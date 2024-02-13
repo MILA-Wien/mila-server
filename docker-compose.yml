@@ -1,0 +1,221 @@
+version: "3"
+
+networks:
+  proxiable:
+    name: proxiable
+    external: true
+  directus:
+    name: directus
+  keycloak:
+    name: keycloak
+
+services:
+  collectivo:
+    container_name: collectivo
+    build: ./collectivo
+    networks:
+      - directus
+      - proxiable
+    environment:
+      NUXT_API_TOKEN: ${COLLECTIVO_API_TOKEN}
+      NUXT_DIRECTUS_ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+      NUXT_DIRECTUS_ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+      NUXT_KEYCLOAK_ADMIN_CLIENT: ${KEYCLOAK_ADMIN_CLIENT}
+      NUXT_KEYCLOAK_ADMIN_SECRET: ${KEYCLOAK_ADMIN_SECRET}
+      NUXT_PUBLIC_COLLECTIVO_URL: ${COLLECTIVO_URL}
+      NUXT_PUBLIC_DEFAULT_LOCAL: ${COLLECTIVO_DEFAULT_LOCAL}
+      NUXT_PUBLIC_DIRECTUS_URL: ${DIRECTUS_URL}
+      NUXT_PUBLIC_KEYCLOAK_URL: ${KEYCLOAK_URL}
+      NUXT_PUBLIC_KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+
+  directus:
+    image: directus/directus:10.9.0
+    container_name: directus
+    depends_on:
+      - directus-db
+      - directus-cache
+    expose:
+      - 8055
+    networks:
+      - proxiable
+      - directus
+    volumes:
+      - ./directus/uploads:/directus/uploads
+      - ./directus/extensions:/directus/extensions
+    environment:
+      KEY: ${DIRECTUS_KEY}
+      SECRET: ${DIRECTUS_SECRET}
+
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+
+      DB_CLIENT: "pg"
+      DB_HOST: "directus-db"
+      DB_PORT: "5432"
+      DB_DATABASE: "directus"
+      DB_USER: "directus"
+      DB_PASSWORD: ${DIRECTUS_DB_PASSWORD}
+
+      # CACHE_ENABLED: "true"
+      # CACHE_STORE: "redis"
+      # REDIS: "redis://directus-cache:6379"
+
+      WEBSOCKETS_ENABLED: true
+      PUBLIC_URL: ${DIRECTUS_URL}
+
+      AUTH_PROVIDERS: "keycloak"
+      AUTH_KEYCLOAK_DRIVER: "openid"
+      AUTH_KEYCLOAK_CLIENT_ID: ${KEYCLOAK_DIRECTUS_CLIENT}
+      AUTH_KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_DIRECTUS_SECRET}
+      AUTH_KEYCLOAK_ISSUER_URL: "${KEYCLOAK_URL}/realms/collectivo/.well-known/openid-configuration"
+      AUTH_KEYCLOAK_IDENTIFIER_KEY: "email"
+      AUTH_KEYCLOAK_ALLOW_PUBLIC_REGISTRATION: "true"
+
+      REFRESH_TOKEN_COOKIE_DOMAIN: ${DIRECTUS_DOMAIN}
+      REFRESH_TOKEN_COOKIE_SECURE: "true"
+      REFRESH_TOKEN_COOKIE_SAME_SITE: "lax"
+
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "true"
+      # CORS_ORIGIN: "[${DIRECTUS_URL}, ${COLLECTIVO_URL}]"
+
+      # EMAIL_VERIFY_SETUP: true
+      # EMAIL_FROM: ${DIRECTUS_EMAIL_FROM}
+      # EMAIL_TRANSPORT: ${DIRECTUS_EMAIL_TRANSPORT}
+      # EMAIL_SMTP_HOST: ${DIRECTUS_EMAIL_SMTP_HOST}
+      # EMAIL_SMTP_PORT: ${DIRECTUS_EMAIL_SMTP_PORT}
+      # EMAIL_SMTP_USER: ${DIRECTUS_EMAIL_SMTP_USER}
+      # EMAIL_SMTP_PASSWORD: ${DIRECTUS_EMAIL_SMTP_PASSWORD}
+
+  directus-db:
+    container_name: directus-db
+    image: postgis/postgis:15-3.4-alpine
+    volumes:
+      - directus-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_USER: "directus"
+      POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
+      POSTGRES_DB: "directus"
+    networks:
+      - directus
+
+  directus-cache:
+    container_name: directus-cache
+    image: redis:6
+    networks:
+      - directus
+
+  keycloak:
+    build: ./keycloak
+    container_name: keycloak
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KEYCLOAK_FRONTEND_URL: ${KEYCLOAK_URL}
+      KEYCLOAK_IMPORT: /tmp/collectivo-realm.json
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      KC_DB_SCHEMA: public
+      KC_DB_URL_DATABASE: "keycloak"
+      KC_DB_URL_HOST: "keycloak-db"
+      KC_DB_URL_PORT: 5432
+      KC_HOSTNAME: ${KEYCLOAK_HOSTNAME}
+    volumes:
+      - ./keycloak/import/collectivo-realm.json:/tmp/collectivo-realm.json
+      - ./keycloak/themes/collectivo:/opt/keycloak/themes/collectivo
+      - ./keycloak/imported/:/opt/keycloak/imported/
+    depends_on:
+      - keycloak-db
+    networks:
+      - keycloak
+      - proxiable
+
+  keycloak-db:
+    image: postgres:14-alpine
+    container_name: keycloak-db
+    volumes:
+      - keycloak-db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - keycloak
+
+  habidat:
+    image: habidat/direktkredit:1.5
+    restart: always
+    volumes:
+      - ./docker/habidat/config/:/habidat/config/
+      - ./docker/habidat/files:/habidat/public/files
+      - ./docker/habidat/images:/habidat/public/images
+      - ./docker/habidat/upload:/habidat/upload
+    environment:
+      - HABIDAT_DK_PROJECT_ID=project
+      - HABIDAT_DK_PROJECT_NAME=${HABIDAT_PROJECT_NAME}
+      - HABIDAT_DK_PROJECT_EMAIL=${HABIDAT_PROJECT_EMAIL}
+      - HABIDAT_DK_PROJECT_LOGO=logo.gif
+      - HABIDAT_DK_ADMIN_EMAIL=${HABIDAT_ADMIN_EMAIL}
+      - HABIDAT_DK_ADMIN_USERNAME=${HABIDAT_ADMIN_USERNAME}
+      - HABIDAT_DK_ADMIN_PASSWORD=${HABIDAT_ADMIN_SECRET}
+      - HABIDAT_DK_SESSION_SECRET=${HABIDAT_JWT_SECRET}
+      - HABIDAT_DK_DB_URI=mysql://${HABIDAT_DB_USER}:${HABIDAT_DB_SECRET}@habidat-db/${HABIDAT_DB_DB}
+      - HABIDAT_DK_PORT_HTTP=80
+      - HABIDAT_DK_AUTH_ADMIN_METHOD=local,oidc
+      - HABIDAT_DK_AUTH_ADMIN_OIDC_LABEL=${HABIDAT_OIDC_ADMIN_LOGIN_BUTTON_LABEL}
+      - HABIDAT_DK_AUTH_ADMIN_OIDC_ISSUER=${KEYCLOAK_URL}/realms/collectivo
+      - HABIDAT_DK_AUTH_ADMIN_OIDC_CLIENT_ID=${HABIDAT_KEYCLOAK_CLIENT_ID}
+      - HABIDAT_DK_AUTH_ADMIN_OIDC_CLIENT_SECRET=${HABIDAT_KEYCLOAK_TOKEN}
+      - HABIDAT_DK_AUTH_ADMIN_OIDC_CALLBACK_URL=/login-oidc-cb-admin
+      - HABIDAT_DK_AUTH_ADMIN_OIDC_AUTH_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/auth
+      - HABIDAT_DK_AUTH_ADMIN_OIDC_TOKEN_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/token
+      - HABIDAT_DK_AUTH_ADMIN_OIDC_USERINFO_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/userinfo
+      - HABIDAT_DK_AUTH_USER_METHOD=oidc
+      - HABIDAT_DK_AUTH_USER_OIDC_LABEL=${HABIDAT_OIDC_USER_LOGIN_BUTTON_LABEL}
+      - HABIDAT_DK_AUTH_USER_OIDC_ISSUER=${KEYCLOAK_URL}/realms/collectivo
+      - HABIDAT_DK_AUTH_USER_OIDC_CLIENT_ID=${HABIDAT_KEYCLOAK_CLIENT_ID}
+      - HABIDAT_DK_AUTH_USER_OIDC_CLIENT_SECRET=${HABIDAT_KEYCLOAK_TOKEN}
+      - HABIDAT_DK_AUTH_USER_OIDC_CALLBACK_URL=/login-oidc-cb
+      - HABIDAT_DK_AUTH_USER_OIDC_AUTH_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/auth
+      - HABIDAT_DK_AUTH_USER_OIDC_TOKEN_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/token
+      - HABIDAT_DK_AUTH_USER_OIDC_USERINFO_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/userinfo
+      - HABIDAT_DK_INTEREST_RATE_TYPE=coupon
+      - VIRTUAL_HOST=${HABIDAT_URL_BASE}
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=${HABIDAT_URL_BASE}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+    depends_on:
+      - habidat-db
+    links:
+      - habidat-db
+    logging:
+      options:
+        max-size: 50m
+
+  habidat-db:
+    image: mariadb
+    restart: always
+    volumes:
+      - ./docker/habidat/db:/var/lib/mysql
+    environment:
+      - MARIADB_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_PASSWORD=${HABIDAT_DB_SECRET}
+      - MYSQL_DATABASE=${HABIDAT_DB_DB}
+      - MYSQL_USER=${HABIDAT_DB_USER}
+    logging:
+      options:
+        max-size: 50m
+
+volumes:
+  directus-db-data:
+  keycloak-db-data:

@@ -1,0 +1,38 @@
+{
+  "name": "collectivo-mila",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev --dotenv ../.env --p 3000",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxi typecheck",
+    "format": "prettier --cache --check .",
+    "format:fix": "prettier --cache --check . --write",
+    "lint": "eslint --cache .",
+    "lint:fix": "eslint --cache . --fix"
+  },
+  "dependencies": {
+    "@collectivo/collectivo": "^0.1.1",
+    "@collectivo/memberships": "^0.1.1",
+    "@collectivo/payments": "^0.1.1"
+  },
+  "devDependencies": {
+    "@iconify/json": "^2.2.165",
+    "@nuxt/devtools": "^1.0.6",
+    "@intlify/vue-router-bridge": "^1.1.0",
+    "@intlify/vue-i18n-bridge": "^1.1.0",
+    "vue-i18n-routing": "^1.2.0",
+    "@nuxtjs/i18n": "8.0.0",
+    "@typescript-eslint/eslint-plugin": "6.16.0",
+    "@typescript-eslint/parser": "6.16.0",
+    "eslint": "8.56.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-vue": "9.19.2",
+    "nuxt": "^3.10.1",
+    "prettier": "3.1.1",
+    "sass": "^1.69.5"
+  }
+}

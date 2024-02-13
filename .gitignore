@@ -1,0 +1,43 @@
+# Local work folders
+archive/
+uploads/
+workbench/
+
+# Ignore custom files in app
+collectivo/app/public/*
+collectivo/app/app.config.ts
+collectivo/custom_extensions/*
+
+# Directus
+directus/database/
+directus/uploads/*
+keycloak/export
+keycloak/imported/imported.flag
+
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# ignore cache
+.eslintcache
