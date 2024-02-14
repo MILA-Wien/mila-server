@@ -3,6 +3,10 @@ archive/
 uploads/
 workbench/
 
+# For habidat (old)
+docker/
+habidat/
+
 # Ignore custom files in app
 collectivo/app/public/*
 collectivo/app/app.config.ts
