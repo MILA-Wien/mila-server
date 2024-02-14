@@ -8,6 +8,8 @@ networks:
     name: directus
   keycloak:
     name: keycloak
+  habidat:
+    name: habidat
 
 services:
   collectivo:
