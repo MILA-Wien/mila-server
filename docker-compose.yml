@@ -200,6 +200,9 @@ services:
     logging:
       options:
         max-size: 50m
+    networks:
+      - habidat
+      - proxiable
 
   habidat-db:
     image: mariadb
@@ -214,6 +217,8 @@ services:
     logging:
       options:
         max-size: 50m
+    networks:
+      - habidat
 
 volumes:
   directus-db-data:
