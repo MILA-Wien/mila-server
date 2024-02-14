@@ -1,0 +1,42 @@
+:root {
+    --pf-global--primary-color--100: #2db3a5;
+    --pf-global--primary-color--200: #24968b;
+    --default-background-color: #97A1CDFF;
+    --link-hover-color: #02679a;
+}
+
+.login-pf body {
+    background-image: none;
+    background-color:  #f6f0e7;
+}
+
+.login-pf a:hover {
+    color: var(--link-hover-color);
+    text-decoration: none;
+}
+
+.pf-c-form-control {
+    --pf-global--primary-color--100: unset;
+}
+div.kc-logo-text{
+    background-image: none;
+    background-size: contain;
+    padding: 20px;
+    background-position: center;
+}
+#kc-header-wrapper {
+    font-size: 0px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    line-height: 1.2em;
+    padding: 62px 10px 20px;
+    white-space: normal;
+    background-image: url(../img/mila_logo_subline_transparent.png);
+    background-size: contain;
+    padding: 20px;
+    /* background-color: #FFF; */
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 150px;
+    margin-top: 20px;
+}
