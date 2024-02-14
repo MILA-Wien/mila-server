@@ -13,7 +13,7 @@ Server setup of MILA Mitmach-Supermarkt e.G.
 
 Set up a reverse proxy with a docker network called `proxiable` (e.g. with https://www.linode.com/docs/guides/using-nginx-proxy-manager/)
 
-Nginx for Keycloak needs (https://stackoverflow.com/questions/56126864)
+Nginx for Keycloak needs Custom Nginx Configuration (https://stackoverflow.com/questions/56126864)
 
 ```
 proxy_buffer_size   128k;
