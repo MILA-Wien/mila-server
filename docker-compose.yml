@@ -30,7 +30,7 @@ services:
       NUXT_PUBLIC_KEYCLOAK_REALM: ${KEYCLOAK_REALM}
 
   directus:
-    image: directus/directus:10.9.0
+    image: directus/directus:10.9.1
     container_name: directus
     depends_on:
       - directus-db
@@ -89,7 +89,7 @@ services:
 
   directus-db:
     container_name: directus-db
-    image: postgis/postgis:15-3.4-alpine
+    image: postgis/postgis:16-3.4-alpine
     volumes:
       - directus-db-data:/var/lib/postgresql/data
     healthcheck:
