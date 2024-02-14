@@ -42,7 +42,6 @@ services:
       - directus
     volumes:
       - ./directus/uploads:/directus/uploads
-      - ./directus/extensions:/directus/extensions
     environment:
       KEY: ${DIRECTUS_KEY}
       SECRET: ${DIRECTUS_SECRET}
