@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@collectivo/collectivo": "^0.2.3",
-    "@collectivo/memberships": "^0.2.2",
+    "@collectivo/memberships": "^0.2.3",
     "@collectivo/payments": "^0.2.0"
   },
   "devDependencies": {
