@@ -30,7 +30,7 @@ services:
       NUXT_PUBLIC_KEYCLOAK_REALM: ${KEYCLOAK_REALM}
 
   directus:
-    image: directus/directus:10.9.1
+    image: directus/directus:10.10.4
     container_name: directus
     depends_on:
       - directus-db
