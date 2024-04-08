@@ -29,8 +29,14 @@ services:
       NUXT_PUBLIC_KEYCLOAK_URL: ${KEYCLOAK_URL}
       NUXT_PUBLIC_KEYCLOAK_REALM: ${KEYCLOAK_REALM}
 
+      NUXT_LOTZAPP_MANDANT: ${LOTZAPP_MANDANT}
+      NUXT_LOTZAPP_SEPA_ID: ${LOTZAPP_SEPA_ID}
+      NUXT_LOTZAPP_TRANSFER_ID: ${LOTZAPP_TRANSFER_ID}
+      NUXT_LOTZAPP_USER: ${LOTZAPP_USER}
+      NUXT_LOTZAPP_PASSWORD: ${LOTZAPP_PASSWORD}
+
   directus:
-    image: directus/directus:10.9.1
+    image: directus/directus:10.10.5
     container_name: directus
     depends_on:
       - directus-db
@@ -43,6 +49,7 @@ services:
     volumes:
       - ./directus/uploads:/directus/uploads
     environment:
+      PUBLIC_URL: ${DIRECTUS_URL}
       KEY: ${DIRECTUS_KEY}
       SECRET: ${DIRECTUS_SECRET}
 
@@ -56,13 +63,6 @@ services:
       DB_USER: "directus"
       DB_PASSWORD: ${DIRECTUS_DB_PASSWORD}
 
-      # CACHE_ENABLED: "true"
-      # CACHE_STORE: "redis"
-      # REDIS: "redis://directus-cache:6379"
-
-      WEBSOCKETS_ENABLED: true
-      PUBLIC_URL: ${DIRECTUS_URL}
-
       AUTH_PROVIDERS: "keycloak"
       AUTH_KEYCLOAK_DRIVER: "openid"
       AUTH_KEYCLOAK_CLIENT_ID: ${KEYCLOAK_DIRECTUS_CLIENT}
@@ -72,7 +72,7 @@ services:
       AUTH_KEYCLOAK_ALLOW_PUBLIC_REGISTRATION: "true"
       AUTH_KEYCLOAK_REDIRECT_ALLOW_LIST: ${COLLECTIVO_URL}
 
-      REFRESH_TOKEN_COOKIE_DOMAIN: ${DIRECTUS_HOSTNAME}
+      REFRESH_TOKEN_COOKIE_DOMAIN: ${DIRECTUS_DOMAIN}
       REFRESH_TOKEN_COOKIE_SECURE: "true"
       REFRESH_TOKEN_COOKIE_SAME_SITE: "lax"
 
@@ -85,6 +85,12 @@ services:
       EMAIL_SMTP_HOST: ${DIRECTUS_EMAIL_SMTP_HOST}
       EMAIL_SMTP_USER: ${DIRECTUS_EMAIL_SMTP_USER}
       EMAIL_SMTP_PASSWORD: ${DIRECTUS_EMAIL_SMTP_PASSWORD}
+
+      WEBSOCKETS_ENABLED: true
+
+      COLLECTIVO_API_URL: ${COLLECTIVO_API_URL}
+      COLLECTIVO_API_KEY: ${COLLECTIVO_API_TOKEN}
+      FLOWS_ENV_ALLOW_LIST: "COLLECTIVO_API_URL, COLLECTIVO_API_TOKEN"
 
   directus-db:
     container_name: directus-db
@@ -122,7 +128,7 @@ services:
       KC_DB_URL_DATABASE: "keycloak"
       KC_DB_URL_HOST: "keycloak-db"
       KC_DB_URL_PORT: 5432
-      KC_HOSTNAME: ${KEYCLOAK_HOSTNAME}
+      KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
     volumes:
       - ./keycloak/themes/collectivo:/opt/keycloak/themes/collectivo
       - ./keycloak/imported/:/opt/keycloak/imported/
