@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "@collectivo/collectivo": "^0.2.10",
-    "@collectivo/memberships": "^0.2.5",
-    "@collectivo/payments": "^0.2.1"
+    "@collectivo/memberships": "^0.2.6",
+    "@collectivo/payments": "^0.2.2"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.165",
