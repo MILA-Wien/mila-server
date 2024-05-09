@@ -75,6 +75,7 @@ services:
       REFRESH_TOKEN_COOKIE_SECURE: "true"
       REFRESH_TOKEN_COOKIE_SAME_SITE: "lax"
 
+      SESSION_COOKIE_DOMAIN: "mila.wien"
       SESSION_COOKIE_SECURE: "true"
       SESSION_COOKIE_SAME_SITE: "lax"
 
