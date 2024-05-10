@@ -15,9 +15,9 @@
     "lint:fix": "eslint --cache . --fix"
   },
   "dependencies": {
-    "@collectivo/collectivo": "^0.3.2",
-    "@collectivo/memberships": "^0.2.7",
-    "@collectivo/payments": "^0.2.2"
+    "@collectivo/collectivo": "^0.3.3",
+    "@collectivo/memberships": "^0.2.8",
+    "@collectivo/payments": "^0.2.3"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.165",
