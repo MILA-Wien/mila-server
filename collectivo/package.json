@@ -15,7 +15,7 @@
     "lint:fix": "eslint --cache . --fix"
   },
   "dependencies": {
-    "@collectivo/collectivo": "^0.3.4",
+    "@collectivo/collectivo": "^0.3.5",
     "@collectivo/memberships": "^0.2.8",
     "@collectivo/payments": "^0.2.3"
   },
@@ -27,11 +27,7 @@
     "vue-i18n-routing": "^1.2.0",
     "@nuxtjs/i18n": "8.0.0",
     "@nuxtjs/google-fonts": "^3.1.3",
-    "@typescript-eslint/eslint-plugin": "6.16.0",
-    "@typescript-eslint/parser": "6.16.0",
     "eslint": "8.56.0",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-plugin-vue": "9.19.2",
     "nuxt": "^3.10.1",
     "prettier": "3.1.1",
     "sass": "^1.69.5"
