@@ -6,11 +6,25 @@ export default defineNuxtConfig({
     "@collectivo/collectivo",
     "@collectivo/payments",
     "@collectivo/memberships",
-    ["github:MILA-Wien/collectivo-mila2", { install: true }],
   ],
+  runtimeConfig: {
+    lotzappMandant: "",
+    lotzappSepaId: "",
+    lotzappTransferId: "",
+    lotzappUser: "",
+    lotzappPassword: "",
+  },
   vite: {
     optimizeDeps: {
       include: ["yup"],
     },
+  },
+  i18n: {
+    langDir: "./lang",
+    defaultLocale: "de",
+    locales: [
+      { code: "en", file: "en.json" },
+      { code: "de", file: "de.json" },
+    ],
   },
 });
