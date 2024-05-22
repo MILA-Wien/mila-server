@@ -39,7 +39,21 @@ async function assignTag(body: any, membership: string) {
 
   const memberStatuses = ["approved", "in-exclusion", "in-cancellation"];
   const notMemberStatuses = ["draft", "applied", "ended"];
-  if (memberStatuses.includes(body.payload.memberships_status)) {
+
+  const extags = await directus.request(
+    readItems("collectivo_tags_directus_users", {
+      filter: {
+        collectivo_tags_id: {
+          _eq: mitgliedstagID,
+        },
+        directus_users_id: {
+          _eq: userID,
+        },
+      },
+    }),
+  );
+
+  if (memberStatuses.includes(body.payload.memberships_status) && !extags) {
     await directus.request(
       createItem("collectivo_tags_directus_users", {
         collectivo_tags_id: mitgliedstagID,
@@ -48,18 +62,6 @@ async function assignTag(body: any, membership: string) {
     );
     console.log("Mitglied tag assigned");
   } else if (notMemberStatuses.includes(body.payload.memberships_status)) {
-    const extags = await directus.request(
-      readItems("collectivo_tags_directus_users", {
-        filter: {
-          collectivo_tags_id: {
-            _eq: mitgliedstagID,
-          },
-          directus_users_id: {
-            _eq: userID,
-          },
-        },
-      }),
-    );
     for (const tag of extags) {
       await directus.request(
         deleteItem("collectivo_tags_directus_users", tag.id),
