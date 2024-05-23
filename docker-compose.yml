@@ -36,7 +36,7 @@ services:
       NUXT_LOTZAPP_PASSWORD: ${LOTZAPP_PASSWORD}
 
   directus:
-    image: directus/directus:10.11.0
+    image: directus/directus:10.11.1
     container_name: directus
     depends_on:
       - directus-db
@@ -118,6 +118,29 @@ services:
     networks:
       - directus
 
+  directus-db-backups:
+    image: prodrigestivill/postgres-backup-local
+    restart: always
+    volumes:
+      - ./directus-db-backups:/backups
+    links:
+      - directus-db
+    depends_on:
+      directus-db:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: directus-db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: directus
+      POSTGRES_USER: directus
+      POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
+      POSTGRES_EXTRA_OPTS: -Z1 --schema=public --blobs
+      SCHEDULE: "@daily"
+      BACKUP_KEEP_DAYS: 7
+      BACKUP_KEEP_WEEKS: 4
+      BACKUP_KEEP_MONTHS: 6
+      HEALTHCHECK_PORT: 8080
+
   keycloak:
     build: ./keycloak
     container_name: keycloak
@@ -157,6 +180,29 @@ services:
       retries: 5
     networks:
       - keycloak
+
+  keycloak-db-backups:
+    image: prodrigestivill/postgres-backup-local
+    restart: always
+    volumes:
+      - ./keycloak-db-backups:/backups
+    links:
+      - keycloak-db
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: keycloak-db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      POSTGRES_EXTRA_OPTS: -Z1 --schema=public --blobs
+      SCHEDULE: "@daily"
+      BACKUP_KEEP_DAYS: 7
+      BACKUP_KEEP_WEEKS: 4
+      BACKUP_KEEP_MONTHS: 6
+      HEALTHCHECK_PORT: 8080
 
   habidat:
     image: habidat/direktkredit:1.5
