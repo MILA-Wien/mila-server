@@ -140,6 +140,8 @@ services:
       BACKUP_KEEP_WEEKS: 4
       BACKUP_KEEP_MONTHS: 6
       HEALTHCHECK_PORT: 8080
+    networks:
+      - directus
 
   keycloak:
     build: ./keycloak
@@ -203,6 +205,8 @@ services:
       BACKUP_KEEP_WEEKS: 4
       BACKUP_KEEP_MONTHS: 6
       HEALTHCHECK_PORT: 8080
+    networks:
+      - keycloak
 
   habidat:
     image: habidat/direktkredit:1.5
