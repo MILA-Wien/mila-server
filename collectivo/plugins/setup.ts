@@ -1,6 +1,5 @@
 export default defineNuxtPlugin({
   name: "mila-setup",
-  dependsOn: ["memberships-setup"],
   async setup() {
     console.info("MILA extension active");
     const form = useMembershipsRegistrationForm();

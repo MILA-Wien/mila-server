@@ -1,7 +1,9 @@
 {
-  "name": "collectivo-mila",
+  "name": "mila-nuxt",
   "version": "0.1.0",
   "private": true,
+  "license": "AGPL-3.0",
+  "author": "Joël Foramitti",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev --dotenv ../.env --p 3000 --host",
@@ -15,22 +17,30 @@
     "lint:fix": "eslint --cache . --fix"
   },
   "dependencies": {
-    "@collectivo/collectivo": "^0.3.6",
-    "@collectivo/memberships": "^0.2.8",
-    "@collectivo/payments": "^0.2.3"
+    "@directus/sdk": "^16.1.0",
+    "@keycloak/keycloak-admin-client": "^25.0.1",
+    "@nuxt/ui": "^2.17.0",
+    "@types/nodemailer": "^6.4.15",
+    "compare-versions": "^6.1.0",
+    "keycloak-js": "^25.0.1",
+    "marked": "^13.0.0",
+    "nodemailer": "^6.9.14",
+    "v-calendar": "^3.1.2",
+    "winston": "^3.13.0",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
-    "@iconify/json": "^2.2.165",
-    "@nuxt/devtools": "^1.0.6",
-    "@nuxt/eslint": "^0.3.12",
-    "@intlify/vue-router-bridge": "^1.1.0",
-    "@intlify/vue-i18n-bridge": "^1.1.0",
-    "vue-i18n-routing": "^1.2.0",
-    "@nuxtjs/i18n": "8.0.0",
-    "@nuxtjs/google-fonts": "^3.1.3",
-    "eslint": "9.2.0",
-    "nuxt": "^3.10.1",
-    "prettier": "3.1.1",
-    "sass": "^1.69.5"
+    "@iconify/json": "^2.2.221",
+    "@nuxt/devtools": "^1.3.3",
+    "@nuxt/eslint": "^0.3.13",
+    "@nuxt/test-utils": "^3.13.1",
+    "@nuxtjs/google-fonts": "^3.2.0",
+    "@nuxtjs/i18n": "8.3.1",
+    "@vitest/ui": "^1.6.0",
+    "eslint": "9.5.0",
+    "nuxt": "^3.12.2",
+    "prettier": "3.3.2",
+    "sass": "^1.77.6",
+    "vitest": "^1.6.0"
   }
 }

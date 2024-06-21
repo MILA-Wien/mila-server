@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
-  extends: ["./base", "./memberships", "./payments"],
+  extends: ["./base", "./memberships", "./payments", "./shifts"],
   runtimeConfig: {
     lotzappMandant: "",
     lotzappSepaId: "",
