@@ -529,6 +529,8 @@ export default defineNuxtPlugin({
                 "Personalkomitee (Beratung bei Personalagenden, Bewerbungsprozessen, etc.)",
               value: "Personalkomitee",
             },
+            { label: "Mitgliedergewinnung", value: "Mitgliedergewinnung" },
+            { label: "Mitgliederbüro", value: "Mitgliederbüro" },
           ],
         },
         {
