@@ -38,9 +38,7 @@ const publicMenuItems = Object.values(menus.value.main_public).sort(
         </div>
       </div>
       <div class="sidebar__main__bottom">
-        <div class="about">
-          <span>Collectivo v{{ pkg.version }}</span>
-        </div>
+        <div class="about"></div>
       </div>
     </div>
   </div>

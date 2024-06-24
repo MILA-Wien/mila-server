@@ -67,9 +67,7 @@ const sidebarWidthLg = String(config.collectivo.sidebarWidth + 90) + "px";
     <div class="main">
       <div class="main__top">
         <div class="main__top__left">
-          <h1>
-            {{ t(pageTitle) }}
-          </h1>
+          <h1>{{ t(pageTitle) }}</h1>
         </div>
 
         <div class="main__top__right">
