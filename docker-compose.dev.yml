@@ -1,8 +1,5 @@
-version: "3"
-
 services:
   collectivo:
-    container_name: collectivo
     image: node:18-alpine
     volumes:
       - ./collectivo:/app
@@ -72,26 +69,17 @@ services:
       AUTH_KEYCLOAK_ISSUER_URL: "http://keycloak:8080/realms/collectivo/.well-known/openid-configuration"
       AUTH_KEYCLOAK_IDENTIFIER_KEY: "email"
       AUTH_KEYCLOAK_ALLOW_PUBLIC_REGISTRATION: "true"
-      # AUTH_KEYCLOAK_DEFAULT_ROLE_ID:
 
       REFRESH_TOKEN_COOKIE_SECURE: "false"
       REFRESH_TOKEN_COOKIE_SAME_SITE: "lax"
 
       LOG_LEVEL: "debug"
 
-      # EMAIL_VERIFY_SETUP: true
-      # EMAIL_FROM: ${DIRECTUS_EMAIL_FROM}
-      # EMAIL_TRANSPORT: ${DIRECTUS_EMAIL_TRANSPORT}
-      # EMAIL_SMTP_HOST: ${DIRECTUS_EMAIL_SMTP_HOST}
-      # EMAIL_SMTP_PORT: ${DIRECTUS_EMAIL_SMTP_PORT}
-      # EMAIL_SMTP_USER: ${DIRECTUS_EMAIL_SMTP_USER}
-      # EMAIL_SMTP_PASSWORD: ${DIRECTUS_EMAIL_SMTP_PASSWORD}
-
   directus-db:
     image: postgis/postgis:15-3.4-alpine
     volumes:
       - directus-db-data:/var/lib/postgresql/data
-      - ./manual_backups:/backups
+      - ./directus-db-backups:/backups
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 10s
@@ -109,6 +97,7 @@ services:
     image: postgres:15.4-alpine
     volumes:
       - keycloak-db-data:/var/lib/postgresql/data
+      - ./keycloak-db-backups:/backups
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak

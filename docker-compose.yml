@@ -1,5 +1,3 @@
-version: "3"
-
 networks:
   proxiable:
     name: proxiable
@@ -100,6 +98,7 @@ services:
     image: postgis/postgis:16-3.4-alpine
     volumes:
       - directus-db-data:/var/lib/postgresql/data
+      - ./directus-db-backups:/backups
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 10s
@@ -134,7 +133,7 @@ services:
       POSTGRES_DB: directus
       POSTGRES_USER: directus
       POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
-      POSTGRES_EXTRA_OPTS: -Z1 --schema=public --blobs
+      POSTGRES_EXTRA_OPTS: --clean -Z1
       SCHEDULE: "@daily"
       BACKUP_KEEP_DAYS: 7
       BACKUP_KEEP_WEEKS: 4
@@ -171,6 +170,7 @@ services:
     container_name: keycloak-db
     volumes:
       - keycloak-db-data:/var/lib/postgresql/data
+      - ./keycloak-db-backups:/backups
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
@@ -199,7 +199,7 @@ services:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
-      POSTGRES_EXTRA_OPTS: -Z1 --schema=public --blobs
+      POSTGRES_EXTRA_OPTS: --clean -Z1
       SCHEDULE: "@daily"
       BACKUP_KEEP_DAYS: 7
       BACKUP_KEEP_WEEKS: 4
