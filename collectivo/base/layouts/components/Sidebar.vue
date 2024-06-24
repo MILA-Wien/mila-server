@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Logo from "./Logo.vue";
 import MenuItem from "./MenuItem.vue";
-import pkg from "../../package.json";
 
 const menus = useCollectivoMenus();
 const user = useCollectivoUser();
