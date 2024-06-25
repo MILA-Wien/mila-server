@@ -8,6 +8,10 @@ import {
   updateUser,
 } from "@directus/sdk";
 
+export default defineEventHandler(async (_event) => {
+  create_examples();
+});
+
 async function getRole(name: string) {
   const directus = await useDirectusAdmin();
 
@@ -26,7 +30,7 @@ async function getRole(name: string) {
   return membersRoles[0].id;
 }
 
-export default async function examples() {
+async function create_examples() {
   console.info("Creating example data for collectivo");
 
   const directus = await useDirectusAdmin();
@@ -212,3 +216,81 @@ export default async function examples() {
     console.info(error);
   }
 }
+
+// export default async function examples() {
+//   console.info("Creating example data for payments");
+
+//   const directus = await useDirectusAdmin();
+
+//   // Clean up old data
+//   await directus.request(deleteItems("payments_invoices_out", { limit: 1000 }));
+
+//   const invoice_ids = [];
+
+//   const users = await directus.request(
+//     readUsers({ filter: { first_name: "Alice" } }),
+//   );
+
+//   for (const status of ["pending", "paid"]) {
+//     const res = await directus.request(
+//       createItem("payments_invoices_out", {
+//         payments_recipient_user: users[0].id,
+//         payments_status: status,
+//         payments_date_issued: new Date(),
+//       }),
+//     );
+
+//     invoice_ids.push(res.id);
+//   }
+
+//   for (const invoice_id of invoice_ids) {
+//     await directus.request(
+//       createItem("payments_invoices_entries", {
+//         payments_invoice: invoice_id,
+//         payments_description: "Test item",
+//         payments_quantity: 1,
+//         payments_price: 100,
+//       }),
+//     );
+//   }
+// }
+
+// import { createItem, deleteItems, readUsers } from "@directus/sdk";
+
+// export default async function examples() {
+//   console.info("Creating example data for memberships");
+
+//   const directus = await useDirectusAdmin();
+
+//   // Clean up old data
+//   await directus.request(deleteItems("memberships", { limit: 1000 }));
+
+//   // Create some memberships
+//   console.info("Creating memberships");
+
+//   const users = [
+//     ["Alice", "applied"],
+//     ["Bob", "approved"],
+//     ["Charlie", "approved"],
+//     ["Dave", "in-cancellation"],
+//     ["User", "approved"],
+//   ];
+
+//   for (const user of users) {
+//     console.log("reading user");
+//     // Get user id
+//     const user_id = (
+//       await directus.request(readUsers({ filter: { first_name: user[0] } }))
+//     )[0];
+
+//     // Create membership
+//     console.log("creating  mship", user_id);
+//     await directus.request(
+//       createItem("memberships", {
+//         memberships_user: user_id,
+//         memberships_type: "normal",
+//         memberships_status: user[1],
+//       }),
+//     );
+//   }
+// }

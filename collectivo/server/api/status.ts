@@ -7,9 +7,6 @@ export default defineEventHandler(async (_event) => {
     directusHealthy = false;
     console.error("Directus refresh error", e);
   }
-  // try {
-  //   await useKeycloakAdmin();
-  // }
 
   return {
     healthy: {
