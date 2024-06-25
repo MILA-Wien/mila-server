@@ -1,0 +1,156 @@
+[
+  {
+    "name": "collectivo_auth_update",
+    "icon": "bolt",
+    "color": null,
+    "description": null,
+    "status": "active",
+    "trigger": "event",
+    "accountability": null,
+    "options": {
+      "type": "filter",
+      "scope": [
+        "items.create",
+        "items.update",
+        "items.delete"
+      ],
+      "collections": [
+        "directus_users"
+      ]
+    },
+    "operation": "9faaf478-7775-48c5-8efa-e167746f7b33",
+    "_syncId": "6e158b1d-4283-4aca-8cf0-93ee04a0b79c"
+  },
+  {
+    "name": "collectivo_assign_default_role_to_new_users",
+    "icon": "supervised_user_circle",
+    "color": null,
+    "description": null,
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "scope": [
+        "items.create"
+      ],
+      "collections": [
+        "directus_users"
+      ]
+    },
+    "operation": "2c4e9dc7-aaf7-445b-89ee-ebf02df1e375",
+    "_syncId": "6f8e46f6-890e-4519-9050-85de9dcce51a"
+  },
+  {
+    "name": "collectivo_user_create",
+    "icon": "bolt",
+    "color": null,
+    "description": null,
+    "status": "active",
+    "trigger": "event",
+    "accountability": null,
+    "options": {
+      "type": "action",
+      "scope": [
+        "items.create"
+      ],
+      "collections": [
+        "directus_users"
+      ]
+    },
+    "operation": "aab6c0bb-9af8-4383-a326-e17559d15935",
+    "_syncId": "745b9dad-d1ac-4457-9f14-bf85bdcb1c6f"
+  },
+  {
+    "name": "messages_launch_campaign",
+    "icon": "play_arrow",
+    "color": null,
+    "description": "Flow implementing a button to manually start the execution of campaigns in draft mode. Ignores any campaigns with another status.",
+    "status": "active",
+    "trigger": "manual",
+    "accountability": "all",
+    "options": {
+      "collections": [
+        "messages_campaigns"
+      ]
+    },
+    "operation": "2db6b1d4-798f-4a86-b4df-bf6af84248b7",
+    "_syncId": "81c4b7ca-fc3b-4156-8ac3-06d8139ce53b"
+  },
+  {
+    "name": "memberships_send_messages",
+    "icon": "conveyor_belt",
+    "color": null,
+    "description": null,
+    "status": "active",
+    "trigger": "manual",
+    "accountability": "all",
+    "options": {
+      "collections": [
+        "memberships"
+      ],
+      "requireConfirmation": true,
+      "fields": [
+        {
+          "field": "template",
+          "name": "Template",
+          "type": "json",
+          "meta": {
+            "interface": "collection-item-dropdown",
+            "options": {
+              "selectedCollection": "messages_templates",
+              "template": "{{name}}"
+            },
+            "required": true
+          }
+        }
+      ],
+      "confirmationDescription": "Please choose a template"
+    },
+    "operation": "bdf8b75d-415a-47a0-9261-31f2bb62aa91",
+    "_syncId": "8dbb0568-bb56-4323-a88a-90eedf950df9"
+  },
+  {
+    "name": "collectivo_sync_tags",
+    "icon": "bolt",
+    "color": null,
+    "description": null,
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "filter",
+      "scope": [
+        "items.create",
+        "items.update",
+        "items.delete"
+      ],
+      "collections": [
+        "collectivo_tags_directus_users"
+      ]
+    },
+    "operation": "9f2df7c8-1939-4dc6-a6cf-46c411056bbd",
+    "_syncId": "a723a447-a16e-42c5-a264-533512172821"
+  },
+  {
+    "name": "messages_handle_campaign_change",
+    "icon": null,
+    "color": null,
+    "description": null,
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "scope": [
+        "items.create",
+        "items.update"
+      ],
+      "collections": [
+        "messages_campaigns"
+      ]
+    },
+    "operation": "66216b9f-1277-4885-b63b-3be81d955fae",
+    "_syncId": "e59c80fe-537e-4077-abb6-5496f7b34c4d"
+  }
+]

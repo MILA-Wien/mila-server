@@ -1,0 +1,41 @@
+{
+  "collection": "directus_users",
+  "field": "mila_survey_group",
+  "type": "alias",
+  "meta": {
+    "collection": "directus_users",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "mila_survey_group",
+    "group": null,
+    "hidden": false,
+    "interface": "group-detail",
+    "note": null,
+    "options": {
+      "headerIcon": "credit_card",
+      "title": "$t:person"
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 1,
+    "special": [
+      "alias",
+      "group",
+      "no-data"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Umfrage"
+      },
+      {
+        "language": "en-US",
+        "translation": "Survey"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}

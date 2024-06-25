@@ -1,0 +1,25 @@
+{
+  "collection": "memberships",
+  "field": "memberships_user",
+  "related_collection": "directus_users",
+  "meta": {
+    "junction_field": null,
+    "many_collection": "memberships",
+    "many_field": "memberships_user",
+    "one_allowed_collections": null,
+    "one_collection": "directus_users",
+    "one_collection_field": null,
+    "one_deselect_action": "nullify",
+    "one_field": "memberships",
+    "sort_field": null
+  },
+  "schema": {
+    "table": "memberships",
+    "column": "memberships_user",
+    "foreign_key_table": "directus_users",
+    "foreign_key_column": "id",
+    "constraint_name": "memberships_memberships_user_foreign",
+    "on_update": "NO ACTION",
+    "on_delete": "SET NULL"
+  }
+}

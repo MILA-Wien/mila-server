@@ -1,0 +1,41 @@
+{
+  "collection": "memberships",
+  "meta": {
+    "accountability": "all",
+    "archive_app_filter": true,
+    "archive_field": null,
+    "archive_value": null,
+    "collapse": "open",
+    "collection": "memberships",
+    "color": null,
+    "display_template": "{{memberships_user}} - {{memberships_type.memberships_name}}",
+    "group": null,
+    "hidden": false,
+    "icon": "switch_account",
+    "item_duplication_fields": null,
+    "note": null,
+    "preview_url": null,
+    "singleton": false,
+    "sort": 100,
+    "sort_field": null,
+    "translations": [
+      {
+        "language": "en-US",
+        "translation": "Memberships",
+        "singular": "Membership",
+        "plural": "Memberships"
+      },
+      {
+        "language": "de-DE",
+        "translation": "Mitgliedschaften",
+        "singular": "Mitgliedschaft",
+        "plural": "Mitgliedschaften"
+      }
+    ],
+    "unarchive_value": null,
+    "versioning": false
+  },
+  "schema": {
+    "name": "memberships"
+  }
+}

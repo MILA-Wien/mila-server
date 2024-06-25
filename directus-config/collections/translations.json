@@ -1,0 +1,146 @@
+[
+  {
+    "language": "en-US",
+    "key": "transfer",
+    "value": "Transfer",
+    "_syncId": "04625738-7864-465c-885e-a8c1c2e0074a"
+  },
+  {
+    "language": "en-US",
+    "key": "sepa",
+    "value": "SEPA Debit",
+    "_syncId": "11234131-5c1b-424a-8225-18970ab7666e"
+  },
+  {
+    "language": "de-DE",
+    "key": "pending",
+    "value": "Ausstehend",
+    "_syncId": "167b5be6-294d-4841-9125-81763bd1b838"
+  },
+  {
+    "language": "de-DE",
+    "key": "applied",
+    "value": "Beworben",
+    "_syncId": "30af010f-ffed-463e-8cdd-c618af9f6669"
+  },
+  {
+    "language": "en-US",
+    "key": "approved",
+    "value": "Approved",
+    "_syncId": "40b31049-34f6-4c17-90dc-0e3536097e6b"
+  },
+  {
+    "language": "de-DE",
+    "key": "approved",
+    "value": "Aufgenommen",
+    "_syncId": "4cf8b12c-6137-4890-bddf-b86fd3ae3c93"
+  },
+  {
+    "language": "de-DE",
+    "key": "cancelled",
+    "value": "Abgebrochen",
+    "_syncId": "56b2a57c-1aeb-42f0-9406-e3aeb779d659"
+  },
+  {
+    "language": "de-DE",
+    "key": "in-cancellation",
+    "value": "Im Ausstieg",
+    "_syncId": "5e61cf45-3f2e-4c8e-b2db-38c34f840eeb"
+  },
+  {
+    "language": "en-US",
+    "key": "in-cancellation",
+    "value": "In cancellation",
+    "_syncId": "865ce3d8-9489-4725-aa5e-d26c2aa75b71"
+  },
+  {
+    "language": "en-US",
+    "key": "applied",
+    "value": "Applied",
+    "_syncId": "9043e4a1-5705-46df-b13b-f75086d88ea4"
+  },
+  {
+    "language": "de-DE",
+    "key": "ended",
+    "value": "Beendet",
+    "_syncId": "ac27be00-3af6-4f16-b956-7462fa6c33de"
+  },
+  {
+    "language": "de-DE",
+    "key": "sepa",
+    "value": "SEPA Einzug",
+    "_syncId": "b5f7cc1b-1f44-40ed-bf66-fb330c6f2bb6"
+  },
+  {
+    "language": "de-DE",
+    "key": "failed",
+    "value": "Fehlgeschlagen",
+    "_syncId": "b64c8c77-e1e0-492d-8323-fd5a9d87662f"
+  },
+  {
+    "language": "de-DE",
+    "key": "paid",
+    "value": "Bezahlt",
+    "_syncId": "bb25d108-b6b8-4490-aedd-c29fce3e4e3d"
+  },
+  {
+    "language": "en-US",
+    "key": "cancelled",
+    "value": "Cancelled",
+    "_syncId": "c93f39f4-5e29-47d3-b558-382dc86c2168"
+  },
+  {
+    "language": "de-DE",
+    "key": "memberships-status-note",
+    "value": "Bezeichnet den Lebenszyklus einer Mitgliedschaft von der Bewerbung bis zum Ende. Der Ausstieg erfolgt durch das Mitglied, der Ausschluss durch die Organisation. Während des Ausstiegs- oder Ausschlussverfahrens sind die Mitgliedschaften weiterhin aktiv. Wenn dieser Vorgang abgeschlossen ist, sollte der Status auf 'Beendet' gesetzt werden.",
+    "_syncId": "cd57b183-3ac4-4e88-87eb-0334340f4990"
+  },
+  {
+    "language": "en-US",
+    "key": "ended",
+    "value": "Ended",
+    "_syncId": "d233d435-3439-4e61-a181-408b996e664e"
+  },
+  {
+    "language": "en-US",
+    "key": "pending",
+    "value": "Pending",
+    "_syncId": "dcb8cf5d-4d50-489b-bd36-61a38a39ec2b"
+  },
+  {
+    "language": "en-US",
+    "key": "in-exclusion",
+    "value": "In exclusion",
+    "_syncId": "e1143ea7-2f8b-48f2-be01-c64be6cd6bae"
+  },
+  {
+    "language": "en-US",
+    "key": "paid",
+    "value": "Paid",
+    "_syncId": "e31afeef-c3c4-445a-a749-d662b5564bdc"
+  },
+  {
+    "language": "de-DE",
+    "key": "transfer",
+    "value": "Überweisung",
+    "_syncId": "e39406b5-82af-4b4a-9638-075d28db4d50"
+  },
+  {
+    "language": "en-US",
+    "key": "failed",
+    "value": "Failed",
+    "_syncId": "e432240a-cf89-4b6d-9566-d1c29151ceb7"
+  },
+  {
+    "language": "en-US",
+    "key": "memberships-status-note",
+    "value": "Signifies the lifecycle of a membership from applied to ended. Cancellation is initiated by the member, exclusion is initiated by the organisation. During the process of cancellation or exclusion, memberships are still active. When this process is finished, the status should be set to 'Ended'.",
+    "_syncId": "f8922729-f715-43e7-b8ac-68342e191568"
+  },
+  {
+    "language": "de-DE",
+    "key": "in-exclusion",
+    "value": "Im Ausschluss",
+    "_syncId": "fffbd05f-7fbf-4a8c-a5a3-0cb231b23832"
+  }
+]

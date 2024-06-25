@@ -20,13 +20,14 @@ export default async function examples() {
   ];
 
   for (const user of users) {
+    console.log("reading user");
     // Get user id
     const user_id = (
       await directus.request(readUsers({ filter: { first_name: user[0] } }))
     )[0];
 
     // Create membership
-
+    console.log("creating  mship", user_id);
     await directus.request(
       createItem("memberships", {
         memberships_user: user_id,

@@ -1,0 +1,51 @@
+{
+  "collection": "messages_messages",
+  "field": "messages_error_message",
+  "type": "string",
+  "meta": {
+    "collection": "messages_messages",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "messages_error_message",
+    "group": null,
+    "hidden": false,
+    "interface": null,
+    "note": null,
+    "options": null,
+    "readonly": false,
+    "required": true,
+    "sort": 1,
+    "special": null,
+    "translations": [
+      {
+        "language": "en-US",
+        "translation": "Error message"
+      },
+      {
+        "language": "de-DE",
+        "translation": "Fehlermeldung"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "messages_error_message",
+    "table": "messages_messages",
+    "data_type": "character varying",
+    "default_value": null,
+    "max_length": 255,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

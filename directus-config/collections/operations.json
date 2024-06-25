@@ -1,0 +1,253 @@
+[
+  {
+    "name": "assignRole",
+    "key": "assignRole",
+    "type": "item-update",
+    "position_x": 23,
+    "position_y": 21,
+    "options": {
+      "collection": "directus_users",
+      "key": [
+        "{{$trigger.key}}"
+      ],
+      "payload": {
+        "role": "{{readRole[0].id}}"
+      }
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "6f8e46f6-890e-4519-9050-85de9dcce51a",
+    "_syncId": "bfeab56c-8447-48c6-865e-a6b79539e1ed"
+  },
+  {
+    "name": "Run Script",
+    "key": "continue",
+    "type": "exec",
+    "position_x": 30,
+    "position_y": 19,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t// Do something...\n\treturn {\n    \t\"true\": true\n    };\n}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "6e158b1d-4283-4aca-8cf0-93ee04a0b79c",
+    "_syncId": "88a1ec06-2398-40bd-a23f-31d038a69470"
+  },
+  {
+    "name": "createCampaign",
+    "key": "createCampaign",
+    "type": "item-create",
+    "position_x": 35,
+    "position_y": 17,
+    "options": {
+      "collection": "messages_campaigns",
+      "permissions": "$full",
+      "emitEvents": true,
+      "payload": {
+        "messages_recipients": "{{prepareRecipients.recipients}}",
+        "messages_template": "{{$trigger.body.template.key}}"
+      }
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "8dbb0568-bb56-4323-a88a-90eedf950df9",
+    "_syncId": "87f9effa-2f68-43d5-b585-ccec054a7432"
+  },
+  {
+    "name": "Run Script",
+    "key": "filter",
+    "type": "exec",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "code": "module.exports = async function(data) {    \n    const attrs = [\"email\", \"password\", \"first_name\", \"last_name\"];\n    if (data[\"$trigger\"][\"event\"]==\"users.delete\"){       \n        return {\n            \"true\": true \n        };\n    }\n    else if (!attrs.some(attr => attr in data[\"$trigger\"].payload)){        \n        throw new Error(\"No important change\");   \n    };\n    return {    \t\n        \"true\": true    \n    };\n}"
+    },
+    "resolve": "5c8a607a-b672-45f6-a915-2cc6e936e5c2",
+    "reject": "88a1ec06-2398-40bd-a23f-31d038a69470",
+    "flow": "6e158b1d-4283-4aca-8cf0-93ee04a0b79c",
+    "_syncId": "9faaf478-7775-48c5-8efa-e167746f7b33"
+  },
+  {
+    "name": "postToNuxtAPI",
+    "key": "postToNuxtAPI",
+    "type": "request",
+    "position_x": 30,
+    "position_y": 1,
+    "options": {
+      "method": "PATCH",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/collectivo/auth",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{{$trigger}}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "6e158b1d-4283-4aca-8cf0-93ee04a0b79c",
+    "_syncId": "5c8a607a-b672-45f6-a915-2cc6e936e5c2"
+  },
+  {
+    "name": "postToNuxtAPI",
+    "key": "postToNuxtAPI",
+    "type": "request",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/collectivo/user",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{{$trigger}}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "745b9dad-d1ac-4457-9f14-bf85bdcb1c6f",
+    "_syncId": "aab6c0bb-9af8-4383-a326-e17559d15935"
+  },
+  {
+    "name": "postToNuxtAPI",
+    "key": "postToNuxtAPI",
+    "type": "request",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/collectivo/roles",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{{$trigger}}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "a723a447-a16e-42c5-a264-533512172821",
+    "_syncId": "9f2df7c8-1939-4dc6-a6cf-46c411056bbd"
+  },
+  {
+    "name": "postToNuxtAPI",
+    "key": "postToNuxtAPI",
+    "type": "request",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/messages/handle_campaign_change",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{{$trigger}}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "e59c80fe-537e-4077-abb6-5496f7b34c4d",
+    "_syncId": "66216b9f-1277-4885-b63b-3be81d955fae"
+  },
+  {
+    "name": "prepareRecipients",
+    "key": "prepareRecipients",
+    "type": "exec",
+    "position_x": 17,
+    "position_y": 17,
+    "options": {
+      "code": "module.exports = async function(data) {\n\tconst recipients = []\n    for (i in data[\"readMemberships\"]) {\n \trecipients.push(\n            {\n                messages_campaigns_id: \"+\",\n           \t\tdirectus_users_id: { id: data[\"readMemberships\"][i].memberships_user }\n            }\n        )\n    }\n\treturn { recipients };\n}"
+    },
+    "resolve": "87f9effa-2f68-43d5-b585-ccec054a7432",
+    "reject": null,
+    "flow": "8dbb0568-bb56-4323-a88a-90eedf950df9",
+    "_syncId": "e837f4c6-9e8a-4c27-9867-5e78b5d7fd92"
+  },
+  {
+    "name": "readMemberships",
+    "key": "readMemberships",
+    "type": "item-read",
+    "position_x": 1,
+    "position_y": 17,
+    "options": {
+      "collection": "memberships",
+      "query": {
+        "fields": [
+          "memberships_user"
+        ],
+        "filter": {
+          "id": {
+            "_in": "{{$trigger.body.keys}}"
+          }
+        }
+      }
+    },
+    "resolve": "e837f4c6-9e8a-4c27-9867-5e78b5d7fd92",
+    "reject": null,
+    "flow": "8dbb0568-bb56-4323-a88a-90eedf950df9",
+    "_syncId": "bdf8b75d-415a-47a0-9261-31f2bb62aa91"
+  },
+  {
+    "name": "readRole",
+    "key": "readRole",
+    "type": "item-read",
+    "position_x": 3,
+    "position_y": 21,
+    "options": {
+      "collection": "directus_roles",
+      "query": {
+        "filter": {
+          "name": {
+            "_eq": "collectivo_user"
+          }
+        }
+      }
+    },
+    "resolve": "bfeab56c-8447-48c6-865e-a6b79539e1ed",
+    "reject": null,
+    "flow": "6f8e46f6-890e-4519-9050-85de9dcce51a",
+    "_syncId": "2c4e9dc7-aaf7-445b-89ee-ebf02df1e375"
+  },
+  {
+    "name": "set_status_to_pending",
+    "key": "set_status_to_pending",
+    "type": "item-update",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "collection": "messages_campaigns",
+      "key": null,
+      "payload": {
+        "messages_campaign_status": "pending"
+      },
+      "query": {
+        "filter": {
+          "_and": [
+            {
+              "messages_campaign_status": {
+                "_eq": "draft"
+              }
+            },
+            {
+              "id": {
+                "_in": "{{$trigger.body.keys}}"
+              }
+            }
+          ]
+        }
+      },
+      "emitEvents": true,
+      "permissions": "$full"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "81c4b7ca-fc3b-4156-8ac3-06d8139ce53b",
+    "_syncId": "2db6b1d4-798f-4a86-b4df-bf6af84248b7"
+  }
+]

@@ -1,0 +1,102 @@
+{
+  "collection": "memberships",
+  "field": "memberships_status",
+  "type": "string",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": "labels",
+    "display_options": {
+      "choices": [
+        {
+          "text": "$t:approved",
+          "value": "approved",
+          "foreground": "#FFFFFF",
+          "background": "#2CB3A5"
+        },
+        {
+          "text": "$t:applied",
+          "value": "applied",
+          "foreground": "#FFFFFF",
+          "background": "#aa4abc"
+        },
+        {
+          "text": "$t:in-cancellation",
+          "value": "in-cancellation",
+          "foreground": "#FFFFFF",
+          "background": "#d94c4c"
+        },
+        {
+          "text": "$t:in-exclusion",
+          "value": "in-exclusion",
+          "foreground": "#FFFFFF",
+          "background": "#d94c4c"
+        },
+        {
+          "text": "$t:ended",
+          "value": "ended",
+          "foreground": "#FFFFFF",
+          "background": "#d94c4c"
+        }
+      ]
+    },
+    "field": "memberships_status",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown",
+    "note": "$t:memberships-status-note",
+    "options": {
+      "choices": [
+        {
+          "text": "$t:draft",
+          "value": "draft"
+        },
+        {
+          "text": "$t:applied",
+          "value": "applied"
+        },
+        {
+          "text": "$t:approved",
+          "value": "approved"
+        },
+        {
+          "text": "$t:in-cancellation",
+          "value": "in-cancellation"
+        },
+        {
+          "text": "$t:in-exclusion",
+          "value": "in-exclusion"
+        },
+        {
+          "text": "$t:ended",
+          "value": "ended"
+        }
+      ]
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 10,
+    "special": null,
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "memberships_status",
+    "table": "memberships",
+    "data_type": "character varying",
+    "default_value": "draft",
+    "max_length": 255,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

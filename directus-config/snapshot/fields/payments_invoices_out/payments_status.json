@@ -1,0 +1,107 @@
+{
+  "collection": "payments_invoices_out",
+  "field": "payments_status",
+  "type": "string",
+  "meta": {
+    "collection": "payments_invoices_out",
+    "conditions": null,
+    "display": "labels",
+    "display_options": {
+      "choices": [
+        {
+          "text": "$t:draft",
+          "value": "draft",
+          "foreground": "#FFFFFF",
+          "background": "#666666"
+        },
+        {
+          "text": "$t:pending",
+          "value": "pending",
+          "foreground": "#FFFFFF",
+          "background": "#CC6600"
+        },
+        {
+          "text": "$t:failed",
+          "value": "failed",
+          "foreground": "#FFFFFF",
+          "background": "#800000"
+        },
+        {
+          "text": "$t:cancelled",
+          "value": "cancelled",
+          "foreground": "#FFFFFF",
+          "background": "#8000FF"
+        },
+        {
+          "text": "$t:paid",
+          "value": "paid",
+          "foreground": "#FFFFFF",
+          "background": "#008000"
+        }
+      ]
+    },
+    "field": "payments_status",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown",
+    "note": null,
+    "options": {
+      "choices": [
+        {
+          "text": "$t:draft",
+          "value": "draft"
+        },
+        {
+          "text": "$t:pending",
+          "value": "pending"
+        },
+        {
+          "text": "$t:failed",
+          "value": "failed"
+        },
+        {
+          "text": "$t:cancelled",
+          "value": "cancelled"
+        },
+        {
+          "text": "$t:paid",
+          "value": "paid"
+        }
+      ]
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 10,
+    "special": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Status"
+      },
+      {
+        "language": "en-US",
+        "translation": "Status"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "payments_status",
+    "table": "payments_invoices_out",
+    "data_type": "character varying",
+    "default_value": "draft",
+    "max_length": 255,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}
