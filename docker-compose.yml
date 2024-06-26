@@ -7,7 +7,8 @@ services:
   collectivo:
     container_name: collectivo
     image: node:18-alpine
-    profiles: [production]
+    # profiles: [production]
+    command: "node app/.output/server/index.mjs"
     volumes:
       - ./collectivo:/app
     networks:
