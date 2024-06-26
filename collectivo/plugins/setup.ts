@@ -443,7 +443,7 @@ export default defineNuxtPlugin(() => {
     title: "MILA Membership Application",
     public: true,
     submitMode: "postNuxt",
-    submitPath: "/api/memberships/register",
+    submitPath: "/api/membership_application",
     submitLabel: "Submit application",
     beforeSubmit: async (data: any) => {
       if (data.shares_options === "normal") {

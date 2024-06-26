@@ -24,7 +24,7 @@
     "icon": "supervised_user_circle",
     "color": null,
     "description": null,
-    "status": "active",
+    "status": "inactive",
     "trigger": "event",
     "accountability": "all",
     "options": {
@@ -81,18 +81,18 @@
     "_syncId": "28c0f3c7-d900-4f6d-be60-da5a803be396"
   },
   {
-    "name": "mila_autotag_mitglied",
+    "name": "Membership Create & Update",
     "icon": "bolt",
-    "color": null,
+    "color": "#6644FF",
     "description": "Automatischer Mitglied Tag",
     "status": "active",
     "trigger": "event",
     "accountability": "all",
     "options": {
-      "type": "filter",
+      "type": "action",
       "scope": [
-        "items.update",
-        "items.create"
+        "items.create",
+        "items.update"
       ],
       "collections": [
         "memberships"
@@ -143,9 +143,9 @@
     "_syncId": "493c1260-3bb9-47e7-940d-115b8b0f1ccc"
   },
   {
-    "name": "collectivo_auth_update",
-    "icon": "bolt",
-    "color": null,
+    "name": "User Sync Keycloak",
+    "icon": "sync",
+    "color": "#6644FF",
     "description": null,
     "status": "active",
     "trigger": "event",
@@ -165,10 +165,10 @@
     "_syncId": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1"
   },
   {
-    "name": "collectivo_user_create",
-    "icon": "bolt",
-    "color": null,
-    "description": null,
+    "name": "User Create Access",
+    "icon": "person_add",
+    "color": "#6644FF",
+    "description": "Set default role & keycloak provider",
     "status": "active",
     "trigger": "event",
     "accountability": "all",
@@ -270,10 +270,10 @@
     "_syncId": "9ee2e72d-ca7e-4c4b-ab18-97abfd062ddf"
   },
   {
-    "name": "collectivo_sync_tags",
-    "icon": "bolt",
-    "color": null,
-    "description": null,
+    "name": "Groups Update Sync Keycloak",
+    "icon": "sync",
+    "color": "#6644FF",
+    "description": "Gruppen mit Keycloak synchronisieren",
     "status": "active",
     "trigger": "event",
     "accountability": "all",

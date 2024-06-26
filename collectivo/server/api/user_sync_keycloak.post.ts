@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
   try {
     return await syncKeycloakUser(event);
   } catch (e) {
-    console.error(e);
+    console.error("Error in auth.patch.ts", e);
     throw e;
   }
 });

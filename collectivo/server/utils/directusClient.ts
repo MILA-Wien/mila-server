@@ -26,9 +26,17 @@ export async function refreshDirectus() {
 
 // Return Directus admin client for server plugins
 export async function useDirectusAdmin() {
-  if (directus === undefined) {
-    await refreshDirectus();
-  }
+  const config = useRuntimeConfig();
+
+  directus = createDirectus(config.public.directusUrl)
+    .with(authentication())
+    .with(rest());
+
+  await directus.login(
+    config.directusAdminEmail,
+    config.directusAdminPassword,
+    {},
+  );
 
   return directus;
 }

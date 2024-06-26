@@ -1,11 +1,9 @@
 import {
   createItem,
-  readItems,
   createUser,
   updateUser,
   readUsers,
   deleteUser,
-  deleteItem,
   createDirectus,
   readMe,
   withToken,
@@ -18,7 +16,8 @@ async function getUserID(event: any) {
   const config = useRuntimeConfig();
   const directusUser = createDirectus(config.public.directusUrl).with(rest());
 
-  if (token) {
+  if (token && token.includes("directus_session_token=")) {
+    console.log("Token: " + token);
     const tokenValue = token.split("directus_session_token=")[1].split(";")[0];
 
     try {

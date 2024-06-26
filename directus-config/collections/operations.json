@@ -37,20 +37,6 @@
     "name": "Check if active",
     "key": "check_if_active",
     "type": "exec",
-    "position_x": 39,
-    "position_y": 19,
-    "options": {
-      "code": "module.exports = async function(data) {\n\t// Do something...\n    if (data[\"read_automation\"][0][\"mila_active\"] != true) {\n        throw new Error(\"Automation not active\")\n    }\n\treturn {};\n}"
-    },
-    "resolve": "0353178c-e17a-4cd8-977f-406d271ec4c7",
-    "reject": null,
-    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
-    "_syncId": "486a5eb1-f379-4d7e-905b-d605170c5660"
-  },
-  {
-    "name": "Check if active",
-    "key": "check_if_active",
-    "type": "exec",
     "position_x": 22,
     "position_y": 37,
     "options": {
@@ -74,6 +60,20 @@
     "reject": null,
     "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
     "_syncId": "2b930398-56f4-4094-9d50-62ad6616117c"
+  },
+  {
+    "name": "Check if active",
+    "key": "check_if_active",
+    "type": "exec",
+    "position_x": 39,
+    "position_y": 19,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t// Do something...\n    if (data[\"read_automation\"][0][\"mila_active\"] != true) {\n        throw new Error(\"Automation not active\")\n    }\n\treturn {};\n}"
+    },
+    "resolve": "0353178c-e17a-4cd8-977f-406d271ec4c7",
+    "reject": null,
+    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
+    "_syncId": "486a5eb1-f379-4d7e-905b-d605170c5660"
   },
   {
     "name": "Check if payload is status approved",
@@ -171,6 +171,29 @@
     "name": "Create campaign",
     "key": "create_campaign",
     "type": "item-create",
+    "position_x": 6,
+    "position_y": 53,
+    "options": {
+      "payload": {
+        "messages_template": "{{read_automation[0].mila_template}}",
+        "messages_recipients": {
+          "create": "{{user_ids.user_ids}}"
+        },
+        "messages_campaign_status": "pending"
+      },
+      "emitEvents": true,
+      "permissions": "$full",
+      "collection": "messages_campaigns"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
+    "_syncId": "b9edf53d-de5a-4f62-b76b-fb4ec074d96f"
+  },
+  {
+    "name": "Create campaign",
+    "key": "create_campaign",
+    "type": "item-create",
     "position_x": 10,
     "position_y": 55,
     "options": {
@@ -218,29 +241,6 @@
     "reject": null,
     "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
     "_syncId": "0353178c-e17a-4cd8-977f-406d271ec4c7"
-  },
-  {
-    "name": "Create campaign",
-    "key": "create_campaign",
-    "type": "item-create",
-    "position_x": 6,
-    "position_y": 53,
-    "options": {
-      "payload": {
-        "messages_template": "{{read_automation[0].mila_template}}",
-        "messages_recipients": {
-          "create": "{{user_ids.user_ids}}"
-        },
-        "messages_campaign_status": "pending"
-      },
-      "emitEvents": true,
-      "permissions": "$full",
-      "collection": "messages_campaigns"
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
-    "_syncId": "b9edf53d-de5a-4f62-b76b-fb4ec074d96f"
   },
   {
     "name": "Create message record",
@@ -368,7 +368,7 @@
   },
   {
     "name": "Skript ausführen",
-    "key": "exec_1m79g",
+    "key": "exec_1p2yn",
     "type": "exec",
     "position_x": 37,
     "position_y": 17,
@@ -378,7 +378,7 @@
     "resolve": null,
     "reject": null,
     "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
-    "_syncId": "e81d8fc2-4fb7-4e68-b823-95835f90c27d"
+    "_syncId": "c5485f09-f7da-4912-a005-c505ea996de6"
   },
   {
     "name": "Skript ausführen",
@@ -404,7 +404,7 @@
       "code": "module.exports = async function(data) {    \n    const attrs = [\"email\", \"password\", \"first_name\", \"last_name\"];\n    if (data[\"$trigger\"][\"event\"]==\"users.delete\"){       \n        return {\n            \"true\": true \n        };\n    }\n    else if (!attrs.some(attr => attr in data[\"$trigger\"].payload)){        \n        throw new Error(\"No important change\");   \n    };\n    return {    \t\n        \"true\": true    \n    };\n}"
     },
     "resolve": "0c188aa8-7df4-4fea-bd78-23758e8a9013",
-    "reject": "e81d8fc2-4fb7-4e68-b823-95835f90c27d",
+    "reject": "c5485f09-f7da-4912-a005-c505ea996de6",
     "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
     "_syncId": "fdb6da80-fa90-4f76-8d09-bf653ded0f32"
   },
@@ -612,32 +612,10 @@
     "name": "postToNuxtAPI",
     "key": "post_to_nuxt_api",
     "type": "request",
-    "position_x": 37,
-    "position_y": 1,
-    "options": {
-      "method": "PATCH",
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/collectivo/auth",
-      "headers": [
-        {
-          "header": "Authorization",
-          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
-        }
-      ],
-      "body": "{{$trigger}}"
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
-    "_syncId": "0c188aa8-7df4-4fea-bd78-23758e8a9013"
-  },
-  {
-    "name": "postToNuxtAPI",
-    "key": "post_to_nuxt_api",
-    "type": "request",
     "position_x": 19,
     "position_y": 1,
     "options": {
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/collectivo/user",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/user_create",
       "method": "POST",
       "body": "{{$trigger}}",
       "headers": [
@@ -653,6 +631,28 @@
     "_syncId": "ad799be4-d215-4375-97d7-6308e05f46f4"
   },
   {
+    "name": "postToNuxtAPI",
+    "key": "post_to_nuxt_api",
+    "type": "request",
+    "position_x": 37,
+    "position_y": 1,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/user_sync_keycloak",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{{$trigger}}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
+    "_syncId": "0c188aa8-7df4-4fea-bd78-23758e8a9013"
+  },
+  {
     "name": "prepareRecipients",
     "key": "prepareRecipients",
     "type": "exec",
@@ -665,6 +665,28 @@
     "reject": null,
     "flow": "9ee2e72d-ca7e-4c4b-ab18-97abfd062ddf",
     "_syncId": "c6b1bdc0-86e7-4523-908b-d00c06bc84b7"
+  },
+  {
+    "name": "Read Automation",
+    "key": "read_automation",
+    "type": "item-read",
+    "position_x": 4,
+    "position_y": 37,
+    "options": {
+      "collection": "mila_automations",
+      "query": {
+        "filter": {
+          "mila_key": {
+            "_eq": "invoice_update_paid"
+          }
+        }
+      },
+      "permissions": "$full"
+    },
+    "resolve": "91a893aa-5e01-4460-8bbb-83b2adcef6fb",
+    "reject": null,
+    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
+    "_syncId": "60b0542a-cba8-4e5f-bea8-b45e79c7c09e"
   },
   {
     "name": "Read Automation",
@@ -708,28 +730,6 @@
     "reject": null,
     "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
     "_syncId": "f241b35f-f3ba-47d8-a044-c9a3ddaa8ce8"
-  },
-  {
-    "name": "Read Automation",
-    "key": "read_automation",
-    "type": "item-read",
-    "position_x": 4,
-    "position_y": 37,
-    "options": {
-      "collection": "mila_automations",
-      "query": {
-        "filter": {
-          "mila_key": {
-            "_eq": "invoice_update_paid"
-          }
-        }
-      },
-      "permissions": "$full"
-    },
-    "resolve": "91a893aa-5e01-4460-8bbb-83b2adcef6fb",
-    "reject": null,
-    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
-    "_syncId": "60b0542a-cba8-4e5f-bea8-b45e79c7c09e"
   },
   {
     "name": "read_campaign_data",
@@ -999,7 +999,7 @@
     "position_y": 1,
     "options": {
       "method": "POST",
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/collectivo/roles",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/groups_sync_keycloak",
       "headers": [
         {
           "header": "Authorization",
@@ -1021,7 +1021,7 @@
     "position_y": 1,
     "options": {
       "method": "POST",
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/mila/mitgliedtag",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/membership_changed",
       "headers": [
         {
           "header": "Authorization",

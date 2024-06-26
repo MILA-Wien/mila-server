@@ -1,27 +1,19 @@
 import { createItem, readItem, readItems, deleteItem } from "@directus/sdk";
 
-const mitgliedstagID = 43;
+const memberStatuses = ["approved", "in-exclusion", "in-cancellation"];
+const notMemberStatuses = ["draft", "applied", "ended"];
 
 export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig();
-  console.log("Autotag Mitglied");
-
-  if (config.public.authService !== "keycloak") {
-    return;
-  }
-
-  try {
-    await refreshDirectus();
-  } catch (e) {
-    logger.error("Failed to connect to Directus", e);
-  }
-
   verifyCollectivoApiToken(event);
   const body = await readBody(event);
 
   body.keys = body.keys || [body.key];
 
-  if (!("memberships_status" in body.payload)) {
+  if (
+    !("memberships_status" in body.payload) ||
+    (body.event.includes(".create") &&
+      notMemberStatuses.includes(body.payload.memberships_status))
+  ) {
     return;
   }
 
@@ -37,10 +29,24 @@ async function assignTag(body: any, membership: string) {
   );
   const userID = mship.memberships_user;
 
-  const memberStatuses = ["approved", "in-exclusion", "in-cancellation"];
-  const notMemberStatuses = ["draft", "applied", "ended"];
+  const mitgliedstagIDs = await directus.request(
+    readItems("collectivo_tags", {
+      filter: {
+        tags_name: {
+          _eq: "Mitglied",
+        },
+      },
+    }),
+  );
 
-  const extags = await directus.request(
+  if (mitgliedstagIDs.length < 1) {
+    console.log("Mitglied tag not found");
+    return;
+  }
+
+  const mitgliedstagID = mitgliedstagIDs[0].id;
+
+  const existing_tag_assignments = await directus.request(
     readItems("collectivo_tags_directus_users", {
       filter: {
         collectivo_tags_id: {
@@ -53,20 +59,21 @@ async function assignTag(body: any, membership: string) {
     }),
   );
 
-  if (memberStatuses.includes(body.payload.memberships_status) && !extags) {
+  if (
+    memberStatuses.includes(body.payload.memberships_status) &&
+    existing_tag_assignments.length == 0
+  ) {
     await directus.request(
       createItem("collectivo_tags_directus_users", {
         collectivo_tags_id: mitgliedstagID,
         directus_users_id: userID,
       }),
     );
-    console.log("Mitglied tag assigned");
   } else if (notMemberStatuses.includes(body.payload.memberships_status)) {
-    for (const tag of extags) {
+    for (const tag of existing_tag_assignments) {
       await directus.request(
         deleteItem("collectivo_tags_directus_users", tag.id),
       );
-      console.log("Mitglied tag removed");
     }
   }
 }
