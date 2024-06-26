@@ -72,9 +72,8 @@ async function onSubmit(data: any) {
 
 <template>
   <CollectivoContainer v-if="form">
-    <!-- !submitted" -->
     <CollectivoFormBuilder
-      v-if="true"
+      v-if="!submitted"
       :fields="form.fields"
       :submit="onSubmit"
       :submit-label="form.submitLabel"

@@ -28,14 +28,14 @@ To update collectivo, run
 - `git pull`
 - `pnpm i`
 - `pnpm build`
-- `docker compose up -d`
+- `docker compose restart collectivo`
 
 ## Maintenance
 
 Update packages
 
 - `cd collectivo`
-- `pnpm up --latest
+- `pnpm up --latest`
 
 ## Change database schemas
 
