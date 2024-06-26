@@ -22,6 +22,14 @@ Server config of MILA Mitmach-Supermarkt e.G.
 - Run `pnpm i` and `pnpm build`
 - Run `docker compose up -d`
 
+To update collectivo, run
+
+- Create a database backup (see below)
+- `git pull`
+- `pnpm i`
+- `pnpm build`
+- `docker compose up -d`
+
 ## Database backups
 
 Backups are created automatically for `directus-db` and `keycloak-db`, using [`postgres-backup-local`](https://github.com/prodrigestivill/docker-postgres-backup-local?tab=readme-ov-file#how-the-backups-folder-works). The backups can be found in the directories `directus-db-backups` and `keycloak-db-backups`.
@@ -29,7 +37,7 @@ Backups are created automatically for `directus-db` and `keycloak-db`, using [`p
 To run a manual backup, run:
 
 ```sh
-docker-compose exec directus-db-backups /backup.sh
+docker compose exec directus-db-backups /backup.sh
 ```
 
 A new backup will be saved in `directus-db-backups/last/directus-XXXXXXXX-XXXXXX.sql.gz`.
