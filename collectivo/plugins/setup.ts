@@ -131,14 +131,14 @@ export default defineNuxtPlugin(() => {
     },
   };
 
-  const is_legal = [
+  const is_legal_profile = [
     {
       key: "memberships_person_type",
       value: "legal",
     },
   ];
 
-  const is_natural = [
+  const is_natural_profile = [
     {
       key: "memberships_person_type",
       value: "natural",
@@ -230,7 +230,7 @@ export default defineNuxtPlugin(() => {
       type: "section",
       order: 400,
       title: "Personal data",
-      conditions: is_natural,
+      conditions: is_natural_profile,
     },
     {
       type: "select",
@@ -296,7 +296,7 @@ export default defineNuxtPlugin(() => {
       type: "text",
       order: 450,
       required: true,
-      conditions: is_natural,
+      conditions: is_natural_profile,
       icon: "i-heroicons-briefcase",
     },
     {
@@ -306,19 +306,19 @@ export default defineNuxtPlugin(() => {
       order: 460,
       width: "lg",
       required: true,
-      conditions: is_natural,
+      conditions: is_natural_profile,
     },
     {
       type: "section",
       order: 500,
       title: "Address",
-      conditions: is_natural,
+      conditions: is_natural_profile,
     },
     {
       type: "section",
       order: 501,
       title: "Organization address",
-      conditions: is_legal,
+      conditions: is_legal_profile,
     },
     {
       label: "Street",
@@ -376,6 +376,20 @@ export default defineNuxtPlugin(() => {
   user.value.fields.push(...profileInputs);
 
   const form = useMembershipsRegistrationForm();
+
+  const is_legal = [
+    {
+      key: "directus_users__memberships_person_type",
+      value: "legal",
+    },
+  ];
+
+  const is_natural = [
+    {
+      key: "directus_users__memberships_person_type",
+      value: "natural",
+    },
+  ];
 
   const is_sepa = [
     {
