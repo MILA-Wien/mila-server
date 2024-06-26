@@ -11,22 +11,15 @@
     "group": null,
     "hidden": false,
     "interface": "select-dropdown-m2o",
-    "note": "The tile will not be shown if this tag is present.",
+    "note": null,
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 42,
-    "special": null,
-    "translations": [
-      {
-        "language": "en-US",
-        "translation": "Tag blocked"
-      },
-      {
-        "language": "de-DE",
-        "translation": "Blockierter tag"
-      }
+    "sort": 14,
+    "special": [
+      "m2o"
     ],
+    "translations": null,
     "validation": null,
     "validation_message": null,
     "width": "full"

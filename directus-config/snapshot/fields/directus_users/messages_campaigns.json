@@ -21,10 +21,6 @@
     ],
     "translations": [
       {
-        "language": "en-US",
-        "translation": "Campaigns"
-      },
-      {
         "language": "de-DE",
         "translation": "Kampagnen"
       }

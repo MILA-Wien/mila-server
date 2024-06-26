@@ -1,44 +1,33 @@
 {
-  "collection": "messages_designs",
-  "field": "messages_design_html",
-  "type": "text",
+  "collection": "mila_automations",
+  "field": "mila_label",
+  "type": "string",
   "meta": {
-    "collection": "messages_designs",
+    "collection": "mila_automations",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "messages_design_html",
+    "field": "mila_label",
     "group": null,
     "hidden": false,
-    "interface": "input-code",
+    "interface": "input",
     "note": null,
-    "options": {
-      "language": "htmlmixed"
-    },
+    "options": null,
     "readonly": false,
-    "required": false,
-    "sort": 7,
+    "required": true,
+    "sort": 6,
     "special": null,
-    "translations": [
-      {
-        "language": "en-US",
-        "translation": "HTML"
-      },
-      {
-        "language": "de-DE",
-        "translation": "HTML"
-      }
-    ],
+    "translations": null,
     "validation": null,
     "validation_message": null,
     "width": "full"
   },
   "schema": {
-    "name": "messages_design_html",
-    "table": "messages_designs",
-    "data_type": "text",
+    "name": "mila_label",
+    "table": "mila_automations",
+    "data_type": "character varying",
     "default_value": null,
-    "max_length": null,
+    "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,
     "is_nullable": true,

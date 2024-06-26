@@ -5,17 +5,8 @@
   "meta": {
     "collection": "memberships",
     "conditions": null,
-    "display": "labels",
-    "display_options": {
-      "choices": [
-        {
-          "text": "$t:Normal membership",
-          "value": "normal",
-          "foreground": "#FFFFFF",
-          "background": "#2CB3A5"
-        }
-      ]
-    },
+    "display": null,
+    "display_options": null,
     "field": "memberships_type",
     "group": null,
     "hidden": false,
@@ -24,23 +15,27 @@
     "options": {
       "choices": [
         {
-          "text": "$t:Normal membership",
-          "value": "normal"
+          "text": "Aktiv",
+          "value": "Aktiv",
+          "icon": "shopping_cart",
+          "color": "#2ECDA7"
+        },
+        {
+          "text": "Investierend",
+          "value": "Investierend",
+          "icon": "payments",
+          "color": "#FFA439"
         }
       ]
     },
     "readonly": false,
-    "required": false,
-    "sort": 10,
+    "required": true,
+    "sort": 3,
     "special": null,
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Art"
-      },
-      {
-        "language": "en-US",
-        "translation": "Type"
+        "translation": "Mitgliedstyp"
       }
     ],
     "validation": null,
@@ -51,7 +46,7 @@
     "name": "memberships_type",
     "table": "memberships",
     "data_type": "character varying",
-    "default_value": "normal",
+    "default_value": null,
     "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,

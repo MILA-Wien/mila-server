@@ -17,7 +17,7 @@
     "options": null,
     "readonly": false,
     "required": true,
-    "sort": 20,
+    "sort": 1,
     "special": [
       "m2o"
     ],

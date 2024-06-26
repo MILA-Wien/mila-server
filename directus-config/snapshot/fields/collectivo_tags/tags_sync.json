@@ -11,11 +11,11 @@
     "group": null,
     "hidden": false,
     "interface": "boolean",
-    "note": "Synchronize this tag with Keycloak.",
+    "note": null,
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 30,
+    "sort": 31,
     "special": [
       "cast-boolean"
     ],
@@ -28,7 +28,7 @@
     "name": "tags_sync",
     "table": "collectivo_tags",
     "data_type": "boolean",
-    "default_value": null,
+    "default_value": false,
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,

@@ -1,9 +1,9 @@
 {
-  "collection": "messages_designs",
+  "collection": "mila_automations",
   "field": "date_updated",
   "type": "timestamp",
   "meta": {
-    "collection": "messages_designs",
+    "collection": "mila_automations",
     "conditions": null,
     "display": "datetime",
     "display_options": {
@@ -28,7 +28,7 @@
   },
   "schema": {
     "name": "date_updated",
-    "table": "messages_designs",
+    "table": "mila_automations",
     "data_type": "timestamp with time zone",
     "default_value": null,
     "max_length": null,

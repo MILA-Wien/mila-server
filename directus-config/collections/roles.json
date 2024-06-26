@@ -1,13 +1,23 @@
 [
   {
-    "name": "collectivo_admin",
+    "name": "Vorstand",
+    "icon": "supervised_user_circle",
+    "description": null,
+    "ip_access": null,
+    "enforce_tfa": false,
+    "admin_access": false,
+    "app_access": true,
+    "_syncId": "85affc9c-9e79-4c6a-b8e2-11d32328c334"
+  },
+  {
+    "name": "aaron_admin",
     "icon": "supervised_user_circle",
     "description": null,
     "ip_access": null,
     "enforce_tfa": false,
     "admin_access": true,
     "app_access": true,
-    "_syncId": "7facae6d-30c8-44fd-91ab-55a0c6d26b51"
+    "_syncId": "be21c983-36bd-447b-b74c-893ec9a6abc4"
   },
   {
     "name": "collectivo_editor",
@@ -17,7 +27,7 @@
     "enforce_tfa": false,
     "admin_access": false,
     "app_access": true,
-    "_syncId": "e350f55f-2e7d-4661-87dc-7e014df13fab"
+    "_syncId": "c5a40dad-70d5-4586-9151-1dacac5677b1"
   },
   {
     "name": "collectivo_user",
@@ -27,6 +37,26 @@
     "enforce_tfa": false,
     "admin_access": false,
     "app_access": false,
-    "_syncId": "ecc84989-5bcf-43f4-92a3-f72e049975cc"
+    "_syncId": "e600443a-e943-4061-b7c5-30482fca92ad"
+  },
+  {
+    "name": "Lesezugriff Mitglieder",
+    "icon": "menu_book",
+    "description": null,
+    "ip_access": null,
+    "enforce_tfa": false,
+    "admin_access": false,
+    "app_access": true,
+    "_syncId": "ecc860e3-b05e-4280-ad01-95c77ec69a01"
+  },
+  {
+    "name": "collectivo_admin",
+    "icon": "supervised_user_circle",
+    "description": null,
+    "ip_access": null,
+    "enforce_tfa": false,
+    "admin_access": true,
+    "app_access": true,
+    "_syncId": "f51856b0-ec8f-48c5-948f-7f05934dfc20"
   }
 ]

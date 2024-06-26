@@ -15,11 +15,16 @@
     "options": null,
     "readonly": false,
     "required": true,
-    "sort": 5,
+    "sort": 108,
     "special": [
       "cast-boolean"
     ],
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Öffentlichkeitsarbeit"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"
@@ -32,7 +37,7 @@
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
-    "is_nullable": false,
+    "is_nullable": true,
     "is_unique": false,
     "is_primary_key": false,
     "is_generated": false,

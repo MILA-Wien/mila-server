@@ -30,6 +30,21 @@ To update collectivo, run
 - `pnpm build`
 - `docker compose up -d`
 
+## Maintenance
+
+Update packages
+
+- `cd collectivo`
+- `pnpm up --latest
+
+## Change database schemas
+
+- Make changes to the local system
+- Run `npx directus-sync pull` to update the database schema
+- Make a database backup of the live system (see below)
+- Run `npx directus-sync push -u "https://studio.mila.wien" -e "<EMAIL>" -p "<PASSWORD>"` to apply the database schema to the live system
+- See https://github.com/tractr/directus-sync for more infos
+
 ## Database backups
 
 Backups are created automatically for `directus-db` and `keycloak-db`, using [`postgres-backup-local`](https://github.com/prodrigestivill/docker-postgres-backup-local?tab=readme-ov-file#how-the-backups-folder-works). The backups can be found in the directories `directus-db-backups` and `keycloak-db-backups`.
@@ -54,7 +69,7 @@ Notes:
 - Alternatively to using `postgres-backup-local`, you can also create a backup as follows:
   - Run `docker compose exec directus-db sh`
   - Then run `pg_dump --clean -U directus directus > backups/my-manual-backup.sql`
-- To reset the database before restoring a backup
+- To reset the database before restoring a backup (this will delete the data!)
   - Delete the container & volume and then start the container agein
   - To remove the volume, you need to use `docker volume rm`, as `docker compose rm -v` does not work.
   - Do not start directus before restoring the backup as it will start migrations on an empty db.

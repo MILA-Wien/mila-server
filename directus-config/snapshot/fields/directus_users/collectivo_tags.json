@@ -19,7 +19,12 @@
     "special": [
       "m2m"
     ],
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Tags"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"

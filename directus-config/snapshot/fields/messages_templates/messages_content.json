@@ -10,9 +10,26 @@
     "field": "messages_content",
     "group": null,
     "hidden": false,
-    "interface": "input-multiline",
+    "interface": "input-rich-text-html",
     "note": null,
-    "options": null,
+    "options": {
+      "toolbar": [
+        "blockquote",
+        "bold",
+        "bullist",
+        "code",
+        "customLink",
+        "fullscreen",
+        "h1",
+        "h2",
+        "h3",
+        "hr",
+        "italic",
+        "numlist",
+        "removeformat",
+        "underline"
+      ]
+    },
     "readonly": false,
     "required": false,
     "sort": 11,

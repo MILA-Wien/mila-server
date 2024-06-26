@@ -1,13 +1,13 @@
 {
-  "collection": "messages_templates",
-  "field": "messages_design",
+  "collection": "mila_automations",
+  "field": "mila_template",
   "type": "integer",
   "meta": {
-    "collection": "messages_templates",
+    "collection": "mila_automations",
     "conditions": null,
-    "display": "raw",
+    "display": null,
     "display_options": null,
-    "field": "messages_design",
+    "field": "mila_template",
     "group": null,
     "hidden": false,
     "interface": "select-dropdown-m2o",
@@ -16,15 +16,17 @@
     "readonly": false,
     "required": false,
     "sort": 8,
-    "special": null,
+    "special": [
+      "m2o"
+    ],
     "translations": null,
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "messages_design",
-    "table": "messages_templates",
+    "name": "mila_template",
+    "table": "mila_automations",
     "data_type": "integer",
     "default_value": null,
     "max_length": null,
@@ -36,7 +38,7 @@
     "is_generated": false,
     "generation_expression": null,
     "has_auto_increment": false,
-    "foreign_key_table": "messages_designs",
+    "foreign_key_table": "messages_templates",
     "foreign_key_column": "id"
   }
 }

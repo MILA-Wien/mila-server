@@ -11,22 +11,15 @@
     "group": null,
     "hidden": false,
     "interface": "select-dropdown-m2o",
-    "note": "The tile will only be shown if this tag is present.",
+    "note": null,
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 41,
-    "special": null,
-    "translations": [
-      {
-        "language": "en-US",
-        "translation": "Tag required"
-      },
-      {
-        "language": "de-DE",
-        "translation": "Notwendiger tag"
-      }
+    "sort": 13,
+    "special": [
+      "m2o"
     ],
+    "translations": null,
     "validation": null,
     "validation_message": null,
     "width": "full"

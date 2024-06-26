@@ -54,16 +54,7 @@
     "required": false,
     "sort": 10,
     "special": null,
-    "translations": [
-      {
-        "language": "en-US",
-        "translation": "Status"
-      },
-      {
-        "language": "de-DE",
-        "translation": "Status"
-      }
-    ],
+    "translations": null,
     "validation": null,
     "validation_message": null,
     "width": "full"
@@ -76,7 +67,7 @@
     "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,
-    "is_nullable": true,
+    "is_nullable": false,
     "is_unique": false,
     "is_primary_key": false,
     "is_generated": false,

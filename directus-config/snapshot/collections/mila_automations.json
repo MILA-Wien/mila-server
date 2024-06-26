@@ -1,41 +1,35 @@
 {
-  "collection": "messages_designs",
+  "collection": "mila_automations",
   "meta": {
     "accountability": "all",
     "archive_app_filter": true,
     "archive_field": null,
     "archive_value": null,
     "collapse": "open",
-    "collection": "messages_designs",
+    "collection": "mila_automations",
     "color": null,
-    "display_template": "{{messages_design_name}}",
+    "display_template": null,
     "group": "messages",
     "hidden": false,
-    "icon": "design_services",
+    "icon": "keyboard_double_arrow_right",
     "item_duplication_fields": null,
     "note": null,
     "preview_url": null,
     "singleton": false,
-    "sort": 90,
+    "sort": 4,
     "sort_field": null,
     "translations": [
       {
-        "language": "en-US",
-        "translation": "Designs",
-        "singular": "Design",
-        "plural": "Designs"
-      },
-      {
         "language": "de-DE",
-        "translation": "Designs",
-        "singular": "Design",
-        "plural": "Designs"
+        "translation": "Automatisierungen",
+        "singular": "Automatisierung",
+        "plural": "Automatisierungen"
       }
     ],
     "unarchive_value": null,
     "versioning": false
   },
   "schema": {
-    "name": "messages_designs"
+    "name": "mila_automations"
   }
 }

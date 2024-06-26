@@ -10,21 +10,17 @@
     "field": "payments_description",
     "group": null,
     "hidden": false,
-    "interface": null,
+    "interface": "input",
     "note": null,
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 3,
+    "sort": 10,
     "special": null,
     "translations": [
       {
-        "language": "en-US",
-        "translation": "Description"
-      },
-      {
         "language": "de-DE",
-        "translation": "Bezeichnung"
+        "translation": "Beschreibung"
       }
     ],
     "validation": null,

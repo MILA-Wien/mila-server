@@ -22,7 +22,7 @@
     },
     "readonly": false,
     "required": true,
-    "sort": 7,
+    "sort": 2,
     "special": null,
     "translations": [
       {
@@ -42,7 +42,7 @@
     "name": "messages_method",
     "table": "messages_templates",
     "data_type": "character varying",
-    "default_value": "email",
+    "default_value": null,
     "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,

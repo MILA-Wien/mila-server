@@ -1,39 +1,30 @@
 {
-  "collection": "messages_messages",
-  "field": "messages_error_message",
+  "collection": "payments_invoices_out",
+  "field": "lotzapp_id",
   "type": "string",
   "meta": {
-    "collection": "messages_messages",
+    "collection": "payments_invoices_out",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "messages_error_message",
+    "field": "lotzapp_id",
     "group": null,
     "hidden": false,
-    "interface": null,
+    "interface": "input",
     "note": null,
     "options": null,
     "readonly": false,
-    "required": true,
-    "sort": 1,
+    "required": false,
+    "sort": 16,
     "special": null,
-    "translations": [
-      {
-        "language": "en-US",
-        "translation": "Error message"
-      },
-      {
-        "language": "de-DE",
-        "translation": "Fehlermeldung"
-      }
-    ],
+    "translations": null,
     "validation": null,
     "validation_message": null,
     "width": "full"
   },
   "schema": {
-    "name": "messages_error_message",
-    "table": "messages_messages",
+    "name": "lotzapp_id",
+    "table": "payments_invoices_out",
     "data_type": "character varying",
     "default_value": null,
     "max_length": 255,

@@ -1,0 +1,25 @@
+{
+  "collection": "payments_invoices_out",
+  "field": "memberships_membership",
+  "related_collection": "memberships",
+  "meta": {
+    "junction_field": null,
+    "many_collection": "payments_invoices_out",
+    "many_field": "memberships_membership",
+    "one_allowed_collections": null,
+    "one_collection": "memberships",
+    "one_collection_field": null,
+    "one_deselect_action": "nullify",
+    "one_field": "memberships_invoices",
+    "sort_field": null
+  },
+  "schema": {
+    "table": "payments_invoices_out",
+    "column": "memberships_membership",
+    "foreign_key_table": "memberships",
+    "foreign_key_column": "id",
+    "constraint_name": "payments_invoices_out_memberships_membership_foreign",
+    "on_update": "NO ACTION",
+    "on_delete": "SET NULL"
+  }
+}

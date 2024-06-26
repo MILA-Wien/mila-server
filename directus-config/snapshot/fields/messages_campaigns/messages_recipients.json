@@ -29,16 +29,7 @@
     "special": [
       "m2m"
     ],
-    "translations": [
-      {
-        "language": "en-US",
-        "translation": "Recipients"
-      },
-      {
-        "language": "de-DE",
-        "translation": "Empfänger*innen"
-      }
-    ],
+    "translations": null,
     "validation": null,
     "validation_message": null,
     "width": "full"

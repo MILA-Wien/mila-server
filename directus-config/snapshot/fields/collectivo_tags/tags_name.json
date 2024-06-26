@@ -20,11 +20,11 @@
     "translations": [
       {
         "language": "en-US",
-        "translation": "Name"
+        "translation": "Tag Name"
       },
       {
         "language": "de-DE",
-        "translation": "Name"
+        "translation": "Tag Name"
       }
     ],
     "validation": null,
@@ -39,7 +39,7 @@
     "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,
-    "is_nullable": true,
+    "is_nullable": false,
     "is_unique": true,
     "is_primary_key": false,
     "is_generated": false,

@@ -16,22 +16,266 @@
     },
     "resolve": null,
     "reject": null,
-    "flow": "6f8e46f6-890e-4519-9050-85de9dcce51a",
-    "_syncId": "bfeab56c-8447-48c6-865e-a6b79539e1ed"
+    "flow": "1496bf80-5a7f-4218-97b6-ee9bfafe2d3e",
+    "_syncId": "f6ff8f73-2405-41a9-acee-1365b411e163"
   },
   {
-    "name": "Run Script",
-    "key": "continue",
+    "name": "calcShares",
+    "key": "calcShares",
     "type": "exec",
-    "position_x": 30,
+    "position_x": 3,
+    "position_y": 38,
+    "options": {
+      "code": "module.exports = async function(data) {\n\tconsole.log(\"calcShares\")\n    let sharesInvoiced = 0\n    console.log(data[\"readSharesEntries\"])\n    for (i in data[\"readSharesEntries\"]) {\n        entry = data[\"readSharesEntries\"][i]\n        console.log(\"entry\", entry)\n    \tsharesInvoiced = sharesInvoiced + entry.payments_quantity\n\t}\n\tsharesTotal = data[\"$trigger\"].payload.memberships_shares\n\tsharesToBeInvoiced = sharesTotal - sharesInvoiced\n\tconsole.log(\"sharesToBeInvoiced\", sharesToBeInvoiced)\n\treturn {sharesToBeInvoiced};\n}"
+    },
+    "resolve": "62270ee8-3614-45dd-96a7-b8b2d6e10493",
+    "reject": null,
+    "flow": "f714c75a-e78a-4c80-9b4d-4b39943d6444",
+    "_syncId": "427cd01e-36f0-4e42-b525-48cd6fcbab28"
+  },
+  {
+    "name": "Check if active",
+    "key": "check_if_active",
+    "type": "exec",
+    "position_x": 39,
     "position_y": 19,
     "options": {
-      "code": "module.exports = async function(data) {\n\t// Do something...\n\treturn {\n    \t\"true\": true\n    };\n}"
+      "code": "module.exports = async function(data) {\n\t// Do something...\n    if (data[\"read_automation\"][0][\"mila_active\"] != true) {\n        throw new Error(\"Automation not active\")\n    }\n\treturn {};\n}"
+    },
+    "resolve": "0353178c-e17a-4cd8-977f-406d271ec4c7",
+    "reject": null,
+    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
+    "_syncId": "486a5eb1-f379-4d7e-905b-d605170c5660"
+  },
+  {
+    "name": "Check if active",
+    "key": "check_if_active",
+    "type": "exec",
+    "position_x": 22,
+    "position_y": 37,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t// Do something...\n    if (data[\"read_automation\"][0][\"mila_active\"] != true) {\n        throw new Error(\"Automation not active\")\n    }\n\treturn {};\n}"
+    },
+    "resolve": "a1519dc1-5cce-4b7c-b64d-91397844174c",
+    "reject": null,
+    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
+    "_syncId": "91a893aa-5e01-4460-8bbb-83b2adcef6fb"
+  },
+  {
+    "name": "Check if active",
+    "key": "check_if_active",
+    "type": "exec",
+    "position_x": 22,
+    "position_y": 35,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t// Do something...\n    if (data[\"read_automation\"][0][\"mila_active\"] != true) {\n        throw new Error(\"Automation not active\")\n    }\n\treturn {};\n}"
+    },
+    "resolve": "b9edf53d-de5a-4f62-b76b-fb4ec074d96f",
+    "reject": null,
+    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
+    "_syncId": "2b930398-56f4-4094-9d50-62ad6616117c"
+  },
+  {
+    "name": "Check if payload is status approved",
+    "key": "check_if_payload_is_status_approved",
+    "type": "condition",
+    "position_x": 17,
+    "position_y": 1,
+    "options": {
+      "filter": {
+        "$trigger": {
+          "payload": {
+            "memberships_status": {
+              "_eq": "approved"
+            }
+          }
+        }
+      }
+    },
+    "resolve": "05cd9d73-3167-4510-ab92-60e4a0cb8b35",
+    "reject": null,
+    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
+    "_syncId": "5949437b-9948-4cd8-9495-35141213a78b"
+  },
+  {
+    "name": "Check if payload is status paid",
+    "key": "check_if_payload_is_status_paid",
+    "type": "condition",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "filter": {
+        "$trigger": {
+          "payload": {
+            "payments_status": {
+              "_eq": "paid"
+            }
+          }
+        }
+      }
+    },
+    "resolve": "2a74014a-0cef-478e-90ff-bc13def7c780",
+    "reject": null,
+    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
+    "_syncId": "ecafe208-21b8-4aa9-ab60-ad3663271ffe"
+  },
+  {
+    "name": "check_status_is_pending",
+    "key": "check_status_is_pending",
+    "type": "condition",
+    "position_x": 37,
+    "position_y": 1,
+    "options": {
+      "filter": {
+        "read_campaign_data": {
+          "messages_campaign_status": {
+            "_eq": "pending"
+          }
+        }
+      }
+    },
+    "resolve": "a8d3c6d2-99a0-4159-9a44-7d8159fd1cde",
+    "reject": null,
+    "flow": "d7fdc4ae-41a5-42d1-aeca-3f9cff1a305a",
+    "_syncId": "ea05b766-8199-45f1-9381-d3af07ef1142"
+  },
+  {
+    "name": "checkHasShares",
+    "key": "checkHasShares",
+    "type": "exec",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "code": "module.exports = async function(data) {\n\tconsole.log(\"prepareInvoice\")\n\tconsole.log(data[\"$trigger\"])\n\tif (!(\"memberships_shares\" in data[\"$trigger\"].payload)) {\n\t\tthrow new Error(\"No shares in payload\")\n    }\n\treturn {}\n}"
+    },
+    "resolve": "b3d317db-f563-46be-ae8e-4d7222cbf349",
+    "reject": "dae7abf0-723a-4576-87f4-a95c5ae98ded",
+    "flow": "f714c75a-e78a-4c80-9b4d-4b39943d6444",
+    "_syncId": "7c3b51f8-043a-4b5a-a88d-21b5eab5c707"
+  },
+  {
+    "name": "checkIsBulk",
+    "key": "checkIsBulk",
+    "type": "exec",
+    "position_x": 37,
+    "position_y": 1,
+    "options": {
+      "code": "module.exports = async function(data) {\n\tif (data[\"$trigger\"].keys.length != 1) {\n\t\tconsole.log(\"multiple keys in payload\")\n    \tthrow new Error(\"Memberships invoice flow: Cannot bulk edit shares\")\n\t}\n\treturn {}\n}"
+    },
+    "resolve": "0c32433c-4785-46f0-9e73-ec8747a61aa2",
+    "reject": null,
+    "flow": "f714c75a-e78a-4c80-9b4d-4b39943d6444",
+    "_syncId": "b3d317db-f563-46be-ae8e-4d7222cbf349"
+  },
+  {
+    "name": "Create campaign",
+    "key": "create_campaign",
+    "type": "item-create",
+    "position_x": 10,
+    "position_y": 55,
+    "options": {
+      "collection": "messages_campaigns",
+      "payload": {
+        "messages_template": "{{read_automation[0].mila_template}}",
+        "messages_recipients": {
+          "create": "{{user_ids.user_ids}}"
+        },
+        "messages_campaign_status": "pending"
+      },
+      "emitEvents": true,
+      "permissions": "$full"
     },
     "resolve": null,
     "reject": null,
-    "flow": "6e158b1d-4283-4aca-8cf0-93ee04a0b79c",
-    "_syncId": "88a1ec06-2398-40bd-a23f-31d038a69470"
+    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
+    "_syncId": "a1519dc1-5cce-4b7c-b64d-91397844174c"
+  },
+  {
+    "name": "Create campaign",
+    "key": "create_campaign",
+    "type": "item-create",
+    "position_x": 56,
+    "position_y": 19,
+    "options": {
+      "collection": "messages_campaigns",
+      "payload": {
+        "messages_template": "{{read_automation[0].mila_template}}",
+        "messages_recipients": {
+          "create": [
+            {
+              "directus_users_id": {
+                "id": "{{read_user.memberships_user}}"
+              },
+              "messages_campaigns_id": "+"
+            }
+          ]
+        },
+        "messages_campaign_status": "pending"
+      },
+      "emitEvents": true
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
+    "_syncId": "0353178c-e17a-4cd8-977f-406d271ec4c7"
+  },
+  {
+    "name": "Create campaign",
+    "key": "create_campaign",
+    "type": "item-create",
+    "position_x": 6,
+    "position_y": 53,
+    "options": {
+      "payload": {
+        "messages_template": "{{read_automation[0].mila_template}}",
+        "messages_recipients": {
+          "create": "{{user_ids.user_ids}}"
+        },
+        "messages_campaign_status": "pending"
+      },
+      "emitEvents": true,
+      "permissions": "$full",
+      "collection": "messages_campaigns"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
+    "_syncId": "b9edf53d-de5a-4f62-b76b-fb4ec074d96f"
+  },
+  {
+    "name": "Create message record",
+    "key": "create_message_record",
+    "type": "item-create",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "collection": "messages_messages",
+      "payload": {
+        "messages_status": "pending",
+        "messages_template": "{{$trigger.template_id}}",
+        "messages_recipient": "{{$trigger.recipient_id}}",
+        "messages_campaign": "{{$trigger.campaign_id}}"
+      },
+      "permissions": "$full"
+    },
+    "resolve": "e017ea93-5aa0-4fb5-98ad-c6cc668aaaf7",
+    "reject": "e2f2f278-e2d6-409e-8f9b-c6646ea9ffe8",
+    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
+    "_syncId": "1e6ecf93-13c2-409f-a166-e8e659e9e488"
+  },
+  {
+    "name": "create_modified_keys_array",
+    "key": "create_modified_keys_array",
+    "type": "exec",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "code": "module.exports = async function(data) {    \n\tmodified_keys = [];\n    if (data[\"$trigger\"].key) {\n        modified_keys.push({\"messages_campaign_id\": data[\"$trigger\"].key});\n    }\n    for (i in data[\"$trigger\"].keys) {\n        modified_keys.push({\"messages_campaign_id\": data[\"$trigger\"].keys[i]});\n    }\n    return modified_keys;\n}"
+    },
+    "resolve": "f7ba060f-e7e1-45bb-8ca1-33fd6dc59422",
+    "reject": null,
+    "flow": "24887665-6c92-44f5-b0ef-8fce13f01df2",
+    "_syncId": "971fbde5-c947-416e-b575-6b7eea353ddf"
   },
   {
     "name": "createCampaign",
@@ -50,28 +294,325 @@
     },
     "resolve": null,
     "reject": null,
-    "flow": "8dbb0568-bb56-4323-a88a-90eedf950df9",
-    "_syncId": "87f9effa-2f68-43d5-b585-ccec054a7432"
+    "flow": "9ee2e72d-ca7e-4c4b-ab18-97abfd062ddf",
+    "_syncId": "48b43cec-c342-4689-be63-9d60311d5d95"
   },
   {
-    "name": "Run Script",
-    "key": "filter",
+    "name": "createInvoice",
+    "key": "createInvoice",
+    "type": "item-create",
+    "position_x": 21,
+    "position_y": 38,
+    "options": {
+      "collection": "payments_invoices_out",
+      "permissions": "$full",
+      "payload": {
+        "payments_recipient_user": "{{readMembership.memberships_user}}",
+        "payments_status": "pending",
+        "memberships_membership": "{{$trigger.keys[0]}}"
+      }
+    },
+    "resolve": "9f3db152-9448-4751-b187-f12ea93b543a",
+    "reject": null,
+    "flow": "f714c75a-e78a-4c80-9b4d-4b39943d6444",
+    "_syncId": "62270ee8-3614-45dd-96a7-b8b2d6e10493"
+  },
+  {
+    "name": "createInvoiceEntries",
+    "key": "createInvoiceEntries",
+    "type": "item-create",
+    "position_x": 41,
+    "position_y": 38,
+    "options": {
+      "collection": "payments_invoices_entries",
+      "permissions": "$full",
+      "payload": {
+        "payments_invoice": "{{createInvoice[0]}}",
+        "payments_description": "MILA Genossenschaftsanteil",
+        "payments_quantity": "{{calcShares.sharesToBeInvoiced}}",
+        "payments_price": "2000"
+      }
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "f714c75a-e78a-4c80-9b4d-4b39943d6444",
+    "_syncId": "9f3db152-9448-4751-b187-f12ea93b543a"
+  },
+  {
+    "name": "Determine outcome",
+    "key": "determine_outcome",
+    "type": "exec",
+    "position_x": 91,
+    "position_y": 1,
+    "options": {
+      "code": "module.exports = async function(data) {\n  if (data[\"$last\"].every((output) => output.status == \"sent\")) {\n  \treturn \"sent\";\n  } else if (data[\"$last\"].every((output) => output.status == \"failed\")) {\n    return \"completely_failed\";\n  } else {\n    return \"partially_failed\";\n  }\n}"
+    },
+    "resolve": "3d84137c-cbcc-4844-afb4-0b6ca68ee5a3",
+    "reject": null,
+    "flow": "d7fdc4ae-41a5-42d1-aeca-3f9cff1a305a",
+    "_syncId": "ed23be81-07c2-4bce-8135-a1b0de1abc87"
+  },
+  {
+    "name": "endFlowWithoutBlocking",
+    "key": "endFlowWithoutBlocking",
+    "type": "exec",
+    "position_x": 3,
+    "position_y": 20,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t// Do nothing, just to let the reject path pass without blocking\n    console.log(\"has no shares\")\n\treturn {};\n}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "f714c75a-e78a-4c80-9b4d-4b39943d6444",
+    "_syncId": "dae7abf0-723a-4576-87f4-a95c5ae98ded"
+  },
+  {
+    "name": "Skript ausführen",
+    "key": "exec_1m79g",
+    "type": "exec",
+    "position_x": 37,
+    "position_y": 17,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t// Do something...\n\treturn {\n    \t\"true\": true\n    };\n}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
+    "_syncId": "e81d8fc2-4fb7-4e68-b823-95835f90c27d"
+  },
+  {
+    "name": "Skript ausführen",
+    "key": "exec_8z2yn",
+    "type": "exec",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "code": "module.exports = async function(data) {    \n\tmodified_keys = [];\n    if (data[\"$trigger\"].key) {\n        modified_keys.push({\"messages_campaign_id\": data[\"$trigger\"].key});\n    }\n    for (i in data[\"$trigger\"].keys) {\n        modified_keys.push({\"messages_campaign_id\": data[\"$trigger\"].keys[i]});\n    }\n    return modified_keys;\n}"
+    },
+    "resolve": "bc86b485-dfae-4f74-ac08-47464f98ac03",
+    "reject": null,
+    "flow": "3bfde787-1881-4718-b02f-743d5f1f2a74",
+    "_syncId": "39e3ab8b-b5de-4870-b556-fc2c69a2fa24"
+  },
+  {
+    "name": "Skript ausführen",
+    "key": "exec_9ytg5",
     "type": "exec",
     "position_x": 19,
     "position_y": 1,
     "options": {
       "code": "module.exports = async function(data) {    \n    const attrs = [\"email\", \"password\", \"first_name\", \"last_name\"];\n    if (data[\"$trigger\"][\"event\"]==\"users.delete\"){       \n        return {\n            \"true\": true \n        };\n    }\n    else if (!attrs.some(attr => attr in data[\"$trigger\"].payload)){        \n        throw new Error(\"No important change\");   \n    };\n    return {    \t\n        \"true\": true    \n    };\n}"
     },
-    "resolve": "5c8a607a-b672-45f6-a915-2cc6e936e5c2",
-    "reject": "88a1ec06-2398-40bd-a23f-31d038a69470",
-    "flow": "6e158b1d-4283-4aca-8cf0-93ee04a0b79c",
-    "_syncId": "9faaf478-7775-48c5-8efa-e167746f7b33"
+    "resolve": "0c188aa8-7df4-4fea-bd78-23758e8a9013",
+    "reject": "e81d8fc2-4fb7-4e68-b823-95835f90c27d",
+    "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
+    "_syncId": "fdb6da80-fa90-4f76-8d09-bf653ded0f32"
+  },
+  {
+    "name": "expand_campaign_to_individual_messages",
+    "key": "expand_campaign_to_individual_messages",
+    "type": "exec",
+    "position_x": 55,
+    "position_y": 1,
+    "options": {
+      "code": "module.exports = async function(data) {\n    campaign = data[\"read_campaign_data\"]\n\tmessagesToSend = [];\n    for (i in campaign.messages_recipients) {\n        recipient = campaign.messages_recipients[i]\n        messagesToSend.push({\n            \"recipient_id\": recipient.directus_users_id,\n            \"template_id\": campaign.messages_template,\n            \"campaign_id\": campaign.id,\n        });\n    }\n\treturn messagesToSend;\n}"
+    },
+    "resolve": "a2879315-4db5-4356-a9c2-be81717ef11b",
+    "reject": null,
+    "flow": "d7fdc4ae-41a5-42d1-aeca-3f9cff1a305a",
+    "_syncId": "a8d3c6d2-99a0-4159-9a44-7d8159fd1cde"
+  },
+  {
+    "name": "Daten lesen",
+    "key": "item_read_oy9vp",
+    "type": "item-read",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "collection": "directus_users",
+      "query": {
+        "fields": [
+          "first_name",
+          "last_name",
+          "email",
+          "memberships.id"
+        ]
+      },
+      "key": "{{$trigger.messages_campaign_id}}",
+      "permissions": "$full"
+    },
+    "resolve": "f3c9decb-96dd-41be-8e8d-13b9e0036999",
+    "reject": null,
+    "flow": "e67933a7-f0df-41e2-b905-d49a8f2482db",
+    "_syncId": "b032fcb2-5cc5-40ad-ae75-62b7870377a6"
+  },
+  {
+    "name": "Daten lesen",
+    "key": "item_read_s8ak4",
+    "type": "item-read",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "query": {
+        "fields": [
+          "id",
+          "lotzapp_id",
+          "payments_status",
+          "payments_date_issued",
+          "payments_entries.payments_quantity",
+          "payments_entries.payments_price",
+          "payments_recipient_user.id",
+          "payments_recipient_user.first_name",
+          "payments_recipient_user.last_name",
+          "payments_recipient_user.email",
+          "payments_recipient_user.memberships_person_type",
+          "payments_recipient_user.memberships_street",
+          "payments_recipient_user.memberships_streetnumber",
+          "payments_recipient_user.memberships_stair",
+          "payments_recipient_user.memberships_door",
+          "payments_recipient_user.memberships_postcode",
+          "payments_recipient_user.memberships_city",
+          "payments_recipient_user.payments_type",
+          "payments_recipient_user.payments_account_iban",
+          "payments_recipient_user.lotzapp_id",
+          "payments_entries.payments_item.payments_name",
+          "payments_entries.payments_price",
+          "payments_entries.payments_quantity"
+        ],
+        "filter": {
+          "id": {
+            "_in": "{{$trigger.body.keys}}"
+          }
+        }
+      },
+      "collection": "payments_invoices_out"
+    },
+    "resolve": "fbde7649-db9a-4d65-91be-973088dcde40",
+    "reject": null,
+    "flow": "939f6a73-ceb3-4974-b4b2-65649be03c84",
+    "_syncId": "0b6f13b8-c0ce-4b3a-830f-c68221337073"
+  },
+  {
+    "name": "Daten aktualisieren",
+    "key": "item_update_rwk16",
+    "type": "item-update",
+    "position_x": 10,
+    "position_y": 24,
+    "options": {
+      "collection": "memberships",
+      "permissions": "$full",
+      "payload": {
+        "memberships_user_search": "{{$last.first_name}} {{$last.last_name}} {{$last.email}}"
+      },
+      "query": null,
+      "key": "{{$last.memberships[0].id}}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "e67933a7-f0df-41e2-b905-d49a8f2482db",
+    "_syncId": "f3c9decb-96dd-41be-8e8d-13b9e0036999"
+  },
+  {
+    "name": "Populate response failure",
+    "key": "populate_response_failure_create_message_record_failure",
+    "type": "transform",
+    "position_x": 37,
+    "position_y": 17,
+    "options": {
+      "json": {
+        "status": "failed"
+      }
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
+    "_syncId": "e2f2f278-e2d6-409e-8f9b-c6646ea9ffe8"
+  },
+  {
+    "name": "Populate response failure",
+    "key": "populate_response_failure_set_message_status_to_failed_read_recipient_data_failure",
+    "type": "transform",
+    "position_x": 91,
+    "position_y": 33,
+    "options": {
+      "json": {
+        "status": "failed"
+      }
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
+    "_syncId": "bfac8686-9234-4a6e-9755-26a6314d8a31"
+  },
+  {
+    "name": "Populate response failure",
+    "key": "populate_response_failure_set_message_status_to_failed_read_template_data_failure",
+    "type": "transform",
+    "position_x": 73,
+    "position_y": 33,
+    "options": {
+      "json": {
+        "status": "failed"
+      }
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
+    "_syncId": "bc9a70af-b46d-4357-ac12-a47ff447bb25"
+  },
+  {
+    "name": "Populate response failure",
+    "key": "populate_response_failure_set_message_status_to_failed_render_message_failure",
+    "type": "transform",
+    "position_x": 109,
+    "position_y": 33,
+    "options": {
+      "json": {
+        "status": "failed"
+      }
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
+    "_syncId": "9fa4ca56-4642-4840-81b4-e059c543f395"
+  },
+  {
+    "name": "Populate response failure",
+    "key": "populate_response_failure_set_message_status_to_failed_send_email_failure",
+    "type": "transform",
+    "position_x": 127,
+    "position_y": 33,
+    "options": {
+      "json": {
+        "status": "failed"
+      }
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
+    "_syncId": "7fb3cc9e-0ed7-4353-92a5-4703b85a7411"
+  },
+  {
+    "name": "Populate response sent",
+    "key": "populate_response_sent",
+    "type": "transform",
+    "position_x": 127,
+    "position_y": 1,
+    "options": {
+      "json": {
+        "status": "sent"
+      }
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
+    "_syncId": "235c2c20-1e97-4776-97e7-8b404b4c7bd9"
   },
   {
     "name": "postToNuxtAPI",
-    "key": "postToNuxtAPI",
+    "key": "post_to_nuxt_api",
     "type": "request",
-    "position_x": 30,
+    "position_x": 37,
     "position_y": 1,
     "options": {
       "method": "PATCH",
@@ -86,74 +627,30 @@
     },
     "resolve": null,
     "reject": null,
-    "flow": "6e158b1d-4283-4aca-8cf0-93ee04a0b79c",
-    "_syncId": "5c8a607a-b672-45f6-a915-2cc6e936e5c2"
+    "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
+    "_syncId": "0c188aa8-7df4-4fea-bd78-23758e8a9013"
   },
   {
     "name": "postToNuxtAPI",
-    "key": "postToNuxtAPI",
+    "key": "post_to_nuxt_api",
     "type": "request",
     "position_x": 19,
     "position_y": 1,
     "options": {
-      "method": "POST",
       "url": "{{$env.COLLECTIVO_API_URL}}/api/collectivo/user",
-      "headers": [
-        {
-          "header": "Authorization",
-          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
-        }
-      ],
-      "body": "{{$trigger}}"
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "745b9dad-d1ac-4457-9f14-bf85bdcb1c6f",
-    "_syncId": "aab6c0bb-9af8-4383-a326-e17559d15935"
-  },
-  {
-    "name": "postToNuxtAPI",
-    "key": "postToNuxtAPI",
-    "type": "request",
-    "position_x": 19,
-    "position_y": 1,
-    "options": {
       "method": "POST",
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/collectivo/roles",
+      "body": "{{$trigger}}",
       "headers": [
         {
           "header": "Authorization",
           "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
         }
-      ],
-      "body": "{{$trigger}}"
+      ]
     },
     "resolve": null,
     "reject": null,
-    "flow": "a723a447-a16e-42c5-a264-533512172821",
-    "_syncId": "9f2df7c8-1939-4dc6-a6cf-46c411056bbd"
-  },
-  {
-    "name": "postToNuxtAPI",
-    "key": "postToNuxtAPI",
-    "type": "request",
-    "position_x": 19,
-    "position_y": 1,
-    "options": {
-      "method": "POST",
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/messages/handle_campaign_change",
-      "headers": [
-        {
-          "header": "Authorization",
-          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
-        }
-      ],
-      "body": "{{$trigger}}"
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "e59c80fe-537e-4077-abb6-5496f7b34c4d",
-    "_syncId": "66216b9f-1277-4885-b63b-3be81d955fae"
+    "flow": "5ea28856-7cb2-49a4-86b8-eacbd27ac54d",
+    "_syncId": "ad799be4-d215-4375-97d7-6308e05f46f4"
   },
   {
     "name": "prepareRecipients",
@@ -164,10 +661,232 @@
     "options": {
       "code": "module.exports = async function(data) {\n\tconst recipients = []\n    for (i in data[\"readMemberships\"]) {\n \trecipients.push(\n            {\n                messages_campaigns_id: \"+\",\n           \t\tdirectus_users_id: { id: data[\"readMemberships\"][i].memberships_user }\n            }\n        )\n    }\n\treturn { recipients };\n}"
     },
-    "resolve": "87f9effa-2f68-43d5-b585-ccec054a7432",
+    "resolve": "48b43cec-c342-4689-be63-9d60311d5d95",
     "reject": null,
-    "flow": "8dbb0568-bb56-4323-a88a-90eedf950df9",
-    "_syncId": "e837f4c6-9e8a-4c27-9867-5e78b5d7fd92"
+    "flow": "9ee2e72d-ca7e-4c4b-ab18-97abfd062ddf",
+    "_syncId": "c6b1bdc0-86e7-4523-908b-d00c06bc84b7"
+  },
+  {
+    "name": "Read Automation",
+    "key": "read_automation",
+    "type": "item-read",
+    "position_x": 4,
+    "position_y": 35,
+    "options": {
+      "permissions": "$full",
+      "query": {
+        "filter": {
+          "mila_key": {
+            "_eq": "membership_update_approved"
+          }
+        }
+      },
+      "collection": "mila_automations"
+    },
+    "resolve": "2b930398-56f4-4094-9d50-62ad6616117c",
+    "reject": null,
+    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
+    "_syncId": "3f29d4d6-c774-42e4-93f6-4feb0ae04768"
+  },
+  {
+    "name": "Read Automation",
+    "key": "read_automation",
+    "type": "item-read",
+    "position_x": 21,
+    "position_y": 19,
+    "options": {
+      "collection": "mila_automations",
+      "query": {
+        "filter": {
+          "mila_key": {
+            "_eq": "memberships_applied_new"
+          }
+        }
+      }
+    },
+    "resolve": "486a5eb1-f379-4d7e-905b-d605170c5660",
+    "reject": null,
+    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
+    "_syncId": "f241b35f-f3ba-47d8-a044-c9a3ddaa8ce8"
+  },
+  {
+    "name": "Read Automation",
+    "key": "read_automation",
+    "type": "item-read",
+    "position_x": 4,
+    "position_y": 37,
+    "options": {
+      "collection": "mila_automations",
+      "query": {
+        "filter": {
+          "mila_key": {
+            "_eq": "invoice_update_paid"
+          }
+        }
+      },
+      "permissions": "$full"
+    },
+    "resolve": "91a893aa-5e01-4460-8bbb-83b2adcef6fb",
+    "reject": null,
+    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
+    "_syncId": "60b0542a-cba8-4e5f-bea8-b45e79c7c09e"
+  },
+  {
+    "name": "read_campaign_data",
+    "key": "read_campaign_data",
+    "type": "item-read",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "collection": "messages_campaigns",
+      "key": "{{$trigger.messages_campaign_id}}",
+      "query": {
+        "fields": [
+          "id",
+          "messages_campaign_status",
+          "messages_template",
+          "messages_recipients.directus_users_id"
+        ]
+      }
+    },
+    "resolve": "ea05b766-8199-45f1-9381-d3af07ef1142",
+    "reject": null,
+    "flow": "d7fdc4ae-41a5-42d1-aeca-3f9cff1a305a",
+    "_syncId": "503b7d7d-0a2a-4629-a722-7f819fb9b61f"
+  },
+  {
+    "name": "Read invoices",
+    "key": "read_invoices",
+    "type": "item-read",
+    "position_x": 4,
+    "position_y": 19,
+    "options": {
+      "collection": "payments_invoices_out",
+      "query": {
+        "fields": [
+          "payments_recipient_user"
+        ],
+        "filter": {
+          "id": {
+            "_in": "{{$trigger.keys}}"
+          }
+        }
+      },
+      "permissions": "$full"
+    },
+    "resolve": "4bb7b88f-e8cc-4b46-b7ed-a075b3cd334b",
+    "reject": null,
+    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
+    "_syncId": "2a74014a-0cef-478e-90ff-bc13def7c780"
+  },
+  {
+    "name": "Read memberships",
+    "key": "read_memberships",
+    "type": "item-read",
+    "position_x": 3,
+    "position_y": 18,
+    "options": {
+      "collection": "memberships",
+      "permissions": "$full",
+      "query": {
+        "fields": [
+          "memberships_user"
+        ],
+        "filter": {
+          "id": {
+            "_in": "{{$trigger.keys}}"
+          }
+        }
+      }
+    },
+    "resolve": "1b8c6e64-414b-4ff4-a9ed-fd3ab6286ee8",
+    "reject": null,
+    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
+    "_syncId": "05cd9d73-3167-4510-ab92-60e4a0cb8b35"
+  },
+  {
+    "name": "Read recipient data",
+    "key": "read_recipient_data",
+    "type": "item-read",
+    "position_x": 55,
+    "position_y": 1,
+    "options": {
+      "collection": "directus_users",
+      "query": {
+        "fields": [
+          "first_name",
+          "last_name",
+          "email"
+        ]
+      },
+      "key": "{{$trigger.recipient_id}}"
+    },
+    "resolve": "5e7278d8-0943-4ba2-a6da-4b673b7019b6",
+    "reject": "4f8fc6b3-3635-4e02-9201-21e669cd395c",
+    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
+    "_syncId": "6ecd80c9-2afe-4c30-8618-9aa0e88c2da0"
+  },
+  {
+    "name": "Read template data",
+    "key": "read_template_data",
+    "type": "item-read",
+    "position_x": 37,
+    "position_y": 1,
+    "options": {
+      "collection": "messages_templates",
+      "key": "{{$trigger.template_id}}",
+      "permissions": "$full"
+    },
+    "resolve": "6ecd80c9-2afe-4c30-8618-9aa0e88c2da0",
+    "reject": "bd57e1ca-8fe5-445f-81a9-4bea6ba1fa67",
+    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
+    "_syncId": "e017ea93-5aa0-4fb5-98ad-c6cc668aaaf7"
+  },
+  {
+    "name": "Read User",
+    "key": "read_user",
+    "type": "item-read",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "collection": "memberships",
+      "key": [
+        "{{$trigger.key}}"
+      ],
+      "query": {
+        "fields": [
+          "memberships_user",
+          "memberships_status"
+        ]
+      }
+    },
+    "resolve": "9f110beb-6d08-47e3-930c-511045c1760b",
+    "reject": null,
+    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
+    "_syncId": "5cdb0368-47f9-4f1c-b09a-6e386191c418"
+  },
+  {
+    "name": "readMembership",
+    "key": "readMembership",
+    "type": "item-read",
+    "position_x": 20,
+    "position_y": 20,
+    "options": {
+      "collection": "memberships",
+      "key": [
+        "{{$trigger.keys[0]}}"
+      ],
+      "permissions": "$full",
+      "query": {
+        "fields": [
+          "memberships_user"
+        ]
+      }
+    },
+    "resolve": "0b6ace39-5a6e-4794-9f17-aa245b14a4fe",
+    "reject": null,
+    "flow": "f714c75a-e78a-4c80-9b4d-4b39943d6444",
+    "_syncId": "0c32433c-4785-46f0-9e73-ec8747a61aa2"
   },
   {
     "name": "readMemberships",
@@ -188,10 +907,10 @@
         }
       }
     },
-    "resolve": "e837f4c6-9e8a-4c27-9867-5e78b5d7fd92",
+    "resolve": "c6b1bdc0-86e7-4523-908b-d00c06bc84b7",
     "reject": null,
-    "flow": "8dbb0568-bb56-4323-a88a-90eedf950df9",
-    "_syncId": "bdf8b75d-415a-47a0-9261-31f2bb62aa91"
+    "flow": "9ee2e72d-ca7e-4c4b-ab18-97abfd062ddf",
+    "_syncId": "bf786ac0-4a7b-49c3-9084-9ff1129d6e79"
   },
   {
     "name": "readRole",
@@ -209,45 +928,357 @@
         }
       }
     },
-    "resolve": "bfeab56c-8447-48c6-865e-a6b79539e1ed",
+    "resolve": "f6ff8f73-2405-41a9-acee-1365b411e163",
     "reject": null,
-    "flow": "6f8e46f6-890e-4519-9050-85de9dcce51a",
-    "_syncId": "2c4e9dc7-aaf7-445b-89ee-ebf02df1e375"
+    "flow": "1496bf80-5a7f-4218-97b6-ee9bfafe2d3e",
+    "_syncId": "1588caf8-5a50-4d81-8241-519cfb76605b"
   },
   {
-    "name": "set_status_to_pending",
-    "key": "set_status_to_pending",
-    "type": "item-update",
+    "name": "readSharesEntries",
+    "key": "readSharesEntries",
+    "type": "item-read",
+    "position_x": 37,
+    "position_y": 20,
+    "options": {
+      "collection": "payments_invoices_entries",
+      "query": {
+        "filter": {
+          "payments_invoice": {
+            "memberships_membership": "{{$trigger.keys[0]}}"
+          },
+          "payments_description": "MILA Genossenschaftsanteil"
+        }
+      }
+    },
+    "resolve": "427cd01e-36f0-4e42-b525-48cd6fcbab28",
+    "reject": null,
+    "flow": "f714c75a-e78a-4c80-9b4d-4b39943d6444",
+    "_syncId": "0b6ace39-5a6e-4794-9f17-aa245b14a4fe"
+  },
+  {
+    "name": "Render message",
+    "key": "render_message",
+    "type": "exec",
+    "position_x": 73,
+    "position_y": 1,
+    "options": {
+      "code": "module.exports = async function(data) {\n    template = data[\"read_template_data\"].messages_content;\n    first_name = data[\"read_recipient_data\"].first_name;\n    last_name = data[\"read_recipient_data\"].last_name;\n    \n    rendered_message = template;\n    \n    rendered_message = rendered_message.replaceAll(\"{\"+\"{recipient_first_name}}\", first_name);\n    rendered_message = rendered_message.replaceAll(\"{\"+\"{recipient_last_name}}\", last_name);\n    \n\treturn {rendered_message};\n}"
+    },
+    "resolve": "85d06f2b-d22c-4b47-babf-597e27d54156",
+    "reject": "0a628fdc-1431-4e6e-aaaf-8b42baf339ae",
+    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
+    "_syncId": "5e7278d8-0943-4ba2-a6da-4b673b7019b6"
+  },
+  {
+    "name": "Webhook / Anfrage URL",
+    "key": "request_asgww",
+    "type": "request",
+    "position_x": 37,
+    "position_y": 1,
+    "options": {
+      "body": "{{$last}}",
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/lotzapp_sync",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ]
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "939f6a73-ceb3-4974-b4b2-65649be03c84",
+    "_syncId": "fbde7649-db9a-4d65-91be-973088dcde40"
+  },
+  {
+    "name": "Webhook / Anfrage URL",
+    "key": "request_bpt1v",
+    "type": "request",
     "position_x": 19,
     "position_y": 1,
     "options": {
-      "collection": "messages_campaigns",
-      "key": null,
-      "payload": {
-        "messages_campaign_status": "pending"
-      },
-      "query": {
-        "filter": {
-          "_and": [
-            {
-              "messages_campaign_status": {
-                "_eq": "draft"
-              }
-            },
-            {
-              "id": {
-                "_in": "{{$trigger.body.keys}}"
-              }
-            }
-          ]
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/collectivo/roles",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
         }
+      ],
+      "body": "{{$trigger}}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "c9a409a7-e523-4a19-90da-2811aecd2bf4",
+    "_syncId": "18d5537d-bd68-4f51-878c-f87c054092f4"
+  },
+  {
+    "name": "Webhook / Anfrage URL",
+    "key": "request_tsrb6",
+    "type": "request",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/mila/mitgliedtag",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{{$trigger}}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "2d68cc8b-f561-4f7f-8cc2-a847cb57054c",
+    "_syncId": "0bec9ec7-45cc-4375-89f9-27231942ddba"
+  },
+  {
+    "name": "Send email",
+    "key": "send_email",
+    "type": "mail",
+    "position_x": 91,
+    "position_y": 1,
+    "options": {
+      "subject": "{{read_template_data.messages_subject}}",
+      "body": "{{render_message.rendered_message}}",
+      "to": [
+        "{{read_recipient_data.email}}"
+      ]
+    },
+    "resolve": "56b3e388-bdf2-4178-b44f-a5b870faa1b7",
+    "reject": "6556ad49-0f8b-4d8d-8b55-41c16e5853fb",
+    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
+    "_syncId": "85d06f2b-d22c-4b47-babf-597e27d54156"
+  },
+  {
+    "name": "send_messages",
+    "key": "send_messages",
+    "type": "trigger",
+    "position_x": 73,
+    "position_y": 1,
+    "options": {
+      "payload": "{{$last}}",
+      "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43"
+    },
+    "resolve": "ed23be81-07c2-4bce-8135-a1b0de1abc87",
+    "reject": null,
+    "flow": "d7fdc4ae-41a5-42d1-aeca-3f9cff1a305a",
+    "_syncId": "a2879315-4db5-4356-a9c2-be81717ef11b"
+  },
+  {
+    "name": "Set message status to failed",
+    "key": "set_message_status_to_failed_read_recipient_data_failure",
+    "type": "item-update",
+    "position_x": 73,
+    "position_y": 17,
+    "options": {
+      "collection": "messages_messages",
+      "key": "{{create_message_record[0]}}",
+      "payload": {
+        "messages_message_status": "failed"
       },
-      "emitEvents": true,
+      "permissions": "$full"
+    },
+    "resolve": "bfac8686-9234-4a6e-9755-26a6314d8a31",
+    "reject": null,
+    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
+    "_syncId": "4f8fc6b3-3635-4e02-9201-21e669cd395c"
+  },
+  {
+    "name": "Set message status to failed",
+    "key": "set_message_status_to_failed_read_template_data_failure",
+    "type": "item-update",
+    "position_x": 55,
+    "position_y": 17,
+    "options": {
+      "collection": "messages_messages",
+      "key": "{{create_message_record[0]}}",
+      "payload": {
+        "messages_message_status": "failed"
+      },
+      "permissions": "$full"
+    },
+    "resolve": "bc9a70af-b46d-4357-ac12-a47ff447bb25",
+    "reject": null,
+    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
+    "_syncId": "bd57e1ca-8fe5-445f-81a9-4bea6ba1fa67"
+  },
+  {
+    "name": "Set message status to failed",
+    "key": "set_message_status_to_failed_render_message_failure",
+    "type": "item-update",
+    "position_x": 91,
+    "position_y": 17,
+    "options": {
+      "collection": "messages_messages",
+      "key": "{{create_message_record[0]}}",
+      "payload": {
+        "messages_message_status": "failed"
+      },
+      "permissions": "$full"
+    },
+    "resolve": "9fa4ca56-4642-4840-81b4-e059c543f395",
+    "reject": null,
+    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
+    "_syncId": "0a628fdc-1431-4e6e-aaaf-8b42baf339ae"
+  },
+  {
+    "name": "Set message status to failed",
+    "key": "set_message_status_to_failed_send_email_failure",
+    "type": "item-update",
+    "position_x": 109,
+    "position_y": 17,
+    "options": {
+      "collection": "messages_messages",
+      "key": "{{create_message_record[0]}}",
+      "payload": {
+        "messages_message_status": "failed"
+      },
+      "permissions": "$full"
+    },
+    "resolve": "7fb3cc9e-0ed7-4353-92a5-4703b85a7411",
+    "reject": null,
+    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
+    "_syncId": "6556ad49-0f8b-4d8d-8b55-41c16e5853fb"
+  },
+  {
+    "name": "Set message status to sent",
+    "key": "set_message_status_to_sent",
+    "type": "item-update",
+    "position_x": 109,
+    "position_y": 1,
+    "options": {
+      "collection": "messages_messages",
+      "payload": {
+        "messages_message_status": "sent"
+      },
+      "key": "{{create_message_record[0]}}",
+      "permissions": "$full"
+    },
+    "resolve": "235c2c20-1e97-4776-97e7-8b404b4c7bd9",
+    "reject": null,
+    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
+    "_syncId": "56b3e388-bdf2-4178-b44f-a5b870faa1b7"
+  },
+  {
+    "name": "Status applied?",
+    "key": "status_applied",
+    "type": "condition",
+    "position_x": 4,
+    "position_y": 19,
+    "options": {
+      "filter": {
+        "read_user": {
+          "memberships_status": {
+            "_eq": "applied"
+          }
+        }
+      }
+    },
+    "resolve": "f241b35f-f3ba-47d8-a044-c9a3ddaa8ce8",
+    "reject": null,
+    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
+    "_syncId": "9f110beb-6d08-47e3-930c-511045c1760b"
+  },
+  {
+    "name": "Trigger execute campaign flow",
+    "key": "trigger_execute_campaign_flow",
+    "type": "trigger",
+    "position_x": 37,
+    "position_y": 1,
+    "options": {
+      "payload": "{{$last}}",
+      "flow": "d7fdc4ae-41a5-42d1-aeca-3f9cff1a305a"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "24887665-6c92-44f5-b0ef-8fce13f01df2",
+    "_syncId": "f7ba060f-e7e1-45bb-8ca1-33fd6dc59422"
+  },
+  {
+    "name": "Flow auslösen",
+    "key": "trigger_f9yog",
+    "type": "trigger",
+    "position_x": 37,
+    "position_y": 1,
+    "options": {
+      "payload": "{{$last}}",
+      "flow": "e67933a7-f0df-41e2-b905-d49a8f2482db"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "3bfde787-1881-4718-b02f-743d5f1f2a74",
+    "_syncId": "bc86b485-dfae-4f74-ac08-47464f98ac03"
+  },
+  {
+    "name": "update_campaign_status",
+    "key": "update_campaign_status",
+    "type": "item-update",
+    "position_x": 109,
+    "position_y": 1,
+    "options": {
+      "collection": "messages_campaigns",
+      "key": "{{$trigger.messages_campaign_id}}",
+      "payload": {
+        "messages_campaign_status": "{{$last}}"
+      },
       "permissions": "$full"
     },
     "resolve": null,
     "reject": null,
-    "flow": "81c4b7ca-fc3b-4156-8ac3-06d8139ce53b",
-    "_syncId": "2db6b1d4-798f-4a86-b4df-bf6af84248b7"
+    "flow": "d7fdc4ae-41a5-42d1-aeca-3f9cff1a305a",
+    "_syncId": "3d84137c-cbcc-4844-afb4-0b6ca68ee5a3"
+  },
+  {
+    "name": "updateMembership",
+    "key": "updateMembership",
+    "type": "item-update",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "collection": "memberships",
+      "payload": {
+        "memberships_shares": "{{$trigger.payload.memberships_shares}}"
+      },
+      "emitEvents": true,
+      "key": [
+        "{{$trigger.key}}"
+      ]
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "493c1260-3bb9-47e7-940d-115b8b0f1ccc",
+    "_syncId": "cfd6218a-7de5-4c15-9757-597a1312f9a6"
+  },
+  {
+    "name": "User ids",
+    "key": "user_ids",
+    "type": "exec",
+    "position_x": 21,
+    "position_y": 18,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_memberships\"]) {\n    \tid = data[\"read_memberships\"][i].memberships_user\n        if (id) {\n            user_ids.push({\n                \"directus_users_id\": {\n                    \"id\": id\n                },\n                \"messages_campaigns_id\": \"+\"\n            })\n        }\n    }\n    \n\treturn { user_ids };\n}"
+    },
+    "resolve": "3f29d4d6-c774-42e4-93f6-4feb0ae04768",
+    "reject": null,
+    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
+    "_syncId": "1b8c6e64-414b-4ff4-a9ed-fd3ab6286ee8"
+  },
+  {
+    "name": "User ids",
+    "key": "user_ids",
+    "type": "exec",
+    "position_x": 22,
+    "position_y": 19,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_invoices\"]) {\n    \tid = data[\"read_invoices\"][i].payments_recipient_user\n        if (id) {\n            user_ids.push({\n                \"directus_users_id\": {\n                    \"id\": id\n                },\n                \"messages_campaigns_id\": \"+\"\n            })\n        }\n    }\n    \n\treturn { user_ids };\n}"
+    },
+    "resolve": "60b0542a-cba8-4e5f-bea8-b45e79c7c09e",
+    "reject": null,
+    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
+    "_syncId": "4bb7b88f-e8cc-4b46-b7ed-a075b3cd334b"
   }
 ]

@@ -1,39 +1,35 @@
 {
-  "collection": "collectivo_tiles",
-  "field": "tiles_component",
+  "collection": "memberships",
+  "field": "memberships_user_search",
   "type": "string",
   "meta": {
-    "collection": "collectivo_tiles",
+    "collection": "memberships",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "tiles_component",
+    "field": "memberships_user_search",
     "group": null,
-    "hidden": false,
-    "interface": null,
+    "hidden": true,
+    "interface": "input",
     "note": null,
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 40,
+    "sort": 16,
     "special": null,
     "translations": [
       {
-        "language": "en-US",
-        "translation": "Component"
-      },
-      {
         "language": "de-DE",
-        "translation": "Komponente"
+        "translation": "Suchhilfe"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
-    "name": "tiles_component",
-    "table": "collectivo_tiles",
+    "name": "memberships_user_search",
+    "table": "memberships",
     "data_type": "character varying",
     "default_value": null,
     "max_length": 255,

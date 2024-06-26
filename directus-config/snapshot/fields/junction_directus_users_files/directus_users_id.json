@@ -1,34 +1,30 @@
 {
-  "collection": "messages_designs",
-  "field": "user_updated",
+  "collection": "junction_directus_users_files",
+  "field": "directus_users_id",
   "type": "uuid",
   "meta": {
-    "collection": "messages_designs",
+    "collection": "junction_directus_users_files",
     "conditions": null,
-    "display": "user",
+    "display": null,
     "display_options": null,
-    "field": "user_updated",
+    "field": "directus_users_id",
     "group": null,
     "hidden": true,
-    "interface": "select-dropdown-m2o",
+    "interface": null,
     "note": null,
-    "options": {
-      "template": "{{avatar.$thumbnail}} {{first_name}} {{last_name}}"
-    },
-    "readonly": true,
+    "options": null,
+    "readonly": false,
     "required": false,
-    "sort": 4,
-    "special": [
-      "user-updated"
-    ],
+    "sort": 2,
+    "special": null,
     "translations": null,
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "user_updated",
-    "table": "messages_designs",
+    "name": "directus_users_id",
+    "table": "junction_directus_users_files",
     "data_type": "uuid",
     "default_value": null,
     "max_length": null,
@@ -40,7 +36,7 @@
     "is_generated": false,
     "generation_expression": null,
     "has_auto_increment": false,
-    "foreign_key_table": null,
-    "foreign_key_column": null
+    "foreign_key_table": "directus_users",
+    "foreign_key_column": "id"
   }
 }

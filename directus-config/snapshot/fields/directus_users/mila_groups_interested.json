@@ -53,6 +53,14 @@
         {
           "text": "Personalkomitee",
           "value": "Personalkomitee"
+        },
+        {
+          "text": "Mitgliedergewinnung",
+          "value": "Mitgliedergewinnung"
+        },
+        {
+          "text": "Mitgliederbüro",
+          "value": "Mitgliederbüro"
         }
       ]
     },
