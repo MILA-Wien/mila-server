@@ -10,19 +10,7 @@ import {
   date,
 } from "yup";
 import type { FormErrorEvent, FormSubmitEvent } from "#ui/types";
-import { parse, marked } from "marked";
-
-const renderer = {
-  link(href: string, title: string, text: string) {
-    const link = marked.Renderer.prototype.link.call(this, href, title, text);
-    return link.replace("<a", "<a target='_blank' ");
-  },
-};
-
-marked.use({
-  // @ts-expect-error
-  renderer,
-});
+import { parse } from "marked";
 
 const customValidators = useCollectivoValidators();
 const user = useCollectivoUser();
@@ -31,6 +19,10 @@ const { t } = useI18n();
 const debug = useRuntimeConfig().public.debug;
 const state: { [key: string]: any } = reactive({});
 let schema = object();
+
+function prepareHTML(html: string) {
+  return (parse(t(html)) as string).replace(/<a /g, "<a target='_blank' ");
+}
 
 const props = defineProps({
   fields: Object as PropType<CollectivoFormField[]>,
@@ -286,7 +278,7 @@ async function fillOutAll() {
           <div
             v-if="input.description"
             class="leading-5 py-2 md-description"
-            v-html="parse(t(input.description))"
+            v-html="prepareHTML(input.description)"
           />
         </div>
         <div v-else-if="input.type === 'description'" class="form-field-lg">
@@ -297,7 +289,7 @@ async function fillOutAll() {
             <div
               v-else
               class="md-description md-small"
-              v-html="parse(t(input.description))"
+              v-html="prepareHTML(input.description)"
             />
           </UFormGroup>
         </div>
@@ -323,7 +315,7 @@ async function fillOutAll() {
               <div
                 v-if="input.description"
                 class="md-description md-small"
-                v-html="parse(t(input.description))"
+                v-html="prepareHTML(input.description)"
               />
             </template>
             <template #error="{ error }">
@@ -447,7 +439,7 @@ async function fillOutAll() {
                 <span
                   v-if="input.content"
                   class="md-description md-small"
-                  v-html="parse(t(input.content))"
+                  v-html="prepareHTML(input.content)"
                 />
               </div>
             </template>
