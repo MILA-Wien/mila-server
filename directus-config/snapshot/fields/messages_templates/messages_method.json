@@ -42,7 +42,7 @@
     "name": "messages_method",
     "table": "messages_templates",
     "data_type": "character varying",
-    "default_value": null,
+    "default_value": "email",
     "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,

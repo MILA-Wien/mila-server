@@ -238,13 +238,14 @@ type Subscription {
   collectivo_tiles_buttons_mutated(event: EventEnum): collectivo_tiles_buttons_mutated
   junction_directus_users_files_mutated(event: EventEnum): junction_directus_users_files_mutated
   memberships_mutated(event: EventEnum): memberships_mutated
-  messages_templates_mutated(event: EventEnum): messages_templates_mutated
   messages_campaigns_mutated(event: EventEnum): messages_campaigns_mutated
   messages_campaigns_directus_users_mutated(event: EventEnum): messages_campaigns_directus_users_mutated
   messages_messages_mutated(event: EventEnum): messages_messages_mutated
   mila_automations_mutated(event: EventEnum): mila_automations_mutated
   payments_invoices_out_mutated(event: EventEnum): payments_invoices_out_mutated
   payments_invoices_entries_mutated(event: EventEnum): payments_invoices_entries_mutated
+  messages_designs_mutated(event: EventEnum): messages_designs_mutated
+  messages_templates_mutated(event: EventEnum): messages_templates_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -1716,6 +1717,26 @@ type messages_campaigns_mutated {
   data: messages_campaigns
 }
 
+type messages_designs {
+  id: ID!
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  date_created: Date
+  date_created_func: datetime_functions
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  date_updated: Date
+  date_updated_func: datetime_functions
+  messages_design_name: String!
+
+  """Add {{content}} where the template should be inserted"""
+  messages_design_html: String!
+}
+
+type messages_designs_mutated {
+  key: ID!
+  event: EventEnum
+  data: messages_designs
+}
+
 type messages_messages {
   date_created: Date
   date_created_func: datetime_functions
@@ -1742,6 +1763,10 @@ type messages_templates {
   date_updated: Date
   date_updated_func: datetime_functions
   id: ID!
+
+  """
+  Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
+  """
   messages_content: String
 
   """The method that should be used to deliver the message."""
@@ -1750,6 +1775,7 @@ type messages_templates {
   messages_subject: String
   user_created: String
   user_updated: String
+  messages_design(filter: messages_designs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_designs
 }
 
 type messages_templates_mutated {
@@ -2314,10 +2340,26 @@ input create_messages_campaigns_input {
   messages_recipients: [create_messages_campaigns_directus_users_input]
 }
 
+input create_messages_designs_input {
+  id: ID
+  user_created: create_directus_users_input
+  date_created: Date
+  user_updated: create_directus_users_input
+  date_updated: Date
+  messages_design_name: String!
+
+  """Add {{content}} where the template should be inserted"""
+  messages_design_html: String!
+}
+
 input create_messages_templates_input {
   date_created: Date
   date_updated: Date
   id: ID
+
+  """
+  Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
+  """
   messages_content: String
 
   """The method that should be used to deliver the message."""
@@ -2326,6 +2368,7 @@ input create_messages_templates_input {
   messages_subject: String
   user_created: String
   user_updated: String
+  messages_design: create_messages_designs_input
 }
 
 input create_payments_invoices_entries_input {
@@ -2901,6 +2944,20 @@ input messages_campaigns_filter {
   _or: [messages_campaigns_filter]
 }
 
+input messages_designs_filter {
+  id: number_filter_operators
+  user_created: directus_users_filter
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  user_updated: directus_users_filter
+  date_updated: date_filter_operators
+  date_updated_func: datetime_function_filter_operators
+  messages_design_name: string_filter_operators
+  messages_design_html: string_filter_operators
+  _and: [messages_designs_filter]
+  _or: [messages_designs_filter]
+}
+
 input messages_templates_filter {
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
@@ -2913,6 +2970,7 @@ input messages_templates_filter {
   messages_subject: string_filter_operators
   user_created: string_filter_operators
   user_updated: string_filter_operators
+  messages_design: messages_designs_filter
   _and: [messages_templates_filter]
   _or: [messages_templates_filter]
 }
@@ -3384,10 +3442,26 @@ input update_messages_campaigns_input {
   messages_recipients: [update_messages_campaigns_directus_users_input]
 }
 
+input update_messages_designs_input {
+  id: ID
+  user_created: update_directus_users_input
+  date_created: Date
+  user_updated: update_directus_users_input
+  date_updated: Date
+  messages_design_name: String
+
+  """Add {{content}} where the template should be inserted"""
+  messages_design_html: String
+}
+
 input update_messages_templates_input {
   date_created: Date
   date_updated: Date
   id: ID
+
+  """
+  Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
+  """
   messages_content: String
 
   """The method that should be used to deliver the message."""
@@ -3396,6 +3470,7 @@ input update_messages_templates_input {
   messages_subject: String
   user_created: String
   user_updated: String
+  messages_design: update_messages_designs_input
 }
 
 input update_payments_invoices_entries_input {

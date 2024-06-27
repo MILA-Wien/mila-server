@@ -40,10 +40,10 @@
     "_syncId": "1496bf80-5a7f-4218-97b6-ee9bfafe2d3e"
   },
   {
-    "name": "messages_handle_campaign_changes",
-    "icon": "campaign",
-    "color": null,
-    "description": "Triggers the execute_campaign flow when a campaign is added or updated with with status \"pending\"",
+    "name": "Campaign Update Send",
+    "icon": "send",
+    "color": "#FFA439",
+    "description": "Calls the Send Mail Endpoint if a Campaign is Sent",
     "status": "active",
     "trigger": "event",
     "accountability": "all",
@@ -57,7 +57,7 @@
         "messages_campaigns"
       ]
     },
-    "operation": "971fbde5-c947-416e-b575-6b7eea353ddf",
+    "operation": "686e608a-82b1-4116-8946-5b904e8f3c86",
     "_syncId": "24887665-6c92-44f5-b0ef-8fce13f01df2"
   },
   {
@@ -185,18 +185,22 @@
     "_syncId": "5ea28856-7cb2-49a4-86b8-eacbd27ac54d"
   },
   {
-    "name": "messages_send_message",
+    "name": "Kampagne senden",
     "icon": "send",
-    "color": null,
-    "description": "Sends a message based on the provided data. The input must contain the following fields: recipient_id (directus user UID), template_id (integer, pointing to an entry of the messages_templates collection). The following inputs are optional: campaign_id (integer, pointing to an entry of the messages_campaigns collection).",
+    "color": "#FFA439",
+    "description": null,
     "status": "active",
-    "trigger": "operation",
+    "trigger": "manual",
     "accountability": "all",
     "options": {
-      "return": "$last"
+      "collections": [
+        "messages_campaigns"
+      ],
+      "requireConfirmation": true,
+      "confirmationDescription": "Möchtest du diese Kampagne absenden?"
     },
-    "operation": "1e6ecf93-13c2-409f-a166-e8e659e9e488",
-    "_syncId": "67354cc1-da30-40f2-8bc7-aa464574bd43"
+    "operation": "5bbba7d2-4d6a-4969-856b-f83c3347411d",
+    "_syncId": "8b324a75-f005-403d-8197-48accc2d3538"
   },
   {
     "name": "mila_new_membership_mail",
@@ -290,20 +294,6 @@
     },
     "operation": "18d5537d-bd68-4f51-878c-f87c054092f4",
     "_syncId": "c9a409a7-e523-4a19-90da-2811aecd2bf4"
-  },
-  {
-    "name": "messages_execute_campaign",
-    "icon": "campaign",
-    "color": null,
-    "description": "Executes a campaign by sending the corresponding messages",
-    "status": "active",
-    "trigger": "operation",
-    "accountability": "all",
-    "options": {
-      "return": "$last"
-    },
-    "operation": "503b7d7d-0a2a-4629-a722-7f819fb9b61f",
-    "_syncId": "d7fdc4ae-41a5-42d1-aeca-3f9cff1a305a"
   },
   {
     "name": "memberships_user_search_inner",

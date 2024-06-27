@@ -1259,27 +1259,16 @@
     "collection": "messages_campaigns",
     "action": "create",
     "permissions": null,
-    "validation": {
-      "_and": [
-        {
-          "_or": [
-            {
-              "messages_campaign_status": {
-                "_eq": "draft"
-              }
-            },
-            {
-              "messages_campaign_status": {
-                "_eq": "pending"
-              }
-            }
-          ]
-        }
-      ]
-    },
+    "validation": null,
     "presets": null,
     "fields": [
-      "*"
+      "id",
+      "user_created",
+      "date_created",
+      "user_updated",
+      "date_updated",
+      "messages_template",
+      "messages_recipients"
     ],
     "_syncId": "f4fc9fb2-2b36-4b13-9b85-8564d1fd16fb"
   },
@@ -1328,11 +1317,6 @@
               "messages_campaign_status": {
                 "_eq": "draft"
               }
-            },
-            {
-              "messages_campaign_status": {
-                "_eq": "pending"
-              }
             }
           ]
         }
@@ -1340,9 +1324,75 @@
     },
     "presets": null,
     "fields": [
-      "*"
+      "id",
+      "user_created",
+      "date_created",
+      "user_updated",
+      "date_updated",
+      "messages_template",
+      "messages_recipients"
     ],
     "_syncId": "36adc3d9-64b8-4ada-8c26-0911a0e316eb"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "messages_designs",
+    "action": "create",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "821b328c-f51f-4656-be01-4e5e5f0e5909"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "messages_designs",
+    "action": "delete",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "e426c18f-ab4c-469b-806d-583f91ce72e0"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "messages_designs",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "bc94e78e-00ba-4591-975c-203f657ca47c"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "messages_designs",
+    "action": "share",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "ba1637f7-b142-497f-b751-20fd9fed2036"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "messages_designs",
+    "action": "update",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "8cabef72-9322-4f23-bb7f-9471950ec1da"
   },
   {
     "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",

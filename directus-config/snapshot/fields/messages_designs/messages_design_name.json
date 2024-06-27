@@ -1,39 +1,30 @@
 {
-  "collection": "messages_templates",
-  "field": "messages_name",
+  "collection": "messages_designs",
+  "field": "messages_design_name",
   "type": "string",
   "meta": {
-    "collection": "messages_templates",
+    "collection": "messages_designs",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "messages_name",
+    "field": "messages_design_name",
     "group": null,
     "hidden": false,
-    "interface": null,
+    "interface": "input",
     "note": null,
     "options": null,
     "readonly": false,
     "required": true,
-    "sort": 1,
+    "sort": 6,
     "special": null,
-    "translations": [
-      {
-        "language": "en-US",
-        "translation": "Name"
-      },
-      {
-        "language": "de-DE",
-        "translation": "Name"
-      }
-    ],
+    "translations": null,
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "messages_name",
-    "table": "messages_templates",
+    "name": "messages_design_name",
+    "table": "messages_designs",
     "data_type": "character varying",
     "default_value": null,
     "max_length": 255,

@@ -120,26 +120,6 @@
     "_syncId": "ecafe208-21b8-4aa9-ab60-ad3663271ffe"
   },
   {
-    "name": "check_status_is_pending",
-    "key": "check_status_is_pending",
-    "type": "condition",
-    "position_x": 37,
-    "position_y": 1,
-    "options": {
-      "filter": {
-        "read_campaign_data": {
-          "messages_campaign_status": {
-            "_eq": "pending"
-          }
-        }
-      }
-    },
-    "resolve": "a8d3c6d2-99a0-4159-9a44-7d8159fd1cde",
-    "reject": null,
-    "flow": "d7fdc4ae-41a5-42d1-aeca-3f9cff1a305a",
-    "_syncId": "ea05b766-8199-45f1-9381-d3af07ef1142"
-  },
-  {
     "name": "checkHasShares",
     "key": "checkHasShares",
     "type": "exec",
@@ -243,41 +223,6 @@
     "_syncId": "0353178c-e17a-4cd8-977f-406d271ec4c7"
   },
   {
-    "name": "Create message record",
-    "key": "create_message_record",
-    "type": "item-create",
-    "position_x": 19,
-    "position_y": 1,
-    "options": {
-      "collection": "messages_messages",
-      "payload": {
-        "messages_status": "pending",
-        "messages_template": "{{$trigger.template_id}}",
-        "messages_recipient": "{{$trigger.recipient_id}}",
-        "messages_campaign": "{{$trigger.campaign_id}}"
-      },
-      "permissions": "$full"
-    },
-    "resolve": "e017ea93-5aa0-4fb5-98ad-c6cc668aaaf7",
-    "reject": "e2f2f278-e2d6-409e-8f9b-c6646ea9ffe8",
-    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
-    "_syncId": "1e6ecf93-13c2-409f-a166-e8e659e9e488"
-  },
-  {
-    "name": "create_modified_keys_array",
-    "key": "create_modified_keys_array",
-    "type": "exec",
-    "position_x": 19,
-    "position_y": 1,
-    "options": {
-      "code": "module.exports = async function(data) {    \n\tmodified_keys = [];\n    if (data[\"$trigger\"].key) {\n        modified_keys.push({\"messages_campaign_id\": data[\"$trigger\"].key});\n    }\n    for (i in data[\"$trigger\"].keys) {\n        modified_keys.push({\"messages_campaign_id\": data[\"$trigger\"].keys[i]});\n    }\n    return modified_keys;\n}"
-    },
-    "resolve": "f7ba060f-e7e1-45bb-8ca1-33fd6dc59422",
-    "reject": null,
-    "flow": "24887665-6c92-44f5-b0ef-8fce13f01df2",
-    "_syncId": "971fbde5-c947-416e-b575-6b7eea353ddf"
-  },
-  {
     "name": "createCampaign",
     "key": "createCampaign",
     "type": "item-create",
@@ -339,20 +284,6 @@
     "_syncId": "9f3db152-9448-4751-b187-f12ea93b543a"
   },
   {
-    "name": "Determine outcome",
-    "key": "determine_outcome",
-    "type": "exec",
-    "position_x": 91,
-    "position_y": 1,
-    "options": {
-      "code": "module.exports = async function(data) {\n  if (data[\"$last\"].every((output) => output.status == \"sent\")) {\n  \treturn \"sent\";\n  } else if (data[\"$last\"].every((output) => output.status == \"failed\")) {\n    return \"completely_failed\";\n  } else {\n    return \"partially_failed\";\n  }\n}"
-    },
-    "resolve": "3d84137c-cbcc-4844-afb4-0b6ca68ee5a3",
-    "reject": null,
-    "flow": "d7fdc4ae-41a5-42d1-aeca-3f9cff1a305a",
-    "_syncId": "ed23be81-07c2-4bce-8135-a1b0de1abc87"
-  },
-  {
     "name": "endFlowWithoutBlocking",
     "key": "endFlowWithoutBlocking",
     "type": "exec",
@@ -407,20 +338,6 @@
     "reject": "c5485f09-f7da-4912-a005-c505ea996de6",
     "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
     "_syncId": "fdb6da80-fa90-4f76-8d09-bf653ded0f32"
-  },
-  {
-    "name": "expand_campaign_to_individual_messages",
-    "key": "expand_campaign_to_individual_messages",
-    "type": "exec",
-    "position_x": 55,
-    "position_y": 1,
-    "options": {
-      "code": "module.exports = async function(data) {\n    campaign = data[\"read_campaign_data\"]\n\tmessagesToSend = [];\n    for (i in campaign.messages_recipients) {\n        recipient = campaign.messages_recipients[i]\n        messagesToSend.push({\n            \"recipient_id\": recipient.directus_users_id,\n            \"template_id\": campaign.messages_template,\n            \"campaign_id\": campaign.id,\n        });\n    }\n\treturn messagesToSend;\n}"
-    },
-    "resolve": "a2879315-4db5-4356-a9c2-be81717ef11b",
-    "reject": null,
-    "flow": "d7fdc4ae-41a5-42d1-aeca-3f9cff1a305a",
-    "_syncId": "a8d3c6d2-99a0-4159-9a44-7d8159fd1cde"
   },
   {
     "name": "Daten lesen",
@@ -511,102 +428,6 @@
     "reject": null,
     "flow": "e67933a7-f0df-41e2-b905-d49a8f2482db",
     "_syncId": "f3c9decb-96dd-41be-8e8d-13b9e0036999"
-  },
-  {
-    "name": "Populate response failure",
-    "key": "populate_response_failure_create_message_record_failure",
-    "type": "transform",
-    "position_x": 37,
-    "position_y": 17,
-    "options": {
-      "json": {
-        "status": "failed"
-      }
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
-    "_syncId": "e2f2f278-e2d6-409e-8f9b-c6646ea9ffe8"
-  },
-  {
-    "name": "Populate response failure",
-    "key": "populate_response_failure_set_message_status_to_failed_read_recipient_data_failure",
-    "type": "transform",
-    "position_x": 91,
-    "position_y": 33,
-    "options": {
-      "json": {
-        "status": "failed"
-      }
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
-    "_syncId": "bfac8686-9234-4a6e-9755-26a6314d8a31"
-  },
-  {
-    "name": "Populate response failure",
-    "key": "populate_response_failure_set_message_status_to_failed_read_template_data_failure",
-    "type": "transform",
-    "position_x": 73,
-    "position_y": 33,
-    "options": {
-      "json": {
-        "status": "failed"
-      }
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
-    "_syncId": "bc9a70af-b46d-4357-ac12-a47ff447bb25"
-  },
-  {
-    "name": "Populate response failure",
-    "key": "populate_response_failure_set_message_status_to_failed_render_message_failure",
-    "type": "transform",
-    "position_x": 109,
-    "position_y": 33,
-    "options": {
-      "json": {
-        "status": "failed"
-      }
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
-    "_syncId": "9fa4ca56-4642-4840-81b4-e059c543f395"
-  },
-  {
-    "name": "Populate response failure",
-    "key": "populate_response_failure_set_message_status_to_failed_send_email_failure",
-    "type": "transform",
-    "position_x": 127,
-    "position_y": 33,
-    "options": {
-      "json": {
-        "status": "failed"
-      }
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
-    "_syncId": "7fb3cc9e-0ed7-4353-92a5-4703b85a7411"
-  },
-  {
-    "name": "Populate response sent",
-    "key": "populate_response_sent",
-    "type": "transform",
-    "position_x": 127,
-    "position_y": 1,
-    "options": {
-      "json": {
-        "status": "sent"
-      }
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
-    "_syncId": "235c2c20-1e97-4776-97e7-8b404b4c7bd9"
   },
   {
     "name": "postToNuxtAPI",
@@ -732,29 +553,6 @@
     "_syncId": "f241b35f-f3ba-47d8-a044-c9a3ddaa8ce8"
   },
   {
-    "name": "read_campaign_data",
-    "key": "read_campaign_data",
-    "type": "item-read",
-    "position_x": 19,
-    "position_y": 1,
-    "options": {
-      "collection": "messages_campaigns",
-      "key": "{{$trigger.messages_campaign_id}}",
-      "query": {
-        "fields": [
-          "id",
-          "messages_campaign_status",
-          "messages_template",
-          "messages_recipients.directus_users_id"
-        ]
-      }
-    },
-    "resolve": "ea05b766-8199-45f1-9381-d3af07ef1142",
-    "reject": null,
-    "flow": "d7fdc4ae-41a5-42d1-aeca-3f9cff1a305a",
-    "_syncId": "503b7d7d-0a2a-4629-a722-7f819fb9b61f"
-  },
-  {
     "name": "Read invoices",
     "key": "read_invoices",
     "type": "item-read",
@@ -803,44 +601,6 @@
     "reject": null,
     "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
     "_syncId": "05cd9d73-3167-4510-ab92-60e4a0cb8b35"
-  },
-  {
-    "name": "Read recipient data",
-    "key": "read_recipient_data",
-    "type": "item-read",
-    "position_x": 55,
-    "position_y": 1,
-    "options": {
-      "collection": "directus_users",
-      "query": {
-        "fields": [
-          "first_name",
-          "last_name",
-          "email"
-        ]
-      },
-      "key": "{{$trigger.recipient_id}}"
-    },
-    "resolve": "5e7278d8-0943-4ba2-a6da-4b673b7019b6",
-    "reject": "4f8fc6b3-3635-4e02-9201-21e669cd395c",
-    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
-    "_syncId": "6ecd80c9-2afe-4c30-8618-9aa0e88c2da0"
-  },
-  {
-    "name": "Read template data",
-    "key": "read_template_data",
-    "type": "item-read",
-    "position_x": 37,
-    "position_y": 1,
-    "options": {
-      "collection": "messages_templates",
-      "key": "{{$trigger.template_id}}",
-      "permissions": "$full"
-    },
-    "resolve": "6ecd80c9-2afe-4c30-8618-9aa0e88c2da0",
-    "reject": "bd57e1ca-8fe5-445f-81a9-4bea6ba1fa67",
-    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
-    "_syncId": "e017ea93-5aa0-4fb5-98ad-c6cc668aaaf7"
   },
   {
     "name": "Read User",
@@ -956,20 +716,6 @@
     "_syncId": "0b6ace39-5a6e-4794-9f17-aa245b14a4fe"
   },
   {
-    "name": "Render message",
-    "key": "render_message",
-    "type": "exec",
-    "position_x": 73,
-    "position_y": 1,
-    "options": {
-      "code": "module.exports = async function(data) {\n    template = data[\"read_template_data\"].messages_content;\n    first_name = data[\"read_recipient_data\"].first_name;\n    last_name = data[\"read_recipient_data\"].last_name;\n    \n    rendered_message = template;\n    \n    rendered_message = rendered_message.replaceAll(\"{\"+\"{recipient_first_name}}\", first_name);\n    rendered_message = rendered_message.replaceAll(\"{\"+\"{recipient_last_name}}\", last_name);\n    \n\treturn {rendered_message};\n}"
-    },
-    "resolve": "85d06f2b-d22c-4b47-babf-597e27d54156",
-    "reject": "0a628fdc-1431-4e6e-aaaf-8b42baf339ae",
-    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
-    "_syncId": "5e7278d8-0943-4ba2-a6da-4b673b7019b6"
-  },
-  {
     "name": "Webhook / Anfrage URL",
     "key": "request_asgww",
     "type": "request",
@@ -1015,6 +761,28 @@
   },
   {
     "name": "Webhook / Anfrage URL",
+    "key": "request_cls83",
+    "type": "request",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_update_send",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{{$trigger}}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "24887665-6c92-44f5-b0ef-8fce13f01df2",
+    "_syncId": "686e608a-82b1-4116-8946-5b904e8f3c86"
+  },
+  {
+    "name": "Webhook / Anfrage URL",
     "key": "request_tsrb6",
     "type": "request",
     "position_x": 19,
@@ -1036,132 +804,39 @@
     "_syncId": "0bec9ec7-45cc-4375-89f9-27231942ddba"
   },
   {
-    "name": "Send email",
-    "key": "send_email",
-    "type": "mail",
-    "position_x": 91,
+    "name": "set_status_to_pending",
+    "key": "set_status_to_pending",
+    "type": "item-update",
+    "position_x": 19,
     "position_y": 1,
     "options": {
-      "subject": "{{read_template_data.messages_subject}}",
-      "body": "{{render_message.rendered_message}}",
-      "to": [
-        "{{read_recipient_data.email}}"
-      ]
-    },
-    "resolve": "56b3e388-bdf2-4178-b44f-a5b870faa1b7",
-    "reject": "6556ad49-0f8b-4d8d-8b55-41c16e5853fb",
-    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
-    "_syncId": "85d06f2b-d22c-4b47-babf-597e27d54156"
-  },
-  {
-    "name": "send_messages",
-    "key": "send_messages",
-    "type": "trigger",
-    "position_x": 73,
-    "position_y": 1,
-    "options": {
-      "payload": "{{$last}}",
-      "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43"
-    },
-    "resolve": "ed23be81-07c2-4bce-8135-a1b0de1abc87",
-    "reject": null,
-    "flow": "d7fdc4ae-41a5-42d1-aeca-3f9cff1a305a",
-    "_syncId": "a2879315-4db5-4356-a9c2-be81717ef11b"
-  },
-  {
-    "name": "Set message status to failed",
-    "key": "set_message_status_to_failed_read_recipient_data_failure",
-    "type": "item-update",
-    "position_x": 73,
-    "position_y": 17,
-    "options": {
-      "collection": "messages_messages",
-      "key": "{{create_message_record[0]}}",
-      "payload": {
-        "messages_message_status": "failed"
+      "query": {
+        "filter": {
+          "_and": [
+            {
+              "messages_campaign_status": {
+                "_eq": "draft"
+              }
+            },
+            {
+              "id": {
+                "_in": "{{$trigger.body.keys}}"
+              }
+            }
+          ]
+        }
       },
-      "permissions": "$full"
-    },
-    "resolve": "bfac8686-9234-4a6e-9755-26a6314d8a31",
-    "reject": null,
-    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
-    "_syncId": "4f8fc6b3-3635-4e02-9201-21e669cd395c"
-  },
-  {
-    "name": "Set message status to failed",
-    "key": "set_message_status_to_failed_read_template_data_failure",
-    "type": "item-update",
-    "position_x": 55,
-    "position_y": 17,
-    "options": {
-      "collection": "messages_messages",
-      "key": "{{create_message_record[0]}}",
       "payload": {
-        "messages_message_status": "failed"
+        "messages_campaign_status": "pending"
       },
-      "permissions": "$full"
+      "emitEvents": true,
+      "permissions": "$full",
+      "collection": "messages_campaigns"
     },
-    "resolve": "bc9a70af-b46d-4357-ac12-a47ff447bb25",
+    "resolve": null,
     "reject": null,
-    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
-    "_syncId": "bd57e1ca-8fe5-445f-81a9-4bea6ba1fa67"
-  },
-  {
-    "name": "Set message status to failed",
-    "key": "set_message_status_to_failed_render_message_failure",
-    "type": "item-update",
-    "position_x": 91,
-    "position_y": 17,
-    "options": {
-      "collection": "messages_messages",
-      "key": "{{create_message_record[0]}}",
-      "payload": {
-        "messages_message_status": "failed"
-      },
-      "permissions": "$full"
-    },
-    "resolve": "9fa4ca56-4642-4840-81b4-e059c543f395",
-    "reject": null,
-    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
-    "_syncId": "0a628fdc-1431-4e6e-aaaf-8b42baf339ae"
-  },
-  {
-    "name": "Set message status to failed",
-    "key": "set_message_status_to_failed_send_email_failure",
-    "type": "item-update",
-    "position_x": 109,
-    "position_y": 17,
-    "options": {
-      "collection": "messages_messages",
-      "key": "{{create_message_record[0]}}",
-      "payload": {
-        "messages_message_status": "failed"
-      },
-      "permissions": "$full"
-    },
-    "resolve": "7fb3cc9e-0ed7-4353-92a5-4703b85a7411",
-    "reject": null,
-    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
-    "_syncId": "6556ad49-0f8b-4d8d-8b55-41c16e5853fb"
-  },
-  {
-    "name": "Set message status to sent",
-    "key": "set_message_status_to_sent",
-    "type": "item-update",
-    "position_x": 109,
-    "position_y": 1,
-    "options": {
-      "collection": "messages_messages",
-      "payload": {
-        "messages_message_status": "sent"
-      },
-      "key": "{{create_message_record[0]}}",
-      "permissions": "$full"
-    },
-    "resolve": "235c2c20-1e97-4776-97e7-8b404b4c7bd9",
-    "reject": null,
-    "flow": "67354cc1-da30-40f2-8bc7-aa464574bd43",
-    "_syncId": "56b3e388-bdf2-4178-b44f-a5b870faa1b7"
+    "flow": "8b324a75-f005-403d-8197-48accc2d3538",
+    "_syncId": "5bbba7d2-4d6a-4969-856b-f83c3347411d"
   },
   {
     "name": "Status applied?",
@@ -1184,21 +859,6 @@
     "_syncId": "9f110beb-6d08-47e3-930c-511045c1760b"
   },
   {
-    "name": "Trigger execute campaign flow",
-    "key": "trigger_execute_campaign_flow",
-    "type": "trigger",
-    "position_x": 37,
-    "position_y": 1,
-    "options": {
-      "payload": "{{$last}}",
-      "flow": "d7fdc4ae-41a5-42d1-aeca-3f9cff1a305a"
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "24887665-6c92-44f5-b0ef-8fce13f01df2",
-    "_syncId": "f7ba060f-e7e1-45bb-8ca1-33fd6dc59422"
-  },
-  {
     "name": "Flow auslösen",
     "key": "trigger_f9yog",
     "type": "trigger",
@@ -1212,25 +872,6 @@
     "reject": null,
     "flow": "3bfde787-1881-4718-b02f-743d5f1f2a74",
     "_syncId": "bc86b485-dfae-4f74-ac08-47464f98ac03"
-  },
-  {
-    "name": "update_campaign_status",
-    "key": "update_campaign_status",
-    "type": "item-update",
-    "position_x": 109,
-    "position_y": 1,
-    "options": {
-      "collection": "messages_campaigns",
-      "key": "{{$trigger.messages_campaign_id}}",
-      "payload": {
-        "messages_campaign_status": "{{$last}}"
-      },
-      "permissions": "$full"
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "d7fdc4ae-41a5-42d1-aeca-3f9cff1a305a",
-    "_syncId": "3d84137c-cbcc-4844-afb4-0b6ca68ee5a3"
   },
   {
     "name": "updateMembership",

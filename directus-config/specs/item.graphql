@@ -33,10 +33,6 @@ type Query {
   memberships_by_id(id: ID!, version: String): memberships
   memberships_aggregated(groupBy: [String], filter: memberships_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_aggregated!]!
   memberships_by_version(version: String!, id: ID!): version_memberships
-  messages_templates(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_templates!]!
-  messages_templates_by_id(id: ID!, version: String): messages_templates
-  messages_templates_aggregated(groupBy: [String], filter: messages_templates_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [messages_templates_aggregated!]!
-  messages_templates_by_version(version: String!, id: ID!): version_messages_templates
   messages_campaigns(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_campaigns!]!
   messages_campaigns_by_id(id: ID!, version: String): messages_campaigns
   messages_campaigns_aggregated(groupBy: [String], filter: messages_campaigns_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [messages_campaigns_aggregated!]!
@@ -61,6 +57,14 @@ type Query {
   payments_invoices_entries_by_id(id: ID!, version: String): payments_invoices_entries
   payments_invoices_entries_aggregated(groupBy: [String], filter: payments_invoices_entries_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [payments_invoices_entries_aggregated!]!
   payments_invoices_entries_by_version(version: String!, id: ID!): version_payments_invoices_entries
+  messages_designs(filter: messages_designs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_designs!]!
+  messages_designs_by_id(id: ID!, version: String): messages_designs
+  messages_designs_aggregated(groupBy: [String], filter: messages_designs_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [messages_designs_aggregated!]!
+  messages_designs_by_version(version: String!, id: ID!): version_messages_designs
+  messages_templates(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_templates!]!
+  messages_templates_by_id(id: ID!, version: String): messages_templates
+  messages_templates_aggregated(groupBy: [String], filter: messages_templates_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [messages_templates_aggregated!]!
+  messages_templates_by_version(version: String!, id: ID!): version_messages_templates
 }
 
 type Mutation {
@@ -80,8 +84,6 @@ type Mutation {
   create_junction_directus_users_files_item(data: create_junction_directus_users_files_input!): junction_directus_users_files
   create_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_input!]): [memberships!]!
   create_memberships_item(data: create_memberships_input!): memberships
-  create_messages_templates_items(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_messages_templates_input!]): [messages_templates!]!
-  create_messages_templates_item(data: create_messages_templates_input!): messages_templates
   create_messages_campaigns_items(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_messages_campaigns_input!]): [messages_campaigns!]!
   create_messages_campaigns_item(data: create_messages_campaigns_input!): messages_campaigns
   create_messages_campaigns_directus_users_items(filter: messages_campaigns_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_messages_campaigns_directus_users_input!]): [messages_campaigns_directus_users!]!
@@ -94,6 +96,10 @@ type Mutation {
   create_payments_invoices_out_item(data: create_payments_invoices_out_input!): payments_invoices_out
   create_payments_invoices_entries_items(filter: payments_invoices_entries_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_payments_invoices_entries_input!]): [payments_invoices_entries!]!
   create_payments_invoices_entries_item(data: create_payments_invoices_entries_input!): payments_invoices_entries
+  create_messages_designs_items(filter: messages_designs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_messages_designs_input!]): [messages_designs!]!
+  create_messages_designs_item(data: create_messages_designs_input!): messages_designs
+  create_messages_templates_items(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_messages_templates_input!]): [messages_templates!]!
+  create_messages_templates_item(data: create_messages_templates_input!): messages_templates
   update_directus_sync_id_map_items(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_sync_id_map_input!): [directus_sync_id_map!]!
   update_directus_sync_id_map_batch(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_sync_id_map_input!]): [directus_sync_id_map!]!
   update_directus_sync_id_map_item(id: ID!, data: update_directus_sync_id_map_input!): directus_sync_id_map
@@ -119,9 +125,6 @@ type Mutation {
   update_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_input!): [memberships!]!
   update_memberships_batch(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_input!]): [memberships!]!
   update_memberships_item(id: ID!, data: update_memberships_input!): memberships
-  update_messages_templates_items(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_messages_templates_input!): [messages_templates!]!
-  update_messages_templates_batch(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_messages_templates_input!]): [messages_templates!]!
-  update_messages_templates_item(id: ID!, data: update_messages_templates_input!): messages_templates
   update_messages_campaigns_items(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_messages_campaigns_input!): [messages_campaigns!]!
   update_messages_campaigns_batch(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_messages_campaigns_input!]): [messages_campaigns!]!
   update_messages_campaigns_item(id: ID!, data: update_messages_campaigns_input!): messages_campaigns
@@ -140,6 +143,12 @@ type Mutation {
   update_payments_invoices_entries_items(filter: payments_invoices_entries_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_payments_invoices_entries_input!): [payments_invoices_entries!]!
   update_payments_invoices_entries_batch(filter: payments_invoices_entries_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_payments_invoices_entries_input!]): [payments_invoices_entries!]!
   update_payments_invoices_entries_item(id: ID!, data: update_payments_invoices_entries_input!): payments_invoices_entries
+  update_messages_designs_items(filter: messages_designs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_messages_designs_input!): [messages_designs!]!
+  update_messages_designs_batch(filter: messages_designs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_messages_designs_input!]): [messages_designs!]!
+  update_messages_designs_item(id: ID!, data: update_messages_designs_input!): messages_designs
+  update_messages_templates_items(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_messages_templates_input!): [messages_templates!]!
+  update_messages_templates_batch(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_messages_templates_input!]): [messages_templates!]!
+  update_messages_templates_item(id: ID!, data: update_messages_templates_input!): messages_templates
   delete_directus_sync_id_map_items(ids: [ID]!): delete_many
   delete_directus_sync_id_map_item(id: ID!): delete_one
   delete_collectivo_extensions_items(ids: [ID]!): delete_many
@@ -156,8 +165,6 @@ type Mutation {
   delete_junction_directus_users_files_item(id: ID!): delete_one
   delete_memberships_items(ids: [ID]!): delete_many
   delete_memberships_item(id: ID!): delete_one
-  delete_messages_templates_items(ids: [ID]!): delete_many
-  delete_messages_templates_item(id: ID!): delete_one
   delete_messages_campaigns_items(ids: [ID]!): delete_many
   delete_messages_campaigns_item(id: ID!): delete_one
   delete_messages_campaigns_directus_users_items(ids: [ID]!): delete_many
@@ -170,6 +177,10 @@ type Mutation {
   delete_payments_invoices_out_item(id: ID!): delete_one
   delete_payments_invoices_entries_items(ids: [ID]!): delete_many
   delete_payments_invoices_entries_item(id: ID!): delete_one
+  delete_messages_designs_items(ids: [ID]!): delete_many
+  delete_messages_designs_item(id: ID!): delete_one
+  delete_messages_templates_items(ids: [ID]!): delete_many
+  delete_messages_templates_item(id: ID!): delete_one
 }
 
 type Subscription {
@@ -200,13 +211,14 @@ type Subscription {
   collectivo_tiles_buttons_mutated(event: EventEnum): collectivo_tiles_buttons_mutated
   junction_directus_users_files_mutated(event: EventEnum): junction_directus_users_files_mutated
   memberships_mutated(event: EventEnum): memberships_mutated
-  messages_templates_mutated(event: EventEnum): messages_templates_mutated
   messages_campaigns_mutated(event: EventEnum): messages_campaigns_mutated
   messages_campaigns_directus_users_mutated(event: EventEnum): messages_campaigns_directus_users_mutated
   messages_messages_mutated(event: EventEnum): messages_messages_mutated
   mila_automations_mutated(event: EventEnum): mila_automations_mutated
   payments_invoices_out_mutated(event: EventEnum): payments_invoices_out_mutated
   payments_invoices_entries_mutated(event: EventEnum): payments_invoices_entries_mutated
+  messages_designs_mutated(event: EventEnum): messages_designs_mutated
+  messages_templates_mutated(event: EventEnum): messages_templates_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -1285,6 +1297,55 @@ type messages_campaigns_mutated {
   data: messages_campaigns
 }
 
+type messages_designs {
+  id: ID!
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  date_created: Date
+  date_created_func: datetime_functions
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  date_updated: Date
+  date_updated_func: datetime_functions
+  messages_design_name: String!
+
+  """Add {{content}} where the template should be inserted"""
+  messages_design_html: String!
+}
+
+type messages_designs_aggregated {
+  group: JSON
+  countAll: Int
+  count: messages_designs_aggregated_count
+  countDistinct: messages_designs_aggregated_count
+  avg: messages_designs_aggregated_fields
+  sum: messages_designs_aggregated_fields
+  avgDistinct: messages_designs_aggregated_fields
+  sumDistinct: messages_designs_aggregated_fields
+  min: messages_designs_aggregated_fields
+  max: messages_designs_aggregated_fields
+}
+
+type messages_designs_aggregated_count {
+  id: Int
+  user_created: Int
+  date_created: Int
+  user_updated: Int
+  date_updated: Int
+  messages_design_name: Int
+
+  """Add {{content}} where the template should be inserted"""
+  messages_design_html: Int
+}
+
+type messages_designs_aggregated_fields {
+  id: Float
+}
+
+type messages_designs_mutated {
+  key: ID!
+  event: EventEnum
+  data: messages_designs
+}
+
 type messages_messages {
   date_created: Date
   date_created_func: datetime_functions
@@ -1342,6 +1403,10 @@ type messages_templates {
   date_updated: Date
   date_updated_func: datetime_functions
   id: ID!
+
+  """
+  Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
+  """
   messages_content: String
 
   """The method that should be used to deliver the message."""
@@ -1350,6 +1415,7 @@ type messages_templates {
   messages_subject: String
   user_created: String
   user_updated: String
+  messages_design(filter: messages_designs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_designs
 }
 
 type messages_templates_aggregated {
@@ -1369,6 +1435,10 @@ type messages_templates_aggregated_count {
   date_created: Int
   date_updated: Int
   id: Int
+
+  """
+  Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
+  """
   messages_content: Int
 
   """The method that should be used to deliver the message."""
@@ -1377,10 +1447,12 @@ type messages_templates_aggregated_count {
   messages_subject: Int
   user_created: Int
   user_updated: Int
+  messages_design: Int
 }
 
 type messages_templates_aggregated_fields {
   id: Float
+  messages_design: Float
 }
 
 type messages_templates_mutated {
@@ -1698,6 +1770,19 @@ type version_messages_campaigns_directus_users {
 }
 
 """"""
+type version_messages_designs {
+  id: ID
+  user_created: JSON
+  date_created: Date
+  user_updated: JSON
+  date_updated: Date
+  messages_design_name: String
+
+  """Add {{content}} where the template should be inserted"""
+  messages_design_html: String
+}
+
+""""""
 type version_messages_messages {
   date_created: Date
   date_updated: Date
@@ -1715,6 +1800,10 @@ type version_messages_templates {
   date_created: Date
   date_updated: Date
   id: ID
+
+  """
+  Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
+  """
   messages_content: String
 
   """The method that should be used to deliver the message."""
@@ -1723,6 +1812,7 @@ type version_messages_templates {
   messages_subject: String
   user_created: String
   user_updated: String
+  messages_design: JSON
 }
 
 """"""
@@ -2095,6 +2185,18 @@ input create_messages_campaigns_input {
   messages_recipients: [create_messages_campaigns_directus_users_input]
 }
 
+input create_messages_designs_input {
+  id: ID
+  user_created: create_directus_users_input
+  date_created: Date
+  user_updated: create_directus_users_input
+  date_updated: Date
+  messages_design_name: String!
+
+  """Add {{content}} where the template should be inserted"""
+  messages_design_html: String!
+}
+
 input create_messages_messages_input {
   date_created: Date
   date_updated: Date
@@ -2111,6 +2213,10 @@ input create_messages_templates_input {
   date_created: Date
   date_updated: Date
   id: ID
+
+  """
+  Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
+  """
   messages_content: String
 
   """The method that should be used to deliver the message."""
@@ -2119,6 +2225,7 @@ input create_messages_templates_input {
   messages_subject: String
   user_created: String
   user_updated: String
+  messages_design: create_messages_designs_input
 }
 
 input create_mila_automations_input {
@@ -2529,6 +2636,20 @@ input messages_campaigns_filter {
   _or: [messages_campaigns_filter]
 }
 
+input messages_designs_filter {
+  id: number_filter_operators
+  user_created: directus_users_filter
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  user_updated: directus_users_filter
+  date_updated: date_filter_operators
+  date_updated_func: datetime_function_filter_operators
+  messages_design_name: string_filter_operators
+  messages_design_html: string_filter_operators
+  _and: [messages_designs_filter]
+  _or: [messages_designs_filter]
+}
+
 input messages_messages_filter {
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
@@ -2557,6 +2678,7 @@ input messages_templates_filter {
   messages_subject: string_filter_operators
   user_created: string_filter_operators
   user_updated: string_filter_operators
+  messages_design: messages_designs_filter
   _and: [messages_templates_filter]
   _or: [messages_templates_filter]
 }
@@ -2882,6 +3004,18 @@ input update_messages_campaigns_input {
   messages_recipients: [update_messages_campaigns_directus_users_input]
 }
 
+input update_messages_designs_input {
+  id: ID
+  user_created: update_directus_users_input
+  date_created: Date
+  user_updated: update_directus_users_input
+  date_updated: Date
+  messages_design_name: String
+
+  """Add {{content}} where the template should be inserted"""
+  messages_design_html: String
+}
+
 input update_messages_messages_input {
   date_created: Date
   date_updated: Date
@@ -2898,6 +3032,10 @@ input update_messages_templates_input {
   date_created: Date
   date_updated: Date
   id: ID
+
+  """
+  Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
+  """
   messages_content: String
 
   """The method that should be used to deliver the message."""
@@ -2906,6 +3044,7 @@ input update_messages_templates_input {
   messages_subject: String
   user_created: String
   user_updated: String
+  messages_design: update_messages_designs_input
 }
 
 input update_mila_automations_input {
