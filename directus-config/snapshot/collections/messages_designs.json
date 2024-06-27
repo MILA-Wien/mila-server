@@ -8,17 +8,24 @@
     "collapse": "open",
     "collection": "messages_designs",
     "color": null,
-    "display_template": null,
+    "display_template": "{{messages_design_name}}",
     "group": "messages",
     "hidden": false,
-    "icon": null,
+    "icon": "design_services",
     "item_duplication_fields": null,
     "note": null,
     "preview_url": null,
     "singleton": false,
-    "sort": 4,
+    "sort": 3,
     "sort_field": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Designs",
+        "singular": "Design",
+        "plural": "Designs"
+      }
+    ],
     "unarchive_value": null,
     "versioning": false
   },
