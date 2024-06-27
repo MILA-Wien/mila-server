@@ -7,9 +7,19 @@ function sleep(ms: number) {
 }
 
 export default defineEventHandler(async (event) => {
+  try {
+    return await handleCampaignUpdate(event);
+  } catch (error) {
+    console.log("Error in campaigns_update_send.post.ts", error);
+    throw error;
+  }
+});
+
+async function handleCampaignUpdate(event: any) {
   // Protect route with API Token
   verifyCollectivoApiToken(event);
   const body = await readBody(event);
+  console.log("Received request", body);
 
   // Ignore requests where there were no changes to the campaign status or the new status is not "pending"
   if (
@@ -46,7 +56,7 @@ export default defineEventHandler(async (event) => {
     campaignEndpoint.isActive = false;
     throw error;
   }
-});
+}
 
 async function executeCampaign(campaignKey: number): Promise<string> {
   try {
@@ -312,18 +322,18 @@ class MailSender {
 
   static fromRuntimeConfig() {
     const config = useRuntimeConfig();
-
+    console.log("Using email configuration", config);
     return new MailSender(
       {
-        host: config.email.smtpHost,
-        port: config.email.smtpPort,
+        host: config.emailSmtpHost,
+        port: Number(config.emailSmtpPort),
         // secure: true, // use TLS
         auth: {
-          user: config.email.smtpUser,
-          pass: config.email.smtpPassword,
+          user: config.emailSmtpUser,
+          pass: config.emailSmtpPassword,
         },
       },
-      config.email.from,
+      config.emailFrom,
     );
   }
 
