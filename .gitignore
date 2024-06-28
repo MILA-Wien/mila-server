@@ -14,11 +14,6 @@ keycloak-db-backups-manual/
 docker/
 habidat/
 
-# Ignore custom files in app
-collectivo/app/public/*
-collectivo/app/app.config.ts
-collectivo/custom_extensions/*
-
 # Directus
 directus/database/
 directus/uploads/*
@@ -49,7 +44,6 @@ logs
 .env
 .env.*
 !.env.example
-directus-sync-prod.config.js
 
 # ignore cache
 .eslintcache
