@@ -1,0 +1,29 @@
+{
+  "collection": "directus_users",
+  "field": "mila_documents",
+  "type": "alias",
+  "meta": {
+    "collection": "directus_users",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "mila_documents",
+    "group": null,
+    "hidden": false,
+    "interface": "files",
+    "note": null,
+    "options": {
+      "folder": "76f53c6c-1395-42b3-9816-436ea3e71086"
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 111,
+    "special": [
+      "files"
+    ],
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}

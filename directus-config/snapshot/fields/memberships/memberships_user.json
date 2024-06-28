@@ -1,0 +1,55 @@
+{
+  "collection": "memberships",
+  "field": "memberships_user",
+  "type": "uuid",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": "related-values",
+    "display_options": {
+      "template": "{{first_name}} {{last_name}}"
+    },
+    "field": "memberships_user",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown-m2o",
+    "note": null,
+    "options": null,
+    "readonly": false,
+    "required": true,
+    "sort": 1,
+    "special": [
+      "m2o"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Person"
+      },
+      {
+        "language": "en-US",
+        "translation": "Person"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "memberships_user",
+    "table": "memberships",
+    "data_type": "uuid",
+    "default_value": null,
+    "max_length": null,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": true,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": "directus_users",
+    "foreign_key_column": "id"
+  }
+}

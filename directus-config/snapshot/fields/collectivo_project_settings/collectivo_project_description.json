@@ -1,0 +1,51 @@
+{
+  "collection": "collectivo_project_settings",
+  "field": "collectivo_project_description",
+  "type": "string",
+  "meta": {
+    "collection": "collectivo_project_settings",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "collectivo_project_description",
+    "group": null,
+    "hidden": false,
+    "interface": null,
+    "note": null,
+    "options": null,
+    "readonly": false,
+    "required": false,
+    "sort": 3,
+    "special": null,
+    "translations": [
+      {
+        "language": "en-US",
+        "translation": "Project description"
+      },
+      {
+        "language": "de-DE",
+        "translation": "Projektbeschreibung"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "collectivo_project_description",
+    "table": "collectivo_project_settings",
+    "data_type": "character varying",
+    "default_value": null,
+    "max_length": 255,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

@@ -1,4 +1,10 @@
 {
+  "t:memberships_form_ptype": "I am applying for a membership as:",
+  "t:memberships_form_mtype": "Which type of membership do you choose?",
+  "t:memberships_form_intro": "Please fill out this form to apply for a membership.",
+  "t:memberships_form_success": "Please log in in order to verify your email address.",
+  "t:memberships_form_already_member": "Your membership application has been submitted. Thank you for your application!",
+
   "t:mila_form_intro": "In order to join the cooperative, we need some information from you. Please complete the following questions. If something is unclear, please contact mitmachen[at]mila.wien.",
   "t:mila_form_account": "If you already have a user account, please log in first.",
   "t:mila_form_mtype_orga": "As an organization, you are automatically an investing member. As an investing member, you support us financially, but you cannot make purchases. We use the shares to build up the equity that we need to open our supermarket. A share at MILA is €20. The standard rate is 9 shares for €180. We recommend subscribing to more than the standard rate, depending on your financial possibilities (1-8 shares cannot be chosen). Further information can be found in the [Rules of Procedure](https://wolke.mila.wien/s/RomRixR2xb5LGNK).",

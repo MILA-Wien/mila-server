@@ -1,0 +1,20 @@
+{
+  "name": "mila-server",
+  "scripts": {
+    "dev": "pnpm run -r --parallel dev",
+    "test": "pnpm run -r --parallel test",
+    "test:ci": "concurrently --raw --kill-others \"pnpm preview\" \"sleep 5 && pnpm seed && pnpm run -r --parallel test\"",
+    "format": "pnpm run -r --parallel format",
+    "format:fix": "pnpm run -r --parallel format:fix",
+    "lint": "pnpm run -r --parallel lint",
+    "lint:fix": "pnpm run -r --parallel lint:fix",
+    "build": "pnpm --parallel run build",
+    "preview": "node collectivo/.output/server/index.mjs",
+    "seed": "curl -f -LI --header \"Authorization:badToken\" --request POST \"http://localhost:3000/api/create_example_data\""
+  },
+  "author": "Joël Foramitti",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

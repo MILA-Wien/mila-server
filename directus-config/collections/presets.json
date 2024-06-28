@@ -1,0 +1,49 @@
+[
+  {
+    "bookmark": "Mitglieder Beworben",
+    "role": null,
+    "collection": "memberships",
+    "search": "",
+    "layout": "tabular",
+    "layout_query": {
+      "tabular": {
+        "page": 1,
+        "fields": [
+          "memberships_date_applied",
+          "memberships_user",
+          "memberships_shares",
+          "memberships_type",
+          "memberships_status"
+        ],
+        "limit": 100
+      }
+    },
+    "layout_options": {
+      "tabular": {
+        "widths": {
+          "memberships_date_applied": 205,
+          "memberships_type": 166,
+          "memberships_user": 222
+        }
+      }
+    },
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "memberships_status": {
+            "_eq": "applied"
+          }
+        },
+        {
+          "memberships_date_approved": {
+            "_null": true
+          }
+        }
+      ]
+    },
+    "icon": "edit_square",
+    "color": "#6644FF",
+    "_syncId": "8ab0587d-6ff8-4385-a0eb-ad3837801abe"
+  }
+]

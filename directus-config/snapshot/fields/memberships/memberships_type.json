@@ -1,0 +1,62 @@
+{
+  "collection": "memberships",
+  "field": "memberships_type",
+  "type": "string",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "memberships_type",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown",
+    "note": null,
+    "options": {
+      "choices": [
+        {
+          "text": "Aktiv",
+          "value": "Aktiv",
+          "icon": "shopping_cart",
+          "color": "#2ECDA7"
+        },
+        {
+          "text": "Investierend",
+          "value": "Investierend",
+          "icon": "payments",
+          "color": "#FFA439"
+        }
+      ]
+    },
+    "readonly": false,
+    "required": true,
+    "sort": 3,
+    "special": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Mitgliedstyp"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "memberships_type",
+    "table": "memberships",
+    "data_type": "character varying",
+    "default_value": null,
+    "max_length": 255,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

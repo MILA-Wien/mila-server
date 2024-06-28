@@ -1,0 +1,332 @@
+[
+  {
+    "name": "mila_membership_approved_mail",
+    "icon": "bolt",
+    "color": null,
+    "description": "Infomail wenn eine Mitgliedschaft auf angenommen gestellt wird",
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "scope": [
+        "items.update"
+      ],
+      "collections": [
+        "memberships"
+      ]
+    },
+    "operation": "5949437b-9948-4cd8-9495-35141213a78b",
+    "_syncId": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a"
+  },
+  {
+    "name": "collectivo_assign_default_role_to_new_users",
+    "icon": "supervised_user_circle",
+    "color": null,
+    "description": null,
+    "status": "inactive",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "scope": [
+        "items.create"
+      ],
+      "collections": [
+        "directus_users"
+      ]
+    },
+    "operation": "1588caf8-5a50-4d81-8241-519cfb76605b",
+    "_syncId": "1496bf80-5a7f-4218-97b6-ee9bfafe2d3e"
+  },
+  {
+    "name": "Campaign Update Send",
+    "icon": "send",
+    "color": "#FFA439",
+    "description": "Calls the Send Mail Endpoint if a Campaign is Sent",
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "scope": [
+        "items.create",
+        "items.update"
+      ],
+      "collections": [
+        "messages_campaigns"
+      ]
+    },
+    "operation": "686e608a-82b1-4116-8946-5b904e8f3c86",
+    "_syncId": "24887665-6c92-44f5-b0ef-8fce13f01df2"
+  },
+  {
+    "name": "mila_invoice_paid_mail",
+    "icon": "bolt",
+    "color": null,
+    "description": "Infomail wenn Rechnung auf bezahlt gestellt wird",
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "scope": [
+        "items.update"
+      ],
+      "collections": [
+        "payments_invoices_out"
+      ]
+    },
+    "operation": "ecafe208-21b8-4aa9-ab60-ad3663271ffe",
+    "_syncId": "28c0f3c7-d900-4f6d-be60-da5a803be396"
+  },
+  {
+    "name": "Membership Create & Update",
+    "icon": "bolt",
+    "color": "#6644FF",
+    "description": "Automatischer Mitglied Tag",
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "scope": [
+        "items.create",
+        "items.update"
+      ],
+      "collections": [
+        "memberships"
+      ]
+    },
+    "operation": "0bec9ec7-45cc-4375-89f9-27231942ddba",
+    "_syncId": "2d68cc8b-f561-4f7f-8cc2-a847cb57054c"
+  },
+  {
+    "name": "memberships_user_search",
+    "icon": "bolt",
+    "color": null,
+    "description": null,
+    "status": "active",
+    "trigger": "event",
+    "accountability": null,
+    "options": {
+      "type": "action",
+      "scope": [
+        "items.create",
+        "items.update"
+      ],
+      "collections": [
+        "directus_users"
+      ]
+    },
+    "operation": "39e3ab8b-b5de-4870-b556-fc2c69a2fa24",
+    "_syncId": "3bfde787-1881-4718-b02f-743d5f1f2a74"
+  },
+  {
+    "name": "memberships_create_invoice_for_shares",
+    "icon": "receipt",
+    "color": null,
+    "description": null,
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "scope": [
+        "items.create"
+      ],
+      "collections": [
+        "memberships"
+      ]
+    },
+    "operation": "cfd6218a-7de5-4c15-9757-597a1312f9a6",
+    "_syncId": "493c1260-3bb9-47e7-940d-115b8b0f1ccc"
+  },
+  {
+    "name": "User Sync Keycloak",
+    "icon": "sync",
+    "color": "#6644FF",
+    "description": null,
+    "status": "active",
+    "trigger": "event",
+    "accountability": null,
+    "options": {
+      "type": "filter",
+      "scope": [
+        "items.create",
+        "items.update",
+        "items.delete"
+      ],
+      "collections": [
+        "directus_users"
+      ]
+    },
+    "operation": "fdb6da80-fa90-4f76-8d09-bf653ded0f32",
+    "_syncId": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1"
+  },
+  {
+    "name": "User Create Access",
+    "icon": "person_add",
+    "color": "#6644FF",
+    "description": "Set default role & keycloak provider",
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "scope": [
+        "items.create"
+      ],
+      "collections": [
+        "directus_users"
+      ]
+    },
+    "operation": "ad799be4-d215-4375-97d7-6308e05f46f4",
+    "_syncId": "5ea28856-7cb2-49a4-86b8-eacbd27ac54d"
+  },
+  {
+    "name": "Kampagne senden",
+    "icon": "send",
+    "color": "#FFA439",
+    "description": null,
+    "status": "active",
+    "trigger": "manual",
+    "accountability": "all",
+    "options": {
+      "collections": [
+        "messages_campaigns"
+      ],
+      "requireConfirmation": true,
+      "confirmationDescription": "Möchtest du diese Kampagne absenden?"
+    },
+    "operation": "5bbba7d2-4d6a-4969-856b-f83c3347411d",
+    "_syncId": "8b324a75-f005-403d-8197-48accc2d3538"
+  },
+  {
+    "name": "mila_new_membership_mail",
+    "icon": "bolt",
+    "color": null,
+    "description": "Willkommensmail wenn ein neuer User erstellt wird",
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "scope": [
+        "items.create"
+      ],
+      "collections": [
+        "memberships"
+      ]
+    },
+    "operation": "5cdb0368-47f9-4f1c-b09a-6e386191c418",
+    "_syncId": "9231dda9-725b-4104-a466-6d8bc1589c22"
+  },
+  {
+    "name": "An Lotzapp senden",
+    "icon": "cloud_upload",
+    "color": "#8000FF",
+    "description": null,
+    "status": "active",
+    "trigger": "manual",
+    "accountability": "all",
+    "options": {
+      "collections": [
+        "payments_invoices_out"
+      ],
+      "requireConfirmation": true,
+      "confirmationDescription": "Ausgewählte Rechnungen in Lotzapp anlegen? (nicht ausstehende und bereits in Lotzapp existierende Rechnungen werden ignoriert)"
+    },
+    "operation": "0b6f13b8-c0ce-4b3a-830f-c68221337073",
+    "_syncId": "939f6a73-ceb3-4974-b4b2-65649be03c84"
+  },
+  {
+    "name": "memberships_send_messages",
+    "icon": "conveyor_belt",
+    "color": null,
+    "description": null,
+    "status": "active",
+    "trigger": "manual",
+    "accountability": "all",
+    "options": {
+      "collections": [
+        "memberships"
+      ],
+      "requireConfirmation": true,
+      "fields": [
+        {
+          "field": "template",
+          "name": "Template",
+          "type": "json",
+          "meta": {
+            "interface": "collection-item-dropdown",
+            "options": {
+              "selectedCollection": "messages_templates",
+              "template": "{{name}}"
+            },
+            "required": true
+          }
+        }
+      ],
+      "confirmationDescription": "Please choose a template"
+    },
+    "operation": "bf786ac0-4a7b-49c3-9084-9ff1129d6e79",
+    "_syncId": "9ee2e72d-ca7e-4c4b-ab18-97abfd062ddf"
+  },
+  {
+    "name": "Groups Update Sync Keycloak",
+    "icon": "sync",
+    "color": "#6644FF",
+    "description": "Gruppen mit Keycloak synchronisieren",
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "filter",
+      "scope": [
+        "items.create",
+        "items.update",
+        "items.delete"
+      ],
+      "collections": [
+        "collectivo_tags_directus_users"
+      ]
+    },
+    "operation": "18d5537d-bd68-4f51-878c-f87c054092f4",
+    "_syncId": "c9a409a7-e523-4a19-90da-2811aecd2bf4"
+  },
+  {
+    "name": "memberships_user_search_inner",
+    "icon": "bolt",
+    "color": null,
+    "description": null,
+    "status": "active",
+    "trigger": "operation",
+    "accountability": null,
+    "options": {
+      "return": "$last"
+    },
+    "operation": "b032fcb2-5cc5-40ad-ae75-62b7870377a6",
+    "_syncId": "e67933a7-f0df-41e2-b905-d49a8f2482db"
+  },
+  {
+    "name": "memberships_update_invoice_for_shares",
+    "icon": "receipt",
+    "color": null,
+    "description": null,
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "filter",
+      "scope": [
+        "items.update"
+      ],
+      "collections": [
+        "memberships"
+      ]
+    },
+    "operation": "7c3b51f8-043a-4b5a-a88d-21b5eab5c707",
+    "_syncId": "f714c75a-e78a-4c80-9b4d-4b39943d6444"
+  }
+]

@@ -1,0 +1,47 @@
+{
+  "collection": "memberships",
+  "field": "memberships_user_search",
+  "type": "string",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "memberships_user_search",
+    "group": null,
+    "hidden": true,
+    "interface": "input",
+    "note": null,
+    "options": null,
+    "readonly": false,
+    "required": false,
+    "sort": 16,
+    "special": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Suchhilfe"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "memberships_user_search",
+    "table": "memberships",
+    "data_type": "character varying",
+    "default_value": null,
+    "max_length": 255,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

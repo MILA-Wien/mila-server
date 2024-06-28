@@ -1,0 +1,41 @@
+{
+  "collection": "directus_users",
+  "field": "payments_profile_group",
+  "type": "alias",
+  "meta": {
+    "collection": "directus_users",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "payments_profile_group",
+    "group": null,
+    "hidden": false,
+    "interface": "group-detail",
+    "note": null,
+    "options": {
+      "headerIcon": "credit_card",
+      "title": "$t:person"
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 103,
+    "special": [
+      "alias",
+      "group",
+      "no-data"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Zahlungsdaten"
+      },
+      {
+        "language": "en-US",
+        "translation": "Payment data"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}
