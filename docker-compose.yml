@@ -51,7 +51,6 @@ services:
       - default
     volumes:
       - ./directus/uploads:/directus/uploads
-      - ./directus/extensions:/directus/extensions
     environment:
       PUBLIC_URL: ${DIRECTUS_URL}
       KEY: ${DIRECTUS_KEY}
