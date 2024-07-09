@@ -474,6 +474,28 @@
     "_syncId": "0c188aa8-7df4-4fea-bd78-23758e8a9013"
   },
   {
+    "name": "postToNuxtAPI",
+    "key": "postToNuxtAPI",
+    "type": "request",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/updateScoreOnShiftCycleStart",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{{$trigger}}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "8fbda46c-8ed1-4578-a38a-5ddbd11ee4da",
+    "_syncId": "9e5efeae-a13a-4841-9653-b4efb31192c8"
+  },
+  {
     "name": "prepareRecipients",
     "key": "prepareRecipients",
     "type": "exec",

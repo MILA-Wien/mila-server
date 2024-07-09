@@ -753,6 +753,42 @@
   },
   {
     "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "collectivo_extensions",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "e5b83ec0-a150-4013-b9e2-d88ae4926934"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "collectivo_project_settings",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "3be15c64-dab6-4465-8d4a-d4621acd4d8d"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "collectivo_project_settings",
+    "action": "update",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "e94c75db-ba46-4697-a964-f88fc4c7ab94"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
     "collection": "collectivo_tags_directus_users",
     "action": "create",
     "permissions": null,
@@ -1242,7 +1278,13 @@
       "email",
       "title",
       "description",
-      "messages_campaigns"
+      "messages_campaigns",
+      "first_name",
+      "last_name",
+      "email",
+      "password",
+      "title",
+      "description"
     ],
     "_syncId": "c544a00d-af51-4f2d-80a0-521641f07a9f"
   },
@@ -1270,6 +1312,12 @@
       "first_name",
       "last_name",
       "email",
+      "title",
+      "description",
+      "first_name",
+      "last_name",
+      "email",
+      "password",
       "title",
       "description"
     ],
@@ -1330,7 +1378,13 @@
       "last_access",
       "lotzapp_id",
       "mila_documents",
-      "collectivo_tags_divider"
+      "collectivo_tags_divider",
+      "first_name",
+      "last_name",
+      "email",
+      "password",
+      "title",
+      "description"
     ],
     "_syncId": "68915fc1-b191-4aa6-8955-572e6ffe4a95"
   },
@@ -1338,7 +1392,15 @@
     "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
     "collection": "directus_users",
     "action": "update",
-    "permissions": null,
+    "permissions": {
+      "_and": [
+        {
+          "id": {
+            "_nnull": true
+          }
+        }
+      ]
+    },
     "validation": null,
     "presets": null,
     "fields": [
@@ -1381,7 +1443,13 @@
       "id",
       "mila_documents",
       "lotzapp_id",
-      "memberships"
+      "memberships",
+      "first_name",
+      "last_name",
+      "email",
+      "password",
+      "title",
+      "description"
     ],
     "_syncId": "cc075e8f-1648-463a-878e-44421be73f52"
   },
@@ -2002,7 +2070,13 @@
       "memberships_postcode",
       "memberships_city",
       "memberships_country",
-      "password"
+      "password",
+      "id",
+      "first_name",
+      "last_name",
+      "email",
+      "password",
+      "title"
     ],
     "_syncId": "467eb83e-0dc1-4f67-bac2-490feb45333f"
   },
@@ -2048,7 +2122,12 @@
       "memberships_postcode",
       "memberships_city",
       "memberships_country",
-      "password"
+      "password",
+      "first_name",
+      "last_name",
+      "email",
+      "password",
+      "title"
     ],
     "_syncId": "56f5edab-082f-4feb-8b00-c038cd9bf32b"
   },
