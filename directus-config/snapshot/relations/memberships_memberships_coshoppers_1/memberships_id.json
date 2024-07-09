@@ -1,0 +1,25 @@
+{
+  "collection": "memberships_memberships_coshoppers_1",
+  "field": "memberships_id",
+  "related_collection": "memberships",
+  "meta": {
+    "junction_field": "memberships_coshoppers_id",
+    "many_collection": "memberships_memberships_coshoppers_1",
+    "many_field": "memberships_id",
+    "one_allowed_collections": null,
+    "one_collection": "memberships",
+    "one_collection_field": null,
+    "one_deselect_action": "delete",
+    "one_field": "kids",
+    "sort_field": null
+  },
+  "schema": {
+    "table": "memberships_memberships_coshoppers_1",
+    "column": "memberships_id",
+    "foreign_key_table": "memberships",
+    "foreign_key_column": "id",
+    "constraint_name": "memberships_memberships_coshoppers_1_memberships_id_foreign",
+    "on_update": "NO ACTION",
+    "on_delete": "CASCADE"
+  }
+}

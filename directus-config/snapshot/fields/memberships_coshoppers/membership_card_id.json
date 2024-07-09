@@ -1,35 +1,37 @@
 {
-  "collection": "memberships",
-  "field": "memberships_user_search",
+  "collection": "memberships_coshoppers",
+  "field": "membership_card_id",
   "type": "string",
   "meta": {
-    "collection": "memberships",
+    "collection": "memberships_coshoppers",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "memberships_user_search",
+    "field": "membership_card_id",
     "group": null,
-    "hidden": true,
+    "hidden": false,
     "interface": "input",
-    "note": null,
-    "options": null,
+    "note": "Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren.",
+    "options": {
+      "iconLeft": "credit_card"
+    },
     "readonly": false,
     "required": false,
-    "sort": 19,
+    "sort": 4,
     "special": null,
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Suchhilfe"
+        "translation": "Mitgliederkarte RFID Nummer"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "memberships_user_search",
-    "table": "memberships",
+    "name": "membership_card_id",
+    "table": "memberships_coshoppers",
     "data_type": "character varying",
     "default_value": null,
     "max_length": 255,

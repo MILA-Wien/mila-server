@@ -1,11 +1,5 @@
 [
   {
-    "language": "de-DE",
-    "key": "memberships-status-note",
-    "value": "Bezeichnet den Lebenszyklus einer Mitgliedschaft von der Bewerbung bis zum Ende. Der Ausstieg erfolgt durch das Mitglied, der Ausschluss durch die Organisation. Während des Ausstiegs- oder Ausschlussverfahrens sind die Mitgliedschaften weiterhin aktiv. Wenn dieser Vorgang abgeschlossen ist, sollte der Status auf 'Beendet' gesetzt werden.",
-    "_syncId": "14e946fb-3d6b-4dee-8f28-280b66f6c353"
-  },
-  {
     "language": "en-US",
     "key": "sepa",
     "value": "SEPA Debit",
@@ -88,12 +82,6 @@
     "key": "applied",
     "value": "Applied",
     "_syncId": "98828f55-a975-4f5c-b7ff-ea8e8975b85a"
-  },
-  {
-    "language": "en-US",
-    "key": "memberships-status-note",
-    "value": "Signifies the lifecycle of a membership from applied to ended. Cancellation is initiated by the member, exclusion is initiated by the organisation. During the process of cancellation or exclusion, memberships are still active. When this process is finished, the status should be set to 'Ended'.",
-    "_syncId": "9ca932b5-a4d0-4714-a17f-67885a0b62a0"
   },
   {
     "language": "de-DE",

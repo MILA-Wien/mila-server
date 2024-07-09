@@ -1,0 +1,37 @@
+{
+  "collection": "memberships",
+  "field": "coshoppers",
+  "type": "alias",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": "related-values",
+    "display_options": {
+      "template": "{{memberships_coshoppers_id.first_name}} {{memberships_coshoppers_id.last_name}}"
+    },
+    "field": "coshoppers",
+    "group": null,
+    "hidden": false,
+    "interface": "list-m2m",
+    "note": null,
+    "options": {
+      "enableSelect": false,
+      "template": "{{memberships_coshoppers_id.first_name}} {{memberships_coshoppers_id.last_name}}"
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 14,
+    "special": [
+      "m2m"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Miteinkäufer*innen"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}

@@ -1,25 +1,25 @@
 {
-  "collection": "memberships",
-  "field": "date_updated",
-  "type": "timestamp",
+  "collection": "memberships_coshoppers",
+  "field": "user_updated",
+  "type": "uuid",
   "meta": {
-    "collection": "memberships",
+    "collection": "memberships_coshoppers",
     "conditions": null,
-    "display": "datetime",
-    "display_options": {
-      "relative": true
-    },
-    "field": "date_updated",
+    "display": "user",
+    "display_options": null,
+    "field": "user_updated",
     "group": null,
     "hidden": true,
-    "interface": "datetime",
+    "interface": "select-dropdown-m2o",
     "note": null,
-    "options": null,
+    "options": {
+      "template": "{{avatar.$thumbnail}} {{first_name}} {{last_name}}"
+    },
     "readonly": true,
     "required": false,
-    "sort": 18,
+    "sort": 7,
     "special": [
-      "date-updated"
+      "user-updated"
     ],
     "translations": null,
     "validation": null,
@@ -27,9 +27,9 @@
     "width": "half"
   },
   "schema": {
-    "name": "date_updated",
-    "table": "memberships",
-    "data_type": "timestamp with time zone",
+    "name": "user_updated",
+    "table": "memberships_coshoppers",
+    "data_type": "uuid",
     "default_value": null,
     "max_length": null,
     "numeric_precision": null,
@@ -40,7 +40,7 @@
     "is_generated": false,
     "generation_expression": null,
     "has_auto_increment": false,
-    "foreign_key_table": null,
-    "foreign_key_column": null
+    "foreign_key_table": "directus_users",
+    "foreign_key_column": "id"
   }
 }

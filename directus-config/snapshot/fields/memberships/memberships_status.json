@@ -44,7 +44,7 @@
     "group": null,
     "hidden": false,
     "interface": "select-dropdown",
-    "note": "$t:memberships-status-note",
+    "note": "Lebenszyklus einer Mitgliedschaft. Ausstieg erfolgt durch das Mitglied, Ausschluss durch die Organisation. Während des Ausstiegs- oder Ausschlussverfahrens sind die Mitgliedschaften weiterhin aktiv. Wenn der Vorgang abgeschlossen ist, sollte der Status auf 'Beendet' gesetzt werden.",
     "options": {
       "choices": [
         {

@@ -1,0 +1,47 @@
+{
+  "collection": "memberships_memberships_coshoppers",
+  "field": "memberships_coshoppers_id",
+  "type": "integer",
+  "meta": {
+    "collection": "memberships_memberships_coshoppers",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "memberships_coshoppers_id",
+    "group": null,
+    "hidden": true,
+    "interface": null,
+    "note": null,
+    "options": null,
+    "readonly": false,
+    "required": false,
+    "sort": 3,
+    "special": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Miteinkäufer*innen"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "memberships_coshoppers_id",
+    "table": "memberships_memberships_coshoppers",
+    "data_type": "integer",
+    "default_value": null,
+    "max_length": null,
+    "numeric_precision": 32,
+    "numeric_scale": 0,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": "memberships_coshoppers",
+    "foreign_key_column": "id"
+  }
+}

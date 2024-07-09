@@ -1,26 +1,26 @@
 {
-  "collection": "memberships",
-  "field": "memberships_user_search",
+  "collection": "memberships_coshoppers",
+  "field": "first_name",
   "type": "string",
   "meta": {
-    "collection": "memberships",
+    "collection": "memberships_coshoppers",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "memberships_user_search",
+    "field": "first_name",
     "group": null,
-    "hidden": true,
+    "hidden": false,
     "interface": "input",
     "note": null,
     "options": null,
     "readonly": false,
-    "required": false,
-    "sort": 19,
+    "required": true,
+    "sort": 2,
     "special": null,
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Suchhilfe"
+        "translation": "Vorname"
       }
     ],
     "validation": null,
@@ -28,14 +28,14 @@
     "width": "half"
   },
   "schema": {
-    "name": "memberships_user_search",
-    "table": "memberships",
+    "name": "first_name",
+    "table": "memberships_coshoppers",
     "data_type": "character varying",
     "default_value": null,
     "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,
-    "is_nullable": true,
+    "is_nullable": false,
     "is_unique": false,
     "is_primary_key": false,
     "is_generated": false,

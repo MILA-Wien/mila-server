@@ -53,6 +53,14 @@
         "id": "settings",
         "enabled": true,
         "locked": true
+      },
+      {
+        "id": "OFx-eEKWKjugmN3ZAvik6",
+        "type": "link",
+        "enabled": true,
+        "url": "https://mein.mila.wien/logout",
+        "name": "Logout",
+        "icon": "logout"
       }
     ],
     "project_descriptor": "Datenstudio",

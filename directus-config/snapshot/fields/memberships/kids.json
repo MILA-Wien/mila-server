@@ -1,0 +1,35 @@
+{
+  "collection": "memberships",
+  "field": "kids",
+  "type": "alias",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "kids",
+    "group": null,
+    "hidden": false,
+    "interface": "list-m2m",
+    "note": null,
+    "options": {
+      "enableSelect": false,
+      "template": "{{memberships_coshoppers_id.first_name}} {{memberships_coshoppers_id.last_name}}"
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 15,
+    "special": [
+      "m2m"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Kinder"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}

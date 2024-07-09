@@ -1,15 +1,15 @@
 {
-  "collection": "memberships",
-  "field": "date_updated",
+  "collection": "memberships_coshoppers",
+  "field": "date_created",
   "type": "timestamp",
   "meta": {
-    "collection": "memberships",
+    "collection": "memberships_coshoppers",
     "conditions": null,
     "display": "datetime",
     "display_options": {
       "relative": true
     },
-    "field": "date_updated",
+    "field": "date_created",
     "group": null,
     "hidden": true,
     "interface": "datetime",
@@ -17,9 +17,9 @@
     "options": null,
     "readonly": true,
     "required": false,
-    "sort": 18,
+    "sort": 6,
     "special": [
-      "date-updated"
+      "date-created"
     ],
     "translations": null,
     "validation": null,
@@ -27,8 +27,8 @@
     "width": "half"
   },
   "schema": {
-    "name": "date_updated",
-    "table": "memberships",
+    "name": "date_created",
+    "table": "memberships_coshoppers",
     "data_type": "timestamp with time zone",
     "default_value": null,
     "max_length": null,
