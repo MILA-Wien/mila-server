@@ -197,7 +197,8 @@
         "messages_campaigns"
       ],
       "requireConfirmation": true,
-      "confirmationDescription": "Möchtest du diese Kampagne absenden?"
+      "confirmationDescription": "Möchtest du diese Kampagne absenden?",
+      "location": "collection"
     },
     "operation": "5bbba7d2-4d6a-4969-856b-f83c3347411d",
     "_syncId": "8b324a75-f005-403d-8197-48accc2d3538"

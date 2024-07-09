@@ -1,5 +1,12 @@
 [
   {
+    "name": "Mitgliederzahlen (bis 30.4.2024)",
+    "icon": "interactive_space",
+    "note": null,
+    "color": null,
+    "_syncId": "54976105-ca62-4135-9d4d-1c5c12ed7e34"
+  },
+  {
     "name": "Generalversammlung 3.6.2024",
     "icon": "space_dashboard",
     "note": null,

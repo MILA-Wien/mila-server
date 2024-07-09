@@ -211,8 +211,6 @@ type Mutation {
 }
 
 type Subscription {
-  collectivo_extensions_mutated(event: EventEnum): collectivo_extensions_mutated
-  collectivo_project_settings_mutated(event: EventEnum): collectivo_project_settings_mutated
   collectivo_tags_mutated(event: EventEnum): collectivo_tags_mutated
   directus_dashboards_mutated(event: EventEnum): directus_dashboards_mutated
   directus_folders_mutated(event: EventEnum): directus_folders_mutated
@@ -324,51 +322,6 @@ type auth_tokens {
   access_token: String
   expires: GraphQLBigInt
   refresh_token: String
-}
-
-type collectivo_extensions {
-  id: ID!
-  user_created: String
-  date_created: Date
-  date_created_func: datetime_functions
-  user_updated: String
-  date_updated: Date
-  date_updated_func: datetime_functions
-  extensions_name: String
-  extensions_status: String
-
-  """Semantic version of the extension (e.g. 1.0.0)"""
-  extensions_version: String
-
-  """Semantic version of the extension schema (e.g. 1.0.0)"""
-  extensions_schema_version: String
-
-  """Whether the extension schema is up to date."""
-  extensions_schema_is_latest: String
-}
-
-type collectivo_extensions_mutated {
-  key: ID!
-  event: EventEnum
-  data: collectivo_extensions
-}
-
-type collectivo_project_settings {
-  id: ID!
-  user_created: String
-  date_created: Date
-  date_created_func: datetime_functions
-  user_updated: String
-  date_updated: Date
-  date_updated_func: datetime_functions
-  collectivo_project_name: String
-  collectivo_project_description: String
-}
-
-type collectivo_project_settings_mutated {
-  key: ID!
-  event: EventEnum
-  data: collectivo_project_settings
 }
 
 type collectivo_tags {

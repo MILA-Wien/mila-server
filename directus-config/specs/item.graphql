@@ -1,10 +1,4 @@
 type Query {
-  collectivo_extensions(filter: collectivo_extensions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_extensions!]!
-  collectivo_extensions_by_id(id: ID!, version: String): collectivo_extensions
-  collectivo_extensions_aggregated(groupBy: [String], filter: collectivo_extensions_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [collectivo_extensions_aggregated!]!
-  collectivo_extensions_by_version(version: String!, id: ID!): version_collectivo_extensions
-  collectivo_project_settings(version: String): collectivo_project_settings
-  collectivo_project_settings_by_version(version: String!): version_collectivo_project_settings
   collectivo_tags(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_tags!]!
   collectivo_tags_by_id(id: ID!, version: String): collectivo_tags
   collectivo_tags_aggregated(groupBy: [String], filter: collectivo_tags_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [collectivo_tags_aggregated!]!
@@ -68,8 +62,6 @@ type Query {
 }
 
 type Mutation {
-  create_collectivo_extensions_items(filter: collectivo_extensions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_collectivo_extensions_input!]): [collectivo_extensions!]!
-  create_collectivo_extensions_item(data: create_collectivo_extensions_input!): collectivo_extensions
   create_collectivo_tags_items(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_collectivo_tags_input!]): [collectivo_tags!]!
   create_collectivo_tags_item(data: create_collectivo_tags_input!): collectivo_tags
   create_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_input!]): [memberships!]!
@@ -100,10 +92,6 @@ type Mutation {
   create_directus_sync_id_map_item(data: create_directus_sync_id_map_input!): directus_sync_id_map
   create_messages_designs_items(filter: messages_designs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_messages_designs_input!]): [messages_designs!]!
   create_messages_designs_item(data: create_messages_designs_input!): messages_designs
-  update_collectivo_extensions_items(filter: collectivo_extensions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_collectivo_extensions_input!): [collectivo_extensions!]!
-  update_collectivo_extensions_batch(filter: collectivo_extensions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_collectivo_extensions_input!]): [collectivo_extensions!]!
-  update_collectivo_extensions_item(id: ID!, data: update_collectivo_extensions_input!): collectivo_extensions
-  update_collectivo_project_settings(data: update_collectivo_project_settings_input!): collectivo_project_settings
   update_collectivo_tags_items(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_collectivo_tags_input!): [collectivo_tags!]!
   update_collectivo_tags_batch(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_collectivo_tags_input!]): [collectivo_tags!]!
   update_collectivo_tags_item(id: ID!, data: update_collectivo_tags_input!): collectivo_tags
@@ -149,8 +137,6 @@ type Mutation {
   update_messages_designs_items(filter: messages_designs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_messages_designs_input!): [messages_designs!]!
   update_messages_designs_batch(filter: messages_designs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_messages_designs_input!]): [messages_designs!]!
   update_messages_designs_item(id: ID!, data: update_messages_designs_input!): messages_designs
-  delete_collectivo_extensions_items(ids: [ID]!): delete_many
-  delete_collectivo_extensions_item(id: ID!): delete_one
   delete_collectivo_tags_items(ids: [ID]!): delete_many
   delete_collectivo_tags_item(id: ID!): delete_one
   delete_memberships_items(ids: [ID]!): delete_many
@@ -184,8 +170,6 @@ type Mutation {
 }
 
 type Subscription {
-  collectivo_extensions_mutated(event: EventEnum): collectivo_extensions_mutated
-  collectivo_project_settings_mutated(event: EventEnum): collectivo_project_settings_mutated
   collectivo_tags_mutated(event: EventEnum): collectivo_tags_mutated
   directus_dashboards_mutated(event: EventEnum): directus_dashboards_mutated
   directus_folders_mutated(event: EventEnum): directus_folders_mutated
@@ -265,87 +249,6 @@ enum EventEnum {
   create
   update
   delete
-}
-
-type collectivo_extensions {
-  id: ID!
-  user_created: String
-  date_created: Date
-  date_created_func: datetime_functions
-  user_updated: String
-  date_updated: Date
-  date_updated_func: datetime_functions
-  extensions_name: String
-  extensions_status: String
-
-  """Semantic version of the extension (e.g. 1.0.0)"""
-  extensions_version: String
-
-  """Semantic version of the extension schema (e.g. 1.0.0)"""
-  extensions_schema_version: String
-
-  """Whether the extension schema is up to date."""
-  extensions_schema_is_latest: String
-}
-
-type collectivo_extensions_aggregated {
-  group: JSON
-  countAll: Int
-  count: collectivo_extensions_aggregated_count
-  countDistinct: collectivo_extensions_aggregated_count
-  avg: collectivo_extensions_aggregated_fields
-  sum: collectivo_extensions_aggregated_fields
-  avgDistinct: collectivo_extensions_aggregated_fields
-  sumDistinct: collectivo_extensions_aggregated_fields
-  min: collectivo_extensions_aggregated_fields
-  max: collectivo_extensions_aggregated_fields
-}
-
-type collectivo_extensions_aggregated_count {
-  id: Int
-  user_created: Int
-  date_created: Int
-  user_updated: Int
-  date_updated: Int
-  extensions_name: Int
-  extensions_status: Int
-
-  """Semantic version of the extension (e.g. 1.0.0)"""
-  extensions_version: Int
-
-  """Semantic version of the extension schema (e.g. 1.0.0)"""
-  extensions_schema_version: Int
-
-  """Whether the extension schema is up to date."""
-  extensions_schema_is_latest: Int
-}
-
-type collectivo_extensions_aggregated_fields {
-  id: Float
-}
-
-type collectivo_extensions_mutated {
-  key: ID!
-  event: EventEnum
-  data: collectivo_extensions
-}
-
-type collectivo_project_settings {
-  id: ID!
-  user_created: String
-  date_created: Date
-  date_created_func: datetime_functions
-  user_updated: String
-  date_updated: Date
-  date_updated_func: datetime_functions
-  collectivo_project_name: String
-  collectivo_project_description: String
-}
-
-type collectivo_project_settings_mutated {
-  key: ID!
-  event: EventEnum
-  data: collectivo_project_settings
 }
 
 type collectivo_tags {
@@ -1631,37 +1534,6 @@ type payments_invoices_out_mutated {
 }
 
 """"""
-type version_collectivo_extensions {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  extensions_name: String
-  extensions_status: String
-
-  """Semantic version of the extension (e.g. 1.0.0)"""
-  extensions_version: String
-
-  """Semantic version of the extension schema (e.g. 1.0.0)"""
-  extensions_schema_version: String
-
-  """Whether the extension schema is up to date."""
-  extensions_schema_is_latest: String
-}
-
-""""""
-type version_collectivo_project_settings {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  collectivo_project_name: String
-  collectivo_project_description: String
-}
-
-""""""
 type version_collectivo_tags {
   id: ID
   user_created: String
@@ -1882,23 +1754,6 @@ input boolean_filter_operators {
   _nnull: Boolean
 }
 
-input collectivo_extensions_filter {
-  id: number_filter_operators
-  user_created: string_filter_operators
-  date_created: date_filter_operators
-  date_created_func: datetime_function_filter_operators
-  user_updated: string_filter_operators
-  date_updated: date_filter_operators
-  date_updated_func: datetime_function_filter_operators
-  extensions_name: string_filter_operators
-  extensions_status: string_filter_operators
-  extensions_version: string_filter_operators
-  extensions_schema_version: string_filter_operators
-  extensions_schema_is_latest: string_filter_operators
-  _and: [collectivo_extensions_filter]
-  _or: [collectivo_extensions_filter]
-}
-
 input collectivo_tags_directus_users_filter {
   id: number_filter_operators
   collectivo_tags_id: collectivo_tags_filter
@@ -1964,25 +1819,6 @@ input collectivo_tiles_filter {
 
 input count_function_filter_operators {
   count: number_filter_operators
-}
-
-input create_collectivo_extensions_input {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  extensions_name: String
-  extensions_status: String
-
-  """Semantic version of the extension (e.g. 1.0.0)"""
-  extensions_version: String
-
-  """Semantic version of the extension schema (e.g. 1.0.0)"""
-  extensions_schema_version: String
-
-  """Whether the extension schema is up to date."""
-  extensions_schema_is_latest: String
 }
 
 input create_collectivo_tags_directus_users_input {
@@ -2773,35 +2609,6 @@ input string_filter_operators {
   _nnull: Boolean
   _empty: Boolean
   _nempty: Boolean
-}
-
-input update_collectivo_extensions_input {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  extensions_name: String
-  extensions_status: String
-
-  """Semantic version of the extension (e.g. 1.0.0)"""
-  extensions_version: String
-
-  """Semantic version of the extension schema (e.g. 1.0.0)"""
-  extensions_schema_version: String
-
-  """Whether the extension schema is up to date."""
-  extensions_schema_is_latest: String
-}
-
-input update_collectivo_project_settings_input {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  collectivo_project_name: String
-  collectivo_project_description: String
 }
 
 input update_collectivo_tags_directus_users_input {
