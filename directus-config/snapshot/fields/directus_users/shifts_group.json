@@ -1,0 +1,32 @@
+{
+  "collection": "directus_users",
+  "field": "shifts_group",
+  "type": "alias",
+  "meta": {
+    "collection": "directus_users",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "shifts_group",
+    "group": null,
+    "hidden": false,
+    "interface": "group-detail",
+    "note": null,
+    "options": {
+      "headerIcon": "account_circle",
+      "title": "$t:person"
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 112,
+    "special": [
+      "alias",
+      "group",
+      "no-data"
+    ],
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}

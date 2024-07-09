@@ -1,0 +1,46 @@
+{
+  "collection": "shifts_assignments",
+  "field": "shifts_slot",
+  "type": "integer",
+  "meta": {
+    "collection": "shifts_assignments",
+    "conditions": null,
+    "display": "related-values",
+    "display_options": {
+      "template": "{{shifts_name}} ({{id}}) -- Shift:{{shifts_shift.shifts_name}} ({{shifts_shift.id}})"
+    },
+    "field": "shifts_slot",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown-m2o",
+    "note": null,
+    "options": {
+      "template": "{{shifts_name}} ({{id}}) -- Shift:{{shifts_shift.shifts_name}} ({{shifts_shift.id}})"
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 8,
+    "special": null,
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "shifts_slot",
+    "table": "shifts_assignments",
+    "data_type": "integer",
+    "default_value": null,
+    "max_length": null,
+    "numeric_precision": 32,
+    "numeric_scale": 0,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": "shifts_slots",
+    "foreign_key_column": "id"
+  }
+}

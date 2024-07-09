@@ -1,0 +1,42 @@
+{
+  "collection": "shifts_absences",
+  "field": "shifts_assignment",
+  "type": "integer",
+  "meta": {
+    "collection": "shifts_absences",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "shifts_assignment",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown-m2o",
+    "note": "If empty, this absence is valid for all assignments.",
+    "options": null,
+    "readonly": false,
+    "required": false,
+    "sort": 8,
+    "special": null,
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "shifts_assignment",
+    "table": "shifts_absences",
+    "data_type": "integer",
+    "default_value": null,
+    "max_length": null,
+    "numeric_precision": 32,
+    "numeric_scale": 0,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": "shifts_assignments",
+    "foreign_key_column": "id"
+  }
+}

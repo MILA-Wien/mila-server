@@ -1,0 +1,31 @@
+{
+  "collection": "shifts_shifts",
+  "field": "shifts_slots",
+  "type": "alias",
+  "meta": {
+    "collection": "shifts_shifts",
+    "conditions": null,
+    "display": null,
+    "display_options": {
+      "template": "{{shifts_name}} ({{id}})"
+    },
+    "field": "shifts_slots",
+    "group": null,
+    "hidden": false,
+    "interface": "list-o2m",
+    "note": null,
+    "options": {
+      "template": "{{shifts_name}} ({{id}})"
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 20,
+    "special": [
+      "o2m"
+    ],
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}

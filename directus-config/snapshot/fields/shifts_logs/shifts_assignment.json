@@ -1,0 +1,46 @@
+{
+  "collection": "shifts_logs",
+  "field": "shifts_assignment",
+  "type": "integer",
+  "meta": {
+    "collection": "shifts_logs",
+    "conditions": null,
+    "display": "related-values",
+    "display_options": {
+      "template": "{{shifts_user.first_name}} {{shifts_user.last_name}} ({{id}}) -- {{shifts_slot}}"
+    },
+    "field": "shifts_assignment",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown-m2o",
+    "note": null,
+    "options": {
+      "template": "{{shifts_user.first_name}} {{shifts_user.last_name}} ({{id}}) -- {{shifts_slot}}"
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 10,
+    "special": null,
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "shifts_assignment",
+    "table": "shifts_logs",
+    "data_type": "integer",
+    "default_value": null,
+    "max_length": null,
+    "numeric_precision": 32,
+    "numeric_scale": 0,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": "shifts_assignments",
+    "foreign_key_column": "id"
+  }
+}

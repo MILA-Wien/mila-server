@@ -1,0 +1,42 @@
+{
+  "collection": "shifts_skills_shifts_slots",
+  "field": "shifts_skills_id",
+  "type": "integer",
+  "meta": {
+    "collection": "shifts_skills_shifts_slots",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "shifts_skills_id",
+    "group": null,
+    "hidden": true,
+    "interface": null,
+    "note": null,
+    "options": null,
+    "readonly": false,
+    "required": false,
+    "sort": 2,
+    "special": null,
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "shifts_skills_id",
+    "table": "shifts_skills_shifts_slots",
+    "data_type": "integer",
+    "default_value": null,
+    "max_length": null,
+    "numeric_precision": 32,
+    "numeric_scale": 0,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": "shifts_skills",
+    "foreign_key_column": "id"
+  }
+}

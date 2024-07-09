@@ -1,0 +1,31 @@
+{
+  "collection": "shifts_slots",
+  "field": "shifts_skills",
+  "type": "alias",
+  "meta": {
+    "collection": "shifts_slots",
+    "conditions": null,
+    "display": null,
+    "display_options": {
+      "template": "{{shifts_skills_id.shifts_name}} ({{shifts_skills_id.id}})"
+    },
+    "field": "shifts_skills",
+    "group": null,
+    "hidden": false,
+    "interface": "list-m2m",
+    "note": null,
+    "options": {
+      "template": "{{shifts_skills_id.shifts_name}} ({{shifts_skills_id.id}})"
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 8,
+    "special": [
+      "m2m"
+    ],
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}
