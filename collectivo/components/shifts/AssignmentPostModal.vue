@@ -53,7 +53,7 @@ onMounted(async () => {
       await directus.request(
         readItems("shifts_assignments", {
           filter: {
-            shifts_user: user.value.data!.id,
+            shifts_user: user.value.user!.id,
             shifts_slot: { _eq: slot.id },
             shifts_from: { _gte: startDate },
           },
@@ -90,14 +90,14 @@ async function postAssignment(slotContainer: SlotContainer) {
   try {
     await postAssignmentInner(slotContainer);
 
-    showCollectivoToast({
+    showToast({
       type: "success",
       description: "Shift assignment successfull",
     });
 
     navigateTo("profile");
   } catch (e) {
-    showCollectivoToast({
+    showToast({
       type: "error",
       description: "Shift assignment failed",
     });
@@ -110,7 +110,7 @@ async function postAssignmentInner(slotContainer: SlotContainer) {
   const shiftStartString = start.toISO()!;
 
   const payload: ShiftsAssignment = {
-    shifts_user: user.value.data!.id,
+    shifts_user: user.value.user!.id,
     shifts_slot: slotContainer.id,
     shifts_from: shiftStartString,
   };
@@ -166,7 +166,7 @@ async function postAssignmentInner(slotContainer: SlotContainer) {
         v-if="shift.shifts_description"
         class="mb-5"
         v-html="parse(shift.shifts_description)"
-      ></p>
+      />
 
       <UFormGroup label="Slot" class="my-5">
         <USelectMenu
