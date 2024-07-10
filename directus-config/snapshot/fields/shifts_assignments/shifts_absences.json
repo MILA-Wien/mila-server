@@ -12,10 +12,12 @@
     "hidden": false,
     "interface": "list-o2m",
     "note": null,
-    "options": null,
+    "options": {
+      "enableSelect": false
+    },
     "readonly": false,
     "required": false,
-    "sort": 9,
+    "sort": 5,
     "special": [
       "o2m"
     ],

@@ -8,17 +8,24 @@
     "collapse": "open",
     "collection": "shifts_absences",
     "color": null,
-    "display_template": null,
+    "display_template": "{{shifts_from}} - {{shifts_to}}",
     "group": "collectivo_shifts_group",
     "hidden": false,
-    "icon": null,
+    "icon": "beach_access",
     "item_duplication_fields": null,
     "note": null,
     "preview_url": null,
     "singleton": false,
-    "sort": 1,
+    "sort": 4,
     "sort_field": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Abwesenheiten",
+        "singular": "Abwesenheit",
+        "plural": "Abwesenheiten"
+      }
+    ],
     "unarchive_value": null,
     "versioning": false
   },

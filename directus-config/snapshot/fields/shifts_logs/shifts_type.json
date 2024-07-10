@@ -11,32 +11,41 @@
     "group": null,
     "hidden": false,
     "interface": "select-dropdown",
-    "note": null,
+    "note": "Was genau soll dokumentiert werden?",
     "options": {
       "choices": [
         {
-          "text": "$t:attended",
+          "text": "Schicht absolviert",
           "value": "attended"
         },
         {
-          "text": "$t:missed",
-          "value": "missed"
+          "text": "Schicht verpasst (Strafschicht!)",
+          "value": "missed",
+          "color": "#E35169"
         },
         {
-          "text": "$t:cancelled",
+          "text": "Schicht abgesagt",
           "value": "cancelled"
         },
         {
-          "text": "$t:cycle",
+          "text": "Auto-Schichtpunkteabzug",
           "value": "cycle"
         },
         {
-          "text": "$t:cycle_activated",
+          "text": "Auto-Schichtpunkteabzug aktiviert",
           "value": "cycle_activated"
         },
         {
-          "text": "$t:cycle_deactivated",
+          "text": "Auto-Schichtpunkteabzug deaktiviert",
           "value": "cycle_deactivated"
+        },
+        {
+          "text": "Schichtpunkte Neustart",
+          "value": "restart_shift_score"
+        },
+        {
+          "text": "Manuelle Schichtpunkteänderung",
+          "value": "manuel_shift_score_change"
         }
       ]
     },
@@ -44,10 +53,15 @@
     "required": true,
     "sort": 2,
     "special": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Aktion"
+      }
+    ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
     "name": "shifts_type",

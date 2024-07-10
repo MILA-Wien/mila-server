@@ -15,12 +15,17 @@
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 15,
+    "sort": 6,
     "special": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Endzeit"
+      }
+    ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
     "name": "shifts_to_time",

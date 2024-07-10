@@ -11,14 +11,21 @@
     "display_template": null,
     "group": "collectivo_shifts_group",
     "hidden": false,
-    "icon": null,
+    "icon": "calendar_view_day",
     "item_duplication_fields": null,
     "note": null,
     "preview_url": null,
     "singleton": false,
-    "sort": 4,
+    "sort": 1,
     "sort_field": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Schichten",
+        "singular": "Schicht",
+        "plural": "Schichten"
+      }
+    ],
     "unarchive_value": null,
     "versioning": false
   },

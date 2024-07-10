@@ -11,16 +11,21 @@
     "group": null,
     "hidden": false,
     "interface": null,
-    "note": "In days",
+    "note": "In Tagen",
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 16,
+    "sort": 10,
     "special": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Schichtwiederholung"
+      }
+    ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
     "name": "shifts_repeats_every",

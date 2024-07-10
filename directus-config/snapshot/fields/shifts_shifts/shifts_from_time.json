@@ -15,12 +15,17 @@
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 14,
+    "sort": 5,
     "special": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Startzeit"
+      }
+    ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
     "name": "shifts_from_time",

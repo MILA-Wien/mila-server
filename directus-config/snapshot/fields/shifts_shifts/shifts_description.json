@@ -29,9 +29,14 @@
     },
     "readonly": false,
     "required": false,
-    "sort": 17,
+    "sort": 8,
     "special": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Schichtbeschreibung"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"

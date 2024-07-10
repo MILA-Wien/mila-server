@@ -1,31 +1,33 @@
 {
-  "collection": "shifts_slots",
-  "field": "shifts_shift",
+  "collection": "shifts_absences",
+  "field": "shifts_membership",
   "type": "integer",
   "meta": {
-    "collection": "shifts_slots",
+    "collection": "shifts_absences",
     "conditions": null,
     "display": "related-values",
     "display_options": {
-      "template": "{{shifts_name}} {{shifts_from}} ({{id}})"
+      "template": "{{memberships_user}}"
     },
-    "field": "shifts_shift",
+    "field": "shifts_membership",
     "group": null,
     "hidden": false,
     "interface": "select-dropdown-m2o",
     "note": null,
     "options": {
       "enableCreate": false,
-      "template": "{{shifts_name}}"
+      "template": "{{memberships_user}}"
     },
     "readonly": false,
     "required": true,
-    "sort": 1,
-    "special": null,
+    "sort": 6,
+    "special": [
+      "m2o"
+    ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Schicht"
+        "translation": "Mitglied"
       }
     ],
     "validation": null,
@@ -33,8 +35,8 @@
     "width": "full"
   },
   "schema": {
-    "name": "shifts_shift",
-    "table": "shifts_slots",
+    "name": "shifts_membership",
+    "table": "shifts_absences",
     "data_type": "integer",
     "default_value": null,
     "max_length": null,
@@ -46,7 +48,7 @@
     "is_generated": false,
     "generation_expression": null,
     "has_auto_increment": false,
-    "foreign_key_table": "shifts_shifts",
+    "foreign_key_table": "memberships",
     "foreign_key_column": "id"
   }
 }

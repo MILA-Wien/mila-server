@@ -8,17 +8,24 @@
     "collapse": "open",
     "collection": "shifts_skills",
     "color": null,
-    "display_template": null,
+    "display_template": "{{shifts_name}}",
     "group": "collectivo_shifts_group",
     "hidden": false,
-    "icon": null,
+    "icon": "person_play",
     "item_duplication_fields": null,
     "note": null,
     "preview_url": null,
     "singleton": false,
-    "sort": 6,
+    "sort": 5,
     "sort_field": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Fähigkeiten",
+        "singular": "Fähigkeit",
+        "plural": "Fähigkeiten"
+      }
+    ],
     "unarchive_value": null,
     "versioning": false
   },

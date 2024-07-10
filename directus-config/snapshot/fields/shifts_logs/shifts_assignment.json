@@ -15,13 +15,19 @@
     "interface": "select-dropdown-m2o",
     "note": null,
     "options": {
-      "template": "{{shifts_user.first_name}} {{shifts_user.last_name}} ({{id}}) -- {{shifts_slot}}"
+      "enableCreate": false,
+      "template": "{{shifts_slot}}"
     },
     "readonly": false,
     "required": false,
-    "sort": 10,
+    "sort": 6,
     "special": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Verknüpfte Schichtanmeldung"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"

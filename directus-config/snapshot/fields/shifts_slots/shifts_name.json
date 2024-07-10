@@ -15,9 +15,14 @@
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 6,
+    "sort": 2,
     "special": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Slotname"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"

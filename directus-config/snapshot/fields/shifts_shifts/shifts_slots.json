@@ -5,25 +5,31 @@
   "meta": {
     "collection": "shifts_shifts",
     "conditions": null,
-    "display": null,
+    "display": "related-values",
     "display_options": {
-      "template": "{{shifts_name}} ({{id}})"
+      "template": "{{shifts_name}}"
     },
     "field": "shifts_slots",
     "group": null,
     "hidden": false,
     "interface": "list-o2m",
-    "note": null,
+    "note": "Jeder Slot kann von je einer Person besetzt werden.",
     "options": {
-      "template": "{{shifts_name}} ({{id}})"
+      "enableSelect": false,
+      "template": "{{shifts_name}}"
     },
     "readonly": false,
     "required": false,
-    "sort": 20,
+    "sort": 9,
     "special": [
       "o2m"
     ],
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Schichtslots"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"

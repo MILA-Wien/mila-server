@@ -7,7 +7,7 @@
     "conditions": null,
     "display": "related-values",
     "display_options": {
-      "template": "{{shifts_name}} ({{id}}) -- Shift:{{shifts_shift.shifts_name}} ({{shifts_shift.id}})"
+      "template": "{{shifts_shift.shifts_name}} - {{shifts_name}}"
     },
     "field": "shifts_slot",
     "group": null,
@@ -15,13 +15,19 @@
     "interface": "select-dropdown-m2o",
     "note": null,
     "options": {
-      "template": "{{shifts_name}} ({{id}}) -- Shift:{{shifts_shift.shifts_name}} ({{shifts_shift.id}})"
+      "enableCreate": false,
+      "template": "{{shifts_shift.shifts_name}} - {{shifts_name}}"
     },
     "readonly": false,
-    "required": false,
-    "sort": 8,
+    "required": true,
+    "sort": 2,
     "special": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Schichtslot"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"
@@ -34,7 +40,7 @@
     "max_length": null,
     "numeric_precision": 32,
     "numeric_scale": 0,
-    "is_nullable": true,
+    "is_nullable": false,
     "is_unique": false,
     "is_primary_key": false,
     "is_generated": false,

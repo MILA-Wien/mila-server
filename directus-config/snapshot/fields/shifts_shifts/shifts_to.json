@@ -15,12 +15,17 @@
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 13,
+    "sort": 4,
     "special": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Enddatum"
+      }
+    ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
     "name": "shifts_to",

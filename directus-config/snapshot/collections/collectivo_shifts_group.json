@@ -11,12 +11,12 @@
     "display_template": null,
     "group": null,
     "hidden": false,
-    "icon": null,
+    "icon": "calendar_month",
     "item_duplication_fields": null,
     "note": null,
     "preview_url": null,
     "singleton": false,
-    "sort": 11,
+    "sort": 10,
     "sort_field": null,
     "translations": [
       {
@@ -27,7 +27,7 @@
       },
       {
         "language": "de-DE",
-        "translation": "Schichten",
+        "translation": "Schichtensystem",
         "singular": "Schicht",
         "plural": "Schichten"
       }

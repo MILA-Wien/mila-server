@@ -1,41 +1,43 @@
 {
-  "collection": "shifts_assignments",
-  "field": "shifts_to",
-  "type": "date",
+  "collection": "shifts_absences",
+  "field": "shifts_is_holiday",
+  "type": "boolean",
   "meta": {
-    "collection": "shifts_assignments",
+    "collection": "shifts_absences",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_to",
+    "field": "shifts_is_holiday",
     "group": null,
     "hidden": false,
-    "interface": null,
-    "note": null,
+    "interface": "boolean",
+    "note": "Während einem Urlaub ist kein Einkauf möglich und es werden keine Schichtpunkte abgezogen.",
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 4,
-    "special": null,
+    "sort": 9,
+    "special": [
+      "cast-boolean"
+    ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Enddatum"
+        "translation": "Urlaub"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "shifts_to",
-    "table": "shifts_assignments",
-    "data_type": "date",
-    "default_value": null,
+    "name": "shifts_is_holiday",
+    "table": "shifts_absences",
+    "data_type": "boolean",
+    "default_value": false,
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
-    "is_nullable": true,
+    "is_nullable": false,
     "is_unique": false,
     "is_primary_key": false,
     "is_generated": false,

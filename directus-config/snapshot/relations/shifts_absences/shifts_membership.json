@@ -1,0 +1,25 @@
+{
+  "collection": "shifts_absences",
+  "field": "shifts_membership",
+  "related_collection": "memberships",
+  "meta": {
+    "junction_field": null,
+    "many_collection": "shifts_absences",
+    "many_field": "shifts_membership",
+    "one_allowed_collections": null,
+    "one_collection": "memberships",
+    "one_collection_field": null,
+    "one_deselect_action": "nullify",
+    "one_field": null,
+    "sort_field": null
+  },
+  "schema": {
+    "table": "shifts_absences",
+    "column": "shifts_membership",
+    "foreign_key_table": "memberships",
+    "foreign_key_column": "id",
+    "constraint_name": "shifts_absences_shifts_membership_foreign",
+    "on_update": "NO ACTION",
+    "on_delete": "NO ACTION"
+  }
+}

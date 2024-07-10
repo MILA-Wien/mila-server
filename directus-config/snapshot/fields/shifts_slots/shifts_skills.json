@@ -15,15 +15,21 @@
     "interface": "list-m2m",
     "note": null,
     "options": {
-      "template": "{{shifts_skills_id.shifts_name}} ({{shifts_skills_id.id}})"
+      "enableCreate": false,
+      "template": "{{shifts_skills_id.shifts_name}}"
     },
     "readonly": false,
     "required": false,
-    "sort": 8,
+    "sort": 3,
     "special": [
       "m2m"
     ],
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Notwendige Fähigkeiten"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"

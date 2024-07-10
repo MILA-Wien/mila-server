@@ -249,12 +249,11 @@ type Subscription {
   memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
   shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
   shifts_skills_mutated(event: EventEnum): shifts_skills_mutated
-  shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_slots_mutated(event: EventEnum): shifts_slots_mutated
   shifts_skills_shifts_slots_mutated(event: EventEnum): shifts_skills_shifts_slots_mutated
   shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
+  shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
-  shifts_skills_directus_users_mutated(event: EventEnum): shifts_skills_directus_users_mutated
   memberships_shifts_skills_mutated(event: EventEnum): memberships_shifts_skills_mutated
 }
 
@@ -1652,7 +1651,7 @@ type memberships {
   shifts_user_type: String!
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
-  shift_counter: Int
+  shifts_counter: Int
   memberships_invoices(filter: payments_invoices_out_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [payments_invoices_out]
   memberships_invoices_func: count_functions
   kids(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers_1]
@@ -1945,11 +1944,17 @@ type shifts_absences {
   user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
-  shifts_from: Date
+  shifts_from: Date!
   shifts_from_func: date_functions
-  shifts_to: Date
+  shifts_to: Date!
   shifts_to_func: date_functions
   shifts_assignment(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_assignments
+
+  """
+  Während einem Urlaub ist kein Einkauf möglich und es werden keine Schichtpunkte abgezogen.
+  """
+  shifts_is_holiday: Boolean!
+  shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
 }
 
 type shifts_absences_mutated {
@@ -1966,12 +1971,12 @@ type shifts_assignments {
   user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
-  shifts_from: Date
+  shifts_from: Date!
   shifts_from_func: date_functions
   shifts_to: Date
   shifts_to_func: date_functions
   shifts_slot(filter: shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_slots
-  shifts_user(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
   shifts_absences(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_absences]
   shifts_absences_func: count_functions
 }
@@ -1984,6 +1989,8 @@ type shifts_assignments_mutated {
 
 type shifts_logs {
   id: ID!
+
+  """Was genau soll dokumentiert werden?"""
   shifts_type: String!
   shifts_date: Date
   shifts_date_func: date_functions
@@ -1996,7 +2003,7 @@ type shifts_logs {
   date_updated: Date
   date_updated_func: datetime_functions
   shifts_assignment(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_assignments
-  shifts_user(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
 }
 
 type shifts_logs_mutated {
@@ -2014,8 +2021,8 @@ type shifts_shifts {
   date_updated: Date
   date_updated_func: datetime_functions
   shifts_status: String
-  shifts_name: String
-  shifts_from: Date!
+  shifts_name: String!
+  shifts_from: Date
   shifts_from_func: date_functions
   shifts_to: Date
   shifts_to_func: date_functions
@@ -2024,11 +2031,13 @@ type shifts_shifts {
   shifts_to_time: String
   shifts_to_time_func: time_functions
 
-  """In days"""
+  """In Tagen"""
   shifts_repeats_every: Int
   shifts_description: String
-  shifts_notes_internal: String
-  shifts_score: Int
+
+  """So viele Punkte bekommt man bei der Absolvierung dieser Schicht"""
+  shifts_score: Int!
+  shifts_location: String
   shifts_slots(filter: shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_slots]
   shifts_slots_func: count_functions
 }
@@ -2048,22 +2057,6 @@ type shifts_skills {
   date_updated: Date
   date_updated_func: datetime_functions
   shifts_name: String
-  directus_users(filter: shifts_skills_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_skills_directus_users]
-  directus_users_func: count_functions
-  shifts_slots(filter: shifts_skills_shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_skills_shifts_slots]
-  shifts_slots_func: count_functions
-}
-
-type shifts_skills_directus_users {
-  id: ID!
-  shifts_skills_id(filter: shifts_skills_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_skills
-  directus_users_id(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
-}
-
-type shifts_skills_directus_users_mutated {
-  key: ID!
-  event: EventEnum
-  data: shifts_skills_directus_users
 }
 
 type shifts_skills_mutated {
@@ -2561,7 +2554,7 @@ input create_memberships_input {
   shifts_user_type: String!
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
-  shift_counter: Int
+  shifts_counter: Int
   memberships_invoices: [create_payments_invoices_out_input]
   kids: [create_memberships_memberships_coshoppers_1_input]
   coshoppers: [create_memberships_memberships_coshoppers_input]
@@ -2664,57 +2657,6 @@ input create_payments_invoices_out_input {
   payments_entries: [create_payments_invoices_entries_input]
 }
 
-input create_shifts_absences_input {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  shifts_from: Date
-  shifts_to: Date
-  shifts_assignment: create_shifts_assignments_input
-}
-
-input create_shifts_assignments_input {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  shifts_from: Date
-  shifts_to: Date
-  shifts_slot: create_shifts_slots_input
-  shifts_user: create_directus_users_input
-  shifts_absences: [create_shifts_absences_input]
-}
-
-input create_shifts_shifts_input {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  shifts_status: String
-  shifts_name: String
-  shifts_from: Date!
-  shifts_to: Date
-  shifts_from_time: String
-  shifts_to_time: String
-
-  """In days"""
-  shifts_repeats_every: Int
-  shifts_description: String
-  shifts_notes_internal: String
-  shifts_score: Int
-  shifts_slots: [create_shifts_slots_input]
-}
-
-input create_shifts_skills_directus_users_input {
-  id: ID
-  shifts_skills_id: create_shifts_skills_input
-  directus_users_id: create_directus_users_input
-}
-
 input create_shifts_skills_input {
   id: ID
   user_created: String
@@ -2722,26 +2664,6 @@ input create_shifts_skills_input {
   user_updated: String
   date_updated: Date
   shifts_name: String
-  directus_users: [create_shifts_skills_directus_users_input]
-  shifts_slots: [create_shifts_skills_shifts_slots_input]
-}
-
-input create_shifts_skills_shifts_slots_input {
-  id: ID
-  shifts_skills_id: create_shifts_skills_input
-  shifts_slots_id: create_shifts_slots_input
-}
-
-input create_shifts_slots_input {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  shifts_name: String
-  shifts_shift: create_shifts_shifts_input
-  shifts_skills: [create_shifts_skills_shifts_slots_input]
-  shifts_assignments: [create_shifts_assignments_input]
 }
 
 input date_filter_operators {
@@ -3274,7 +3196,7 @@ input memberships_filter {
   user_updated: string_filter_operators
   membership_card_id: string_filter_operators
   shifts_user_type: string_filter_operators
-  shift_counter: number_filter_operators
+  shifts_counter: number_filter_operators
   memberships_invoices: payments_invoices_out_filter
   memberships_invoices_func: count_function_filter_operators
   kids: memberships_memberships_coshoppers_1_filter
@@ -3433,6 +3355,8 @@ input shifts_absences_filter {
   shifts_to: date_filter_operators
   shifts_to_func: date_function_filter_operators
   shifts_assignment: shifts_assignments_filter
+  shifts_is_holiday: boolean_filter_operators
+  shifts_membership: memberships_filter
   _and: [shifts_absences_filter]
   _or: [shifts_absences_filter]
 }
@@ -3450,7 +3374,7 @@ input shifts_assignments_filter {
   shifts_to: date_filter_operators
   shifts_to_func: date_function_filter_operators
   shifts_slot: shifts_slots_filter
-  shifts_user: directus_users_filter
+  shifts_membership: memberships_filter
   shifts_absences: shifts_absences_filter
   shifts_absences_func: count_function_filter_operators
   _and: [shifts_assignments_filter]
@@ -3477,20 +3401,12 @@ input shifts_shifts_filter {
   shifts_to_time_func: time_function_filter_operators
   shifts_repeats_every: number_filter_operators
   shifts_description: string_filter_operators
-  shifts_notes_internal: string_filter_operators
   shifts_score: number_filter_operators
+  shifts_location: string_filter_operators
   shifts_slots: shifts_slots_filter
   shifts_slots_func: count_function_filter_operators
   _and: [shifts_shifts_filter]
   _or: [shifts_shifts_filter]
-}
-
-input shifts_skills_directus_users_filter {
-  id: number_filter_operators
-  shifts_skills_id: shifts_skills_filter
-  directus_users_id: directus_users_filter
-  _and: [shifts_skills_directus_users_filter]
-  _or: [shifts_skills_directus_users_filter]
 }
 
 input shifts_skills_filter {
@@ -3502,10 +3418,6 @@ input shifts_skills_filter {
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
   shifts_name: string_filter_operators
-  directus_users: shifts_skills_directus_users_filter
-  directus_users_func: count_function_filter_operators
-  shifts_slots: shifts_skills_shifts_slots_filter
-  shifts_slots_func: count_function_filter_operators
   _and: [shifts_skills_filter]
   _or: [shifts_skills_filter]
 }
@@ -3960,7 +3872,7 @@ input update_memberships_input {
   shifts_user_type: String
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
-  shift_counter: Int
+  shifts_counter: Int
   memberships_invoices: [update_payments_invoices_out_input]
   kids: [update_memberships_memberships_coshoppers_1_input]
   coshoppers: [update_memberships_memberships_coshoppers_input]
@@ -4063,57 +3975,6 @@ input update_payments_invoices_out_input {
   payments_entries: [update_payments_invoices_entries_input]
 }
 
-input update_shifts_absences_input {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  shifts_from: Date
-  shifts_to: Date
-  shifts_assignment: update_shifts_assignments_input
-}
-
-input update_shifts_assignments_input {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  shifts_from: Date
-  shifts_to: Date
-  shifts_slot: update_shifts_slots_input
-  shifts_user: update_directus_users_input
-  shifts_absences: [update_shifts_absences_input]
-}
-
-input update_shifts_shifts_input {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  shifts_status: String
-  shifts_name: String
-  shifts_from: Date
-  shifts_to: Date
-  shifts_from_time: String
-  shifts_to_time: String
-
-  """In days"""
-  shifts_repeats_every: Int
-  shifts_description: String
-  shifts_notes_internal: String
-  shifts_score: Int
-  shifts_slots: [update_shifts_slots_input]
-}
-
-input update_shifts_skills_directus_users_input {
-  id: ID
-  shifts_skills_id: update_shifts_skills_input
-  directus_users_id: update_directus_users_input
-}
-
 input update_shifts_skills_input {
   id: ID
   user_created: String
@@ -4121,24 +3982,4 @@ input update_shifts_skills_input {
   user_updated: String
   date_updated: Date
   shifts_name: String
-  directus_users: [update_shifts_skills_directus_users_input]
-  shifts_slots: [update_shifts_skills_shifts_slots_input]
-}
-
-input update_shifts_skills_shifts_slots_input {
-  id: ID
-  shifts_skills_id: update_shifts_skills_input
-  shifts_slots_id: update_shifts_slots_input
-}
-
-input update_shifts_slots_input {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  shifts_name: String
-  shifts_shift: update_shifts_shifts_input
-  shifts_skills: [update_shifts_skills_shifts_slots_input]
-  shifts_assignments: [update_shifts_assignments_input]
 }

@@ -1,30 +1,40 @@
 {
-  "collection": "shifts_skills_directus_users",
-  "field": "shifts_skills_id",
+  "collection": "shifts_assignments",
+  "field": "shifts_membership",
   "type": "integer",
   "meta": {
-    "collection": "shifts_skills_directus_users",
+    "collection": "shifts_assignments",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_skills_id",
+    "field": "shifts_membership",
     "group": null,
-    "hidden": true,
-    "interface": null,
+    "hidden": false,
+    "interface": "select-dropdown-m2o",
     "note": null,
-    "options": null,
+    "options": {
+      "enableCreate": false,
+      "template": "{{id}} - {{memberships_user}}"
+    },
     "readonly": false,
-    "required": false,
-    "sort": 2,
-    "special": null,
-    "translations": null,
+    "required": true,
+    "sort": 1,
+    "special": [
+      "m2o"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Mitglied"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"
   },
   "schema": {
-    "name": "shifts_skills_id",
-    "table": "shifts_skills_directus_users",
+    "name": "shifts_membership",
+    "table": "shifts_assignments",
     "data_type": "integer",
     "default_value": null,
     "max_length": null,
@@ -36,7 +46,7 @@
     "is_generated": false,
     "generation_expression": null,
     "has_auto_increment": false,
-    "foreign_key_table": "shifts_skills",
+    "foreign_key_table": "memberships",
     "foreign_key_column": "id"
   }
 }

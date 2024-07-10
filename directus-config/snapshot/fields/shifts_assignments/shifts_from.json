@@ -14,13 +14,18 @@
     "note": null,
     "options": null,
     "readonly": false,
-    "required": false,
-    "sort": 6,
+    "required": true,
+    "sort": 3,
     "special": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Startdatum"
+      }
+    ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
     "name": "shifts_from",
@@ -30,7 +35,7 @@
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
-    "is_nullable": true,
+    "is_nullable": false,
     "is_unique": false,
     "is_primary_key": false,
     "is_generated": false,

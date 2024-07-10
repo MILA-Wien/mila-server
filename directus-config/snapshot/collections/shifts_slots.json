@@ -11,14 +11,21 @@
     "display_template": null,
     "group": "collectivo_shifts_group",
     "hidden": false,
-    "icon": null,
+    "icon": "calendar_view_month",
     "item_duplication_fields": null,
     "note": null,
     "preview_url": null,
     "singleton": false,
-    "sort": 5,
+    "sort": 2,
     "sort_field": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Schichtslots",
+        "singular": "Schichtslot",
+        "plural": "Schichtslots"
+      }
+    ],
     "unarchive_value": null,
     "versioning": false
   },

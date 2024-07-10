@@ -11,14 +11,21 @@
     "display_template": null,
     "group": "collectivo_shifts_group",
     "hidden": false,
-    "icon": null,
+    "icon": "perm_contact_calendar",
     "item_duplication_fields": null,
     "note": null,
     "preview_url": null,
     "singleton": false,
-    "sort": 2,
+    "sort": 3,
     "sort_field": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Anmeldungen",
+        "singular": "Anmeldung",
+        "plural": "Anmeldungen"
+      }
+    ],
     "unarchive_value": null,
     "versioning": false
   },

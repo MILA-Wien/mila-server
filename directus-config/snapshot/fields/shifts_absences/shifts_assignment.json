@@ -11,13 +11,18 @@
     "group": null,
     "hidden": false,
     "interface": "select-dropdown-m2o",
-    "note": "If empty, this absence is valid for all assignments.",
+    "note": "Wenn leerg, dann gilt die Abwesenheit für alle Anmeldungen im gewählten Zeitraum.",
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 8,
+    "sort": 10,
     "special": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Verknüpfte Schichtanmeldung"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"

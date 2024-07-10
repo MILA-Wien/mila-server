@@ -52,21 +52,21 @@
     },
     "readonly": false,
     "required": false,
-    "sort": 10,
+    "sort": 2,
     "special": null,
     "translations": [
       {
         "language": "en-US",
-        "translation": "Status"
+        "translation": "Shift status"
       },
       {
         "language": "de-DE",
-        "translation": "Status"
+        "translation": "Schichtstatus"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
     "name": "shifts_status",

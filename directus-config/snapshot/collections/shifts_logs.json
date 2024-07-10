@@ -11,14 +11,21 @@
     "display_template": null,
     "group": "collectivo_shifts_group",
     "hidden": false,
-    "icon": null,
+    "icon": "checklist",
     "item_duplication_fields": null,
     "note": null,
     "preview_url": null,
     "singleton": false,
-    "sort": 3,
+    "sort": 6,
     "sort_field": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Logbuch",
+        "singular": "Schichtlog",
+        "plural": "Schichtlogs"
+      }
+    ],
     "unarchive_value": null,
     "versioning": false
   },

@@ -6,7 +6,9 @@
     "collection": "shifts_absences",
     "conditions": null,
     "display": null,
-    "display_options": null,
+    "display_options": {
+      "format": "DD.MM.YYYY"
+    },
     "field": "shifts_to",
     "group": null,
     "hidden": false,
@@ -14,13 +16,18 @@
     "note": null,
     "options": null,
     "readonly": false,
-    "required": false,
-    "sort": 7,
+    "required": true,
+    "sort": 8,
     "special": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Enddatum"
+      }
+    ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
     "name": "shifts_to",
@@ -30,7 +37,7 @@
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
-    "is_nullable": true,
+    "is_nullable": false,
     "is_unique": false,
     "is_primary_key": false,
     "is_generated": false,

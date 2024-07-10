@@ -1,42 +1,52 @@
 {
   "collection": "shifts_logs",
-  "field": "shifts_user",
-  "type": "uuid",
+  "field": "shifts_membership",
+  "type": "integer",
   "meta": {
     "collection": "shifts_logs",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_user",
+    "field": "shifts_membership",
     "group": null,
     "hidden": false,
     "interface": "select-dropdown-m2o",
     "note": null,
-    "options": null,
+    "options": {
+      "enableCreate": false,
+      "template": "{{memberships_user}}"
+    },
     "readonly": false,
     "required": true,
-    "sort": 11,
-    "special": null,
-    "translations": null,
+    "sort": 1,
+    "special": [
+      "m2o"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Mitglied"
+      }
+    ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
-    "name": "shifts_user",
+    "name": "shifts_membership",
     "table": "shifts_logs",
-    "data_type": "uuid",
+    "data_type": "integer",
     "default_value": null,
     "max_length": null,
-    "numeric_precision": null,
-    "numeric_scale": null,
-    "is_nullable": true,
+    "numeric_precision": 32,
+    "numeric_scale": 0,
+    "is_nullable": false,
     "is_unique": false,
     "is_primary_key": false,
     "is_generated": false,
     "generation_expression": null,
     "has_auto_increment": false,
-    "foreign_key_table": "directus_users",
+    "foreign_key_table": "memberships",
     "foreign_key_column": "id"
   }
 }
