@@ -18,7 +18,7 @@ import { DateTime } from "luxon";
 const props = defineProps({
   shiftType: {
     type: String,
-    required: false,
+    default: null,
   },
   adminMode: {
     type: Boolean,

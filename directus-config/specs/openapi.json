@@ -13476,393 +13476,6 @@
         ]
       }
     },
-    "/items/collectivo_project_settings": {
-      "post": {
-        "summary": "Create an Item",
-        "description": "Create a new collectivo_project_settings item.",
-        "tags": [
-          "Items",
-          "ItemsCollectivoProjectSettings"
-        ],
-        "operationId": "createItemsCollectivoProjectSettings",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Meta"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ItemsCollectivoProjectSettings"
-                    }
-                  },
-                  {
-                    "$ref": "#/components/schemas/ItemsCollectivoProjectSettings"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "items": {
-                        "$ref": "#/components/schemas/ItemsCollectivoProjectSettings"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        }
-      },
-      "get": {
-        "summary": "List Items",
-        "description": "List the collectivo_project_settings items.",
-        "tags": [
-          "Items",
-          "ItemsCollectivoProjectSettings"
-        ],
-        "operationId": "readItemsCollectivoProjectSettings",
-        "security": [
-          {
-            "Auth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          },
-          {
-            "$ref": "#/components/parameters/Filter"
-          },
-          {
-            "$ref": "#/components/parameters/Search"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "$ref": "#/components/schemas/ItemsCollectivoProjectSettings"
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/x-metadata"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update Multiple Items",
-        "description": "Update multiple collectivo_project_settings items at the same time.",
-        "tags": [
-          "Items",
-          "ItemsCollectivoProjectSettings"
-        ],
-        "operationId": "updateItemsCollectivoProjectSettings",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          },
-          {
-            "$ref": "#/components/parameters/Filter"
-          },
-          {
-            "$ref": "#/components/parameters/Search"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ItemsCollectivoProjectSettings"
-                    }
-                  },
-                  {
-                    "$ref": "#/components/schemas/ItemsCollectivoProjectSettings"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "data": {
-                      "items": {
-                        "$ref": "#/components/schemas/ItemsCollectivoProjectSettings"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete Multiple Items",
-        "description": "Delete multiple existing collectivo_project_settings items.",
-        "tags": [
-          "Items",
-          "ItemsCollectivoProjectSettings"
-        ],
-        "operationId": "deleteItemsCollectivoProjectSettings",
-        "responses": {
-          "200": {
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        },
-        "parameters": []
-      }
-    },
-    "/items/collectivo_project_settings/{id}": {
-      "get": {
-        "summary": "Retrieve an Item",
-        "description": "Retrieve a single collectivo_project_settings item by unique identifier.",
-        "tags": [
-          "Items",
-          "ItemsCollectivoProjectSettings"
-        ],
-        "operationId": "readSingleItemsCollectivoProjectSettings",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Version"
-          },
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/ItemsCollectivoProjectSettings"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update an Item",
-        "description": "Update an existing collectivo_project_settings item.",
-        "tags": [
-          "Items",
-          "ItemsCollectivoProjectSettings"
-        ],
-        "operationId": "updateSingleItemsCollectivoProjectSettings",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "$ref": "#/components/schemas/ItemsCollectivoProjectSettings"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/ItemsCollectivoProjectSettings"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete an Item",
-        "description": "Delete an existing collectivo_project_settings item.",
-        "tags": [
-          "Items",
-          "ItemsCollectivoProjectSettings"
-        ],
-        "operationId": "deleteSingleItemsCollectivoProjectSettings",
-        "responses": {
-          "200": {
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
     "/items/memberships_memberships_coshoppers_1": {
       "post": {
         "summary": "Create an Item",
@@ -14602,393 +14215,6 @@
           "ItemsMembershipsMembershipsCoshoppers"
         ],
         "operationId": "deleteSingleItemsMembershipsMembershipsCoshoppers",
-        "responses": {
-          "200": {
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
-    "/items/collectivo_extensions": {
-      "post": {
-        "summary": "Create an Item",
-        "description": "Create a new collectivo_extensions item.",
-        "tags": [
-          "Items",
-          "ItemsCollectivoExtensions"
-        ],
-        "operationId": "createItemsCollectivoExtensions",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Meta"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ItemsCollectivoExtensions"
-                    }
-                  },
-                  {
-                    "$ref": "#/components/schemas/ItemsCollectivoExtensions"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "items": {
-                        "$ref": "#/components/schemas/ItemsCollectivoExtensions"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        }
-      },
-      "get": {
-        "summary": "List Items",
-        "description": "List the collectivo_extensions items.",
-        "tags": [
-          "Items",
-          "ItemsCollectivoExtensions"
-        ],
-        "operationId": "readItemsCollectivoExtensions",
-        "security": [
-          {
-            "Auth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          },
-          {
-            "$ref": "#/components/parameters/Filter"
-          },
-          {
-            "$ref": "#/components/parameters/Search"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "$ref": "#/components/schemas/ItemsCollectivoExtensions"
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/x-metadata"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update Multiple Items",
-        "description": "Update multiple collectivo_extensions items at the same time.",
-        "tags": [
-          "Items",
-          "ItemsCollectivoExtensions"
-        ],
-        "operationId": "updateItemsCollectivoExtensions",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          },
-          {
-            "$ref": "#/components/parameters/Filter"
-          },
-          {
-            "$ref": "#/components/parameters/Search"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ItemsCollectivoExtensions"
-                    }
-                  },
-                  {
-                    "$ref": "#/components/schemas/ItemsCollectivoExtensions"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "data": {
-                      "items": {
-                        "$ref": "#/components/schemas/ItemsCollectivoExtensions"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete Multiple Items",
-        "description": "Delete multiple existing collectivo_extensions items.",
-        "tags": [
-          "Items",
-          "ItemsCollectivoExtensions"
-        ],
-        "operationId": "deleteItemsCollectivoExtensions",
-        "responses": {
-          "200": {
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        },
-        "parameters": []
-      }
-    },
-    "/items/collectivo_extensions/{id}": {
-      "get": {
-        "summary": "Retrieve an Item",
-        "description": "Retrieve a single collectivo_extensions item by unique identifier.",
-        "tags": [
-          "Items",
-          "ItemsCollectivoExtensions"
-        ],
-        "operationId": "readSingleItemsCollectivoExtensions",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Version"
-          },
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/ItemsCollectivoExtensions"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update an Item",
-        "description": "Update an existing collectivo_extensions item.",
-        "tags": [
-          "Items",
-          "ItemsCollectivoExtensions"
-        ],
-        "operationId": "updateSingleItemsCollectivoExtensions",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "$ref": "#/components/schemas/ItemsCollectivoExtensions"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/ItemsCollectivoExtensions"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete an Item",
-        "description": "Delete an existing collectivo_extensions item.",
-        "tags": [
-          "Items",
-          "ItemsCollectivoExtensions"
-        ],
-        "operationId": "deleteSingleItemsCollectivoExtensions",
         "responses": {
           "200": {
             "description": "Successful request"
@@ -18119,6 +17345,393 @@
           }
         ]
       }
+    },
+    "/items/memberships_shifts_skills": {
+      "post": {
+        "summary": "Create an Item",
+        "description": "Create a new memberships_shifts_skills item.",
+        "tags": [
+          "Items",
+          "ItemsMembershipsShiftsSkills"
+        ],
+        "operationId": "createItemsMembershipsShiftsSkills",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Meta"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                    }
+                  },
+                  {
+                    "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "get": {
+        "summary": "List Items",
+        "description": "List the memberships_shifts_skills items.",
+        "tags": [
+          "Items",
+          "ItemsMembershipsShiftsSkills"
+        ],
+        "operationId": "readItemsMembershipsShiftsSkills",
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/x-metadata"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Multiple Items",
+        "description": "Update multiple memberships_shifts_skills items at the same time.",
+        "tags": [
+          "Items",
+          "ItemsMembershipsShiftsSkills"
+        ],
+        "operationId": "updateItemsMembershipsShiftsSkills",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                    }
+                  },
+                  {
+                    "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Multiple Items",
+        "description": "Delete multiple existing memberships_shifts_skills items.",
+        "tags": [
+          "Items",
+          "ItemsMembershipsShiftsSkills"
+        ],
+        "operationId": "deleteItemsMembershipsShiftsSkills",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "parameters": []
+      }
+    },
+    "/items/memberships_shifts_skills/{id}": {
+      "get": {
+        "summary": "Retrieve an Item",
+        "description": "Retrieve a single memberships_shifts_skills item by unique identifier.",
+        "tags": [
+          "Items",
+          "ItemsMembershipsShiftsSkills"
+        ],
+        "operationId": "readSingleItemsMembershipsShiftsSkills",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Version"
+          },
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update an Item",
+        "description": "Update an existing memberships_shifts_skills item.",
+        "tags": [
+          "Items",
+          "ItemsMembershipsShiftsSkills"
+        ],
+        "operationId": "updateSingleItemsMembershipsShiftsSkills",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an Item",
+        "description": "Delete an existing memberships_shifts_skills item.",
+        "tags": [
+          "Items",
+          "ItemsMembershipsShiftsSkills"
+        ],
+        "operationId": "deleteSingleItemsMembershipsShiftsSkills",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ]
+      }
     }
   },
   "tags": [
@@ -18304,20 +17917,12 @@
       "x-collection": "memberships"
     },
     {
-      "name": "ItemsCollectivoProjectSettings",
-      "x-collection": "collectivo_project_settings"
-    },
-    {
       "name": "ItemsMembershipsMembershipsCoshoppers1",
       "x-collection": "memberships_memberships_coshoppers_1"
     },
     {
       "name": "ItemsMembershipsMembershipsCoshoppers",
       "x-collection": "memberships_memberships_coshoppers"
-    },
-    {
-      "name": "ItemsCollectivoExtensions",
-      "x-collection": "collectivo_extensions"
     },
     {
       "name": "ItemsShiftsAssignments",
@@ -18350,6 +17955,10 @@
     {
       "name": "ItemsShiftsSkillsDirectusUsers",
       "x-collection": "shifts_skills_directus_users"
+    },
+    {
+      "name": "ItemsMembershipsShiftsSkills",
+      "x-collection": "memberships_shifts_skills"
     }
   ],
   "components": {
@@ -18953,10 +18562,6 @@
             "nullable": true,
             "type": "string"
           },
-          "shifts_user_type": {
-            "nullable": true,
-            "type": "string"
-          },
           "collectivo_tags": {
             "nullable": true,
             "type": "array",
@@ -19009,20 +18614,6 @@
                 },
                 {
                   "$ref": "#/components/schemas/ItemsJunctionDirectusUsersFiles"
-                }
-              ]
-            }
-          },
-          "shifts_skills": {
-            "nullable": true,
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "$ref": "#/components/schemas/ItemsShiftsSkillsDirectusUsers"
                 }
               ]
             }
@@ -21159,6 +20750,7 @@
           },
           "id": {
             "nullable": false,
+            "description": "Diese Nummer identifiziert das Mitglied",
             "type": "integer"
           },
           "memberships_date_applied": {
@@ -21188,11 +20780,12 @@
           },
           "memberships_shares": {
             "nullable": false,
+            "description": "Änderung generiert automatische Rechnung",
             "type": "integer"
           },
           "memberships_status": {
             "nullable": false,
-            "description": "Lebenszyklus einer Mitgliedschaft. Ausstieg erfolgt durch das Mitglied, Ausschluss durch die Organisation. Während des Ausstiegs- oder Ausschlussverfahrens sind die Mitgliedschaften weiterhin aktiv. Wenn der Vorgang abgeschlossen ist, sollte der Status auf 'Beendet' gesetzt werden.",
+            "description": "Lebenszyklus von Beitritt bis Beendet",
             "type": "string"
           },
           "memberships_type": {
@@ -21201,6 +20794,7 @@
           },
           "memberships_user": {
             "nullable": true,
+            "description": "Verknüpfter Account",
             "oneOf": [
               {
                 "type": "string",
@@ -21230,8 +20824,19 @@
             "description": "Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren.",
             "type": "string"
           },
+          "shifts_user_type": {
+            "nullable": false,
+            "description": "Welche Art von Schichten macht dieses Mitglied?",
+            "type": "string"
+          },
+          "shift_counter": {
+            "nullable": true,
+            "description": "Wenn negativ, dann müssen Schichten nachgeholt werden",
+            "type": "integer"
+          },
           "memberships_invoices": {
             "nullable": true,
+            "description": "Rechnungen für Anteils-Zahlungen",
             "type": "array",
             "items": {
               "oneOf": [
@@ -21240,6 +20845,20 @@
                 },
                 {
                   "$ref": "#/components/schemas/ItemsPaymentsInvoicesOut"
+                }
+              ]
+            }
+          },
+          "kids": {
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "$ref": "#/components/schemas/ItemsMembershipsMembershipsCoshoppers1"
                 }
               ]
             }
@@ -21258,7 +20877,7 @@
               ]
             }
           },
-          "kids": {
+          "shifts_skills": {
             "nullable": true,
             "type": "array",
             "items": {
@@ -21267,51 +20886,13 @@
                   "type": "integer"
                 },
                 {
-                  "$ref": "#/components/schemas/ItemsMembershipsMembershipsCoshoppers1"
+                  "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
                 }
               ]
             }
           }
         },
         "x-collection": "memberships"
-      },
-      "ItemsCollectivoProjectSettings": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "nullable": false,
-            "type": "integer"
-          },
-          "user_created": {
-            "nullable": true,
-            "type": "string",
-            "format": "uuid"
-          },
-          "date_created": {
-            "nullable": true,
-            "type": "string",
-            "format": "timestamp"
-          },
-          "user_updated": {
-            "nullable": true,
-            "type": "string",
-            "format": "uuid"
-          },
-          "date_updated": {
-            "nullable": true,
-            "type": "string",
-            "format": "timestamp"
-          },
-          "collectivo_project_name": {
-            "nullable": true,
-            "type": "string"
-          },
-          "collectivo_project_description": {
-            "nullable": true,
-            "type": "string"
-          }
-        },
-        "x-collection": "collectivo_project_settings"
       },
       "ItemsMembershipsMembershipsCoshoppers1": {
         "type": "object",
@@ -21376,59 +20957,6 @@
           }
         },
         "x-collection": "memberships_memberships_coshoppers"
-      },
-      "ItemsCollectivoExtensions": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "nullable": false,
-            "type": "integer"
-          },
-          "user_created": {
-            "nullable": true,
-            "type": "string",
-            "format": "uuid"
-          },
-          "date_created": {
-            "nullable": true,
-            "type": "string",
-            "format": "timestamp"
-          },
-          "user_updated": {
-            "nullable": true,
-            "type": "string",
-            "format": "uuid"
-          },
-          "date_updated": {
-            "nullable": true,
-            "type": "string",
-            "format": "timestamp"
-          },
-          "extensions_name": {
-            "nullable": false,
-            "type": "string"
-          },
-          "extensions_status": {
-            "nullable": false,
-            "type": "string"
-          },
-          "extensions_version": {
-            "nullable": true,
-            "description": "Semantic version of the extension (e.g. 1.0.0)",
-            "type": "string"
-          },
-          "extensions_schema_version": {
-            "nullable": true,
-            "description": "Semantic version of the extension schema (e.g. 1.0.0)",
-            "type": "string"
-          },
-          "extensions_schema_is_latest": {
-            "nullable": true,
-            "description": "Whether the extension schema is up to date.",
-            "type": "string"
-          }
-        },
-        "x-collection": "collectivo_extensions"
       },
       "ItemsShiftsAssignments": {
         "type": "object",
@@ -21917,6 +21445,38 @@
           }
         },
         "x-collection": "shifts_skills_directus_users"
+      },
+      "ItemsMembershipsShiftsSkills": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "nullable": false,
+            "type": "integer"
+          },
+          "memberships_id": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsMemberships"
+              }
+            ]
+          },
+          "shifts_skills_id": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsShiftsSkills"
+              }
+            ]
+          }
+        },
+        "x-collection": "memberships_shifts_skills"
       }
     },
     "parameters": {

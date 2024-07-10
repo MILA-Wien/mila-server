@@ -10,7 +10,7 @@
       "template": "{{memberships_coshoppers_id.first_name}} {{memberships_coshoppers_id.last_name}}"
     },
     "field": "coshoppers",
-    "group": null,
+    "group": "cards_group",
     "hidden": false,
     "interface": "list-m2m",
     "note": null,
@@ -20,7 +20,7 @@
     },
     "readonly": false,
     "required": false,
-    "sort": 14,
+    "sort": 2,
     "special": [
       "m2m"
     ],
@@ -32,6 +32,6 @@
     ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   }
 }

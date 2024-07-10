@@ -1,8 +1,8 @@
-export default function showToast(
+export const showToast = (
   title: string,
   description: string,
   type: "error" | "success",
-) {
+) => {
   const toast = useToast();
 
   toast.add({
@@ -14,4 +14,4 @@ export default function showToast(
         : "i-heroicons-check",
     color: type == "error" ? "red" : "green",
   });
-}
+};

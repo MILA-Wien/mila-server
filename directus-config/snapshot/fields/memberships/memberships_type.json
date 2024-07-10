@@ -5,10 +5,23 @@
   "meta": {
     "collection": "memberships",
     "conditions": null,
-    "display": null,
-    "display_options": null,
+    "display": "labels",
+    "display_options": {
+      "choices": [
+        {
+          "text": "Aktiv",
+          "value": "Aktiv",
+          "color": "#2ECDA7"
+        },
+        {
+          "text": "Investierend",
+          "value": "Investierend",
+          "color": "#FFA439"
+        }
+      ]
+    },
     "field": "memberships_type",
-    "group": null,
+    "group": "membership_group",
     "hidden": false,
     "interface": "select-dropdown",
     "note": null,
@@ -30,7 +43,7 @@
     },
     "readonly": false,
     "required": true,
-    "sort": 3,
+    "sort": 2,
     "special": null,
     "translations": [
       {

@@ -1,35 +1,36 @@
 {
   "collection": "memberships",
-  "field": "kids",
+  "field": "shifts_group",
   "type": "alias",
   "meta": {
     "collection": "memberships",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "kids",
-    "group": "cards_group",
+    "field": "shifts_group",
+    "group": null,
     "hidden": false,
-    "interface": "list-m2m",
+    "interface": "group-detail",
     "note": null,
     "options": {
-      "enableSelect": false,
-      "template": "{{memberships_coshoppers_id.first_name}} {{memberships_coshoppers_id.last_name}}"
+      "headerIcon": "calendar_month"
     },
     "readonly": false,
     "required": false,
-    "sort": 3,
+    "sort": 4,
     "special": [
-      "m2m"
+      "alias",
+      "group",
+      "no-data"
     ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Kinder"
+        "translation": "Schichten"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   }
 }

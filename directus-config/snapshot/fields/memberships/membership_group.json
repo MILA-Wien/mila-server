@@ -1,30 +1,34 @@
 {
-  "collection": "directus_users",
-  "field": "shifts_group",
+  "collection": "memberships",
+  "field": "membership_group",
   "type": "alias",
   "meta": {
-    "collection": "directus_users",
+    "collection": "memberships",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_group",
+    "field": "membership_group",
     "group": null,
     "hidden": false,
     "interface": "group-detail",
     "note": null,
     "options": {
-      "headerIcon": "account_circle",
-      "title": "$t:person"
+      "headerIcon": "account_box"
     },
     "readonly": false,
     "required": false,
-    "sort": 112,
+    "sort": 3,
     "special": [
       "alias",
       "group",
       "no-data"
     ],
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Mitgliedschaft"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"

@@ -1,5 +1,4 @@
 import type { DateTime } from "luxon";
-import getActiveAssignment from "~/utils/assignments/getActiveAssignment";
 
 export enum OccurrenceType {
   NOT_ASSIGNED,

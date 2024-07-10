@@ -1,0 +1,101 @@
+{
+  "collection": "memberships",
+  "field": "shifts_user_type",
+  "type": "string",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": "labels",
+    "display_options": {
+      "choices": [
+        {
+          "text": "Regulär",
+          "value": "regular",
+          "color": "#2ECDA7",
+          "background": null,
+          "icon": null
+        },
+        {
+          "text": "Springer*in",
+          "value": "jumper",
+          "icon": null,
+          "color": "#2ECDA7"
+        },
+        {
+          "text": "Befreit",
+          "value": "exempt",
+          "color": "#3399FF"
+        },
+        {
+          "text": "Inaktiv",
+          "value": "inactive",
+          "color": "#FFA439"
+        }
+      ],
+      "format": false
+    },
+    "field": "shifts_user_type",
+    "group": "shifts_group",
+    "hidden": false,
+    "interface": "select-dropdown",
+    "note": "Welche Art von Schichten macht dieses Mitglied?",
+    "options": {
+      "choices": [
+        {
+          "text": "Regulär",
+          "value": "regular",
+          "icon": "transfer_within_a_station",
+          "color": "#2ECDA7"
+        },
+        {
+          "text": "Springer*in",
+          "value": "jumper",
+          "icon": "sprint",
+          "color": "#2ECDA7"
+        },
+        {
+          "text": "Befreit",
+          "value": "exempt",
+          "icon": "self_improvement",
+          "color": "#3399FF"
+        },
+        {
+          "text": "Inaktiv",
+          "value": "inactive",
+          "icon": "cancel",
+          "color": "#FFA439"
+        }
+      ]
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 1,
+    "special": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Schichttyp"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "shifts_user_type",
+    "table": "memberships",
+    "data_type": "character varying",
+    "default_value": null,
+    "max_length": 255,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": false,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

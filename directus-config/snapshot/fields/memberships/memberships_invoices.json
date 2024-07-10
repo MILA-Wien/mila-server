@@ -8,14 +8,17 @@
     "display": null,
     "display_options": null,
     "field": "memberships_invoices",
-    "group": null,
+    "group": "membership_group",
     "hidden": false,
     "interface": "list-o2m",
-    "note": null,
-    "options": null,
+    "note": "Rechnungen für Anteils-Zahlungen",
+    "options": {
+      "enableCreate": false,
+      "enableSelect": false
+    },
     "readonly": false,
     "required": false,
-    "sort": 5,
+    "sort": 4,
     "special": [
       "o2m"
     ],

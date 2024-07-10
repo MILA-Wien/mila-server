@@ -1,35 +1,36 @@
 {
   "collection": "memberships",
-  "field": "kids",
+  "field": "cards_group",
   "type": "alias",
   "meta": {
     "collection": "memberships",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "kids",
-    "group": "cards_group",
+    "field": "cards_group",
+    "group": null,
     "hidden": false,
-    "interface": "list-m2m",
+    "interface": "group-detail",
     "note": null,
     "options": {
-      "enableSelect": false,
-      "template": "{{memberships_coshoppers_id.first_name}} {{memberships_coshoppers_id.last_name}}"
+      "headerIcon": "credit_card"
     },
     "readonly": false,
     "required": false,
-    "sort": 3,
+    "sort": 5,
     "special": [
-      "m2m"
+      "alias",
+      "group",
+      "no-data"
     ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Kinder"
+        "translation": "Karten & Miteinkäufer*innen"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   }
 }

@@ -63,20 +63,24 @@ export const getShiftOccurrences = async (
 
   const assignmentIds = assignments.map((assignment) => assignment.id);
 
-  const absences = (await directus.request(
-    readItems("shifts_absences", {
-      filter: {
-        shifts_assignment: {
-          _in: assignmentIds,
+  const absences = [];
+  if (assignmentIds.length) {
+    const absences_ = (await directus.request(
+      readItems("shifts_absences", {
+        filter: {
+          shifts_assignment: {
+            _in: assignmentIds,
+          },
+          _or: [
+            { shifts_to: { _gte: from.toISO() } },
+            { shifts_from: { _lte: to.toISO() } },
+          ],
         },
-        _or: [
-          { shifts_to: { _gte: from.toISO() } },
-          { shifts_from: { _lte: to.toISO() } },
-        ],
-      },
-      fields: ["shifts_from", "shifts_to", "shifts_assignment"],
-    }),
-  )) as ShiftsAbsence[];
+        fields: ["shifts_from", "shifts_to", "shifts_assignment"],
+      }),
+    )) as ShiftsAbsence[];
+    absences.push(...absences_);
+  }
 
   const occurrences = [];
 

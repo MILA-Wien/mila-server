@@ -9,7 +9,6 @@ import SlotCard from "~/components/shifts/SlotCard.vue";
 const route = useRoute();
 const directus = useDirectus();
 const user = useCollectivoUser();
-user.value.load();
 const shift = ref<ShiftsShift>();
 const nextOccurrences: Ref<ShiftOccurrence[]> = ref([]);
 const shift_start = ref<DateTime>();

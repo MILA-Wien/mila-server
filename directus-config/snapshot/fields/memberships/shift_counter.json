@@ -1,30 +1,26 @@
 {
   "collection": "memberships",
-  "field": "memberships_shares",
+  "field": "shift_counter",
   "type": "integer",
   "meta": {
     "collection": "memberships",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "memberships_shares",
-    "group": "membership_group",
+    "field": "shift_counter",
+    "group": "shifts_group",
     "hidden": false,
     "interface": "input",
-    "note": "Änderung generiert automatische Rechnung",
+    "note": "Wenn negativ, dann müssen Schichten nachgeholt werden",
     "options": null,
-    "readonly": false,
-    "required": false,
-    "sort": 3,
+    "readonly": true,
+    "required": true,
+    "sort": 2,
     "special": null,
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Anteile"
-      },
-      {
-        "language": "en-US",
-        "translation": "Shares"
+        "translation": "Schichtzähler"
       }
     ],
     "validation": null,
@@ -32,14 +28,14 @@
     "width": "half"
   },
   "schema": {
-    "name": "memberships_shares",
+    "name": "shift_counter",
     "table": "memberships",
     "data_type": "integer",
     "default_value": 0,
     "max_length": null,
     "numeric_precision": 32,
     "numeric_scale": 0,
-    "is_nullable": false,
+    "is_nullable": true,
     "is_unique": false,
     "is_primary_key": false,
     "is_generated": false,

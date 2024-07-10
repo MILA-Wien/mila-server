@@ -753,42 +753,6 @@
   },
   {
     "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
-    "collection": "collectivo_extensions",
-    "action": "read",
-    "permissions": null,
-    "validation": null,
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "_syncId": "e5b83ec0-a150-4013-b9e2-d88ae4926934"
-  },
-  {
-    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
-    "collection": "collectivo_project_settings",
-    "action": "read",
-    "permissions": null,
-    "validation": null,
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "_syncId": "3be15c64-dab6-4465-8d4a-d4621acd4d8d"
-  },
-  {
-    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
-    "collection": "collectivo_project_settings",
-    "action": "update",
-    "permissions": null,
-    "validation": null,
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "_syncId": "e94c75db-ba46-4697-a964-f88fc4c7ab94"
-  },
-  {
-    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
     "collection": "collectivo_tags_directus_users",
     "action": "create",
     "permissions": null,

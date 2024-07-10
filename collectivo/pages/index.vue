@@ -10,7 +10,6 @@ setCollectivoTitle("Dashboard");
 const tiles = useCollectivoTiles();
 const user = useCollectivoUser();
 
-user.value.load();
 tiles.value.load();
 
 function getFilteredTiles(tiles: CollectivoTile[]) {

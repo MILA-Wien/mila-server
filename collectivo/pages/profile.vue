@@ -11,13 +11,6 @@ const user = useCollectivoUser();
 // Sort profile.inputs by order
 // profile.value.inputs.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
-// Get form data
-async function getProfile() {
-  await user.value.load();
-}
-
-getProfile();
-
 // Submit form data
 async function saveProfile(data: CollectivoUser) {
   try {

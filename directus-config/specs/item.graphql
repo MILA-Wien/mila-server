@@ -63,8 +63,6 @@ type Query {
   memberships_by_id(id: ID!, version: String): memberships
   memberships_aggregated(groupBy: [String], filter: memberships_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_aggregated!]!
   memberships_by_version(version: String!, id: ID!): version_memberships
-  collectivo_project_settings(version: String): collectivo_project_settings
-  collectivo_project_settings_by_version(version: String!): version_collectivo_project_settings
   memberships_memberships_coshoppers_1(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers_1!]!
   memberships_memberships_coshoppers_1_by_id(id: ID!, version: String): memberships_memberships_coshoppers_1
   memberships_memberships_coshoppers_1_aggregated(groupBy: [String], filter: memberships_memberships_coshoppers_1_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_memberships_coshoppers_1_aggregated!]!
@@ -73,10 +71,6 @@ type Query {
   memberships_memberships_coshoppers_by_id(id: ID!, version: String): memberships_memberships_coshoppers
   memberships_memberships_coshoppers_aggregated(groupBy: [String], filter: memberships_memberships_coshoppers_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_memberships_coshoppers_aggregated!]!
   memberships_memberships_coshoppers_by_version(version: String!, id: ID!): version_memberships_memberships_coshoppers
-  collectivo_extensions(filter: collectivo_extensions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_extensions!]!
-  collectivo_extensions_by_id(id: ID!, version: String): collectivo_extensions
-  collectivo_extensions_aggregated(groupBy: [String], filter: collectivo_extensions_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [collectivo_extensions_aggregated!]!
-  collectivo_extensions_by_version(version: String!, id: ID!): version_collectivo_extensions
   shifts_assignments(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_assignments!]!
   shifts_assignments_by_id(id: ID!, version: String): shifts_assignments
   shifts_assignments_aggregated(groupBy: [String], filter: shifts_assignments_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_assignments_aggregated!]!
@@ -109,6 +103,10 @@ type Query {
   shifts_skills_directus_users_by_id(id: ID!, version: String): shifts_skills_directus_users
   shifts_skills_directus_users_aggregated(groupBy: [String], filter: shifts_skills_directus_users_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_skills_directus_users_aggregated!]!
   shifts_skills_directus_users_by_version(version: String!, id: ID!): version_shifts_skills_directus_users
+  memberships_shifts_skills(filter: memberships_shifts_skills_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_shifts_skills!]!
+  memberships_shifts_skills_by_id(id: ID!, version: String): memberships_shifts_skills
+  memberships_shifts_skills_aggregated(groupBy: [String], filter: memberships_shifts_skills_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_shifts_skills_aggregated!]!
+  memberships_shifts_skills_by_version(version: String!, id: ID!): version_memberships_shifts_skills
 }
 
 type Mutation {
@@ -148,8 +146,6 @@ type Mutation {
   create_memberships_memberships_coshoppers_1_item(data: create_memberships_memberships_coshoppers_1_input!): memberships_memberships_coshoppers_1
   create_memberships_memberships_coshoppers_items(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_memberships_coshoppers_input!]): [memberships_memberships_coshoppers!]!
   create_memberships_memberships_coshoppers_item(data: create_memberships_memberships_coshoppers_input!): memberships_memberships_coshoppers
-  create_collectivo_extensions_items(filter: collectivo_extensions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_collectivo_extensions_input!]): [collectivo_extensions!]!
-  create_collectivo_extensions_item(data: create_collectivo_extensions_input!): collectivo_extensions
   create_shifts_assignments_items(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_assignments_input!]): [shifts_assignments!]!
   create_shifts_assignments_item(data: create_shifts_assignments_input!): shifts_assignments
   create_shifts_skills_items(filter: shifts_skills_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_skills_input!]): [shifts_skills!]!
@@ -166,6 +162,8 @@ type Mutation {
   create_shifts_logs_item(data: create_shifts_logs_input!): shifts_logs
   create_shifts_skills_directus_users_items(filter: shifts_skills_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_skills_directus_users_input!]): [shifts_skills_directus_users!]!
   create_shifts_skills_directus_users_item(data: create_shifts_skills_directus_users_input!): shifts_skills_directus_users
+  create_memberships_shifts_skills_items(filter: memberships_shifts_skills_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_shifts_skills_input!]): [memberships_shifts_skills!]!
+  create_memberships_shifts_skills_item(data: create_memberships_shifts_skills_input!): memberships_shifts_skills
   update_directus_sync_id_map_items(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_sync_id_map_input!): [directus_sync_id_map!]!
   update_directus_sync_id_map_batch(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_sync_id_map_input!]): [directus_sync_id_map!]!
   update_directus_sync_id_map_item(id: ID!, data: update_directus_sync_id_map_input!): directus_sync_id_map
@@ -214,16 +212,12 @@ type Mutation {
   update_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_input!): [memberships!]!
   update_memberships_batch(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_input!]): [memberships!]!
   update_memberships_item(id: ID!, data: update_memberships_input!): memberships
-  update_collectivo_project_settings(data: update_collectivo_project_settings_input!): collectivo_project_settings
   update_memberships_memberships_coshoppers_1_items(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_memberships_coshoppers_1_input!): [memberships_memberships_coshoppers_1!]!
   update_memberships_memberships_coshoppers_1_batch(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_memberships_coshoppers_1_input!]): [memberships_memberships_coshoppers_1!]!
   update_memberships_memberships_coshoppers_1_item(id: ID!, data: update_memberships_memberships_coshoppers_1_input!): memberships_memberships_coshoppers_1
   update_memberships_memberships_coshoppers_items(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_memberships_coshoppers_input!): [memberships_memberships_coshoppers!]!
   update_memberships_memberships_coshoppers_batch(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_memberships_coshoppers_input!]): [memberships_memberships_coshoppers!]!
   update_memberships_memberships_coshoppers_item(id: ID!, data: update_memberships_memberships_coshoppers_input!): memberships_memberships_coshoppers
-  update_collectivo_extensions_items(filter: collectivo_extensions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_collectivo_extensions_input!): [collectivo_extensions!]!
-  update_collectivo_extensions_batch(filter: collectivo_extensions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_collectivo_extensions_input!]): [collectivo_extensions!]!
-  update_collectivo_extensions_item(id: ID!, data: update_collectivo_extensions_input!): collectivo_extensions
   update_shifts_assignments_items(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_assignments_input!): [shifts_assignments!]!
   update_shifts_assignments_batch(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_assignments_input!]): [shifts_assignments!]!
   update_shifts_assignments_item(id: ID!, data: update_shifts_assignments_input!): shifts_assignments
@@ -248,6 +242,9 @@ type Mutation {
   update_shifts_skills_directus_users_items(filter: shifts_skills_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_skills_directus_users_input!): [shifts_skills_directus_users!]!
   update_shifts_skills_directus_users_batch(filter: shifts_skills_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_skills_directus_users_input!]): [shifts_skills_directus_users!]!
   update_shifts_skills_directus_users_item(id: ID!, data: update_shifts_skills_directus_users_input!): shifts_skills_directus_users
+  update_memberships_shifts_skills_items(filter: memberships_shifts_skills_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_shifts_skills_input!): [memberships_shifts_skills!]!
+  update_memberships_shifts_skills_batch(filter: memberships_shifts_skills_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_shifts_skills_input!]): [memberships_shifts_skills!]!
+  update_memberships_shifts_skills_item(id: ID!, data: update_memberships_shifts_skills_input!): memberships_shifts_skills
   delete_directus_sync_id_map_items(ids: [ID]!): delete_many
   delete_directus_sync_id_map_item(id: ID!): delete_one
   delete_collectivo_tags_items(ids: [ID]!): delete_many
@@ -284,8 +281,6 @@ type Mutation {
   delete_memberships_memberships_coshoppers_1_item(id: ID!): delete_one
   delete_memberships_memberships_coshoppers_items(ids: [ID]!): delete_many
   delete_memberships_memberships_coshoppers_item(id: ID!): delete_one
-  delete_collectivo_extensions_items(ids: [ID]!): delete_many
-  delete_collectivo_extensions_item(id: ID!): delete_one
   delete_shifts_assignments_items(ids: [ID]!): delete_many
   delete_shifts_assignments_item(id: ID!): delete_one
   delete_shifts_skills_items(ids: [ID]!): delete_many
@@ -302,6 +297,8 @@ type Mutation {
   delete_shifts_logs_item(id: ID!): delete_one
   delete_shifts_skills_directus_users_items(ids: [ID]!): delete_many
   delete_shifts_skills_directus_users_item(id: ID!): delete_one
+  delete_memberships_shifts_skills_items(ids: [ID]!): delete_many
+  delete_memberships_shifts_skills_item(id: ID!): delete_one
 }
 
 type Subscription {
@@ -339,10 +336,8 @@ type Subscription {
   payments_invoices_entries_mutated(event: EventEnum): payments_invoices_entries_mutated
   memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
   memberships_mutated(event: EventEnum): memberships_mutated
-  collectivo_project_settings_mutated(event: EventEnum): collectivo_project_settings_mutated
   memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
   memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
-  collectivo_extensions_mutated(event: EventEnum): collectivo_extensions_mutated
   shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
   shifts_skills_mutated(event: EventEnum): shifts_skills_mutated
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
@@ -351,6 +346,7 @@ type Subscription {
   shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
   shifts_skills_directus_users_mutated(event: EventEnum): shifts_skills_directus_users_mutated
+  memberships_shifts_skills_mutated(event: EventEnum): memberships_shifts_skills_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -397,87 +393,6 @@ enum EventEnum {
   create
   update
   delete
-}
-
-type collectivo_extensions {
-  id: ID!
-  user_created: String
-  date_created: Date
-  date_created_func: datetime_functions
-  user_updated: String
-  date_updated: Date
-  date_updated_func: datetime_functions
-  extensions_name: String!
-  extensions_status: String
-
-  """Semantic version of the extension (e.g. 1.0.0)"""
-  extensions_version: String
-
-  """Semantic version of the extension schema (e.g. 1.0.0)"""
-  extensions_schema_version: String
-
-  """Whether the extension schema is up to date."""
-  extensions_schema_is_latest: String
-}
-
-type collectivo_extensions_aggregated {
-  group: JSON
-  countAll: Int
-  count: collectivo_extensions_aggregated_count
-  countDistinct: collectivo_extensions_aggregated_count
-  avg: collectivo_extensions_aggregated_fields
-  sum: collectivo_extensions_aggregated_fields
-  avgDistinct: collectivo_extensions_aggregated_fields
-  sumDistinct: collectivo_extensions_aggregated_fields
-  min: collectivo_extensions_aggregated_fields
-  max: collectivo_extensions_aggregated_fields
-}
-
-type collectivo_extensions_aggregated_count {
-  id: Int
-  user_created: Int
-  date_created: Int
-  user_updated: Int
-  date_updated: Int
-  extensions_name: Int
-  extensions_status: Int
-
-  """Semantic version of the extension (e.g. 1.0.0)"""
-  extensions_version: Int
-
-  """Semantic version of the extension schema (e.g. 1.0.0)"""
-  extensions_schema_version: Int
-
-  """Whether the extension schema is up to date."""
-  extensions_schema_is_latest: Int
-}
-
-type collectivo_extensions_aggregated_fields {
-  id: Float
-}
-
-type collectivo_extensions_mutated {
-  key: ID!
-  event: EventEnum
-  data: collectivo_extensions
-}
-
-type collectivo_project_settings {
-  id: ID!
-  user_created: String
-  date_created: Date
-  date_created_func: datetime_functions
-  user_updated: String
-  date_updated: Date
-  date_updated_func: datetime_functions
-  collectivo_project_name: String
-  collectivo_project_description: String
-}
-
-type collectivo_project_settings_mutated {
-  key: ID!
-  event: EventEnum
-  data: collectivo_project_settings
 }
 
 type collectivo_tags {
@@ -1177,7 +1092,6 @@ type directus_users {
   payments_account_iban: String
   payments_account_owner: String
   payments_type: String
-  shifts_user_type: String
   collectivo_tags(filter: collectivo_tags_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_tags_directus_users]
   collectivo_tags_func: count_functions
   memberships(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships]
@@ -1186,8 +1100,6 @@ type directus_users {
   messages_campaigns_func: count_functions
   mila_documents(filter: junction_directus_users_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [junction_directus_users_files]
   mila_documents_func: count_functions
-  shifts_skills(filter: shifts_skills_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_skills_directus_users]
-  shifts_skills_func: count_functions
 }
 
 type directus_users_mutated {
@@ -1278,6 +1190,8 @@ type memberships {
   date_created_func: datetime_functions
   date_updated: Date
   date_updated_func: datetime_functions
+
+  """Diese Nummer identifiziert das Mitglied"""
   id: ID!
   memberships_date_applied: Date
   memberships_date_applied_func: date_functions
@@ -1289,11 +1203,11 @@ type memberships {
   memberships_date_ended_func: date_functions
   memberships_date_excluded: Date
   memberships_date_excluded_func: date_functions
+
+  """Änderung generiert automatische Rechnung"""
   memberships_shares: Int!
 
-  """
-  Lebenszyklus einer Mitgliedschaft. Ausstieg erfolgt durch das Mitglied, Ausschluss durch die Organisation. Während des Ausstiegs- oder Ausschlussverfahrens sind die Mitgliedschaften weiterhin aktiv. Wenn der Vorgang abgeschlossen ist, sollte der Status auf 'Beendet' gesetzt werden.
-  """
+  """Lebenszyklus von Beitritt bis Beendet"""
   memberships_status: String
   memberships_type: String
   memberships_user(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
@@ -1303,12 +1217,20 @@ type memberships {
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   membership_card_id: String
+
+  """Welche Art von Schichten macht dieses Mitglied?"""
+  shifts_user_type: String!
+
+  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
+  shift_counter: Int
   memberships_invoices(filter: payments_invoices_out_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [payments_invoices_out]
   memberships_invoices_func: count_functions
-  coshoppers(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers]
-  coshoppers_func: count_functions
   kids(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers_1]
   kids_func: count_functions
+  coshoppers(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers]
+  coshoppers_func: count_functions
+  shifts_skills(filter: memberships_shifts_skills_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_shifts_skills]
+  shifts_skills_func: count_functions
 }
 
 type memberships_aggregated {
@@ -1327,19 +1249,23 @@ type memberships_aggregated {
 type memberships_aggregated_count {
   date_created: Int
   date_updated: Int
+
+  """Diese Nummer identifiziert das Mitglied"""
   id: Int
   memberships_date_applied: Int
   memberships_date_approved: Int
   memberships_date_cancelled: Int
   memberships_date_ended: Int
   memberships_date_excluded: Int
+
+  """Änderung generiert automatische Rechnung"""
   memberships_shares: Int
 
-  """
-  Lebenszyklus einer Mitgliedschaft. Ausstieg erfolgt durch das Mitglied, Ausschluss durch die Organisation. Während des Ausstiegs- oder Ausschlussverfahrens sind die Mitgliedschaften weiterhin aktiv. Wenn der Vorgang abgeschlossen ist, sollte der Status auf 'Beendet' gesetzt werden.
-  """
+  """Lebenszyklus von Beitritt bis Beendet"""
   memberships_status: Int
   memberships_type: Int
+
+  """Verknüpfter Account"""
   memberships_user: Int
   memberships_user_search: Int
   user_created: Int
@@ -1347,14 +1273,29 @@ type memberships_aggregated_count {
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   membership_card_id: Int
+
+  """Welche Art von Schichten macht dieses Mitglied?"""
+  shifts_user_type: Int
+
+  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
+  shift_counter: Int
+
+  """Rechnungen für Anteils-Zahlungen"""
   memberships_invoices: Int
-  coshoppers: Int
   kids: Int
+  coshoppers: Int
+  shifts_skills: Int
 }
 
 type memberships_aggregated_fields {
+  """Diese Nummer identifiziert das Mitglied"""
   id: Float
+
+  """Änderung generiert automatische Rechnung"""
   memberships_shares: Float
+
+  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
+  shift_counter: Float
 }
 
 type memberships_coshoppers {
@@ -1486,6 +1427,43 @@ type memberships_mutated {
   key: ID!
   event: EventEnum
   data: memberships
+}
+
+type memberships_shifts_skills {
+  id: ID!
+  memberships_id(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+  shifts_skills_id(filter: shifts_skills_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_skills
+}
+
+type memberships_shifts_skills_aggregated {
+  group: JSON
+  countAll: Int
+  count: memberships_shifts_skills_aggregated_count
+  countDistinct: memberships_shifts_skills_aggregated_count
+  avg: memberships_shifts_skills_aggregated_fields
+  sum: memberships_shifts_skills_aggregated_fields
+  avgDistinct: memberships_shifts_skills_aggregated_fields
+  sumDistinct: memberships_shifts_skills_aggregated_fields
+  min: memberships_shifts_skills_aggregated_fields
+  max: memberships_shifts_skills_aggregated_fields
+}
+
+type memberships_shifts_skills_aggregated_count {
+  id: Int
+  memberships_id: Int
+  shifts_skills_id: Int
+}
+
+type memberships_shifts_skills_aggregated_fields {
+  id: Float
+  memberships_id: Float
+  shifts_skills_id: Float
+}
+
+type memberships_shifts_skills_mutated {
+  key: ID!
+  event: EventEnum
+  data: memberships_shifts_skills
 }
 
 type messages_campaigns {
@@ -2328,37 +2306,6 @@ type time_functions {
 }
 
 """"""
-type version_collectivo_extensions {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  extensions_name: String
-  extensions_status: String
-
-  """Semantic version of the extension (e.g. 1.0.0)"""
-  extensions_version: String
-
-  """Semantic version of the extension schema (e.g. 1.0.0)"""
-  extensions_schema_version: String
-
-  """Whether the extension schema is up to date."""
-  extensions_schema_is_latest: String
-}
-
-""""""
-type version_collectivo_project_settings {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  collectivo_project_name: String
-  collectivo_project_description: String
-}
-
-""""""
 type version_collectivo_tags {
   date_created: Date
   date_updated: Date
@@ -2429,17 +2376,19 @@ type version_junction_directus_users_files {
 type version_memberships {
   date_created: Date
   date_updated: Date
+
+  """Diese Nummer identifiziert das Mitglied"""
   id: ID
   memberships_date_applied: Date
   memberships_date_approved: Date
   memberships_date_cancelled: Date
   memberships_date_ended: Date
   memberships_date_excluded: Date
+
+  """Änderung generiert automatische Rechnung"""
   memberships_shares: Int
 
-  """
-  Lebenszyklus einer Mitgliedschaft. Ausstieg erfolgt durch das Mitglied, Ausschluss durch die Organisation. Während des Ausstiegs- oder Ausschlussverfahrens sind die Mitgliedschaften weiterhin aktiv. Wenn der Vorgang abgeschlossen ist, sollte der Status auf 'Beendet' gesetzt werden.
-  """
+  """Lebenszyklus von Beitritt bis Beendet"""
   memberships_status: String
   memberships_type: String
   memberships_user: JSON
@@ -2449,9 +2398,16 @@ type version_memberships {
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   membership_card_id: String
+
+  """Welche Art von Schichten macht dieses Mitglied?"""
+  shifts_user_type: String
+
+  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
+  shift_counter: Int
   memberships_invoices: JSON
-  coshoppers: JSON
   kids: JSON
+  coshoppers: JSON
+  shifts_skills: JSON
 }
 
 """"""
@@ -2480,6 +2436,13 @@ type version_memberships_memberships_coshoppers_1 {
   id: ID
   memberships_id: JSON
   memberships_coshoppers_id: JSON
+}
+
+""""""
+type version_memberships_shifts_skills {
+  id: ID
+  memberships_id: JSON
+  shifts_skills_id: JSON
 }
 
 """"""
@@ -2716,23 +2679,6 @@ input boolean_filter_operators {
   _nnull: Boolean
 }
 
-input collectivo_extensions_filter {
-  id: number_filter_operators
-  user_created: string_filter_operators
-  date_created: date_filter_operators
-  date_created_func: datetime_function_filter_operators
-  user_updated: string_filter_operators
-  date_updated: date_filter_operators
-  date_updated_func: datetime_function_filter_operators
-  extensions_name: string_filter_operators
-  extensions_status: string_filter_operators
-  extensions_version: string_filter_operators
-  extensions_schema_version: string_filter_operators
-  extensions_schema_is_latest: string_filter_operators
-  _and: [collectivo_extensions_filter]
-  _or: [collectivo_extensions_filter]
-}
-
 input collectivo_tags_directus_users_filter {
   collectivo_tags_id: collectivo_tags_filter
   directus_users_id: directus_users_filter
@@ -2798,25 +2744,6 @@ input collectivo_tiles_filter {
 
 input count_function_filter_operators {
   count: number_filter_operators
-}
-
-input create_collectivo_extensions_input {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  extensions_name: String!
-  extensions_status: String
-
-  """Semantic version of the extension (e.g. 1.0.0)"""
-  extensions_version: String
-
-  """Semantic version of the extension schema (e.g. 1.0.0)"""
-  extensions_schema_version: String
-
-  """Whether the extension schema is up to date."""
-  extensions_schema_is_latest: String
 }
 
 input create_collectivo_tags_directus_users_input {
@@ -2969,12 +2896,10 @@ input create_directus_users_input {
   payments_account_iban: String
   payments_account_owner: String
   payments_type: String
-  shifts_user_type: String
   collectivo_tags: [create_collectivo_tags_directus_users_input]
   memberships: [create_memberships_input]
   messages_campaigns: [create_messages_campaigns_directus_users_input]
   mila_documents: [create_junction_directus_users_files_input]
-  shifts_skills: [create_shifts_skills_directus_users_input]
 }
 
 input create_junction_directus_users_files_input {
@@ -2999,17 +2924,19 @@ input create_memberships_coshoppers_input {
 input create_memberships_input {
   date_created: Date
   date_updated: Date
+
+  """Diese Nummer identifiziert das Mitglied"""
   id: ID
   memberships_date_applied: Date
   memberships_date_approved: Date
   memberships_date_cancelled: Date
   memberships_date_ended: Date
   memberships_date_excluded: Date
+
+  """Änderung generiert automatische Rechnung"""
   memberships_shares: Int!
 
-  """
-  Lebenszyklus einer Mitgliedschaft. Ausstieg erfolgt durch das Mitglied, Ausschluss durch die Organisation. Während des Ausstiegs- oder Ausschlussverfahrens sind die Mitgliedschaften weiterhin aktiv. Wenn der Vorgang abgeschlossen ist, sollte der Status auf 'Beendet' gesetzt werden.
-  """
+  """Lebenszyklus von Beitritt bis Beendet"""
   memberships_status: String
   memberships_type: String
   memberships_user: create_directus_users_input
@@ -3019,9 +2946,16 @@ input create_memberships_input {
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   membership_card_id: String
+
+  """Welche Art von Schichten macht dieses Mitglied?"""
+  shifts_user_type: String!
+
+  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
+  shift_counter: Int
   memberships_invoices: [create_payments_invoices_out_input]
-  coshoppers: [create_memberships_memberships_coshoppers_input]
   kids: [create_memberships_memberships_coshoppers_1_input]
+  coshoppers: [create_memberships_memberships_coshoppers_input]
+  shifts_skills: [create_memberships_shifts_skills_input]
 }
 
 input create_memberships_memberships_coshoppers_1_input {
@@ -3034,6 +2968,12 @@ input create_memberships_memberships_coshoppers_input {
   id: ID
   memberships_id: create_memberships_input
   memberships_coshoppers_id: create_memberships_coshoppers_input
+}
+
+input create_memberships_shifts_skills_input {
+  id: ID
+  memberships_id: create_memberships_input
+  shifts_skills_id: create_shifts_skills_input
 }
 
 input create_messages_campaigns_directus_users_input {
@@ -3501,7 +3441,6 @@ input directus_users_filter {
   payments_account_iban: string_filter_operators
   payments_account_owner: string_filter_operators
   payments_type: string_filter_operators
-  shifts_user_type: string_filter_operators
   collectivo_tags: collectivo_tags_directus_users_filter
   collectivo_tags_func: count_function_filter_operators
   memberships: memberships_filter
@@ -3510,8 +3449,6 @@ input directus_users_filter {
   messages_campaigns_func: count_function_filter_operators
   mila_documents: junction_directus_users_files_filter
   mila_documents_func: count_function_filter_operators
-  shifts_skills: shifts_skills_directus_users_filter
-  shifts_skills_func: count_function_filter_operators
   _and: [directus_users_filter]
   _or: [directus_users_filter]
 }
@@ -3587,12 +3524,16 @@ input memberships_filter {
   user_created: string_filter_operators
   user_updated: string_filter_operators
   membership_card_id: string_filter_operators
+  shifts_user_type: string_filter_operators
+  shift_counter: number_filter_operators
   memberships_invoices: payments_invoices_out_filter
   memberships_invoices_func: count_function_filter_operators
-  coshoppers: memberships_memberships_coshoppers_filter
-  coshoppers_func: count_function_filter_operators
   kids: memberships_memberships_coshoppers_1_filter
   kids_func: count_function_filter_operators
+  coshoppers: memberships_memberships_coshoppers_filter
+  coshoppers_func: count_function_filter_operators
+  shifts_skills: memberships_shifts_skills_filter
+  shifts_skills_func: count_function_filter_operators
   _and: [memberships_filter]
   _or: [memberships_filter]
 }
@@ -3611,6 +3552,14 @@ input memberships_memberships_coshoppers_filter {
   memberships_coshoppers_id: memberships_coshoppers_filter
   _and: [memberships_memberships_coshoppers_filter]
   _or: [memberships_memberships_coshoppers_filter]
+}
+
+input memberships_shifts_skills_filter {
+  id: number_filter_operators
+  memberships_id: memberships_filter
+  shifts_skills_id: shifts_skills_filter
+  _and: [memberships_shifts_skills_filter]
+  _or: [memberships_shifts_skills_filter]
 }
 
 input messages_campaigns_directus_users_filter {
@@ -3917,35 +3866,6 @@ input time_function_filter_operators {
   second: number_filter_operators
 }
 
-input update_collectivo_extensions_input {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  extensions_name: String
-  extensions_status: String
-
-  """Semantic version of the extension (e.g. 1.0.0)"""
-  extensions_version: String
-
-  """Semantic version of the extension schema (e.g. 1.0.0)"""
-  extensions_schema_version: String
-
-  """Whether the extension schema is up to date."""
-  extensions_schema_is_latest: String
-}
-
-input update_collectivo_project_settings_input {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  collectivo_project_name: String
-  collectivo_project_description: String
-}
-
 input update_collectivo_tags_directus_users_input {
   collectivo_tags_id: update_collectivo_tags_input
   directus_users_id: update_directus_users_input
@@ -4096,12 +4016,10 @@ input update_directus_users_input {
   payments_account_iban: String
   payments_account_owner: String
   payments_type: String
-  shifts_user_type: String
   collectivo_tags: [update_collectivo_tags_directus_users_input]
   memberships: [update_memberships_input]
   messages_campaigns: [update_messages_campaigns_directus_users_input]
   mila_documents: [update_junction_directus_users_files_input]
-  shifts_skills: [update_shifts_skills_directus_users_input]
 }
 
 input update_junction_directus_users_files_input {
@@ -4126,17 +4044,19 @@ input update_memberships_coshoppers_input {
 input update_memberships_input {
   date_created: Date
   date_updated: Date
+
+  """Diese Nummer identifiziert das Mitglied"""
   id: ID
   memberships_date_applied: Date
   memberships_date_approved: Date
   memberships_date_cancelled: Date
   memberships_date_ended: Date
   memberships_date_excluded: Date
+
+  """Änderung generiert automatische Rechnung"""
   memberships_shares: Int
 
-  """
-  Lebenszyklus einer Mitgliedschaft. Ausstieg erfolgt durch das Mitglied, Ausschluss durch die Organisation. Während des Ausstiegs- oder Ausschlussverfahrens sind die Mitgliedschaften weiterhin aktiv. Wenn der Vorgang abgeschlossen ist, sollte der Status auf 'Beendet' gesetzt werden.
-  """
+  """Lebenszyklus von Beitritt bis Beendet"""
   memberships_status: String
   memberships_type: String
   memberships_user: update_directus_users_input
@@ -4146,9 +4066,16 @@ input update_memberships_input {
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   membership_card_id: String
+
+  """Welche Art von Schichten macht dieses Mitglied?"""
+  shifts_user_type: String
+
+  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
+  shift_counter: Int
   memberships_invoices: [update_payments_invoices_out_input]
-  coshoppers: [update_memberships_memberships_coshoppers_input]
   kids: [update_memberships_memberships_coshoppers_1_input]
+  coshoppers: [update_memberships_memberships_coshoppers_input]
+  shifts_skills: [update_memberships_shifts_skills_input]
 }
 
 input update_memberships_memberships_coshoppers_1_input {
@@ -4161,6 +4088,12 @@ input update_memberships_memberships_coshoppers_input {
   id: ID
   memberships_id: update_memberships_input
   memberships_coshoppers_id: update_memberships_coshoppers_input
+}
+
+input update_memberships_shifts_skills_input {
+  id: ID
+  memberships_id: update_memberships_input
+  shifts_skills_id: update_shifts_skills_input
 }
 
 input update_messages_campaigns_directus_users_input {

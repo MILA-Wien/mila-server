@@ -40,7 +40,7 @@ const europeanIBAN = [
 
 export default defineNuxtPlugin(() => {
   const menu = useCollectivoMenus();
-  const user = useCollectivoUser();
+  const user = useCollectivoUser().value;
   const runtimeConfig = useRuntimeConfig();
 
   const items: CollectivoMenuItem[] = [
@@ -56,8 +56,7 @@ export default defineNuxtPlugin(() => {
       to: "/shifts/profile",
       order: 90,
       filter: async () => {
-        await user.value.load();
-        return user.value.data?.shifts_user_type != "inactive" ?? false;
+        return user.membership?.shifts_user_type != "inactive";
       },
     },
     {
@@ -68,8 +67,7 @@ export default defineNuxtPlugin(() => {
       // hideOnMobile: true,
       order: 99,
       filter: async () => {
-        await user.value.load();
-        return user.value.data?.role?.app_access ?? false;
+        return user.user?.role?.app_access ?? false;
       },
     },
   ];
@@ -90,7 +88,7 @@ export default defineNuxtPlugin(() => {
     {
       label: "Login",
       icon: "i-heroicons-arrow-right-on-rectangle-solid",
-      click: user.value.login,
+      click: user.login,
       order: 100,
       filter: (_item) => {
         return true;
@@ -108,9 +106,7 @@ export default defineNuxtPlugin(() => {
     {
       label: "Logout",
       icon: "i-heroicons-arrow-left-on-rectangle-solid",
-      click: () => {
-        user.value.logout();
-      },
+      click: user.logout,
       order: 1000,
     },
     {
@@ -383,7 +379,7 @@ export default defineNuxtPlugin(() => {
     },
   ];
 
-  user.value.fields.push(...profileInputs);
+  user.fields.push(...profileInputs);
 
   const form = useMembershipsRegistrationForm();
 

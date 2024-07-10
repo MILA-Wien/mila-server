@@ -1,27 +1,30 @@
 {
-  "collection": "directus_users",
+  "collection": "memberships",
   "field": "shifts_skills",
   "type": "alias",
   "meta": {
-    "collection": "directus_users",
+    "collection": "memberships",
     "conditions": null,
     "display": null,
     "display_options": null,
     "field": "shifts_skills",
-    "group": null,
+    "group": "shifts_group",
     "hidden": false,
     "interface": "list-m2m",
     "note": null,
-    "options": null,
+    "options": {
+      "enableCreate": false,
+      "template": "{{shifts_skills_id.shifts_name}}"
+    },
     "readonly": false,
     "required": false,
-    "sort": 113,
+    "sort": 3,
     "special": [
       "m2m"
     ],
     "translations": null,
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "fill"
   }
 }

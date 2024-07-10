@@ -1,171 +1,87 @@
 <script setup lang="ts">
-import { readItems } from "@directus/sdk";
-import { DateTime } from "luxon";
-import showToast from "~/composables/toast";
+definePageMeta({
+  middleware: ["auth"],
+});
 
 const config = useRuntimeConfig();
 
 const { t } = useI18n();
 setCollectivoTitle(t("Shifts"));
 
-const directus = useDirectus();
-const user = useCollectivoUser();
+const user = useCollectivoUser().value.user!;
+const mship = useCollectivoUser().value.membership!;
+const isActive = mship.shifts_user_type != "inactive";
 const activeAssignments: Ref<ShiftsAssignmentRules[]> = ref([]);
-const skillsLoading = ref(true);
-const skillsUserLinks = ref<ShiftsSkillUserLink[]>([]);
-const skillNames = ref<string[]>([]);
-const score = ref("loading...");
-const isActive = ref(false);
-const isExempt = ref(false);
 
 async function loadData() {
-  await user.value.load();
-  isActive.value = user.value.data?.shifts_user_type != "inactive";
-  isExempt.value = user.value.data?.shifts_user_type == "exempt";
-
-  if (!user.value.data) {
-    return;
-  }
-
-  activeAssignments.value = await getActiveAssignments(user.value.data!);
-
-  directus
-    .request(
-      readItems("shifts_skills_directus_users", {
-        filter: { directus_users_id: { _eq: user.value.data.id } },
-        fields: ["*", { shifts_skills: ["*"] }, { directus_users: ["*"] }],
-      }),
-    )
-    .then((items) => {
-      skillsUserLinks.value.push(...items);
-      getUserSkillNames();
-    })
-    .catch((error) =>
-      showToast("Failed to load skills", error.message, "error"),
-    );
-
-  getUserScore(user.value.data, DateTime.now())
-    .then((item) => {
-      score.value = item.toString();
-    })
-    .catch((error) =>
-      showToast("Failed to load score", error.message, "error"),
-    );
+  activeAssignments.value = await getActiveAssignments(user);
 }
 
-loadData();
-
-function getUserSkillNames() {
-  if (skillsUserLinks.value.length === 0) {
-    skillsLoading.value = false;
-    return;
-  }
-
-  directus
-    .request(
-      readItems("shifts_skills", {
-        filter: {
-          id: {
-            _in: skillsUserLinks.value.map((link) => link.shifts_skills_id),
-          },
-        },
-        fields: ["shifts_name"],
-      }),
-    )
-    .then((skills) => {
-      skillNames.value = skills.map((skill) => skill.shifts_name);
-    })
-    .catch((error) =>
-      showToast("Failed to load skills", error.message, "error"),
-    )
-    .finally(() => (skillsLoading.value = false));
-}
+if (isActive) loadData();
 </script>
 
 <template>
-  <div v-if="user.data">
-    <div v-if="!isActive">
-      <p>
-        {{ t("Shift system is deactivated for this account.") }}
-      </p>
-    </div>
-    <div v-else>
-      <CollectivoContainer>
-        <div>
-          <p>
-            {{ t("Type") }}: {{ t("t:" + user.data["shifts_user_type"] ?? "") }}
-          </p>
-          <p>
-            <span>{{ t("Skills") }}: </span>
-            <span v-if="skillsLoading">loading...</span>
-            <span v-else>
-              <span v-if="!skillNames.length">{{ t("None") }}</span>
-              <span v-for="(skillName, index) in skillNames" :key="skillName">
-                <span v-if="index !== 0">, </span>
-                <span>{{ skillName }}</span>
-              </span>
-            </span>
-          </p>
-          <p>
-            {{ t("Status") }}:
-            <span v-if="!isActive" class="font-bold text-orange-500">
-              {{ t("Choose shift type") }}
-            </span>
-            <span v-else-if="isExempt" class="font-bold text-green-500">
-              {{ t("t:shift_status_exempt") }}
-            </span>
-            <span
-              v-else-if="Number(score) == 1"
-              class="font-bold text-green-500"
-            >
-              {{ score }} {{ t("shift") }} {{ t("ahead") }}
-            </span>
-            <span
-              v-else-if="Number(score) >= 0"
-              class="font-bold text-green-500"
-            >
-              {{ score }} {{ t("shifts") }} {{ t("ahead") }}
-            </span>
-            <span v-else>
-              {{ -Number(score) }} {{ t("shifts") }} {{ t("to catch up") }}
-            </span>
-            <span />
-          </p>
-        </div>
-      </CollectivoContainer>
+  <div v-if="!isActive">
+    <p>
+      {{ t("Shift system has not been activated for this account.") }}
+    </p>
+  </div>
+  <div v-else>
+    <CollectivoContainer>
+      <div>
+        <p>{{ t("Membership number") }}: {{ mship.id }}</p>
+        <p>{{ t("Name") }}: {{ user.first_name + " " + user.last_name }}</p>
+        <p>{{ t("Shifttype") }}: {{ t("t:" + mship.shifts_user_type) }}</p>
 
-      <div v-if="isActive" class="flex flex-wrap pb-6 gap-5">
-        <NuxtLink to="/shifts/signup"
-          ><UButton size="lg" icon="i-heroicons-plus-circle">{{
-            t("Sign up for a shift")
-          }}</UButton></NuxtLink
-        >
-        <a :href="`mailto:${config.public.collectivoContactEmail}`">
-          <UButton
-            size="lg"
-            :label="t('Request change')"
-            :icon="'i-heroicons-pencil-square'"
-          />
-        </a>
+        <!-- <p>
+          <span>{{ t("Skills") }}: </span>
+          <span v-if="!mship.shifts_skills.length">{{ t("None") }}</span>
+          <span v-for="(skill, index) in mship.shifts_skills" :key="skill.id">
+            <span v-if="index !== 0">, </span>
+            <span>{{ skill.shifts_skills_id.shifts_name }}</span>
+          </span>
+        </p> -->
+
+        <p v-if="mship.shifts_user_type != 'exempt'">
+          {{ t("Shiftcounter") }}: {{ mship.shifts_counter }}
+        </p>
       </div>
+    </CollectivoContainer>
 
-      <h2>{{ t("My shifts") }}</h2>
-      <p v-if="!activeAssignments.length">
-        {{ t("No upcoming shifts") }}
-      </p>
-      <div class="flex flex-col gap-4 my-4">
-        <ShiftsAssignmentCard
-          v-for="assignment in activeAssignments"
-          :key="assignment.assignment.id"
-          :shift-assignment="assignment"
+    <div v-if="isActive" class="flex flex-wrap pb-6 gap-5">
+      <NuxtLink to="/shifts/signup"
+        ><UButton size="lg" icon="i-heroicons-plus-circle">{{
+          t("Sign up for a shift")
+        }}</UButton></NuxtLink
+      >
+      <a :href="`mailto:${config.public.collectivoContactEmail}`">
+        <UButton
+          size="lg"
+          :label="t('Request change')"
+          :icon="'i-heroicons-pencil-square'"
         />
-      </div>
+      </a>
+    </div>
+
+    <h2>{{ t("My shifts") }}</h2>
+    <p v-if="!activeAssignments.length">
+      {{ t("No upcoming shifts") }}
+    </p>
+    <div class="flex flex-col gap-4 my-4">
+      <ShiftsAssignmentCard
+        v-for="assignment in activeAssignments"
+        :key="assignment.assignment.id"
+        :shift-assignment="assignment"
+      />
     </div>
   </div>
 </template>
 
 <i18n lang="yaml">
 de:
+  "Membership number": "Mitgliedsnummer"
+  "Shifttype": "Schichttyp"
+  "Shiftcounter": "Schichtzähler"
   "Request change": "Änderung beantragen"
   "t:shift_status_good": "Gut!"
   "t:shift_status_bad": "Du musst Schichten nachholen"
@@ -181,9 +97,9 @@ de:
   "to catch up": "nachzuholen"
   "Skills": "Fähigkeiten"
   "Sign up for a shift": "Neue Schicht eintragen"
-  "t:REGULAR": "Regulär"
-  "t:JUMPER": "Springer*in"
-  "t:EXEMPT": "Befreit"
+  "t:regular": "Regulär"
+  "t:jumper": "Springer*in"
+  "t:exempt": "Befreit"
   "t:inactive": "Nicht aktiv"
   "None": "Keine"
   "My activities": "Meine Aktivitäten"

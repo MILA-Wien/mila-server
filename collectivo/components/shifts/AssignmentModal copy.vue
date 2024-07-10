@@ -38,7 +38,6 @@ const emit = defineEmits<{
 
 const directus = useDirectus();
 const user = useCollectivoUser();
-user.value.load();
 const loading = ref(false);
 const from = ref<DateTime>();
 const to = ref<DateTime>();
