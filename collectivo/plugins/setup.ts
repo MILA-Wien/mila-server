@@ -51,6 +51,12 @@ export default defineNuxtPlugin(() => {
       order: 0,
     },
     {
+      label: "Shifts",
+      icon: "i-heroicons-calendar-days-solid",
+      to: "/shifts/profile",
+      order: 90,
+    },
+    {
       label: "Studio",
       icon: "i-heroicons-chart-bar-square",
       to: runtimeConfig.public.directusUrl,

@@ -17,6 +17,24 @@ importers:
       '@directus/sdk':
         specifier: ^16.1.0
         version: 16.1.0
+      '@fullcalendar/daygrid':
+        specifier: ^6.1.11
+        version: 6.1.14(@fullcalendar/core@6.1.14)
+      '@fullcalendar/interaction':
+        specifier: ^6.1.11
+        version: 6.1.14(@fullcalendar/core@6.1.14)
+      '@fullcalendar/list':
+        specifier: ^6.1.11
+        version: 6.1.14(@fullcalendar/core@6.1.14)
+      '@fullcalendar/luxon3':
+        specifier: ^6.1.10
+        version: 6.1.14(@fullcalendar/core@6.1.14)(luxon@3.4.4)
+      '@fullcalendar/timegrid':
+        specifier: ^6.1.11
+        version: 6.1.14(@fullcalendar/core@6.1.14)
+      '@fullcalendar/vue3':
+        specifier: ^6.1.11
+        version: 6.1.14(@fullcalendar/core@6.1.14)(vue@3.4.30)
       '@keycloak/keycloak-admin-client':
         specifier: ^25.0.1
         version: 25.0.1
@@ -35,12 +53,18 @@ importers:
       keycloak-js:
         specifier: ^25.0.1
         version: 25.0.1
+      luxon:
+        specifier: ^3.4.4
+        version: 3.4.4
       marked:
         specifier: ^13.0.1
         version: 13.0.1
       nodemailer:
         specifier: ^6.9.14
         version: 6.9.14
+      rrule:
+        specifier: ^2.8.1
+        version: 2.8.1
       v-calendar:
         specifier: ^3.1.2
         version: 3.1.2(@popperjs/core@2.11.8)(vue@3.4.30)
@@ -1014,6 +1038,65 @@ packages:
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
     engines: {node: '>=14'}
     dev: true
+
+  /@fullcalendar/core@6.1.14:
+    resolution: {integrity: sha512-hIPRBevm0aMc2aHy1hRIJgXmI1QTvQM1neQa9oxtuqUmF1+ApYC3oAdwcQMTuI7lHHw3pKJDyJFkKLPPnL6HXA==}
+    dependencies:
+      preact: 10.12.1
+    dev: false
+
+  /@fullcalendar/daygrid@6.1.14(@fullcalendar/core@6.1.14):
+    resolution: {integrity: sha512-DSyjiA1dEM8k3bOCrZpZOmAOZu71KGtH02ze+4QKuhxkmn/zQghmmLRdfzpOrcyJg6xGKkoB4pBcO+2lXar8XQ==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.14
+    dependencies:
+      '@fullcalendar/core': 6.1.14
+    dev: false
+
+  /@fullcalendar/interaction@6.1.14(@fullcalendar/core@6.1.14):
+    resolution: {integrity: sha512-rXum5XCjq+WEPNctFeYL/JKZGeU2rlxrElygocdMegcrIBJQW5hnWWVE+i4/1dOmUKF80CbGVlXUyYXoqK2eFg==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.14
+    dependencies:
+      '@fullcalendar/core': 6.1.14
+    dev: false
+
+  /@fullcalendar/list@6.1.14(@fullcalendar/core@6.1.14):
+    resolution: {integrity: sha512-eV0/6iCumYfvlPzIUTAONWH17/JlQCyCChUz8m06L4E/sOiNjkHGz8vlVTmZKqXzx9oWOOyV/Nm3pCtHmVZh+Q==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.14
+    dependencies:
+      '@fullcalendar/core': 6.1.14
+    dev: false
+
+  /@fullcalendar/luxon3@6.1.14(@fullcalendar/core@6.1.14)(luxon@3.4.4):
+    resolution: {integrity: sha512-VjCm5Tpc6ougbDrC19oEXJgnagrnPIRJEvCvW7q6GYBhP6q86g0qDXK5ocT7yeVfYqXopex8zgWQhcgNam6quQ==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.14
+      luxon: ^3.0.0
+    dependencies:
+      '@fullcalendar/core': 6.1.14
+      luxon: 3.4.4
+    dev: false
+
+  /@fullcalendar/timegrid@6.1.14(@fullcalendar/core@6.1.14):
+    resolution: {integrity: sha512-ZByc3BVAtxWSVfyaNedROLlg/Tb2NQ43+MZZAfBSrVwVm2xyfQ+Bsx3pJyCXsRsUh2TFFTO07q7nMWe0jet3KQ==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.14
+    dependencies:
+      '@fullcalendar/core': 6.1.14
+      '@fullcalendar/daygrid': 6.1.14(@fullcalendar/core@6.1.14)
+    dev: false
+
+  /@fullcalendar/vue3@6.1.14(@fullcalendar/core@6.1.14)(vue@3.4.30):
+    resolution: {integrity: sha512-cD4tGlXOoIfRn5sz/+uT+50rAuCtPEgXfG3O5LJXI4xRWztAXqkmZetcuTEDb3OOy/D03IdtpjvoayCHib7rZg==}
+    peerDependencies:
+      '@fullcalendar/core': ~6.1.14
+      vue: ^3.0.11
+    dependencies:
+      '@fullcalendar/core': 6.1.14
+      vue: 3.4.30(typescript@5.5.2)
+    dev: false
 
   /@grpc/grpc-js@1.10.10:
     resolution: {integrity: sha512-HPa/K5NX6ahMoeBv15njAc/sfF4/jmiXLar9UlC2UfHFKZzsCVLc3wbe7+7qua7w9VPh2/L6EBxyAV7/E8Wftg==}
@@ -6256,6 +6339,11 @@ packages:
     dependencies:
       yallist: 3.1.1
 
+  /luxon@3.4.4:
+    resolution: {integrity: sha512-zobTr7akeGHnv7eBOXcRgMeCP6+uyYsczwmeRCauvpvaAltgNyTbLH/+VaEAPUeWBT+1GuNmz4wC/6jtQzbbVA==}
+    engines: {node: '>=12'}
+    dev: false
+
   /magic-string-ast@0.6.2:
     resolution: {integrity: sha512-oN3Bcd7ZVt+0VGEs7402qR/tjgjbM7kPlH/z7ufJnzTLVBzXJITRHOJiwMmmYMgZfdoWQsfQcY+iKlxiBppnMA==}
     engines: {node: '>=16.14.0'}
@@ -7697,6 +7785,10 @@ packages:
       picocolors: 1.0.1
       source-map-js: 1.2.0
 
+  /preact@10.12.1:
+    resolution: {integrity: sha512-l8386ixSsBdbreOAkqtrwqHwdvR35ID8c3rKPa8lCWuO86dBi32QWHV4vfsZK1utLLFMvw+Z5Ad4XLkZzchscg==}
+    dev: false
+
   /prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
@@ -8056,6 +8148,12 @@ packages:
       '@rollup/rollup-win32-ia32-msvc': 4.18.0
       '@rollup/rollup-win32-x64-msvc': 4.18.0
       fsevents: 2.3.3
+
+  /rrule@2.8.1:
+    resolution: {integrity: sha512-hM3dHSBMeaJ0Ktp7W38BJZ7O1zOgaFEsn41PDk+yHoEtfLV+PoJt9E9xAlZiWgf/iqEqionN0ebHFZIDAp+iGw==}
+    dependencies:
+      tslib: 2.6.3
+    dev: false
 
   /run-applescript@7.0.0:
     resolution: {integrity: sha512-9by4Ij99JUr/MCFBUkDKLWK3G9HVXmabKz9U5MlIAIuvuzkiOicRYs8XJLxX+xahD+mLiiCYDqF9dKAgtzKP1A==}
@@ -8754,7 +8852,6 @@ packages:
 
   /tslib@2.6.3:
     resolution: {integrity: sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==}
-    dev: true
 
   /tsscmp@1.0.6:
     resolution: {integrity: sha512-LxhtAkPDTkVCMQjt2h6eBVY28KCjikZqZfMcC15YBeNjkgUpdCfBu5HoiOTDu86v6smE8yOjyEktJ8hlbANHQA==}
