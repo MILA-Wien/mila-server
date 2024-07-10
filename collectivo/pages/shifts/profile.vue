@@ -83,73 +83,83 @@ function getUserSkillNames() {
 </script>
 
 <template>
-  <div>
-    <CollectivoContainer v-if="user.data">
-      <div>
-        <p>
-          {{ t("Type") }}: {{ t("t:" + user.data["shifts_user_type"] ?? "") }}
-        </p>
-        <p>
-          <span>{{ t("Skills") }}: </span>
-          <span v-if="skillsLoading">loading...</span>
-          <span v-else>
-            <span v-if="!skillNames.length">{{ t("None") }}</span>
-            <span v-for="(skillName, index) in skillNames" :key="skillName">
-              <span v-if="index !== 0">, </span>
-              <span>{{ skillName }}</span>
-            </span>
-          </span>
-        </p>
-        <p>
-          {{ t("Status") }}:
-          <span v-if="!isActive" class="font-bold text-orange-500">
-            {{ t("Choose shift type") }}
-          </span>
-          <span v-else-if="isExempt" class="font-bold text-green-500">
-            {{ t("t:shift_status_exempt") }}
-          </span>
-          <span v-else-if="Number(score) == 1" class="font-bold text-green-500">
-            {{ score }} {{ t("shift") }} {{ t("ahead") }}
-          </span>
-          <span v-else-if="Number(score) >= 0" class="font-bold text-green-500">
-            {{ score }} {{ t("shifts") }} {{ t("ahead") }}
-          </span>
-          <span v-else>
-            {{ -Number(score) }} {{ t("shifts") }} {{ t("to catch up") }}
-          </span>
-          <span />
-        </p>
-      </div>
-    </CollectivoContainer>
-
-    <div v-if="isActive" class="flex flex-wrap pb-6 gap-5">
-      <NuxtLink to="/shifts/signup"
-        ><UButton size="lg" icon="i-heroicons-plus-circle">{{
-          t("Sign up for a shift")
-        }}</UButton></NuxtLink
-      >
-      <a :href="`mailto:${config.public.collectivoContactEmail}`">
-        <UButton
-          size="lg"
-          :label="t('Request change')"
-          :icon="'i-heroicons-pencil-square'"
-        />
-      </a>
+  <div v-if="user.data">
+    <div v-if="!isActive">
+      <p>
+        {{ t("Shift system is deactivated for this account.") }}
+      </p>
     </div>
     <div v-else>
-      <ShiftsSetShiftType />
-    </div>
+      <CollectivoContainer>
+        <div>
+          <p>
+            {{ t("Type") }}: {{ t("t:" + user.data["shifts_user_type"] ?? "") }}
+          </p>
+          <p>
+            <span>{{ t("Skills") }}: </span>
+            <span v-if="skillsLoading">loading...</span>
+            <span v-else>
+              <span v-if="!skillNames.length">{{ t("None") }}</span>
+              <span v-for="(skillName, index) in skillNames" :key="skillName">
+                <span v-if="index !== 0">, </span>
+                <span>{{ skillName }}</span>
+              </span>
+            </span>
+          </p>
+          <p>
+            {{ t("Status") }}:
+            <span v-if="!isActive" class="font-bold text-orange-500">
+              {{ t("Choose shift type") }}
+            </span>
+            <span v-else-if="isExempt" class="font-bold text-green-500">
+              {{ t("t:shift_status_exempt") }}
+            </span>
+            <span
+              v-else-if="Number(score) == 1"
+              class="font-bold text-green-500"
+            >
+              {{ score }} {{ t("shift") }} {{ t("ahead") }}
+            </span>
+            <span
+              v-else-if="Number(score) >= 0"
+              class="font-bold text-green-500"
+            >
+              {{ score }} {{ t("shifts") }} {{ t("ahead") }}
+            </span>
+            <span v-else>
+              {{ -Number(score) }} {{ t("shifts") }} {{ t("to catch up") }}
+            </span>
+            <span />
+          </p>
+        </div>
+      </CollectivoContainer>
 
-    <h2>{{ t("My shifts") }}</h2>
-    <p v-if="!activeAssignments.length">
-      {{ t("No upcoming shifts") }}
-    </p>
-    <div class="flex flex-col gap-4 my-4">
-      <ShiftsAssignmentCard
-        v-for="assignment in activeAssignments"
-        :key="assignment.assignment.id"
-        :shift-assignment="assignment"
-      />
+      <div v-if="isActive" class="flex flex-wrap pb-6 gap-5">
+        <NuxtLink to="/shifts/signup"
+          ><UButton size="lg" icon="i-heroicons-plus-circle">{{
+            t("Sign up for a shift")
+          }}</UButton></NuxtLink
+        >
+        <a :href="`mailto:${config.public.collectivoContactEmail}`">
+          <UButton
+            size="lg"
+            :label="t('Request change')"
+            :icon="'i-heroicons-pencil-square'"
+          />
+        </a>
+      </div>
+
+      <h2>{{ t("My shifts") }}</h2>
+      <p v-if="!activeAssignments.length">
+        {{ t("No upcoming shifts") }}
+      </p>
+      <div class="flex flex-col gap-4 my-4">
+        <ShiftsAssignmentCard
+          v-for="assignment in activeAssignments"
+          :key="assignment.assignment.id"
+          :shift-assignment="assignment"
+        />
+      </div>
     </div>
   </div>
 </template>

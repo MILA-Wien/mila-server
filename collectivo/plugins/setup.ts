@@ -55,6 +55,10 @@ export default defineNuxtPlugin(() => {
       icon: "i-heroicons-calendar-days-solid",
       to: "/shifts/profile",
       order: 90,
+      filter: async () => {
+        await user.value.load();
+        return user.value.data?.shifts_user_type != "inactive" ?? false;
+      },
     },
     {
       label: "Studio",
@@ -63,7 +67,7 @@ export default defineNuxtPlugin(() => {
       external: true,
       // hideOnMobile: true,
       order: 99,
-      filter: async (_item) => {
+      filter: async () => {
         await user.value.load();
         return user.value.data?.role?.app_access ?? false;
       },
