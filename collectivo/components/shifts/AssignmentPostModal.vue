@@ -95,7 +95,7 @@ async function postAssignment(slotContainer: SlotContainer) {
       description: "Shift assignment successfull",
     });
 
-    navigateTo("profile");
+    navigateTo("dashboard");
   } catch (e) {
     showToast({
       type: "error",

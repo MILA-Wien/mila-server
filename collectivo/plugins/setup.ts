@@ -53,7 +53,7 @@ export default defineNuxtPlugin(() => {
     {
       label: "Shifts",
       icon: "i-heroicons-calendar-days-solid",
-      to: "/shifts/profile",
+      to: "/shifts/dashboard",
       order: 90,
       filter: async () => {
         return user.membership?.shifts_user_type != "inactive";

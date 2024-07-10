@@ -49,11 +49,18 @@ if (isActive) loadData();
     </CollectivoContainer>
 
     <div v-if="isActive" class="flex flex-wrap pb-6 gap-5">
-      <NuxtLink to="/shifts/signup"
+      <template v-if="true">
+        <NuxtLink to="/shifts/signup-jumper"
+          ><UButton size="lg" icon="i-heroicons-plus-circle">{{
+            t("Sign up for a one-time shift")
+          }}</UButton>
+        </NuxtLink>
+      </template>
+      <!-- <NuxtLink to="/shifts/signup"
         ><UButton size="lg" icon="i-heroicons-plus-circle">{{
           t("Sign up for a shift")
         }}</UButton></NuxtLink
-      >
+      > -->
       <a :href="`mailto:${config.public.collectivoContactEmail}`">
         <UButton
           size="lg"
@@ -103,4 +110,5 @@ de:
   "t:inactive": "Nicht aktiv"
   "None": "Keine"
   "My activities": "Meine Aktivitäten"
+  "Sign up for a one-time shift": "Einmalige Schicht eintragen"
 </i18n>

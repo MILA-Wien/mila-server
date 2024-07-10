@@ -93,7 +93,7 @@ onMounted(async () => {
       </div>
     </div>
     <div class="calendar-header__right">
-      <UFormGroup :label="t('Shift type')">
+      <UFormGroup v-if="shiftTypes.length > 1" :label="t('Shift type')">
         <USelectMenu
           v-model="selectedShiftType"
           :options="shiftTypes"
