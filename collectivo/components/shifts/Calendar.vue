@@ -49,19 +49,27 @@ const calendarOptions = ref({
   },
 });
 
+interface ShiftType {
+  label: string;
+  value: string;
+  icon: string;
+}
+
+const possibleShiftTypes: { [key: string]: ShiftType } = {
+  regular: {
+    label: "Regular",
+    value: "regular",
+    icon: "i-heroicons-squares-plus",
+  },
+  jumper: {
+    label: "One-time",
+    value: "jumper",
+    icon: "i-heroicons-stop",
+  },
+};
+
 const customSettings = ref({
-  allowedShiftTypes: [
-    // {
-    //   label: "Regular",
-    //   value: "regular",
-    //   icon: "i-heroicons-squares-plus",
-    // },
-    {
-      label: "One-time",
-      value: "jumper",
-      icon: "i-heroicons-stop",
-    },
-  ],
+  allowedShiftTypes: [possibleShiftTypes[props.shiftType]],
   selectedShiftType: props.shiftType,
 });
 

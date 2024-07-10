@@ -37,7 +37,7 @@ const publicMenuItems = Object.values(menus.value.main_public).sort(
         </div>
       </div>
       <div class="sidebar__main__bottom">
-        <div class="about"></div>
+        <div class="about" />
       </div>
     </div>
   </div>
@@ -56,7 +56,7 @@ const publicMenuItems = Object.values(menus.value.main_public).sort(
     @apply h-full flex flex-col bg-white shadow-lg overflow-y-auto px-3 py-4 rounded-xl;
 
     &__top {
-      @apply flex justify-center items-center mb-3 p-1;
+      @apply flex justify-center items-center mb-3 p-2;
     }
 
     &__middle {
