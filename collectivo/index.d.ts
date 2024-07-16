@@ -78,7 +78,9 @@ declare global {
   export interface ShiftsLog {
     id?: number;
     shifts_type: ShiftLogType;
+    shifts_note: string;
     shifts_date: string;
+    shifts_score: number;
     shifts_assignment?: ShiftsAssignment;
     shifts_membership: string;
   }

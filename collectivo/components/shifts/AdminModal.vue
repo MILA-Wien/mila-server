@@ -30,6 +30,7 @@ const repeats = shift.shifts_repeats_every ?? 0;
 const isWeeks = repeats % 7 === 0;
 const frequency = isWeeks ? repeats / 7 : repeats;
 const slots = ref<SlotContainer[]>([]);
+const subModalIsOpen = ref(false);
 
 async function getOpenSlots() {
   const openSlots = props.shiftOccurence.openSlots;
@@ -99,6 +100,31 @@ async function postAssignment(slotContainer: SlotContainer) {
   }
 }
 
+const logs = ref<ShiftsLog[]>([]);
+
+async function getLogs() {
+  logs.value = await directus.request(
+    readItems("shifts_logs", {
+      filter: {
+        shifts_shift: { _eq: shift.id },
+        shifts_date: { _eq: startDate },
+      },
+      fields: [
+        "id",
+        "shifts_type",
+        "shifts_note",
+        "shifts_score",
+        "shifts_membership.id",
+        "shifts_membership.memberships_user.first_name",
+        "shifts_membership.memberships_user.last_name",
+        "shifts_membership.memberships_user.email",
+      ],
+    }),
+  );
+}
+
+getLogs();
+
 async function postAssignmentInner(slotContainer: SlotContainer) {
   submitLoading.value = true;
 
@@ -121,10 +147,9 @@ async function postAssignmentInner(slotContainer: SlotContainer) {
   // await directus.request(createItem("shifts_assignments", payload));
 }
 
-function getUserString(assignment: any) {
-  const mship = assignment.assignment.shifts_membership;
+function getUserString(mship: any) {
   const user = mship.memberships_user;
-  return `${mship.id} ${user.first_name} ${user.last_name} (${user.email})`;
+  return `${mship.id} ${user.first_name} ${user.last_name} ${user.email}`;
 }
 </script>
 
@@ -178,20 +203,57 @@ function getUserString(assignment: any) {
         :key="slot.id"
         class="p-2 my-2 border-2 border-solid"
       >
-        <h5>{{ slot.slot.shifts_name }} ({{ slot.id }})</h5>
-
-        <br />
-        Assignments:
+        <h5>{{ slot.slot.shifts_name }} (Slot ID {{ slot.id }})</h5>
         <div
           v-for="assignment of slot.assignments"
-          class="p-2 border-2 border-solid"
+          :key="assignment.assignment.id"
         >
-          {{ getUserString(assignment) }}
-          ( {{ assignment.assignment.shifts_from }} -
-          {{ assignment.assignment.shifts_to }} )
+          <p class="font-bold">
+            Anmeldung from
+            {{ assignment.assignment.shifts_from }} to
+            {{ assignment.assignment.shifts_to || "indefinite" }}
+            (ID {{ assignment.assignment.id }})
+          </p>
+          <p>{{ getUserString(assignment.assignment.shifts_membership) }}</p>
+          <div class="flex flex-wrap gap-2">
+            <UButton label="Remove assignment" />
+          </div>
+        </div>
+        <UButton
+          v-if="slot.assignments.length == 0"
+          label="Create assignment"
+        />
+      </div>
+
+      <!-- Logs -->
+      <h2>{{ t("Logs") }}</h2>
+      <div
+        v-for="log of logs"
+        :key="log.id"
+        class="border-2 border-solid p-2 flex flex-row"
+      >
+        <div class="grow">
+          <p>Log ID: {{ log.id }}</p>
+          <p>Type: {{ log.shifts_type }}</p>
+          <p v-if="log.shifts_note">Note: {{ log.shifts_note }}</p>
+          <p>Impact: {{ log.shifts_score }}</p>
+          <p>Member: {{ getUserString(log.shifts_membership) }}</p>
+        </div>
+        <div class="">
+          <a
+            :href="`http://localhost:8055/admin/content/shifts_logs/${log.id}`"
+            target="blank"
+          >
+            <UIcon name="i-heroicons-arrow-top-right-on-square-16-solid" />
+          </a>
         </div>
       </div>
 
+      <!-- <UButton label="Open" @click="subModalIsOpen = true" />
+
+      <UModal v-model="subModalIsOpen">
+        <div class="p-4">HELLO</div>
+      </UModal> -->
       <!-- <UFormGroup label="Slot" class="my-5">
         <USelectMenu
           v-model="chosenSlot"
