@@ -5,8 +5,10 @@
   "meta": {
     "collection": "shifts_slots",
     "conditions": null,
-    "display": null,
-    "display_options": null,
+    "display": "related-values",
+    "display_options": {
+      "template": "{{shifts_membership.memberships_user.first_name}} {{shifts_membership.memberships_user.last_name}}: {{shifts_from}} - {{shifts_to}}"
+    },
     "field": "shifts_assignments",
     "group": null,
     "hidden": false,

@@ -26,8 +26,7 @@
           "foreground": "#FFFFFF",
           "background": "var(--warning)"
         }
-      ],
-      "showAsDot": true
+      ]
     },
     "field": "shifts_status",
     "group": null,

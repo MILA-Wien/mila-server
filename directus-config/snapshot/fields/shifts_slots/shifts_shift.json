@@ -7,7 +7,7 @@
     "conditions": null,
     "display": "related-values",
     "display_options": {
-      "template": "{{shifts_name}} {{shifts_from}} ({{id}})"
+      "template": "{{shifts_name}} "
     },
     "field": "shifts_shift",
     "group": null,
