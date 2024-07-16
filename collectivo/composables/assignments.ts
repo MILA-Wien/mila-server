@@ -3,7 +3,10 @@ import { RRule, RRuleSet } from "rrule";
 import { isShiftDurationModelActive, shiftToRRule } from "~/composables/shifts";
 import { readItems } from "@directus/sdk";
 
-export const getActiveAssignments = async (user: CollectivoUser) => {
+export const getActiveAssignments = async (
+  user: CollectivoUser,
+  mship: MembershipsMembership,
+) => {
   const directus = useDirectus();
   const now = getCurrentDate();
   const nowStr = now.toISOString();
@@ -11,7 +14,7 @@ export const getActiveAssignments = async (user: CollectivoUser) => {
   const assignments = (await directus.request(
     readItems("shifts_assignments", {
       filter: {
-        shifts_user: { id: { _eq: user.id } },
+        shifts_membership: { id: { _eq: mship.id } },
         shifts_to: {
           _or: [{ _gte: nowStr }, { _null: true }],
         },
@@ -22,7 +25,9 @@ export const getActiveAssignments = async (user: CollectivoUser) => {
       fields: [
         "*",
         { shifts_slot: ["*", { shifts_shift: ["*"] }] },
-        { shifts_user: ["first_name", "last_name"] },
+        {
+          shifts_membership: { memberships_user: ["first_name", "last_name"] },
+        },
       ],
     }),
   )) as ShiftsAssignment[];
@@ -31,14 +36,16 @@ export const getActiveAssignments = async (user: CollectivoUser) => {
     readItems("shifts_absences", {
       filter: {
         shifts_assignment: {
-          shifts_user: { id: { _eq: user.id } },
+          shifts_membership: { id: { _eq: mship.id } },
         },
         shifts_to: { _gte: nowStr },
       },
       fields: [
         "*",
         { shifts_slot: ["*", { shifts_shift: ["*"] }] },
-        { shifts_user: ["first_name", "last_name"] },
+        {
+          shifts_membership: { memberships_user: ["first_name", "last_name"] },
+        },
       ],
     }),
   )) as ShiftsAbsence[];
@@ -164,14 +171,14 @@ export const getAssigneeName = (
   if (!assignment)
     return "No assignee on " + atDate.toLocaleString(DateTime.DATE_SHORT);
 
-  if (typeof assignment.shifts_user == "string") {
-    throw new Error("Assignment shifts_user field must be loaded");
+  if (typeof assignment.shifts_membership == "string") {
+    throw new Error("Assignment shifts_membership field must be loaded");
   }
 
   return (
-    assignment.shifts_user.first_name +
+    assignment.shifts_membership.memberships_user.first_name +
     " " +
-    assignment.shifts_user.last_name[0] +
+    assignment.shifts_membership.memberships_user.last_name[0] +
     "."
   );
 };

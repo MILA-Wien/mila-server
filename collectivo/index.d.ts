@@ -49,7 +49,7 @@ declare global {
     shifts_from: string;
     shifts_to?: string;
     shifts_slot: ShiftsSlot | number;
-    shifts_user: CollectivoUser | string;
+    shifts_membership: MembershipsMembership | number;
   }
 
   export interface ShiftsAssignmentRules {
@@ -66,6 +66,7 @@ declare global {
     shifts_from: string;
     shifts_to: string;
     shifts_assignment?: number;
+    shifts_membership: MembershipsMembership | number;
   }
 
   export interface ShiftsSkill {
@@ -79,7 +80,7 @@ declare global {
     shifts_type: ShiftLogType;
     shifts_date: string;
     shifts_assignment?: ShiftsAssignment;
-    shifts_user: string;
+    shifts_membership: string;
   }
 
   export interface ShiftOccurrence {

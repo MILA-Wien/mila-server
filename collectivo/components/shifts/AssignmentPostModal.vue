@@ -53,7 +53,7 @@ onMounted(async () => {
       await directus.request(
         readItems("shifts_assignments", {
           filter: {
-            shifts_user: user.value.user!.id,
+            shifts_membership: user.value.membership!.id,
             shifts_slot: { _eq: slot.id },
             shifts_from: { _gte: startDate },
           },
@@ -110,7 +110,7 @@ async function postAssignmentInner(slotContainer: SlotContainer) {
   const shiftStartString = start.toISO()!;
 
   const payload: ShiftsAssignment = {
-    shifts_user: user.value.user!.id,
+    shifts_membership: user.value.membership!.id,
     shifts_slot: slotContainer.id,
     shifts_from: shiftStartString,
   };

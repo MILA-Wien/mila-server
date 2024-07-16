@@ -14,7 +14,7 @@ const isActive = mship.shifts_user_type != "inactive";
 const activeAssignments: Ref<ShiftsAssignmentRules[]> = ref([]);
 
 async function loadData() {
-  activeAssignments.value = await getActiveAssignments(user);
+  activeAssignments.value = await getActiveAssignments(user, mship);
 }
 
 if (isActive) loadData();

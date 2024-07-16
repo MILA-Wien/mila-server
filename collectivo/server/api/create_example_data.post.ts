@@ -35,6 +35,8 @@ async function getRole(name: string) {
 
 async function create_examples() {
   console.info("Creating example data for collectivo");
+  // await create_users();
+  await create_memberships();
   await create_shifts();
   console.log("Seed successful");
 }
@@ -246,6 +248,8 @@ async function create_memberships() {
     ["Charlie", "approved"],
     ["Dave", "in-cancellation"],
     ["User", "approved"],
+    ["Editor", "approved"],
+    ["Admin", "approved"],
   ];
 
   for (const mship of mships) {
@@ -260,6 +264,7 @@ async function create_memberships() {
         memberships_user: user_id,
         memberships_type: "Aktiv",
         memberships_status: mship[1],
+        shifts_user_type: "regular",
       }),
     );
   }
