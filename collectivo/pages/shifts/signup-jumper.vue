@@ -15,7 +15,7 @@ definePageMeta({
 
 <template>
   <CollectivoContainer>
-    <ShiftsCalendar :shift-type="'jumper'" />
+    <ShiftsCalendar mode="jumper" />
   </CollectivoContainer>
 </template>
 

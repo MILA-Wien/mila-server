@@ -8,7 +8,7 @@ import luxonPlugin from "@fullcalendar/luxon3";
 import { DateTime } from "luxon";
 
 const props = defineProps({
-  shiftType: {
+  mode: {
     type: String,
     default: null,
   },
@@ -48,30 +48,38 @@ const calendarOptions = ref({
 interface ShiftType {
   label: string;
   value: string;
-  icon: string;
+  icon?: string;
 }
 
 const possibleShiftTypes: { [key: string]: ShiftType } = {
   regular: {
-    label: "Regular",
+    label: "Registration regular",
     value: "regular",
     icon: "i-heroicons-squares-plus",
   },
   jumper: {
-    label: "One-time",
+    label: "Registration one-time",
     value: "jumper",
     icon: "i-heroicons-stop",
+  },
+  unfilled: {
+    label: "Unfilled shifts",
+    value: "unfilled",
+  },
+  all: {
+    label: "All shifts",
+    value: "all",
   },
 };
 
 const propsShiftTypeToList: { [key: string]: ShiftType[] } = {
   jumper: [possibleShiftTypes.jumper],
-  admin: [possibleShiftTypes.regular, possibleShiftTypes.jumper],
+  admin: Object.values(possibleShiftTypes),
 };
 
 const customSettings = ref({
-  allowedShiftTypes: propsShiftTypeToList[props.shiftType],
-  selectedShiftType: propsShiftTypeToList[props.shiftType][0].value,
+  allowedShiftTypes: propsShiftTypeToList[props.mode],
+  selectedShiftType: propsShiftTypeToList[props.mode][0].value,
 });
 
 const calendarRef = ref(null);
@@ -142,12 +150,22 @@ async function updateEvents(from, to) {
     <full-calendar ref="calendarRef" :options="calendarOptions" />
   </div>
 
-  <ShiftsAssignmentPostModal
-    v-if="assignmentCreationModalOpen && selectedShiftOccurence"
-    v-model:is-open="assignmentCreationModalOpen"
-    :shift-occurence="selectedShiftOccurence"
-    :shift-type="customSettings.selectedShiftType"
-  />
+  <template v-if="props.mode != 'admin'">
+    <ShiftsAssignmentPostModal
+      v-if="assignmentCreationModalOpen && selectedShiftOccurence"
+      v-model:is-open="assignmentCreationModalOpen"
+      :shift-occurence="selectedShiftOccurence"
+      :shift-type="customSettings.selectedShiftType"
+    />
+  </template>
+  <template v-else>
+    <ShiftsAdminModal
+      v-if="assignmentCreationModalOpen && selectedShiftOccurence"
+      v-model:is-open="assignmentCreationModalOpen"
+      :shift-occurence="selectedShiftOccurence"
+      :shift-type="customSettings.selectedShiftType"
+    />
+  </template>
 </template>
 
 <style scoped>

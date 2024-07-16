@@ -13,7 +13,7 @@ definePageMeta({
 
 <template>
   <CollectivoContainer>
-    <ShiftsCalendar :shift-type="'admin'" />
+    <ShiftsCalendar mode="admin" />
   </CollectivoContainer>
 </template>
 
