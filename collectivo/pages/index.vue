@@ -32,7 +32,7 @@ function getFilteredTiles(tiles: CollectivoTile[]) {
 
 <template>
   <div
-    v-if="user.data && tiles.data"
+    v-if="user.user && tiles.data"
     class="gap-5 columns-1 md:columns-2 xl:columns-3 2xl:columns-4"
   >
     <CollectivoCard

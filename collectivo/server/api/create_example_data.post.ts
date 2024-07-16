@@ -265,8 +265,6 @@ async function create_memberships() {
   }
 }
 
-const times_of_day = [10, 13, 16, 19];
-
 async function create_shifts() {
   console.log("Creating shifts");
   await cleanShiftsData();
@@ -297,6 +295,10 @@ async function cleanShiftsData() {
   }
 }
 
+const SHIFT_TIMES_OF_DAY = [10, 13, 16, 19];
+const SHIFT_CYCLE_START = DateTime.local(2024, 1, 1);
+const SHIFT_CYCLE_DURATION_WEEKS = 4;
+
 async function createShifts() {
   const directus = await useDirectusAdmin();
 
@@ -309,7 +311,7 @@ async function createShifts() {
     for (let weekday = 0; weekday < 5; weekday++) {
       const day = monday.plus({ days: weekday, week: week });
 
-      for (const time_of_day of times_of_day) {
+      for (const time_of_day of SHIFT_TIMES_OF_DAY) {
         shiftsRequests.push({
           shifts_name:
             ["A", "B", "C", "D"][week] +
@@ -318,9 +320,8 @@ async function createShifts() {
             "-" +
             time_of_day,
           shifts_from: day.set({ hour: time_of_day }).toString(),
-          shifts_to: day.set({ hour: time_of_day + 3 }).toString(),
-          shifts_from_time: "10:00",
-          shifts_to_time: "13:00",
+          shifts_from_time: String(time_of_day) + ":00",
+          shifts_to_time: String(time_of_day + 3) + ":00",
           shifts_repeats_every: nb_weeks * 7,
           shifts_status: "published",
           shifts_location: "Shop",
@@ -339,26 +340,20 @@ async function createSlots() {
   const slotsRequests = [];
 
   for (const shift of shifts) {
-    if (shift["shifts_time"] == times_of_day[times_of_day.length - 1]) {
-      for (let i = 0; i < 2; i++) {
-        slotsRequests.push({
-          shifts_name: "Cleaning",
-          shifts_shift: shift.id,
-        });
-      }
-    } else {
-      slotsRequests.push({
-        shifts_name: "Cashier",
-        shifts_shift: shift.id,
-      });
+    slotsRequests.push({
+      shifts_name: "Cleaning",
+      shifts_shift: shift.id,
+    });
 
-      for (let i = 0; i < 2; i++) {
-        slotsRequests.push({
-          shifts_name: "Shelves",
-          shifts_shift: shift.id,
-        });
-      }
-    }
+    slotsRequests.push({
+      shifts_name: "Cashier",
+      shifts_shift: shift.id,
+    });
+
+    slotsRequests.push({
+      shifts_name: "Shelves",
+      shifts_shift: shift.id,
+    });
   }
 
   await directus.request(createItems("shifts_slots", slotsRequests));

@@ -4,9 +4,7 @@ definePageMeta({
 });
 
 const { t } = useI18n();
-setCollectivoTitle(t("Sign up for a one-time shift"), {
-  backLink: "dashboard",
-});
+setCollectivoTitle(t("Shifts administration"));
 
 definePageMeta({
   middleware: ["auth"],
@@ -15,11 +13,11 @@ definePageMeta({
 
 <template>
   <CollectivoContainer>
-    <ShiftsCalendar :shift-type="'jumper'" />
+    <ShiftsCalendar :shift-type="'admin'" />
   </CollectivoContainer>
 </template>
 
 <i18n lang="yaml">
 de:
-  "Sign up for a one-time shift": "Einmalige Schicht eintragen"
+  "Shifts administration": "Schichtverwaltung"
 </i18n>

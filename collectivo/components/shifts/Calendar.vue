@@ -12,10 +12,6 @@ const props = defineProps({
     type: String,
     default: null,
   },
-  adminMode: {
-    type: Boolean,
-    default: false,
-  },
 });
 
 const assignmentCreationModalOpen = ref(false);
@@ -68,9 +64,14 @@ const possibleShiftTypes: { [key: string]: ShiftType } = {
   },
 };
 
+const propsShiftTypeToList: { [key: string]: ShiftType[] } = {
+  jumper: [possibleShiftTypes.jumper],
+  admin: [possibleShiftTypes.regular, possibleShiftTypes.jumper],
+};
+
 const customSettings = ref({
-  allowedShiftTypes: [possibleShiftTypes[props.shiftType]],
-  selectedShiftType: props.shiftType,
+  allowedShiftTypes: propsShiftTypeToList[props.shiftType],
+  selectedShiftType: propsShiftTypeToList[props.shiftType][0].value,
 });
 
 const calendarRef = ref(null);
@@ -121,7 +122,7 @@ async function updateEvents(from, to) {
         (occurrence.slots - occurrence.openSlots.length) +
         "/" +
         occurrence.slots,
-      start: occurrence.start.toJSDate(),
+      start: occurrence.start.toJSDate(), // TODO: Handle invalid date
       end: occurrence.end.toJSDate(),
       allDay: false,
       shiftOccurence: occurrence,
