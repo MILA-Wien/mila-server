@@ -20434,12 +20434,12 @@
             "type": "string"
           },
           "shifts_user_type": {
-            "nullable": false,
+            "nullable": true,
             "description": "Welche Art von Schichten macht dieses Mitglied?",
             "type": "string"
           },
           "shifts_counter": {
-            "nullable": true,
+            "nullable": false,
             "description": "Wenn negativ, dann müssen Schichten nachgeholt werden",
             "type": "integer"
           },
@@ -20601,6 +20601,7 @@
           },
           "shifts_to": {
             "nullable": true,
+            "description": "Kann freigelassen werden für langfristige Anmeldung. Springer*innen-Anmeldung hat selbes Start- und Enddatum haben.",
             "type": "string",
             "format": "date"
           },
@@ -20616,7 +20617,7 @@
             ]
           },
           "shifts_membership": {
-            "nullable": true,
+            "nullable": false,
             "oneOf": [
               {
                 "type": "integer"
@@ -20628,6 +20629,7 @@
           },
           "shifts_absences": {
             "nullable": true,
+            "description": "Abwesenheit gilt nur für diese Schicht",
             "type": "array",
             "items": {
               "oneOf": [
@@ -20916,7 +20918,7 @@
             "type": "string"
           },
           "shifts_score": {
-            "nullable": false,
+            "nullable": true,
             "description": "So viele Punkte bekommt man bei der Absolvierung dieser Schicht",
             "type": "integer"
           },

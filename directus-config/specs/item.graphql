@@ -1207,10 +1207,10 @@ type memberships {
   membership_card_id: String
 
   """Welche Art von Schichten macht dieses Mitglied?"""
-  shifts_user_type: String!
+  shifts_user_type: String
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
-  shifts_counter: Int
+  shifts_counter: Int!
   memberships_invoices(filter: payments_invoices_out_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [payments_invoices_out]
   memberships_invoices_func: count_functions
   kids(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers_1]
@@ -1953,6 +1953,10 @@ type shifts_assignments {
   date_updated_func: datetime_functions
   shifts_from: Date!
   shifts_from_func: date_functions
+
+  """
+  Kann freigelassen werden für langfristige Anmeldung. Springer*innen-Anmeldung hat selbes Start- und Enddatum haben.
+  """
   shifts_to: Date
   shifts_to_func: date_functions
   shifts_slot(filter: shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_slots
@@ -1981,9 +1985,15 @@ type shifts_assignments_aggregated_count {
   user_updated: Int
   date_updated: Int
   shifts_from: Int
+
+  """
+  Kann freigelassen werden für langfristige Anmeldung. Springer*innen-Anmeldung hat selbes Start- und Enddatum haben.
+  """
   shifts_to: Int
   shifts_slot: Int
   shifts_membership: Int
+
+  """Abwesenheit gilt nur für diese Schicht"""
   shifts_absences: Int
 }
 
@@ -2084,7 +2094,7 @@ type shifts_shifts {
   shifts_description: String
 
   """So viele Punkte bekommt man bei der Absolvierung dieser Schicht"""
-  shifts_score: Int!
+  shifts_score: Int
   shifts_location: String
   shifts_slots(filter: shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_slots]
   shifts_slots_func: count_functions
@@ -2560,6 +2570,10 @@ type version_shifts_assignments {
   user_updated: String
   date_updated: Date
   shifts_from: Date
+
+  """
+  Kann freigelassen werden für langfristige Anmeldung. Springer*innen-Anmeldung hat selbes Start- und Enddatum haben.
+  """
   shifts_to: Date
   shifts_slot: JSON
   shifts_membership: JSON
@@ -2928,10 +2942,10 @@ input create_memberships_input {
   membership_card_id: String
 
   """Welche Art von Schichten macht dieses Mitglied?"""
-  shifts_user_type: String!
+  shifts_user_type: String
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
-  shifts_counter: Int
+  shifts_counter: Int!
   memberships_invoices: [create_payments_invoices_out_input]
   kids: [create_memberships_memberships_coshoppers_1_input]
   coshoppers: [create_memberships_memberships_coshoppers_input]
@@ -3082,6 +3096,10 @@ input create_shifts_assignments_input {
   user_updated: String
   date_updated: Date
   shifts_from: Date!
+
+  """
+  Kann freigelassen werden für langfristige Anmeldung. Springer*innen-Anmeldung hat selbes Start- und Enddatum haben.
+  """
   shifts_to: Date
   shifts_slot: create_shifts_slots_input
   shifts_membership: create_memberships_input
@@ -3122,7 +3140,7 @@ input create_shifts_shifts_input {
   shifts_description: String
 
   """So viele Punkte bekommt man bei der Absolvierung dieser Schicht"""
-  shifts_score: Int!
+  shifts_score: Int
   shifts_location: String
   shifts_slots: [create_shifts_slots_input]
 }
@@ -4194,6 +4212,10 @@ input update_shifts_assignments_input {
   user_updated: String
   date_updated: Date
   shifts_from: Date
+
+  """
+  Kann freigelassen werden für langfristige Anmeldung. Springer*innen-Anmeldung hat selbes Start- und Enddatum haben.
+  """
   shifts_to: Date
   shifts_slot: update_shifts_slots_input
   shifts_membership: update_memberships_input

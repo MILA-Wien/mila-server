@@ -24,7 +24,7 @@ declare global {
 
   export interface ShiftsShift {
     id?: string;
-    shifts_name?: string;
+    shifts_name: string;
     shifts_from: string;
     shifts_to?: string;
     shifts_from_time?: string;
@@ -33,6 +33,7 @@ declare global {
     shifts_slots?: ShiftsSlot[] | number[];
     shifts_status: ItemStatus;
     shifts_description?: string;
+    shifts_location?: string;
   }
 
   export interface ShiftsSlot {

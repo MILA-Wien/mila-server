@@ -11,7 +11,7 @@
     "group": null,
     "hidden": false,
     "interface": null,
-    "note": null,
+    "note": "Kann freigelassen werden für langfristige Anmeldung. Springer*innen-Anmeldung hat selbes Start- und Enddatum haben.",
     "options": null,
     "readonly": false,
     "required": false,

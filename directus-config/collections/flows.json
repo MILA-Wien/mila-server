@@ -91,7 +91,6 @@
     "options": {
       "type": "action",
       "scope": [
-        "items.create",
         "items.update"
       ],
       "collections": [

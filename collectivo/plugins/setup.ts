@@ -1,4 +1,5 @@
 import { electronicFormatIBAN, isValidIBAN } from "ibantools";
+import { boolean } from "yup";
 
 const europeanIBAN = [
   "AD",
@@ -56,7 +57,9 @@ export default defineNuxtPlugin(() => {
       to: "/shifts/dashboard",
       order: 90,
       filter: async () => {
-        return user.membership?.shifts_user_type != "inactive";
+        return Boolean(
+          user.membership && user.membership.shifts_user_type != "inactive",
+        );
       },
     },
     {

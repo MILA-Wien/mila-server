@@ -11,7 +11,7 @@
     "group": null,
     "hidden": false,
     "interface": "list-o2m",
-    "note": null,
+    "note": "Abwesenheit gilt nur für diese Schicht",
     "options": {
       "enableSelect": false
     },
@@ -21,7 +21,12 @@
     "special": [
       "o2m"
     ],
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Abwesenheiten"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"

@@ -30,7 +30,6 @@ export default defineEventHandler(async (event) => {
 
 async function syncKeycloakUser(event: any) {
   const config = useRuntimeConfig();
-  console.log("update auth called");
 
   if (config.public.authService !== "keycloak") {
     return;
@@ -49,8 +48,8 @@ async function syncKeycloakUser(event: any) {
   const isCreate = body.event === "users.create";
   const isDelete = body.event === "users.delete";
 
-  console.log("event is", body.event);
-  console.log("payload is", body);
+  // console.log("event is", body.event);
+  // console.log("payload is", body);
 
   let user: any = {};
   body.keys = body.keys || [body.key];
@@ -69,7 +68,7 @@ async function syncKeycloakUser(event: any) {
         }),
       );
 
-      console.log("user:", user);
+      // console.log("user:", user);
 
       if (!user || !user.email) {
         if (isDelete) {
@@ -97,7 +96,7 @@ async function syncKeycloakUser(event: any) {
 
     // Set external identifier to match new email
     if (user.id && body.payload.email && email != extid) {
-      console.log("updating external identifier", email);
+      // console.log("updating external identifier", email);
 
       await directus.request(
         updateUser(user.id, { external_identifier: email }),
@@ -143,7 +142,7 @@ async function syncKeycloakUser(event: any) {
 
     // If still no keycloak user found, create new
     if (!kc_user_id) {
-      console.log("creating new keycloak user");
+      // console.log("creating new keycloak user");
 
       const kc_user = await keycloak.users.create({
         email: email,
@@ -157,9 +156,9 @@ async function syncKeycloakUser(event: any) {
 
     // Update keycloak user
     if ("email" in body.payload && body.payload.email !== user.email) {
-      console.log("updating email");
-      console.log("kc_user_id", kc_user_id);
-      console.log("email", body.payload.email);
+      // console.log("updating email");
+      // console.log("kc_user_id", kc_user_id);
+      // console.log("email", body.payload.email);
 
       await keycloak.users.update(
         { id: kc_user_id },
@@ -170,7 +169,7 @@ async function syncKeycloakUser(event: any) {
         },
       );
 
-      console.log("email updated");
+      // console.log("email updated");
     }
 
     if ("first_name" in body.payload) {
