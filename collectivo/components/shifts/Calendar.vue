@@ -118,6 +118,7 @@ const registerEventUpdate = async () => {
 async function updateEvents(from, to) {
   const occurrences = await getShiftOccurrences(from, to, {
     shiftType: customSettings.value.selectedShiftType,
+    admin: props.mode === "admin",
   });
 
   const events = [];
@@ -127,9 +128,9 @@ async function updateEvents(from, to) {
       title:
         occurrence.shift.shifts_name +
         " - " +
-        (occurrence.slots - occurrence.openSlots.length) +
+        (occurrence.slotNumber - occurrence.openSlots.length) +
         "/" +
-        occurrence.slots,
+        occurrence.slotNumber,
       start: occurrence.start.toJSDate(), // TODO: Handle invalid date
       end: occurrence.end.toJSDate(),
       allDay: false,

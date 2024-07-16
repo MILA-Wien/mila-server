@@ -5,7 +5,8 @@ import { readItems } from "@directus/sdk";
 
 export const getActiveAssignments = async (
   user: CollectivoUser,
-  mship: MembershipsMembership,
+  mship: MembershipsMembership | null,
+  slots?: number[],
 ) => {
   const directus = useDirectus();
   const now = getCurrentDate();

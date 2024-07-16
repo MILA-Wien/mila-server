@@ -30,7 +30,7 @@ declare global {
     shifts_from_time?: string;
     shifts_to_time?: string;
     shifts_repeats_every?: number;
-    shifts_slots?: ShiftsSlot[] | number[];
+    shifts_slots?: ShiftsSlot[];
     shifts_status: ItemStatus;
     shifts_description?: string;
     shifts_location?: string;
@@ -83,13 +83,28 @@ declare global {
     shifts_membership: string;
   }
 
+  // Shift occurrenecs
+
   export interface ShiftOccurrence {
     shift: ShiftsShift;
     start: DateTime;
     end: DateTime;
-    slots: number;
+    slotNumber: number;
     openSlots: number[];
     shiftRule: RRuleSet;
+    slots: SlotRrule[];
+  }
+
+  export interface SlotRrule {
+    id: number;
+    slot: ShiftsSlot;
+    rrule: RRule | RRuleSet;
+    assignments: AssignmentRrule[];
+  }
+
+  export interface AssignmentRrule {
+    assignment: ShiftsAssignment;
+    rrule: RRule | RRuleSet;
   }
 
   export interface ShiftsSkillUserLink {

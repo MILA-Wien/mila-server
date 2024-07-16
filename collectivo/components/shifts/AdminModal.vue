@@ -30,7 +30,6 @@ const repeats = shift.shifts_repeats_every ?? 0;
 const isWeeks = repeats % 7 === 0;
 const frequency = isWeeks ? repeats / 7 : repeats;
 const slots = ref<SlotContainer[]>([]);
-const chosenSlot = ref<SlotContainer | null>(null);
 
 async function getOpenSlots() {
   const openSlots = props.shiftOccurence.openSlots;
@@ -113,13 +112,19 @@ async function postAssignmentInner(slotContainer: SlotContainer) {
 
   // One-time shifts have same start and end date
   // Regular shifts are either until freeUntil or forever
-  if (props.shiftType === "jumper") {
-    payload.shifts_to = shiftStartString;
-  } else if (slotContainer.freeUntil) {
-    payload.shifts_to = slotContainer.freeUntil.toISO()!;
-  }
+  // if (props.shiftType === "jumper") {
+  //   payload.shifts_to = shiftStartString;
+  // } else if (slotContainer.freeUntil) {
+  //   payload.shifts_to = slotContainer.freeUntil.toISO()!;
+  // }
 
-  await directus.request(createItem("shifts_assignments", payload));
+  // await directus.request(createItem("shifts_assignments", payload));
+}
+
+function getUserString(assignment: any) {
+  const mship = assignment.assignment.shifts_membership;
+  const user = mship.memberships_user;
+  return `${mship.id} ${user.first_name} ${user.last_name} (${user.email})`;
 }
 </script>
 
@@ -169,11 +174,22 @@ async function postAssignmentInner(slotContainer: SlotContainer) {
       <!-- Shift slots -->
       <h2>{{ t("Slots") }}</h2>
       <div
-        v-for="slot of slots"
+        v-for="slot of props.shiftOccurence.slots"
         :key="slot.id"
         class="p-2 my-2 border-2 border-solid"
       >
-        {{ slot }}
+        <h5>{{ slot.slot.shifts_name }} ({{ slot.id }})</h5>
+
+        <br />
+        Assignments:
+        <div
+          v-for="assignment of slot.assignments"
+          class="p-2 border-2 border-solid"
+        >
+          {{ getUserString(assignment) }}
+          ( {{ assignment.assignment.shifts_from }} -
+          {{ assignment.assignment.shifts_to }} )
+        </div>
       </div>
 
       <!-- <UFormGroup label="Slot" class="my-5">

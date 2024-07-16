@@ -110,9 +110,9 @@ async function updateEvents(from, to) {
       title:
         occurrence.shift.shifts_name +
         " - " +
-        (occurrence.slots - occurrence.openSlots.length) +
+        (occurrence.slotNumber - occurrence.openSlots.length) +
         "/" +
-        occurrence.slots,
+        occurrence.slotNumber,
       start: occurrence.start.toJSDate(),
       end: occurrence.end.toJSDate(),
       allDay: false,
