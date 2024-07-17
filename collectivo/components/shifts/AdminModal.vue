@@ -10,6 +10,7 @@ import {
 } from "@directus/sdk";
 import sanitizeHtml from "sanitize-html";
 
+const emit = defineEmits(["data-has-changed"]);
 const props = defineProps({
   shiftOccurence: {
     type: Object as PropType<ShiftOccurrence>,
@@ -175,6 +176,7 @@ async function removeAssignment(onetime: boolean) {
   removeAssignmentObject.value._removed = true;
   removeAssignmentModalIsOpen.value = false;
   chosenSlot.value.removedAssignments = true;
+  emit("data-has-changed");
 }
 
 // CREATE ASSIGNMENT FLOW
@@ -228,6 +230,7 @@ async function createAssignment(onetime: boolean) {
   chosenSlot.value.assignments.push(res);
 
   createAssignmentModalIsOpen.value = false;
+  emit("data-has-changed");
 }
 </script>
 
@@ -394,7 +397,6 @@ async function createAssignment(onetime: boolean) {
     >
       <div class="p-10 flex flex-col gap-4">
         <h2>{{ t("Remove assignment") }}</h2>
-        {{ removeAssignmentObject }}
         <div>
           <p>
             {{

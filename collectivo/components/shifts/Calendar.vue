@@ -168,6 +168,7 @@ async function updateEvents(from, to) {
       v-model:is-open="shiftActionModalisOpen"
       :shift-occurence="selectedShiftOccurence"
       :shift-type="customSettings.selectedShiftType"
+      @data-has-changed="registerEventUpdate"
     />
   </template>
 </template>
