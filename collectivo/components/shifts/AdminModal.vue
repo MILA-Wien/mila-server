@@ -149,14 +149,25 @@ async function postAssignmentInner(slotContainer: SlotContainer) {
 
 function getUserString(mship: any) {
   const user = mship.memberships_user;
-  return `${mship.id} ${user.first_name} ${user.last_name} ${user.email}`;
+  return `M${mship.id} ${user.first_name} ${user.last_name}`;
 }
 </script>
 
 <template>
   <UModal v-model="isOpen">
     <div class="m-10">
-      <h2>{{ shift.shifts_name }}</h2>
+      <div class="flex items-center justify-between">
+        <h2>{{ shift.shifts_name }}</h2>
+
+        <a
+          :href="`http://localhost:8055/admin/content/shifts_shift/${shift.id}`"
+          target="blank"
+          class="flex flex-row items-center align-middle text-xs gap-1"
+        >
+          <span class="text-xs">Shift {{ shift.id }}</span>
+          <UIcon name="i-heroicons-arrow-top-right-on-square-16-solid" />
+        </a>
+      </div>
 
       <p class="font-bold text-lg my-5 leading-7">
         {{ t("ID") }}:
@@ -198,15 +209,46 @@ function getUserString(mship: any) {
 
       <!-- Shift slots -->
       <h2>{{ t("Slots") }}</h2>
-      <div
-        v-for="slot of props.shiftOccurence.slots"
-        :key="slot.id"
-        class="p-2 my-2 border-2 border-solid"
-      >
-        <h5>{{ slot.slot.shifts_name }} (Slot ID {{ slot.id }})</h5>
-        <div
+
+      <div class="flex flex-col gap-2 my-2">
+        <ShiftsObjectBox
+          v-for="slot of props.shiftOccurence.slots"
+          :id="slot.id"
+          :key="slot.id"
+          label="Slot"
+          collection="shifts_slots"
+        >
+          <template #header>{{ slot.slot.shifts_name }}</template>
+
+          <ShiftsObjectBox
+            v-for="assignment of slot.assignments"
+            :id="assignment.assignment.id"
+            :key="assignment.assignment.id"
+            label="Assignment"
+            collection="shifts_assignments"
+          >
+            <template #header>{{
+              getUserString(assignment.assignment.shifts_membership)
+            }}</template>
+            {{ assignment.assignment.shifts_from }} to
+            {{ assignment.assignment.shifts_to || "indefinite" }}
+
+            <div class="flex flex-wrap gap-2">
+              <UButton label="Remove assignment" />
+            </div>
+          </ShiftsObjectBox>
+
+          <UButton
+            v-if="slot.assignments.length == 0"
+            label="Create assignment"
+          />
+        </ShiftsObjectBox>
+      </div>
+
+      <!-- <div
           v-for="assignment of slot.assignments"
           :key="assignment.assignment.id"
+          class="p-2 border-2 border-solid"
         >
           <p class="font-bold">
             Anmeldung from
@@ -218,21 +260,15 @@ function getUserString(mship: any) {
           <div class="flex flex-wrap gap-2">
             <UButton label="Remove assignment" />
           </div>
-        </div>
-        <UButton
-          v-if="slot.assignments.length == 0"
-          label="Create assignment"
-        />
-      </div>
+        </div> -->
+
+      <!-- </div> -->
 
       <!-- Logs -->
       <h2>{{ t("Logs") }}</h2>
-      <div
-        v-for="log of logs"
-        :key="log.id"
-        class="border-2 border-solid p-2 flex flex-row"
-      >
-        <div class="grow">
+      <div v-for="log of logs" :key="log.id">
+        <!-- class="border-2 border-solid p-2 flex flex-row" -->
+        <!-- <div class="grow">
           <p>Log ID: {{ log.id }}</p>
           <p>Type: {{ log.shifts_type }}</p>
           <p v-if="log.shifts_note">Note: {{ log.shifts_note }}</p>
@@ -246,7 +282,12 @@ function getUserString(mship: any) {
           >
             <UIcon name="i-heroicons-arrow-top-right-on-square-16-solid" />
           </a>
-        </div>
+        </div> -->
+        <ShiftsObjectBox :id="log.id!" label="Log" collection="shifts_logs">
+          <template #header>{{ t(log.shifts_type) }}</template>
+          <p>{{ getUserString(log.shifts_membership) }}</p>
+          <p v-if="log.shifts_note">Notes: {{ log.shifts_note }}</p>
+        </ShiftsObjectBox>
       </div>
 
       <!-- <UButton label="Open" @click="subModalIsOpen = true" />
@@ -315,4 +356,7 @@ de:
   Time: "Uhrzeit"
   Slots: "Slots"
   Assignments: "Anmeldungen"
+  attended: "Schicht besucht"
+  missed: "Schicht verpasst"
+  cancelled: "Schicht abgesagt"
 </i18n>

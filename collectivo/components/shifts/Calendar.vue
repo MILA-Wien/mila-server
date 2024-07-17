@@ -74,7 +74,7 @@ const possibleShiftTypes: { [key: string]: ShiftType } = {
 
 const propsShiftTypeToList: { [key: string]: ShiftType[] } = {
   jumper: [possibleShiftTypes.jumper],
-  admin: Object.values(possibleShiftTypes),
+  admin: [possibleShiftTypes.unfilled, possibleShiftTypes.all],
 };
 
 const customSettings = ref({
