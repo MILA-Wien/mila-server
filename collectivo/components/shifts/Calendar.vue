@@ -31,6 +31,7 @@ const calendarOptions: Ref<CalendarOptions> = ref({
   initialView: "dayGridMonth",
   headerToolbar: false,
   events: [],
+  eventDisplay: "block",
   height: "auto",
   allDaySlot: false,
   displayEventTime: true,
@@ -174,5 +175,10 @@ async function updateEvents(from, to) {
 <style scoped>
 :deep(.fc-event) {
   cursor: pointer;
+}
+
+/* Allows line break in calendar events */
+:deep(.fc-event-title) {
+  white-space: pre-line;
 }
 </style>
