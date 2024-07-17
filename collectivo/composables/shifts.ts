@@ -77,9 +77,9 @@ export const getShiftOccurrences = async (
     const absences_ = (await directus.request(
       readItems("shifts_absences", {
         filter: {
-          shifts_assignment: {
-            _in: assignmentIds,
-          },
+          // shifts_assignment: {
+          //   _in: assignmentIds,
+          // },
           _or: [
             { shifts_to: { _gte: from.toISO() } },
             { shifts_from: { _lte: to.toISO() } },
@@ -282,8 +282,9 @@ export const slotToRrule = (
 
     const filteredAbsences = absences.filter(
       (absence) =>
-        absence.shifts_assignment == assignment.id ||
-        absence.shifts_assignment == null,
+        (absence.shifts_assignment == assignment.id ||
+          absence.shifts_assignment == null) &&
+        absence.shifts_membership == assignment.shifts_membership.id,
     );
 
     for (const absence of filteredAbsences) {
