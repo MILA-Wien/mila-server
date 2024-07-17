@@ -10,7 +10,7 @@
     "field": "shifts_note",
     "group": null,
     "hidden": false,
-    "interface": "input-rich-text-md",
+    "interface": "input-multiline",
     "note": null,
     "options": null,
     "readonly": false,

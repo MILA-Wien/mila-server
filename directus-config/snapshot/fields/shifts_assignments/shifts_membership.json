@@ -5,8 +5,10 @@
   "meta": {
     "collection": "shifts_assignments",
     "conditions": null,
-    "display": null,
-    "display_options": null,
+    "display": "related-values",
+    "display_options": {
+      "template": "M{{id}} {{memberships_user.first_name}} {{memberships_user.last_name}}"
+    },
     "field": "shifts_membership",
     "group": null,
     "hidden": false,

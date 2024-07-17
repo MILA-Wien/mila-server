@@ -16,36 +16,41 @@
       "choices": [
         {
           "text": "Schicht absolviert",
-          "value": "attended"
+          "value": "attended",
+          "color": "#2ECDA7"
         },
         {
-          "text": "Schicht verpasst (Strafschicht!)",
+          "text": "Schicht abgesagt (keine Strafschicht)",
+          "value": "cancelled",
+          "color": "#FFA439"
+        },
+        {
+          "text": "Schicht verpasst (Strafschicht)",
           "value": "missed",
           "color": "#E35169"
         },
         {
-          "text": "Schicht abgesagt",
-          "value": "cancelled"
+          "text": "Anderes",
+          "value": "other",
+          "color": "#2ECDA7"
         },
         {
-          "text": "Auto-Schichtpunkteabzug",
-          "value": "cycle"
+          "text": "4W Zyklus ",
+          "value": "cycle",
+          "color": "#3399FF",
+          "icon": "cycle"
         },
         {
-          "text": "Auto-Schichtpunkteabzug aktiviert",
-          "value": "cycle_activated"
+          "text": "4W Zyklus aktiviert",
+          "value": "cycle_activated",
+          "color": "#3399FF",
+          "icon": "autoplay"
         },
         {
-          "text": "Auto-Schichtpunkteabzug deaktiviert",
-          "value": "cycle_deactivated"
-        },
-        {
-          "text": "Schichtpunkte Neustart",
-          "value": "restart_shift_score"
-        },
-        {
-          "text": "Manuelle Schichtpunkteänderung",
-          "value": "manuel_shift_score_change"
+          "text": "4W Zyklus deaktiviert",
+          "value": "cycle_deactivated",
+          "color": "#3399FF",
+          "icon": "autostop"
         }
       ]
     },

@@ -10,7 +10,7 @@
     "one_collection": "shifts_slots",
     "one_collection_field": null,
     "one_deselect_action": "nullify",
-    "one_field": "shifts_skills",
+    "one_field": null,
     "sort_field": null
   },
   "schema": {

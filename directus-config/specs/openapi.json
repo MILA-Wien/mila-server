@@ -14637,393 +14637,6 @@
         ]
       }
     },
-    "/items/shifts_skills": {
-      "post": {
-        "summary": "Create an Item",
-        "description": "Create a new shifts_skills item.",
-        "tags": [
-          "Items",
-          "ItemsShiftsSkills"
-        ],
-        "operationId": "createItemsShiftsSkills",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Meta"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ItemsShiftsSkills"
-                    }
-                  },
-                  {
-                    "$ref": "#/components/schemas/ItemsShiftsSkills"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "items": {
-                        "$ref": "#/components/schemas/ItemsShiftsSkills"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        }
-      },
-      "get": {
-        "summary": "List Items",
-        "description": "List the shifts_skills items.",
-        "tags": [
-          "Items",
-          "ItemsShiftsSkills"
-        ],
-        "operationId": "readItemsShiftsSkills",
-        "security": [
-          {
-            "Auth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          },
-          {
-            "$ref": "#/components/parameters/Filter"
-          },
-          {
-            "$ref": "#/components/parameters/Search"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "$ref": "#/components/schemas/ItemsShiftsSkills"
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/x-metadata"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update Multiple Items",
-        "description": "Update multiple shifts_skills items at the same time.",
-        "tags": [
-          "Items",
-          "ItemsShiftsSkills"
-        ],
-        "operationId": "updateItemsShiftsSkills",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          },
-          {
-            "$ref": "#/components/parameters/Filter"
-          },
-          {
-            "$ref": "#/components/parameters/Search"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ItemsShiftsSkills"
-                    }
-                  },
-                  {
-                    "$ref": "#/components/schemas/ItemsShiftsSkills"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "data": {
-                      "items": {
-                        "$ref": "#/components/schemas/ItemsShiftsSkills"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete Multiple Items",
-        "description": "Delete multiple existing shifts_skills items.",
-        "tags": [
-          "Items",
-          "ItemsShiftsSkills"
-        ],
-        "operationId": "deleteItemsShiftsSkills",
-        "responses": {
-          "200": {
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        },
-        "parameters": []
-      }
-    },
-    "/items/shifts_skills/{id}": {
-      "get": {
-        "summary": "Retrieve an Item",
-        "description": "Retrieve a single shifts_skills item by unique identifier.",
-        "tags": [
-          "Items",
-          "ItemsShiftsSkills"
-        ],
-        "operationId": "readSingleItemsShiftsSkills",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Version"
-          },
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/ItemsShiftsSkills"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update an Item",
-        "description": "Update an existing shifts_skills item.",
-        "tags": [
-          "Items",
-          "ItemsShiftsSkills"
-        ],
-        "operationId": "updateSingleItemsShiftsSkills",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "$ref": "#/components/schemas/ItemsShiftsSkills"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/ItemsShiftsSkills"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete an Item",
-        "description": "Delete an existing shifts_skills item.",
-        "tags": [
-          "Items",
-          "ItemsShiftsSkills"
-        ],
-        "operationId": "deleteSingleItemsShiftsSkills",
-        "responses": {
-          "200": {
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
     "/items/shifts_slots": {
       "post": {
         "summary": "Create an Item",
@@ -17540,10 +17153,6 @@
     {
       "name": "ItemsShiftsAssignments",
       "x-collection": "shifts_assignments"
-    },
-    {
-      "name": "ItemsShiftsSkills",
-      "x-collection": "shifts_skills"
     },
     {
       "name": "ItemsShiftsSlots",
@@ -20439,7 +20048,7 @@
             "type": "string"
           },
           "shifts_counter": {
-            "nullable": false,
+            "nullable": true,
             "description": "Wenn negativ, dann müssen Schichten nachgeholt werden",
             "type": "integer"
           },
@@ -20645,40 +20254,6 @@
         },
         "x-collection": "shifts_assignments"
       },
-      "ItemsShiftsSkills": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "nullable": false,
-            "type": "integer"
-          },
-          "user_created": {
-            "nullable": true,
-            "type": "string",
-            "format": "uuid"
-          },
-          "date_created": {
-            "nullable": true,
-            "type": "string",
-            "format": "timestamp"
-          },
-          "user_updated": {
-            "nullable": true,
-            "type": "string",
-            "format": "uuid"
-          },
-          "date_updated": {
-            "nullable": true,
-            "type": "string",
-            "format": "timestamp"
-          },
-          "shifts_name": {
-            "nullable": true,
-            "type": "string"
-          }
-        },
-        "x-collection": "shifts_skills"
-      },
       "ItemsShiftsSlots": {
         "type": "object",
         "properties": {
@@ -20721,20 +20296,6 @@
               }
             ]
           },
-          "shifts_skills": {
-            "nullable": true,
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "$ref": "#/components/schemas/ItemsShiftsSkillsShiftsSlots"
-                }
-              ]
-            }
-          },
           "shifts_assignments": {
             "nullable": true,
             "description": "Hier können Mitglieder für diese Schicht eingetragen werden",
@@ -20759,17 +20320,6 @@
           "id": {
             "nullable": false,
             "type": "integer"
-          },
-          "shifts_skills_id": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "$ref": "#/components/schemas/ItemsShiftsSkills"
-              }
-            ]
           },
           "shifts_slots_id": {
             "nullable": true,
@@ -20899,12 +20449,12 @@
             "format": "date"
           },
           "shifts_from_time": {
-            "nullable": true,
+            "nullable": false,
             "type": "string",
             "format": "time"
           },
           "shifts_to_time": {
-            "nullable": true,
+            "nullable": false,
             "type": "string",
             "format": "time"
           },
@@ -20989,17 +20539,6 @@
             "type": "string",
             "format": "timestamp"
           },
-          "shifts_assignment": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "$ref": "#/components/schemas/ItemsShiftsAssignments"
-              }
-            ]
-          },
           "shifts_membership": {
             "nullable": false,
             "oneOf": [
@@ -21008,6 +20547,17 @@
               },
               {
                 "$ref": "#/components/schemas/ItemsMemberships"
+              }
+            ]
+          },
+          "shifts_shift": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsShiftsShifts"
               }
             ]
           }
@@ -21029,17 +20579,6 @@
               },
               {
                 "$ref": "#/components/schemas/ItemsMemberships"
-              }
-            ]
-          },
-          "shifts_skills_id": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "$ref": "#/components/schemas/ItemsShiftsSkills"
               }
             ]
           }

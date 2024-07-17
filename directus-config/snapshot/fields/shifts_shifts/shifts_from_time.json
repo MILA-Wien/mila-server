@@ -14,7 +14,7 @@
     "note": null,
     "options": null,
     "readonly": false,
-    "required": false,
+    "required": true,
     "sort": 5,
     "special": null,
     "translations": [
@@ -35,7 +35,7 @@
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
-    "is_nullable": true,
+    "is_nullable": false,
     "is_unique": false,
     "is_primary_key": false,
     "is_generated": false,

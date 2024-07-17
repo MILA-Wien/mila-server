@@ -207,7 +207,7 @@
     "icon": null,
     "color": null,
     "description": null,
-    "status": "active",
+    "status": "inactive",
     "trigger": "schedule",
     "accountability": "all",
     "options": {

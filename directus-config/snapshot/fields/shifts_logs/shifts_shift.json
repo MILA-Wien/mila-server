@@ -1,31 +1,33 @@
 {
   "collection": "shifts_logs",
-  "field": "shifts_assignment",
+  "field": "shifts_shift",
   "type": "integer",
   "meta": {
     "collection": "shifts_logs",
     "conditions": null,
     "display": "related-values",
     "display_options": {
-      "template": "{{shifts_user.first_name}} {{shifts_user.last_name}} ({{id}}) -- {{shifts_slot}}"
+      "template": "{{shifts_name}}"
     },
-    "field": "shifts_assignment",
+    "field": "shifts_shift",
     "group": null,
     "hidden": false,
     "interface": "select-dropdown-m2o",
     "note": null,
     "options": {
       "enableCreate": false,
-      "template": "{{shifts_slot}}"
+      "template": "{{shifts_name}}"
     },
     "readonly": false,
     "required": false,
-    "sort": 6,
-    "special": null,
+    "sort": 12,
+    "special": [
+      "m2o"
+    ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Verknüpfte Schichtanmeldung"
+        "translation": "Verknüpfte Schicht"
       }
     ],
     "validation": null,
@@ -33,7 +35,7 @@
     "width": "full"
   },
   "schema": {
-    "name": "shifts_assignment",
+    "name": "shifts_shift",
     "table": "shifts_logs",
     "data_type": "integer",
     "default_value": null,
@@ -46,7 +48,7 @@
     "is_generated": false,
     "generation_expression": null,
     "has_auto_increment": false,
-    "foreign_key_table": "shifts_assignments",
+    "foreign_key_table": "shifts_shifts",
     "foreign_key_column": "id"
   }
 }

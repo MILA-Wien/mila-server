@@ -248,7 +248,6 @@ type Subscription {
   memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
   memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
   shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
-  shifts_skills_mutated(event: EventEnum): shifts_skills_mutated
   shifts_slots_mutated(event: EventEnum): shifts_slots_mutated
   shifts_skills_shifts_slots_mutated(event: EventEnum): shifts_skills_shifts_slots_mutated
   shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
@@ -1651,7 +1650,7 @@ type memberships {
   shifts_user_type: String
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
-  shifts_counter: Int!
+  shifts_counter: Int
   memberships_invoices(filter: payments_invoices_out_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [payments_invoices_out]
   memberships_invoices_func: count_functions
   kids(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers_1]
@@ -1716,7 +1715,6 @@ type memberships_mutated {
 type memberships_shifts_skills {
   id: ID!
   memberships_id(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
-  shifts_skills_id(filter: shifts_skills_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_skills
 }
 
 type memberships_shifts_skills_mutated {
@@ -2006,8 +2004,8 @@ type shifts_logs {
   user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
-  shifts_assignment(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_assignments
   shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+  shifts_shift(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_shifts
 }
 
 type shifts_logs_mutated {
@@ -2030,9 +2028,9 @@ type shifts_shifts {
   shifts_from_func: date_functions
   shifts_to: Date
   shifts_to_func: date_functions
-  shifts_from_time: String
+  shifts_from_time: String!
   shifts_from_time_func: time_functions
-  shifts_to_time: String
+  shifts_to_time: String!
   shifts_to_time_func: time_functions
 
   """In Tagen"""
@@ -2052,26 +2050,8 @@ type shifts_shifts_mutated {
   data: shifts_shifts
 }
 
-type shifts_skills {
-  id: ID!
-  user_created: String
-  date_created: Date
-  date_created_func: datetime_functions
-  user_updated: String
-  date_updated: Date
-  date_updated_func: datetime_functions
-  shifts_name: String
-}
-
-type shifts_skills_mutated {
-  key: ID!
-  event: EventEnum
-  data: shifts_skills
-}
-
 type shifts_skills_shifts_slots {
   id: ID!
-  shifts_skills_id(filter: shifts_skills_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_skills
   shifts_slots_id(filter: shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_slots
 }
 
@@ -2091,8 +2071,6 @@ type shifts_slots {
   date_updated_func: datetime_functions
   shifts_name: String
   shifts_shift(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_shifts
-  shifts_skills(filter: shifts_skills_shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_skills_shifts_slots]
-  shifts_skills_func: count_functions
   shifts_assignments(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_assignments]
   shifts_assignments_func: count_functions
 }
@@ -2558,7 +2536,7 @@ input create_memberships_input {
   shifts_user_type: String
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
-  shifts_counter: Int!
+  shifts_counter: Int
   memberships_invoices: [create_payments_invoices_out_input]
   kids: [create_memberships_memberships_coshoppers_1_input]
   coshoppers: [create_memberships_memberships_coshoppers_input]
@@ -2580,7 +2558,6 @@ input create_memberships_memberships_coshoppers_input {
 input create_memberships_shifts_skills_input {
   id: ID
   memberships_id: create_memberships_input
-  shifts_skills_id: create_shifts_skills_input
 }
 
 input create_messages_campaigns_directus_users_input {
@@ -2659,15 +2636,6 @@ input create_payments_invoices_out_input {
   user_created: String
   user_updated: String
   payments_entries: [create_payments_invoices_entries_input]
-}
-
-input create_shifts_skills_input {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  shifts_name: String
 }
 
 input date_filter_operators {
@@ -3232,7 +3200,6 @@ input memberships_memberships_coshoppers_filter {
 input memberships_shifts_skills_filter {
   id: number_filter_operators
   memberships_id: memberships_filter
-  shifts_skills_id: shifts_skills_filter
   _and: [memberships_shifts_skills_filter]
   _or: [memberships_shifts_skills_filter]
 }
@@ -3413,27 +3380,6 @@ input shifts_shifts_filter {
   _or: [shifts_shifts_filter]
 }
 
-input shifts_skills_filter {
-  id: number_filter_operators
-  user_created: string_filter_operators
-  date_created: date_filter_operators
-  date_created_func: datetime_function_filter_operators
-  user_updated: string_filter_operators
-  date_updated: date_filter_operators
-  date_updated_func: datetime_function_filter_operators
-  shifts_name: string_filter_operators
-  _and: [shifts_skills_filter]
-  _or: [shifts_skills_filter]
-}
-
-input shifts_skills_shifts_slots_filter {
-  id: number_filter_operators
-  shifts_skills_id: shifts_skills_filter
-  shifts_slots_id: shifts_slots_filter
-  _and: [shifts_skills_shifts_slots_filter]
-  _or: [shifts_skills_shifts_slots_filter]
-}
-
 input shifts_slots_filter {
   id: number_filter_operators
   user_created: string_filter_operators
@@ -3444,8 +3390,6 @@ input shifts_slots_filter {
   date_updated_func: datetime_function_filter_operators
   shifts_name: string_filter_operators
   shifts_shift: shifts_shifts_filter
-  shifts_skills: shifts_skills_shifts_slots_filter
-  shifts_skills_func: count_function_filter_operators
   shifts_assignments: shifts_assignments_filter
   shifts_assignments_func: count_function_filter_operators
   _and: [shifts_slots_filter]
@@ -3898,7 +3842,6 @@ input update_memberships_memberships_coshoppers_input {
 input update_memberships_shifts_skills_input {
   id: ID
   memberships_id: update_memberships_input
-  shifts_skills_id: update_shifts_skills_input
 }
 
 input update_messages_campaigns_directus_users_input {
@@ -3977,13 +3920,4 @@ input update_payments_invoices_out_input {
   user_created: String
   user_updated: String
   payments_entries: [update_payments_invoices_entries_input]
-}
-
-input update_shifts_skills_input {
-  id: ID
-  user_created: String
-  date_created: Date
-  user_updated: String
-  date_updated: Date
-  shifts_name: String
 }
