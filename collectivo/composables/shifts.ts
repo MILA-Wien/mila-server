@@ -16,6 +16,7 @@ export const getShiftOccurrences = async (
   const { shiftType } = options;
   const isJumper = shiftType === "jumper";
   const isRegular = shiftType === "regular";
+  const isUnfilled = shiftType === "unfilled";
   const isAll = shiftType === "all";
 
   const shifts: ShiftsShift[] = (await directus.request(
@@ -84,7 +85,12 @@ export const getShiftOccurrences = async (
             { shifts_from: { _lte: to.toISO() } },
           ],
         },
-        fields: ["shifts_from", "shifts_to", "shifts_assignment"],
+        fields: [
+          "shifts_membership",
+          "shifts_from",
+          "shifts_to",
+          "shifts_assignment",
+        ],
       }),
     )) as ShiftsAbsence[];
     absences.push(...absences_);
@@ -121,7 +127,7 @@ export const getShiftOccurrences = async (
     let maxDate = to.toJSDate();
 
     // Jumper and regular can only be into the future
-    if ((isJumper || isRegular) && minDate < today) {
+    if ((isJumper || isRegular || isUnfilled) && minDate < today) {
       minDate = today;
     }
 
@@ -182,11 +188,6 @@ export const getOccurrencesForShift = (
   return shiftOccurrences;
 };
 
-interface slotOccurrence {
-  slot: number;
-  assignments: AssignmentRrule[];
-}
-
 // Get occurence object for a shift on a given date
 // Includes information about shift, slots, and assignments
 // Time is always given in UTC - even if meant for other timezones
@@ -197,22 +198,25 @@ const getSingleShiftOccurence = (
   slotRules: SlotRrule[],
 ): ShiftOccurrence => {
   const openSlots: number[] = [];
+  const slotOccurrences: SlotOccurrence[] = [];
 
   for (const slotRule of slotRules ?? []) {
     if (slotRule.rrule.between(date, date, true).length > 0) {
       openSlots.push(slotRule.id);
     }
 
-    const slot: slotOccurrence = {
-      slot: slotRule.id,
+    const slotOccurrence: SlotOccurrence = {
+      slot: slotRule.slot,
       assignments: [],
     };
 
     for (const assignment of slotRule.assignments) {
       if (assignment.rrule.between(date, date, true).length > 0) {
-        slot.assignments.push(assignment);
+        slotOccurrence.assignments.push(assignment.assignment);
       }
     }
+
+    slotOccurrences.push(slotOccurrence);
   }
 
   const dateString = date.toISOString().split("T")[0];
@@ -232,7 +236,7 @@ const getSingleShiftOccurence = (
     shiftRule: shiftRule,
     slotNumber: slotRules?.length ?? 0,
     openSlots: openSlots,
-    slots: slotRules,
+    slots: slotOccurrences,
   };
 };
 

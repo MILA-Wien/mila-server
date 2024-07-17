@@ -39,6 +39,7 @@ declare global {
     shifts_to?: string;
     shifts_slot: ShiftsSlot | number;
     shifts_membership: MembershipsMembership | number;
+    _removed?: boolean;
   }
 
   export interface ShiftsAssignmentRules {
@@ -76,6 +77,12 @@ declare global {
 
   // Shift occurrenecs
 
+  interface SlotOccurrence {
+    slot: ShiftsSlot;
+    assignments: ShiftsAssignment[];
+    removedAssignments?: boolean;
+  }
+
   export interface ShiftOccurrence {
     shift: ShiftsShift;
     start: DateTime;
@@ -83,7 +90,7 @@ declare global {
     slotNumber: number;
     openSlots: number[];
     shiftRule: RRuleSet;
-    slots: SlotRrule[];
+    slots: SlotOccurrence[];
   }
 
   export interface SlotRrule {

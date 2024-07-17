@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { DateTime } from "luxon";
 import { parse } from "marked";
-import { createItem, deleteItem, readItem, readItems } from "@directus/sdk";
+import {
+  createItem,
+  deleteItem,
+  readItem,
+  readItems,
+  updateItem,
+} from "@directus/sdk";
 import sanitizeHtml from "sanitize-html";
-
-interface SlotContainer {
-  slot: ShiftsSlot;
-  freeUntil: DateTime | null;
-  id: number;
-  occurences: Date[];
-}
 
 const props = defineProps({
   shiftOccurence: {
@@ -20,7 +19,6 @@ const props = defineProps({
 
 const { t } = useI18n();
 const directus = useDirectus();
-const user = useCollectivoUser();
 
 const shift = props.shiftOccurence.shift;
 const start = props.shiftOccurence.start;
@@ -29,21 +27,45 @@ const end = props.shiftOccurence.end;
 const repeats = shift.shifts_repeats_every ?? 0;
 const isWeeks = repeats % 7 === 0;
 const frequency = isWeeks ? repeats / 7 : repeats;
-const slots = ref<SlotContainer[]>([]);
 const isPast = start < DateTime.now();
-const chosenSlot = ref<SlotRrule | null>(null);
-
-// Modals ------------------------------------------------------------------------
+const chosenSlot = ref<SlotOccurrence | null>(null);
 
 const mainModalIsOpen = defineModel("isOpen", {
   required: true,
   type: Boolean,
 });
-const createAssignmentModalIsOpen = ref(false);
-const removeAssignmentModalIsOpen = ref(false);
+
+// SHIFT LOGS
+
+const logs = ref<ShiftsLog[]>([]);
 const createLogModalIsOpen = ref(false);
 
-// Membership data flow -----------------------------------------------------------
+async function getLogs() {
+  logs.value = (await directus.request(
+    readItems("shifts_logs", {
+      filter: {
+        shifts_shift: { _eq: shift.id },
+        shifts_date: { _eq: startDate },
+      },
+      fields: [
+        "id",
+        "shifts_type",
+        "shifts_note",
+        "shifts_score",
+        {
+          shifts_membership: [
+            "id",
+            { memberships_user: ["first_name", "last_name", "email"] },
+          ],
+        },
+      ],
+    }),
+  )) as ShiftsLog[];
+}
+
+getLogs();
+
+// MEMBERSHIP DATA FLOW
 
 const mshipData = ref<MembershipsMembership | null>(null);
 const mshipError = ref<boolean>(false);
@@ -78,101 +100,88 @@ async function loadMembership() {
   }
 }
 
-async function getOpenSlots() {
-  const openSlots = props.shiftOccurence.openSlots;
-  return (await directus.request(
-    readItems("shifts_slots", {
-      filter: { id: { _in: openSlots } },
-    }),
-  )) as ShiftsSlot[];
-}
-
-onMounted(async () => {
-  const openSlots = await getOpenSlots();
-
-  for (const slot of openSlots) {
-    const nearestFutureAssignment = (
-      await directus.request(
-        readItems("shifts_assignments", {
-          filter: {
-            shifts_membership: user.value.membership!.id,
-            shifts_slot: { _eq: slot.id },
-            // @ts-expect-error Directus bug does not allow _gte on date fields
-            shifts_from: { _gte: startDate },
-          },
-          sort: "-shifts_from",
-          limit: 1,
-        }),
-      )
-    )[0] as ShiftsAssignment;
-
-    const freeUntil = nearestFutureAssignment
-      ? DateTime.fromISO(
-          nearestFutureAssignment.shifts_from + "T00:00:00.000Z",
-        ).minus({
-          days: 1,
-        })
-      : null;
-
-    const occurences = props.shiftOccurence.shiftRule.between(
-      start.startOf("day").toJSDate(),
-      freeUntil ? freeUntil.toJSDate() : start.startOf("day").toJSDate(),
-      true,
-    );
-
-    slots.value.push({
-      id: slot.id,
-      slot,
-      freeUntil: freeUntil,
-      occurences: occurences,
-    });
-  }
-});
-
-const logs = ref<ShiftsLog[]>([]);
-
-async function getLogs() {
-  logs.value = (await directus.request(
-    readItems("shifts_logs", {
-      filter: {
-        shifts_shift: { _eq: shift.id },
-        shifts_date: { _eq: startDate },
-      },
-      fields: [
-        "id",
-        "shifts_type",
-        "shifts_note",
-        "shifts_score",
-        {
-          shifts_membership: [
-            "id",
-            { memberships_user: ["first_name", "last_name", "email"] },
-          ],
-        },
-      ],
-    }),
-  )) as ShiftsLog[];
-}
-
-getLogs();
-
-function getUserString(mship: MembershipsMembership) {
+function displayMembership(mship: MembershipsMembership) {
   const user = mship.memberships_user;
   return `M${mship.id} ${user.first_name} ${user.last_name}`;
 }
 
-async function removeAssignment(
-  assignmentID: number,
-  slot: SlotRrule,
-  assIndex: number,
+// REMOVE ASSIGNMENT FLOW
+
+const removeAssignmentModalIsOpen = ref(false);
+const removeAssignmentObject = ref<ShiftsAssignment | null>(null);
+const removeAssignmentIndex = ref<number | null>(null);
+
+function startRemoveAssignmentFlow(
+  assignment: ShiftsAssignment,
+  assignmentIndex: number,
+  slot: SlotOccurrence,
 ) {
-  await directus.request(deleteItem("shifts_assignments", assignmentID));
-  slot.assignments.splice(assIndex); // Remove assignment from slot
+  removeAssignmentObject.value = assignment;
+  removeAssignmentIndex.value = assignmentIndex;
+  chosenSlot.value = slot;
+  removeAssignmentModalIsOpen.value = true;
+}
+
+async function removeAssignment(onetime: boolean) {
+  if (
+    !removeAssignmentObject.value ||
+    !chosenSlot.value ||
+    removeAssignmentIndex.value == null
+  ) {
+    console.error("Something went wrong");
+    console.log(removeAssignmentObject.value);
+    console.log(chosenSlot.value);
+    console.log(removeAssignmentIndex.value);
+    return;
+  }
+
+  if (
+    removeAssignmentObject.value.shifts_from ==
+      removeAssignmentObject.value.shifts_to ||
+    (!onetime && removeAssignmentObject.value.shifts_from == startDate)
+  ) {
+    // Remove one-time assignment
+    console.log("I will delete this completely :)");
+    await directus.request(
+      deleteItem("shifts_assignments", removeAssignmentObject.value.id!),
+    );
+  } else if (onetime) {
+    // Create one-time absence for a regular assignment
+    await directus.request(
+      createItem("shifts_absences", {
+        shifts_membership: (
+          removeAssignmentObject.value
+            .shifts_membership as MembershipsMembership
+        ).id,
+        shifts_assignment: removeAssignmentObject.value.id,
+        shifts_from: startDate,
+        shifts_to: startDate,
+      }),
+    );
+  } else {
+    // Stop regular assignment on the day before
+    console.log("I will change the end date of this assignment");
+    await directus.request(
+      updateItem("shifts_assignments", removeAssignmentObject.value.id!, {
+        shifts_to: start.minus({ days: 1 }).toISO()!.split("T")[0],
+      }),
+    );
+  }
+
+  // Remove assignment from slot
+  // chosenSlot.value = chosenSlot.value.assignments.splice(
+  //   removeAssignmentIndex.value,
+  // );
+  removeAssignmentObject.value._removed = true;
+  removeAssignmentModalIsOpen.value = false;
+  chosenSlot.value.removedAssignments = true;
 }
 
 // CREATE ASSIGNMENT FLOW
 
-function startAssignmentFlow(slot: SlotRrule) {
+const createAssignmentModalIsOpen = ref(false);
+
+function startCreateAssignmentFlow(slot: SlotOccurrence) {
   chosenSlot.value = slot;
   mshipID.value = null;
   createAssignmentModalIsOpen.value = true;
@@ -191,7 +200,7 @@ async function createAssignment(onetime: boolean) {
 
   const payload: ShiftsAssignment = {
     shifts_membership: mshipID.value,
-    shifts_slot: chosenSlot.value.id,
+    shifts_slot: chosenSlot.value.slot.id,
     shifts_from: startDate,
   };
 
@@ -216,10 +225,7 @@ async function createAssignment(onetime: boolean) {
     }),
   )) as ShiftsAssignment;
 
-  chosenSlot.value.assignments.push({
-    assignment: res,
-    rrule: null,
-  });
+  chosenSlot.value.assignments.push(res);
 
   createAssignmentModalIsOpen.value = false;
 }
@@ -275,72 +281,83 @@ async function createAssignment(onetime: boolean) {
       <!-- eslint-enable -->
 
       <!-- Shift slots -->
-      <h2>{{ t("Slots") }}</h2>
+      <div v-if="!isPast">
+        <h2>{{ t("Assignments") }}</h2>
 
-      <div class="flex flex-col gap-2 my-2">
-        <ShiftsObjectBox
-          v-for="slot of props.shiftOccurence.slots"
-          :id="slot.id"
-          :key="slot.id"
-          :label="t('Slot')"
-          collection="shifts_slots"
-        >
-          <template #header>{{ slot.slot.shifts_name }}</template>
-
+        <div class="flex flex-col gap-2 my-2">
           <ShiftsObjectBox
-            v-for="(assignment, assIndex) of slot.assignments"
-            :id="assignment.assignment.id!"
-            :key="assignment.assignment.id"
-            :label="t('Assignment')"
-            collection="shifts_assignments"
+            v-for="slot of props.shiftOccurence.slots"
+            :id="slot.slot.id"
+            :key="slot.slot.id"
+            :label="t('Slot')"
+            collection="shifts_slots"
           >
-            <template #header>{{
-              getUserString(
-                assignment.assignment
-                  .shifts_membership as MembershipsMembership,
-              )
-            }}</template>
-            {{ assignment.assignment.shifts_from }} to
-            {{ assignment.assignment.shifts_to || "indefinite" }}
+            <template #header>{{ slot.slot.shifts_name }}</template>
 
-            <div class="flex flex-wrap gap-2">
-              <UButton
-                label="Remove assignment"
-                @click="
-                  removeAssignment(assignment.assignment.id!, slot, assIndex)
-                "
-              />
+            <div class="flex flex-col gap-3">
+              <template v-for="(assignment, ai) of slot.assignments">
+                <ShiftsObjectBox
+                  v-if="!assignment._removed"
+                  :id="assignment.id!"
+                  :key="assignment.id"
+                  :label="t('Assignment')"
+                  collection="shifts_assignments"
+                >
+                  <template #header>{{
+                    displayMembership(
+                      assignment.shifts_membership as MembershipsMembership,
+                    )
+                  }}</template>
+                  {{ assignment.shifts_from }} {{ t("to") }}
+                  {{ assignment.shifts_to || t("no end date") }}
+
+                  <div class="flex flex-wrap gap-2 mt-2">
+                    <UButton
+                      :label="t('Remove assignment')"
+                      @click="startRemoveAssignmentFlow(assignment, ai, slot)"
+                    />
+                  </div>
+                </ShiftsObjectBox>
+              </template>
             </div>
-          </ShiftsObjectBox>
 
-          <UButton
-            v-if="slot.assignments.length == 0"
-            label="Create assignment"
-            @click="startAssignmentFlow(slot)"
-          />
-        </ShiftsObjectBox>
+            <UButton
+              v-if="slot.assignments.length == 0 || slot.removedAssignments"
+              :label="t('Create assignment')"
+              @click="startCreateAssignmentFlow(slot)"
+            />
+          </ShiftsObjectBox>
+        </div>
       </div>
 
       <!-- Logs -->
-      <h2 class="mb-2 mt-6">{{ t("Logs") }}</h2>
-      <div v-for="log of logs" :key="log.id">
-        <ShiftsObjectBox :id="log.id!" label="Log" collection="shifts_logs">
-          <template #header>{{ t(log.shifts_type) }}</template>
-          <p>
-            {{ getUserString(log.shifts_membership as MembershipsMembership) }}
-          </p>
-          <p v-if="log.shifts_note">Notes: {{ log.shifts_note }}</p>
-        </ShiftsObjectBox>
+      <div v-if="isPast">
+        <h2 class="mb-2 mt-6">{{ t("Logs") }}</h2>
+        <div v-for="log of logs" :key="log.id">
+          <ShiftsObjectBox :id="log.id!" label="Log" collection="shifts_logs">
+            <template #header>{{ t(log.shifts_type) }}</template>
+            <p>
+              {{
+                displayMembership(
+                  log.shifts_membership as MembershipsMembership,
+                )
+              }}
+            </p>
+            <p v-if="log.shifts_note">Notes: {{ log.shifts_note }}</p>
+          </ShiftsObjectBox>
+        </div>
       </div>
     </div>
+
+    <!-- CREATE ASSIGNMENT FLOW -->
 
     <UModal v-model="createAssignmentModalIsOpen" :transition="false">
       <div class="p-10 flex flex-col gap-4">
         <h2>{{ t("Create assignment") }}</h2>
-        <UFormGroup label="Membership number" name="membershipID">
+        <UFormGroup :label="t('Membership number')" name="membershipID">
           <UInput v-model="mshipID" />
         </UFormGroup>
-        <UButton @click="loadMembership">Load membership</UButton>
+        <UButton @click="loadMembership">{{ t("Load membership") }}</UButton>
 
         <div v-if="mshipData">
           <p class="font-bold">
@@ -354,20 +371,67 @@ async function createAssignment(onetime: boolean) {
           <p>Shift type: {{ mshipData.shifts_user_type }}</p>
 
           <div class="flex flex-wrap gap-2 mt-3">
-            <UButton @click="createAssignment(true)"
-              >Create one-time assignment</UButton
-            >
-            <UButton @click="createAssignment(false)"
-              >Create regular assignment</UButton
-            >
+            <UButton @click="createAssignment(true)">{{
+              t("Create one-time assignment")
+            }}</UButton>
+            <UButton @click="createAssignment(false)">{{
+              t("Create regular assignment")
+            }}</UButton>
           </div>
         </div>
-        <div v-if="mshipError">Member {{ mshipID }} not found</div>
+        <div v-if="mshipError">
+          {{ t("Member") }} {{ mshipID }} {{ t("not found") }}
+        </div>
       </div>
     </UModal>
 
-    <UModal v-model="removeAssignmentModalIsOpen" :transition="false">
-      <div class="p-4">HELLO</div>
+    <!-- REMOVE ASSIGNMENT FLOW -->
+
+    <UModal
+      v-if="removeAssignmentObject"
+      v-model="removeAssignmentModalIsOpen"
+      :transition="false"
+    >
+      <div class="p-10 flex flex-col gap-4">
+        <h2>{{ t("Remove assignment") }}</h2>
+        {{ removeAssignmentObject }}
+        <div>
+          <p>
+            {{
+              displayMembership(
+                removeAssignmentObject.shifts_membership as MembershipsMembership,
+              )
+            }}
+          </p>
+          <p
+            v-if="
+              removeAssignmentObject.shifts_from ==
+              removeAssignmentObject.shifts_to
+            "
+          >
+            {{ removeAssignmentObject.shifts_from }} ({{ t("One-time shift") }})
+          </p>
+          <p v-else>
+            {{ removeAssignmentObject.shifts_from }} {{ t("to") }}
+            {{ removeAssignmentObject.shifts_to || t("No end date") }}
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-2 mt-3">
+          <UButton @click="removeAssignment(true)">
+            {{ t("Remove assignment for") }} {{ startDate }}
+          </UButton>
+          <UButton
+            v-if="
+              removeAssignmentObject.shifts_from !=
+              removeAssignmentObject.shifts_to
+            "
+            @click="removeAssignment(false)"
+          >
+            {{ t("Remove for ") }} {{ startDate }}
+            {{ t("and all future dates") }}
+          </UButton>
+        </div>
+      </div>
     </UModal>
 
     <UModal v-model="createLogModalIsOpen" :transition="false">
@@ -394,10 +458,13 @@ de:
   Assignments: "Anmeldungen"
   Assignment: "Anmeldung"
   Remove assignment: "Anmeldung entfernen"
+  Remove assignment for: "Anmeldung entfernen für"
+  and all future dates: "und alle zukünftigen Termine"
   Create assignment: "Anmeldung erstellen"
   Shift: "Schicht"
   attended: "Schicht besucht"
   missed: "Schicht verpasst"
   cancelled: "Schicht abgesagt"
   past: "vergangen"
+  no end date: "kein Enddatum"
 </i18n>
