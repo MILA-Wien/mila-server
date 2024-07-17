@@ -4,17 +4,6 @@ import type { DateTime } from "luxon";
 import type { ItemStatus } from "@collectivo/collectivo/server/utils/directusFields";
 
 declare global {
-  interface CollectivoSchema {
-    shifts_slots: ShiftsSlot[];
-    shifts_skills: ShiftsSkill[];
-    shifts_assignments: ShiftsAssignment[];
-    shifts_absences: ShiftsAbsence[];
-    shifts_logs: ShiftsLog[];
-    shifts_shifts: ShiftsShift[];
-    shifts_skills_directus_users: ShiftsSkillUserLink[];
-    shifts_skills_shifts_slots: ShiftsSkillSlotLink[];
-  }
-
   export type ShiftsUserType = "jumper" | "regular" | "exempt" | "inactive";
 
   export interface CollectivoUser {
@@ -82,7 +71,7 @@ declare global {
     shifts_date: string;
     shifts_score: number;
     shifts_assignment?: ShiftsAssignment;
-    shifts_membership: string;
+    shifts_membership: MembershipsMembership | number;
   }
 
   // Shift occurrenecs
@@ -121,11 +110,29 @@ declare global {
     shifts_slot_id: number;
   }
 
+  export interface MembershipsMembership {
+    id: number;
+    name: string;
+    memberships_user: DirectusUser | number;
+    memberships_status: string;
+    memberships_type: string;
+    memberships_shares: number;
+  }
+
   interface CollectivoSchema {
     collectivo_extensions: CollectivoExtension[];
     collectivo_tiles: CollectivoTile[];
     collectivo_tags: CollectivoTag[];
     directus_users: CollectivoUser[];
+    memberships: MembershipsMembership[];
+    shifts_slots: ShiftsSlot[];
+    shifts_skills: ShiftsSkill[];
+    shifts_assignments: ShiftsAssignment[];
+    shifts_absences: ShiftsAbsence[];
+    shifts_logs: ShiftsLog[];
+    shifts_shifts: ShiftsShift[];
+    shifts_skills_directus_users: ShiftsSkillUserLink[];
+    shifts_skills_shifts_slots: ShiftsSkillSlotLink[];
   }
 
   interface DataWrapper<T> {

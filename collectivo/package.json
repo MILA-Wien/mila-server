@@ -34,6 +34,7 @@
     "marked": "^13.0.1",
     "nodemailer": "^6.9.14",
     "rrule": "^2.8.1",
+    "sanitize-html": "^2.13.0",
     "v-calendar": "^3.1.2",
     "winston": "^3.13.0",
     "yup": "^1.4.0"
@@ -46,6 +47,7 @@
     "@nuxtjs/google-fonts": "^3.2.0",
     "@nuxtjs/i18n": "8.3.1",
     "@types/luxon": "^3.4.2",
+    "@types/sanitize-html": "^2.11.0",
     "@vitest/ui": "^1.6.0",
     "eslint": "9.5.0",
     "nuxt": "^3.12.2",
