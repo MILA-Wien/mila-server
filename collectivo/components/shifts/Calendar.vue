@@ -6,6 +6,7 @@ import listPlugin from "@fullcalendar/list";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import luxonPlugin from "@fullcalendar/luxon3";
 import { DateTime } from "luxon";
+import type { CalendarOptions } from "@fullcalendar/core";
 
 const props = defineProps({
   mode: {
@@ -14,11 +15,11 @@ const props = defineProps({
   },
 });
 
-const assignmentCreationModalOpen = ref(false);
+const shiftActionModalisOpen = ref(false);
 const selectedShiftOccurence = ref(null);
 
 // Dates are used without time, time always being set to UTC 00:00
-const calendarOptions = ref({
+const calendarOptions: Ref<CalendarOptions> = ref({
   timeZone: "UTC",
   plugins: [
     dayGridPlugin,
@@ -30,6 +31,7 @@ const calendarOptions = ref({
   initialView: "dayGridMonth",
   headerToolbar: false,
   events: [],
+  height: "auto",
   allDaySlot: false,
   displayEventTime: true,
   eventTimeFormat: {
@@ -41,7 +43,7 @@ const calendarOptions = ref({
   nowIndicator: true,
   eventClick: (info) => {
     selectedShiftOccurence.value = info.event.extendedProps.shiftOccurence;
-    assignmentCreationModalOpen.value = true;
+    shiftActionModalisOpen.value = true;
   },
 });
 
@@ -143,7 +145,7 @@ async function updateEvents(from, to) {
 </script>
 
 <template>
-  <div id="dashboard-calendar" class="calendar">
+  <div class="">
     <ShiftsCalendarHeader
       v-model="customSettings"
       :calendar-ref="calendarComputed()"
@@ -153,16 +155,16 @@ async function updateEvents(from, to) {
 
   <template v-if="props.mode != 'admin'">
     <ShiftsAssignmentPostModal
-      v-if="assignmentCreationModalOpen && selectedShiftOccurence"
-      v-model:is-open="assignmentCreationModalOpen"
+      v-if="shiftActionModalisOpen && selectedShiftOccurence"
+      v-model:is-open="shiftActionModalisOpen"
       :shift-occurence="selectedShiftOccurence"
       :shift-type="customSettings.selectedShiftType"
     />
   </template>
   <template v-else>
     <ShiftsAdminModal
-      v-if="assignmentCreationModalOpen && selectedShiftOccurence"
-      v-model:is-open="assignmentCreationModalOpen"
+      v-if="shiftActionModalisOpen && selectedShiftOccurence"
+      v-model:is-open="shiftActionModalisOpen"
       :shift-occurence="selectedShiftOccurence"
       :shift-type="customSettings.selectedShiftType"
     />

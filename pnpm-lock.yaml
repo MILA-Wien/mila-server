@@ -17,24 +17,27 @@ importers:
       '@directus/sdk':
         specifier: ^16.1.0
         version: 16.1.0
+      '@fullcalendar/core':
+        specifier: ^6.1.15
+        version: 6.1.15
       '@fullcalendar/daygrid':
         specifier: ^6.1.11
-        version: 6.1.14(@fullcalendar/core@6.1.14)
+        version: 6.1.14(@fullcalendar/core@6.1.15)
       '@fullcalendar/interaction':
         specifier: ^6.1.11
-        version: 6.1.14(@fullcalendar/core@6.1.14)
+        version: 6.1.14(@fullcalendar/core@6.1.15)
       '@fullcalendar/list':
         specifier: ^6.1.11
-        version: 6.1.14(@fullcalendar/core@6.1.14)
+        version: 6.1.14(@fullcalendar/core@6.1.15)
       '@fullcalendar/luxon3':
         specifier: ^6.1.10
-        version: 6.1.14(@fullcalendar/core@6.1.14)(luxon@3.4.4)
+        version: 6.1.14(@fullcalendar/core@6.1.15)(luxon@3.4.4)
       '@fullcalendar/timegrid':
         specifier: ^6.1.11
-        version: 6.1.14(@fullcalendar/core@6.1.14)
+        version: 6.1.14(@fullcalendar/core@6.1.15)
       '@fullcalendar/vue3':
         specifier: ^6.1.11
-        version: 6.1.14(@fullcalendar/core@6.1.14)(vue@3.4.30)
+        version: 6.1.14(@fullcalendar/core@6.1.15)(vue@3.4.30)
       '@keycloak/keycloak-admin-client':
         specifier: ^25.0.1
         version: 25.0.1
@@ -1048,62 +1051,62 @@ packages:
     engines: {node: '>=14'}
     dev: true
 
-  /@fullcalendar/core@6.1.14:
-    resolution: {integrity: sha512-hIPRBevm0aMc2aHy1hRIJgXmI1QTvQM1neQa9oxtuqUmF1+ApYC3oAdwcQMTuI7lHHw3pKJDyJFkKLPPnL6HXA==}
+  /@fullcalendar/core@6.1.15:
+    resolution: {integrity: sha512-BuX7o6ALpLb84cMw1FCB9/cSgF4JbVO894cjJZ6kP74jzbUZNjtwffwRdA+Id8rrLjT30d/7TrkW90k4zbXB5Q==}
     dependencies:
       preact: 10.12.1
     dev: false
 
-  /@fullcalendar/daygrid@6.1.14(@fullcalendar/core@6.1.14):
+  /@fullcalendar/daygrid@6.1.14(@fullcalendar/core@6.1.15):
     resolution: {integrity: sha512-DSyjiA1dEM8k3bOCrZpZOmAOZu71KGtH02ze+4QKuhxkmn/zQghmmLRdfzpOrcyJg6xGKkoB4pBcO+2lXar8XQ==}
     peerDependencies:
       '@fullcalendar/core': ~6.1.14
     dependencies:
-      '@fullcalendar/core': 6.1.14
+      '@fullcalendar/core': 6.1.15
     dev: false
 
-  /@fullcalendar/interaction@6.1.14(@fullcalendar/core@6.1.14):
+  /@fullcalendar/interaction@6.1.14(@fullcalendar/core@6.1.15):
     resolution: {integrity: sha512-rXum5XCjq+WEPNctFeYL/JKZGeU2rlxrElygocdMegcrIBJQW5hnWWVE+i4/1dOmUKF80CbGVlXUyYXoqK2eFg==}
     peerDependencies:
       '@fullcalendar/core': ~6.1.14
     dependencies:
-      '@fullcalendar/core': 6.1.14
+      '@fullcalendar/core': 6.1.15
     dev: false
 
-  /@fullcalendar/list@6.1.14(@fullcalendar/core@6.1.14):
+  /@fullcalendar/list@6.1.14(@fullcalendar/core@6.1.15):
     resolution: {integrity: sha512-eV0/6iCumYfvlPzIUTAONWH17/JlQCyCChUz8m06L4E/sOiNjkHGz8vlVTmZKqXzx9oWOOyV/Nm3pCtHmVZh+Q==}
     peerDependencies:
       '@fullcalendar/core': ~6.1.14
     dependencies:
-      '@fullcalendar/core': 6.1.14
+      '@fullcalendar/core': 6.1.15
     dev: false
 
-  /@fullcalendar/luxon3@6.1.14(@fullcalendar/core@6.1.14)(luxon@3.4.4):
+  /@fullcalendar/luxon3@6.1.14(@fullcalendar/core@6.1.15)(luxon@3.4.4):
     resolution: {integrity: sha512-VjCm5Tpc6ougbDrC19oEXJgnagrnPIRJEvCvW7q6GYBhP6q86g0qDXK5ocT7yeVfYqXopex8zgWQhcgNam6quQ==}
     peerDependencies:
       '@fullcalendar/core': ~6.1.14
       luxon: ^3.0.0
     dependencies:
-      '@fullcalendar/core': 6.1.14
+      '@fullcalendar/core': 6.1.15
       luxon: 3.4.4
     dev: false
 
-  /@fullcalendar/timegrid@6.1.14(@fullcalendar/core@6.1.14):
+  /@fullcalendar/timegrid@6.1.14(@fullcalendar/core@6.1.15):
     resolution: {integrity: sha512-ZByc3BVAtxWSVfyaNedROLlg/Tb2NQ43+MZZAfBSrVwVm2xyfQ+Bsx3pJyCXsRsUh2TFFTO07q7nMWe0jet3KQ==}
     peerDependencies:
       '@fullcalendar/core': ~6.1.14
     dependencies:
-      '@fullcalendar/core': 6.1.14
-      '@fullcalendar/daygrid': 6.1.14(@fullcalendar/core@6.1.14)
+      '@fullcalendar/core': 6.1.15
+      '@fullcalendar/daygrid': 6.1.14(@fullcalendar/core@6.1.15)
     dev: false
 
-  /@fullcalendar/vue3@6.1.14(@fullcalendar/core@6.1.14)(vue@3.4.30):
+  /@fullcalendar/vue3@6.1.14(@fullcalendar/core@6.1.15)(vue@3.4.30):
     resolution: {integrity: sha512-cD4tGlXOoIfRn5sz/+uT+50rAuCtPEgXfG3O5LJXI4xRWztAXqkmZetcuTEDb3OOy/D03IdtpjvoayCHib7rZg==}
     peerDependencies:
       '@fullcalendar/core': ~6.1.14
       vue: ^3.0.11
     dependencies:
-      '@fullcalendar/core': 6.1.14
+      '@fullcalendar/core': 6.1.15
       vue: 3.4.30(typescript@5.5.2)
     dev: false
 
