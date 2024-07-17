@@ -367,7 +367,7 @@ async function createAssignment(onetime: boolean) {
         <h2>{{ t("Assignments") }}</h2>
 
         <div class="flex flex-col gap-2 my-2">
-          <ShiftsObjectBox
+          <ShiftsAdminModalBox
             v-for="slot of props.shiftOccurence.slots"
             :id="slot.slot.id"
             :key="slot.slot.id"
@@ -378,7 +378,7 @@ async function createAssignment(onetime: boolean) {
 
             <div class="flex flex-col gap-3">
               <template v-for="(assignment, ai) of slot.assignments">
-                <ShiftsObjectBox
+                <ShiftsAdminModalBox
                   v-if="!assignment._removed"
                   :id="assignment.id!"
                   :key="assignment.id"
@@ -399,7 +399,7 @@ async function createAssignment(onetime: boolean) {
                       @click="startRemoveAssignmentFlow(assignment, ai, slot)"
                     />
                   </div>
-                </ShiftsObjectBox>
+                </ShiftsAdminModalBox>
               </template>
             </div>
 
@@ -408,7 +408,7 @@ async function createAssignment(onetime: boolean) {
               :label="t('Create assignment')"
               @click="startCreateAssignmentFlow(slot)"
             />
-          </ShiftsObjectBox>
+          </ShiftsAdminModalBox>
         </div>
       </div>
 
@@ -421,7 +421,7 @@ async function createAssignment(onetime: boolean) {
               v-for="assignment of slot.assignments"
               :key="assignment.id"
             >
-              <ShiftsObjectBox
+              <ShiftsAdminModalBox
                 v-if="!assignment._logged"
                 :id="assignment.id!"
                 :label="t('Assignment')"
@@ -469,11 +469,15 @@ async function createAssignment(onetime: boolean) {
                   >
                   <!-- <UButton @click="createLog('other')">{{ t("Load membership") }}</UButton> -->
                 </div>
-              </ShiftsObjectBox>
+              </ShiftsAdminModalBox>
             </template>
           </template>
           <template v-for="log of logs" :key="log.id">
-            <ShiftsObjectBox :id="log.id!" label="Log" collection="shifts_logs">
+            <ShiftsAdminModalBox
+              :id="log.id!"
+              label="Log"
+              collection="shifts_logs"
+            >
               <template #header>{{
                 displayMembership(
                   log.shifts_membership as MembershipsMembership,
@@ -481,7 +485,7 @@ async function createAssignment(onetime: boolean) {
               }}</template>
               <p>{{ t(log.shifts_type) }} ({{ log.shifts_score }})</p>
               <p v-if="log.shifts_note">Notes: {{ log.shifts_note }}</p>
-            </ShiftsObjectBox>
+            </ShiftsAdminModalBox>
           </template>
         </div>
         <div class="mt-3">
