@@ -40,6 +40,7 @@ declare global {
     shifts_slot: ShiftsSlot | number;
     shifts_membership: MembershipsMembership | number;
     _removed?: boolean;
+    _logged?: boolean;
   }
 
   export interface ShiftsAssignmentRules {
@@ -67,12 +68,12 @@ declare global {
 
   export interface ShiftsLog {
     id?: number;
-    shifts_type: ShiftLogType;
+    shifts_membership: MembershipsMembership | number;
+    shifts_type: string;
     shifts_note: string;
     shifts_date: string;
     shifts_score: number;
-    shifts_assignment?: ShiftsAssignment;
-    shifts_membership: MembershipsMembership | number;
+    shifts_shift?: ShiftsShift | number;
   }
 
   // Shift occurrenecs

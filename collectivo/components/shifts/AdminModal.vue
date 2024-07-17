@@ -39,7 +39,11 @@ const mainModalIsOpen = defineModel("isOpen", {
 // SHIFT LOGS
 
 const logs = ref<ShiftsLog[]>([]);
+const logEntryOptions = ["attended", "missed", "cancelled", "other"];
 const createLogModalIsOpen = ref(false);
+const logEntryType = ref<string | null>(null);
+const logEntryScore = ref(0);
+const logEntryNote = ref<string | null>(null);
 
 async function getLogs() {
   logs.value = (await directus.request(
@@ -62,9 +66,86 @@ async function getLogs() {
       ],
     }),
   )) as ShiftsLog[];
+
+  for (const log of logs.value) {
+    // Check if there is an assignment with that log
+    for (const slot of props.shiftOccurence.slots) {
+      for (const assignment of slot.assignments) {
+        if (assignment.shifts_membership.id === log.shifts_membership.id) {
+          assignment._logged = true;
+        }
+      }
+    }
+  }
 }
 
 getLogs();
+
+async function createLog(
+  type: string,
+  mshipID: number,
+  assignment?: ShiftsAssignment,
+  score?: number,
+  note?: string,
+  shift_?: number,
+) {
+  if (!score) {
+    score = type === "attended" ? 1 : type === "missed" ? -1 : 0;
+  }
+
+  const log = (await directus.request(
+    createItem(
+      "shifts_logs",
+      {
+        shifts_membership: mshipID,
+        shifts_type: type,
+        shifts_date: startDate,
+        shifts_score: score,
+        shifts_note: note,
+        shifts_shift: shift_ ?? Number(shift.id),
+      },
+      {
+        fields: [
+          "id",
+          "shifts_type",
+          "shifts_note",
+          "shifts_score",
+          {
+            shifts_membership: [
+              "id",
+              { memberships_user: ["first_name", "last_name", "email"] },
+            ],
+          },
+        ],
+      },
+    ),
+  )) as ShiftsLog;
+
+  logs.value.push(log);
+  if (assignment) {
+    assignment._logged = true;
+  }
+
+  return log;
+}
+
+function startLogCreationFlow() {
+  logEntryType.value = "other";
+  logEntryScore.value = 0;
+  logEntryNote.value = null;
+  createLogModalIsOpen.value = true;
+}
+
+async function createCustomLog() {
+  return await createLog(
+    logEntryType.value!,
+    mshipID.value!,
+    undefined,
+    logEntryScore.value,
+    logEntryNote.value ?? undefined,
+  );
+  createLogModalIsOpen.value = false;
+}
 
 // MEMBERSHIP DATA FLOW
 
@@ -170,9 +251,6 @@ async function removeAssignment(onetime: boolean) {
   }
 
   // Remove assignment from slot
-  // chosenSlot.value = chosenSlot.value.assignments.splice(
-  //   removeAssignmentIndex.value,
-  // );
   removeAssignmentObject.value._removed = true;
   removeAssignmentModalIsOpen.value = false;
   chosenSlot.value.removedAssignments = true;
@@ -238,7 +316,9 @@ async function createAssignment(onetime: boolean) {
   <UModal v-model="mainModalIsOpen" :ui="{ width: 'sm:max-w-[1000px]' }">
     <div class="m-10">
       <div class="flex items-center justify-between">
-        <h2>{{ shift.shifts_name }}</h2>
+        <h2>
+          {{ shift.shifts_name }} <span v-if="isPast">( {{ t("past") }} )</span>
+        </h2>
         <a
           :href="`http://localhost:8055/admin/content/shifts_shift/${shift.id}`"
           target="blank"
@@ -264,7 +344,6 @@ async function createAssignment(onetime: boolean) {
         <div>
           {{ t("Date") }}:
           {{ start.toLocaleString(DateTime.DATE_MED) }}
-          <span v-if="isPast">( {{ t("past") }} )</span>
         </div>
 
         <div>
@@ -336,18 +415,77 @@ async function createAssignment(onetime: boolean) {
       <!-- Logs -->
       <div v-if="isPast">
         <h2 class="mb-2 mt-6">{{ t("Logs") }}</h2>
-        <div v-for="log of logs" :key="log.id">
-          <ShiftsObjectBox :id="log.id!" label="Log" collection="shifts_logs">
-            <template #header>{{ t(log.shifts_type) }}</template>
-            <p>
-              {{
+        <div class="flex flex-col gap-2">
+          <template v-for="slot of props.shiftOccurence.slots" :key="slot.id">
+            <template
+              v-for="assignment of slot.assignments"
+              :key="assignment.id"
+            >
+              <ShiftsObjectBox
+                v-if="!assignment._logged"
+                :id="assignment.id!"
+                :label="t('Assignment')"
+                collection="shifts_assignments"
+              >
+                <template #header
+                  >{{ t("Pending") }}:
+                  {{
+                    displayMembership(
+                      assignment.shifts_membership as MembershipsMembership,
+                    )
+                  }}</template
+                >
+
+                <div class="flex flex-wrap gap-3">
+                  <UButton
+                    @click="
+                      createLog(
+                        'attended',
+                        assignment.shifts_membership.id,
+                        assignment,
+                      )
+                    "
+                    >{{ t("Attended") }} (+1)</UButton
+                  >
+                  <UButton
+                    @click="
+                      createLog(
+                        'cancelled',
+                        assignment.shifts_membership.id,
+                        assignment,
+                      )
+                    "
+                    >{{ t("Cancelled") }} (+0)</UButton
+                  >
+                  <UButton
+                    @click="
+                      createLog(
+                        'missed',
+                        assignment.shifts_membership.id,
+                        assignment,
+                      )
+                    "
+                    >{{ t("Missed") }} (-1)</UButton
+                  >
+                  <!-- <UButton @click="createLog('other')">{{ t("Load membership") }}</UButton> -->
+                </div>
+              </ShiftsObjectBox>
+            </template>
+          </template>
+          <template v-for="log of logs" :key="log.id">
+            <ShiftsObjectBox :id="log.id!" label="Log" collection="shifts_logs">
+              <template #header>{{
                 displayMembership(
                   log.shifts_membership as MembershipsMembership,
                 )
-              }}
-            </p>
-            <p v-if="log.shifts_note">Notes: {{ log.shifts_note }}</p>
-          </ShiftsObjectBox>
+              }}</template>
+              <p>{{ t(log.shifts_type) }} ({{ log.shifts_score }})</p>
+              <p v-if="log.shifts_note">Notes: {{ log.shifts_note }}</p>
+            </ShiftsObjectBox>
+          </template>
+        </div>
+        <div class="mt-3">
+          <UButton @click="startLogCreationFlow">{{ t("Create log") }}</UButton>
         </div>
       </div>
     </div>
@@ -437,7 +575,46 @@ async function createAssignment(onetime: boolean) {
     </UModal>
 
     <UModal v-model="createLogModalIsOpen" :transition="false">
-      <div class="p-4">HELLO</div>
+      <div class="p-10 flex flex-col gap-4">
+        <h2>{{ t("Create log entry") }}</h2>
+        <UFormGroup :label="t('Membership number')" name="membershipID">
+          <UInput v-model="mshipID" />
+        </UFormGroup>
+        <UButton @click="loadMembership">{{ t("Load membership") }}</UButton>
+
+        <div v-if="mshipData">
+          <p class="font-bold">
+            {{ mshipData.memberships_user.first_name }}
+            {{ mshipData.memberships_user.last_name }}
+          </p>
+          <p>Membership type: {{ mshipData.memberships_type }}</p>
+
+          <p>Membership status: {{ mshipData.memberships_status }}</p>
+
+          <p>Shift type: {{ mshipData.shifts_user_type }}</p>
+
+          <UFormGroup :label="t('Type')" name="logEntryType">
+            <USelect v-model="logEntryType" :options="logEntryOptions" />
+          </UFormGroup>
+
+          <UFormGroup :label="t('Score')" name="logEntryScore">
+            <UInput v-model="logEntryScore" />
+          </UFormGroup>
+
+          <UFormGroup :label="t('Note')" name="logEntryNote">
+            <UInput v-model="logEntryNote" />
+          </UFormGroup>
+
+          <div class="flex flex-wrap gap-2 mt-3">
+            <UButton @click="createCustomLog()">{{
+              t("Create log entry")
+            }}</UButton>
+          </div>
+        </div>
+        <div v-if="mshipError">
+          {{ t("Member") }} {{ mshipID }} {{ t("not found") }}
+        </div>
+      </div>
     </UModal>
   </UModal>
 </template>
@@ -464,9 +641,13 @@ de:
   and all future dates: "und alle zukünftigen Termine"
   Create assignment: "Anmeldung erstellen"
   Shift: "Schicht"
-  attended: "Schicht besucht"
+  attended: "Schicht absolviert"
   missed: "Schicht verpasst"
   cancelled: "Schicht abgesagt"
   past: "vergangen"
   no end date: "kein Enddatum"
+  Create log: "Logeintrag erstellen"
+  Attended: "Absolviert"
+  Cancelled: "Abgesagt"
+  Missed: "Verpasst"
 </i18n>
