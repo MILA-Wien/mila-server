@@ -38,8 +38,8 @@ async function saveProfile(data: CollectivoUser) {
   <!-- <CollectivoMenuTabs :items="profileMenu" /> -->
   <CollectivoContainer>
     <CollectivoFormBuilder
-      v-if="user.data"
-      :data="user.data"
+      v-if="user.user"
+      :data="user.user"
       :fields="user.fields"
       :submit="saveProfile"
       submit-label="Save"

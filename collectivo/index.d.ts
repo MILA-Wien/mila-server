@@ -1,7 +1,5 @@
 import type { DirectusRole } from "@directus/sdk";
-import type { ShiftLogType } from "~/server/utils/ShiftLogType";
 import type { DateTime } from "luxon";
-import type { ItemStatus } from "@collectivo/collectivo/server/utils/directusFields";
 
 declare global {
   export type ShiftsUserType = "jumper" | "regular" | "exempt" | "inactive";
@@ -20,7 +18,7 @@ declare global {
     shifts_to_time?: string;
     shifts_repeats_every?: number;
     shifts_slots?: ShiftsSlot[];
-    shifts_status: ItemStatus;
+    shifts_status: string;
     shifts_description?: string;
     shifts_location?: string;
   }
