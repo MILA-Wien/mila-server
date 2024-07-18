@@ -11,6 +11,7 @@ services:
     command: "node app/.output/server/index.mjs"
     volumes:
       - ./collectivo:/app
+    restart: unless-stopepd
     networks:
       - default
       - proxiable
@@ -51,6 +52,7 @@ services:
       - default
     volumes:
       - ./directus/uploads:/directus/uploads
+    restart: unless-stopepd
     environment:
       PUBLIC_URL: ${DIRECTUS_URL}
       KEY: ${DIRECTUS_KEY}
@@ -96,6 +98,7 @@ services:
     volumes:
       - directus-db-data:/var/lib/postgresql/data
       - ./directus-db-backups:/backups
+    restart: unless-stopepd
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 10s
@@ -110,7 +113,7 @@ services:
 
   directus-db-backups:
     image: prodrigestivill/postgres-backup-local
-    restart: always
+    restart: unless-stopepd
     profiles: [production]
     volumes:
       - ./directus-db-backups:/backups
@@ -152,6 +155,7 @@ services:
     volumes:
       - ./keycloak/themes/collectivo:/opt/keycloak/themes/collectivo
       - ./keycloak/imported/:/opt/keycloak/imported/
+    restart: unless-stopepd
     depends_on:
       - keycloak-db
     networks:
@@ -186,6 +190,7 @@ services:
     volumes:
       - ./keycloak/themes/collectivo:/opt/keycloak/themes/collectivo
       - ./keycloak/import:/opt/keycloak/data/import:ro
+    restart: unless-stopepd
     depends_on:
       - keycloak-db
     networks:
@@ -198,6 +203,7 @@ services:
     volumes:
       - keycloak-db-data:/var/lib/postgresql/data
       - ./keycloak-db-backups:/backups
+    restart: unless-stopepd
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
@@ -216,6 +222,7 @@ services:
     profiles: [production]
     volumes:
       - ./keycloak-db-backups:/backups
+    restart: unless-stopepd
     links:
       - keycloak-db
     depends_on:
@@ -240,7 +247,7 @@ services:
     image: habidat/direktkredit:1.5
     container_name: habidat
     profiles: [production]
-    restart: always
+    restart: unless-stopepd
     volumes:
       - ./docker/habidat/config/:/habidat/config/
       - ./docker/habidat/files:/habidat/public/files
@@ -290,7 +297,7 @@ services:
   habidat-db:
     image: mariadb
     profiles: [production]
-    restart: always
+    restart: unless-stopepd
     volumes:
       - ./docker/habidat/db:/var/lib/mysql
     environment:
