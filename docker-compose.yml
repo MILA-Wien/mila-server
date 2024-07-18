@@ -39,7 +39,7 @@ services:
 
   directus:
     image: directus/directus:10.12.1
-    container_name: directus
+    container_name: ${DIRECTUS_CONTAINER_NAME}
     depends_on:
       - directus-db
     expose:
