@@ -16,9 +16,7 @@ export const getActiveAssignments = async (
     readItems("shifts_assignments", {
       filter: {
         shifts_membership: { id: { _eq: mship.id } },
-        shifts_status: {
-          _eq: "approved",
-        },
+
         shifts_to: {
           _or: [{ _gte: nowStr }, { _null: true }],
         },
@@ -36,6 +34,10 @@ export const getActiveAssignments = async (
   const absences = (await directus.request(
     readItems("shifts_absences", {
       filter: {
+        shifts_membership: { id: { _eq: mship.id } },
+        shifts_status: {
+          _eq: "approved",
+        },
         shifts_assignment: {
           shifts_membership: { id: { _eq: mship.id } },
         },

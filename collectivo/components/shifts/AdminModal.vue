@@ -683,4 +683,7 @@ de:
   Missed: "Verpasst"
   Suggestions: "Vorschläge"
   Log entry exists: "Logeintrag existiert"
+  Load membership: "Mitgliedschaft laden"
+  Create one-time assignment: "Einmalige Anmeldung erstellen"
+  Create regular assignment: "Reguläre Anmeldung erstellen"
 </i18n>
