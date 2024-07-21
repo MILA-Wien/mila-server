@@ -57,6 +57,7 @@ declare global {
     shifts_to: string;
     shifts_assignment?: number | ShiftsAssignment;
     shifts_membership: MembershipsMembership | number;
+    shifts_is_holiday?: boolean;
     _rrule?: RRule | RRuleSet;
   }
 

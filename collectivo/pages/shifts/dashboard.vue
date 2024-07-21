@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { createItem } from "@directus/sdk";
+
 definePageMeta({
   middleware: ["auth"],
 });
@@ -12,6 +14,49 @@ const user = useCollectivoUser().value.user!;
 const mship = useCollectivoUser().value.membership!;
 const isActive = mship.shifts_user_type != "inactive";
 const activeAssignments: Ref<ShiftsAssignmentRules[]> = ref([]);
+const directus = useDirectus();
+
+const absencePostModalOpen = ref(false);
+const absenceFromDate = ref<Date | undefined>(undefined);
+const absenceToDate = ref<Date | undefined>(undefined);
+const absenceIsHoliday = ref(false);
+
+async function postAbsence() {
+  if (
+    !absenceFromDate.value ||
+    !absenceToDate.value ||
+    absenceFromDate.value > absenceToDate.value ||
+    absenceToDate.value < new Date() ||
+    absenceFromDate.value < new Date()
+  ) {
+    showToast({
+      type: "error",
+      title: "Error",
+      description: t("Please select a valid date range."),
+    });
+    return;
+  }
+
+  const payload = {
+    shifts_membership: mship.id,
+    shifts_from: absenceFromDate.value?.toISOString(),
+    shifts_to: absenceToDate.value?.toISOString(),
+    shifts_is_holiday: absenceIsHoliday.value,
+  };
+
+  console.log(payload);
+  await directus.request(createItem("shifts_absences", payload));
+  absencePostModalOpen.value = false;
+  absenceFromDate.value = undefined;
+  absenceToDate.value = undefined;
+  absenceIsHoliday.value = false;
+
+  showToast({
+    type: "success",
+    // title: ",
+    // description: t("Please select a valid date range."),
+  });
+}
 
 async function loadData() {
   activeAssignments.value = await getActiveAssignments(user, mship);
@@ -49,13 +94,19 @@ if (isActive) loadData();
     </CollectivoContainer>
 
     <div v-if="isActive" class="flex flex-wrap pb-6 gap-5">
-      <template v-if="true">
-        <NuxtLink to="/shifts/signup-jumper"
-          ><UButton size="lg" icon="i-heroicons-plus-circle">{{
-            t("Sign up for a one-time shift")
-          }}</UButton>
-        </NuxtLink>
-      </template>
+      <NuxtLink to="/shifts/signup-jumper"
+        ><UButton size="lg" icon="i-heroicons-plus-circle">{{
+          t("Sign up for a one-time shift")
+        }}</UButton>
+      </NuxtLink>
+
+      <UButton
+        size="lg"
+        icon="i-heroicons-pause-circle"
+        @click="absencePostModalOpen = true"
+        >{{ t("Ask for absence") }}</UButton
+      >
+
       <!-- <NuxtLink to="/shifts/signup"
         ><UButton size="lg" icon="i-heroicons-plus-circle">{{
           t("Sign up for a shift")
@@ -64,7 +115,7 @@ if (isActive) loadData();
       <a :href="`mailto:${config.public.collectivoContactEmail}`">
         <UButton
           size="lg"
-          :label="t('Request change')"
+          :label="t('Other request')"
           :icon="'i-heroicons-pencil-square'"
         />
       </a>
@@ -81,6 +132,44 @@ if (isActive) loadData();
         :shift-assignment="assignment"
       />
     </div>
+    <UModal v-model="absencePostModalOpen">
+      <div class="p-10">
+        <h2>{{ t("Ask for absence") }}</h2>
+        <UFormGroup :label="t('From')" class="my-5">
+          <CollectivoFormDate
+            v-model="absenceFromDate"
+            :max-years-past="1"
+            :max-years-future="1"
+          />
+        </UFormGroup>
+        <UFormGroup :label="t('To')" class="my-5">
+          <CollectivoFormDate
+            v-model="absenceToDate"
+            :max-years-past="1"
+            :max-years-future="1"
+          />
+        </UFormGroup>
+
+        <UFormGroup :label="t('Holiday') + '?'" class="my-5">
+          <div class="form-box flex flex-row">
+            <UToggle v-model="absenceIsHoliday" class="mt-0.5 mr-2" />
+            <span>{{
+              t(
+                "I will not be able to go shopping during this absence and am not required to do shifts.",
+              )
+            }}</span>
+          </div>
+        </UFormGroup>
+        <UButton
+          class="w-full"
+          size="lg"
+          icon="i-heroicons-pencil-square"
+          @click="postAbsence()"
+        >
+          {{ t("Ask for absence") }}
+        </UButton>
+      </div>
+    </UModal>
   </div>
 </template>
 
@@ -111,4 +200,12 @@ de:
   "None": "Keine"
   "My activities": "Meine Aktivitäten"
   "Sign up for a one-time shift": "Einmalige Schicht eintragen"
+  Other request: "Andere Anfrage"
+  Ask for absence: "Abwesenheit beantragen"
+  From: "Von"
+  To: "Bis"
+  Holiday: "Urlaub"
+  "Please select a valid date range.": "Bitte wähle einen validen Datumsbereich aus."
+
+  I will not be able to go shopping during this absence and am not required to do shifts.: "Ich werde während dieser Abwesenheit nicht einkaufen können und bin nicht verpflichtet, Schichten zu übernehmen."
 </i18n>

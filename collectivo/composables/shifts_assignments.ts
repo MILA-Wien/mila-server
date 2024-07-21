@@ -36,7 +36,7 @@ export const getActiveAssignments = async (
       filter: {
         shifts_membership: { id: { _eq: mship.id } },
         shifts_status: {
-          _eq: "approved",
+          _eq: "accepted",
         },
         shifts_assignment: {
           shifts_membership: { id: { _eq: mship.id } },

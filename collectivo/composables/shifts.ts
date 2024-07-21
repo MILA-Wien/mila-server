@@ -78,7 +78,7 @@ export const getShiftOccurrences = async (
       readItems("shifts_absences", {
         filter: {
           shifts_status: {
-            _eq: "approved",
+            _eq: "accepted",
           },
           _or: [
             { shifts_to: { _gte: from.toISO() } },

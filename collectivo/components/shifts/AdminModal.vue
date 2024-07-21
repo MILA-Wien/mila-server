@@ -238,7 +238,7 @@ async function removeAssignment(onetime: boolean) {
         shifts_assignment: removeAssignmentObject.value.id,
         shifts_from: startDate,
         shifts_to: startDate,
-        shifts_status: "approved",
+        shifts_status: "accepted",
       }),
     );
   } else {
