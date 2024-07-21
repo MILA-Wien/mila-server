@@ -1938,6 +1938,8 @@ type shifts_absences {
   """
   shifts_is_holiday: Boolean!
   shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+
+  """Nur angenommene Urlaube werden im Schichtkalender aktiv."""
   shifts_status: String
 }
 

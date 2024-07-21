@@ -11,17 +11,17 @@
     "group": null,
     "hidden": false,
     "interface": "select-dropdown",
-    "note": null,
+    "note": "Nur angenommene Urlaube werden im Schichtkalender aktiv.",
     "options": {
       "choices": [
         {
-          "text": "Applied",
-          "value": "applied",
+          "text": "$t:requested",
+          "value": "requested",
           "color": "#6644FF"
         },
         {
-          "text": "Approved",
-          "value": "approved",
+          "text": "$t:accepted",
+          "value": "accepted",
           "color": "#2ECDA7"
         },
         {
@@ -30,7 +30,7 @@
           "color": "#E35169"
         },
         {
-          "text": "Cancelled",
+          "text": "$t:cancelled",
           "value": "cancelled",
           "color": "#A2B5CD"
         }
@@ -38,18 +38,23 @@
     },
     "readonly": false,
     "required": false,
-    "sort": 11,
+    "sort": 7,
     "special": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Status"
+      }
+    ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
     "name": "shifts_status",
     "table": "shifts_absences",
     "data_type": "character varying",
-    "default_value": "applied",
+    "default_value": "requested",
     "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,

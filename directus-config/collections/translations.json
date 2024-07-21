@@ -19,6 +19,12 @@
   },
   {
     "language": "de-DE",
+    "key": "denied",
+    "value": "Abgelehnt",
+    "_syncId": "2fb63205-c84b-4fce-a03a-ccab52a75ba9"
+  },
+  {
+    "language": "de-DE",
     "key": "pending",
     "value": "Ausstehend",
     "_syncId": "427f0acf-c6f2-4177-8fe6-fcbc28ec6d72"
@@ -48,6 +54,12 @@
     "_syncId": "585ee95b-4e9c-445a-9bbc-888124aef5d3"
   },
   {
+    "language": "de-DE",
+    "key": "accepted",
+    "value": "Akzeptiert",
+    "_syncId": "5a2a7665-f828-446d-b708-0ddc70f05707"
+  },
+  {
     "language": "en-US",
     "key": "ended",
     "value": "Ended",
@@ -58,6 +70,12 @@
     "key": "pending",
     "value": "Pending",
     "_syncId": "66b64b51-25f3-49f9-b1c2-b2412f6b227e"
+  },
+  {
+    "language": "de-DE",
+    "key": "requested",
+    "value": "Angefragt",
+    "_syncId": "77f566dd-8d1d-4d4d-8637-e6c43fde2704"
   },
   {
     "language": "de-DE",

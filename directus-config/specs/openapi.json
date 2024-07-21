@@ -19746,6 +19746,7 @@
           },
           "shifts_status": {
             "nullable": true,
+            "description": "Nur angenommene Urlaube werden im Schichtkalender aktiv.",
             "type": "string"
           }
         },

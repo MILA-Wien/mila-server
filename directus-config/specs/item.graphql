@@ -1815,6 +1815,8 @@ type shifts_absences {
   """
   shifts_is_holiday: Boolean!
   shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+
+  """Nur angenommene Urlaube werden im Schichtkalender aktiv."""
   shifts_status: String
 }
 
@@ -1850,6 +1852,8 @@ type shifts_absences_aggregated_count {
   """
   shifts_is_holiday: Int
   shifts_membership: Int
+
+  """Nur angenommene Urlaube werden im Schichtkalender aktiv."""
   shifts_status: Int
 }
 
@@ -2395,6 +2399,8 @@ type version_shifts_absences {
   """
   shifts_is_holiday: Boolean
   shifts_membership: JSON
+
+  """Nur angenommene Urlaube werden im Schichtkalender aktiv."""
   shifts_status: String
 }
 
@@ -2898,6 +2904,8 @@ input create_shifts_absences_input {
   """
   shifts_is_holiday: Boolean!
   shifts_membership: create_memberships_input
+
+  """Nur angenommene Urlaube werden im Schichtkalender aktiv."""
   shifts_status: String
 }
 
@@ -3960,6 +3968,8 @@ input update_shifts_absences_input {
   """
   shifts_is_holiday: Boolean
   shifts_membership: update_memberships_input
+
+  """Nur angenommene Urlaube werden im Schichtkalender aktiv."""
   shifts_status: String
 }
 
