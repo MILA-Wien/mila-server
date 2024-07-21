@@ -52,10 +52,12 @@ declare global {
 
   export interface ShiftsAbsence {
     id?: number;
+    shifts_status: string;
     shifts_from: string;
     shifts_to: string;
-    shifts_assignment?: number;
+    shifts_assignment?: number | ShiftsAssignment;
     shifts_membership: MembershipsMembership | number;
+    _rrule?: RRule | RRuleSet;
   }
 
   export interface ShiftsSkill {
@@ -79,6 +81,7 @@ declare global {
   interface SlotOccurrence {
     slot: ShiftsSlot;
     assignments: ShiftsAssignment[];
+    absentAssignments: ShiftsAssignment[];
     removedAssignments?: boolean;
   }
 
@@ -102,6 +105,7 @@ declare global {
   export interface AssignmentRrule {
     assignment: ShiftsAssignment;
     rrule: RRule | RRuleSet;
+    absences: ShiftsAbsence[];
   }
 
   export interface ShiftsSkillUserLink {

@@ -78,7 +78,7 @@ export const getShiftOccurrences = async (
       readItems("shifts_absences", {
         filter: {
           shifts_status: {
-            _eq: "accepted",
+            _eq: "approved",
           },
           _or: [
             { shifts_to: { _gte: from.toISO() } },
@@ -208,11 +208,19 @@ const getSingleShiftOccurence = (
     const slotOccurrence: SlotOccurrence = {
       slot: slotRule.slot,
       assignments: [],
+      absentAssignments: [],
     };
 
     for (const assignment of slotRule.assignments) {
       if (assignment.rrule.between(date, date, true).length > 0) {
         slotOccurrence.assignments.push(assignment.assignment);
+      }
+      for (const absence of assignment.absences) {
+        if (absence._rrule.between(date, date, true).length > 0) {
+          slotOccurrence.absentAssignments.push(
+            absence.shifts_assignment as ShiftsAssignment,
+          );
+        }
       }
     }
 
@@ -294,12 +302,14 @@ export const slotToRrule = (
         dtstart: shiftRule.after(new Date(absence.shifts_from), true),
         until: shiftRule.before(new Date(absence.shifts_to), true),
       });
-
+      absence._rrule = absenceRule;
+      absence.shifts_assignment = assignment;
       assignmentRule.exrule(absenceRule);
     }
 
     assignmentRules.push({
       assignment: assignment,
+      absences: filteredAbsences,
       rrule: assignmentRule,
     });
     // console.log("assignmentRule", shift.shifts_name);

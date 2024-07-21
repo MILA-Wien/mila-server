@@ -137,7 +137,7 @@ function startLogCreationFlow() {
 }
 
 async function createCustomLog() {
-  return await createLog(
+  const log = await createLog(
     logEntryType.value!,
     mshipID.value!,
     undefined,
@@ -145,6 +145,7 @@ async function createCustomLog() {
     logEntryNote.value ?? undefined,
   );
   createLogModalIsOpen.value = false;
+  return log;
 }
 
 // MEMBERSHIP DATA FLOW
@@ -223,7 +224,6 @@ async function removeAssignment(onetime: boolean) {
     (!onetime && removeAssignmentObject.value.shifts_from == startDate)
   ) {
     // Remove one-time assignment
-    console.log("I will delete this completely :)");
     await directus.request(
       deleteItem("shifts_assignments", removeAssignmentObject.value.id!),
     );
@@ -238,11 +238,11 @@ async function removeAssignment(onetime: boolean) {
         shifts_assignment: removeAssignmentObject.value.id,
         shifts_from: startDate,
         shifts_to: startDate,
+        shifts_status: "approved",
       }),
     );
   } else {
     // Stop regular assignment on the day before
-    console.log("I will change the end date of this assignment");
     await directus.request(
       updateItem("shifts_assignments", removeAssignmentObject.value.id!, {
         shifts_to: start.minus({ days: 1 }).toISO()!.split("T")[0],
@@ -371,18 +371,20 @@ async function createAssignment(onetime: boolean) {
             v-for="slot of props.shiftOccurence.slots"
             :id="slot.slot.id"
             :key="slot.slot.id"
+            class="bg-gray-100"
             :label="t('Slot')"
             collection="shifts_slots"
           >
             <template #header>{{ slot.slot.shifts_name }}</template>
 
-            <div class="flex flex-col gap-3">
+            <div class="flex flex-col gap-3 mb-3">
               <template v-for="(assignment, ai) of slot.assignments">
                 <ShiftsAdminModalBox
                   v-if="!assignment._removed"
                   :id="assignment.id!"
                   :key="assignment.id"
                   :label="t('Assignment')"
+                  class="bg-green-100"
                   collection="shifts_assignments"
                 >
                   <template #header>{{
@@ -399,6 +401,27 @@ async function createAssignment(onetime: boolean) {
                       @click="startRemoveAssignmentFlow(assignment, ai, slot)"
                     />
                   </div>
+                </ShiftsAdminModalBox>
+              </template>
+              <template v-for="assignment of slot.absentAssignments">
+                <ShiftsAdminModalBox
+                  v-if="!assignment._removed"
+                  :id="assignment.id!"
+                  :key="assignment.id"
+                  class="bg-red-100"
+                  :label="t('Assignment')"
+                  collection="shifts_assignments"
+                >
+                  <template #header
+                    >{{ t("Absent") }}:
+                    {{
+                      displayMembership(
+                        assignment.shifts_membership as MembershipsMembership,
+                      )
+                    }}</template
+                  >
+                  {{ assignment.shifts_from }} {{ t("to") }}
+                  {{ assignment.shifts_to || t("no end date") }}
                 </ShiftsAdminModalBox>
               </template>
             </div>
