@@ -15024,780 +15024,6 @@
         ]
       }
     },
-    "/items/shifts_skills_shifts_slots": {
-      "post": {
-        "summary": "Create an Item",
-        "description": "Create a new shifts_skills_shifts_slots item.",
-        "tags": [
-          "Items",
-          "ItemsShiftsSkillsShiftsSlots"
-        ],
-        "operationId": "createItemsShiftsSkillsShiftsSlots",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Meta"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ItemsShiftsSkillsShiftsSlots"
-                    }
-                  },
-                  {
-                    "$ref": "#/components/schemas/ItemsShiftsSkillsShiftsSlots"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "items": {
-                        "$ref": "#/components/schemas/ItemsShiftsSkillsShiftsSlots"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        }
-      },
-      "get": {
-        "summary": "List Items",
-        "description": "List the shifts_skills_shifts_slots items.",
-        "tags": [
-          "Items",
-          "ItemsShiftsSkillsShiftsSlots"
-        ],
-        "operationId": "readItemsShiftsSkillsShiftsSlots",
-        "security": [
-          {
-            "Auth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          },
-          {
-            "$ref": "#/components/parameters/Filter"
-          },
-          {
-            "$ref": "#/components/parameters/Search"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "$ref": "#/components/schemas/ItemsShiftsSkillsShiftsSlots"
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/x-metadata"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update Multiple Items",
-        "description": "Update multiple shifts_skills_shifts_slots items at the same time.",
-        "tags": [
-          "Items",
-          "ItemsShiftsSkillsShiftsSlots"
-        ],
-        "operationId": "updateItemsShiftsSkillsShiftsSlots",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          },
-          {
-            "$ref": "#/components/parameters/Filter"
-          },
-          {
-            "$ref": "#/components/parameters/Search"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ItemsShiftsSkillsShiftsSlots"
-                    }
-                  },
-                  {
-                    "$ref": "#/components/schemas/ItemsShiftsSkillsShiftsSlots"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "data": {
-                      "items": {
-                        "$ref": "#/components/schemas/ItemsShiftsSkillsShiftsSlots"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete Multiple Items",
-        "description": "Delete multiple existing shifts_skills_shifts_slots items.",
-        "tags": [
-          "Items",
-          "ItemsShiftsSkillsShiftsSlots"
-        ],
-        "operationId": "deleteItemsShiftsSkillsShiftsSlots",
-        "responses": {
-          "200": {
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        },
-        "parameters": []
-      }
-    },
-    "/items/shifts_skills_shifts_slots/{id}": {
-      "get": {
-        "summary": "Retrieve an Item",
-        "description": "Retrieve a single shifts_skills_shifts_slots item by unique identifier.",
-        "tags": [
-          "Items",
-          "ItemsShiftsSkillsShiftsSlots"
-        ],
-        "operationId": "readSingleItemsShiftsSkillsShiftsSlots",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Version"
-          },
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/ItemsShiftsSkillsShiftsSlots"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update an Item",
-        "description": "Update an existing shifts_skills_shifts_slots item.",
-        "tags": [
-          "Items",
-          "ItemsShiftsSkillsShiftsSlots"
-        ],
-        "operationId": "updateSingleItemsShiftsSkillsShiftsSlots",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "$ref": "#/components/schemas/ItemsShiftsSkillsShiftsSlots"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/ItemsShiftsSkillsShiftsSlots"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete an Item",
-        "description": "Delete an existing shifts_skills_shifts_slots item.",
-        "tags": [
-          "Items",
-          "ItemsShiftsSkillsShiftsSlots"
-        ],
-        "operationId": "deleteSingleItemsShiftsSkillsShiftsSlots",
-        "responses": {
-          "200": {
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
-    "/items/shifts_absences": {
-      "post": {
-        "summary": "Create an Item",
-        "description": "Create a new shifts_absences item.",
-        "tags": [
-          "Items",
-          "ItemsShiftsAbsences"
-        ],
-        "operationId": "createItemsShiftsAbsences",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Meta"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ItemsShiftsAbsences"
-                    }
-                  },
-                  {
-                    "$ref": "#/components/schemas/ItemsShiftsAbsences"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "items": {
-                        "$ref": "#/components/schemas/ItemsShiftsAbsences"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        }
-      },
-      "get": {
-        "summary": "List Items",
-        "description": "List the shifts_absences items.",
-        "tags": [
-          "Items",
-          "ItemsShiftsAbsences"
-        ],
-        "operationId": "readItemsShiftsAbsences",
-        "security": [
-          {
-            "Auth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          },
-          {
-            "$ref": "#/components/parameters/Filter"
-          },
-          {
-            "$ref": "#/components/parameters/Search"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "$ref": "#/components/schemas/ItemsShiftsAbsences"
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/x-metadata"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update Multiple Items",
-        "description": "Update multiple shifts_absences items at the same time.",
-        "tags": [
-          "Items",
-          "ItemsShiftsAbsences"
-        ],
-        "operationId": "updateItemsShiftsAbsences",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          },
-          {
-            "$ref": "#/components/parameters/Filter"
-          },
-          {
-            "$ref": "#/components/parameters/Search"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ItemsShiftsAbsences"
-                    }
-                  },
-                  {
-                    "$ref": "#/components/schemas/ItemsShiftsAbsences"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "data": {
-                      "items": {
-                        "$ref": "#/components/schemas/ItemsShiftsAbsences"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete Multiple Items",
-        "description": "Delete multiple existing shifts_absences items.",
-        "tags": [
-          "Items",
-          "ItemsShiftsAbsences"
-        ],
-        "operationId": "deleteItemsShiftsAbsences",
-        "responses": {
-          "200": {
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        },
-        "parameters": []
-      }
-    },
-    "/items/shifts_absences/{id}": {
-      "get": {
-        "summary": "Retrieve an Item",
-        "description": "Retrieve a single shifts_absences item by unique identifier.",
-        "tags": [
-          "Items",
-          "ItemsShiftsAbsences"
-        ],
-        "operationId": "readSingleItemsShiftsAbsences",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Version"
-          },
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/ItemsShiftsAbsences"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update an Item",
-        "description": "Update an existing shifts_absences item.",
-        "tags": [
-          "Items",
-          "ItemsShiftsAbsences"
-        ],
-        "operationId": "updateSingleItemsShiftsAbsences",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "$ref": "#/components/schemas/ItemsShiftsAbsences"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/ItemsShiftsAbsences"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete an Item",
-        "description": "Delete an existing shifts_absences item.",
-        "tags": [
-          "Items",
-          "ItemsShiftsAbsences"
-        ],
-        "operationId": "deleteSingleItemsShiftsAbsences",
-        "responses": {
-          "200": {
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
     "/items/shifts_shifts": {
       "post": {
         "summary": "Create an Item",
@@ -16572,15 +15798,15 @@
         ]
       }
     },
-    "/items/memberships_shifts_skills": {
+    "/items/shifts_absences": {
       "post": {
         "summary": "Create an Item",
-        "description": "Create a new memberships_shifts_skills item.",
+        "description": "Create a new shifts_absences item.",
         "tags": [
           "Items",
-          "ItemsMembershipsShiftsSkills"
+          "ItemsShiftsAbsences"
         ],
-        "operationId": "createItemsMembershipsShiftsSkills",
+        "operationId": "createItemsShiftsAbsences",
         "parameters": [
           {
             "$ref": "#/components/parameters/Meta"
@@ -16594,11 +15820,11 @@
                   {
                     "type": "array",
                     "items": {
-                      "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                      "$ref": "#/components/schemas/ItemsShiftsAbsences"
                     }
                   },
                   {
-                    "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                    "$ref": "#/components/schemas/ItemsShiftsAbsences"
                   }
                 ]
               }
@@ -16615,7 +15841,7 @@
                   "properties": {
                     "data": {
                       "items": {
-                        "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                        "$ref": "#/components/schemas/ItemsShiftsAbsences"
                       }
                     }
                   }
@@ -16630,12 +15856,12 @@
       },
       "get": {
         "summary": "List Items",
-        "description": "List the memberships_shifts_skills items.",
+        "description": "List the shifts_absences items.",
         "tags": [
           "Items",
-          "ItemsMembershipsShiftsSkills"
+          "ItemsShiftsAbsences"
         ],
-        "operationId": "readItemsMembershipsShiftsSkills",
+        "operationId": "readItemsShiftsAbsences",
         "security": [
           {
             "Auth": []
@@ -16676,7 +15902,7 @@
                       "type": "array",
                       "items": {
                         "type": "object",
-                        "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                        "$ref": "#/components/schemas/ItemsShiftsAbsences"
                       }
                     },
                     "meta": {
@@ -16694,12 +15920,12 @@
       },
       "patch": {
         "summary": "Update Multiple Items",
-        "description": "Update multiple memberships_shifts_skills items at the same time.",
+        "description": "Update multiple shifts_absences items at the same time.",
         "tags": [
           "Items",
-          "ItemsMembershipsShiftsSkills"
+          "ItemsShiftsAbsences"
         ],
-        "operationId": "updateItemsMembershipsShiftsSkills",
+        "operationId": "updateItemsShiftsAbsences",
         "parameters": [
           {
             "$ref": "#/components/parameters/Fields"
@@ -16731,11 +15957,11 @@
                   {
                     "type": "array",
                     "items": {
-                      "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                      "$ref": "#/components/schemas/ItemsShiftsAbsences"
                     }
                   },
                   {
-                    "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                    "$ref": "#/components/schemas/ItemsShiftsAbsences"
                   }
                 ]
               }
@@ -16751,7 +15977,7 @@
                   "properties": {
                     "data": {
                       "items": {
-                        "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                        "$ref": "#/components/schemas/ItemsShiftsAbsences"
                       }
                     }
                   }
@@ -16763,12 +15989,12 @@
       },
       "delete": {
         "summary": "Delete Multiple Items",
-        "description": "Delete multiple existing memberships_shifts_skills items.",
+        "description": "Delete multiple existing shifts_absences items.",
         "tags": [
           "Items",
-          "ItemsMembershipsShiftsSkills"
+          "ItemsShiftsAbsences"
         ],
-        "operationId": "deleteItemsMembershipsShiftsSkills",
+        "operationId": "deleteItemsShiftsAbsences",
         "responses": {
           "200": {
             "description": "Successful request"
@@ -16780,15 +16006,15 @@
         "parameters": []
       }
     },
-    "/items/memberships_shifts_skills/{id}": {
+    "/items/shifts_absences/{id}": {
       "get": {
         "summary": "Retrieve an Item",
-        "description": "Retrieve a single memberships_shifts_skills item by unique identifier.",
+        "description": "Retrieve a single shifts_absences item by unique identifier.",
         "tags": [
           "Items",
-          "ItemsMembershipsShiftsSkills"
+          "ItemsShiftsAbsences"
         ],
-        "operationId": "readSingleItemsMembershipsShiftsSkills",
+        "operationId": "readSingleItemsShiftsAbsences",
         "parameters": [
           {
             "$ref": "#/components/parameters/Fields"
@@ -16830,7 +16056,7 @@
                   "properties": {
                     "data": {
                       "type": "object",
-                      "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                      "$ref": "#/components/schemas/ItemsShiftsAbsences"
                     }
                   }
                 }
@@ -16847,12 +16073,12 @@
       },
       "patch": {
         "summary": "Update an Item",
-        "description": "Update an existing memberships_shifts_skills item.",
+        "description": "Update an existing shifts_absences item.",
         "tags": [
           "Items",
-          "ItemsMembershipsShiftsSkills"
+          "ItemsShiftsAbsences"
         ],
-        "operationId": "updateSingleItemsMembershipsShiftsSkills",
+        "operationId": "updateSingleItemsShiftsAbsences",
         "parameters": [
           {
             "$ref": "#/components/parameters/Fields"
@@ -16886,7 +16112,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                "$ref": "#/components/schemas/ItemsShiftsAbsences"
               }
             }
           }
@@ -16901,7 +16127,7 @@
                   "properties": {
                     "data": {
                       "type": "object",
-                      "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
+                      "$ref": "#/components/schemas/ItemsShiftsAbsences"
                     }
                   }
                 }
@@ -16918,12 +16144,12 @@
       },
       "delete": {
         "summary": "Delete an Item",
-        "description": "Delete an existing memberships_shifts_skills item.",
+        "description": "Delete an existing shifts_absences item.",
         "tags": [
           "Items",
-          "ItemsMembershipsShiftsSkills"
+          "ItemsShiftsAbsences"
         ],
-        "operationId": "deleteSingleItemsMembershipsShiftsSkills",
+        "operationId": "deleteSingleItemsShiftsAbsences",
         "responses": {
           "200": {
             "description": "Successful request"
@@ -17159,14 +16385,6 @@
       "x-collection": "shifts_slots"
     },
     {
-      "name": "ItemsShiftsSkillsShiftsSlots",
-      "x-collection": "shifts_skills_shifts_slots"
-    },
-    {
-      "name": "ItemsShiftsAbsences",
-      "x-collection": "shifts_absences"
-    },
-    {
       "name": "ItemsShiftsShifts",
       "x-collection": "shifts_shifts"
     },
@@ -17175,8 +16393,8 @@
       "x-collection": "shifts_logs"
     },
     {
-      "name": "ItemsMembershipsShiftsSkills",
-      "x-collection": "memberships_shifts_skills"
+      "name": "ItemsShiftsAbsences",
+      "x-collection": "shifts_absences"
     }
   ],
   "components": {
@@ -20094,20 +19312,6 @@
                 }
               ]
             }
-          },
-          "shifts_skills": {
-            "nullable": true,
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "$ref": "#/components/schemas/ItemsMembershipsShiftsSkills"
-                }
-              ]
-            }
           }
         },
         "x-collection": "memberships"
@@ -20314,95 +19518,6 @@
         },
         "x-collection": "shifts_slots"
       },
-      "ItemsShiftsSkillsShiftsSlots": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "nullable": false,
-            "type": "integer"
-          },
-          "shifts_slots_id": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "$ref": "#/components/schemas/ItemsShiftsSlots"
-              }
-            ]
-          }
-        },
-        "x-collection": "shifts_skills_shifts_slots"
-      },
-      "ItemsShiftsAbsences": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "nullable": false,
-            "type": "integer"
-          },
-          "user_created": {
-            "nullable": true,
-            "type": "string",
-            "format": "uuid"
-          },
-          "date_created": {
-            "nullable": true,
-            "type": "string",
-            "format": "timestamp"
-          },
-          "user_updated": {
-            "nullable": true,
-            "type": "string",
-            "format": "uuid"
-          },
-          "date_updated": {
-            "nullable": true,
-            "type": "string",
-            "format": "timestamp"
-          },
-          "shifts_from": {
-            "nullable": false,
-            "type": "string",
-            "format": "date"
-          },
-          "shifts_to": {
-            "nullable": false,
-            "type": "string",
-            "format": "date"
-          },
-          "shifts_assignment": {
-            "nullable": true,
-            "description": "Wenn leerg, dann gilt die Abwesenheit für alle Anmeldungen im gewählten Zeitraum.",
-            "oneOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "$ref": "#/components/schemas/ItemsShiftsAssignments"
-              }
-            ]
-          },
-          "shifts_is_holiday": {
-            "nullable": false,
-            "description": "Während einem Urlaub ist kein Einkauf möglich und es werden keine Schichtpunkte abgezogen.",
-            "type": "boolean"
-          },
-          "shifts_membership": {
-            "nullable": false,
-            "oneOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "$ref": "#/components/schemas/ItemsMemberships"
-              }
-            ]
-          }
-        },
-        "x-collection": "shifts_absences"
-      },
       "ItemsShiftsShifts": {
         "type": "object",
         "properties": {
@@ -20564,15 +19679,62 @@
         },
         "x-collection": "shifts_logs"
       },
-      "ItemsMembershipsShiftsSkills": {
+      "ItemsShiftsAbsences": {
         "type": "object",
         "properties": {
           "id": {
             "nullable": false,
             "type": "integer"
           },
-          "memberships_id": {
+          "user_created": {
             "nullable": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          "date_created": {
+            "nullable": true,
+            "type": "string",
+            "format": "timestamp"
+          },
+          "user_updated": {
+            "nullable": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          "date_updated": {
+            "nullable": true,
+            "type": "string",
+            "format": "timestamp"
+          },
+          "shifts_from": {
+            "nullable": false,
+            "type": "string",
+            "format": "date"
+          },
+          "shifts_to": {
+            "nullable": false,
+            "type": "string",
+            "format": "date"
+          },
+          "shifts_assignment": {
+            "nullable": true,
+            "description": "Wenn leerg, dann gilt die Abwesenheit für alle Anmeldungen im gewählten Zeitraum.",
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsShiftsAssignments"
+              }
+            ]
+          },
+          "shifts_is_holiday": {
+            "nullable": false,
+            "description": "Während einem Urlaub ist kein Einkauf möglich und es werden keine Schichtpunkte abgezogen.",
+            "type": "boolean"
+          },
+          "shifts_membership": {
+            "nullable": false,
             "oneOf": [
               {
                 "type": "integer"
@@ -20581,9 +19743,13 @@
                 "$ref": "#/components/schemas/ItemsMemberships"
               }
             ]
+          },
+          "shifts_status": {
+            "nullable": true,
+            "type": "string"
           }
         },
-        "x-collection": "memberships_shifts_skills"
+        "x-collection": "shifts_absences"
       }
     },
     "parameters": {

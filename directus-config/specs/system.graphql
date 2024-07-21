@@ -249,11 +249,9 @@ type Subscription {
   memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
   shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
   shifts_slots_mutated(event: EventEnum): shifts_slots_mutated
-  shifts_skills_shifts_slots_mutated(event: EventEnum): shifts_skills_shifts_slots_mutated
-  shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
-  memberships_shifts_skills_mutated(event: EventEnum): memberships_shifts_skills_mutated
+  shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -1657,8 +1655,6 @@ type memberships {
   kids_func: count_functions
   coshoppers(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers]
   coshoppers_func: count_functions
-  shifts_skills(filter: memberships_shifts_skills_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_shifts_skills]
-  shifts_skills_func: count_functions
 }
 
 type memberships_coshoppers {
@@ -1710,17 +1706,6 @@ type memberships_mutated {
   key: ID!
   event: EventEnum
   data: memberships
-}
-
-type memberships_shifts_skills {
-  id: ID!
-  memberships_id(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
-}
-
-type memberships_shifts_skills_mutated {
-  key: ID!
-  event: EventEnum
-  data: memberships_shifts_skills
 }
 
 type messages_campaigns {
@@ -1953,6 +1938,7 @@ type shifts_absences {
   """
   shifts_is_holiday: Boolean!
   shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+  shifts_status: String
 }
 
 type shifts_absences_mutated {
@@ -2048,17 +2034,6 @@ type shifts_shifts_mutated {
   key: ID!
   event: EventEnum
   data: shifts_shifts
-}
-
-type shifts_skills_shifts_slots {
-  id: ID!
-  shifts_slots_id(filter: shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_slots
-}
-
-type shifts_skills_shifts_slots_mutated {
-  key: ID!
-  event: EventEnum
-  data: shifts_skills_shifts_slots
 }
 
 type shifts_slots {
@@ -2540,7 +2515,6 @@ input create_memberships_input {
   memberships_invoices: [create_payments_invoices_out_input]
   kids: [create_memberships_memberships_coshoppers_1_input]
   coshoppers: [create_memberships_memberships_coshoppers_input]
-  shifts_skills: [create_memberships_shifts_skills_input]
 }
 
 input create_memberships_memberships_coshoppers_1_input {
@@ -2553,11 +2527,6 @@ input create_memberships_memberships_coshoppers_input {
   id: ID
   memberships_id: create_memberships_input
   memberships_coshoppers_id: create_memberships_coshoppers_input
-}
-
-input create_memberships_shifts_skills_input {
-  id: ID
-  memberships_id: create_memberships_input
 }
 
 input create_messages_campaigns_directus_users_input {
@@ -3175,8 +3144,6 @@ input memberships_filter {
   kids_func: count_function_filter_operators
   coshoppers: memberships_memberships_coshoppers_filter
   coshoppers_func: count_function_filter_operators
-  shifts_skills: memberships_shifts_skills_filter
-  shifts_skills_func: count_function_filter_operators
   _and: [memberships_filter]
   _or: [memberships_filter]
 }
@@ -3195,13 +3162,6 @@ input memberships_memberships_coshoppers_filter {
   memberships_coshoppers_id: memberships_coshoppers_filter
   _and: [memberships_memberships_coshoppers_filter]
   _or: [memberships_memberships_coshoppers_filter]
-}
-
-input memberships_shifts_skills_filter {
-  id: number_filter_operators
-  memberships_id: memberships_filter
-  _and: [memberships_shifts_skills_filter]
-  _or: [memberships_shifts_skills_filter]
 }
 
 input messages_campaigns_directus_users_filter {
@@ -3328,6 +3288,7 @@ input shifts_absences_filter {
   shifts_assignment: shifts_assignments_filter
   shifts_is_holiday: boolean_filter_operators
   shifts_membership: memberships_filter
+  shifts_status: string_filter_operators
   _and: [shifts_absences_filter]
   _or: [shifts_absences_filter]
 }
@@ -3824,7 +3785,6 @@ input update_memberships_input {
   memberships_invoices: [update_payments_invoices_out_input]
   kids: [update_memberships_memberships_coshoppers_1_input]
   coshoppers: [update_memberships_memberships_coshoppers_input]
-  shifts_skills: [update_memberships_shifts_skills_input]
 }
 
 input update_memberships_memberships_coshoppers_1_input {
@@ -3837,11 +3797,6 @@ input update_memberships_memberships_coshoppers_input {
   id: ID
   memberships_id: update_memberships_input
   memberships_coshoppers_id: update_memberships_coshoppers_input
-}
-
-input update_memberships_shifts_skills_input {
-  id: ID
-  memberships_id: update_memberships_input
 }
 
 input update_messages_campaigns_directus_users_input {

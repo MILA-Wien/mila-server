@@ -79,14 +79,6 @@ type Query {
   shifts_slots_by_id(id: ID!, version: String): shifts_slots
   shifts_slots_aggregated(groupBy: [String], filter: shifts_slots_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_slots_aggregated!]!
   shifts_slots_by_version(version: String!, id: ID!): version_shifts_slots
-  shifts_skills_shifts_slots(filter: shifts_skills_shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_skills_shifts_slots!]!
-  shifts_skills_shifts_slots_by_id(id: ID!, version: String): shifts_skills_shifts_slots
-  shifts_skills_shifts_slots_aggregated(groupBy: [String], filter: shifts_skills_shifts_slots_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_skills_shifts_slots_aggregated!]!
-  shifts_skills_shifts_slots_by_version(version: String!, id: ID!): version_shifts_skills_shifts_slots
-  shifts_absences(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_absences!]!
-  shifts_absences_by_id(id: ID!, version: String): shifts_absences
-  shifts_absences_aggregated(groupBy: [String], filter: shifts_absences_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_absences_aggregated!]!
-  shifts_absences_by_version(version: String!, id: ID!): version_shifts_absences
   shifts_shifts(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_shifts!]!
   shifts_shifts_by_id(id: ID!, version: String): shifts_shifts
   shifts_shifts_aggregated(groupBy: [String], filter: shifts_shifts_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_shifts_aggregated!]!
@@ -95,10 +87,10 @@ type Query {
   shifts_logs_by_id(id: ID!, version: String): shifts_logs
   shifts_logs_aggregated(groupBy: [String], filter: shifts_logs_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_logs_aggregated!]!
   shifts_logs_by_version(version: String!, id: ID!): version_shifts_logs
-  memberships_shifts_skills(filter: memberships_shifts_skills_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_shifts_skills!]!
-  memberships_shifts_skills_by_id(id: ID!, version: String): memberships_shifts_skills
-  memberships_shifts_skills_aggregated(groupBy: [String], filter: memberships_shifts_skills_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_shifts_skills_aggregated!]!
-  memberships_shifts_skills_by_version(version: String!, id: ID!): version_memberships_shifts_skills
+  shifts_absences(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_absences!]!
+  shifts_absences_by_id(id: ID!, version: String): shifts_absences
+  shifts_absences_aggregated(groupBy: [String], filter: shifts_absences_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_absences_aggregated!]!
+  shifts_absences_by_version(version: String!, id: ID!): version_shifts_absences
 }
 
 type Mutation {
@@ -142,16 +134,12 @@ type Mutation {
   create_shifts_assignments_item(data: create_shifts_assignments_input!): shifts_assignments
   create_shifts_slots_items(filter: shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_slots_input!]): [shifts_slots!]!
   create_shifts_slots_item(data: create_shifts_slots_input!): shifts_slots
-  create_shifts_skills_shifts_slots_items(filter: shifts_skills_shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_skills_shifts_slots_input!]): [shifts_skills_shifts_slots!]!
-  create_shifts_skills_shifts_slots_item(data: create_shifts_skills_shifts_slots_input!): shifts_skills_shifts_slots
-  create_shifts_absences_items(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_absences_input!]): [shifts_absences!]!
-  create_shifts_absences_item(data: create_shifts_absences_input!): shifts_absences
   create_shifts_shifts_items(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_shifts_input!]): [shifts_shifts!]!
   create_shifts_shifts_item(data: create_shifts_shifts_input!): shifts_shifts
   create_shifts_logs_items(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_logs_input!]): [shifts_logs!]!
   create_shifts_logs_item(data: create_shifts_logs_input!): shifts_logs
-  create_memberships_shifts_skills_items(filter: memberships_shifts_skills_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_shifts_skills_input!]): [memberships_shifts_skills!]!
-  create_memberships_shifts_skills_item(data: create_memberships_shifts_skills_input!): memberships_shifts_skills
+  create_shifts_absences_items(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_absences_input!]): [shifts_absences!]!
+  create_shifts_absences_item(data: create_shifts_absences_input!): shifts_absences
   update_directus_sync_id_map_items(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_sync_id_map_input!): [directus_sync_id_map!]!
   update_directus_sync_id_map_batch(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_sync_id_map_input!]): [directus_sync_id_map!]!
   update_directus_sync_id_map_item(id: ID!, data: update_directus_sync_id_map_input!): directus_sync_id_map
@@ -212,21 +200,15 @@ type Mutation {
   update_shifts_slots_items(filter: shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_slots_input!): [shifts_slots!]!
   update_shifts_slots_batch(filter: shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_slots_input!]): [shifts_slots!]!
   update_shifts_slots_item(id: ID!, data: update_shifts_slots_input!): shifts_slots
-  update_shifts_skills_shifts_slots_items(filter: shifts_skills_shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_skills_shifts_slots_input!): [shifts_skills_shifts_slots!]!
-  update_shifts_skills_shifts_slots_batch(filter: shifts_skills_shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_skills_shifts_slots_input!]): [shifts_skills_shifts_slots!]!
-  update_shifts_skills_shifts_slots_item(id: ID!, data: update_shifts_skills_shifts_slots_input!): shifts_skills_shifts_slots
-  update_shifts_absences_items(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_absences_input!): [shifts_absences!]!
-  update_shifts_absences_batch(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_absences_input!]): [shifts_absences!]!
-  update_shifts_absences_item(id: ID!, data: update_shifts_absences_input!): shifts_absences
   update_shifts_shifts_items(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_shifts_input!): [shifts_shifts!]!
   update_shifts_shifts_batch(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_shifts_input!]): [shifts_shifts!]!
   update_shifts_shifts_item(id: ID!, data: update_shifts_shifts_input!): shifts_shifts
   update_shifts_logs_items(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_logs_input!): [shifts_logs!]!
   update_shifts_logs_batch(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_logs_input!]): [shifts_logs!]!
   update_shifts_logs_item(id: ID!, data: update_shifts_logs_input!): shifts_logs
-  update_memberships_shifts_skills_items(filter: memberships_shifts_skills_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_shifts_skills_input!): [memberships_shifts_skills!]!
-  update_memberships_shifts_skills_batch(filter: memberships_shifts_skills_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_shifts_skills_input!]): [memberships_shifts_skills!]!
-  update_memberships_shifts_skills_item(id: ID!, data: update_memberships_shifts_skills_input!): memberships_shifts_skills
+  update_shifts_absences_items(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_absences_input!): [shifts_absences!]!
+  update_shifts_absences_batch(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_absences_input!]): [shifts_absences!]!
+  update_shifts_absences_item(id: ID!, data: update_shifts_absences_input!): shifts_absences
   delete_directus_sync_id_map_items(ids: [ID]!): delete_many
   delete_directus_sync_id_map_item(id: ID!): delete_one
   delete_collectivo_tags_items(ids: [ID]!): delete_many
@@ -267,16 +249,12 @@ type Mutation {
   delete_shifts_assignments_item(id: ID!): delete_one
   delete_shifts_slots_items(ids: [ID]!): delete_many
   delete_shifts_slots_item(id: ID!): delete_one
-  delete_shifts_skills_shifts_slots_items(ids: [ID]!): delete_many
-  delete_shifts_skills_shifts_slots_item(id: ID!): delete_one
-  delete_shifts_absences_items(ids: [ID]!): delete_many
-  delete_shifts_absences_item(id: ID!): delete_one
   delete_shifts_shifts_items(ids: [ID]!): delete_many
   delete_shifts_shifts_item(id: ID!): delete_one
   delete_shifts_logs_items(ids: [ID]!): delete_many
   delete_shifts_logs_item(id: ID!): delete_one
-  delete_memberships_shifts_skills_items(ids: [ID]!): delete_many
-  delete_memberships_shifts_skills_item(id: ID!): delete_one
+  delete_shifts_absences_items(ids: [ID]!): delete_many
+  delete_shifts_absences_item(id: ID!): delete_one
 }
 
 type Subscription {
@@ -318,11 +296,9 @@ type Subscription {
   memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
   shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
   shifts_slots_mutated(event: EventEnum): shifts_slots_mutated
-  shifts_skills_shifts_slots_mutated(event: EventEnum): shifts_skills_shifts_slots_mutated
-  shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
-  memberships_shifts_skills_mutated(event: EventEnum): memberships_shifts_skills_mutated
+  shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -1205,8 +1181,6 @@ type memberships {
   kids_func: count_functions
   coshoppers(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers]
   coshoppers_func: count_functions
-  shifts_skills(filter: memberships_shifts_skills_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_shifts_skills]
-  shifts_skills_func: count_functions
 }
 
 type memberships_aggregated {
@@ -1260,7 +1234,6 @@ type memberships_aggregated_count {
   memberships_invoices: Int
   kids: Int
   coshoppers: Int
-  shifts_skills: Int
 }
 
 type memberships_aggregated_fields {
@@ -1403,40 +1376,6 @@ type memberships_mutated {
   key: ID!
   event: EventEnum
   data: memberships
-}
-
-type memberships_shifts_skills {
-  id: ID!
-  memberships_id(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
-}
-
-type memberships_shifts_skills_aggregated {
-  group: JSON
-  countAll: Int
-  count: memberships_shifts_skills_aggregated_count
-  countDistinct: memberships_shifts_skills_aggregated_count
-  avg: memberships_shifts_skills_aggregated_fields
-  sum: memberships_shifts_skills_aggregated_fields
-  avgDistinct: memberships_shifts_skills_aggregated_fields
-  sumDistinct: memberships_shifts_skills_aggregated_fields
-  min: memberships_shifts_skills_aggregated_fields
-  max: memberships_shifts_skills_aggregated_fields
-}
-
-type memberships_shifts_skills_aggregated_count {
-  id: Int
-  memberships_id: Int
-}
-
-type memberships_shifts_skills_aggregated_fields {
-  id: Float
-  memberships_id: Float
-}
-
-type memberships_shifts_skills_mutated {
-  key: ID!
-  event: EventEnum
-  data: memberships_shifts_skills
 }
 
 type messages_campaigns {
@@ -1876,6 +1815,7 @@ type shifts_absences {
   """
   shifts_is_holiday: Boolean!
   shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+  shifts_status: String
 }
 
 type shifts_absences_aggregated {
@@ -1910,6 +1850,7 @@ type shifts_absences_aggregated_count {
   """
   shifts_is_holiday: Int
   shifts_membership: Int
+  shifts_status: Int
 }
 
 type shifts_absences_aggregated_fields {
@@ -2139,40 +2080,6 @@ type shifts_shifts_mutated {
   data: shifts_shifts
 }
 
-type shifts_skills_shifts_slots {
-  id: ID!
-  shifts_slots_id(filter: shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_slots
-}
-
-type shifts_skills_shifts_slots_aggregated {
-  group: JSON
-  countAll: Int
-  count: shifts_skills_shifts_slots_aggregated_count
-  countDistinct: shifts_skills_shifts_slots_aggregated_count
-  avg: shifts_skills_shifts_slots_aggregated_fields
-  sum: shifts_skills_shifts_slots_aggregated_fields
-  avgDistinct: shifts_skills_shifts_slots_aggregated_fields
-  sumDistinct: shifts_skills_shifts_slots_aggregated_fields
-  min: shifts_skills_shifts_slots_aggregated_fields
-  max: shifts_skills_shifts_slots_aggregated_fields
-}
-
-type shifts_skills_shifts_slots_aggregated_count {
-  id: Int
-  shifts_slots_id: Int
-}
-
-type shifts_skills_shifts_slots_aggregated_fields {
-  id: Float
-  shifts_slots_id: Float
-}
-
-type shifts_skills_shifts_slots_mutated {
-  key: ID!
-  event: EventEnum
-  data: shifts_skills_shifts_slots
-}
-
 type shifts_slots {
   id: ID!
   user_created: String
@@ -2332,7 +2239,6 @@ type version_memberships {
   memberships_invoices: JSON
   kids: JSON
   coshoppers: JSON
-  shifts_skills: JSON
 }
 
 """"""
@@ -2361,12 +2267,6 @@ type version_memberships_memberships_coshoppers_1 {
   id: ID
   memberships_id: JSON
   memberships_coshoppers_id: JSON
-}
-
-""""""
-type version_memberships_shifts_skills {
-  id: ID
-  memberships_id: JSON
 }
 
 """"""
@@ -2495,6 +2395,7 @@ type version_shifts_absences {
   """
   shifts_is_holiday: Boolean
   shifts_membership: JSON
+  shifts_status: String
 }
 
 """"""
@@ -2554,12 +2455,6 @@ type version_shifts_shifts {
   shifts_score: Int
   shifts_location: String
   shifts_slots: JSON
-}
-
-""""""
-type version_shifts_skills_shifts_slots {
-  id: ID
-  shifts_slots_id: JSON
 }
 
 """"""
@@ -2872,7 +2767,6 @@ input create_memberships_input {
   memberships_invoices: [create_payments_invoices_out_input]
   kids: [create_memberships_memberships_coshoppers_1_input]
   coshoppers: [create_memberships_memberships_coshoppers_input]
-  shifts_skills: [create_memberships_shifts_skills_input]
 }
 
 input create_memberships_memberships_coshoppers_1_input {
@@ -2885,11 +2779,6 @@ input create_memberships_memberships_coshoppers_input {
   id: ID
   memberships_id: create_memberships_input
   memberships_coshoppers_id: create_memberships_coshoppers_input
-}
-
-input create_memberships_shifts_skills_input {
-  id: ID
-  memberships_id: create_memberships_input
 }
 
 input create_messages_campaigns_directus_users_input {
@@ -3009,6 +2898,7 @@ input create_shifts_absences_input {
   """
   shifts_is_holiday: Boolean!
   shifts_membership: create_memberships_input
+  shifts_status: String
 }
 
 input create_shifts_assignments_input {
@@ -3065,11 +2955,6 @@ input create_shifts_shifts_input {
   shifts_score: Int
   shifts_location: String
   shifts_slots: [create_shifts_slots_input]
-}
-
-input create_shifts_skills_shifts_slots_input {
-  id: ID
-  shifts_slots_id: create_shifts_slots_input
 }
 
 input create_shifts_slots_input {
@@ -3443,8 +3328,6 @@ input memberships_filter {
   kids_func: count_function_filter_operators
   coshoppers: memberships_memberships_coshoppers_filter
   coshoppers_func: count_function_filter_operators
-  shifts_skills: memberships_shifts_skills_filter
-  shifts_skills_func: count_function_filter_operators
   _and: [memberships_filter]
   _or: [memberships_filter]
 }
@@ -3463,13 +3346,6 @@ input memberships_memberships_coshoppers_filter {
   memberships_coshoppers_id: memberships_coshoppers_filter
   _and: [memberships_memberships_coshoppers_filter]
   _or: [memberships_memberships_coshoppers_filter]
-}
-
-input memberships_shifts_skills_filter {
-  id: number_filter_operators
-  memberships_id: memberships_filter
-  _and: [memberships_shifts_skills_filter]
-  _or: [memberships_shifts_skills_filter]
 }
 
 input messages_campaigns_directus_users_filter {
@@ -3628,6 +3504,7 @@ input shifts_absences_filter {
   shifts_assignment: shifts_assignments_filter
   shifts_is_holiday: boolean_filter_operators
   shifts_membership: memberships_filter
+  shifts_status: string_filter_operators
   _and: [shifts_absences_filter]
   _or: [shifts_absences_filter]
 }
@@ -3697,13 +3574,6 @@ input shifts_shifts_filter {
   shifts_slots_func: count_function_filter_operators
   _and: [shifts_shifts_filter]
   _or: [shifts_shifts_filter]
-}
-
-input shifts_skills_shifts_slots_filter {
-  id: number_filter_operators
-  shifts_slots_id: shifts_slots_filter
-  _and: [shifts_skills_shifts_slots_filter]
-  _or: [shifts_skills_shifts_slots_filter]
 }
 
 input shifts_slots_filter {
@@ -3959,7 +3829,6 @@ input update_memberships_input {
   memberships_invoices: [update_payments_invoices_out_input]
   kids: [update_memberships_memberships_coshoppers_1_input]
   coshoppers: [update_memberships_memberships_coshoppers_input]
-  shifts_skills: [update_memberships_shifts_skills_input]
 }
 
 input update_memberships_memberships_coshoppers_1_input {
@@ -3972,11 +3841,6 @@ input update_memberships_memberships_coshoppers_input {
   id: ID
   memberships_id: update_memberships_input
   memberships_coshoppers_id: update_memberships_coshoppers_input
-}
-
-input update_memberships_shifts_skills_input {
-  id: ID
-  memberships_id: update_memberships_input
 }
 
 input update_messages_campaigns_directus_users_input {
@@ -4096,6 +3960,7 @@ input update_shifts_absences_input {
   """
   shifts_is_holiday: Boolean
   shifts_membership: update_memberships_input
+  shifts_status: String
 }
 
 input update_shifts_assignments_input {
@@ -4152,11 +4017,6 @@ input update_shifts_shifts_input {
   shifts_score: Int
   shifts_location: String
   shifts_slots: [update_shifts_slots_input]
-}
-
-input update_shifts_skills_shifts_slots_input {
-  id: ID
-  shifts_slots_id: update_shifts_slots_input
 }
 
 input update_shifts_slots_input {

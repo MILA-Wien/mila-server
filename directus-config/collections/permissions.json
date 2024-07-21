@@ -1479,6 +1479,126 @@
   },
   {
     "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "memberships_memberships_coshoppers_1",
+    "action": "create",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "bba3d418-b6b8-4461-9c2f-e43838d37332"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "memberships_memberships_coshoppers_1",
+    "action": "delete",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "0efeaec5-1263-4fa3-8a51-8107360302a9"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "memberships_memberships_coshoppers_1",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "1dc6202a-cf6c-40d6-8ec9-de0208aa4dbb"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "memberships_memberships_coshoppers_1",
+    "action": "share",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "6ef6a251-3f73-4153-90eb-d54dbf088e64"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "memberships_memberships_coshoppers_1",
+    "action": "update",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "6ee302c2-a559-434b-b193-cf1374af91f7"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "memberships_memberships_coshoppers",
+    "action": "create",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "135e52b7-fb97-41c5-a8f2-f1730a55124b"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "memberships_memberships_coshoppers",
+    "action": "delete",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "1462e579-483f-4c62-a87f-4cc092b0bc50"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "memberships_memberships_coshoppers",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "9c2dc966-3248-4a7e-9146-b51ec45ca06b"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "memberships_memberships_coshoppers",
+    "action": "share",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "4b4afde0-761c-427c-87fe-c36a9aa18e71"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "memberships_memberships_coshoppers",
+    "action": "update",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "7737c340-96ae-4212-8205-bd8f06c255c0"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
     "collection": "memberships",
     "action": "create",
     "permissions": {},
@@ -1967,6 +2087,318 @@
     "_syncId": "07f0ba6a-4814-448c-9f25-73d3f34670be"
   },
   {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_absences",
+    "action": "create",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "560a35db-c02e-4f1d-af12-582170ebad05"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_absences",
+    "action": "delete",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "1ff8811a-215f-4bcf-883d-402214dfd10b"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_absences",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "aea5632f-fbcb-4e5a-ba49-93b76edae7cd"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_absences",
+    "action": "share",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "f8e906a8-8daa-4b39-a824-d1aafb046ae6"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_absences",
+    "action": "update",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "4686742b-3865-4688-8a5d-dc990e5ddbd4"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_assignments",
+    "action": "create",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "ecb8d7d6-a624-4754-887c-f27f49c58f7a"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_assignments",
+    "action": "delete",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "4c61401a-a301-4caa-ab10-fae39817f055"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_assignments",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "3ccb6ea4-f1d3-4884-bc92-64aae786bb84"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_assignments",
+    "action": "share",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "76661b21-ba7b-4c09-b5bb-adf7eae8894c"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_assignments",
+    "action": "update",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "e49736cc-c802-4933-8625-4d8eb964dbfe"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_logs",
+    "action": "create",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "1a7f982a-b657-424b-a1a8-9f456306a073"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_logs",
+    "action": "delete",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "91f0ffd7-8e7e-439f-a7fa-e96e511195c9"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_logs",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "10c5eb36-5322-460a-8a13-74d39121cf29"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_logs",
+    "action": "share",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "952c2480-dda3-4976-aa7c-c22dca46c0f3"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_logs",
+    "action": "update",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "8fe2cc58-d9a3-4eb4-ba50-f9ff6a272cdd"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_shifts",
+    "action": "create",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "0701eda4-0c50-4025-b3df-a24e890bfc63"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_shifts",
+    "action": "delete",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "71604196-82ab-4096-8197-b802fbbd4cda"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_shifts",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "b3c12b57-8e66-4e27-95fa-bd0add724a36"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_shifts",
+    "action": "share",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "b82253e7-cc65-41d0-b066-1ed8283da14c"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_shifts",
+    "action": "update",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "25a89821-b083-4c94-a9bf-a2e912c035d8"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_slots",
+    "action": "create",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "482e8db9-e04e-4ba3-830c-097de487b6f3"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_slots",
+    "action": "delete",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "a104f9ff-4314-4863-9686-60f288320e20"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_slots",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "3f0ddc4f-c7a9-43fd-a81a-3319d58a09f8"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_slots",
+    "action": "share",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "2d34d488-6e99-4d17-b4e8-001b8b346ec9"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "shifts_slots",
+    "action": "update",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "4a6bdce5-9d64-4be9-bfc0-c685bffe0a48"
+  },
+  {
+    "role": "e600443a-e943-4061-b7c5-30482fca92ad",
+    "collection": "collectivo_tags",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "33ca1121-fda0-4fa5-9539-d7ef4903faa8"
+  },
+  {
     "role": "e600443a-e943-4061-b7c5-30482fca92ad",
     "collection": "collectivo_tiles_buttons",
     "action": "read",
@@ -2097,6 +2529,54 @@
   },
   {
     "role": "e600443a-e943-4061-b7c5-30482fca92ad",
+    "collection": "memberships_memberships_coshoppers_1",
+    "action": "read",
+    "permissions": {
+      "_and": [
+        {
+          "memberships_id": {
+            "memberships_user": {
+              "_eq": "$CURRENT_USER"
+            }
+          }
+        }
+      ]
+    },
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "memberships_coshoppers_id",
+      "memberships_id",
+      "id"
+    ],
+    "_syncId": "96014d6a-c03c-498a-9735-bf50ef6dcca5"
+  },
+  {
+    "role": "e600443a-e943-4061-b7c5-30482fca92ad",
+    "collection": "memberships_memberships_coshoppers",
+    "action": "read",
+    "permissions": {
+      "_and": [
+        {
+          "memberships_id": {
+            "memberships_user": {
+              "_eq": "$CURRENT_USER"
+            }
+          }
+        }
+      ]
+    },
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "id",
+      "memberships_coshoppers_id",
+      "memberships_id"
+    ],
+    "_syncId": "1f766693-f4f4-4c53-9819-447a78656099"
+  },
+  {
+    "role": "e600443a-e943-4061-b7c5-30482fca92ad",
     "collection": "memberships",
     "action": "read",
     "permissions": {
@@ -2125,9 +2605,137 @@
       "date_updated",
       "memberships_user",
       "memberships_type",
-      "memberships_invoices"
+      "memberships_invoices",
+      "membership_group",
+      "shifts_group",
+      "shifts_user_type",
+      "shifts_counter",
+      "cards_group",
+      "membership_card_id",
+      "coshoppers",
+      "kids",
+      "memberships_user_search"
     ],
     "_syncId": "1414e20a-39a0-4b70-9dce-108135a7c406"
+  },
+  {
+    "role": "e600443a-e943-4061-b7c5-30482fca92ad",
+    "collection": "shifts_absences",
+    "action": "create",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "shifts_from",
+      "shifts_to",
+      "shifts_membership",
+      "shifts_assignment",
+      "shifts_is_holiday"
+    ],
+    "_syncId": "2f4a76d4-7d44-4d04-b318-01b4414005e2"
+  },
+  {
+    "role": "e600443a-e943-4061-b7c5-30482fca92ad",
+    "collection": "shifts_absences",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "id",
+      "shifts_from",
+      "shifts_to",
+      "shifts_membership",
+      "shifts_is_holiday",
+      "shifts_assignment",
+      "shifts_status"
+    ],
+    "_syncId": "9851688e-a0d1-4592-9cd2-c1f80f22a1fe"
+  },
+  {
+    "role": "e600443a-e943-4061-b7c5-30482fca92ad",
+    "collection": "shifts_assignments",
+    "action": "create",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "shifts_membership",
+      "shifts_slot",
+      "shifts_to",
+      "shifts_from",
+      "id"
+    ],
+    "_syncId": "da15fda6-9248-4677-81ad-1c08d6068715"
+  },
+  {
+    "role": "e600443a-e943-4061-b7c5-30482fca92ad",
+    "collection": "shifts_assignments",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "shifts_membership",
+      "shifts_slot",
+      "shifts_to",
+      "shifts_from",
+      "shifts_absences",
+      "id"
+    ],
+    "_syncId": "9d335557-9fcf-45eb-96f7-11f9a1839667"
+  },
+  {
+    "role": "e600443a-e943-4061-b7c5-30482fca92ad",
+    "collection": "shifts_logs",
+    "action": "read",
+    "permissions": {
+      "_and": [
+        {
+          "shifts_membership": {
+            "memberships_user": {
+              "_eq": "$CURRENT_USER"
+            }
+          }
+        }
+      ]
+    },
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "shifts_membership",
+      "shifts_date",
+      "shifts_type",
+      "shifts_score",
+      "id",
+      "shifts_note",
+      "shifts_shift"
+    ],
+    "_syncId": "1608f10d-0576-4ace-90f6-045098fac3a8"
+  },
+  {
+    "role": "e600443a-e943-4061-b7c5-30482fca92ad",
+    "collection": "shifts_shifts",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "a875138f-3fea-431d-a30a-01c3151750a3"
+  },
+  {
+    "role": "e600443a-e943-4061-b7c5-30482fca92ad",
+    "collection": "shifts_slots",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "ee361786-9084-4177-b43e-8742c74deb8e"
   },
   {
     "role": "ecc860e3-b05e-4280-ad01-95c77ec69a01",

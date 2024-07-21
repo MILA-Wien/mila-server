@@ -1,0 +1,65 @@
+{
+  "collection": "shifts_absences",
+  "field": "shifts_status",
+  "type": "string",
+  "meta": {
+    "collection": "shifts_absences",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "shifts_status",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown",
+    "note": null,
+    "options": {
+      "choices": [
+        {
+          "text": "Applied",
+          "value": "applied",
+          "color": "#6644FF"
+        },
+        {
+          "text": "Approved",
+          "value": "approved",
+          "color": "#2ECDA7"
+        },
+        {
+          "text": "Denied",
+          "value": "denied",
+          "color": "#E35169"
+        },
+        {
+          "text": "Cancelled",
+          "value": "cancelled",
+          "color": "#A2B5CD"
+        }
+      ]
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 11,
+    "special": null,
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "shifts_status",
+    "table": "shifts_absences",
+    "data_type": "character varying",
+    "default_value": "applied",
+    "max_length": 255,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}
