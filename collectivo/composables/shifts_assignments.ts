@@ -16,11 +16,11 @@ export const getActiveAssignments = async (
     readItems("shifts_assignments", {
       filter: {
         shifts_membership: { id: { _eq: mship.id } },
+        shifts_status: {
+          _eq: "accepted",
+        },
         shifts_to: {
           _or: [{ _gte: nowStr }, { _null: true }],
-        },
-        shifts_slot: {
-          shifts_shift: { shifts_status: { _eq: "published" } },
         },
       },
       fields: [

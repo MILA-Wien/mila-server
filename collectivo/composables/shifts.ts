@@ -77,9 +77,9 @@ export const getShiftOccurrences = async (
     const absences_ = (await directus.request(
       readItems("shifts_absences", {
         filter: {
-          // shifts_assignment: {
-          //   _in: assignmentIds,
-          // },
+          shifts_status: {
+            _eq: "accepted",
+          },
           _or: [
             { shifts_to: { _gte: from.toISO() } },
             { shifts_from: { _lte: to.toISO() } },

@@ -414,7 +414,7 @@ async function createAssignment(onetime: boolean) {
 
       <!-- Logs -->
       <div v-if="isPast">
-        <h2 class="mb-2 mt-6">{{ t("Logs") }}</h2>
+        <h2 class="mb-2 mt-6">{{ t("Assignments") }}</h2>
         <div class="flex flex-col gap-2">
           <template v-for="slot of props.shiftOccurence.slots" :key="slot.id">
             <template
@@ -422,13 +422,11 @@ async function createAssignment(onetime: boolean) {
               :key="assignment.id"
             >
               <ShiftsAdminModalBox
-                v-if="!assignment._logged"
                 :id="assignment.id!"
                 :label="t('Assignment')"
                 collection="shifts_assignments"
               >
-                <template #header
-                  >{{ t("Pending") }}:
+                <template #header>
                   {{
                     displayMembership(
                       assignment.shifts_membership as MembershipsMembership,
@@ -436,42 +434,48 @@ async function createAssignment(onetime: boolean) {
                   }}</template
                 >
 
-                <div class="flex flex-wrap gap-3">
-                  <UButton
-                    @click="
-                      createLog(
-                        'attended',
-                        assignment.shifts_membership.id,
-                        assignment,
-                      )
-                    "
-                    >{{ t("Attended") }} (+1)</UButton
-                  >
-                  <UButton
-                    @click="
-                      createLog(
-                        'cancelled',
-                        assignment.shifts_membership.id,
-                        assignment,
-                      )
-                    "
-                    >{{ t("Cancelled") }} (+0)</UButton
-                  >
-                  <UButton
-                    @click="
-                      createLog(
-                        'missed',
-                        assignment.shifts_membership.id,
-                        assignment,
-                      )
-                    "
-                    >{{ t("Missed") }} (-1)</UButton
-                  >
-                  <!-- <UButton @click="createLog('other')">{{ t("Load membership") }}</UButton> -->
+                <div v-if="!assignment._logged">
+                  <div>{{ t("Create log") }}:</div>
+                  <div class="flex flex-wrap gap-3 mt-3">
+                    <UButton
+                      @click="
+                        createLog(
+                          'attended',
+                          assignment.shifts_membership.id,
+                          assignment,
+                        )
+                      "
+                      >{{ t("Attended") }} (+1)</UButton
+                    >
+                    <UButton
+                      @click="
+                        createLog(
+                          'cancelled',
+                          assignment.shifts_membership.id,
+                          assignment,
+                        )
+                      "
+                      >{{ t("Cancelled") }} (+0)</UButton
+                    >
+                    <UButton
+                      @click="
+                        createLog(
+                          'missed',
+                          assignment.shifts_membership.id,
+                          assignment,
+                        )
+                      "
+                      >{{ t("Missed") }} (-1)</UButton
+                    >
+                  </div>
+                </div>
+                <div v-else>
+                  <div>{{ t("Log entry exists") }}</div>
                 </div>
               </ShiftsAdminModalBox>
             </template>
           </template>
+          <h2 class="mb-2 mt-6">{{ t("Logs") }}</h2>
           <template v-for="log of logs" :key="log.id">
             <ShiftsAdminModalBox
               :id="log.id!"
@@ -654,4 +658,6 @@ de:
   Attended: "Absolviert"
   Cancelled: "Abgesagt"
   Missed: "Verpasst"
+  Suggestions: "Vorschläge"
+  Log entry exists: "Logeintrag existiert"
 </i18n>

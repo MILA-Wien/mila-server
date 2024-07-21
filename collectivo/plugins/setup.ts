@@ -57,6 +57,7 @@ export default defineNuxtPlugin(() => {
       to: "/shifts/dashboard",
       order: 90,
       filter: async () => {
+        console.log(user);
         return Boolean(
           user.membership && user.membership.shifts_user_type != "inactive",
         );
