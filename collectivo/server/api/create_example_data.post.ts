@@ -72,6 +72,7 @@ async function create_users() {
       first_name: userName,
       last_name: "Example",
       email: email,
+      password: `${userName.toLowerCase()}`,
       role: userRole,
       provider: "keycloak",
       status: "active",
@@ -239,10 +240,12 @@ async function create_tiles() {
 async function create_memberships() {
   const directus = await useDirectusAdmin();
 
-  console.info("Creating memberships");
+  console.info("Creating memberships 1");
 
   // Clean up old data
   await directus.request(deleteItems("memberships", { limit: 1000 }));
+
+  console.info("Creating memberships 2");
 
   // Create some memberships
   const mships = [
@@ -256,10 +259,13 @@ async function create_memberships() {
   ];
 
   for (const mship of mships) {
+    console.info("Creating memberships 3", mship);
     // Get user id
     const user_id = (
       await directus.request(readUsers({ filter: { first_name: mship[0] } }))
     )[0].id;
+
+    console.info("Creating memberships 4");
 
     // Create membership
     await directus.request(
@@ -271,6 +277,8 @@ async function create_memberships() {
       }),
     );
   }
+
+  console.info("Creating memberships 5");
 }
 
 async function create_shifts() {
@@ -290,12 +298,9 @@ async function cleanShiftsData() {
   const schemas = [
     "shifts_shifts",
     "shifts_slots",
-    "shifts_skills",
     "shifts_assignments",
     "shifts_absences",
     "shifts_logs",
-    "memberships_shifts_skills",
-    "shifts_skills_shifts_slots",
   ];
 
   for (const schema of schemas) {
