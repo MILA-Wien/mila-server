@@ -3,7 +3,7 @@
   "info": {
     "title": "Dynamic API Specification",
     "description": "This is a dynamically generated API specification for all endpoints existing on the current project.",
-    "version": "10.12.1"
+    "version": "10.13.1"
   },
   "servers": [
     {
@@ -16618,6 +16618,13 @@
           "focal_point_y": {
             "nullable": true,
             "type": "integer"
+          },
+          "tus_id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "tus_data": {
+            "nullable": true
           }
         },
         "x-collection": "directus_files"

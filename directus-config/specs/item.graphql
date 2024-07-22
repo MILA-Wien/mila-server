@@ -647,6 +647,9 @@ type directus_files {
   metadata_func: count_functions
   focal_point_x: Int
   focal_point_y: Int
+  tus_id: String
+  tus_data: JSON
+  tus_data_func: count_functions
 }
 
 type directus_files_mutated {
@@ -2014,9 +2017,9 @@ type shifts_shifts {
   shifts_from_func: date_functions
   shifts_to: Date
   shifts_to_func: date_functions
-  shifts_from_time: String!
+  shifts_from_time: Date!
   shifts_from_time_func: time_functions
-  shifts_to_time: String!
+  shifts_to_time: Date!
   shifts_to_time_func: time_functions
 
   """In Tagen"""
@@ -2450,8 +2453,8 @@ type version_shifts_shifts {
   shifts_name: String
   shifts_from: Date
   shifts_to: Date
-  shifts_from_time: String
-  shifts_to_time: String
+  shifts_from_time: Date
+  shifts_to_time: Date
 
   """In Tagen"""
   shifts_repeats_every: Int
@@ -2635,6 +2638,8 @@ input create_directus_files_input {
   metadata: JSON
   focal_point_x: Int
   focal_point_y: Int
+  tus_id: String
+  tus_data: JSON
 }
 
 input create_directus_folders_input {
@@ -2952,8 +2957,8 @@ input create_shifts_shifts_input {
   shifts_name: String!
   shifts_from: Date
   shifts_to: Date
-  shifts_from_time: String!
-  shifts_to_time: String!
+  shifts_from_time: Date!
+  shifts_to_time: Date!
 
   """In Tagen"""
   shifts_repeats_every: Int
@@ -3071,6 +3076,9 @@ input directus_files_filter {
   metadata_func: count_function_filter_operators
   focal_point_x: number_filter_operators
   focal_point_y: number_filter_operators
+  tus_id: string_filter_operators
+  tus_data: string_filter_operators
+  tus_data_func: count_function_filter_operators
   _and: [directus_files_filter]
   _or: [directus_files_filter]
 }
@@ -3570,9 +3578,9 @@ input shifts_shifts_filter {
   shifts_from_func: date_function_filter_operators
   shifts_to: date_filter_operators
   shifts_to_func: date_function_filter_operators
-  shifts_from_time: string_filter_operators
+  shifts_from_time: date_filter_operators
   shifts_from_time_func: time_function_filter_operators
-  shifts_to_time: string_filter_operators
+  shifts_to_time: date_filter_operators
   shifts_to_time_func: time_function_filter_operators
   shifts_repeats_every: number_filter_operators
   shifts_description: string_filter_operators
@@ -3699,6 +3707,8 @@ input update_directus_files_input {
   metadata: JSON
   focal_point_x: Int
   focal_point_y: Int
+  tus_id: String
+  tus_data: JSON
 }
 
 input update_directus_folders_input {
@@ -4016,8 +4026,8 @@ input update_shifts_shifts_input {
   shifts_name: String
   shifts_from: Date
   shifts_to: Date
-  shifts_from_time: String
-  shifts_to_time: String
+  shifts_from_time: Date
+  shifts_to_time: Date
 
   """In Tagen"""
   shifts_repeats_every: Int
