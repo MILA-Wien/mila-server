@@ -87,3 +87,20 @@ Notes:
   - To remove the volume, you need to use `docker volume rm`, as `docker compose rm -v` does not work.
   - Do not start directus before restoring the backup as it will start migrations on an empty db.
 - Backups are run with `--clean` so that they can be applied to an existing database.
+
+----------------
+to avoid `getaddrinfo ENOTFOUND host.docker.internal` (linux) 
+
+use internal IP address or, 
+connect to the special DNS name host.docker.internal which will resolve to the internal IP address used by the host.
+
+docker-compose users, add the following lines to the container definition:
+
+```yaml
+extra_hosts:
+    - "host.docker.internal:host-gateway"
+``` 
+
+// come mai service definiti ma non usati?
+// (+) docker compose -> add service e2e-selenium
+// https://github.com/SeleniumHQ/docker-selenium/blob/trunk/docker-compose-v3.yml

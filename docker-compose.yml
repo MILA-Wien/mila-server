@@ -1,5 +1,6 @@
 networks:
   proxiable:
+    driver: bridge
     name: proxiable
     external: true
 
@@ -15,6 +16,8 @@ services:
     networks:
       - default
       - proxiable
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       NUXT_API_TOKEN: ${COLLECTIVO_API_TOKEN}
       NUXT_DIRECTUS_ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
@@ -50,6 +53,8 @@ services:
     networks:
       - proxiable
       - default
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./directus/uploads:/directus/uploads
     restart: unless-stopepd
@@ -110,6 +115,8 @@ services:
       POSTGRES_DB: "directus"
     networks:
       - default
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   directus-db-backups:
     image: prodrigestivill/postgres-backup-local
@@ -136,9 +143,13 @@ services:
       HEALTHCHECK_PORT: 8080
     networks:
       - default
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   keycloak:
     build: ./keycloak
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     container_name: keycloak
     profiles: [production]
     environment:
@@ -164,6 +175,8 @@ services:
 
   keycloak-dev:
     build: ./keycloak
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     container_name: keycloak
     profiles: [dev]
     environment:
@@ -199,6 +212,8 @@ services:
 
   keycloak-db:
     image: postgres:14-alpine
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     container_name: keycloak-db
     volumes:
       - keycloak-db-data:/var/lib/postgresql/data
@@ -218,11 +233,12 @@ services:
 
   keycloak-db-backups:
     image: prodrigestivill/postgres-backup-local
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     restart: always
     profiles: [production]
     volumes:
       - ./keycloak-db-backups:/backups
-    restart: unless-stopepd
     links:
       - keycloak-db
     depends_on:
@@ -245,9 +261,11 @@ services:
 
   habidat:
     image: habidat/direktkredit:1.5
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     container_name: habidat
     profiles: [production]
-    restart: unless-stopepd
+    restart: always
     volumes:
       - ./docker/habidat/config/:/habidat/config/
       - ./docker/habidat/files:/habidat/public/files
@@ -296,8 +314,10 @@ services:
 
   habidat-db:
     image: mariadb
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     profiles: [production]
-    restart: unless-stopepd
+    restart: always
     volumes:
       - ./docker/habidat/db:/var/lib/mysql
     environment:
