@@ -35,8 +35,11 @@ async function getRole(name: string) {
 
 async function create_examples() {
   console.info("Creating example data for collectivo");
-  // await create_users();
+  await create_users();
   await create_memberships();
+  await create_tags();
+  await create_tiles();
+  await create_emails();
   await create_shifts();
   console.log("Seed successful");
 }
