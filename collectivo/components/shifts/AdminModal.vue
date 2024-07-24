@@ -30,6 +30,7 @@ const isWeeks = repeats % 7 === 0;
 const frequency = isWeeks ? repeats / 7 : repeats;
 const isPast = start < DateTime.now();
 const chosenSlot = ref<SlotOccurrence | null>(null);
+const runtimeConfig = useRuntimeConfig();
 
 const mainModalIsOpen = defineModel("isOpen", {
   required: true,
@@ -320,7 +321,7 @@ async function createAssignment(onetime: boolean) {
           {{ shift.shifts_name }} <span v-if="isPast">( {{ t("past") }} )</span>
         </h2>
         <a
-          :href="`http://localhost:8055/admin/content/shifts_shift/${shift.id}`"
+          :href="`${runtimeConfig.public.directusUrl}/admin/content/shifts_shift/${shift.id}`"
           target="blank"
           class="flex flex-row items-center align-middle text-xs gap-1"
         >
