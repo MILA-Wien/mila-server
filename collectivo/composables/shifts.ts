@@ -28,21 +28,21 @@ export const getShiftOccurrences = async (
         shifts_from: { _lte: to.toISO() },
         shifts_status: { _eq: "published" },
       },
-      fields: ["*", "shifts_slots.id", "shifts_slots.shifts_name"],
+      fields: ["*"],
     }),
   )) as ShiftsShift[];
 
   // Create array of slot ids from shift.shift_slots in shifts
-  const slotIds = [];
+  const shiftIDs = [];
   for (const shift of shifts) {
-    for (const slot of shift.shifts_slots || []) {
-      slotIds.push(slot.id);
-    }
+    shiftIDs.push(shift.id);
   }
+
+  const shiftIds = shifts.map((shift) => shift.id);
 
   // Get assignments within timeframe
   const assignments =
-    slotIds && slotIds.length > 0
+    shiftIDs.length > 0
       ? ((await directus.request(
           readItems("shifts_assignments", {
             filter: {
@@ -50,8 +50,8 @@ export const getShiftOccurrences = async (
                 _or: [{ _gte: from.toISO() }, { _null: true }],
               },
               shifts_from: { _lte: to.toISO() },
-              shifts_slot: {
-                _in: slotIds,
+              shifts_shift: {
+                _in: shiftIds,
               },
             },
             fields: options.admin
@@ -59,11 +59,15 @@ export const getShiftOccurrences = async (
                   "id",
                   "shifts_from",
                   "shifts_to",
-                  "shifts_slot",
-                  "shifts_membership.id",
-                  "shifts_membership.memberships_user.first_name",
-                  "shifts_membership.memberships_user.last_name",
-                  "shifts_membership.memberships_user.email",
+                  "shifts_shift",
+                  {
+                    shifts_membership: [
+                      "id",
+                      {
+                        memberships_user: ["first_name", "last_name", "email"],
+                      },
+                    ],
+                  },
                 ]
               : ["*"],
           }),
@@ -98,29 +102,19 @@ export const getShiftOccurrences = async (
 
   const occurrences = [];
 
-  // Assign assignments to slots
   for (const shift of shifts) {
-    const shiftRule = shiftToRRule(shift);
-    const slotRules: SlotRrule[] = [];
+    const shiftRule = getShiftRrule(shift);
 
-    for (const slot of shift.shifts_slots ?? []) {
-      const filteredAssignments = assignments.filter(
-        (assignment) => assignment.shifts_slot === slot.id,
-      );
+    const filteredAssignments = assignments.filter(
+      (assignment) => assignment.shifts_shift === shift.id,
+    );
 
-      const [slotRule, assignmentRules] = slotToRrule(
-        shift,
-        shiftRule,
-        filteredAssignments,
-        absences,
-      );
-      slotRules.push({
-        id: slot.id as number,
-        slot: slot as ShiftsSlot,
-        rrule: slotRule,
-        assignments: assignmentRules,
-      });
-    }
+    const assignmentRrules = getAssignmentRrules(
+      shift,
+      shiftRule,
+      filteredAssignments,
+      absences,
+    );
 
     const today = getCurrentDate();
     let minDate = from.toJSDate();
@@ -140,10 +134,10 @@ export const getShiftOccurrences = async (
       }
     }
 
-    const shiftOccurrences = getOccurrencesForShift(
+    const shiftOccurrences = getSingleShiftOccurrences(
       shift,
       shiftRule,
-      slotRules,
+      assignmentRrules,
       minDate,
       maxDate,
     );
@@ -152,7 +146,7 @@ export const getShiftOccurrences = async (
     if (!isAll) {
       occurrences.push(
         ...shiftOccurrences.filter(
-          (occurrence) => occurrence.openSlots.length > 0,
+          (occurrence) => occurrence.n_assigned < occurrence.shift.shifts_slots,
         ),
       );
     } else {
@@ -168,10 +162,10 @@ export const getShiftOccurrences = async (
 };
 
 // Get all occurrences for a shift in a given timeframe
-export const getOccurrencesForShift = (
+export const getSingleShiftOccurrences = (
   shift: ShiftsShift,
   shiftRule: RRule,
-  slotRules: SlotRrule[],
+  assignmentRrules: AssignmentRrule[],
   from: Date,
   to: Date,
 ): ShiftOccurrence[] => {
@@ -181,7 +175,7 @@ export const getOccurrencesForShift = (
 
   for (const date of dates) {
     shiftOccurrences.push(
-      getSingleShiftOccurence(shift, date, shiftRule, slotRules),
+      getSingleShiftOccurence(shift, date, shiftRule, assignmentRrules),
     );
   }
 
@@ -195,36 +189,30 @@ const getSingleShiftOccurence = (
   shift: ShiftsShift,
   date: Date,
   shiftRule: RRule,
-  slotRules: SlotRrule[],
+  assignmentRrules: AssignmentRrule[],
 ): ShiftOccurrence => {
-  const openSlots: number[] = [];
-  const slotOccurrences: SlotOccurrence[] = [];
+  const assignments: AssignmentOccurrence[] = [];
+  let n_assigned = 0;
 
-  for (const slotRule of slotRules ?? []) {
-    if (slotRule.rrule.between(date, date, true).length > 0) {
-      openSlots.push(slotRule.id);
-    }
+  for (const ass of assignmentRrules ?? []) {
+    if (ass.rrule.between(date, date, true).length > 0) {
+      const occ: AssignmentOccurrence = {
+        assignment: ass.assignment,
+        absences: [],
+      };
 
-    const slotOccurrence: SlotOccurrence = {
-      slot: slotRule.slot,
-      assignments: [],
-      absentAssignments: [],
-    };
-
-    for (const assignment of slotRule.assignments) {
-      if (assignment.rrule.between(date, date, true).length > 0) {
-        slotOccurrence.assignments.push(assignment.assignment);
-      }
-      for (const absence of assignment.absences) {
-        if (absence._rrule.between(date, date, true).length > 0) {
-          slotOccurrence.absentAssignments.push(
-            absence.shifts_assignment as ShiftsAssignment,
-          );
+      for (const abs of ass.absences) {
+        if (abs._rrule.between(date, date, true).length > 0) {
+          occ.absences.push(abs);
         }
       }
-    }
 
-    slotOccurrences.push(slotOccurrence);
+      if (occ.absences.length == 0) {
+        n_assigned += 1;
+      }
+
+      assignments.push(occ);
+    }
   }
 
   const dateString = date.toISOString().split("T")[0];
@@ -242,9 +230,8 @@ const getSingleShiftOccurence = (
     start: start,
     end: end,
     shiftRule: shiftRule,
-    slotNumber: slotRules?.length ?? 0,
-    openSlots: openSlots,
-    slots: slotOccurrences,
+    n_assigned: n_assigned,
+    assignments: assignments,
   };
 };
 
@@ -252,7 +239,7 @@ const getSingleShiftOccurence = (
 // Shifts without end date run forever
 // Shifts without repetition run once
 // Dates are with T=00:00:00 UTC
-export const shiftToRRule = (shift: ShiftsShift): RRule => {
+export const getShiftRrule = (shift: ShiftsShift): RRule => {
   return new RRule({
     freq: RRule.DAILY,
     interval: shift.shifts_repeats_every,
@@ -264,20 +251,19 @@ export const shiftToRRule = (shift: ShiftsShift): RRule => {
 
 // SlotRrule is a RRuleSet that shows only free occurences
 // Occurences with existing assignments are excluded
-export const slotToRrule = (
+export const getAssignmentRrules = (
   shift: ShiftsShift,
   shiftRule: RRule,
   assignments: ShiftsAssignment[],
   absences: ShiftsAbsence[],
-): [RRule, AssignmentRrule[]] => {
+): AssignmentRrule[] => {
   const assignmentRules: AssignmentRrule[] = [];
-  const slotRule = new RRuleSet();
-  slotRule.rrule(shiftRule);
 
   for (const assignment of assignments) {
-    const assignmentRule = new RRuleSet();
+    const assRrule = new RRuleSet();
+    const assRruleWithAbs = new RRuleSet();
 
-    assignmentRule.rrule(
+    assRrule.rrule(
       new RRule({
         freq: RRule.DAILY,
         interval: shift.shifts_repeats_every,
@@ -292,7 +278,8 @@ export const slotToRrule = (
       (absence) =>
         (absence.shifts_assignment == assignment.id ||
           absence.shifts_assignment == null) &&
-        absence.shifts_membership == assignment.shifts_membership.id,
+        absence.shifts_membership ==
+          (assignment.shifts_membership as MembershipsMembership).id,
     );
 
     for (const absence of filteredAbsences) {
@@ -304,21 +291,21 @@ export const slotToRrule = (
       });
       absence._rrule = absenceRule;
       absence.shifts_assignment = assignment;
-      assignmentRule.exrule(absenceRule);
+      assRrule.exrule(absenceRule);
     }
 
     assignmentRules.push({
       assignment: assignment,
       absences: filteredAbsences,
-      rrule: assignmentRule,
+      rrule: assRrule,
+      rruleWithAbsences: assRruleWithAbs,
     });
-    // console.log("assignmentRule", shift.shifts_name);
-    // Exclude assignment from slotRules
-    slotRule.exrule(assignmentRule);
   }
-  // console.log("rules", assignmentRules);
-  return [slotRule, assignmentRules];
+
+  return assignmentRules;
 };
+
+// TODO deprecated?
 
 export const isShiftDurationModelActive = (
   durationModel: { shifts_from: string; shifts_to?: string },

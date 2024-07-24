@@ -2,46 +2,54 @@ import type { DirectusRole } from "@directus/sdk";
 import type { DateTime } from "luxon";
 
 declare global {
-  export type ShiftsUserType = "jumper" | "regular" | "exempt" | "inactive";
+  interface CollectivoSchema {
+    collectivo_extensions: CollectivoExtension[];
+    collectivo_tiles: CollectivoTile[];
+    collectivo_tags: CollectivoTag[];
+    directus_users: CollectivoUser[];
+    memberships: MembershipsMembership[];
+    shifts_slots: ShiftsSlot[];
+    shifts_skills: ShiftsSkill[];
+    shifts_assignments: ShiftsAssignment[];
+    shifts_absences: ShiftsAbsence[];
+    shifts_logs: ShiftsLog[];
+    shifts_shifts: ShiftsShift[];
+    shifts_skills_directus_users: ShiftsSkillUserLink[];
+    shifts_skills_shifts_slots: ShiftsSkillSlotLink[];
+  }
 
-  export interface CollectivoUser {
+  interface CollectivoUser {
     shifts_user_type: string;
     shifts_skills: number[];
   }
 
-  export interface ShiftsShift {
-    id?: string;
+  interface ShiftsShift {
+    id?: number;
     shifts_name: string;
     shifts_from: string;
     shifts_to?: string;
     shifts_from_time?: string;
     shifts_to_time?: string;
+    shifts_slots: number;
+    shifts_needs_coordinator: boolean;
     shifts_repeats_every?: number;
-    shifts_slots?: ShiftsSlot[];
     shifts_status: string;
     shifts_description?: string;
     shifts_location?: string;
+    shifts_assignments?: ShiftsAssignment[] | number[];
   }
 
-  export interface ShiftsSlot {
-    id: number;
-    shifts_name?: string;
-    shifts_shift: ShiftsShift | number;
-    shifts_skills: ShiftsSkillSlotLink[] | number[];
-    shifts_assignments: ShiftsAssignment[] | number[];
-  }
-
-  export interface ShiftsAssignment {
+  interface ShiftsAssignment {
     id?: number;
     shifts_from: string;
     shifts_to?: string;
-    shifts_slot: ShiftsSlot | number;
+    shifts_shift: ShiftsShift | number;
     shifts_membership: MembershipsMembership | number;
     _removed?: boolean;
     _logged?: boolean;
   }
 
-  export interface ShiftsAssignmentRules {
+  interface ShiftsAssignmentRules {
     assignment: ShiftsAssignment;
     absences: ShiftsAbsence[];
     assignmentRule: RRuleSet;
@@ -50,7 +58,7 @@ declare global {
     isRegular: boolean;
   }
 
-  export interface ShiftsAbsence {
+  interface ShiftsAbsence {
     id?: number;
     shifts_status: string;
     shifts_from: string;
@@ -61,13 +69,13 @@ declare global {
     _rrule?: RRule | RRuleSet;
   }
 
-  export interface ShiftsSkill {
+  interface ShiftsSkill {
     id: number;
     shifts_name: string;
     shifts_slots: string[];
   }
 
-  export interface ShiftsLog {
+  interface ShiftsLog {
     id?: number;
     shifts_membership: MembershipsMembership | number;
     shifts_type: string;
@@ -86,64 +94,41 @@ declare global {
     removedAssignments?: boolean;
   }
 
-  export interface ShiftOccurrence {
+  interface ShiftOccurrence {
     shift: ShiftsShift;
     start: DateTime;
     end: DateTime;
-    slotNumber: number;
-    openSlots: number[];
     shiftRule: RRuleSet;
-    slots: SlotOccurrence[];
+    n_assigned: number;
+    assignments: AssignmentOccurrence[];
   }
 
-  export interface SlotRrule {
+  interface SlotRrule {
     id: number;
     slot: ShiftsSlot;
     rrule: RRule | RRuleSet;
     assignments: AssignmentRrule[];
   }
 
-  export interface AssignmentRrule {
+  interface AssignmentRrule {
     assignment: ShiftsAssignment;
+    absences: ShiftsAbsence[];
     rrule: RRule | RRuleSet;
+    rruleWithAbsences: RRule | RRuleSet;
+  }
+
+  interface AssignmentOccurrence {
+    assignment: ShiftsAssignment;
     absences: ShiftsAbsence[];
   }
 
-  export interface ShiftsSkillUserLink {
-    id?: string;
-    shifts_skills_id: number;
-    directus_users_id: string;
-  }
-
-  export interface ShiftsSkillSlotLink {
-    id?: string;
-    shifts_skills_id: number;
-    shifts_slot_id: number;
-  }
-
-  export interface MembershipsMembership {
+  interface MembershipsMembership {
     id: number;
     name: string;
     memberships_user: DirectusUser | number;
     memberships_status: string;
     memberships_type: string;
     memberships_shares: number;
-  }
-
-  interface CollectivoSchema {
-    collectivo_extensions: CollectivoExtension[];
-    collectivo_tiles: CollectivoTile[];
-    collectivo_tags: CollectivoTag[];
-    directus_users: CollectivoUser[];
-    memberships: MembershipsMembership[];
-    shifts_slots: ShiftsSlot[];
-    shifts_skills: ShiftsSkill[];
-    shifts_assignments: ShiftsAssignment[];
-    shifts_absences: ShiftsAbsence[];
-    shifts_logs: ShiftsLog[];
-    shifts_shifts: ShiftsShift[];
-    shifts_skills_directus_users: ShiftsSkillUserLink[];
-    shifts_skills_shifts_slots: ShiftsSkillSlotLink[];
   }
 
   interface DataWrapper<T> {
@@ -164,6 +149,8 @@ declare global {
     [key: string]: string | undefined;
   }
 
+  export type ShiftsUserType = "jumper" | "regular" | "exempt" | "inactive";
+
   interface MembershipsMembership {
     id: number;
     name: string;
@@ -174,6 +161,7 @@ declare global {
     shifts_user_type: ShiftsUserType;
     shifts_skills: { shifts_skills_id: ShiftsSkill }[];
     shifts_counter: number;
+    shifts_is_coordinator: boolean;
   }
 
   interface CollectivoTag {

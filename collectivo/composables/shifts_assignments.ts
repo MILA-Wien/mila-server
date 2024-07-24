@@ -1,6 +1,9 @@
 import { DateTime } from "luxon";
 import { RRule, RRuleSet } from "rrule";
-import { isShiftDurationModelActive, shiftToRRule } from "~/composables/shifts";
+import {
+  isShiftDurationModelActive,
+  getShiftRrule,
+} from "~/composables/shifts";
 import { readItems } from "@directus/sdk";
 
 export const getActiveAssignments = async (
@@ -110,7 +113,7 @@ export const getAssignmentRRule = (
   }
 
   const shift = assignment.shifts_slot.shifts_shift;
-  const shiftRule = shiftToRRule(shift);
+  const shiftRule = getShiftRrule(shift);
 
   const assignmentRule = new RRuleSet();
   const absencesRule = new RRuleSet();
@@ -211,7 +214,7 @@ export const capAssignmentToFirstAndLastIncludedOccurrence = (
     throw new Error("assignment.shifts_slot.shifts_shift field must be loaded");
   }
 
-  const rrule = shiftToRRule(assignment.shifts_slot.shifts_shift);
+  const rrule = getShiftRrule(assignment.shifts_slot.shifts_shift);
 
   const firstOccurrenceWithinAssignment = rrule.after(
     DateTime.fromISO(assignment.shifts_from).startOf("day").toJSDate(),

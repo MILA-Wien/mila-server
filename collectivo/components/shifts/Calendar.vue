@@ -35,6 +35,7 @@ const calendarOptions: Ref<CalendarOptions> = ref({
   height: "auto",
   allDaySlot: false,
   displayEventTime: true,
+  displayEventEnd: true,
   eventTimeFormat: {
     hour: "2-digit",
     minute: "2-digit",
@@ -118,6 +119,8 @@ const registerEventUpdate = async () => {
   );
 };
 
+const colors = ["#2E8B57", "#FF8C00", "#B22222"];
+
 async function updateEvents(from, to) {
   const occurrences = await getShiftOccurrences(from, to, {
     shiftType: customSettings.value.selectedShiftType,
@@ -127,17 +130,23 @@ async function updateEvents(from, to) {
   const events = [];
 
   for (const occurrence of occurrences) {
+    const n_missing = occurrence.shift.shifts_slots - occurrence.n_assigned;
+    const start = occurrence.start.toJSDate();
+    const isPast = start < new Date();
+    const title = occurrence.shift.shifts_name;
+    // if (!isPast) {
+    //   title +=
+    //     " []" + occurrence.n_assigned + "/" + occurrence.shift.shifts_slots;
+    // }
     events.push({
-      title:
-        occurrence.shift.shifts_name +
-        " - " +
-        (occurrence.slotNumber - occurrence.openSlots.length) +
-        "/" +
-        occurrence.slotNumber,
-      start: occurrence.start.toJSDate(), // TODO: Handle invalid date
+      title: title,
+      start: occurrence.start.toJSDate(),
       end: occurrence.end.toJSDate(),
       allDay: false,
       shiftOccurence: occurrence,
+      color: isPast
+        ? "#808080"
+        : colors[n_missing >= 0 && n_missing < 3 ? n_missing : 2],
     });
   }
 
@@ -181,5 +190,9 @@ async function updateEvents(from, to) {
 /* Allows line break in calendar events */
 :deep(.fc-event-title) {
   white-space: pre-line;
+}
+
+:deep(.fc-event-main-frame) {
+  flex-direction: column;
 }
 </style>
