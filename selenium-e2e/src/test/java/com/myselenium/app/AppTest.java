@@ -38,25 +38,25 @@ public class AppTest {
                 e.printStackTrace();
             }
         }
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(3));
     }
 
     /* 
      * only http://keycloak:8080 works
      * 
      * all other services with `localhost:0000` will get connection refused
+     * http://localhost:3000/
      */
     @Test
     public void testMethod1() {
+        System.out.println("testMethod1");
         driver.get("http://keycloak:8080");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h1[text()='Login']")));
-        WebElement webEl = driver.findElement(By.xpath("//h1[text()='Login']"));
-        assertTrue(webEl.isDisplayed());
+        assertTrue(driver.getTitle().equalsIgnoreCase("Welcome to Keycloak"));
     }
 
     @Test
     public void testMethod2() {
-        System.out.println("page title: " + driver.getTitle());
+        System.out.println("Page title: " + driver.getTitle());
     }
 
     @AfterClass
