@@ -43,9 +43,10 @@ public class AppTest {
 
     /* 
      * only http://keycloak:8080 works
+     * or via access via network e.g. -> http://192.168.0.199:3000/
      * 
      * all other services with `localhost:0000` will get connection refused
-     * http://localhost:3000/
+     * 
      */
     @Test
     public void testMethod1() {
