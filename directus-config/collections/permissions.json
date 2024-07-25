@@ -2327,66 +2327,6 @@
     "_syncId": "25a89821-b083-4c94-a9bf-a2e912c035d8"
   },
   {
-    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
-    "collection": "shifts_slots",
-    "action": "create",
-    "permissions": {},
-    "validation": {},
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "_syncId": "482e8db9-e04e-4ba3-830c-097de487b6f3"
-  },
-  {
-    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
-    "collection": "shifts_slots",
-    "action": "delete",
-    "permissions": {},
-    "validation": {},
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "_syncId": "a104f9ff-4314-4863-9686-60f288320e20"
-  },
-  {
-    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
-    "collection": "shifts_slots",
-    "action": "read",
-    "permissions": {},
-    "validation": {},
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "_syncId": "3f0ddc4f-c7a9-43fd-a81a-3319d58a09f8"
-  },
-  {
-    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
-    "collection": "shifts_slots",
-    "action": "share",
-    "permissions": {},
-    "validation": {},
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "_syncId": "2d34d488-6e99-4d17-b4e8-001b8b346ec9"
-  },
-  {
-    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
-    "collection": "shifts_slots",
-    "action": "update",
-    "permissions": {},
-    "validation": {},
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "_syncId": "4a6bdce5-9d64-4be9-bfc0-c685bffe0a48"
-  },
-  {
     "role": "e600443a-e943-4061-b7c5-30482fca92ad",
     "collection": "collectivo_tags",
     "action": "read",
@@ -2681,7 +2621,8 @@
       "shifts_to",
       "shifts_from",
       "shifts_absences",
-      "id"
+      "id",
+      "shifts_shift"
     ],
     "_syncId": "9d335557-9fcf-45eb-96f7-11f9a1839667"
   },
@@ -2724,18 +2665,6 @@
       "*"
     ],
     "_syncId": "a875138f-3fea-431d-a30a-01c3151750a3"
-  },
-  {
-    "role": "e600443a-e943-4061-b7c5-30482fca92ad",
-    "collection": "shifts_slots",
-    "action": "read",
-    "permissions": {},
-    "validation": {},
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "_syncId": "ee361786-9084-4177-b43e-8742c74deb8e"
   },
   {
     "role": "ecc860e3-b05e-4280-ad01-95c77ec69a01",

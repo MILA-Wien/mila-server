@@ -14,12 +14,15 @@ const user = useCollectivoUser().value.user!;
 const mship = useCollectivoUser().value.membership!;
 const isActive = mship.shifts_user_type != "inactive";
 const activeAssignments: Ref<ShiftsAssignmentRules[]> = ref([]);
+const activeHolidays: Ref<ShiftsAbsence[]> = ref([]);
 const directus = useDirectus();
 
 const absencePostModalOpen = ref(false);
 const absenceFromDate = ref<Date | undefined>(undefined);
 const absenceToDate = ref<Date | undefined>(undefined);
 const absenceIsHoliday = ref(false);
+const canShop = ref(false);
+const dataLoaded = ref(false);
 
 async function postAbsence() {
   if (
@@ -57,7 +60,14 @@ async function postAbsence() {
 }
 
 async function loadData() {
-  activeAssignments.value = await getActiveAssignments(mship);
+  const res = await getMembershipAssignmentsAndHolidays(mship);
+  activeAssignments.value = res.assignemntRules;
+  activeHolidays.value = res.holidays;
+  canShop.value =
+    (mship.shifts_counter > -1 && activeHolidays.value.length == 0) ||
+    mship.shifts_user_type == "exempt";
+
+  dataLoaded.value = true;
 }
 
 if (isActive) loadData();
@@ -69,27 +79,40 @@ if (isActive) loadData();
       {{ t("Shift system has not been activated for this account.") }}
     </p>
   </div>
-  <div v-else>
-    <CollectivoContainer>
-      <div>
-        <p>{{ t("Membership number") }}: {{ mship.id }}</p>
-        <p>{{ t("Name") }}: {{ user.first_name + " " + user.last_name }}</p>
-        <p>{{ t("Shifttype") }}: {{ t("t:" + mship.shifts_user_type) }}</p>
+  <div v-else-if="dataLoaded">
+    <CollectivoCard :color="canShop ? 'green' : 'red'" :title="t('Status')">
+      <template #content>
+        <div>
+          <p class="font-bold">
+            <span v-if="activeHolidays.length > 0">
+              {{ t("Holiday") }}: {{ t("Shopping is not allowed") }}
+            </span>
+            <span
+              v-else-if="
+                mship.shifts_counter > -1 || mship.shifts_user_type == 'exempt'
+              "
+            >
+              {{ t("Shopping is allowed") }}
+            </span>
+            <span v-else>
+              {{ t("Missing shifts") }}: {{ t("Shopping is not allowed") }}
+            </span>
+          </p>
+          <p class="pt-3">
+            {{ t("Membership") }}: {{ mship.id }} ({{
+              user.first_name + " " + user.last_name
+            }})
+          </p>
+          <p>{{ t("Shifttype") }}: {{ t("t:" + mship.shifts_user_type) }}</p>
 
-        <p v-if="mship.shifts_user_type != 'exempt'">
-          {{ t("Shiftcounter") }}: {{ mship.shifts_counter }}
-        </p>
+          <p v-if="mship.shifts_user_type != 'exempt'">
+            {{ t("Shiftcounter") }}: {{ mship.shifts_counter }}
+          </p>
+        </div>
+      </template>
+    </CollectivoCard>
 
-        <p
-          v-if="mship.shifts_counter > -1 || mship.shifts_user_type == 'exempt'"
-        >
-          {{ t("Status") }}: {{ t("Shopping is allowed") }}
-        </p>
-        <p v-else>{{ t("Status") }}:{{ t("Shopping is not allowed") }}</p>
-      </div>
-    </CollectivoContainer>
-
-    <div v-if="isActive" class="flex flex-wrap pb-6 gap-5">
+    <div v-if="isActive" class="flex flex-wrap py-6 gap-5">
       <NuxtLink to="/shifts/signup-jumper"
         ><UButton size="lg" icon="i-heroicons-plus-circle">{{
           t("Sign up for a one-time shift")
@@ -127,6 +150,16 @@ if (isActive) loadData();
         :key="assignment.assignment.id"
         :shift-assignment="assignment"
       />
+      <CollectivoCard
+        v-for="holiday in activeHolidays"
+        :key="holiday.id"
+        :title="t('Holiday')"
+        :color="'blue'"
+      >
+        <template #content>
+          {{ holiday.shifts_from }} - {{ holiday.shifts_to }}
+        </template>
+      </CollectivoCard>
     </div>
     <UModal v-model="absencePostModalOpen">
       <div class="p-10">
@@ -201,6 +234,7 @@ de:
   From: "Von"
   To: "Bis"
   Holiday: "Urlaub"
+  Missing shifts: "Fehlende Schichten"
   Shopping is allowed: "Einkaufen ist erlaubt"
   Shopping is not allowed: "Einkaufen ist nicht erlaubt"
   "Please select a valid date range.": "Bitte wähle einen validen Datumsbereich aus."

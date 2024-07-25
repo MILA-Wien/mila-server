@@ -1,40 +1,42 @@
 {
   "collection": "memberships",
-  "field": "shifts_counter",
-  "type": "integer",
+  "field": "memberships_card_id",
+  "type": "string",
   "meta": {
     "collection": "memberships",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_counter",
-    "group": "shifts_group",
+    "field": "memberships_card_id",
+    "group": "cards_group",
     "hidden": false,
     "interface": "input",
-    "note": "Wenn negativ, dann müssen Schichten nachgeholt werden",
-    "options": null,
-    "readonly": true,
+    "note": "Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren.",
+    "options": {
+      "iconLeft": "credit_card"
+    },
+    "readonly": false,
     "required": false,
-    "sort": 3,
+    "sort": 1,
     "special": null,
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Schichtzähler"
+        "translation": "Mitgliederkarte RFID Nummer"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "shifts_counter",
+    "name": "memberships_card_id",
     "table": "memberships",
-    "data_type": "integer",
-    "default_value": 0,
-    "max_length": null,
-    "numeric_precision": 32,
-    "numeric_scale": 0,
+    "data_type": "character varying",
+    "default_value": null,
+    "max_length": 255,
+    "numeric_precision": null,
+    "numeric_scale": null,
     "is_nullable": true,
     "is_unique": false,
     "is_primary_key": false,

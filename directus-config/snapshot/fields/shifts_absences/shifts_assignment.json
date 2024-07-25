@@ -4,14 +4,32 @@
   "type": "integer",
   "meta": {
     "collection": "shifts_absences",
-    "conditions": null,
+    "conditions": [
+      {
+        "name": "Hide if there is chosen membership",
+        "rule": {
+          "_and": [
+            {
+              "shifts_membership": {
+                "_nnull": true
+              }
+            }
+          ]
+        },
+        "hidden": true,
+        "options": {
+          "enableCreate": true,
+          "enableSelect": true
+        }
+      }
+    ],
     "display": null,
     "display_options": null,
     "field": "shifts_assignment",
     "group": null,
     "hidden": false,
     "interface": "select-dropdown-m2o",
-    "note": "Wenn leerg, dann gilt die Abwesenheit für alle Anmeldungen im gewählten Zeitraum.",
+    "note": "Wenn leer, dann gilt die Abwesenheit für alle Anmeldungen im gewählten Zeitraum.",
     "options": null,
     "readonly": false,
     "required": false,

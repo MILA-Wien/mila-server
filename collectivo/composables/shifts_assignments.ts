@@ -1,9 +1,8 @@
 import { RRule, RRuleSet } from "rrule";
 import { readItems } from "@directus/sdk";
 
-export const getActiveAssignments = async (
+export const getMembershipAssignmentsAndHolidays = async (
   mship: MembershipsMembership,
-  shiftID?: number,
 ) => {
   const directus = useDirectus();
   const now = getCurrentDate();
@@ -14,9 +13,6 @@ export const getActiveAssignments = async (
       _or: [{ _gte: nowStr }, { _null: true }],
     },
   };
-  if (shiftID) {
-    filter["shifts_shift"] = { id: { _eq: shiftID } };
-  }
   const assignments = (await directus.request(
     readItems("shifts_assignments", {
       filter: filter,
@@ -33,13 +29,16 @@ export const getActiveAssignments = async (
   const absences = (await directus.request(
     readItems("shifts_absences", {
       filter: {
-        shifts_membership: { id: { _eq: mship.id } },
         shifts_status: {
           _eq: "accepted",
         },
-        shifts_assignment: {
-          shifts_membership: { id: { _eq: mship.id } },
-        },
+        _or: [
+          { shifts_membership: { id: { _eq: mship.id } } },
+          {
+            shifts_assignment: { shifts_membership: { id: { _eq: mship.id } } },
+          },
+        ],
+
         shifts_to: { _gte: nowStr },
       },
       fields: [
@@ -51,6 +50,13 @@ export const getActiveAssignments = async (
       ],
     }),
   )) as ShiftsAbsence[];
+
+  const holidays = [] as ShiftsAbsence[];
+  for (const absence of absences) {
+    if (absence.shifts_is_holiday) {
+      holidays.push(absence);
+    }
+  }
 
   const assignmentRules: ShiftsAssignmentRules[] = assignments.map(
     (assignment) => {
@@ -92,7 +98,10 @@ export const getActiveAssignments = async (
     return nextA > nextB ? 1 : -1;
   });
 
-  return assignmentRules;
+  return {
+    assignemntRules: assignmentRules,
+    holidays: holidays,
+  };
 };
 
 // Get assignment rrule
@@ -136,45 +145,3 @@ export const getAssignmentRRule = (
 
   return [assignmentRule, absencesRule];
 };
-
-// export const getNextAssignmentOccurence = (
-//   assignment: ShiftsAssignment,
-// ): Date | null => {
-//   return getAssignmentRRule(assignment)[0].after(new Date());
-// };
-
-// export const getActiveAssignment = (
-//   assignments: ShiftsAssignment[],
-//   atDate?: DateTime,
-// ): ShiftsAssignment | null => {
-//   for (const assignment of assignments) {
-//     if (isShiftDurationModelActive(assignment, atDate)) return assignment;
-//   }
-
-//   return null;
-// };
-
-// export const getAssigneeName = (
-//   assignments: ShiftsAssignment[],
-//   atDate?: DateTime,
-// ) => {
-//   if (!atDate) {
-//     atDate = DateTime.now();
-//   }
-
-//   const assignment = getActiveAssignment(assignments, atDate);
-//   const mship = assignment?.shifts_membership as MembershipsMembership;
-//   if (!assignment)
-//     return "No assignee on " + atDate.toLocaleString(DateTime.DATE_SHORT);
-
-//   if (typeof assignment.shifts_membership == "string") {
-//     throw new Error("Assignment shifts_membership field must be loaded");
-//   }
-
-//   return (
-//     mship.memberships_user.first_name +
-//     " " +
-//     mship.memberships_user.last_name[0] +
-//     "."
-//   );
-// };

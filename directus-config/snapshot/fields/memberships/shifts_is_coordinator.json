@@ -1,40 +1,40 @@
 {
   "collection": "memberships",
-  "field": "membership_card_id",
-  "type": "string",
+  "field": "shifts_is_coordinator",
+  "type": "boolean",
   "meta": {
     "collection": "memberships",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "membership_card_id",
-    "group": "cards_group",
+    "field": "shifts_is_coordinator",
+    "group": "shifts_group",
     "hidden": false,
-    "interface": "input",
-    "note": "Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren.",
-    "options": {
-      "iconLeft": "credit_card"
-    },
+    "interface": "boolean",
+    "note": null,
+    "options": null,
     "readonly": false,
-    "required": false,
-    "sort": 1,
-    "special": null,
+    "required": true,
+    "sort": 2,
+    "special": [
+      "cast-boolean"
+    ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Mitgliederkarte RFID Nummer"
+        "translation": "Schichtkoordinator*in"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
-    "name": "membership_card_id",
+    "name": "shifts_is_coordinator",
     "table": "memberships",
-    "data_type": "character varying",
-    "default_value": null,
-    "max_length": 255,
+    "data_type": "boolean",
+    "default_value": false,
+    "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
     "is_nullable": true,

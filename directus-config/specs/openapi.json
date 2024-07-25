@@ -13089,393 +13089,6 @@
         ]
       }
     },
-    "/items/memberships": {
-      "post": {
-        "summary": "Create an Item",
-        "description": "Create a new memberships item.",
-        "tags": [
-          "Items",
-          "ItemsMemberships"
-        ],
-        "operationId": "createItemsMemberships",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Meta"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ItemsMemberships"
-                    }
-                  },
-                  {
-                    "$ref": "#/components/schemas/ItemsMemberships"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "items": {
-                        "$ref": "#/components/schemas/ItemsMemberships"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        }
-      },
-      "get": {
-        "summary": "List Items",
-        "description": "List the memberships items.",
-        "tags": [
-          "Items",
-          "ItemsMemberships"
-        ],
-        "operationId": "readItemsMemberships",
-        "security": [
-          {
-            "Auth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          },
-          {
-            "$ref": "#/components/parameters/Filter"
-          },
-          {
-            "$ref": "#/components/parameters/Search"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "$ref": "#/components/schemas/ItemsMemberships"
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/x-metadata"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update Multiple Items",
-        "description": "Update multiple memberships items at the same time.",
-        "tags": [
-          "Items",
-          "ItemsMemberships"
-        ],
-        "operationId": "updateItemsMemberships",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          },
-          {
-            "$ref": "#/components/parameters/Filter"
-          },
-          {
-            "$ref": "#/components/parameters/Search"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ItemsMemberships"
-                    }
-                  },
-                  {
-                    "$ref": "#/components/schemas/ItemsMemberships"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "data": {
-                      "items": {
-                        "$ref": "#/components/schemas/ItemsMemberships"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete Multiple Items",
-        "description": "Delete multiple existing memberships items.",
-        "tags": [
-          "Items",
-          "ItemsMemberships"
-        ],
-        "operationId": "deleteItemsMemberships",
-        "responses": {
-          "200": {
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        },
-        "parameters": []
-      }
-    },
-    "/items/memberships/{id}": {
-      "get": {
-        "summary": "Retrieve an Item",
-        "description": "Retrieve a single memberships item by unique identifier.",
-        "tags": [
-          "Items",
-          "ItemsMemberships"
-        ],
-        "operationId": "readSingleItemsMemberships",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Version"
-          },
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/ItemsMemberships"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update an Item",
-        "description": "Update an existing memberships item.",
-        "tags": [
-          "Items",
-          "ItemsMemberships"
-        ],
-        "operationId": "updateSingleItemsMemberships",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "$ref": "#/components/schemas/ItemsMemberships"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/ItemsMemberships"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete an Item",
-        "description": "Delete an existing memberships item.",
-        "tags": [
-          "Items",
-          "ItemsMemberships"
-        ],
-        "operationId": "deleteSingleItemsMemberships",
-        "responses": {
-          "200": {
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
     "/items/memberships_memberships_coshoppers_1": {
       "post": {
         "summary": "Create an Item",
@@ -14637,15 +14250,15 @@
         ]
       }
     },
-    "/items/shifts_slots": {
+    "/items/memberships": {
       "post": {
         "summary": "Create an Item",
-        "description": "Create a new shifts_slots item.",
+        "description": "Create a new memberships item.",
         "tags": [
           "Items",
-          "ItemsShiftsSlots"
+          "ItemsMemberships"
         ],
-        "operationId": "createItemsShiftsSlots",
+        "operationId": "createItemsMemberships",
         "parameters": [
           {
             "$ref": "#/components/parameters/Meta"
@@ -14659,11 +14272,11 @@
                   {
                     "type": "array",
                     "items": {
-                      "$ref": "#/components/schemas/ItemsShiftsSlots"
+                      "$ref": "#/components/schemas/ItemsMemberships"
                     }
                   },
                   {
-                    "$ref": "#/components/schemas/ItemsShiftsSlots"
+                    "$ref": "#/components/schemas/ItemsMemberships"
                   }
                 ]
               }
@@ -14680,7 +14293,7 @@
                   "properties": {
                     "data": {
                       "items": {
-                        "$ref": "#/components/schemas/ItemsShiftsSlots"
+                        "$ref": "#/components/schemas/ItemsMemberships"
                       }
                     }
                   }
@@ -14695,12 +14308,12 @@
       },
       "get": {
         "summary": "List Items",
-        "description": "List the shifts_slots items.",
+        "description": "List the memberships items.",
         "tags": [
           "Items",
-          "ItemsShiftsSlots"
+          "ItemsMemberships"
         ],
-        "operationId": "readItemsShiftsSlots",
+        "operationId": "readItemsMemberships",
         "security": [
           {
             "Auth": []
@@ -14741,7 +14354,7 @@
                       "type": "array",
                       "items": {
                         "type": "object",
-                        "$ref": "#/components/schemas/ItemsShiftsSlots"
+                        "$ref": "#/components/schemas/ItemsMemberships"
                       }
                     },
                     "meta": {
@@ -14759,12 +14372,12 @@
       },
       "patch": {
         "summary": "Update Multiple Items",
-        "description": "Update multiple shifts_slots items at the same time.",
+        "description": "Update multiple memberships items at the same time.",
         "tags": [
           "Items",
-          "ItemsShiftsSlots"
+          "ItemsMemberships"
         ],
-        "operationId": "updateItemsShiftsSlots",
+        "operationId": "updateItemsMemberships",
         "parameters": [
           {
             "$ref": "#/components/parameters/Fields"
@@ -14796,11 +14409,11 @@
                   {
                     "type": "array",
                     "items": {
-                      "$ref": "#/components/schemas/ItemsShiftsSlots"
+                      "$ref": "#/components/schemas/ItemsMemberships"
                     }
                   },
                   {
-                    "$ref": "#/components/schemas/ItemsShiftsSlots"
+                    "$ref": "#/components/schemas/ItemsMemberships"
                   }
                 ]
               }
@@ -14816,7 +14429,7 @@
                   "properties": {
                     "data": {
                       "items": {
-                        "$ref": "#/components/schemas/ItemsShiftsSlots"
+                        "$ref": "#/components/schemas/ItemsMemberships"
                       }
                     }
                   }
@@ -14828,12 +14441,12 @@
       },
       "delete": {
         "summary": "Delete Multiple Items",
-        "description": "Delete multiple existing shifts_slots items.",
+        "description": "Delete multiple existing memberships items.",
         "tags": [
           "Items",
-          "ItemsShiftsSlots"
+          "ItemsMemberships"
         ],
-        "operationId": "deleteItemsShiftsSlots",
+        "operationId": "deleteItemsMemberships",
         "responses": {
           "200": {
             "description": "Successful request"
@@ -14845,15 +14458,15 @@
         "parameters": []
       }
     },
-    "/items/shifts_slots/{id}": {
+    "/items/memberships/{id}": {
       "get": {
         "summary": "Retrieve an Item",
-        "description": "Retrieve a single shifts_slots item by unique identifier.",
+        "description": "Retrieve a single memberships item by unique identifier.",
         "tags": [
           "Items",
-          "ItemsShiftsSlots"
+          "ItemsMemberships"
         ],
-        "operationId": "readSingleItemsShiftsSlots",
+        "operationId": "readSingleItemsMemberships",
         "parameters": [
           {
             "$ref": "#/components/parameters/Fields"
@@ -14895,7 +14508,7 @@
                   "properties": {
                     "data": {
                       "type": "object",
-                      "$ref": "#/components/schemas/ItemsShiftsSlots"
+                      "$ref": "#/components/schemas/ItemsMemberships"
                     }
                   }
                 }
@@ -14912,12 +14525,12 @@
       },
       "patch": {
         "summary": "Update an Item",
-        "description": "Update an existing shifts_slots item.",
+        "description": "Update an existing memberships item.",
         "tags": [
           "Items",
-          "ItemsShiftsSlots"
+          "ItemsMemberships"
         ],
-        "operationId": "updateSingleItemsShiftsSlots",
+        "operationId": "updateSingleItemsMemberships",
         "parameters": [
           {
             "$ref": "#/components/parameters/Fields"
@@ -14951,7 +14564,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "$ref": "#/components/schemas/ItemsShiftsSlots"
+                "$ref": "#/components/schemas/ItemsMemberships"
               }
             }
           }
@@ -14966,7 +14579,7 @@
                   "properties": {
                     "data": {
                       "type": "object",
-                      "$ref": "#/components/schemas/ItemsShiftsSlots"
+                      "$ref": "#/components/schemas/ItemsMemberships"
                     }
                   }
                 }
@@ -14983,12 +14596,12 @@
       },
       "delete": {
         "summary": "Delete an Item",
-        "description": "Delete an existing shifts_slots item.",
+        "description": "Delete an existing memberships item.",
         "tags": [
           "Items",
-          "ItemsShiftsSlots"
+          "ItemsMemberships"
         ],
-        "operationId": "deleteSingleItemsShiftsSlots",
+        "operationId": "deleteSingleItemsMemberships",
         "responses": {
           "200": {
             "description": "Successful request"
@@ -16365,10 +15978,6 @@
       "x-collection": "memberships_coshoppers"
     },
     {
-      "name": "ItemsMemberships",
-      "x-collection": "memberships"
-    },
-    {
       "name": "ItemsMembershipsMembershipsCoshoppers1",
       "x-collection": "memberships_memberships_coshoppers_1"
     },
@@ -16381,8 +15990,8 @@
       "x-collection": "shifts_assignments"
     },
     {
-      "name": "ItemsShiftsSlots",
-      "x-collection": "shifts_slots"
+      "name": "ItemsMemberships",
+      "x-collection": "memberships"
     },
     {
       "name": "ItemsShiftsShifts",
@@ -19178,151 +18787,6 @@
         },
         "x-collection": "memberships_coshoppers"
       },
-      "ItemsMemberships": {
-        "type": "object",
-        "properties": {
-          "date_created": {
-            "nullable": true,
-            "type": "string",
-            "format": "timestamp"
-          },
-          "date_updated": {
-            "nullable": true,
-            "type": "string",
-            "format": "timestamp"
-          },
-          "id": {
-            "nullable": false,
-            "description": "Diese Nummer identifiziert das Mitglied",
-            "type": "integer"
-          },
-          "memberships_date_applied": {
-            "nullable": true,
-            "type": "string",
-            "format": "date"
-          },
-          "memberships_date_approved": {
-            "nullable": true,
-            "type": "string",
-            "format": "date"
-          },
-          "memberships_date_cancelled": {
-            "nullable": true,
-            "type": "string",
-            "format": "date"
-          },
-          "memberships_date_ended": {
-            "nullable": true,
-            "type": "string",
-            "format": "date"
-          },
-          "memberships_date_excluded": {
-            "nullable": true,
-            "type": "string",
-            "format": "date"
-          },
-          "memberships_shares": {
-            "nullable": false,
-            "description": "Änderung generiert automatische Rechnung",
-            "type": "integer"
-          },
-          "memberships_status": {
-            "nullable": false,
-            "description": "Lebenszyklus von Beitritt bis Beendet",
-            "type": "string"
-          },
-          "memberships_type": {
-            "nullable": true,
-            "type": "string"
-          },
-          "memberships_user": {
-            "nullable": true,
-            "description": "Verknüpfter Account",
-            "oneOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "$ref": "#/components/schemas/Users"
-              }
-            ]
-          },
-          "memberships_user_search": {
-            "nullable": true,
-            "type": "string"
-          },
-          "user_created": {
-            "nullable": true,
-            "type": "string",
-            "format": "uuid"
-          },
-          "user_updated": {
-            "nullable": true,
-            "type": "string",
-            "format": "uuid"
-          },
-          "membership_card_id": {
-            "nullable": true,
-            "description": "Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren.",
-            "type": "string"
-          },
-          "shifts_user_type": {
-            "nullable": true,
-            "description": "Welche Art von Schichten macht dieses Mitglied?",
-            "type": "string"
-          },
-          "shifts_counter": {
-            "nullable": true,
-            "description": "Wenn negativ, dann müssen Schichten nachgeholt werden",
-            "type": "integer"
-          },
-          "memberships_invoices": {
-            "nullable": true,
-            "description": "Rechnungen für Anteils-Zahlungen",
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "$ref": "#/components/schemas/ItemsPaymentsInvoicesOut"
-                }
-              ]
-            }
-          },
-          "kids": {
-            "nullable": true,
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "$ref": "#/components/schemas/ItemsMembershipsMembershipsCoshoppers1"
-                }
-              ]
-            }
-          },
-          "coshoppers": {
-            "nullable": true,
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "$ref": "#/components/schemas/ItemsMembershipsMembershipsCoshoppers"
-                }
-              ]
-            }
-          }
-        },
-        "x-collection": "memberships"
-      },
       "ItemsMembershipsMembershipsCoshoppers1": {
         "type": "object",
         "properties": {
@@ -19425,17 +18889,6 @@
             "type": "string",
             "format": "date"
           },
-          "shifts_slot": {
-            "nullable": false,
-            "oneOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "$ref": "#/components/schemas/ItemsShiftsSlots"
-              }
-            ]
-          },
           "shifts_membership": {
             "nullable": false,
             "oneOf": [
@@ -19444,6 +18897,17 @@
               },
               {
                 "$ref": "#/components/schemas/ItemsMemberships"
+              }
+            ]
+          },
+          "shifts_shift": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsShiftsShifts"
               }
             ]
           },
@@ -19465,51 +18929,112 @@
         },
         "x-collection": "shifts_assignments"
       },
-      "ItemsShiftsSlots": {
+      "ItemsMemberships": {
         "type": "object",
         "properties": {
-          "id": {
-            "nullable": false,
-            "type": "integer"
-          },
-          "user_created": {
-            "nullable": true,
-            "type": "string",
-            "format": "uuid"
-          },
           "date_created": {
             "nullable": true,
             "type": "string",
             "format": "timestamp"
-          },
-          "user_updated": {
-            "nullable": true,
-            "type": "string",
-            "format": "uuid"
           },
           "date_updated": {
             "nullable": true,
             "type": "string",
             "format": "timestamp"
           },
-          "shifts_name": {
+          "id": {
+            "nullable": false,
+            "description": "Diese Nummer identifiziert das Mitglied",
+            "type": "integer"
+          },
+          "memberships_date_applied": {
+            "nullable": true,
+            "type": "string",
+            "format": "date"
+          },
+          "memberships_date_approved": {
+            "nullable": true,
+            "type": "string",
+            "format": "date"
+          },
+          "memberships_date_cancelled": {
+            "nullable": true,
+            "type": "string",
+            "format": "date"
+          },
+          "memberships_date_ended": {
+            "nullable": true,
+            "type": "string",
+            "format": "date"
+          },
+          "memberships_date_excluded": {
+            "nullable": true,
+            "type": "string",
+            "format": "date"
+          },
+          "memberships_shares": {
+            "nullable": false,
+            "description": "Änderung generiert automatische Rechnung",
+            "type": "integer"
+          },
+          "memberships_status": {
+            "nullable": false,
+            "description": "Lebenszyklus von Beitritt bis Beendet",
+            "type": "string"
+          },
+          "memberships_type": {
             "nullable": true,
             "type": "string"
           },
-          "shifts_shift": {
-            "nullable": false,
+          "memberships_user": {
+            "nullable": true,
+            "description": "Verknüpfter Account",
             "oneOf": [
               {
-                "type": "integer"
+                "type": "string",
+                "format": "uuid"
               },
               {
-                "$ref": "#/components/schemas/ItemsShiftsShifts"
+                "$ref": "#/components/schemas/Users"
               }
             ]
           },
-          "shifts_assignments": {
+          "memberships_user_search": {
             "nullable": true,
-            "description": "Hier können Mitglieder für diese Schicht eingetragen werden",
+            "type": "string"
+          },
+          "user_created": {
+            "nullable": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_updated": {
+            "nullable": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          "shifts_user_type": {
+            "nullable": true,
+            "description": "Welche Art von Schichten macht dieses Mitglied?",
+            "type": "string"
+          },
+          "shifts_counter": {
+            "nullable": true,
+            "description": "Wenn negativ, dann müssen Schichten nachgeholt werden",
+            "type": "integer"
+          },
+          "shifts_is_coordinator": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "memberships_card_id": {
+            "nullable": true,
+            "description": "Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren.",
+            "type": "string"
+          },
+          "memberships_invoices": {
+            "nullable": true,
+            "description": "Rechnungen für Anteils-Zahlungen",
             "type": "array",
             "items": {
               "oneOf": [
@@ -19517,13 +19042,41 @@
                   "type": "integer"
                 },
                 {
-                  "$ref": "#/components/schemas/ItemsShiftsAssignments"
+                  "$ref": "#/components/schemas/ItemsPaymentsInvoicesOut"
+                }
+              ]
+            }
+          },
+          "kids": {
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "$ref": "#/components/schemas/ItemsMembershipsMembershipsCoshoppers1"
+                }
+              ]
+            }
+          },
+          "coshoppers": {
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "$ref": "#/components/schemas/ItemsMembershipsMembershipsCoshoppers"
                 }
               ]
             }
           }
         },
-        "x-collection": "shifts_slots"
+        "x-collection": "memberships"
       },
       "ItemsShiftsShifts": {
         "type": "object",
@@ -19598,20 +19151,13 @@
             "nullable": true,
             "type": "string"
           },
-          "shifts_slots": {
+          "shifts_needs_coordinator": {
             "nullable": true,
-            "description": "Jeder Slot kann von je einer Person besetzt werden.",
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "$ref": "#/components/schemas/ItemsShiftsSlots"
-                }
-              ]
-            }
+            "type": "boolean"
+          },
+          "shifts_slots": {
+            "nullable": false,
+            "type": "integer"
           }
         },
         "x-collection": "shifts_shifts"
@@ -19725,7 +19271,7 @@
           },
           "shifts_assignment": {
             "nullable": true,
-            "description": "Wenn leerg, dann gilt die Abwesenheit für alle Anmeldungen im gewählten Zeitraum.",
+            "description": "Wenn leer, dann gilt die Abwesenheit für alle Anmeldungen im gewählten Zeitraum.",
             "oneOf": [
               {
                 "type": "integer"
@@ -19741,7 +19287,8 @@
             "type": "boolean"
           },
           "shifts_membership": {
-            "nullable": false,
+            "nullable": true,
+            "description": "Wähle entweder ein Mitglied oder eine verknüpfte Anmeldung aus.",
             "oneOf": [
               {
                 "type": "integer"

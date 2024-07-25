@@ -1,52 +1,54 @@
 {
   "collection": "shifts_assignments",
-  "field": "shifts_slot",
+  "field": "shifts_shift",
   "type": "integer",
   "meta": {
     "collection": "shifts_assignments",
     "conditions": null,
     "display": "related-values",
     "display_options": {
-      "template": "{{shifts_shift.shifts_name}} - {{shifts_name}}"
+      "template": "{{shifts_name}}"
     },
-    "field": "shifts_slot",
+    "field": "shifts_shift",
     "group": null,
     "hidden": false,
     "interface": "select-dropdown-m2o",
     "note": null,
     "options": {
       "enableCreate": false,
-      "template": "{{shifts_shift.shifts_name}} - {{shifts_name}}"
+      "template": "{{shifts_name}}"
     },
     "readonly": false,
     "required": true,
     "sort": 2,
-    "special": null,
+    "special": [
+      "m2o"
+    ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Schichtslot"
+        "translation": "Schicht"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
-    "name": "shifts_slot",
+    "name": "shifts_shift",
     "table": "shifts_assignments",
     "data_type": "integer",
     "default_value": null,
     "max_length": null,
     "numeric_precision": 32,
     "numeric_scale": 0,
-    "is_nullable": false,
+    "is_nullable": true,
     "is_unique": false,
     "is_primary_key": false,
     "is_generated": false,
     "generation_expression": null,
     "has_auto_increment": false,
-    "foreign_key_table": "shifts_slots",
+    "foreign_key_table": "shifts_shifts",
     "foreign_key_column": "id"
   }
 }

@@ -1,37 +1,49 @@
 {
   "collection": "shifts_shifts",
   "field": "shifts_slots",
-  "type": "alias",
+  "type": "integer",
   "meta": {
     "collection": "shifts_shifts",
     "conditions": null,
-    "display": "related-values",
-    "display_options": {
-      "template": "{{shifts_name}}"
-    },
+    "display": null,
+    "display_options": null,
     "field": "shifts_slots",
     "group": null,
     "hidden": false,
-    "interface": "list-o2m",
-    "note": "Jeder Slot kann von je einer Person besetzt werden.",
+    "interface": "input",
+    "note": null,
     "options": {
-      "enableSelect": false,
-      "template": "{{shifts_name}}"
+      "min": 1
     },
     "readonly": false,
-    "required": false,
-    "sort": 9,
-    "special": [
-      "o2m"
-    ],
+    "required": true,
+    "sort": 7,
+    "special": null,
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Schichtslots"
+        "translation": "Anzahl Personen"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
+  },
+  "schema": {
+    "name": "shifts_slots",
+    "table": "shifts_shifts",
+    "data_type": "integer",
+    "default_value": null,
+    "max_length": null,
+    "numeric_precision": 32,
+    "numeric_scale": 0,
+    "is_nullable": false,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
   }
 }

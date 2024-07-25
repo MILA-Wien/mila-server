@@ -4,7 +4,26 @@
   "type": "boolean",
   "meta": {
     "collection": "shifts_absences",
-    "conditions": null,
+    "conditions": [
+      {
+        "name": "Hide if there is no chosen membership",
+        "rule": {
+          "_and": [
+            {
+              "shifts_membership": {
+                "_null": true
+              }
+            }
+          ]
+        },
+        "hidden": true,
+        "options": {
+          "iconOn": "check_box",
+          "iconOff": "check_box_outline_blank",
+          "label": "Aktiviert"
+        }
+      }
+    ],
     "display": null,
     "display_options": null,
     "field": "shifts_is_holiday",

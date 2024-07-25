@@ -244,11 +244,10 @@ type Subscription {
   payments_invoices_out_mutated(event: EventEnum): payments_invoices_out_mutated
   payments_invoices_entries_mutated(event: EventEnum): payments_invoices_entries_mutated
   memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
-  memberships_mutated(event: EventEnum): memberships_mutated
   memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
   memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
   shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
-  shifts_slots_mutated(event: EventEnum): shifts_slots_mutated
+  memberships_mutated(event: EventEnum): memberships_mutated
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
   shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
@@ -1646,14 +1645,15 @@ type memberships {
   user_created: String
   user_updated: String
 
-  """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
-  membership_card_id: String
-
   """Welche Art von Schichten macht dieses Mitglied?"""
   shifts_user_type: String
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
   shifts_counter: Int
+  shifts_is_coordinator: Boolean
+
+  """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
+  memberships_card_id: String
   memberships_invoices(filter: payments_invoices_out_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [payments_invoices_out]
   memberships_invoices_func: count_functions
   kids(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers_1]
@@ -1970,8 +1970,8 @@ type shifts_assignments {
   """
   shifts_to: Date
   shifts_to_func: date_functions
-  shifts_slot(filter: shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_slots
   shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+  shifts_shift(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_shifts
   shifts_absences(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_absences]
   shifts_absences_func: count_functions
 }
@@ -2033,34 +2033,14 @@ type shifts_shifts {
   """So viele Punkte bekommt man bei der Absolvierung dieser Schicht"""
   shifts_score: Int
   shifts_location: String
-  shifts_slots(filter: shifts_slots_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_slots]
-  shifts_slots_func: count_functions
+  shifts_needs_coordinator: Boolean
+  shifts_slots: Int!
 }
 
 type shifts_shifts_mutated {
   key: ID!
   event: EventEnum
   data: shifts_shifts
-}
-
-type shifts_slots {
-  id: ID!
-  user_created: String
-  date_created: Date
-  date_created_func: datetime_functions
-  user_updated: String
-  date_updated: Date
-  date_updated_func: datetime_functions
-  shifts_name: String
-  shifts_shift(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_shifts
-  shifts_assignments(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_assignments]
-  shifts_assignments_func: count_functions
-}
-
-type shifts_slots_mutated {
-  key: ID!
-  event: EventEnum
-  data: shifts_slots
 }
 
 type time_functions {
@@ -2513,14 +2493,15 @@ input create_memberships_input {
   user_created: String
   user_updated: String
 
-  """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
-  membership_card_id: String
-
   """Welche Art von Schichten macht dieses Mitglied?"""
   shifts_user_type: String
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
   shifts_counter: Int
+  shifts_is_coordinator: Boolean
+
+  """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
+  memberships_card_id: String
   memberships_invoices: [create_payments_invoices_out_input]
   kids: [create_memberships_memberships_coshoppers_1_input]
   coshoppers: [create_memberships_memberships_coshoppers_input]
@@ -3147,9 +3128,10 @@ input memberships_filter {
   memberships_user_search: string_filter_operators
   user_created: string_filter_operators
   user_updated: string_filter_operators
-  membership_card_id: string_filter_operators
   shifts_user_type: string_filter_operators
   shifts_counter: number_filter_operators
+  shifts_is_coordinator: boolean_filter_operators
+  memberships_card_id: string_filter_operators
   memberships_invoices: payments_invoices_out_filter
   memberships_invoices_func: count_function_filter_operators
   kids: memberships_memberships_coshoppers_1_filter
@@ -3317,8 +3299,8 @@ input shifts_assignments_filter {
   shifts_from_func: date_function_filter_operators
   shifts_to: date_filter_operators
   shifts_to_func: date_function_filter_operators
-  shifts_slot: shifts_slots_filter
   shifts_membership: memberships_filter
+  shifts_shift: shifts_shifts_filter
   shifts_absences: shifts_absences_filter
   shifts_absences_func: count_function_filter_operators
   _and: [shifts_assignments_filter]
@@ -3347,26 +3329,10 @@ input shifts_shifts_filter {
   shifts_description: string_filter_operators
   shifts_score: number_filter_operators
   shifts_location: string_filter_operators
-  shifts_slots: shifts_slots_filter
-  shifts_slots_func: count_function_filter_operators
+  shifts_needs_coordinator: boolean_filter_operators
+  shifts_slots: number_filter_operators
   _and: [shifts_shifts_filter]
   _or: [shifts_shifts_filter]
-}
-
-input shifts_slots_filter {
-  id: number_filter_operators
-  user_created: string_filter_operators
-  date_created: date_filter_operators
-  date_created_func: datetime_function_filter_operators
-  user_updated: string_filter_operators
-  date_updated: date_filter_operators
-  date_updated_func: datetime_function_filter_operators
-  shifts_name: string_filter_operators
-  shifts_shift: shifts_shifts_filter
-  shifts_assignments: shifts_assignments_filter
-  shifts_assignments_func: count_function_filter_operators
-  _and: [shifts_slots_filter]
-  _or: [shifts_slots_filter]
 }
 
 input string_filter_operators {
@@ -3788,14 +3754,15 @@ input update_memberships_input {
   user_created: String
   user_updated: String
 
-  """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
-  membership_card_id: String
-
   """Welche Art von Schichten macht dieses Mitglied?"""
   shifts_user_type: String
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
   shifts_counter: Int
+  shifts_is_coordinator: Boolean
+
+  """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
+  memberships_card_id: String
   memberships_invoices: [update_payments_invoices_out_input]
   kids: [update_memberships_memberships_coshoppers_1_input]
   coshoppers: [update_memberships_memberships_coshoppers_input]

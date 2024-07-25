@@ -284,12 +284,14 @@ export const getAssignmentRrules = (
       }),
     );
 
+    // Case 1: Absence for this assignment
+    // Case 2: Absence for the same membership and all assignments
     const filteredAbsences = absences.filter(
       (absence) =>
-        (absence.shifts_assignment == assignment.id ||
-          absence.shifts_assignment == null) &&
-        absence.shifts_membership ==
-          (assignment.shifts_membership as MembershipsMembership).id,
+        absence.shifts_assignment == assignment.id ||
+        (absence.shifts_assignment == null &&
+          absence.shifts_membership ==
+            (assignment.shifts_membership as MembershipsMembership).id),
     );
 
     for (const absence of filteredAbsences) {
@@ -315,40 +317,40 @@ export const getAssignmentRrules = (
   return assignmentRules;
 };
 
-// TODO deprecated?
+// // TODO deprecated?
 
-export const isShiftDurationModelActive = (
-  durationModel: { shifts_from: string; shifts_to?: string },
-  atDate?: DateTime,
-): boolean => {
-  return isFromToActive(
-    DateTime.fromISO(durationModel.shifts_from),
-    durationModel.shifts_to
-      ? DateTime.fromISO(durationModel.shifts_to)
-      : undefined,
-    atDate,
-    true,
-  );
-};
+// export const isShiftDurationModelActive = (
+//   durationModel: { shifts_from: string; shifts_to?: string },
+//   atDate?: DateTime,
+// ): boolean => {
+//   return isFromToActive(
+//     DateTime.fromISO(durationModel.shifts_from),
+//     durationModel.shifts_to
+//       ? DateTime.fromISO(durationModel.shifts_to)
+//       : undefined,
+//     atDate,
+//     true,
+//   );
+// };
 
-export const isFromToActive = (
-  from: DateTime,
-  to?: DateTime,
-  atDate?: DateTime,
-  dateOnly = true,
-): boolean => {
-  if (!atDate) {
-    atDate = DateTime.now();
-  }
+// export const isFromToActive = (
+//   from: DateTime,
+//   to?: DateTime,
+//   atDate?: DateTime,
+//   dateOnly = true,
+// ): boolean => {
+//   if (!atDate) {
+//     atDate = DateTime.now();
+//   }
 
-  if (dateOnly) {
-    from = from.startOf("day");
-    to = to?.endOf("day");
-  }
+//   if (dateOnly) {
+//     from = from.startOf("day");
+//     to = to?.endOf("day");
+//   }
 
-  if (from > atDate) {
-    return false;
-  }
+//   if (from > atDate) {
+//     return false;
+//   }
 
-  return !(to && to < atDate);
-};
+//   return !(to && to < atDate);
+// };

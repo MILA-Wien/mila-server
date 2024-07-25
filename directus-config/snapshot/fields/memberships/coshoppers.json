@@ -20,7 +20,7 @@
     },
     "readonly": false,
     "required": false,
-    "sort": 2,
+    "sort": 3,
     "special": [
       "m2m"
     ],

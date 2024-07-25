@@ -1,38 +1,40 @@
 {
-  "collection": "shifts_slots",
-  "field": "shifts_name",
-  "type": "string",
+  "collection": "shifts_shifts",
+  "field": "shifts_needs_coordinator",
+  "type": "boolean",
   "meta": {
-    "collection": "shifts_slots",
+    "collection": "shifts_shifts",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_name",
+    "field": "shifts_needs_coordinator",
     "group": null,
     "hidden": false,
-    "interface": null,
+    "interface": "boolean",
     "note": null,
     "options": null,
     "readonly": false,
-    "required": false,
-    "sort": 2,
-    "special": null,
+    "required": true,
+    "sort": 8,
+    "special": [
+      "cast-boolean"
+    ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Slotname"
+        "translation": "Benötigt Koordinator*in?"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
-    "name": "shifts_name",
-    "table": "shifts_slots",
-    "data_type": "character varying",
-    "default_value": null,
-    "max_length": 255,
+    "name": "shifts_needs_coordinator",
+    "table": "shifts_shifts",
+    "data_type": "boolean",
+    "default_value": false,
+    "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
     "is_nullable": true,

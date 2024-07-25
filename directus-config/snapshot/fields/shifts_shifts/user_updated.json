@@ -17,7 +17,7 @@
     },
     "readonly": true,
     "required": false,
-    "sort": 15,
+    "sort": 16,
     "special": [
       "user-updated"
     ],
