@@ -18,7 +18,6 @@ export const getShiftOccurrences = async (
   const isRegular = shiftType === "regular";
   const isUnfilled = shiftType === "unfilled";
   const isAll = shiftType === "all";
-
   const shifts: ShiftsShift[] = (await directus.request(
     readItems("shifts_shifts", {
       filter: {
@@ -191,8 +190,10 @@ const getSingleShiftOccurence = (
   shiftRule: RRule,
   assignmentRrules: AssignmentRrule[],
 ): ShiftOccurrence => {
+  const mship = useCollectivoUser().value.membership;
   const assignments: AssignmentOccurrence[] = [];
   let n_assigned = 0;
+  let selfAssigned = false;
 
   for (const ass of assignmentRrules ?? []) {
     if (ass.rrule.between(date, date, true).length > 0) {
@@ -207,8 +208,16 @@ const getSingleShiftOccurence = (
         }
       }
 
+      // Assignment is active?
       if (occ.absences.length == 0) {
         n_assigned += 1;
+        if (
+          (typeof occ.assignment.shifts_membership == "object" &&
+            occ.assignment.shifts_membership.id == mship?.id) ||
+          occ.assignment.shifts_membership == mship?.id
+        ) {
+          selfAssigned = true;
+        }
       }
 
       assignments.push(occ);
@@ -232,6 +241,7 @@ const getSingleShiftOccurence = (
     shiftRule: shiftRule,
     n_assigned: n_assigned,
     assignments: assignments,
+    selfAssigned: selfAssigned,
   };
 };
 

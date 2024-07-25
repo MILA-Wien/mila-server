@@ -524,11 +524,13 @@ async function createAssignment(onetime: boolean) {
             {{ mshipData.memberships_user.first_name }}
             {{ mshipData.memberships_user.last_name }}
           </p>
-          <p>Membership type: {{ mshipData.memberships_type }}</p>
+          <p>{{ t("Membership type") }}: {{ mshipData.memberships_type }}</p>
 
-          <p>Membership status: {{ mshipData.memberships_status }}</p>
+          <p>
+            {{ t("Membership status") }}: {{ t(mshipData.memberships_status) }}
+          </p>
 
-          <p>Shift type: {{ mshipData.shifts_user_type }}</p>
+          <p>{{ t("Shift type") }}: {{ t(mshipData.shifts_user_type) }}</p>
 
           <div class="flex flex-wrap gap-2 mt-3">
             <UButton @click="createAssignment(true)">{{
@@ -681,4 +683,17 @@ de:
   Create regular assignment: "Reguläre Anmeldung erstellen"
   Assigned: "Angemeldet"
   Absent: "Abwesend"
+  Membership type: "Mitgliedschaftstyp"
+  Membership status: "Mitgliedschaftsstatus"
+  Shift type: "Schichttyp"
+  regular: "Regulär"
+  jumper: "Springer*in"
+  inactive: "Inaktiv"
+  exempt: "Befreit"
+  approved: "Aufgenommen"
+  applied: "Beworben"
+  in-exclusion: "Im Ausschluss"
+  in-cancellation: "Im Ausstieg"
+  ended: "Beendet"
+  draft: "Entwurf"
 </i18n>

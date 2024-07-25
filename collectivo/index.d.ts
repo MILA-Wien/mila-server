@@ -83,15 +83,6 @@ declare global {
     shifts_shift?: ShiftsShift | number;
   }
 
-  // Shift occurrenecs
-
-  interface SlotOccurrence {
-    slot: ShiftsSlot;
-    assignments: ShiftsAssignment[];
-    absentAssignments: ShiftsAssignment[];
-    removedAssignments?: boolean;
-  }
-
   interface ShiftOccurrence {
     shift: ShiftsShift;
     start: DateTime;
@@ -99,6 +90,7 @@ declare global {
     shiftRule: RRuleSet;
     n_assigned: number;
     assignments: AssignmentOccurrence[];
+    selfAssigned?: boolean;
   }
 
   interface SlotRrule {

@@ -147,12 +147,17 @@ async function updateEvents(from, to) {
     const isPast = start < new Date();
     let title = occurrence.shift.shifts_name;
     let color = "";
+
     if (props.mode === "admin") {
       color = isPast
         ? "#808080"
         : colors[n_missing >= 0 && n_missing < 3 ? n_missing : 2];
     } else {
       color = colors[0];
+      if (occurrence.selfAssigned) {
+        // Do not add occurrences that the user themselves is already assigned to
+        continue;
+      }
     }
     if (props.mode === "admin" && !isPast) {
       title +=
@@ -177,7 +182,6 @@ async function updateEvents(from, to) {
 </script>
 
 <template>
-  LOCALE: {{ locale }}
   <div v-if="showCalendar" class="">
     <ShiftsCalendarHeader
       v-model="customSettings"

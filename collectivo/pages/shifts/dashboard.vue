@@ -76,18 +76,16 @@ if (isActive) loadData();
         <p>{{ t("Name") }}: {{ user.first_name + " " + user.last_name }}</p>
         <p>{{ t("Shifttype") }}: {{ t("t:" + mship.shifts_user_type) }}</p>
 
-        <!-- <p>
-          <span>{{ t("Skills") }}: </span>
-          <span v-if="!mship.shifts_skills.length">{{ t("None") }}</span>
-          <span v-for="(skill, index) in mship.shifts_skills" :key="skill.id">
-            <span v-if="index !== 0">, </span>
-            <span>{{ skill.shifts_skills_id.shifts_name }}</span>
-          </span>
-        </p> -->
-
         <p v-if="mship.shifts_user_type != 'exempt'">
           {{ t("Shiftcounter") }}: {{ mship.shifts_counter }}
         </p>
+
+        <p
+          v-if="mship.shifts_counter > -1 || mship.shifts_user_type == 'exempt'"
+        >
+          {{ t("Status") }}: {{ t("Shopping is allowed") }}
+        </p>
+        <p v-else>{{ t("Status") }}:{{ t("Shopping is not allowed") }}</p>
       </div>
     </CollectivoContainer>
 
@@ -113,7 +111,7 @@ if (isActive) loadData();
       <a :href="`mailto:${config.public.contactEmail}`">
         <UButton
           size="lg"
-          :label="t('Other request')"
+          :label="t('Other request') + ': ' + config.public.contactEmail"
           :icon="'i-heroicons-pencil-square'"
         />
       </a>
@@ -203,6 +201,8 @@ de:
   From: "Von"
   To: "Bis"
   Holiday: "Urlaub"
+  Shopping is allowed: "Einkaufen ist erlaubt"
+  Shopping is not allowed: "Einkaufen ist nicht erlaubt"
   "Please select a valid date range.": "Bitte wähle einen validen Datumsbereich aus."
 
   I will not be able to go shopping during this absence and am not required to do shifts.: "Ich werde während dieser Abwesenheit nicht einkaufen können und bin nicht verpflichtet, Schichten zu übernehmen."

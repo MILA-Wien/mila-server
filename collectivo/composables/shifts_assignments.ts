@@ -1,19 +1,25 @@
 import { RRule, RRuleSet } from "rrule";
 import { readItems } from "@directus/sdk";
 
-export const getActiveAssignments = async (mship: MembershipsMembership) => {
+export const getActiveAssignments = async (
+  mship: MembershipsMembership,
+  shiftID?: number,
+) => {
   const directus = useDirectus();
   const now = getCurrentDate();
   const nowStr = now.toISOString();
-
+  const filter = {
+    shifts_membership: { id: { _eq: mship.id } },
+    shifts_to: {
+      _or: [{ _gte: nowStr }, { _null: true }],
+    },
+  };
+  if (shiftID) {
+    filter["shifts_shift"] = { id: { _eq: shiftID } };
+  }
   const assignments = (await directus.request(
     readItems("shifts_assignments", {
-      filter: {
-        shifts_membership: { id: { _eq: mship.id } },
-        shifts_to: {
-          _or: [{ _gte: nowStr }, { _null: true }],
-        },
-      },
+      filter: filter,
       fields: [
         "*",
         { shifts_shift: ["*"] },
