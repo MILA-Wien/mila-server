@@ -2554,7 +2554,9 @@
       "membership_card_id",
       "coshoppers",
       "kids",
-      "memberships_user_search"
+      "memberships_user_search",
+      "shifts_is_coordinator",
+      "memberships_card_id"
     ],
     "_syncId": "1414e20a-39a0-4b70-9dce-108135a7c406"
   },
@@ -2604,7 +2606,9 @@
       "shifts_slot",
       "shifts_to",
       "shifts_from",
-      "id"
+      "id",
+      "shifts_shift",
+      "shifts_absences"
     ],
     "_syncId": "da15fda6-9248-4677-81ad-1c08d6068715"
   },

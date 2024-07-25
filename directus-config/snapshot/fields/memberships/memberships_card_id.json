@@ -38,7 +38,7 @@
     "numeric_precision": null,
     "numeric_scale": null,
     "is_nullable": true,
-    "is_unique": false,
+    "is_unique": true,
     "is_primary_key": false,
     "is_generated": false,
     "generation_expression": null,
