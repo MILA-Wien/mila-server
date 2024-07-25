@@ -15,8 +15,7 @@ const props = defineProps({
 const nextOccurrence = props.shiftAssignment.nextOccurrence;
 const assignment = props.shiftAssignment.assignment as ShiftsAssignment;
 const absences = props.shiftAssignment.absences as ShiftsAbsence[];
-const slot = assignment.shifts_slot as ShiftsSlot;
-const shift = slot.shifts_shift as ShiftsShift;
+const shift = assignment.shifts_shift as ShiftsShift;
 
 function getTimeString(occurence: Date) {
   const occ = DateTime.fromJSDate(occurence);
@@ -74,16 +73,14 @@ function getEndDate(endDate: string) {
 
         <!-- Shift name -->
         <p class="mt-2">
-          <span v-if="slot.shifts_name">{{ shift.shifts_name }}</span>
-          <span v-if="slot.shifts_name && slot.shifts_name"> - </span>
-          <span v-if="slot.shifts_name">{{ slot.shifts_name }}</span>
+          {{ shift.shifts_name }}
         </p>
 
         <!-- Shift infos -->
         <p
           v-if="shift.shifts_description"
           v-html="parse(shift.shifts_description)"
-        ></p>
+        />
 
         <!-- Space for buttons
         <div class="flex flex-wrap gap-3 pt-4">

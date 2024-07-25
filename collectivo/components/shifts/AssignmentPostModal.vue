@@ -1,14 +1,7 @@
 <script setup lang="ts">
 import { DateTime } from "luxon";
 import { parse } from "marked";
-import { createItem, readItems } from "@directus/sdk";
-
-interface SlotContainer {
-  slot: ShiftsSlot;
-  freeUntil: DateTime | null;
-  id: number;
-  occurences: Date[];
-}
+import { createItem } from "@directus/sdk";
 
 const props = defineProps({
   shiftOccurence: {
@@ -16,7 +9,7 @@ const props = defineProps({
     required: true,
   },
   shiftType: {
-    type: String as PropType<"jumper" | "regular">,
+    type: String,
     default: "regular",
   },
 });
@@ -27,68 +20,16 @@ const directus = useDirectus();
 const user = useCollectivoUser();
 const shift = props.shiftOccurence.shift;
 const start = props.shiftOccurence.start;
-const startDate = start.toISO()?.split("T")[0];
+// const startDate = start.toISO()?.split("T")[0];
 const end = props.shiftOccurence.end;
 const submitLoading = ref(false);
 const repeats = shift.shifts_repeats_every ?? 0;
 const isWeeks = repeats % 7 === 0;
 const frequency = isWeeks ? repeats / 7 : repeats;
-const slots = ref<SlotContainer[]>([]);
-const chosenSlot = ref<SlotContainer | null>(null);
 
-async function getOpenSlots() {
-  const openSlots = props.shiftOccurence.openSlots;
-  return (await directus.request(
-    readItems("shifts_slots", {
-      filter: { id: { _in: openSlots } },
-    }),
-  )) as ShiftsSlot[];
-}
-
-onMounted(async () => {
-  const openSlots = await getOpenSlots();
-
-  for (const slot of openSlots) {
-    const nearestFutureAssignment = (
-      await directus.request(
-        readItems("shifts_assignments", {
-          filter: {
-            shifts_membership: user.value.membership!.id,
-            shifts_slot: { _eq: slot.id },
-            shifts_from: { _gte: startDate },
-          },
-          sort: "-shifts_from",
-          limit: 1,
-        }),
-      )
-    )[0] as ShiftsAssignment;
-
-    const freeUntil = nearestFutureAssignment
-      ? DateTime.fromISO(
-          nearestFutureAssignment.shifts_from + "T00:00:00.000Z",
-        ).minus({
-          days: 1,
-        })
-      : null;
-
-    const occurences = props.shiftOccurence.shiftRule.between(
-      start.startOf("day").toJSDate(),
-      freeUntil ? freeUntil.toJSDate() : start.startOf("day").toJSDate(),
-      true,
-    );
-
-    slots.value.push({
-      id: slot.id,
-      slot,
-      freeUntil: freeUntil,
-      occurences: occurences,
-    });
-  }
-});
-
-async function postAssignment(slotContainer: SlotContainer) {
+async function postAssignment() {
   try {
-    await postAssignmentInner(slotContainer);
+    await postAssignmentInner();
 
     showToast({
       type: "success",
@@ -104,14 +45,14 @@ async function postAssignment(slotContainer: SlotContainer) {
   }
 }
 
-async function postAssignmentInner(slotContainer: SlotContainer) {
+async function postAssignmentInner() {
   submitLoading.value = true;
 
   const shiftStartString = start.toISO()!;
 
   const payload: ShiftsAssignment = {
     shifts_membership: user.value.membership!.id,
-    shifts_slot: slotContainer.id,
+    shifts_shift: shift.id!,
     shifts_from: shiftStartString,
   };
 
@@ -119,8 +60,8 @@ async function postAssignmentInner(slotContainer: SlotContainer) {
   // Regular shifts are either until freeUntil or forever
   if (props.shiftType === "jumper") {
     payload.shifts_to = shiftStartString;
-  } else if (slotContainer.freeUntil) {
-    payload.shifts_to = slotContainer.freeUntil.toISO()!;
+  } else {
+    throw new Error("Regular shifts are not supported yet");
   }
 
   await directus.request(createItem("shifts_assignments", payload));
@@ -154,10 +95,6 @@ async function postAssignmentInner(slotContainer: SlotContainer) {
           <br />
           {{ t("Starting from") }}
           {{ start.toLocaleString(DateTime.DATE_MED) }}
-          <span v-if="chosenSlot && chosenSlot.freeUntil">
-            {{ t("until") }}
-            {{ chosenSlot.freeUntil.toLocaleString(DateTime.DATE_MED) }}
-          </span>
         </span>
       </p>
 
@@ -168,44 +105,12 @@ async function postAssignmentInner(slotContainer: SlotContainer) {
         v-html="parse(shift.shifts_description)"
       />
 
-      <UFormGroup label="Slot" class="my-5">
-        <USelectMenu
-          v-model="chosenSlot"
-          :options="slots"
-          option-value="id"
-          label="Slot"
-          placeholder="Choose slot"
-        >
-          <template #option="{ option }">
-            {{ option.id }} - {{ option.slot.shifts_name }}
-            <span v-if="shiftType == 'regular' && option.freeUntil">
-              (free until
-              {{ option.freeUntil.toLocaleString(DateTime.DATE_MED) }}
-              )
-            </span>
-          </template>
-
-          <template #label>
-            <template v-if="chosenSlot">
-              {{ chosenSlot.id }} - {{ chosenSlot.slot.shifts_name }}
-              <span v-if="shiftType == 'regular' && chosenSlot.freeUntil">
-                (free until
-                {{ chosenSlot.freeUntil.toLocaleString(DateTime.DATE_MED) }}
-                )
-              </span>
-            </template>
-            <template v-else> Choose slot </template>
-          </template>
-        </USelectMenu>
-      </UFormGroup>
-
       <UButton
         class="w-full"
         size="lg"
         icon="i-heroicons-pencil-square"
         :loading="submitLoading"
-        :disabled="!chosenSlot"
-        @click="postAssignment(chosenSlot!)"
+        @click="postAssignment()"
       >
         {{ t("Sign up") }}
       </UButton>

@@ -133,20 +133,30 @@ async function updateEvents(from, to) {
     const n_missing = occurrence.shift.shifts_slots - occurrence.n_assigned;
     const start = occurrence.start.toJSDate();
     const isPast = start < new Date();
-    const title = occurrence.shift.shifts_name;
-    // if (!isPast) {
-    //   title +=
-    //     " []" + occurrence.n_assigned + "/" + occurrence.shift.shifts_slots;
-    // }
+    let title = occurrence.shift.shifts_name;
+    let color = "";
+    if (props.mode === "admin") {
+      color = isPast
+        ? "#808080"
+        : colors[n_missing >= 0 && n_missing < 3 ? n_missing : 2];
+    } else {
+      color = colors[0];
+    }
+    if (props.mode === "admin" && !isPast) {
+      title +=
+        " [" +
+        occurrence.n_assigned +
+        "/" +
+        occurrence.shift.shifts_slots +
+        "]";
+    }
     events.push({
       title: title,
       start: occurrence.start.toJSDate(),
       end: occurrence.end.toJSDate(),
       allDay: false,
       shiftOccurence: occurrence,
-      color: isPast
-        ? "#808080"
-        : colors[n_missing >= 0 && n_missing < 3 ? n_missing : 2],
+      color: color,
     });
   }
 

@@ -291,7 +291,7 @@ export const getAssignmentRrules = (
       });
       absence._rrule = absenceRule;
       absence.shifts_assignment = assignment;
-      assRrule.exrule(absenceRule);
+      assRruleWithAbs.exrule(absenceRule);
     }
 
     assignmentRules.push({

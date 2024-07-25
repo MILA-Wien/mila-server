@@ -53,13 +53,11 @@ async function postAbsence() {
 
   showToast({
     type: "success",
-    // title: ",
-    // description: t("Please select a valid date range."),
   });
 }
 
 async function loadData() {
-  activeAssignments.value = await getActiveAssignments(user, mship);
+  activeAssignments.value = await getActiveAssignments(mship);
 }
 
 if (isActive) loadData();
@@ -112,7 +110,7 @@ if (isActive) loadData();
           t("Sign up for a shift")
         }}</UButton></NuxtLink
       > -->
-      <a :href="`mailto:${config.public.collectivoContactEmail}`">
+      <a :href="`mailto:${config.public.contactEmail}`">
         <UButton
           size="lg"
           :label="t('Other request')"

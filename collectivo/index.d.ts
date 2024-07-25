@@ -45,8 +45,6 @@ declare global {
     shifts_to?: string;
     shifts_shift: ShiftsShift | number;
     shifts_membership: MembershipsMembership | number;
-    _removed?: boolean;
-    _logged?: boolean;
   }
 
   interface ShiftsAssignmentRules {
@@ -120,6 +118,8 @@ declare global {
   interface AssignmentOccurrence {
     assignment: ShiftsAssignment;
     absences: ShiftsAbsence[];
+    logged?: boolean;
+    removed?: boolean;
   }
 
   interface MembershipsMembership {
