@@ -17,6 +17,10 @@ const props = defineProps({
 
 const shiftActionModalisOpen = ref(false);
 const selectedShiftOccurence = ref(null);
+const showCalendar = ref(true);
+
+// Watch locale change
+const { locale } = useI18n();
 
 // Dates are used without time, time always being set to UTC 00:00
 const calendarOptions: Ref<CalendarOptions> = ref({
@@ -30,6 +34,7 @@ const calendarOptions: Ref<CalendarOptions> = ref({
   ],
   initialView: "dayGridMonth",
   headerToolbar: false,
+  locale: locale.value,
   events: [],
   eventDisplay: "block",
   height: "auto",
@@ -47,6 +52,13 @@ const calendarOptions: Ref<CalendarOptions> = ref({
     selectedShiftOccurence.value = info.event.extendedProps.shiftOccurence;
     shiftActionModalisOpen.value = true;
   },
+});
+
+watch(locale, () => {
+  showCalendar.value = false;
+  calendarOptions.value.locale = locale.value;
+  registerEventUpdate();
+  showCalendar.value = true;
 });
 
 interface ShiftType {
@@ -165,7 +177,8 @@ async function updateEvents(from, to) {
 </script>
 
 <template>
-  <div class="">
+  LOCALE: {{ locale }}
+  <div v-if="showCalendar" class="">
     <ShiftsCalendarHeader
       v-model="customSettings"
       :calendar-ref="calendarComputed()"

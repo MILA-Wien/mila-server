@@ -8,11 +8,16 @@ const model = defineModel();
 const shiftTypes = model.value.allowedShiftTypes;
 const displayedDate = ref();
 const calendarApi = ref(null);
+const { locale } = useI18n();
 
 // Get shift type with value from props
 const selectedShiftType = ref(
   shiftTypes.find((type) => type.value === model.value.selectedShiftType),
 );
+
+watch(locale, () => {
+  displayedDate.value = calendarApi.value.view.title;
+});
 
 const prevHandler = () => {
   calendarApi.value.prev();
