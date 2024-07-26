@@ -305,6 +305,8 @@ async function createAssignment(onetime: boolean) {
 
   occ.assignments.push({
     assignment: res,
+    isActive: true,
+    isOneTime: onetime,
     absences: [],
   } as AssignmentOccurrence);
 
@@ -378,13 +380,25 @@ function getAssignmentColor(assignment: AssignmentOccurrence) {
 
       <!-- Shift slots -->
       <div v-if="!isPast">
-        <h2>
-          {{ t("Assignments") }} [{{ occ.n_assigned }}/{{
-            occ.shift.shifts_slots
-          }}]
-        </h2>
+        <div class="flex flex-row items-end mb-5">
+          <div class="grow">
+            <h2>
+              {{ t("Assignments") }} [{{ occ.n_assigned }}/{{
+                occ.shift.shifts_slots
+              }}]
+            </h2>
+          </div>
+          <div class="mb-1">
+            <UButton
+              :label="t('Create assignment')"
+              size="md"
+              icon="i-heroicons-plus-16-solid"
+              @click="startCreateAssignmentFlow()"
+            />
+          </div>
+        </div>
 
-        <div class="flex flex-col gap-2 my-2">
+        <div class="flex flex-col gap-3 my-2">
           <template
             v-for="(assignment, ai) of occ.assignments"
             :key="assignment.assignment.id"
@@ -439,11 +453,6 @@ function getAssignmentColor(assignment: AssignmentOccurrence) {
             </ShiftsAdminModalBox>
           </template>
         </div>
-
-        <UButton
-          :label="t('Create assignment')"
-          @click="startCreateAssignmentFlow()"
-        />
       </div>
 
       <!-- Logs -->
