@@ -15,6 +15,7 @@ const mship = useCollectivoUser().value.membership!;
 const isActive = mship.shifts_user_type != "inactive";
 const activeAssignments: Ref<ShiftsAssignmentRules[]> = ref([]);
 const activeHolidays: Ref<ShiftsAbsence[]> = ref([]);
+const activeAbsences: Ref<ShiftsAbsence[]> = ref([]);
 const directus = useDirectus();
 
 const absencePostModalOpen = ref(false);
@@ -25,17 +26,29 @@ const canShop = ref(false);
 const dataLoaded = ref(false);
 
 async function postAbsence() {
-  if (
-    !absenceFromDate.value ||
-    !absenceToDate.value ||
-    absenceFromDate.value > absenceToDate.value ||
-    absenceToDate.value < new Date() ||
-    absenceFromDate.value < new Date()
-  ) {
+  if (!absenceFromDate.value || !absenceToDate.value) {
     showToast({
       type: "error",
       title: "Error",
-      description: t("Please select a valid date range."),
+      description: t("Please fill out every field."),
+    });
+    return;
+  }
+
+  if (absenceFromDate.value < new Date()) {
+    showToast({
+      type: "error",
+      title: "Error",
+      description: t("Absence must start in the future."),
+    });
+    return;
+  }
+
+  if (absenceFromDate.value > absenceToDate.value) {
+    showToast({
+      type: "error",
+      title: "Error",
+      description: t("Absence must end after it starts."),
     });
     return;
   }
@@ -56,6 +69,8 @@ async function postAbsence() {
 
   showToast({
     type: "success",
+    title: t("Success"),
+    description: t("Absence has been requested"),
   });
 }
 
@@ -63,6 +78,7 @@ async function loadData() {
   const res = await getMembershipAssignmentsAndHolidays(mship);
   activeAssignments.value = res.assignemntRules;
   activeHolidays.value = res.holidays;
+  activeAbsences.value = res.absences;
   canShop.value =
     (mship.shifts_counter > -1 && activeHolidays.value.length == 0) ||
     mship.shifts_user_type == "exempt";
@@ -140,7 +156,7 @@ if (isActive) loadData();
       </a>
     </div>
 
-    <h2>{{ t("My shifts") }}</h2>
+    <h2>{{ t("My next shifts") }}</h2>
     <p v-if="!activeAssignments.length">
       {{ t("No upcoming shifts") }}
     </p>
@@ -150,20 +166,37 @@ if (isActive) loadData();
         :key="assignment.assignment.id"
         :shift-assignment="assignment"
       />
-      <CollectivoCard
-        v-for="holiday in activeHolidays"
-        :key="holiday.id"
-        :title="t('Holiday')"
-        :color="'blue'"
-      >
-        <template #content>
-          {{ holiday.shifts_from }} - {{ holiday.shifts_to }}
-        </template>
-      </CollectivoCard>
+    </div>
+    <div v-if="activeAbsences.length">
+      <h2>{{ t("My absences") }}</h2>
+      <p>
+        {{ t("During an absence, all shift assignments are paused.") }}
+      </p>
+      <div class="flex flex-col gap-4 my-4">
+        <CollectivoCard
+          v-for="absence in activeAbsences"
+          :key="absence.id"
+          :title="absence.shifts_is_holiday ? t('Holiday') : t('Absence')"
+          :color="'blue'"
+        >
+          <template #content>
+            <div>{{ absence.shifts_from }} - {{ absence.shifts_to }}</div>
+            <div>{{ t("Status") }}: {{ t(absence.shifts_status) }}</div>
+            <div v-if="absence.shifts_is_holiday">
+              {{
+                t(
+                  "During a holiday, shopping is not allowed and no shift points are deducted.",
+                )
+              }}
+            </div>
+          </template>
+        </CollectivoCard>
+      </div>
     </div>
     <UModal v-model="absencePostModalOpen">
       <div class="p-10">
         <h2>{{ t("Ask for absence") }}</h2>
+        <p>{{ t("During an absence, all shift assignments are paused.") }}</p>
         <UFormGroup :label="t('From')" class="my-5">
           <CollectivoFormDate
             v-model="absenceFromDate"
@@ -184,7 +217,7 @@ if (isActive) loadData();
             <UToggle v-model="absenceIsHoliday" class="mt-0.5 mr-2" />
             <span>{{
               t(
-                "I will not be able to go shopping during this absence and am not required to do shifts.",
+                "During a holiday, shopping is not allowed and no shift points are deducted.",
               )
             }}</span>
           </div>
@@ -214,6 +247,9 @@ de:
   "Choose shift type": "Schichttyp wählen"
   "Shifts": "Schichten"
   "My shifts": "Meine Schichten"
+  "My next shifts": "Meine nächsten Schichten"
+  "My absences": "Meine Abwesenheiten"
+  "My past shifts": "Meine vergangenen Schichten"
   "Upcoming shifts": "Kommende Schichten"
   "No upcoming shifts": "Keine kommenden Schichten"
   "shifts": "Schichten"
@@ -229,15 +265,24 @@ de:
   "None": "Keine"
   "My activities": "Meine Aktivitäten"
   "Sign up for a one-time shift": "Einmalige Schicht eintragen"
+  requested: "Beantragt"
+  accepted: "Angenommen"
+  denied: "Abgelehnt"
   Other request: "Andere Anfrage"
   Ask for absence: "Abwesenheit beantragen"
   From: "Von"
   To: "Bis"
+  Absence: "Abwesenheit"
   Holiday: "Urlaub"
   Missing shifts: "Fehlende Schichten"
   Shopping is allowed: "Einkaufen ist erlaubt"
   Shopping is not allowed: "Einkaufen ist nicht erlaubt"
+  "Please fill out every field.": "Bitte fülle jedes Feld aus."
+  "Absence must start in the future.": "Abwesenheit muss in der Zukunft beginnen."
+  "Absence must end after it starts.": "Abwesenheit muss nach dem Start enden."
   "Please select a valid date range.": "Bitte wähle einen validen Datumsbereich aus."
-
-  I will not be able to go shopping during this absence and am not required to do shifts.: "Ich werde während dieser Abwesenheit nicht einkaufen können und bin nicht verpflichtet, Schichten zu übernehmen."
+  Absence has been requested: "Abwesenheit wurde beantragt"
+  Success: "Erfolg"
+  During a holiday, shopping is not allowed and no shift points are deducted.: "Während eines Urlaubs ist das Einkaufen nicht erlaubt und es werden keine Schichtpunkte abgezogen."
+  "During an absence, all shift assignments are paused.": "Während einer Abwesenheit werden alle Schichtanmeldung pausiert."
 </i18n>

@@ -29,9 +29,6 @@ export const getMembershipAssignmentsAndHolidays = async (
   const absences = (await directus.request(
     readItems("shifts_absences", {
       filter: {
-        shifts_status: {
-          _eq: "accepted",
-        },
         _or: [
           { shifts_membership: { id: { _eq: mship.id } } },
           {
@@ -62,8 +59,9 @@ export const getMembershipAssignmentsAndHolidays = async (
     (assignment) => {
       const filteredAbsences = absences.filter(
         (absence) =>
-          absence.shifts_assignment == assignment.id ||
-          absence.shifts_assignment == null,
+          (absence.shifts_assignment == assignment.id ||
+            absence.shifts_assignment == null) &&
+          absence.shifts_status == "accepted",
       );
 
       const rules = getAssignmentRRule(assignment, filteredAbsences);
@@ -100,6 +98,7 @@ export const getMembershipAssignmentsAndHolidays = async (
 
   return {
     assignemntRules: assignmentRules,
+    absences: absences,
     holidays: holidays,
   };
 };
