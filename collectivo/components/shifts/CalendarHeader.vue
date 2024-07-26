@@ -127,7 +127,7 @@ onMounted(async () => {
 .calendar-header {
   @apply flex items-center justify-between mb-6;
   &__left {
-    @apply flex items-center gap-5 justify-between lg:justify-start w-full;
+    @apply flex flex-col items-start gap-2 justify-between lg:justify-start w-full;
     &__title {
       @apply font-semibold text-2xl;
     }

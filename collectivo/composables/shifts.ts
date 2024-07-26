@@ -199,6 +199,7 @@ const getSingleShiftOccurence = (
     if (ass.rrule.between(date, date, true).length > 0) {
       const occ: AssignmentOccurrence = {
         assignment: ass.assignment,
+        isOneTime: ass.assignment.shifts_from == ass.assignment.shifts_to,
         absences: [],
       };
 
@@ -210,6 +211,7 @@ const getSingleShiftOccurence = (
 
       // Assignment is active?
       if (occ.absences.length == 0) {
+        occ.isActive = true;
         n_assigned += 1;
         if (
           (typeof occ.assignment.shifts_membership == "object" &&

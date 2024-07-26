@@ -256,6 +256,7 @@ async function removeAssignment(onetime: boolean) {
   // Remove assignment from slot
   removeAssignmentObject.value.removed = true;
   removeAssignmentModalIsOpen.value = false;
+  occ.n_assigned--;
   emit("data-has-changed");
 }
 
@@ -291,6 +292,7 @@ async function createAssignment(onetime: boolean) {
         "shifts_membership",
         "shifts_shift",
         "shifts_from",
+        "shifts_to",
         {
           shifts_membership: [
             "id",
@@ -307,7 +309,20 @@ async function createAssignment(onetime: boolean) {
   } as AssignmentOccurrence);
 
   createAssignmentModalIsOpen.value = false;
+  occ.n_assigned++;
   emit("data-has-changed");
+}
+
+function getAssignmentColor(assignment: AssignmentOccurrence) {
+  if (!assignment.isActive || assignment.removed) {
+    return "bg-gray-100";
+  }
+
+  if (assignment.isOneTime) {
+    return "bg-green-100";
+  }
+
+  return "bg-primary-100";
 }
 </script>
 
@@ -370,62 +385,59 @@ async function createAssignment(onetime: boolean) {
         </h2>
 
         <div class="flex flex-col gap-2 my-2">
-          <template v-for="(assignment, ai) of occ.assignments">
+          <template
+            v-for="(assignment, ai) of occ.assignments"
+            :key="assignment.assignment.id"
+          >
             <ShiftsAdminModalBox
-              v-if="!assignment.removed"
               :id="assignment.assignment.id!"
-              :key="assignment.assignment.id"
               :label="t('Assignment')"
-              :class="
-                assignment.absences.length > 0 ? 'bg-gray-100' : 'bg-green-100'
-              "
+              :class="getAssignmentColor(assignment)"
               collection="shifts_assignments"
             >
-              <template #header>{{
-                displayMembership(
-                  assignment.assignment
-                    .shifts_membership as MembershipsMembership,
-                )
-              }}</template>
-              {{ t("Assigned") }}: {{ assignment.assignment.shifts_from }}
-              {{ t("to") }}
-              {{ assignment.assignment.shifts_to || t("no end date") }}
+              <template #header>
+                {{
+                  displayMembership(
+                    assignment.assignment
+                      .shifts_membership as MembershipsMembership,
+                  )
+                }}
+              </template>
+
+              <template #bottom-right>
+                <div
+                  v-if="assignment.isActive && !assignment.removed"
+                  class="flex flex-wrap gap-2"
+                >
+                  <UButton
+                    icon="i-heroicons-trash-16-solid"
+                    color="gray"
+                    :label="t('Remove')"
+                    @click="startRemoveAssignmentFlow(assignment, ai)"
+                  />
+                </div>
+              </template>
+
+              <span v-if="assignment.isOneTime">
+                {{ t("One-time shift") }}
+              </span>
+
+              <span v-else>
+                {{ t("Regular shift") }}
+                <span v-if="assignment.assignment.shifts_to">
+                  {{ t("until") }}
+                  {{ assignment.assignment.shifts_to }}
+                </span>
+              </span>
+
+              <span v-if="assignment.removed"> ({{ t("Removed") }}) </span>
+
               <div v-for="absence of assignment.absences" :key="absence.id">
                 {{ t("Absent") }}: {{ absence.shifts_from }} {{ t("to") }}
-                {{ absence.shifts_to || t("no end date") }}
-              </div>
-              <div
-                v-if="assignment.absences.length == 0"
-                class="flex flex-wrap gap-2 mt-2"
-              >
-                <UButton
-                  :label="t('Remove assignment')"
-                  @click="startRemoveAssignmentFlow(assignment, ai)"
-                />
+                {{ absence.shifts_to }}
               </div>
             </ShiftsAdminModalBox>
           </template>
-          <!-- <template v-for="assignment of slot.absentAssignments">
-            <ShiftsAdminModalBox
-              v-if="!assignment._removed"
-              :id="assignment.id!"
-              :key="assignment.id"
-              class="bg-red-100"
-              :label="t('Assignment')"
-              collection="shifts_assignments"
-            >
-              <template #header
-                >{{ t("Absent") }}:
-                {{
-                  displayMembership(
-                    assignment.shifts_membership as MembershipsMembership,
-                  )
-                }}</template
-              >
-              {{ assignment.shifts_from }} {{ t("to") }}
-              {{ assignment.shifts_to || t("no end date") }}
-            </ShiftsAdminModalBox>
-          </template> -->
         </div>
 
         <UButton
@@ -671,7 +683,7 @@ de:
   missed: "Schicht verpasst"
   cancelled: "Schicht abgesagt"
   past: "vergangen"
-  no end date: "kein Enddatum"
+  No end date: "Kein Enddatum"
   Create log: "Logeintrag erstellen"
   Attended: "Absolviert"
   Cancelled: "Abgesagt"
@@ -696,4 +708,5 @@ de:
   in-cancellation: "Im Ausstieg"
   ended: "Beendet"
   draft: "Entwurf"
+  Removed: "Entfernt"
 </i18n>

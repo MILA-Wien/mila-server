@@ -110,6 +110,8 @@ declare global {
   interface AssignmentOccurrence {
     assignment: ShiftsAssignment;
     absences: ShiftsAbsence[];
+    isOneTime?: boolean;
+    isActive?: boolean;
     logged?: boolean;
     removed?: boolean;
   }
