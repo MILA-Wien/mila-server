@@ -96,6 +96,11 @@ async function postAssignmentInner() {
           {{ t("Starting from") }}
           {{ start.toLocaleString(DateTime.DATE_MED) }}
         </span>
+        <br />
+        <span v-if="shift.shifts_location">
+          {{ t("Location") }}:
+          {{ shift.shifts_location }}
+        </span>
       </p>
 
       <!-- Shift infos -->
@@ -130,4 +135,5 @@ de:
   "Starting from": "Beginnend am"
   Regular shift: "Regelmäßige Schicht"
   One-time shift: "Einmalige Schicht"
+  Location: "Ort"
 </i18n>

@@ -368,6 +368,11 @@ function getAssignmentColor(assignment: AssignmentOccurrence) {
           {{ t("to") }}
           {{ end.toLocaleString(DateTime.TIME_24_SIMPLE) }}
         </div>
+
+        <div v-if="shift.shifts_location">
+          {{ t("Location") }}:
+          {{ shift.shifts_location }}
+        </div>
       </div>
 
       <!-- eslint-disable vue/no-v-html -->
@@ -718,4 +723,5 @@ de:
   ended: "Beendet"
   draft: "Entwurf"
   Removed: "Entfernt"
+  Location: "Ort"
 </i18n>

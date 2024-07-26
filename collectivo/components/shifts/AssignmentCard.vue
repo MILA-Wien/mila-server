@@ -72,8 +72,11 @@ function getEndDate(endDate: string) {
         </p>
 
         <!-- Shift name -->
-        <p class="mt-2">
-          {{ shift.shifts_name }}
+        <p class="mt-2">{{ t("Shift name") }}: {{ shift.shifts_name }}</p>
+
+        <!-- Shift location -->
+        <p v-if="shift.shifts_location">
+          {{ t("Location") }}: {{ shift.shifts_location }}
         </p>
 
         <!-- Shift infos -->
@@ -99,4 +102,6 @@ de:
   "to": "bis"
   "Absences": "Abwesenheiten"
   "One-time shift": "Einmalige Schicht"
+  "Location": "Ort"
+  "Shift name": "Schichtname"
 </i18n>
