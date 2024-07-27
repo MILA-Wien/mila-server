@@ -258,10 +258,7 @@ de:
   "to catch up": "nachzuholen"
   "Skills": "Fähigkeiten"
   "Sign up for a shift": "Neue Schicht eintragen"
-  "t:regular": "Regulär"
-  "t:jumper": "Springer*in"
-  "t:exempt": "Befreit"
-  "t:inactive": "Nicht aktiv"
+
   "None": "Keine"
   "My activities": "Meine Aktivitäten"
   "Sign up for a one-time shift": "Einmalige Schicht eintragen"
@@ -285,4 +282,15 @@ de:
   Success: "Erfolg"
   During a holiday, shopping is not allowed and no shift points are deducted.: "Während eines Urlaubs ist das Einkaufen nicht erlaubt und es werden keine Schichtpunkte abgezogen."
   "During an absence, all shift assignments are paused.": "Während einer Abwesenheit werden alle Schichtanmeldung pausiert."
+
+  "t:regular": "Regulär"
+  "t:jumper": "Springer*in"
+  "t:exempt": "Befreit"
+  "t:inactive": "Nicht aktiv"
+
+en:
+  "t:regular": "Regular"
+  "t:jumper": "Jumper"
+  "t:exempt": "Exempt"
+  "t:inactive": "Inactive"
 </i18n>

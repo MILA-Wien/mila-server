@@ -28,10 +28,13 @@ declare global {
     shifts_name: string;
     shifts_from: string;
     shifts_to?: string;
+    shifts_is_all_day: boolean;
     shifts_from_time?: string;
     shifts_to_time?: string;
     shifts_slots: number;
     shifts_needs_coordinator: boolean;
+    shifts_is_regular: boolean;
+    shifts_category: string;
     shifts_repeats_every?: number;
     shifts_status: string;
     shifts_description?: string;
@@ -41,6 +44,7 @@ declare global {
 
   interface ShiftsAssignment {
     id?: number;
+    shifts_is_regular: boolean;
     shifts_from: string;
     shifts_to?: string;
     shifts_shift: ShiftsShift | number;
@@ -63,14 +67,9 @@ declare global {
     shifts_to: string;
     shifts_assignment?: number | ShiftsAssignment;
     shifts_membership: MembershipsMembership | number;
+    shifts_is_for_all_assignments: boolean;
     shifts_is_holiday?: boolean;
     _rrule?: RRule | RRuleSet;
-  }
-
-  interface ShiftsSkill {
-    id: number;
-    shifts_name: string;
-    shifts_slots: string[];
   }
 
   interface ShiftsLog {

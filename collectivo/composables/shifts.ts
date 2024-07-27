@@ -229,11 +229,11 @@ const getSingleShiftOccurence = (
   const dateString = date.toISOString().split("T")[0];
 
   const start = DateTime.fromISO(
-    `${dateString}T${shift.shifts_from_time}Z`,
+    `${dateString}T${shift.shifts_from_time || "00:00:00"}Z`,
   ).toUTC();
 
   const end = DateTime.fromISO(
-    `${dateString}T${shift.shifts_to_time}Z`,
+    `${dateString}T${shift.shifts_to_time || "00:00:00"}Z`,
   ).toUTC();
 
   return {

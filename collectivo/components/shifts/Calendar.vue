@@ -167,11 +167,12 @@ async function updateEvents(from, to) {
         occurrence.shift.shifts_slots +
         "]";
     }
+
     events.push({
       title: title,
       start: occurrence.start.toJSDate(),
       end: occurrence.end.toJSDate(),
-      allDay: false,
+      allDay: occurrence.shift.shifts_is_all_day,
       shiftOccurence: occurrence,
       color: color,
     });
