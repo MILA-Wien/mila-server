@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { createItem } from "@directus/sdk";
+import { createItem, readItems } from "@directus/sdk";
 
 definePageMeta({
   middleware: ["auth"],
@@ -74,6 +74,19 @@ async function postAbsence() {
   });
 }
 
+const logs = ref<ShiftsLog[]>([]);
+
+async function getLogs() {
+  logs.value = await directus.request(
+    readItems("shifts_logs", {
+      filter: { shifts_membership: mship.id },
+      sort: ["-shifts_date"],
+    }),
+  );
+}
+
+getLogs();
+
 async function loadData() {
   const res = await getMembershipAssignmentsAndHolidays(mship);
   activeAssignments.value = res.assignemntRules;
@@ -91,6 +104,10 @@ function getShiftName(assignmentID: number) {
     (a) => a.assignment.id == assignmentID,
   );
   return assignment?.assignment.shifts_shift.shifts_name;
+}
+
+function displayShiftScore(score: number) {
+  return score > 0 ? "+" + score : score;
 }
 
 if (isActive) loadData();
@@ -203,6 +220,28 @@ if (isActive) loadData();
         </CollectivoCard>
       </div>
     </div>
+
+    <!-- LOGS -->
+
+    <div v-if="logs.length">
+      <h2>{{ t("My activities") }}</h2>
+      <div class="my-4">
+        <CollectivoCard :color="'blue'">
+          <template #content>
+            <div class="flex flex-col gap-1">
+              <div v-for="log in logs" :key="log.id">
+                {{ log.shifts_date }}: {{ t("log:" + log.shifts_type) }} ({{
+                  displayShiftScore(log.shifts_score)
+                }})
+              </div>
+            </div>
+          </template>
+        </CollectivoCard>
+      </div>
+    </div>
+
+    <!-- MODALS -->
+
     <UModal v-model="absencePostModalOpen">
       <div class="p-10">
         <h2>{{ t("Ask for absence") }}</h2>
@@ -259,7 +298,7 @@ de:
   "My shifts": "Meine Schichten"
   "My next shifts": "Meine nächsten Schichten"
   "My absences": "Meine Abwesenheiten"
-  "My past shifts": "Meine vergangenen Schichten"
+  "My activities": "Meine Aktivitäten"
   "Upcoming shifts": "Kommende Schichten"
   "No upcoming shifts": "Keine kommenden Schichten"
   "shifts": "Schichten"
@@ -270,7 +309,6 @@ de:
   "Sign up for a shift": "Neue Schicht eintragen"
 
   "None": "Keine"
-  "My activities": "Meine Aktivitäten"
   "Sign up for a one-time shift": "Einmalige Schicht eintragen"
   requested: "Beantragt"
   accepted: "Angenommen"
@@ -298,9 +336,19 @@ de:
   "t:exempt": "Befreit"
   "t:inactive": "Nicht aktiv"
 
+  "log:attended": "Schicht absolviert"
+  "log:missed": "Schicht verpasst"
+  "log:cancelled": "Schicht abgemeldet"
+  "log:other": "Anderes"
+
 en:
   "t:regular": "Regular"
   "t:jumper": "Jumper"
   "t:exempt": "Exempt"
   "t:inactive": "Inactive"
+
+  "log:attended": "Shift done"
+  "log:missed": "Shift missed"
+  "log:cancelled": "Shift cancelled"
+  "log:other": "Other"
 </i18n>
