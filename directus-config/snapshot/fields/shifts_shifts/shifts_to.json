@@ -4,18 +4,33 @@
   "type": "date",
   "meta": {
     "collection": "shifts_shifts",
-    "conditions": null,
+    "conditions": [
+      {
+        "name": "show if regular",
+        "rule": {
+          "_and": [
+            {
+              "shifts_is_regular": {
+                "_eq": true
+              }
+            }
+          ]
+        },
+        "hidden": false,
+        "options": {}
+      }
+    ],
     "display": null,
     "display_options": null,
     "field": "shifts_to",
     "group": null,
-    "hidden": false,
+    "hidden": true,
     "interface": null,
-    "note": null,
+    "note": "Kann freigelassen werden für fortwährende Schicht",
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 4,
+    "sort": 6,
     "special": null,
     "translations": [
       {

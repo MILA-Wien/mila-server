@@ -25,13 +25,13 @@
           "color": "#2ECDA7"
         },
         {
-          "text": "Denied",
+          "text": "$t:denied",
           "value": "denied",
           "color": "#E35169"
         },
         {
-          "text": "$t:cancelled",
-          "value": "cancelled",
+          "text": "$t:request-withdrawn",
+          "value": "withdrawn",
           "color": "#A2B5CD"
         }
       ]

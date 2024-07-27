@@ -72,6 +72,8 @@ async function postAbsence() {
     title: t("Success"),
     description: t("Absence has been requested"),
   });
+
+  loadData();
 }
 
 const logs = ref<ShiftsLog[]>([]);
@@ -232,7 +234,7 @@ if (isActive) loadData();
               <div v-for="log in logs" :key="log.id">
                 {{ log.shifts_date }}: {{ t("log:" + log.shifts_type) }} ({{
                   displayShiftScore(log.shifts_score)
-                }})
+                }}) {{ log.shifts_note }}
               </div>
             </div>
           </template>
@@ -338,7 +340,7 @@ de:
 
   "log:attended": "Schicht absolviert"
   "log:missed": "Schicht verpasst"
-  "log:cancelled": "Schicht abgemeldet"
+  "log:cancelled": "Schicht abgesagt"
   "log:other": "Anderes"
 
 en:

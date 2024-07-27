@@ -10,7 +10,7 @@
     "field": "shifts_note",
     "group": null,
     "hidden": false,
-    "interface": "input-multiline",
+    "interface": "input",
     "note": null,
     "options": null,
     "readonly": false,
@@ -20,7 +20,7 @@
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Interne Notizen"
+        "translation": "Beschreibung"
       }
     ],
     "validation": null,

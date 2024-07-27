@@ -1,36 +1,39 @@
 {
   "collection": "shifts_shifts",
-  "field": "date_updated",
-  "type": "timestamp",
+  "field": "shifts_is_all_day",
+  "type": "boolean",
   "meta": {
     "collection": "shifts_shifts",
     "conditions": null,
-    "display": "datetime",
-    "display_options": {
-      "relative": true
-    },
-    "field": "date_updated",
+    "display": null,
+    "display_options": null,
+    "field": "shifts_is_all_day",
     "group": null,
-    "hidden": true,
-    "interface": "datetime",
+    "hidden": false,
+    "interface": "boolean",
     "note": null,
     "options": null,
-    "readonly": true,
-    "required": false,
-    "sort": 19,
+    "readonly": false,
+    "required": true,
+    "sort": 8,
     "special": [
-      "date-updated"
+      "cast-boolean"
     ],
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Ganztags"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "half"
   },
   "schema": {
-    "name": "date_updated",
+    "name": "shifts_is_all_day",
     "table": "shifts_shifts",
-    "data_type": "timestamp with time zone",
-    "default_value": null,
+    "data_type": "boolean",
+    "default_value": false,
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,

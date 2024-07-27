@@ -1,42 +1,45 @@
 {
   "collection": "shifts_shifts",
-  "field": "shifts_from_time",
-  "type": "time",
+  "field": "shifts_category",
+  "type": "string",
   "meta": {
     "collection": "shifts_shifts",
-    "conditions": [
-      {
-        "name": "hide if all day",
-        "rule": {
-          "_and": [
-            {
-              "shifts_is_all_day": {
-                "_eq": true
-              }
-            }
-          ]
-        },
-        "hidden": true,
-        "options": {},
-        "required": false
-      }
-    ],
+    "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_from_time",
+    "field": "shifts_category",
     "group": null,
     "hidden": false,
-    "interface": null,
+    "interface": "select-dropdown",
     "note": null,
-    "options": null,
+    "options": {
+      "choices": [
+        {
+          "text": "$t:normal",
+          "value": "normal"
+        },
+        {
+          "text": "$t:bookkeeping",
+          "value": "bookkeeping"
+        },
+        {
+          "text": "$t:public-relations",
+          "value": "public-relations"
+        },
+        {
+          "text": "$t:it-support",
+          "value": "it-support"
+        }
+      ]
+    },
     "readonly": false,
     "required": true,
-    "sort": 9,
+    "sort": 3,
     "special": null,
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Startzeit"
+        "translation": "Schichtkategorie"
       }
     ],
     "validation": null,
@@ -44,11 +47,11 @@
     "width": "half"
   },
   "schema": {
-    "name": "shifts_from_time",
+    "name": "shifts_category",
     "table": "shifts_shifts",
-    "data_type": "time without time zone",
-    "default_value": null,
-    "max_length": null,
+    "data_type": "character varying",
+    "default_value": "normal",
+    "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,
     "is_nullable": true,

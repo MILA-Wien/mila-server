@@ -32,16 +32,16 @@
     "group": null,
     "hidden": false,
     "interface": "select-dropdown",
-    "note": null,
+    "note": "Nur veröffentlichte Schichten werden im Kalender angezeigt.",
     "options": {
       "choices": [
         {
-          "text": "$t:published",
-          "value": "published"
-        },
-        {
           "text": "$t:draft",
           "value": "draft"
+        },
+        {
+          "text": "$t:published",
+          "value": "published"
         },
         {
           "text": "$t:archived",

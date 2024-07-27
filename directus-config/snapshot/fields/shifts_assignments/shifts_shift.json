@@ -20,7 +20,7 @@
     },
     "readonly": false,
     "required": true,
-    "sort": 2,
+    "sort": 1,
     "special": [
       "m2o"
     ],
@@ -32,7 +32,7 @@
     ],
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
     "name": "shifts_shift",

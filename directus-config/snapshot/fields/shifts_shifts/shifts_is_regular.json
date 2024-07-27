@@ -1,26 +1,28 @@
 {
   "collection": "shifts_shifts",
-  "field": "shifts_score",
-  "type": "integer",
+  "field": "shifts_is_regular",
+  "type": "boolean",
   "meta": {
     "collection": "shifts_shifts",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_score",
+    "field": "shifts_is_regular",
     "group": null,
     "hidden": false,
-    "interface": "input",
-    "note": "So viele Punkte bekommt man bei der Absolvierung dieser Schicht",
+    "interface": "boolean",
+    "note": "Soll die Schicht sich regelmäßig wiederholen?",
     "options": null,
     "readonly": false,
-    "required": false,
-    "sort": 12,
-    "special": null,
+    "required": true,
+    "sort": 4,
+    "special": [
+      "cast-boolean"
+    ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Schichtpunkte"
+        "translation": "Regelmäßige Schicht"
       }
     ],
     "validation": null,
@@ -28,13 +30,13 @@
     "width": "half"
   },
   "schema": {
-    "name": "shifts_score",
+    "name": "shifts_is_regular",
     "table": "shifts_shifts",
-    "data_type": "integer",
-    "default_value": 1,
+    "data_type": "boolean",
+    "default_value": false,
     "max_length": null,
-    "numeric_precision": 32,
-    "numeric_scale": 0,
+    "numeric_precision": null,
+    "numeric_scale": null,
     "is_nullable": true,
     "is_unique": false,
     "is_primary_key": false,

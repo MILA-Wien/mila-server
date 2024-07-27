@@ -13,6 +13,12 @@
   },
   {
     "language": "de-DE",
+    "key": "normal",
+    "value": "Normal",
+    "_syncId": "25642544-916b-4130-9839-0a82ff18403d"
+  },
+  {
+    "language": "de-DE",
     "key": "approved",
     "value": "Aufgenommen",
     "_syncId": "29daf9c4-e45b-4047-b13b-ef83dc632e1e"
@@ -22,6 +28,12 @@
     "key": "denied",
     "value": "Abgelehnt",
     "_syncId": "2fb63205-c84b-4fce-a03a-ccab52a75ba9"
+  },
+  {
+    "language": "de-DE",
+    "key": "bookkeeping",
+    "value": "Buchhaltung",
+    "_syncId": "4070196f-80ef-42bd-b269-4b458661bc71"
   },
   {
     "language": "de-DE",
@@ -56,7 +68,7 @@
   {
     "language": "de-DE",
     "key": "accepted",
-    "value": "Akzeptiert",
+    "value": "Freigegeben",
     "_syncId": "5a2a7665-f828-446d-b708-0ddc70f05707"
   },
   {
@@ -70,6 +82,12 @@
     "key": "pending",
     "value": "Pending",
     "_syncId": "66b64b51-25f3-49f9-b1c2-b2412f6b227e"
+  },
+  {
+    "language": "de-DE",
+    "key": "it-support",
+    "value": "IT Support",
+    "_syncId": "6fad38a3-29ee-4fa3-9974-d5980eebe7bb"
   },
   {
     "language": "de-DE",
@@ -106,6 +124,12 @@
     "key": "sepa",
     "value": "SEPA Einzug",
     "_syncId": "a53dd2b3-9f87-439a-819a-0a8463f5287b"
+  },
+  {
+    "language": "de-DE",
+    "key": "request-withdrawn",
+    "value": "Anfrage zurückgezogen",
+    "_syncId": "b189cd2f-6b4c-4b23-84f6-394dfd16476b"
   },
   {
     "language": "de-DE",
@@ -148,5 +172,11 @@
     "key": "paid",
     "value": "Bezahlt",
     "_syncId": "fbc0cd5d-2a39-4e24-b22c-1ee298475736"
+  },
+  {
+    "language": "de-DE",
+    "key": "public-relations",
+    "value": "Öffentlichkeitsarbeit",
+    "_syncId": "ffb1ab4c-dce3-4c38-bd39-33b1b44316f1"
   }
 ]

@@ -6,21 +6,22 @@
     "collection": "shifts_absences",
     "conditions": [
       {
-        "name": "Hide if there is chosen membership",
+        "name": "Hide if for all assignments",
         "rule": {
           "_and": [
             {
-              "shifts_membership": {
-                "_nnull": true
+              "shifts_is_for_all_assignments": {
+                "_eq": true
               }
             }
           ]
         },
         "hidden": true,
         "options": {
-          "enableCreate": true,
+          "enableCreate": false,
           "enableSelect": true
-        }
+        },
+        "required": false
       }
     ],
     "display": null,
@@ -29,11 +30,15 @@
     "group": null,
     "hidden": false,
     "interface": "select-dropdown-m2o",
-    "note": "Wenn leer, dann gilt die Abwesenheit für alle Anmeldungen im gewählten Zeitraum.",
-    "options": null,
+    "note": "Abwesenheit gilt nur für diese spezifische Anmeldung",
+    "options": {
+      "enableCreate": false,
+      "filter": null,
+      "template": "{{shifts_shift.shifts_name}}"
+    },
     "readonly": false,
-    "required": false,
-    "sort": 11,
+    "required": true,
+    "sort": 12,
     "special": null,
     "translations": [
       {
@@ -43,7 +48,7 @@
     ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
     "name": "shifts_assignment",

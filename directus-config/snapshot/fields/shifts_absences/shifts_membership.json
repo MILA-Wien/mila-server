@@ -4,42 +4,7 @@
   "type": "integer",
   "meta": {
     "collection": "shifts_absences",
-    "conditions": [
-      {
-        "name": "Hide if there is a connected shift",
-        "rule": {
-          "_and": [
-            {
-              "shifts_assignment": {
-                "_nnull": true
-              }
-            }
-          ]
-        },
-        "hidden": true,
-        "options": {
-          "enableCreate": true,
-          "enableSelect": true
-        }
-      },
-      {
-        "name": "Mandatory if there is no connected shift",
-        "rule": {
-          "_and": [
-            {
-              "shifts_assignment": {
-                "_null": true
-              }
-            }
-          ]
-        },
-        "required": true,
-        "options": {
-          "enableCreate": true,
-          "enableSelect": true
-        }
-      }
-    ],
+    "conditions": null,
     "display": "related-values",
     "display_options": {
       "template": "{{memberships_user}}"
@@ -54,7 +19,7 @@
       "template": "{{memberships_user}}"
     },
     "readonly": false,
-    "required": false,
+    "required": true,
     "sort": 6,
     "special": [
       "m2o"
@@ -77,7 +42,7 @@
     "max_length": null,
     "numeric_precision": 32,
     "numeric_scale": 0,
-    "is_nullable": true,
+    "is_nullable": false,
     "is_unique": false,
     "is_primary_key": false,
     "is_generated": false,

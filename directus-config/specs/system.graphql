@@ -229,17 +229,12 @@ type Subscription {
   directus_versions_mutated(event: EventEnum): directus_versions_mutated
   directus_webhooks_mutated(event: EventEnum): directus_webhooks_mutated
   directus_sync_id_map_mutated(event: EventEnum): directus_sync_id_map_mutated
-  shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
-  memberships_mutated(event: EventEnum): memberships_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
   collectivo_tags_mutated(event: EventEnum): collectivo_tags_mutated
   collectivo_tags_directus_users_mutated(event: EventEnum): collectivo_tags_directus_users_mutated
   collectivo_tiles_mutated(event: EventEnum): collectivo_tiles_mutated
   collectivo_tiles_buttons_mutated(event: EventEnum): collectivo_tiles_buttons_mutated
   junction_directus_users_files_mutated(event: EventEnum): junction_directus_users_files_mutated
-  memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
-  memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
-  memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
   messages_templates_mutated(event: EventEnum): messages_templates_mutated
   messages_campaigns_mutated(event: EventEnum): messages_campaigns_mutated
   messages_campaigns_directus_users_mutated(event: EventEnum): messages_campaigns_directus_users_mutated
@@ -248,9 +243,14 @@ type Subscription {
   mila_automations_mutated(event: EventEnum): mila_automations_mutated
   payments_invoices_out_mutated(event: EventEnum): payments_invoices_out_mutated
   payments_invoices_entries_mutated(event: EventEnum): payments_invoices_entries_mutated
-  shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
-  shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
+  memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
+  memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
+  memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
+  memberships_mutated(event: EventEnum): memberships_mutated
   shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
+  shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
+  shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
+  shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -1642,39 +1642,39 @@ type memberships {
   memberships_type: String
   memberships_user(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   memberships_user_search: String
-
-  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
-  shifts_counter: Int
-
-  """Welche Art von Schichten macht dieses Mitglied?"""
-  shifts_user_type: String
   user_created: String
   user_updated: String
 
+  """Welche Art von Schichten macht dieses Mitglied?"""
+  shifts_user_type: String
+
+  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
+  shifts_counter: Int
+  shifts_is_coordinator: Boolean
+
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
-  shifts_is_coordinator: Boolean
   memberships_invoices(filter: payments_invoices_out_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [payments_invoices_out]
   memberships_invoices_func: count_functions
-  coshoppers(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers]
-  coshoppers_func: count_functions
   kids(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers_1]
   kids_func: count_functions
+  coshoppers(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers]
+  coshoppers_func: count_functions
 }
 
 type memberships_coshoppers {
+  id: ID!
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   date_created: Date
   date_created_func: datetime_functions
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   date_updated: Date
   date_updated_func: datetime_functions
   first_name: String!
-  id: ID!
   last_name: String!
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   membership_card_id: String
-  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
-  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
 }
 
 type memberships_coshoppers_mutated {
@@ -1685,14 +1685,14 @@ type memberships_coshoppers_mutated {
 
 type memberships_memberships_coshoppers {
   id: ID!
-  memberships_coshoppers_id(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships_coshoppers
   memberships_id(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+  memberships_coshoppers_id(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships_coshoppers
 }
 
 type memberships_memberships_coshoppers_1 {
   id: ID!
-  memberships_coshoppers_id(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships_coshoppers
   memberships_id(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+  memberships_coshoppers_id(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships_coshoppers
 }
 
 type memberships_memberships_coshoppers_1_mutated {
@@ -1925,14 +1925,18 @@ type server_info_websocket_rest {
 }
 
 type shifts_absences {
+  id: ID!
+  user_created: String
   date_created: Date
   date_created_func: datetime_functions
+  user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
-  id: ID!
-  shifts_assignment(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_assignments
   shifts_from: Date!
   shifts_from_func: date_functions
+  shifts_to: Date!
+  shifts_to_func: date_functions
+  shifts_assignment(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_assignments
 
   """
   Während einem Urlaub ist kein Einkauf möglich und es werden keine Schichtpunkte abgezogen.
@@ -1942,10 +1946,9 @@ type shifts_absences {
 
   """Nur angenommene Urlaube werden im Schichtkalender aktiv."""
   shifts_status: String
-  shifts_to: Date!
-  shifts_to_func: date_functions
-  user_created: String
-  user_updated: String
+
+  """Eine allgemeine Abwesenheit gilt für alle Anmeldungen des Mitglieds"""
+  shifts_is_for_all_assignments: Boolean
 }
 
 type shifts_absences_mutated {
@@ -1955,23 +1958,24 @@ type shifts_absences_mutated {
 }
 
 type shifts_assignments {
+  id: ID!
+  user_created: String
   date_created: Date
   date_created_func: datetime_functions
+  user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
-  id: ID!
   shifts_from: Date!
   shifts_from_func: date_functions
-  shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
 
-  """
-  Kann freigelassen werden für langfristige Anmeldung. Springer*innen-Anmeldung hat selbes Start- und Enddatum haben.
-  """
+  """Kann freigelassen werden für fortwährende Anmeldung"""
   shifts_to: Date
   shifts_to_func: date_functions
-  user_created: String
-  user_updated: String
+  shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
   shifts_shift(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_shifts
+
+  """Soll diese Anmeldung langfristig aktiv sein?"""
+  shifts_is_regular: Boolean
   shifts_absences(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_absences]
   shifts_absences_func: count_functions
 }
@@ -1983,22 +1987,22 @@ type shifts_assignments_mutated {
 }
 
 type shifts_logs {
-  date_created: Date
-  date_created_func: datetime_functions
-  date_updated: Date
-  date_updated_func: datetime_functions
   id: ID!
-  shifts_date: Date
-  shifts_date_func: date_functions
-  shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
-  shifts_note: String
-  shifts_score: Int
-  shifts_shift(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_shifts
 
   """Was genau soll dokumentiert werden?"""
   shifts_type: String!
+  shifts_date: Date
+  shifts_date_func: date_functions
+  shifts_score: Int
+  shifts_note: String
   user_created: String
+  date_created: Date
+  date_created_func: datetime_functions
   user_updated: String
+  date_updated: Date
+  date_updated_func: datetime_functions
+  shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+  shifts_shift(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_shifts
 }
 
 type shifts_logs_mutated {
@@ -2008,33 +2012,39 @@ type shifts_logs_mutated {
 }
 
 type shifts_shifts {
+  id: ID!
+  user_created: String
   date_created: Date
   date_created_func: datetime_functions
+  user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
-  id: ID!
-  shifts_description: String
+
+  """Nur veröffentlichte Schichten werden im Kalender angezeigt."""
+  shifts_status: String
+  shifts_name: String!
   shifts_from: Date
   shifts_from_func: date_functions
-  shifts_from_time: Date!
-  shifts_from_time_func: time_functions
-  shifts_location: String
-  shifts_name: String!
 
-  """In Tagen"""
-  shifts_repeats_every: Int
-
-  """So viele Punkte bekommt man bei der Absolvierung dieser Schicht"""
-  shifts_score: Int
-  shifts_status: String
+  """Kann freigelassen werden für fortwährende Schicht"""
   shifts_to: Date
   shifts_to_func: date_functions
-  shifts_to_time: Date!
+  shifts_from_time: Date
+  shifts_from_time_func: time_functions
+  shifts_to_time: Date
   shifts_to_time_func: time_functions
-  user_created: String
-  user_updated: String
+
+  """Wiederholungsfrequenz in Tagen"""
+  shifts_repeats_every: Int
+  shifts_description: String
+  shifts_location: String
   shifts_needs_coordinator: Boolean
   shifts_slots: Int
+
+  """Soll die Schicht sich regelmäßig wiederholen?"""
+  shifts_is_regular: Boolean
+  shifts_category: String
+  shifts_is_all_day: Boolean
 }
 
 type shifts_shifts_mutated {
@@ -2458,16 +2468,16 @@ input create_junction_directus_users_files_input {
 }
 
 input create_memberships_coshoppers_input {
+  id: ID
+  user_created: create_directus_users_input
   date_created: Date
+  user_updated: create_directus_users_input
   date_updated: Date
   first_name: String!
-  id: ID
   last_name: String!
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   membership_card_id: String
-  user_created: create_directus_users_input
-  user_updated: create_directus_users_input
 }
 
 input create_memberships_input {
@@ -2490,33 +2500,33 @@ input create_memberships_input {
   memberships_type: String
   memberships_user: create_directus_users_input
   memberships_user_search: String
-
-  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
-  shifts_counter: Int
-
-  """Welche Art von Schichten macht dieses Mitglied?"""
-  shifts_user_type: String
   user_created: String
   user_updated: String
 
+  """Welche Art von Schichten macht dieses Mitglied?"""
+  shifts_user_type: String
+
+  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
+  shifts_counter: Int
+  shifts_is_coordinator: Boolean
+
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
-  shifts_is_coordinator: Boolean
   memberships_invoices: [create_payments_invoices_out_input]
-  coshoppers: [create_memberships_memberships_coshoppers_input]
   kids: [create_memberships_memberships_coshoppers_1_input]
+  coshoppers: [create_memberships_memberships_coshoppers_input]
 }
 
 input create_memberships_memberships_coshoppers_1_input {
   id: ID
-  memberships_coshoppers_id: create_memberships_coshoppers_input
   memberships_id: create_memberships_input
+  memberships_coshoppers_id: create_memberships_coshoppers_input
 }
 
 input create_memberships_memberships_coshoppers_input {
   id: ID
-  memberships_coshoppers_id: create_memberships_coshoppers_input
   memberships_id: create_memberships_input
+  memberships_coshoppers_id: create_memberships_coshoppers_input
 }
 
 input create_messages_campaigns_directus_users_input {
@@ -3091,16 +3101,16 @@ input junction_directus_users_files_filter {
 }
 
 input memberships_coshoppers_filter {
+  id: number_filter_operators
+  user_created: directus_users_filter
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
+  user_updated: directus_users_filter
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
   first_name: string_filter_operators
-  id: number_filter_operators
   last_name: string_filter_operators
   membership_card_id: string_filter_operators
-  user_created: directus_users_filter
-  user_updated: directus_users_filter
   _and: [memberships_coshoppers_filter]
   _or: [memberships_coshoppers_filter]
 }
@@ -3126,34 +3136,34 @@ input memberships_filter {
   memberships_type: string_filter_operators
   memberships_user: directus_users_filter
   memberships_user_search: string_filter_operators
-  shifts_counter: number_filter_operators
-  shifts_user_type: string_filter_operators
   user_created: string_filter_operators
   user_updated: string_filter_operators
-  memberships_card_id: string_filter_operators
+  shifts_user_type: string_filter_operators
+  shifts_counter: number_filter_operators
   shifts_is_coordinator: boolean_filter_operators
+  memberships_card_id: string_filter_operators
   memberships_invoices: payments_invoices_out_filter
   memberships_invoices_func: count_function_filter_operators
-  coshoppers: memberships_memberships_coshoppers_filter
-  coshoppers_func: count_function_filter_operators
   kids: memberships_memberships_coshoppers_1_filter
   kids_func: count_function_filter_operators
+  coshoppers: memberships_memberships_coshoppers_filter
+  coshoppers_func: count_function_filter_operators
   _and: [memberships_filter]
   _or: [memberships_filter]
 }
 
 input memberships_memberships_coshoppers_1_filter {
   id: number_filter_operators
-  memberships_coshoppers_id: memberships_coshoppers_filter
   memberships_id: memberships_filter
+  memberships_coshoppers_id: memberships_coshoppers_filter
   _and: [memberships_memberships_coshoppers_1_filter]
   _or: [memberships_memberships_coshoppers_1_filter]
 }
 
 input memberships_memberships_coshoppers_filter {
   id: number_filter_operators
-  memberships_coshoppers_id: memberships_coshoppers_filter
   memberships_id: memberships_filter
+  memberships_coshoppers_id: memberships_coshoppers_filter
   _and: [memberships_memberships_coshoppers_filter]
   _or: [memberships_memberships_coshoppers_filter]
 }
@@ -3268,39 +3278,41 @@ input payments_invoices_out_filter {
 }
 
 input shifts_absences_filter {
+  id: number_filter_operators
+  user_created: string_filter_operators
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
+  user_updated: string_filter_operators
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
-  id: number_filter_operators
-  shifts_assignment: shifts_assignments_filter
   shifts_from: date_filter_operators
   shifts_from_func: date_function_filter_operators
+  shifts_to: date_filter_operators
+  shifts_to_func: date_function_filter_operators
+  shifts_assignment: shifts_assignments_filter
   shifts_is_holiday: boolean_filter_operators
   shifts_membership: memberships_filter
   shifts_status: string_filter_operators
-  shifts_to: date_filter_operators
-  shifts_to_func: date_function_filter_operators
-  user_created: string_filter_operators
-  user_updated: string_filter_operators
+  shifts_is_for_all_assignments: boolean_filter_operators
   _and: [shifts_absences_filter]
   _or: [shifts_absences_filter]
 }
 
 input shifts_assignments_filter {
+  id: number_filter_operators
+  user_created: string_filter_operators
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
+  user_updated: string_filter_operators
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
-  id: number_filter_operators
   shifts_from: date_filter_operators
   shifts_from_func: date_function_filter_operators
-  shifts_membership: memberships_filter
   shifts_to: date_filter_operators
   shifts_to_func: date_function_filter_operators
-  user_created: string_filter_operators
-  user_updated: string_filter_operators
+  shifts_membership: memberships_filter
   shifts_shift: shifts_shifts_filter
+  shifts_is_regular: boolean_filter_operators
   shifts_absences: shifts_absences_filter
   shifts_absences_func: count_function_filter_operators
   _and: [shifts_assignments_filter]
@@ -3308,29 +3320,31 @@ input shifts_assignments_filter {
 }
 
 input shifts_shifts_filter {
+  id: number_filter_operators
+  user_created: string_filter_operators
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
+  user_updated: string_filter_operators
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
-  id: number_filter_operators
-  shifts_description: string_filter_operators
+  shifts_status: string_filter_operators
+  shifts_name: string_filter_operators
   shifts_from: date_filter_operators
   shifts_from_func: date_function_filter_operators
-  shifts_from_time: date_filter_operators
-  shifts_from_time_func: time_function_filter_operators
-  shifts_location: string_filter_operators
-  shifts_name: string_filter_operators
-  shifts_repeats_every: number_filter_operators
-  shifts_score: number_filter_operators
-  shifts_status: string_filter_operators
   shifts_to: date_filter_operators
   shifts_to_func: date_function_filter_operators
+  shifts_from_time: date_filter_operators
+  shifts_from_time_func: time_function_filter_operators
   shifts_to_time: date_filter_operators
   shifts_to_time_func: time_function_filter_operators
-  user_created: string_filter_operators
-  user_updated: string_filter_operators
+  shifts_repeats_every: number_filter_operators
+  shifts_description: string_filter_operators
+  shifts_location: string_filter_operators
   shifts_needs_coordinator: boolean_filter_operators
   shifts_slots: number_filter_operators
+  shifts_is_regular: boolean_filter_operators
+  shifts_category: string_filter_operators
+  shifts_is_all_day: boolean_filter_operators
   _and: [shifts_shifts_filter]
   _or: [shifts_shifts_filter]
 }
@@ -3719,16 +3733,16 @@ input update_junction_directus_users_files_input {
 }
 
 input update_memberships_coshoppers_input {
+  id: ID
+  user_created: update_directus_users_input
   date_created: Date
+  user_updated: update_directus_users_input
   date_updated: Date
   first_name: String
-  id: ID
   last_name: String
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   membership_card_id: String
-  user_created: update_directus_users_input
-  user_updated: update_directus_users_input
 }
 
 input update_memberships_input {
@@ -3751,33 +3765,33 @@ input update_memberships_input {
   memberships_type: String
   memberships_user: update_directus_users_input
   memberships_user_search: String
-
-  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
-  shifts_counter: Int
-
-  """Welche Art von Schichten macht dieses Mitglied?"""
-  shifts_user_type: String
   user_created: String
   user_updated: String
 
+  """Welche Art von Schichten macht dieses Mitglied?"""
+  shifts_user_type: String
+
+  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
+  shifts_counter: Int
+  shifts_is_coordinator: Boolean
+
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
-  shifts_is_coordinator: Boolean
   memberships_invoices: [update_payments_invoices_out_input]
-  coshoppers: [update_memberships_memberships_coshoppers_input]
   kids: [update_memberships_memberships_coshoppers_1_input]
+  coshoppers: [update_memberships_memberships_coshoppers_input]
 }
 
 input update_memberships_memberships_coshoppers_1_input {
   id: ID
-  memberships_coshoppers_id: update_memberships_coshoppers_input
   memberships_id: update_memberships_input
+  memberships_coshoppers_id: update_memberships_coshoppers_input
 }
 
 input update_memberships_memberships_coshoppers_input {
   id: ID
-  memberships_coshoppers_id: update_memberships_coshoppers_input
   memberships_id: update_memberships_input
+  memberships_coshoppers_id: update_memberships_coshoppers_input
 }
 
 input update_messages_campaigns_directus_users_input {

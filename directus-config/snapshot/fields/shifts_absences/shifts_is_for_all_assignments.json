@@ -1,47 +1,28 @@
 {
   "collection": "shifts_absences",
-  "field": "shifts_is_holiday",
+  "field": "shifts_is_for_all_assignments",
   "type": "boolean",
   "meta": {
     "collection": "shifts_absences",
-    "conditions": [
-      {
-        "name": "Hide if not for all assignments",
-        "rule": {
-          "_and": [
-            {
-              "shifts_is_for_all_assignments": {
-                "_eq": false
-              }
-            }
-          ]
-        },
-        "hidden": true,
-        "options": {
-          "iconOn": "check_box",
-          "iconOff": "check_box_outline_blank",
-          "label": "Aktiviert"
-        }
-      }
-    ],
+    "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_is_holiday",
+    "field": "shifts_is_for_all_assignments",
     "group": null,
     "hidden": false,
     "interface": "boolean",
-    "note": "Während einem Urlaub ist kein Einkauf möglich und es werden keine Schichtpunkte abgezogen.",
+    "note": "Eine allgemeine Abwesenheit gilt für alle Anmeldungen des Mitglieds",
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 11,
+    "sort": 10,
     "special": [
       "cast-boolean"
     ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Urlaub"
+        "translation": "Allgemeine Abwesenheit"
       }
     ],
     "validation": null,
@@ -49,14 +30,14 @@
     "width": "half"
   },
   "schema": {
-    "name": "shifts_is_holiday",
+    "name": "shifts_is_for_all_assignments",
     "table": "shifts_absences",
     "data_type": "boolean",
-    "default_value": false,
+    "default_value": true,
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
-    "is_nullable": false,
+    "is_nullable": true,
     "is_unique": false,
     "is_primary_key": false,
     "is_generated": false,

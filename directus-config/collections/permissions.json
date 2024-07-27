@@ -2554,9 +2554,7 @@
       "membership_card_id",
       "coshoppers",
       "kids",
-      "memberships_user_search",
-      "shifts_is_coordinator",
-      "memberships_card_id"
+      "memberships_user_search"
     ],
     "_syncId": "1414e20a-39a0-4b70-9dce-108135a7c406"
   },
@@ -2572,7 +2570,8 @@
       "shifts_to",
       "shifts_membership",
       "shifts_assignment",
-      "shifts_is_holiday"
+      "shifts_is_holiday",
+      "shifts_is_for_all_assignments"
     ],
     "_syncId": "2f4a76d4-7d44-4d04-b318-01b4414005e2"
   },
@@ -2590,7 +2589,8 @@
       "shifts_membership",
       "shifts_is_holiday",
       "shifts_assignment",
-      "shifts_status"
+      "shifts_status",
+      "shifts_is_for_all_assignments"
     ],
     "_syncId": "9851688e-a0d1-4592-9cd2-c1f80f22a1fe"
   },
@@ -2607,6 +2607,7 @@
       "shifts_to",
       "shifts_from",
       "id",
+      "shifts_is_regular",
       "shifts_shift",
       "shifts_absences"
     ],
@@ -2626,7 +2627,8 @@
       "shifts_from",
       "shifts_absences",
       "id",
-      "shifts_shift"
+      "shifts_shift",
+      "shifts_is_regular"
     ],
     "_syncId": "9d335557-9fcf-45eb-96f7-11f9a1839667"
   },
@@ -2666,7 +2668,21 @@
     "validation": {},
     "presets": null,
     "fields": [
-      "*"
+      "shifts_name",
+      "shifts_status",
+      "shifts_category",
+      "shifts_is_regular",
+      "shifts_from",
+      "shifts_to",
+      "shifts_repeats_every",
+      "shifts_is_all_day",
+      "shifts_from_time",
+      "shifts_to_time",
+      "shifts_slots",
+      "shifts_needs_coordinator",
+      "shifts_location",
+      "shifts_description",
+      "id"
     ],
     "_syncId": "a875138f-3fea-431d-a30a-01c3151750a3"
   },

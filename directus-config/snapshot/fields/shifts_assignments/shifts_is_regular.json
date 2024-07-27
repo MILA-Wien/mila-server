@@ -1,38 +1,40 @@
 {
-  "collection": "shifts_shifts",
-  "field": "shifts_location",
-  "type": "string",
+  "collection": "shifts_assignments",
+  "field": "shifts_is_regular",
+  "type": "boolean",
   "meta": {
-    "collection": "shifts_shifts",
+    "collection": "shifts_assignments",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_location",
+    "field": "shifts_is_regular",
     "group": null,
     "hidden": false,
-    "interface": "input",
-    "note": null,
+    "interface": "boolean",
+    "note": "Soll diese Anmeldung langfristig aktiv sein?",
     "options": null,
     "readonly": false,
-    "required": false,
-    "sort": 13,
-    "special": null,
+    "required": true,
+    "sort": 3,
+    "special": [
+      "cast-boolean"
+    ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Schichtort"
+        "translation": "Regelmäßige Anmeldung"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
-    "name": "shifts_location",
-    "table": "shifts_shifts",
-    "data_type": "character varying",
-    "default_value": null,
-    "max_length": 255,
+    "name": "shifts_is_regular",
+    "table": "shifts_assignments",
+    "data_type": "boolean",
+    "default_value": false,
+    "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
     "is_nullable": true,
