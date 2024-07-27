@@ -86,6 +86,13 @@ async function loadData() {
   dataLoaded.value = true;
 }
 
+function getShiftName(assignmentID: number) {
+  const assignment = activeAssignments.value.find(
+    (a) => a.assignment.id == assignmentID,
+  );
+  return assignment?.assignment.shifts_shift.shifts_name;
+}
+
 if (isActive) loadData();
 </script>
 
@@ -169,9 +176,6 @@ if (isActive) loadData();
     </div>
     <div v-if="activeAbsences.length">
       <h2>{{ t("My absences") }}</h2>
-      <p>
-        {{ t("During an absence, all shift assignments are paused.") }}
-      </p>
       <div class="flex flex-col gap-4 my-4">
         <CollectivoCard
           v-for="absence in activeAbsences"
@@ -182,7 +186,13 @@ if (isActive) loadData();
           <template #content>
             <div>{{ absence.shifts_from }} - {{ absence.shifts_to }}</div>
             <div>{{ t("Status") }}: {{ t(absence.shifts_status) }}</div>
+            <div v-if="!absence.shifts_is_for_all_assignments">
+              {{ t("Info") }}:
+              {{ t("This absence affects only the shift") }}
+              {{ getShiftName(absence.shifts_assignment) }}
+            </div>
             <div v-if="absence.shifts_is_holiday">
+              {{ t("Info") }}:
               {{
                 t(
                   "During a holiday, shopping is not allowed and no shift points are deducted.",
@@ -282,7 +292,7 @@ de:
   Success: "Erfolg"
   During a holiday, shopping is not allowed and no shift points are deducted.: "Während eines Urlaubs ist das Einkaufen nicht erlaubt und es werden keine Schichtpunkte abgezogen."
   "During an absence, all shift assignments are paused.": "Während einer Abwesenheit werden alle Schichtanmeldung pausiert."
-
+  This absence affects only the shift: "Diese Abwesenheit betrifft nur die Schicht"
   "t:regular": "Regulär"
   "t:jumper": "Springer*in"
   "t:exempt": "Befreit"

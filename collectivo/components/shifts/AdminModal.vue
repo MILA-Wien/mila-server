@@ -214,12 +214,11 @@ async function removeAssignment(onetime: boolean) {
   }
 
   if (
-    removeAssignmentObject.value.assignment.shifts_from ==
-      removeAssignmentObject.value.assignment.shifts_to ||
+    !removeAssignmentObject.value.assignment.shifts_is_regular ||
     (!onetime &&
       removeAssignmentObject.value.assignment.shifts_from == startDate)
   ) {
-    // Remove one-time assignment
+    // Remove one-time assignment or regular shift starting here
     await directus.request(
       deleteItem(
         "shifts_assignments",
@@ -235,6 +234,7 @@ async function removeAssignment(onetime: boolean) {
             .shifts_membership as MembershipsMembership
         ).id,
         shifts_assignment: removeAssignmentObject.value.assignment.id,
+        shifts_is_for_all_assignments: false,
         shifts_from: startDate,
         shifts_to: startDate,
         shifts_status: "accepted",
@@ -279,17 +279,15 @@ async function createAssignment(onetime: boolean) {
     shifts_membership: mshipID.value,
     shifts_shift: shift.id!,
     shifts_from: startDate,
+    shifts_is_regular: !onetime,
   };
-
-  if (onetime) {
-    payload.shifts_to = startDate;
-  }
 
   const res = (await directus.request(
     createItem("shifts_assignments", payload, {
       fields: [
         "id",
         "shifts_membership",
+        "shifts_is_regular",
         "shifts_shift",
         "shifts_from",
         "shifts_to",
@@ -362,7 +360,10 @@ function getAssignmentColor(assignment: AssignmentOccurrence) {
           {{ start.toLocaleString(DateTime.DATE_MED) }}
         </div>
 
-        <div>
+        <div v-if="shift.shifts_is_all_day">
+          {{ t("All day") }}
+        </div>
+        <div v-else>
           {{ t("Time") }}:
           {{ start.toLocaleString(DateTime.TIME_24_SIMPLE) }}
           {{ t("to") }}
@@ -724,4 +725,5 @@ de:
   draft: "Entwurf"
   Removed: "Entfernt"
   Location: "Ort"
+  All day: "Ganztägig"
 </i18n>

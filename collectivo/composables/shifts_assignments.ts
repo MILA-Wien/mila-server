@@ -123,9 +123,11 @@ export const getAssignmentRRule = (
       interval: shift.shifts_repeats_every,
       count: shift.shifts_repeats_every ? null : 1,
       dtstart: shiftRule.after(new Date(assignment.shifts_from), true),
-      until: assignment.shifts_to
-        ? shiftRule.before(new Date(assignment.shifts_to), true)
-        : null,
+      until: assignment.shifts_is_regular
+        ? assignment.shifts_to
+          ? shiftRule.before(new Date(assignment.shifts_to), true)
+          : null
+        : shiftRule.before(new Date(assignment.shifts_from), true),
     }),
   );
 

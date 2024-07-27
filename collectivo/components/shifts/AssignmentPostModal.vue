@@ -54,6 +54,7 @@ async function postAssignmentInner() {
     shifts_membership: user.value.membership!.id,
     shifts_shift: shift.id!,
     shifts_from: shiftStartString,
+    shifts_is_regular: false,
   };
 
   // One-time shifts have same start and end date

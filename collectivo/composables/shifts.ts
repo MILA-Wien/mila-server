@@ -59,6 +59,7 @@ export const getShiftOccurrences = async (
                   "shifts_from",
                   "shifts_to",
                   "shifts_shift",
+                  "shifts_is_regular",
                   {
                     shifts_membership: [
                       "id",
@@ -199,7 +200,7 @@ const getSingleShiftOccurence = (
     if (ass.rrule.between(date, date, true).length > 0) {
       const occ: AssignmentOccurrence = {
         assignment: ass.assignment,
-        isOneTime: ass.assignment.shifts_from == ass.assignment.shifts_to,
+        isOneTime: !ass.assignment.shifts_is_regular,
         absences: [],
       };
 
@@ -255,9 +256,13 @@ export const getShiftRrule = (shift: ShiftsShift): RRule => {
   return new RRule({
     freq: RRule.DAILY,
     interval: shift.shifts_repeats_every,
-    count: shift.shifts_repeats_every ? null : 1,
+    count: shift.shifts_is_regular ? null : 1,
     dtstart: new Date(shift.shifts_from),
-    until: shift.shifts_to ? new Date(shift.shifts_to) : null,
+    until: shift.shifts_is_regular
+      ? shift.shifts_to
+        ? new Date(shift.shifts_to)
+        : null
+      : new Date(shift.shifts_from),
   });
 };
 
@@ -280,9 +285,11 @@ export const getAssignmentRrules = (
         freq: RRule.DAILY,
         interval: shift.shifts_repeats_every,
         dtstart: shiftRule.after(new Date(assignment.shifts_from), true),
-        until: assignment.shifts_to
-          ? shiftRule.before(new Date(assignment.shifts_to), true)
-          : null,
+        until: assignment.shifts_is_regular
+          ? assignment.shifts_to
+            ? shiftRule.before(new Date(assignment.shifts_to), true)
+            : null
+          : shiftRule.before(new Date(assignment.shifts_from), true),
       }),
     );
 
@@ -318,41 +325,3 @@ export const getAssignmentRrules = (
 
   return assignmentRules;
 };
-
-// // TODO deprecated?
-
-// export const isShiftDurationModelActive = (
-//   durationModel: { shifts_from: string; shifts_to?: string },
-//   atDate?: DateTime,
-// ): boolean => {
-//   return isFromToActive(
-//     DateTime.fromISO(durationModel.shifts_from),
-//     durationModel.shifts_to
-//       ? DateTime.fromISO(durationModel.shifts_to)
-//       : undefined,
-//     atDate,
-//     true,
-//   );
-// };
-
-// export const isFromToActive = (
-//   from: DateTime,
-//   to?: DateTime,
-//   atDate?: DateTime,
-//   dateOnly = true,
-// ): boolean => {
-//   if (!atDate) {
-//     atDate = DateTime.now();
-//   }
-
-//   if (dateOnly) {
-//     from = from.startOf("day");
-//     to = to?.endOf("day");
-//   }
-
-//   if (from > atDate) {
-//     return false;
-//   }
-
-//   return !(to && to < atDate);
-// };
