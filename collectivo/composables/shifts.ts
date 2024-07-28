@@ -1,9 +1,11 @@
 import { readItems } from "@directus/sdk";
+import type { QueryFilter } from "@directus/sdk";
 import { DateTime } from "luxon";
 import { RRule, RRuleSet } from "rrule";
 
 interface GetShiftOccurrencesOptions {
   shiftType?: "regular" | "jumper" | "unfilled" | "all";
+  shiftCategory?: string;
   admin?: boolean;
 }
 
@@ -18,7 +20,7 @@ export const getShiftOccurrences = async (
   const isRegular = shiftType === "regular";
   const isUnfilled = shiftType === "unfilled";
   const isAll = shiftType === "all";
-  const filter = {
+  const filter: QueryFilter<CollectivoSchema, ShiftsShift> = {
     shifts_to: {
       _or: [{ _gte: from.toISO() }, { _null: true }],
     },
@@ -27,6 +29,9 @@ export const getShiftOccurrences = async (
   };
   if (!options.admin) {
     filter.shifts_allow_self_assignment = { _eq: true };
+  }
+  if (options.shiftCategory != "all") {
+    filter.shifts_category = { _eq: options.shiftCategory };
   }
   const shifts: ShiftsShift[] = (await directus.request(
     readItems("shifts_shifts", {

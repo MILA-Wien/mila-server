@@ -7,12 +7,19 @@ const props = defineProps({
 const { t } = useI18n();
 const model = defineModel();
 const shiftTypes = model.value.allowedShiftTypes;
+const shiftCategories = model.value.allowedShiftCategories;
 const displayedDate = ref();
 const calendarApi = ref(null);
 
 // Get shift type with value from props
 const selectedShiftType = ref(
   shiftTypes.find((type) => type.value === model.value.selectedShiftType),
+);
+
+const selectedShiftCategory = ref(
+  shiftCategories.find(
+    (type) => type.value === model.value.selectedShiftCategory,
+  ),
 );
 
 const prevHandler = () => {
@@ -58,6 +65,10 @@ watch(selectedShiftType, (value) => {
   model.value.selectedShiftType = value.value;
 });
 
+watch(selectedShiftCategory, (value) => {
+  model.value.selectedShiftCategory = value.value;
+});
+
 onMounted(async () => {
   const calendar = await props.calendarRef.value.getApi;
   calendarApi.value = calendar();
@@ -94,6 +105,18 @@ onMounted(async () => {
       </div>
     </div>
     <div class="calendar-header__right">
+      <UFormGroup v-if="shiftCategories.length > 1" :label="t('Category')">
+        <USelectMenu
+          v-model="selectedShiftCategory"
+          :options="shiftCategories"
+          class="w-36"
+        >
+          <template #label>{{ t(selectedShiftCategory.label) }}</template>
+          <template #option="{ option }">
+            {{ t(option.label) }}
+          </template>
+        </USelectMenu>
+      </UFormGroup>
       <UFormGroup v-if="shiftTypes.length > 1" :label="t('Shift type')">
         <USelectMenu
           v-model="selectedShiftType"
@@ -162,4 +185,10 @@ de:
   "Registration one-time": "Anmeldung Einmalig"
   "Unfilled shifts": "Ungefüllte Schichten"
   "All shifts": "Alle Schichten"
+  Category: Kategorie
+  "Public relations": "Öffentlichkeitsarbeit"
+  "IT Support": "IT Support"
+  Accounting: Buchhaltung
+  Normal: Normal
+  All: Alle
 </i18n>

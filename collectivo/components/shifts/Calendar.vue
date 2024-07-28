@@ -88,20 +88,57 @@ const possibleShiftTypes: { [key: string]: ShiftType } = {
   },
 };
 
+const possibleShiftCategories: { [key: string]: ShiftType } = {
+  all: {
+    label: "Alle",
+    value: "all",
+  },
+  normal: {
+    label: "Normal",
+    value: "normal",
+  },
+  accounting: {
+    label: "Accounting",
+    value: "accounting",
+  },
+  "it-support": {
+    label: "IT Support",
+    value: "it-support",
+  },
+  "public-relations": {
+    label: "Public relations",
+    value: "public-relations",
+  },
+};
+
 const propsShiftTypeToList: { [key: string]: ShiftType[] } = {
   jumper: [possibleShiftTypes.jumper],
   admin: [possibleShiftTypes.unfilled, possibleShiftTypes.all],
 };
 
+const propsShiftCategoryToList: { [key: string]: ShiftType[] } = {
+  jumper: [possibleShiftCategories.all],
+  admin: [...Object.values(possibleShiftCategories)],
+};
+
 const customSettings = ref({
   allowedShiftTypes: propsShiftTypeToList[props.mode],
   selectedShiftType: propsShiftTypeToList[props.mode][0].value,
+  allowedShiftCategories: propsShiftCategoryToList[props.mode],
+  selectedShiftCategory: propsShiftCategoryToList[props.mode][0].value,
 });
 
 const calendarRef = ref(null);
 
 watch(
   () => customSettings.value.selectedShiftType,
+  (value) => {
+    registerEventUpdate();
+  },
+);
+
+watch(
+  () => customSettings.value.selectedShiftCategory,
   (value) => {
     registerEventUpdate();
   },
@@ -136,6 +173,7 @@ const colors = ["#2E8B57", "#FF8C00", "#B22222"];
 async function updateEvents(from, to) {
   const occurrences = await getShiftOccurrences(from, to, {
     shiftType: customSettings.value.selectedShiftType,
+    shiftCategory: customSettings.value.selectedShiftCategory,
     admin: props.mode === "admin",
   });
 
@@ -183,6 +221,8 @@ async function updateEvents(from, to) {
 </script>
 
 <template>
+  Shift category {{ customSettings.selectedShiftCategory }}
+
   <div v-if="showCalendar" class="">
     <ShiftsCalendarHeader
       v-model="customSettings"
