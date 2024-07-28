@@ -275,7 +275,7 @@ export default defineNuxtPlugin(() => {
         },
         {
           value: "open",
-          label: "Offen",
+          label: "Open",
         },
         {
           value: "no-answer",
