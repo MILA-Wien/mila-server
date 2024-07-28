@@ -1,28 +1,28 @@
 {
-  "collection": "memberships",
-  "field": "shifts_is_coordinator",
+  "collection": "shifts_shifts",
+  "field": "shifts_allow_self_assignment",
   "type": "boolean",
   "meta": {
-    "collection": "memberships",
+    "collection": "shifts_shifts",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_is_coordinator",
-    "group": "shifts_group",
+    "field": "shifts_allow_self_assignment",
+    "group": null,
     "hidden": false,
     "interface": "boolean",
-    "note": null,
+    "note": "Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?",
     "options": null,
     "readonly": false,
     "required": true,
-    "sort": 2,
+    "sort": 12,
     "special": [
       "cast-boolean"
     ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Schichtkoordinator*in"
+        "translation": "Selbstständige Anmeldung"
       }
     ],
     "validation": null,
@@ -30,10 +30,10 @@
     "width": "half"
   },
   "schema": {
-    "name": "shifts_is_coordinator",
-    "table": "memberships",
+    "name": "shifts_allow_self_assignment",
+    "table": "shifts_shifts",
     "data_type": "boolean",
-    "default_value": false,
+    "default_value": true,
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,

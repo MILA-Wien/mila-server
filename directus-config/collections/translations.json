@@ -25,6 +25,12 @@
   },
   {
     "language": "de-DE",
+    "key": "accounting",
+    "value": "Buchhaltung",
+    "_syncId": "2b59732a-bca6-4d62-bc80-9dd7377bf272"
+  },
+  {
+    "language": "de-DE",
     "key": "denied",
     "value": "Abgelehnt",
     "_syncId": "2fb63205-c84b-4fce-a03a-ccab52a75ba9"
@@ -154,6 +160,12 @@
     "key": "cancelled",
     "value": "Abgebrochen",
     "_syncId": "c5b62634-b498-4a70-800c-69285f768d2d"
+  },
+  {
+    "language": "de-DE",
+    "key": "shift-coordination",
+    "value": "Schichtkoordination",
+    "_syncId": "d83e3423-4e27-402f-b926-87dac2860cc0"
   },
   {
     "language": "en-US",

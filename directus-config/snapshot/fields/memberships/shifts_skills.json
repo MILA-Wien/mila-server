@@ -1,57 +1,59 @@
 {
-  "collection": "shifts_shifts",
-  "field": "shifts_category",
-  "type": "string",
+  "collection": "memberships",
+  "field": "shifts_skills",
+  "type": "json",
   "meta": {
-    "collection": "shifts_shifts",
+    "collection": "memberships",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_category",
-    "group": null,
+    "field": "shifts_skills",
+    "group": "shifts_group",
     "hidden": false,
-    "interface": "select-dropdown",
+    "interface": "select-multiple-checkbox",
     "note": null,
     "options": {
       "choices": [
         {
-          "text": "$t:normal",
-          "value": "normal"
+          "text": "$t:shift-coordination",
+          "value": "shift-coordination"
         },
         {
           "text": "$t:accounting",
           "value": "accounting"
         },
         {
-          "text": "$t:public-relations",
-          "value": "public-relations"
-        },
-        {
           "text": "$t:it-support",
           "value": "it-support"
+        },
+        {
+          "text": "$t:public-relations",
+          "value": "public-relations"
         }
       ]
     },
     "readonly": false,
-    "required": true,
+    "required": false,
     "sort": 3,
-    "special": null,
+    "special": [
+      "cast-json"
+    ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Schichtkategorie"
+        "translation": "Fähigkeiten"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "shifts_category",
-    "table": "shifts_shifts",
-    "data_type": "character varying",
-    "default_value": "normal",
-    "max_length": 255,
+    "name": "shifts_skills",
+    "table": "memberships",
+    "data_type": "json",
+    "default_value": null,
+    "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
     "is_nullable": true,

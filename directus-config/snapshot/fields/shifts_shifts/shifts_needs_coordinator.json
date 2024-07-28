@@ -15,19 +15,19 @@
     "options": null,
     "readonly": false,
     "required": true,
-    "sort": 12,
+    "sort": 13,
     "special": [
       "cast-boolean"
     ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Benötigt Koordinator*in?"
+        "translation": "Braucht Koordinator*in"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
     "name": "shifts_needs_coordinator",

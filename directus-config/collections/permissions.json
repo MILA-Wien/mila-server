@@ -2609,7 +2609,8 @@
       "id",
       "shifts_is_regular",
       "shifts_shift",
-      "shifts_absences"
+      "shifts_absences",
+      "shifts_is_coordination"
     ],
     "_syncId": "da15fda6-9248-4677-81ad-1c08d6068715"
   },
@@ -2628,7 +2629,8 @@
       "shifts_absences",
       "id",
       "shifts_shift",
-      "shifts_is_regular"
+      "shifts_is_regular",
+      "shifts_is_coordination"
     ],
     "_syncId": "9d335557-9fcf-45eb-96f7-11f9a1839667"
   },
@@ -2682,7 +2684,8 @@
       "shifts_needs_coordinator",
       "shifts_location",
       "shifts_description",
-      "id"
+      "id",
+      "shifts_allow_self_assignment"
     ],
     "_syncId": "a875138f-3fea-431d-a30a-01c3151750a3"
   },

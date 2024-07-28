@@ -14,13 +14,6 @@ declare global {
     shifts_absences: ShiftsAbsence[];
     shifts_logs: ShiftsLog[];
     shifts_shifts: ShiftsShift[];
-    shifts_skills_directus_users: ShiftsSkillUserLink[];
-    shifts_skills_shifts_slots: ShiftsSkillSlotLink[];
-  }
-
-  interface CollectivoUser {
-    shifts_user_type: string;
-    shifts_skills: number[];
   }
 
   interface ShiftsShift {
@@ -40,6 +33,7 @@ declare global {
     shifts_status: string;
     shifts_description?: string;
     shifts_location?: string;
+    shifts_needs_coordinator: boolean;
     shifts_assignments?: ShiftsAssignment[] | number[];
   }
 
@@ -50,6 +44,7 @@ declare global {
     shifts_to?: string;
     shifts_shift: ShiftsShift | number;
     shifts_membership: MembershipsMembership | number;
+    shifts_is_coordination: boolean;
   }
 
   interface ShiftsAssignmentRules {
@@ -91,6 +86,7 @@ declare global {
     n_assigned: number;
     assignments: AssignmentOccurrence[];
     selfAssigned?: boolean;
+    needsCoordinator?: boolean;
   }
 
   interface SlotRrule {
@@ -153,9 +149,8 @@ declare global {
     memberships_type: string;
     memberships_shares: number;
     shifts_user_type: ShiftsUserType;
-    shifts_skills: { shifts_skills_id: ShiftsSkill }[];
     shifts_counter: number;
-    shifts_is_coordinator: boolean;
+    shifts_skills?: string[];
   }
 
   interface CollectivoTag {

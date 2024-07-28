@@ -221,8 +221,6 @@ async function updateEvents(from, to) {
 </script>
 
 <template>
-  Shift category {{ customSettings.selectedShiftCategory }}
-
   <div v-if="showCalendar" class="">
     <ShiftsCalendarHeader
       v-model="customSettings"

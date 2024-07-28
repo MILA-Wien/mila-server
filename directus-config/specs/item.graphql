@@ -59,6 +59,10 @@ type Query {
   memberships_coshoppers_by_id(id: ID!, version: String): memberships_coshoppers
   memberships_coshoppers_aggregated(groupBy: [String], filter: memberships_coshoppers_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_coshoppers_aggregated!]!
   memberships_coshoppers_by_version(version: String!, id: ID!): version_memberships_coshoppers
+  shifts_assignments(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_assignments!]!
+  shifts_assignments_by_id(id: ID!, version: String): shifts_assignments
+  shifts_assignments_aggregated(groupBy: [String], filter: shifts_assignments_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_assignments_aggregated!]!
+  shifts_assignments_by_version(version: String!, id: ID!): version_shifts_assignments
   memberships_memberships_coshoppers_1(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers_1!]!
   memberships_memberships_coshoppers_1_by_id(id: ID!, version: String): memberships_memberships_coshoppers_1
   memberships_memberships_coshoppers_1_aggregated(groupBy: [String], filter: memberships_memberships_coshoppers_1_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_memberships_coshoppers_1_aggregated!]!
@@ -71,10 +75,6 @@ type Query {
   memberships_by_id(id: ID!, version: String): memberships
   memberships_aggregated(groupBy: [String], filter: memberships_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_aggregated!]!
   memberships_by_version(version: String!, id: ID!): version_memberships
-  shifts_assignments(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_assignments!]!
-  shifts_assignments_by_id(id: ID!, version: String): shifts_assignments
-  shifts_assignments_aggregated(groupBy: [String], filter: shifts_assignments_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_assignments_aggregated!]!
-  shifts_assignments_by_version(version: String!, id: ID!): version_shifts_assignments
   shifts_absences(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_absences!]!
   shifts_absences_by_id(id: ID!, version: String): shifts_absences
   shifts_absences_aggregated(groupBy: [String], filter: shifts_absences_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_absences_aggregated!]!
@@ -120,14 +120,14 @@ type Mutation {
   create_payments_invoices_entries_item(data: create_payments_invoices_entries_input!): payments_invoices_entries
   create_memberships_coshoppers_items(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_coshoppers_input!]): [memberships_coshoppers!]!
   create_memberships_coshoppers_item(data: create_memberships_coshoppers_input!): memberships_coshoppers
+  create_shifts_assignments_items(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_assignments_input!]): [shifts_assignments!]!
+  create_shifts_assignments_item(data: create_shifts_assignments_input!): shifts_assignments
   create_memberships_memberships_coshoppers_1_items(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_memberships_coshoppers_1_input!]): [memberships_memberships_coshoppers_1!]!
   create_memberships_memberships_coshoppers_1_item(data: create_memberships_memberships_coshoppers_1_input!): memberships_memberships_coshoppers_1
   create_memberships_memberships_coshoppers_items(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_memberships_coshoppers_input!]): [memberships_memberships_coshoppers!]!
   create_memberships_memberships_coshoppers_item(data: create_memberships_memberships_coshoppers_input!): memberships_memberships_coshoppers
   create_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_input!]): [memberships!]!
   create_memberships_item(data: create_memberships_input!): memberships
-  create_shifts_assignments_items(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_assignments_input!]): [shifts_assignments!]!
-  create_shifts_assignments_item(data: create_shifts_assignments_input!): shifts_assignments
   create_shifts_absences_items(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_absences_input!]): [shifts_absences!]!
   create_shifts_absences_item(data: create_shifts_absences_input!): shifts_absences
   create_shifts_shifts_items(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_shifts_input!]): [shifts_shifts!]!
@@ -179,6 +179,9 @@ type Mutation {
   update_memberships_coshoppers_items(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_coshoppers_input!): [memberships_coshoppers!]!
   update_memberships_coshoppers_batch(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_coshoppers_input!]): [memberships_coshoppers!]!
   update_memberships_coshoppers_item(id: ID!, data: update_memberships_coshoppers_input!): memberships_coshoppers
+  update_shifts_assignments_items(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_assignments_input!): [shifts_assignments!]!
+  update_shifts_assignments_batch(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_assignments_input!]): [shifts_assignments!]!
+  update_shifts_assignments_item(id: ID!, data: update_shifts_assignments_input!): shifts_assignments
   update_memberships_memberships_coshoppers_1_items(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_memberships_coshoppers_1_input!): [memberships_memberships_coshoppers_1!]!
   update_memberships_memberships_coshoppers_1_batch(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_memberships_coshoppers_1_input!]): [memberships_memberships_coshoppers_1!]!
   update_memberships_memberships_coshoppers_1_item(id: ID!, data: update_memberships_memberships_coshoppers_1_input!): memberships_memberships_coshoppers_1
@@ -188,9 +191,6 @@ type Mutation {
   update_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_input!): [memberships!]!
   update_memberships_batch(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_input!]): [memberships!]!
   update_memberships_item(id: ID!, data: update_memberships_input!): memberships
-  update_shifts_assignments_items(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_assignments_input!): [shifts_assignments!]!
-  update_shifts_assignments_batch(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_assignments_input!]): [shifts_assignments!]!
-  update_shifts_assignments_item(id: ID!, data: update_shifts_assignments_input!): shifts_assignments
   update_shifts_absences_items(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_absences_input!): [shifts_absences!]!
   update_shifts_absences_batch(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_absences_input!]): [shifts_absences!]!
   update_shifts_absences_item(id: ID!, data: update_shifts_absences_input!): shifts_absences
@@ -230,14 +230,14 @@ type Mutation {
   delete_payments_invoices_entries_item(id: ID!): delete_one
   delete_memberships_coshoppers_items(ids: [ID]!): delete_many
   delete_memberships_coshoppers_item(id: ID!): delete_one
+  delete_shifts_assignments_items(ids: [ID]!): delete_many
+  delete_shifts_assignments_item(id: ID!): delete_one
   delete_memberships_memberships_coshoppers_1_items(ids: [ID]!): delete_many
   delete_memberships_memberships_coshoppers_1_item(id: ID!): delete_one
   delete_memberships_memberships_coshoppers_items(ids: [ID]!): delete_many
   delete_memberships_memberships_coshoppers_item(id: ID!): delete_one
   delete_memberships_items(ids: [ID]!): delete_many
   delete_memberships_item(id: ID!): delete_one
-  delete_shifts_assignments_items(ids: [ID]!): delete_many
-  delete_shifts_assignments_item(id: ID!): delete_one
   delete_shifts_absences_items(ids: [ID]!): delete_many
   delete_shifts_absences_item(id: ID!): delete_one
   delete_shifts_shifts_items(ids: [ID]!): delete_many
@@ -280,10 +280,10 @@ type Subscription {
   payments_invoices_out_mutated(event: EventEnum): payments_invoices_out_mutated
   payments_invoices_entries_mutated(event: EventEnum): payments_invoices_entries_mutated
   memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
+  shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
   memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
   memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
   memberships_mutated(event: EventEnum): memberships_mutated
-  shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
   shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
@@ -1163,10 +1163,11 @@ type memberships {
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
   shifts_counter: Int
-  shifts_is_coordinator: Boolean
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
+  shifts_skills: JSON
+  shifts_skills_func: count_functions
   memberships_invoices(filter: payments_invoices_out_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [payments_invoices_out]
   memberships_invoices_func: count_functions
   kids(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers_1]
@@ -1218,10 +1219,10 @@ type memberships_aggregated_count {
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
   shifts_counter: Int
-  shifts_is_coordinator: Int
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: Int
+  shifts_skills: Int
 
   """Rechnungen für Anteils-Zahlungen"""
   memberships_invoices: Int
@@ -1891,6 +1892,7 @@ type shifts_assignments {
 
   """Soll diese Anmeldung langfristig aktiv sein?"""
   shifts_is_regular: Boolean
+  shifts_is_coordination: Boolean
   shifts_absences(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_absences]
   shifts_absences_func: count_functions
 }
@@ -1923,6 +1925,7 @@ type shifts_assignments_aggregated_count {
 
   """Soll diese Anmeldung langfristig aktiv sein?"""
   shifts_is_regular: Int
+  shifts_is_coordination: Int
 
   """Abwesenheit gilt nur für diese Schicht"""
   shifts_absences: Int
@@ -2028,13 +2031,16 @@ type shifts_shifts {
   shifts_repeats_every: Int
   shifts_description: String
   shifts_location: String
-  shifts_needs_coordinator: Boolean
   shifts_slots: Int
 
   """Soll die Schicht sich regelmäßig wiederholen?"""
   shifts_is_regular: Boolean
   shifts_category: String
   shifts_is_all_day: Boolean
+
+  """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
+  shifts_allow_self_assignment: Boolean
+  shifts_needs_coordinator: Boolean
 }
 
 type shifts_shifts_aggregated {
@@ -2071,13 +2077,16 @@ type shifts_shifts_aggregated_count {
   shifts_repeats_every: Int
   shifts_description: Int
   shifts_location: Int
-  shifts_needs_coordinator: Int
   shifts_slots: Int
 
   """Soll die Schicht sich regelmäßig wiederholen?"""
   shifts_is_regular: Int
   shifts_category: Int
   shifts_is_all_day: Int
+
+  """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
+  shifts_allow_self_assignment: Int
+  shifts_needs_coordinator: Int
 }
 
 type shifts_shifts_aggregated_fields {
@@ -2196,10 +2205,10 @@ type version_memberships {
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
   shifts_counter: Int
-  shifts_is_coordinator: Boolean
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
+  shifts_skills: JSON
   memberships_invoices: JSON
   kids: JSON
   coshoppers: JSON
@@ -2383,6 +2392,7 @@ type version_shifts_assignments {
 
   """Soll diese Anmeldung langfristig aktiv sein?"""
   shifts_is_regular: Boolean
+  shifts_is_coordination: Boolean
   shifts_absences: JSON
 }
 
@@ -2425,13 +2435,16 @@ type version_shifts_shifts {
   shifts_repeats_every: Int
   shifts_description: String
   shifts_location: String
-  shifts_needs_coordinator: Boolean
   shifts_slots: Int
 
   """Soll die Schicht sich regelmäßig wiederholen?"""
   shifts_is_regular: Boolean
   shifts_category: String
   shifts_is_all_day: Boolean
+
+  """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
+  shifts_allow_self_assignment: Boolean
+  shifts_needs_coordinator: Boolean
 }
 
 input big_int_filter_operators {
@@ -2728,10 +2741,10 @@ input create_memberships_input {
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
   shifts_counter: Int
-  shifts_is_coordinator: Boolean
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
+  shifts_skills: JSON
   memberships_invoices: [create_payments_invoices_out_input]
   kids: [create_memberships_memberships_coshoppers_1_input]
   coshoppers: [create_memberships_memberships_coshoppers_input]
@@ -2889,6 +2902,7 @@ input create_shifts_assignments_input {
 
   """Soll diese Anmeldung langfristig aktiv sein?"""
   shifts_is_regular: Boolean
+  shifts_is_coordination: Boolean
   shifts_absences: [create_shifts_absences_input]
 }
 
@@ -2929,13 +2943,16 @@ input create_shifts_shifts_input {
   shifts_repeats_every: Int
   shifts_description: String
   shifts_location: String
-  shifts_needs_coordinator: Boolean
   shifts_slots: Int
 
   """Soll die Schicht sich regelmäßig wiederholen?"""
   shifts_is_regular: Boolean
   shifts_category: String
   shifts_is_all_day: Boolean
+
+  """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
+  shifts_allow_self_assignment: Boolean
+  shifts_needs_coordinator: Boolean
 }
 
 input date_filter_operators {
@@ -3294,8 +3311,9 @@ input memberships_filter {
   user_updated: string_filter_operators
   shifts_user_type: string_filter_operators
   shifts_counter: number_filter_operators
-  shifts_is_coordinator: boolean_filter_operators
   memberships_card_id: string_filter_operators
+  shifts_skills: string_filter_operators
+  shifts_skills_func: count_function_filter_operators
   memberships_invoices: payments_invoices_out_filter
   memberships_invoices_func: count_function_filter_operators
   kids: memberships_memberships_coshoppers_1_filter
@@ -3499,6 +3517,7 @@ input shifts_assignments_filter {
   shifts_membership: memberships_filter
   shifts_shift: shifts_shifts_filter
   shifts_is_regular: boolean_filter_operators
+  shifts_is_coordination: boolean_filter_operators
   shifts_absences: shifts_absences_filter
   shifts_absences_func: count_function_filter_operators
   _and: [shifts_assignments_filter]
@@ -3545,11 +3564,12 @@ input shifts_shifts_filter {
   shifts_repeats_every: number_filter_operators
   shifts_description: string_filter_operators
   shifts_location: string_filter_operators
-  shifts_needs_coordinator: boolean_filter_operators
   shifts_slots: number_filter_operators
   shifts_is_regular: boolean_filter_operators
   shifts_category: string_filter_operators
   shifts_is_all_day: boolean_filter_operators
+  shifts_allow_self_assignment: boolean_filter_operators
+  shifts_needs_coordinator: boolean_filter_operators
   _and: [shifts_shifts_filter]
   _or: [shifts_shifts_filter]
 }
@@ -3787,10 +3807,10 @@ input update_memberships_input {
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
   shifts_counter: Int
-  shifts_is_coordinator: Boolean
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
+  shifts_skills: JSON
   memberships_invoices: [update_payments_invoices_out_input]
   kids: [update_memberships_memberships_coshoppers_1_input]
   coshoppers: [update_memberships_memberships_coshoppers_input]
@@ -3948,6 +3968,7 @@ input update_shifts_assignments_input {
 
   """Soll diese Anmeldung langfristig aktiv sein?"""
   shifts_is_regular: Boolean
+  shifts_is_coordination: Boolean
   shifts_absences: [update_shifts_absences_input]
 }
 
@@ -3988,11 +4009,14 @@ input update_shifts_shifts_input {
   shifts_repeats_every: Int
   shifts_description: String
   shifts_location: String
-  shifts_needs_coordinator: Boolean
   shifts_slots: Int
 
   """Soll die Schicht sich regelmäßig wiederholen?"""
   shifts_is_regular: Boolean
   shifts_category: String
   shifts_is_all_day: Boolean
+
+  """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
+  shifts_allow_self_assignment: Boolean
+  shifts_needs_coordinator: Boolean
 }

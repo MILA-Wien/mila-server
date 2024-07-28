@@ -174,6 +174,7 @@ async function loadMembership() {
           { memberships_user: ["first_name", "last_name"] },
           "memberships_type",
           "memberships_status",
+          "shifts_skills",
           "shifts_user_type",
         ],
       }),
@@ -256,6 +257,9 @@ async function removeAssignment(onetime: boolean) {
   // Remove assignment from slot
   removeAssignmentObject.value.removed = true;
   removeAssignmentModalIsOpen.value = false;
+  if (removeAssignmentObject.value.assignment.shifts_is_coordination) {
+    occ.needsCoordinator = true;
+  }
   occ.n_assigned--;
   emit("data-has-changed");
 }
@@ -263,10 +267,12 @@ async function removeAssignment(onetime: boolean) {
 // CREATE ASSIGNMENT FLOW
 
 const createAssignmentModalIsOpen = ref(false);
+const createAssignmentCoordinator = ref(false);
 
 function startCreateAssignmentFlow() {
   mshipID.value = null;
   createAssignmentModalIsOpen.value = true;
+  createAssignmentCoordinator.value = false;
 }
 
 async function createAssignment(onetime: boolean) {
@@ -280,6 +286,7 @@ async function createAssignment(onetime: boolean) {
     shifts_shift: shift.id!,
     shifts_from: startDate,
     shifts_is_regular: !onetime,
+    shifts_is_coordination: createAssignmentCoordinator.value,
   };
 
   const res = (await directus.request(
@@ -288,6 +295,7 @@ async function createAssignment(onetime: boolean) {
         "id",
         "shifts_membership",
         "shifts_is_regular",
+        "shifts_is_coordination",
         "shifts_shift",
         "shifts_from",
         "shifts_to",
@@ -309,6 +317,10 @@ async function createAssignment(onetime: boolean) {
   } as AssignmentOccurrence);
 
   createAssignmentModalIsOpen.value = false;
+  if (createAssignmentCoordinator.value) {
+    occ.needsCoordinator = false;
+  }
+
   occ.n_assigned++;
   emit("data-has-changed");
 }
@@ -318,11 +330,28 @@ function getAssignmentColor(assignment: AssignmentOccurrence) {
     return "bg-gray-100";
   }
 
+  if (assignment.assignment.shifts_is_coordination) {
+    return "bg-yellow-100";
+  }
+
   if (assignment.isOneTime) {
     return "bg-green-100";
   }
 
   return "bg-primary-100";
+}
+
+function checkIfMshipInAssignments(mship: number) {
+  for (const assignment of occ.assignments) {
+    if (
+      (assignment.assignment.shifts_membership as MembershipsMembership).id ===
+        mship &&
+      assignment.isActive
+    ) {
+      return true;
+    }
+  }
+  return false;
 }
 </script>
 
@@ -370,6 +399,11 @@ function getAssignmentColor(assignment: AssignmentOccurrence) {
           {{ end.toLocaleString(DateTime.TIME_24_SIMPLE) }}
         </div>
 
+        <div>
+          {{ t("Category") }}:
+          {{ t("cat:" + shift.shifts_category) }}
+        </div>
+
         <div v-if="shift.shifts_location">
           {{ t("Location") }}:
           {{ shift.shifts_location }}
@@ -405,6 +439,12 @@ function getAssignmentColor(assignment: AssignmentOccurrence) {
         </div>
 
         <div class="flex flex-col gap-3 my-2">
+          <div
+            v-if="occ.needsCoordinator"
+            class="bg-yellow-100 p-2 rounded-md font-bold"
+          >
+            {{ t("Shift needs coordinator") }}
+          </div>
           <template
             v-for="(assignment, ai) of occ.assignments"
             :key="assignment.assignment.id"
@@ -416,12 +456,17 @@ function getAssignmentColor(assignment: AssignmentOccurrence) {
               collection="shifts_assignments"
             >
               <template #header>
-                {{
-                  displayMembership(
-                    assignment.assignment
-                      .shifts_membership as MembershipsMembership,
-                  )
-                }}
+                <p class="font-bold">
+                  <span v-if="assignment.assignment.shifts_is_coordination">
+                    {{ t("Shift coordination") }}:
+                  </span>
+                  {{
+                    displayMembership(
+                      assignment.assignment
+                        .shifts_membership as MembershipsMembership,
+                    )
+                  }}
+                </p>
               </template>
 
               <template #bottom-right>
@@ -475,13 +520,16 @@ function getAssignmentColor(assignment: AssignmentOccurrence) {
               collection="shifts_assignments"
             >
               <template #header>
+                <span v-if="assignment.assignment.shifts_is_coordination">
+                  {{ t("Shift coordination") }}
+                </span>
                 {{
                   displayMembership(
                     assignment.assignment
                       .shifts_membership as MembershipsMembership,
                   )
-                }}</template
-              >
+                }}
+              </template>
 
               <div v-if="!assignment.logged">
                 <div>{{ t("Create log") }}:</div>
@@ -554,18 +602,52 @@ function getAssignmentColor(assignment: AssignmentOccurrence) {
           <p>{{ t("Membership type") }}: {{ mshipData.memberships_type }}</p>
 
           <p>
-            {{ t("Membership status") }}: {{ t(mshipData.memberships_status) }}
+            {{ t("Membership status") }}:
+            {{ t(mshipData.memberships_status) }}
           </p>
 
           <p>{{ t("Shift type") }}: {{ t(mshipData.shifts_user_type) }}</p>
 
-          <div class="flex flex-wrap gap-2 mt-3">
-            <UButton @click="createAssignment(true)">{{
-              t("Create one-time assignment")
-            }}</UButton>
-            <UButton @click="createAssignment(false)">{{
-              t("Create regular assignment")
-            }}</UButton>
+          <p v-if="mshipData.shifts_skills">
+            {{ t("Skills") }}:
+            <span v-for="skill in mshipData.shifts_skills" :key="skill">
+              {{ t("skill:" + skill) }},
+            </span>
+          </p>
+
+          <div
+            v-if="checkIfMshipInAssignments(mshipData.id)"
+            class="bg-red-100 p-2 rounded-md mt-3 font-bold"
+          >
+            {{ t("Member is already assigned for this shift") }}
+          </div>
+          <div v-else>
+            <UFormGroup
+              v-if="
+                occ.needsCoordinator &&
+                mshipData.shifts_skills &&
+                mshipData.shifts_skills.includes('shift-coordination')
+              "
+              :label="t('Shift coordinator')"
+              name="createShiftCoordinator"
+              class="my-5"
+            >
+              <div class="form-box flex flex-row">
+                <UToggle
+                  v-model="createAssignmentCoordinator"
+                  class="mt-0.5 mr-2"
+                />
+                <span>{{ t("Assign this person as coordinator") }}</span>
+              </div>
+            </UFormGroup>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <UButton @click="createAssignment(true)">{{
+                t("Create one-time assignment")
+              }}</UButton>
+              <UButton @click="createAssignment(false)">{{
+                t("Create regular assignment")
+              }}</UButton>
+            </div>
           </div>
         </div>
         <div v-if="mshipError">
@@ -592,12 +674,7 @@ function getAssignmentColor(assignment: AssignmentOccurrence) {
               )
             }}
           </p>
-          <p
-            v-if="
-              removeAssignmentObject.assignment.shifts_from ==
-              removeAssignmentObject.assignment.shifts_to
-            "
-          >
+          <p v-if="!removeAssignmentObject.assignment.shifts_is_regular">
             {{ removeAssignmentObject.assignment.shifts_from }} ({{
               t("One-time shift")
             }})
@@ -614,10 +691,7 @@ function getAssignmentColor(assignment: AssignmentOccurrence) {
             {{ t("Remove assignment for") }} {{ startDate }}
           </UButton>
           <UButton
-            v-if="
-              removeAssignmentObject.assignment.shifts_from !=
-              removeAssignmentObject.assignment.shifts_to
-            "
+            v-if="removeAssignmentObject.assignment.shifts_is_regular"
             @click="removeAssignment(false)"
           >
             {{ t("Remove for ") }} {{ startDate }}
@@ -726,4 +800,20 @@ de:
   Removed: "Entfernt"
   Location: "Ort"
   All day: "Ganztägig"
+  "Shift coordinator": "Schichtkoordinator*in"
+  "Shift coordination": "Schichtkoordination"
+  "cat:normal": "Normal"
+  "cat:accounting": "Buchhaltung"
+  "cat:it-support": "IT-Support"
+  "cat:public-relations": "Öffentlichkeitsarbeit"
+  "Required skills": "Benötigte Fähigkeiten"
+  "Shift needs coordinator": "Schicht benötigt Koordinator*in"
+  "Assign this person as coordinator": "Diese Person als Koordinator*in eintragen"
+  "skill:shift-coordination": "Schichtkoordination"
+  "skill:accounting": "Buchhaltung"
+  "skill:it-support": "IT-Support"
+  "skill:public-relations": "Öffentlichkeitsarbeit"
+  Skills: "Fähigkeiten"
+  Category: Kategorie
+  Member is already assigned  for this shift: "Mitglied ist bereits für diese Schicht angemeldet"
 </i18n>
