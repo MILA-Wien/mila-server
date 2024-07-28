@@ -18,15 +18,19 @@ export const getShiftOccurrences = async (
   const isRegular = shiftType === "regular";
   const isUnfilled = shiftType === "unfilled";
   const isAll = shiftType === "all";
+  const filter = {
+    shifts_to: {
+      _or: [{ _gte: from.toISO() }, { _null: true }],
+    },
+    shifts_from: { _lte: to.toISO() },
+    shifts_status: { _eq: "published" },
+  };
+  if (!options.admin) {
+    filter.shifts_allow_self_assignment = { _eq: true };
+  }
   const shifts: ShiftsShift[] = (await directus.request(
     readItems("shifts_shifts", {
-      filter: {
-        shifts_to: {
-          _or: [{ _gte: from.toISO() }, { _null: true }],
-        },
-        shifts_from: { _lte: to.toISO() },
-        shifts_status: { _eq: "published" },
-      },
+      filter: filter,
       fields: ["*"],
     }),
   )) as ShiftsShift[];

@@ -33,6 +33,7 @@ declare global {
     shifts_to_time?: string;
     shifts_slots: number;
     shifts_needs_coordinator: boolean;
+    shifts_allow_self_assignment: boolean;
     shifts_is_regular: boolean;
     shifts_category: string;
     shifts_repeats_every?: number;
