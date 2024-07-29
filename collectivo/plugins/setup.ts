@@ -51,6 +51,13 @@ export default defineNuxtPlugin(() => {
       order: 0,
     },
     {
+      label: "Handbook",
+      icon: "i-heroicons-book-open",
+      to: "https://handbuch.mila.wien/books/mitglieder-handbuch",
+      external: true,
+      order: 1,
+    },
+    {
       label: "Studio",
       icon: "i-heroicons-chart-bar-square",
       to: runtimeConfig.public.directusUrl,
