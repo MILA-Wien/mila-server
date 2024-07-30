@@ -14,55 +14,55 @@ type Query {
   relations_by_name(collection: String!, field: String!): directus_relations
   extensions: [directus_extensions!]!
   users_me: directus_users
-  roles(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_roles!]!
-  roles_by_id(id: ID!, version: String): directus_roles
-  roles_aggregated(groupBy: [String], filter: directus_roles_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_roles_aggregated!]!
-  revisions(filter: directus_revisions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_revisions!]!
-  revisions_by_id(id: ID!, version: String): directus_revisions
-  revisions_aggregated(groupBy: [String], filter: directus_revisions_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_revisions_aggregated!]!
-  folders(filter: directus_folders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_folders!]!
-  folders_by_id(id: ID!, version: String): directus_folders
-  folders_aggregated(groupBy: [String], filter: directus_folders_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_folders_aggregated!]!
-  activity(filter: directus_activity_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_activity!]!
-  activity_by_id(id: ID!, version: String): directus_activity
-  activity_aggregated(groupBy: [String], filter: directus_activity_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_activity_aggregated!]!
-  permissions(filter: directus_permissions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_permissions!]!
-  permissions_by_id(id: ID!, version: String): directus_permissions
-  permissions_aggregated(groupBy: [String], filter: directus_permissions_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_permissions_aggregated!]!
-  files(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_files!]!
-  files_by_id(id: ID!, version: String): directus_files
-  files_aggregated(groupBy: [String], filter: directus_files_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_files_aggregated!]!
-  presets(filter: directus_presets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_presets!]!
-  presets_by_id(id: ID!, version: String): directus_presets
-  presets_aggregated(groupBy: [String], filter: directus_presets_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_presets_aggregated!]!
-  settings(version: String): directus_settings
-  panels(filter: directus_panels_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_panels!]!
-  panels_by_id(id: ID!, version: String): directus_panels
-  panels_aggregated(groupBy: [String], filter: directus_panels_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_panels_aggregated!]!
-  notifications(filter: directus_notifications_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_notifications!]!
-  notifications_by_id(id: ID!, version: String): directus_notifications
-  notifications_aggregated(groupBy: [String], filter: directus_notifications_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_notifications_aggregated!]!
-  shares(filter: directus_shares_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_shares!]!
-  shares_by_id(id: ID!, version: String): directus_shares
-  shares_aggregated(groupBy: [String], filter: directus_shares_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_shares_aggregated!]!
-  flows(filter: directus_flows_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_flows!]!
-  flows_by_id(id: ID!, version: String): directus_flows
-  flows_aggregated(groupBy: [String], filter: directus_flows_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_flows_aggregated!]!
-  operations(filter: directus_operations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_operations!]!
-  operations_by_id(id: ID!, version: String): directus_operations
-  operations_aggregated(groupBy: [String], filter: directus_operations_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_operations_aggregated!]!
   dashboards(filter: directus_dashboards_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_dashboards!]!
   dashboards_by_id(id: ID!, version: String): directus_dashboards
   dashboards_aggregated(groupBy: [String], filter: directus_dashboards_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_dashboards_aggregated!]!
-  translations(filter: directus_translations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_translations!]!
-  translations_by_id(id: ID!, version: String): directus_translations
-  translations_aggregated(groupBy: [String], filter: directus_translations_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_translations_aggregated!]!
+  folders(filter: directus_folders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_folders!]!
+  folders_by_id(id: ID!, version: String): directus_folders
+  folders_aggregated(groupBy: [String], filter: directus_folders_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_folders_aggregated!]!
+  flows(filter: directus_flows_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_flows!]!
+  flows_by_id(id: ID!, version: String): directus_flows
+  flows_aggregated(groupBy: [String], filter: directus_flows_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_flows_aggregated!]!
+  notifications(filter: directus_notifications_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_notifications!]!
+  notifications_by_id(id: ID!, version: String): directus_notifications
+  notifications_aggregated(groupBy: [String], filter: directus_notifications_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_notifications_aggregated!]!
+  operations(filter: directus_operations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_operations!]!
+  operations_by_id(id: ID!, version: String): directus_operations
+  operations_aggregated(groupBy: [String], filter: directus_operations_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_operations_aggregated!]!
+  panels(filter: directus_panels_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_panels!]!
+  panels_by_id(id: ID!, version: String): directus_panels
+  panels_aggregated(groupBy: [String], filter: directus_panels_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_panels_aggregated!]!
+  permissions(filter: directus_permissions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_permissions!]!
+  permissions_by_id(id: ID!, version: String): directus_permissions
+  permissions_aggregated(groupBy: [String], filter: directus_permissions_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_permissions_aggregated!]!
+  activity(filter: directus_activity_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_activity!]!
+  activity_by_id(id: ID!, version: String): directus_activity
+  activity_aggregated(groupBy: [String], filter: directus_activity_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_activity_aggregated!]!
+  files(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_files!]!
+  files_by_id(id: ID!, version: String): directus_files
+  files_aggregated(groupBy: [String], filter: directus_files_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_files_aggregated!]!
+  revisions(filter: directus_revisions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_revisions!]!
+  revisions_by_id(id: ID!, version: String): directus_revisions
+  revisions_aggregated(groupBy: [String], filter: directus_revisions_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_revisions_aggregated!]!
   versions(filter: directus_versions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_versions!]!
   versions_by_id(id: ID!, version: String): directus_versions
   versions_aggregated(groupBy: [String], filter: directus_versions_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_versions_aggregated!]!
+  presets(filter: directus_presets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_presets!]!
+  presets_by_id(id: ID!, version: String): directus_presets
+  presets_aggregated(groupBy: [String], filter: directus_presets_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_presets_aggregated!]!
   webhooks(filter: directus_webhooks_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_webhooks!]!
   webhooks_by_id(id: ID!, version: String): directus_webhooks
   webhooks_aggregated(groupBy: [String], filter: directus_webhooks_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_webhooks_aggregated!]!
+  translations(filter: directus_translations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_translations!]!
+  translations_by_id(id: ID!, version: String): directus_translations
+  translations_aggregated(groupBy: [String], filter: directus_translations_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_translations_aggregated!]!
+  roles(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_roles!]!
+  roles_by_id(id: ID!, version: String): directus_roles
+  roles_aggregated(groupBy: [String], filter: directus_roles_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_roles_aggregated!]!
+  shares(filter: directus_shares_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_shares!]!
+  shares_by_id(id: ID!, version: String): directus_shares
+  shares_aggregated(groupBy: [String], filter: directus_shares_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_shares_aggregated!]!
+  settings(version: String): directus_settings
   users(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_users!]!
   users_by_id(id: ID!, version: String): directus_users
   users_aggregated(groupBy: [String], filter: directus_users_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_users_aggregated!]!
@@ -102,152 +102,152 @@ type Mutation {
   delete_comment(id: ID!): delete_one
   import_file(url: String!, data: create_directus_files_input): directus_files
   users_invite(email: String!, role: String!, invite_url: String): Boolean
-  create_roles_items(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_roles_input!]): [directus_roles!]!
-  create_roles_item(data: create_directus_roles_input!): directus_roles
+  create_dashboards_items(filter: directus_dashboards_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_dashboards_input!]): [directus_dashboards!]!
+  create_dashboards_item(data: create_directus_dashboards_input!): directus_dashboards
   create_folders_items(filter: directus_folders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_folders_input!]): [directus_folders!]!
   create_folders_item(data: create_directus_folders_input!): directus_folders
+  create_flows_items(filter: directus_flows_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_flows_input!]): [directus_flows!]!
+  create_flows_item(data: create_directus_flows_input!): directus_flows
+  create_notifications_items(filter: directus_notifications_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_notifications_input!]): [directus_notifications!]!
+  create_notifications_item(data: create_directus_notifications_input!): directus_notifications
+  create_operations_items(filter: directus_operations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_operations_input!]): [directus_operations!]!
+  create_operations_item(data: create_directus_operations_input!): directus_operations
+  create_panels_items(filter: directus_panels_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_panels_input!]): [directus_panels!]!
+  create_panels_item(data: create_directus_panels_input!): directus_panels
   create_permissions_items(filter: directus_permissions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_permissions_input!]): [directus_permissions!]!
   create_permissions_item(data: create_directus_permissions_input!): directus_permissions
   create_files_items(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_files_input!]): [directus_files!]!
   create_files_item(data: create_directus_files_input!): directus_files
-  create_presets_items(filter: directus_presets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_presets_input!]): [directus_presets!]!
-  create_presets_item(data: create_directus_presets_input!): directus_presets
-  create_panels_items(filter: directus_panels_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_panels_input!]): [directus_panels!]!
-  create_panels_item(data: create_directus_panels_input!): directus_panels
-  create_notifications_items(filter: directus_notifications_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_notifications_input!]): [directus_notifications!]!
-  create_notifications_item(data: create_directus_notifications_input!): directus_notifications
-  create_shares_items(filter: directus_shares_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_shares_input!]): [directus_shares!]!
-  create_shares_item(data: create_directus_shares_input!): directus_shares
-  create_flows_items(filter: directus_flows_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_flows_input!]): [directus_flows!]!
-  create_flows_item(data: create_directus_flows_input!): directus_flows
-  create_operations_items(filter: directus_operations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_operations_input!]): [directus_operations!]!
-  create_operations_item(data: create_directus_operations_input!): directus_operations
-  create_dashboards_items(filter: directus_dashboards_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_dashboards_input!]): [directus_dashboards!]!
-  create_dashboards_item(data: create_directus_dashboards_input!): directus_dashboards
-  create_translations_items(filter: directus_translations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_translations_input!]): [directus_translations!]!
-  create_translations_item(data: create_directus_translations_input!): directus_translations
   create_versions_items(filter: directus_versions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_versions_input!]): [directus_versions!]!
   create_versions_item(data: create_directus_versions_input!): directus_versions
+  create_presets_items(filter: directus_presets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_presets_input!]): [directus_presets!]!
+  create_presets_item(data: create_directus_presets_input!): directus_presets
   create_webhooks_items(filter: directus_webhooks_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_webhooks_input!]): [directus_webhooks!]!
   create_webhooks_item(data: create_directus_webhooks_input!): directus_webhooks
+  create_translations_items(filter: directus_translations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_translations_input!]): [directus_translations!]!
+  create_translations_item(data: create_directus_translations_input!): directus_translations
+  create_roles_items(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_roles_input!]): [directus_roles!]!
+  create_roles_item(data: create_directus_roles_input!): directus_roles
+  create_shares_items(filter: directus_shares_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_shares_input!]): [directus_shares!]!
+  create_shares_item(data: create_directus_shares_input!): directus_shares
   create_users_items(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_users_input!]): [directus_users!]!
   create_users_item(data: create_directus_users_input!): directus_users
-  update_roles_items(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_roles_input!): [directus_roles!]!
-  update_roles_batch(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_roles_input!]): [directus_roles!]!
-  update_roles_item(id: ID!, data: update_directus_roles_input!): directus_roles
+  update_dashboards_items(filter: directus_dashboards_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_dashboards_input!): [directus_dashboards!]!
+  update_dashboards_batch(filter: directus_dashboards_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_dashboards_input!]): [directus_dashboards!]!
+  update_dashboards_item(id: ID!, data: update_directus_dashboards_input!): directus_dashboards
   update_folders_items(filter: directus_folders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_folders_input!): [directus_folders!]!
   update_folders_batch(filter: directus_folders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_folders_input!]): [directus_folders!]!
   update_folders_item(id: ID!, data: update_directus_folders_input!): directus_folders
+  update_flows_items(filter: directus_flows_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_flows_input!): [directus_flows!]!
+  update_flows_batch(filter: directus_flows_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_flows_input!]): [directus_flows!]!
+  update_flows_item(id: ID!, data: update_directus_flows_input!): directus_flows
+  update_notifications_items(filter: directus_notifications_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_notifications_input!): [directus_notifications!]!
+  update_notifications_batch(filter: directus_notifications_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_notifications_input!]): [directus_notifications!]!
+  update_notifications_item(id: ID!, data: update_directus_notifications_input!): directus_notifications
+  update_operations_items(filter: directus_operations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_operations_input!): [directus_operations!]!
+  update_operations_batch(filter: directus_operations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_operations_input!]): [directus_operations!]!
+  update_operations_item(id: ID!, data: update_directus_operations_input!): directus_operations
+  update_panels_items(filter: directus_panels_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_panels_input!): [directus_panels!]!
+  update_panels_batch(filter: directus_panels_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_panels_input!]): [directus_panels!]!
+  update_panels_item(id: ID!, data: update_directus_panels_input!): directus_panels
   update_permissions_items(filter: directus_permissions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_permissions_input!): [directus_permissions!]!
   update_permissions_batch(filter: directus_permissions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_permissions_input!]): [directus_permissions!]!
   update_permissions_item(id: ID!, data: update_directus_permissions_input!): directus_permissions
   update_files_items(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_files_input!): [directus_files!]!
   update_files_batch(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_files_input!]): [directus_files!]!
   update_files_item(id: ID!, data: update_directus_files_input!): directus_files
-  update_presets_items(filter: directus_presets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_presets_input!): [directus_presets!]!
-  update_presets_batch(filter: directus_presets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_presets_input!]): [directus_presets!]!
-  update_presets_item(id: ID!, data: update_directus_presets_input!): directus_presets
-  update_settings(data: update_directus_settings_input!): directus_settings
-  update_panels_items(filter: directus_panels_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_panels_input!): [directus_panels!]!
-  update_panels_batch(filter: directus_panels_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_panels_input!]): [directus_panels!]!
-  update_panels_item(id: ID!, data: update_directus_panels_input!): directus_panels
-  update_notifications_items(filter: directus_notifications_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_notifications_input!): [directus_notifications!]!
-  update_notifications_batch(filter: directus_notifications_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_notifications_input!]): [directus_notifications!]!
-  update_notifications_item(id: ID!, data: update_directus_notifications_input!): directus_notifications
-  update_shares_items(filter: directus_shares_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_shares_input!): [directus_shares!]!
-  update_shares_batch(filter: directus_shares_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_shares_input!]): [directus_shares!]!
-  update_shares_item(id: ID!, data: update_directus_shares_input!): directus_shares
-  update_flows_items(filter: directus_flows_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_flows_input!): [directus_flows!]!
-  update_flows_batch(filter: directus_flows_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_flows_input!]): [directus_flows!]!
-  update_flows_item(id: ID!, data: update_directus_flows_input!): directus_flows
-  update_operations_items(filter: directus_operations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_operations_input!): [directus_operations!]!
-  update_operations_batch(filter: directus_operations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_operations_input!]): [directus_operations!]!
-  update_operations_item(id: ID!, data: update_directus_operations_input!): directus_operations
-  update_dashboards_items(filter: directus_dashboards_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_dashboards_input!): [directus_dashboards!]!
-  update_dashboards_batch(filter: directus_dashboards_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_dashboards_input!]): [directus_dashboards!]!
-  update_dashboards_item(id: ID!, data: update_directus_dashboards_input!): directus_dashboards
-  update_translations_items(filter: directus_translations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_translations_input!): [directus_translations!]!
-  update_translations_batch(filter: directus_translations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_translations_input!]): [directus_translations!]!
-  update_translations_item(id: ID!, data: update_directus_translations_input!): directus_translations
   update_versions_items(filter: directus_versions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_versions_input!): [directus_versions!]!
   update_versions_batch(filter: directus_versions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_versions_input!]): [directus_versions!]!
   update_versions_item(id: ID!, data: update_directus_versions_input!): directus_versions
+  update_presets_items(filter: directus_presets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_presets_input!): [directus_presets!]!
+  update_presets_batch(filter: directus_presets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_presets_input!]): [directus_presets!]!
+  update_presets_item(id: ID!, data: update_directus_presets_input!): directus_presets
   update_webhooks_items(filter: directus_webhooks_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_webhooks_input!): [directus_webhooks!]!
   update_webhooks_batch(filter: directus_webhooks_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_webhooks_input!]): [directus_webhooks!]!
   update_webhooks_item(id: ID!, data: update_directus_webhooks_input!): directus_webhooks
+  update_translations_items(filter: directus_translations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_translations_input!): [directus_translations!]!
+  update_translations_batch(filter: directus_translations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_translations_input!]): [directus_translations!]!
+  update_translations_item(id: ID!, data: update_directus_translations_input!): directus_translations
+  update_roles_items(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_roles_input!): [directus_roles!]!
+  update_roles_batch(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_roles_input!]): [directus_roles!]!
+  update_roles_item(id: ID!, data: update_directus_roles_input!): directus_roles
+  update_shares_items(filter: directus_shares_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_shares_input!): [directus_shares!]!
+  update_shares_batch(filter: directus_shares_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_shares_input!]): [directus_shares!]!
+  update_shares_item(id: ID!, data: update_directus_shares_input!): directus_shares
+  update_settings(data: update_directus_settings_input!): directus_settings
   update_users_items(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_users_input!): [directus_users!]!
   update_users_batch(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_users_input!]): [directus_users!]!
   update_users_item(id: ID!, data: update_directus_users_input!): directus_users
-  delete_roles_items(ids: [ID]!): delete_many
-  delete_roles_item(id: ID!): delete_one
+  delete_dashboards_items(ids: [ID]!): delete_many
+  delete_dashboards_item(id: ID!): delete_one
   delete_folders_items(ids: [ID]!): delete_many
   delete_folders_item(id: ID!): delete_one
+  delete_flows_items(ids: [ID]!): delete_many
+  delete_flows_item(id: ID!): delete_one
+  delete_notifications_items(ids: [ID]!): delete_many
+  delete_notifications_item(id: ID!): delete_one
+  delete_operations_items(ids: [ID]!): delete_many
+  delete_operations_item(id: ID!): delete_one
+  delete_panels_items(ids: [ID]!): delete_many
+  delete_panels_item(id: ID!): delete_one
   delete_permissions_items(ids: [ID]!): delete_many
   delete_permissions_item(id: ID!): delete_one
   delete_files_items(ids: [ID]!): delete_many
   delete_files_item(id: ID!): delete_one
-  delete_presets_items(ids: [ID]!): delete_many
-  delete_presets_item(id: ID!): delete_one
-  delete_panels_items(ids: [ID]!): delete_many
-  delete_panels_item(id: ID!): delete_one
-  delete_notifications_items(ids: [ID]!): delete_many
-  delete_notifications_item(id: ID!): delete_one
-  delete_shares_items(ids: [ID]!): delete_many
-  delete_shares_item(id: ID!): delete_one
-  delete_flows_items(ids: [ID]!): delete_many
-  delete_flows_item(id: ID!): delete_one
-  delete_operations_items(ids: [ID]!): delete_many
-  delete_operations_item(id: ID!): delete_one
-  delete_dashboards_items(ids: [ID]!): delete_many
-  delete_dashboards_item(id: ID!): delete_one
-  delete_translations_items(ids: [ID]!): delete_many
-  delete_translations_item(id: ID!): delete_one
   delete_versions_items(ids: [ID]!): delete_many
   delete_versions_item(id: ID!): delete_one
+  delete_presets_items(ids: [ID]!): delete_many
+  delete_presets_item(id: ID!): delete_one
   delete_webhooks_items(ids: [ID]!): delete_many
   delete_webhooks_item(id: ID!): delete_one
+  delete_translations_items(ids: [ID]!): delete_many
+  delete_translations_item(id: ID!): delete_one
+  delete_roles_items(ids: [ID]!): delete_many
+  delete_roles_item(id: ID!): delete_one
+  delete_shares_items(ids: [ID]!): delete_many
+  delete_shares_item(id: ID!): delete_one
   delete_users_items(ids: [ID]!): delete_many
   delete_users_item(id: ID!): delete_one
 }
 
 type Subscription {
-  directus_roles_mutated(event: EventEnum): directus_roles_mutated
-  directus_revisions_mutated(event: EventEnum): directus_revisions_mutated
-  directus_folders_mutated(event: EventEnum): directus_folders_mutated
-  directus_activity_mutated(event: EventEnum): directus_activity_mutated
-  directus_permissions_mutated(event: EventEnum): directus_permissions_mutated
-  directus_files_mutated(event: EventEnum): directus_files_mutated
-  directus_presets_mutated(event: EventEnum): directus_presets_mutated
-  directus_settings_mutated(event: EventEnum): directus_settings_mutated
-  directus_panels_mutated(event: EventEnum): directus_panels_mutated
-  directus_notifications_mutated(event: EventEnum): directus_notifications_mutated
-  directus_shares_mutated(event: EventEnum): directus_shares_mutated
-  directus_flows_mutated(event: EventEnum): directus_flows_mutated
-  directus_operations_mutated(event: EventEnum): directus_operations_mutated
-  directus_dashboards_mutated(event: EventEnum): directus_dashboards_mutated
-  directus_translations_mutated(event: EventEnum): directus_translations_mutated
-  directus_versions_mutated(event: EventEnum): directus_versions_mutated
-  directus_webhooks_mutated(event: EventEnum): directus_webhooks_mutated
-  directus_sync_id_map_mutated(event: EventEnum): directus_sync_id_map_mutated
-  directus_users_mutated(event: EventEnum): directus_users_mutated
   collectivo_tags_mutated(event: EventEnum): collectivo_tags_mutated
-  collectivo_tags_directus_users_mutated(event: EventEnum): collectivo_tags_directus_users_mutated
-  collectivo_tiles_mutated(event: EventEnum): collectivo_tiles_mutated
-  collectivo_tiles_buttons_mutated(event: EventEnum): collectivo_tiles_buttons_mutated
-  junction_directus_users_files_mutated(event: EventEnum): junction_directus_users_files_mutated
-  messages_templates_mutated(event: EventEnum): messages_templates_mutated
-  messages_campaigns_mutated(event: EventEnum): messages_campaigns_mutated
-  messages_campaigns_directus_users_mutated(event: EventEnum): messages_campaigns_directus_users_mutated
-  messages_designs_mutated(event: EventEnum): messages_designs_mutated
-  messages_messages_mutated(event: EventEnum): messages_messages_mutated
-  mila_automations_mutated(event: EventEnum): mila_automations_mutated
-  payments_invoices_out_mutated(event: EventEnum): payments_invoices_out_mutated
-  payments_invoices_entries_mutated(event: EventEnum): payments_invoices_entries_mutated
-  memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
-  shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
-  memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
-  memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
+  directus_dashboards_mutated(event: EventEnum): directus_dashboards_mutated
+  directus_folders_mutated(event: EventEnum): directus_folders_mutated
+  directus_flows_mutated(event: EventEnum): directus_flows_mutated
+  directus_notifications_mutated(event: EventEnum): directus_notifications_mutated
+  directus_operations_mutated(event: EventEnum): directus_operations_mutated
+  directus_panels_mutated(event: EventEnum): directus_panels_mutated
+  directus_permissions_mutated(event: EventEnum): directus_permissions_mutated
+  directus_activity_mutated(event: EventEnum): directus_activity_mutated
+  directus_files_mutated(event: EventEnum): directus_files_mutated
+  directus_revisions_mutated(event: EventEnum): directus_revisions_mutated
+  directus_versions_mutated(event: EventEnum): directus_versions_mutated
+  directus_presets_mutated(event: EventEnum): directus_presets_mutated
+  directus_webhooks_mutated(event: EventEnum): directus_webhooks_mutated
   memberships_mutated(event: EventEnum): memberships_mutated
+  directus_translations_mutated(event: EventEnum): directus_translations_mutated
+  directus_roles_mutated(event: EventEnum): directus_roles_mutated
+  directus_shares_mutated(event: EventEnum): directus_shares_mutated
+  messages_campaigns_mutated(event: EventEnum): messages_campaigns_mutated
+  directus_settings_mutated(event: EventEnum): directus_settings_mutated
+  messages_messages_mutated(event: EventEnum): messages_messages_mutated
+  payments_invoices_out_mutated(event: EventEnum): payments_invoices_out_mutated
+  messages_campaigns_directus_users_mutated(event: EventEnum): messages_campaigns_directus_users_mutated
+  messages_templates_mutated(event: EventEnum): messages_templates_mutated
+  collectivo_tags_directus_users_mutated(event: EventEnum): collectivo_tags_directus_users_mutated
+  collectivo_tiles_buttons_mutated(event: EventEnum): collectivo_tiles_buttons_mutated
+  mila_automations_mutated(event: EventEnum): mila_automations_mutated
+  directus_users_mutated(event: EventEnum): directus_users_mutated
+  payments_invoices_entries_mutated(event: EventEnum): payments_invoices_entries_mutated
+  junction_directus_users_files_mutated(event: EventEnum): junction_directus_users_files_mutated
+  collectivo_tiles_mutated(event: EventEnum): collectivo_tiles_mutated
+  directus_sync_id_map_mutated(event: EventEnum): directus_sync_id_map_mutated
+  messages_designs_mutated(event: EventEnum): messages_designs_mutated
+  memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
+  memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
+  memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
+  shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
   shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
@@ -332,24 +332,24 @@ type auth_tokens {
 }
 
 type collectivo_tags {
+  id: ID!
+  user_created: String
   date_created: Date
   date_created_func: datetime_functions
+  user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
-  id: ID!
-  tags_description: String
   tags_name: String!
+  tags_description: String
   tags_sync: Boolean
-  user_created: String
-  user_updated: String
   tags_users(filter: collectivo_tags_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_tags_directus_users]
   tags_users_func: count_functions
 }
 
 type collectivo_tags_directus_users {
+  id: ID!
   collectivo_tags_id(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): collectivo_tags
   directus_users_id(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
-  id: ID!
 }
 
 type collectivo_tags_directus_users_mutated {
@@ -365,37 +365,37 @@ type collectivo_tags_mutated {
 }
 
 type collectivo_tiles {
+  id: ID!
+  user_created: String
   date_created: Date
   date_created_func: datetime_functions
+  user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
-  id: ID!
   sort: Int
-  tiles_color: String
-  tiles_content: String
-  tiles_name: String!
   tiles_status: String
-  tiles_tag_blocked(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): collectivo_tags
+  tiles_name: String!
+  tiles_content: String
+  tiles_color: String
   tiles_tag_required(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): collectivo_tags
-  user_created: String
-  user_updated: String
+  tiles_tag_blocked(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): collectivo_tags
   tiles_buttons(filter: collectivo_tiles_buttons_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_tiles_buttons]
   tiles_buttons_func: count_functions
 }
 
 type collectivo_tiles_buttons {
+  id: ID!
+  user_created: String
   date_created: Date
   date_created_func: datetime_functions
+  user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
-  id: ID!
   sort: Int
-  tiles_is_external: Boolean
   tiles_label: String
   tiles_path: String
+  tiles_is_external: Boolean
   tiles_tile(filter: collectivo_tiles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): collectivo_tiles
-  user_created: String
-  user_updated: String
 }
 
 type collectivo_tiles_buttons_mutated {
@@ -1403,41 +1403,41 @@ type directus_users {
   theme_light_overrides_func: count_functions
   theme_dark_overrides: JSON
   theme_dark_overrides_func: count_functions
-  lotzapp_id: String
+  payments_type: String
+  payments_account_iban: String
+  payments_account_owner: String
+  memberships_phone: String
   memberships_birthday: Date
   memberships_birthday_func: date_functions
-  memberships_city: String
-  memberships_country: String
-  memberships_door: String
-  memberships_gender: String
   memberships_occupation: String
-  memberships_organization_id: String
-  memberships_organization_name: String
-  memberships_organization_type: String
+  memberships_gender: String
   memberships_person_type: String
-  memberships_phone: String
-  memberships_postcode: String
-  memberships_stair: String
   memberships_street: String
   memberships_streetnumber: String
+  memberships_stair: String
+  memberships_door: String
+  memberships_postcode: String
+  memberships_city: String
+  memberships_country: String
+  memberships_organization_name: String
+  memberships_organization_id: String
+  memberships_organization_type: String
   mila_groups_interested: JSON
   mila_groups_interested_func: count_functions
-  mila_pr_approved: Boolean
   mila_skills: JSON
   mila_skills_func: count_functions
   mila_survey_contact: String
   mila_survey_motivation: String
-  payments_account_iban: String
-  payments_account_owner: String
-  payments_type: String
+  mila_pr_approved: Boolean
+  lotzapp_id: String
   collectivo_tags(filter: collectivo_tags_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_tags_directus_users]
   collectivo_tags_func: count_functions
-  memberships(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships]
-  memberships_func: count_functions
   messages_campaigns(filter: messages_campaigns_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_campaigns_directus_users]
   messages_campaigns_func: count_functions
   mila_documents(filter: junction_directus_users_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [junction_directus_users_files]
   mila_documents_func: count_functions
+  memberships(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships]
+  memberships_func: count_functions
 }
 
 type directus_users_aggregated {
@@ -1474,34 +1474,34 @@ type directus_users_aggregated_count {
   theme_light: Int
   theme_light_overrides: Int
   theme_dark_overrides: Int
-  lotzapp_id: Int
-  memberships_birthday: Int
-  memberships_city: Int
-  memberships_country: Int
-  memberships_door: Int
-  memberships_gender: Int
-  memberships_occupation: Int
-  memberships_organization_id: Int
-  memberships_organization_name: Int
-  memberships_organization_type: Int
-  memberships_person_type: Int
+  payments_type: Int
+  payments_account_iban: Int
+  payments_account_owner: Int
   memberships_phone: Int
-  memberships_postcode: Int
-  memberships_stair: Int
+  memberships_birthday: Int
+  memberships_occupation: Int
+  memberships_gender: Int
+  memberships_person_type: Int
   memberships_street: Int
   memberships_streetnumber: Int
+  memberships_stair: Int
+  memberships_door: Int
+  memberships_postcode: Int
+  memberships_city: Int
+  memberships_country: Int
+  memberships_organization_name: Int
+  memberships_organization_id: Int
+  memberships_organization_type: Int
   mila_groups_interested: Int
-  mila_pr_approved: Int
   mila_skills: Int
   mila_survey_contact: Int
   mila_survey_motivation: Int
-  payments_account_iban: Int
-  payments_account_owner: Int
-  payments_type: Int
+  mila_pr_approved: Int
+  lotzapp_id: Int
   collectivo_tags: Int
-  memberships: Int
   messages_campaigns: Int
   mila_documents: Int
+  memberships: Int
 }
 
 type directus_users_mutated {
@@ -1604,9 +1604,9 @@ type directus_webhooks_mutated {
 }
 
 type junction_directus_users_files {
-  directus_files_id(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
-  directus_users_id(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   id: ID!
+  directus_users_id(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  directus_files_id(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
 }
 
 type junction_directus_users_files_mutated {
@@ -1616,66 +1616,67 @@ type junction_directus_users_files_mutated {
 }
 
 type memberships {
-  date_created: Date
-  date_created_func: datetime_functions
-  date_updated: Date
-  date_updated_func: datetime_functions
-
   """Diese Nummer identifiziert das Mitglied"""
   id: ID!
+
+  """Lebenszyklus von Beitritt bis Beendet"""
+  memberships_status: String
   memberships_date_applied: Date
   memberships_date_applied_func: date_functions
   memberships_date_approved: Date
   memberships_date_approved_func: date_functions
   memberships_date_cancelled: Date
   memberships_date_cancelled_func: date_functions
-  memberships_date_ended: Date
-  memberships_date_ended_func: date_functions
   memberships_date_excluded: Date
   memberships_date_excluded_func: date_functions
+  memberships_date_ended: Date
+  memberships_date_ended_func: date_functions
 
   """Änderung generiert automatische Rechnung"""
-  memberships_shares: Int!
-
-  """Lebenszyklus von Beitritt bis Beendet"""
-  memberships_status: String
-  memberships_type: String
-  memberships_user(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
-  memberships_user_search: String
+  memberships_shares: Int
   user_created: String
+  date_created: Date
+  date_created_func: datetime_functions
   user_updated: String
-
-  """Welche Art von Schichten macht dieses Mitglied?"""
-  shifts_user_type: String
-
-  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
-  shifts_counter: Int
+  date_updated: Date
+  date_updated_func: datetime_functions
+  memberships_user(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  memberships_type: String
+  memberships_user_search: String
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
+
+  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
+  shifts_counter: Int
   shifts_skills: JSON
   shifts_skills_func: count_functions
+
+  """Welche Art von Schichten macht dieses Mitglied?"""
+  shifts_user_type: String
+  shifts_orientation_date: Date
+  shifts_orientation_date_func: date_functions
+  coshoppers(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers]
+  coshoppers_func: count_functions
   memberships_invoices(filter: payments_invoices_out_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [payments_invoices_out]
   memberships_invoices_func: count_functions
   kids(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers_1]
   kids_func: count_functions
-  coshoppers(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers]
-  coshoppers_func: count_functions
 }
 
 type memberships_coshoppers {
-  id: ID!
-  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   date_created: Date
   date_created_func: datetime_functions
-  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   date_updated: Date
   date_updated_func: datetime_functions
   first_name: String!
+  id: ID!
   last_name: String!
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   membership_card_id: String
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
 }
 
 type memberships_coshoppers_mutated {
@@ -1686,14 +1687,14 @@ type memberships_coshoppers_mutated {
 
 type memberships_memberships_coshoppers {
   id: ID!
-  memberships_id(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
   memberships_coshoppers_id(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships_coshoppers
+  memberships_id(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
 }
 
 type memberships_memberships_coshoppers_1 {
   id: ID!
-  memberships_id(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
   memberships_coshoppers_id(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships_coshoppers
+  memberships_id(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
 }
 
 type memberships_memberships_coshoppers_1_mutated {
@@ -1715,23 +1716,23 @@ type memberships_mutated {
 }
 
 type messages_campaigns {
+  id: ID!
+  user_created: String
   date_created: Date
   date_created_func: datetime_functions
+  user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
-  id: ID!
   messages_campaign_status: String
   messages_template(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_templates
-  user_created: String
-  user_updated: String
   messages_recipients(filter: messages_campaigns_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_campaigns_directus_users]
   messages_recipients_func: count_functions
 }
 
 type messages_campaigns_directus_users {
-  directus_users_id(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   id: ID!
   messages_campaigns_id(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_campaigns
+  directus_users_id(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
 }
 
 type messages_campaigns_directus_users_mutated {
@@ -1767,17 +1768,17 @@ type messages_designs_mutated {
 }
 
 type messages_messages {
+  id: ID!
+  user_created: String
   date_created: Date
   date_created_func: datetime_functions
+  user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
-  id: ID!
-  messages_campaign(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_campaigns
   messages_message_status: String
-  messages_recipient(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  messages_campaign(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_campaigns
   messages_template(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_templates
-  user_created: String
-  user_updated: String
+  messages_recipient(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
 }
 
 type messages_messages_mutated {
@@ -1787,24 +1788,24 @@ type messages_messages_mutated {
 }
 
 type messages_templates {
+  id: ID!
+  user_created: String
   date_created: Date
   date_created_func: datetime_functions
+  user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
-  id: ID!
+  messages_name: String!
+
+  """The method that should be used to deliver the message."""
+  messages_method: String
+  messages_subject: String
 
   """
   Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
   """
   messages_content: String
   messages_design(filter: messages_designs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_designs
-
-  """The method that should be used to deliver the message."""
-  messages_method: String
-  messages_name: String!
-  messages_subject: String
-  user_created: String
-  user_updated: String
 }
 
 type messages_templates_mutated {
@@ -1814,17 +1815,17 @@ type messages_templates_mutated {
 }
 
 type mila_automations {
+  id: ID!
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   date_created: Date
   date_created_func: datetime_functions
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   date_updated: Date
   date_updated_func: datetime_functions
-  id: ID!
-  mila_active: Boolean
-  mila_key: String!
-  mila_label: String
   mila_template(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_templates
-  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
-  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  mila_key: String!
+  mila_active: Boolean
+  mila_label: String
 }
 
 type mila_automations_mutated {
@@ -1834,19 +1835,19 @@ type mila_automations_mutated {
 }
 
 type payments_invoices_entries {
+  id: ID!
+  user_created: String
   date_created: Date
   date_created_func: datetime_functions
+  user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
-  id: ID!
-  payments_description: String
   payments_invoice(filter: payments_invoices_out_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): payments_invoices_out
+  payments_quantity: Int
 
   """Price is in cents."""
   payments_price: Int
-  payments_quantity: Int
-  user_created: String
-  user_updated: String
+  payments_description: String
 }
 
 type payments_invoices_entries_mutated {
@@ -1856,22 +1857,22 @@ type payments_invoices_entries_mutated {
 }
 
 type payments_invoices_out {
+  id: ID!
+  user_created: String
   date_created: Date
   date_created_func: datetime_functions
+  user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
-  id: ID!
-  lotzapp_id: String
-  memberships_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+  payments_status: String
+  payments_recipient_user(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   payments_date_issued: Date
   payments_date_issued_func: date_functions
   payments_date_paid: Date
   payments_date_paid_func: date_functions
   payments_notes: String
-  payments_recipient_user(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
-  payments_status: String
-  user_created: String
-  user_updated: String
+  memberships_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+  lotzapp_id: String
   payments_entries(filter: payments_invoices_entries_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [payments_invoices_entries]
   payments_entries_func: count_functions
 }
@@ -1926,18 +1927,17 @@ type server_info_websocket_rest {
 }
 
 type shifts_absences {
-  id: ID!
-  user_created: String
   date_created: Date
   date_created_func: datetime_functions
-  user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
+  id: ID!
+  shifts_assignment(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_assignments
   shifts_from: Date!
   shifts_from_func: date_functions
-  shifts_to: Date!
-  shifts_to_func: date_functions
-  shifts_assignment(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_assignments
+
+  """Eine allgemeine Abwesenheit gilt für alle Anmeldungen des Mitglieds"""
+  shifts_is_for_all_assignments: Boolean
 
   """
   Während einem Urlaub ist kein Einkauf möglich und es werden keine Schichtpunkte abgezogen.
@@ -1947,9 +1947,10 @@ type shifts_absences {
 
   """Nur angenommene Urlaube werden im Schichtkalender aktiv."""
   shifts_status: String
-
-  """Eine allgemeine Abwesenheit gilt für alle Anmeldungen des Mitglieds"""
-  shifts_is_for_all_assignments: Boolean
+  shifts_to: Date!
+  shifts_to_func: date_functions
+  user_created: String
+  user_updated: String
 }
 
 type shifts_absences_mutated {
@@ -1959,25 +1960,25 @@ type shifts_absences_mutated {
 }
 
 type shifts_assignments {
-  id: ID!
-  user_created: String
   date_created: Date
   date_created_func: datetime_functions
-  user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
+  id: ID!
   shifts_from: Date!
   shifts_from_func: date_functions
+  shifts_is_coordination: Boolean
+
+  """Soll diese Anmeldung langfristig aktiv sein?"""
+  shifts_is_regular: Boolean
+  shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+  shifts_shift(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_shifts
 
   """Kann freigelassen werden für fortwährende Anmeldung"""
   shifts_to: Date
   shifts_to_func: date_functions
-  shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
-  shifts_shift(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_shifts
-
-  """Soll diese Anmeldung langfristig aktiv sein?"""
-  shifts_is_regular: Boolean
-  shifts_is_coordination: Boolean
+  user_created: String
+  user_updated: String
   shifts_absences(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_absences]
   shifts_absences_func: count_functions
 }
@@ -1989,22 +1990,22 @@ type shifts_assignments_mutated {
 }
 
 type shifts_logs {
+  date_created: Date
+  date_created_func: datetime_functions
+  date_updated: Date
+  date_updated_func: datetime_functions
   id: ID!
+  shifts_date: Date
+  shifts_date_func: date_functions
+  shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+  shifts_note: String
+  shifts_score: Int
+  shifts_shift(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_shifts
 
   """Was genau soll dokumentiert werden?"""
   shifts_type: String!
-  shifts_date: Date
-  shifts_date_func: date_functions
-  shifts_score: Int
-  shifts_note: String
   user_created: String
-  date_created: Date
-  date_created_func: datetime_functions
   user_updated: String
-  date_updated: Date
-  date_updated_func: datetime_functions
-  shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
-  shifts_shift(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_shifts
 }
 
 type shifts_logs_mutated {
@@ -2014,42 +2015,42 @@ type shifts_logs_mutated {
 }
 
 type shifts_shifts {
-  id: ID!
-  user_created: String
   date_created: Date
   date_created_func: datetime_functions
-  user_updated: String
   date_updated: Date
   date_updated_func: datetime_functions
+  id: ID!
+
+  """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
+  shifts_allow_self_assignment: Boolean
+  shifts_category: String
+  shifts_description: String
+  shifts_from: Date
+  shifts_from_func: date_functions
+  shifts_from_time: Date
+  shifts_from_time_func: time_functions
+  shifts_is_all_day: Boolean
+
+  """Soll die Schicht sich regelmäßig wiederholen?"""
+  shifts_is_regular: Boolean
+  shifts_location: String
+  shifts_name: String!
+  shifts_needs_coordinator: Boolean
+
+  """Wiederholungsfrequenz in Tagen"""
+  shifts_repeats_every: Int
+  shifts_slots: Int
 
   """Nur veröffentlichte Schichten werden im Kalender angezeigt."""
   shifts_status: String
-  shifts_name: String!
-  shifts_from: Date
-  shifts_from_func: date_functions
 
   """Kann freigelassen werden für fortwährende Schicht"""
   shifts_to: Date
   shifts_to_func: date_functions
-  shifts_from_time: Date
-  shifts_from_time_func: time_functions
   shifts_to_time: Date
   shifts_to_time_func: time_functions
-
-  """Wiederholungsfrequenz in Tagen"""
-  shifts_repeats_every: Int
-  shifts_description: String
-  shifts_location: String
-  shifts_slots: Int
-
-  """Soll die Schicht sich regelmäßig wiederholen?"""
-  shifts_is_regular: Boolean
-  shifts_category: String
-  shifts_is_all_day: Boolean
-
-  """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
-  shifts_allow_self_assignment: Boolean
-  shifts_needs_coordinator: Boolean
+  user_created: String
+  user_updated: String
 }
 
 type shifts_shifts_mutated {
@@ -2092,24 +2093,24 @@ input boolean_filter_operators {
 }
 
 input collectivo_tags_directus_users_filter {
+  id: number_filter_operators
   collectivo_tags_id: collectivo_tags_filter
   directus_users_id: directus_users_filter
-  id: number_filter_operators
   _and: [collectivo_tags_directus_users_filter]
   _or: [collectivo_tags_directus_users_filter]
 }
 
 input collectivo_tags_filter {
+  id: number_filter_operators
+  user_created: string_filter_operators
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
+  user_updated: string_filter_operators
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
-  id: number_filter_operators
-  tags_description: string_filter_operators
   tags_name: string_filter_operators
+  tags_description: string_filter_operators
   tags_sync: boolean_filter_operators
-  user_created: string_filter_operators
-  user_updated: string_filter_operators
   tags_users: collectivo_tags_directus_users_filter
   tags_users_func: count_function_filter_operators
   _and: [collectivo_tags_filter]
@@ -2117,37 +2118,37 @@ input collectivo_tags_filter {
 }
 
 input collectivo_tiles_buttons_filter {
+  id: number_filter_operators
+  user_created: string_filter_operators
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
+  user_updated: string_filter_operators
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
-  id: number_filter_operators
   sort: number_filter_operators
-  tiles_is_external: boolean_filter_operators
   tiles_label: string_filter_operators
   tiles_path: string_filter_operators
+  tiles_is_external: boolean_filter_operators
   tiles_tile: collectivo_tiles_filter
-  user_created: string_filter_operators
-  user_updated: string_filter_operators
   _and: [collectivo_tiles_buttons_filter]
   _or: [collectivo_tiles_buttons_filter]
 }
 
 input collectivo_tiles_filter {
+  id: number_filter_operators
+  user_created: string_filter_operators
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
+  user_updated: string_filter_operators
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
-  id: number_filter_operators
   sort: number_filter_operators
-  tiles_color: string_filter_operators
-  tiles_content: string_filter_operators
-  tiles_name: string_filter_operators
   tiles_status: string_filter_operators
-  tiles_tag_blocked: collectivo_tags_filter
+  tiles_name: string_filter_operators
+  tiles_content: string_filter_operators
+  tiles_color: string_filter_operators
   tiles_tag_required: collectivo_tags_filter
-  user_created: string_filter_operators
-  user_updated: string_filter_operators
+  tiles_tag_blocked: collectivo_tags_filter
   tiles_buttons: collectivo_tiles_buttons_filter
   tiles_buttons_func: count_function_filter_operators
   _and: [collectivo_tiles_filter]
@@ -2159,20 +2160,20 @@ input count_function_filter_operators {
 }
 
 input create_collectivo_tags_directus_users_input {
+  id: ID
   collectivo_tags_id: create_collectivo_tags_input
   directus_users_id: create_directus_users_input
-  id: ID
 }
 
 input create_collectivo_tags_input {
-  date_created: Date
-  date_updated: Date
   id: ID
-  tags_description: String
-  tags_name: String!
-  tags_sync: Boolean
   user_created: String
+  date_created: Date
   user_updated: String
+  date_updated: Date
+  tags_name: String!
+  tags_description: String
+  tags_sync: Boolean
   tags_users: [create_collectivo_tags_directus_users_input]
 }
 
@@ -2409,34 +2410,34 @@ input create_directus_users_input {
   theme_light: String
   theme_light_overrides: JSON
   theme_dark_overrides: JSON
-  lotzapp_id: String
-  memberships_birthday: Date
-  memberships_city: String
-  memberships_country: String
-  memberships_door: String
-  memberships_gender: String
-  memberships_occupation: String
-  memberships_organization_id: String
-  memberships_organization_name: String
-  memberships_organization_type: String
-  memberships_person_type: String
+  payments_type: String
+  payments_account_iban: String
+  payments_account_owner: String
   memberships_phone: String
-  memberships_postcode: String
-  memberships_stair: String
+  memberships_birthday: Date
+  memberships_occupation: String
+  memberships_gender: String
+  memberships_person_type: String
   memberships_street: String
   memberships_streetnumber: String
+  memberships_stair: String
+  memberships_door: String
+  memberships_postcode: String
+  memberships_city: String
+  memberships_country: String
+  memberships_organization_name: String
+  memberships_organization_id: String
+  memberships_organization_type: String
   mila_groups_interested: JSON
-  mila_pr_approved: Boolean
   mila_skills: JSON
   mila_survey_contact: String
   mila_survey_motivation: String
-  payments_account_iban: String
-  payments_account_owner: String
-  payments_type: String
+  mila_pr_approved: Boolean
+  lotzapp_id: String
   collectivo_tags: [create_collectivo_tags_directus_users_input]
-  memberships: [create_memberships_input]
   messages_campaigns: [create_messages_campaigns_directus_users_input]
   mila_documents: [create_junction_directus_users_files_input]
+  memberships: [create_memberships_input]
 }
 
 input create_directus_versions_input {
@@ -2467,87 +2468,87 @@ input create_directus_webhooks_input {
 }
 
 input create_junction_directus_users_files_input {
-  directus_files_id: create_directus_files_input
-  directus_users_id: create_directus_users_input
   id: ID
+  directus_users_id: create_directus_users_input
+  directus_files_id: create_directus_files_input
 }
 
 input create_memberships_coshoppers_input {
-  id: ID
-  user_created: create_directus_users_input
   date_created: Date
-  user_updated: create_directus_users_input
   date_updated: Date
   first_name: String!
+  id: ID
   last_name: String!
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   membership_card_id: String
+  user_created: create_directus_users_input
+  user_updated: create_directus_users_input
 }
 
 input create_memberships_input {
-  date_created: Date
-  date_updated: Date
-
   """Diese Nummer identifiziert das Mitglied"""
   id: ID
-  memberships_date_applied: Date
-  memberships_date_approved: Date
-  memberships_date_cancelled: Date
-  memberships_date_ended: Date
-  memberships_date_excluded: Date
-
-  """Änderung generiert automatische Rechnung"""
-  memberships_shares: Int!
 
   """Lebenszyklus von Beitritt bis Beendet"""
   memberships_status: String
-  memberships_type: String
-  memberships_user: create_directus_users_input
-  memberships_user_search: String
+  memberships_date_applied: Date
+  memberships_date_approved: Date
+  memberships_date_cancelled: Date
+  memberships_date_excluded: Date
+  memberships_date_ended: Date
+
+  """Änderung generiert automatische Rechnung"""
+  memberships_shares: Int
   user_created: String
+  date_created: Date
   user_updated: String
-
-  """Welche Art von Schichten macht dieses Mitglied?"""
-  shifts_user_type: String
-
-  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
-  shifts_counter: Int
+  date_updated: Date
+  memberships_user: create_directus_users_input
+  memberships_type: String
+  memberships_user_search: String
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
+
+  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
+  shifts_counter: Int
   shifts_skills: JSON
+
+  """Welche Art von Schichten macht dieses Mitglied?"""
+  shifts_user_type: String
+  shifts_orientation_date: Date
+  coshoppers: [create_memberships_memberships_coshoppers_input]
   memberships_invoices: [create_payments_invoices_out_input]
   kids: [create_memberships_memberships_coshoppers_1_input]
-  coshoppers: [create_memberships_memberships_coshoppers_input]
 }
 
 input create_memberships_memberships_coshoppers_1_input {
   id: ID
-  memberships_id: create_memberships_input
   memberships_coshoppers_id: create_memberships_coshoppers_input
+  memberships_id: create_memberships_input
 }
 
 input create_memberships_memberships_coshoppers_input {
   id: ID
-  memberships_id: create_memberships_input
   memberships_coshoppers_id: create_memberships_coshoppers_input
+  memberships_id: create_memberships_input
 }
 
 input create_messages_campaigns_directus_users_input {
-  directus_users_id: create_directus_users_input
   id: ID
   messages_campaigns_id: create_messages_campaigns_input
+  directus_users_id: create_directus_users_input
 }
 
 input create_messages_campaigns_input {
-  date_created: Date
-  date_updated: Date
   id: ID
+  user_created: String
+  date_created: Date
+  user_updated: String
+  date_updated: Date
   messages_campaign_status: String
   messages_template: create_messages_templates_input
-  user_created: String
-  user_updated: String
   messages_recipients: [create_messages_campaigns_directus_users_input]
 }
 
@@ -2564,51 +2565,51 @@ input create_messages_designs_input {
 }
 
 input create_messages_templates_input {
-  date_created: Date
-  date_updated: Date
   id: ID
+  user_created: String
+  date_created: Date
+  user_updated: String
+  date_updated: Date
+  messages_name: String!
+
+  """The method that should be used to deliver the message."""
+  messages_method: String
+  messages_subject: String
 
   """
   Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
   """
   messages_content: String
   messages_design: create_messages_designs_input
-
-  """The method that should be used to deliver the message."""
-  messages_method: String
-  messages_name: String!
-  messages_subject: String
-  user_created: String
-  user_updated: String
 }
 
 input create_payments_invoices_entries_input {
-  date_created: Date
-  date_updated: Date
   id: ID
-  payments_description: String
+  user_created: String
+  date_created: Date
+  user_updated: String
+  date_updated: Date
   payments_invoice: create_payments_invoices_out_input
+  payments_quantity: Int
 
   """Price is in cents."""
   payments_price: Int
-  payments_quantity: Int
-  user_created: String
-  user_updated: String
+  payments_description: String
 }
 
 input create_payments_invoices_out_input {
-  date_created: Date
-  date_updated: Date
   id: ID
-  lotzapp_id: String
-  memberships_membership: create_memberships_input
+  user_created: String
+  date_created: Date
+  user_updated: String
+  date_updated: Date
+  payments_status: String
+  payments_recipient_user: create_directus_users_input
   payments_date_issued: Date
   payments_date_paid: Date
   payments_notes: String
-  payments_recipient_user: create_directus_users_input
-  payments_status: String
-  user_created: String
-  user_updated: String
+  memberships_membership: create_memberships_input
+  lotzapp_id: String
   payments_entries: [create_payments_invoices_entries_input]
 }
 
@@ -3017,41 +3018,41 @@ input directus_users_filter {
   theme_light_overrides_func: count_function_filter_operators
   theme_dark_overrides: string_filter_operators
   theme_dark_overrides_func: count_function_filter_operators
-  lotzapp_id: string_filter_operators
+  payments_type: string_filter_operators
+  payments_account_iban: string_filter_operators
+  payments_account_owner: string_filter_operators
+  memberships_phone: string_filter_operators
   memberships_birthday: date_filter_operators
   memberships_birthday_func: date_function_filter_operators
-  memberships_city: string_filter_operators
-  memberships_country: string_filter_operators
-  memberships_door: string_filter_operators
-  memberships_gender: string_filter_operators
   memberships_occupation: string_filter_operators
-  memberships_organization_id: string_filter_operators
-  memberships_organization_name: string_filter_operators
-  memberships_organization_type: string_filter_operators
+  memberships_gender: string_filter_operators
   memberships_person_type: string_filter_operators
-  memberships_phone: string_filter_operators
-  memberships_postcode: string_filter_operators
-  memberships_stair: string_filter_operators
   memberships_street: string_filter_operators
   memberships_streetnumber: string_filter_operators
+  memberships_stair: string_filter_operators
+  memberships_door: string_filter_operators
+  memberships_postcode: string_filter_operators
+  memberships_city: string_filter_operators
+  memberships_country: string_filter_operators
+  memberships_organization_name: string_filter_operators
+  memberships_organization_id: string_filter_operators
+  memberships_organization_type: string_filter_operators
   mila_groups_interested: string_filter_operators
   mila_groups_interested_func: count_function_filter_operators
-  mila_pr_approved: boolean_filter_operators
   mila_skills: string_filter_operators
   mila_skills_func: count_function_filter_operators
   mila_survey_contact: string_filter_operators
   mila_survey_motivation: string_filter_operators
-  payments_account_iban: string_filter_operators
-  payments_account_owner: string_filter_operators
-  payments_type: string_filter_operators
+  mila_pr_approved: boolean_filter_operators
+  lotzapp_id: string_filter_operators
   collectivo_tags: collectivo_tags_directus_users_filter
   collectivo_tags_func: count_function_filter_operators
-  memberships: memberships_filter
-  memberships_func: count_function_filter_operators
   messages_campaigns: messages_campaigns_directus_users_filter
   messages_campaigns_func: count_function_filter_operators
   mila_documents: junction_directus_users_files_filter
   mila_documents_func: count_function_filter_operators
+  memberships: memberships_filter
+  memberships_func: count_function_filter_operators
   _and: [directus_users_filter]
   _or: [directus_users_filter]
 }
@@ -3098,100 +3099,102 @@ input hash_filter_operators {
 }
 
 input junction_directus_users_files_filter {
-  directus_files_id: directus_files_filter
-  directus_users_id: directus_users_filter
   id: number_filter_operators
+  directus_users_id: directus_users_filter
+  directus_files_id: directus_files_filter
   _and: [junction_directus_users_files_filter]
   _or: [junction_directus_users_files_filter]
 }
 
 input memberships_coshoppers_filter {
-  id: number_filter_operators
-  user_created: directus_users_filter
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
-  user_updated: directus_users_filter
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
   first_name: string_filter_operators
+  id: number_filter_operators
   last_name: string_filter_operators
   membership_card_id: string_filter_operators
+  user_created: directus_users_filter
+  user_updated: directus_users_filter
   _and: [memberships_coshoppers_filter]
   _or: [memberships_coshoppers_filter]
 }
 
 input memberships_filter {
-  date_created: date_filter_operators
-  date_created_func: datetime_function_filter_operators
-  date_updated: date_filter_operators
-  date_updated_func: datetime_function_filter_operators
   id: number_filter_operators
+  memberships_status: string_filter_operators
   memberships_date_applied: date_filter_operators
   memberships_date_applied_func: date_function_filter_operators
   memberships_date_approved: date_filter_operators
   memberships_date_approved_func: date_function_filter_operators
   memberships_date_cancelled: date_filter_operators
   memberships_date_cancelled_func: date_function_filter_operators
-  memberships_date_ended: date_filter_operators
-  memberships_date_ended_func: date_function_filter_operators
   memberships_date_excluded: date_filter_operators
   memberships_date_excluded_func: date_function_filter_operators
+  memberships_date_ended: date_filter_operators
+  memberships_date_ended_func: date_function_filter_operators
   memberships_shares: number_filter_operators
-  memberships_status: string_filter_operators
-  memberships_type: string_filter_operators
-  memberships_user: directus_users_filter
-  memberships_user_search: string_filter_operators
   user_created: string_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
   user_updated: string_filter_operators
-  shifts_user_type: string_filter_operators
-  shifts_counter: number_filter_operators
+  date_updated: date_filter_operators
+  date_updated_func: datetime_function_filter_operators
+  memberships_user: directus_users_filter
+  memberships_type: string_filter_operators
+  memberships_user_search: string_filter_operators
   memberships_card_id: string_filter_operators
+  shifts_counter: number_filter_operators
   shifts_skills: string_filter_operators
   shifts_skills_func: count_function_filter_operators
+  shifts_user_type: string_filter_operators
+  shifts_orientation_date: date_filter_operators
+  shifts_orientation_date_func: date_function_filter_operators
+  coshoppers: memberships_memberships_coshoppers_filter
+  coshoppers_func: count_function_filter_operators
   memberships_invoices: payments_invoices_out_filter
   memberships_invoices_func: count_function_filter_operators
   kids: memberships_memberships_coshoppers_1_filter
   kids_func: count_function_filter_operators
-  coshoppers: memberships_memberships_coshoppers_filter
-  coshoppers_func: count_function_filter_operators
   _and: [memberships_filter]
   _or: [memberships_filter]
 }
 
 input memberships_memberships_coshoppers_1_filter {
   id: number_filter_operators
-  memberships_id: memberships_filter
   memberships_coshoppers_id: memberships_coshoppers_filter
+  memberships_id: memberships_filter
   _and: [memberships_memberships_coshoppers_1_filter]
   _or: [memberships_memberships_coshoppers_1_filter]
 }
 
 input memberships_memberships_coshoppers_filter {
   id: number_filter_operators
-  memberships_id: memberships_filter
   memberships_coshoppers_id: memberships_coshoppers_filter
+  memberships_id: memberships_filter
   _and: [memberships_memberships_coshoppers_filter]
   _or: [memberships_memberships_coshoppers_filter]
 }
 
 input messages_campaigns_directus_users_filter {
-  directus_users_id: directus_users_filter
   id: number_filter_operators
   messages_campaigns_id: messages_campaigns_filter
+  directus_users_id: directus_users_filter
   _and: [messages_campaigns_directus_users_filter]
   _or: [messages_campaigns_directus_users_filter]
 }
 
 input messages_campaigns_filter {
+  id: number_filter_operators
+  user_created: string_filter_operators
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
+  user_updated: string_filter_operators
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
-  id: number_filter_operators
   messages_campaign_status: string_filter_operators
   messages_template: messages_templates_filter
-  user_created: string_filter_operators
-  user_updated: string_filter_operators
   messages_recipients: messages_campaigns_directus_users_filter
   messages_recipients_func: count_function_filter_operators
   _and: [messages_campaigns_filter]
@@ -3213,18 +3216,18 @@ input messages_designs_filter {
 }
 
 input messages_templates_filter {
+  id: number_filter_operators
+  user_created: string_filter_operators
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
+  user_updated: string_filter_operators
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
-  id: number_filter_operators
+  messages_name: string_filter_operators
+  messages_method: string_filter_operators
+  messages_subject: string_filter_operators
   messages_content: string_filter_operators
   messages_design: messages_designs_filter
-  messages_method: string_filter_operators
-  messages_name: string_filter_operators
-  messages_subject: string_filter_operators
-  user_created: string_filter_operators
-  user_updated: string_filter_operators
   _and: [messages_templates_filter]
   _or: [messages_templates_filter]
 }
@@ -3245,38 +3248,38 @@ input number_filter_operators {
 }
 
 input payments_invoices_entries_filter {
+  id: number_filter_operators
+  user_created: string_filter_operators
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
+  user_updated: string_filter_operators
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
-  id: number_filter_operators
-  payments_description: string_filter_operators
   payments_invoice: payments_invoices_out_filter
-  payments_price: number_filter_operators
   payments_quantity: number_filter_operators
-  user_created: string_filter_operators
-  user_updated: string_filter_operators
+  payments_price: number_filter_operators
+  payments_description: string_filter_operators
   _and: [payments_invoices_entries_filter]
   _or: [payments_invoices_entries_filter]
 }
 
 input payments_invoices_out_filter {
+  id: number_filter_operators
+  user_created: string_filter_operators
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
+  user_updated: string_filter_operators
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
-  id: number_filter_operators
-  lotzapp_id: string_filter_operators
-  memberships_membership: memberships_filter
+  payments_status: string_filter_operators
+  payments_recipient_user: directus_users_filter
   payments_date_issued: date_filter_operators
   payments_date_issued_func: date_function_filter_operators
   payments_date_paid: date_filter_operators
   payments_date_paid_func: date_function_filter_operators
   payments_notes: string_filter_operators
-  payments_recipient_user: directus_users_filter
-  payments_status: string_filter_operators
-  user_created: string_filter_operators
-  user_updated: string_filter_operators
+  memberships_membership: memberships_filter
+  lotzapp_id: string_filter_operators
   payments_entries: payments_invoices_entries_filter
   payments_entries_func: count_function_filter_operators
   _and: [payments_invoices_out_filter]
@@ -3284,42 +3287,42 @@ input payments_invoices_out_filter {
 }
 
 input shifts_absences_filter {
-  id: number_filter_operators
-  user_created: string_filter_operators
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
-  user_updated: string_filter_operators
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
+  id: number_filter_operators
+  shifts_assignment: shifts_assignments_filter
   shifts_from: date_filter_operators
   shifts_from_func: date_function_filter_operators
-  shifts_to: date_filter_operators
-  shifts_to_func: date_function_filter_operators
-  shifts_assignment: shifts_assignments_filter
+  shifts_is_for_all_assignments: boolean_filter_operators
   shifts_is_holiday: boolean_filter_operators
   shifts_membership: memberships_filter
   shifts_status: string_filter_operators
-  shifts_is_for_all_assignments: boolean_filter_operators
+  shifts_to: date_filter_operators
+  shifts_to_func: date_function_filter_operators
+  user_created: string_filter_operators
+  user_updated: string_filter_operators
   _and: [shifts_absences_filter]
   _or: [shifts_absences_filter]
 }
 
 input shifts_assignments_filter {
-  id: number_filter_operators
-  user_created: string_filter_operators
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
-  user_updated: string_filter_operators
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
+  id: number_filter_operators
   shifts_from: date_filter_operators
   shifts_from_func: date_function_filter_operators
-  shifts_to: date_filter_operators
-  shifts_to_func: date_function_filter_operators
+  shifts_is_coordination: boolean_filter_operators
+  shifts_is_regular: boolean_filter_operators
   shifts_membership: memberships_filter
   shifts_shift: shifts_shifts_filter
-  shifts_is_regular: boolean_filter_operators
-  shifts_is_coordination: boolean_filter_operators
+  shifts_to: date_filter_operators
+  shifts_to_func: date_function_filter_operators
+  user_created: string_filter_operators
+  user_updated: string_filter_operators
   shifts_absences: shifts_absences_filter
   shifts_absences_func: count_function_filter_operators
   _and: [shifts_assignments_filter]
@@ -3327,32 +3330,32 @@ input shifts_assignments_filter {
 }
 
 input shifts_shifts_filter {
-  id: number_filter_operators
-  user_created: string_filter_operators
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
-  user_updated: string_filter_operators
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
-  shifts_status: string_filter_operators
-  shifts_name: string_filter_operators
+  id: number_filter_operators
+  shifts_allow_self_assignment: boolean_filter_operators
+  shifts_category: string_filter_operators
+  shifts_description: string_filter_operators
   shifts_from: date_filter_operators
   shifts_from_func: date_function_filter_operators
-  shifts_to: date_filter_operators
-  shifts_to_func: date_function_filter_operators
   shifts_from_time: date_filter_operators
   shifts_from_time_func: time_function_filter_operators
+  shifts_is_all_day: boolean_filter_operators
+  shifts_is_regular: boolean_filter_operators
+  shifts_location: string_filter_operators
+  shifts_name: string_filter_operators
+  shifts_needs_coordinator: boolean_filter_operators
+  shifts_repeats_every: number_filter_operators
+  shifts_slots: number_filter_operators
+  shifts_status: string_filter_operators
+  shifts_to: date_filter_operators
+  shifts_to_func: date_function_filter_operators
   shifts_to_time: date_filter_operators
   shifts_to_time_func: time_function_filter_operators
-  shifts_repeats_every: number_filter_operators
-  shifts_description: string_filter_operators
-  shifts_location: string_filter_operators
-  shifts_slots: number_filter_operators
-  shifts_is_regular: boolean_filter_operators
-  shifts_category: string_filter_operators
-  shifts_is_all_day: boolean_filter_operators
-  shifts_allow_self_assignment: boolean_filter_operators
-  shifts_needs_coordinator: boolean_filter_operators
+  user_created: string_filter_operators
+  user_updated: string_filter_operators
   _and: [shifts_shifts_filter]
   _or: [shifts_shifts_filter]
 }
@@ -3386,20 +3389,20 @@ input time_function_filter_operators {
 }
 
 input update_collectivo_tags_directus_users_input {
+  id: ID
   collectivo_tags_id: update_collectivo_tags_input
   directus_users_id: update_directus_users_input
-  id: ID
 }
 
 input update_collectivo_tags_input {
-  date_created: Date
-  date_updated: Date
   id: ID
-  tags_description: String
-  tags_name: String
-  tags_sync: Boolean
   user_created: String
+  date_created: Date
   user_updated: String
+  date_updated: Date
+  tags_name: String
+  tags_description: String
+  tags_sync: Boolean
   tags_users: [update_collectivo_tags_directus_users_input]
 }
 
@@ -3677,34 +3680,34 @@ input update_directus_users_input {
   theme_light: String
   theme_light_overrides: JSON
   theme_dark_overrides: JSON
-  lotzapp_id: String
-  memberships_birthday: Date
-  memberships_city: String
-  memberships_country: String
-  memberships_door: String
-  memberships_gender: String
-  memberships_occupation: String
-  memberships_organization_id: String
-  memberships_organization_name: String
-  memberships_organization_type: String
-  memberships_person_type: String
+  payments_type: String
+  payments_account_iban: String
+  payments_account_owner: String
   memberships_phone: String
-  memberships_postcode: String
-  memberships_stair: String
+  memberships_birthday: Date
+  memberships_occupation: String
+  memberships_gender: String
+  memberships_person_type: String
   memberships_street: String
   memberships_streetnumber: String
+  memberships_stair: String
+  memberships_door: String
+  memberships_postcode: String
+  memberships_city: String
+  memberships_country: String
+  memberships_organization_name: String
+  memberships_organization_id: String
+  memberships_organization_type: String
   mila_groups_interested: JSON
-  mila_pr_approved: Boolean
   mila_skills: JSON
   mila_survey_contact: String
   mila_survey_motivation: String
-  payments_account_iban: String
-  payments_account_owner: String
-  payments_type: String
+  mila_pr_approved: Boolean
+  lotzapp_id: String
   collectivo_tags: [update_collectivo_tags_directus_users_input]
-  memberships: [update_memberships_input]
   messages_campaigns: [update_messages_campaigns_directus_users_input]
   mila_documents: [update_junction_directus_users_files_input]
+  memberships: [update_memberships_input]
 }
 
 input update_directus_versions_input {
@@ -3735,87 +3738,87 @@ input update_directus_webhooks_input {
 }
 
 input update_junction_directus_users_files_input {
-  directus_files_id: update_directus_files_input
-  directus_users_id: update_directus_users_input
   id: ID
+  directus_users_id: update_directus_users_input
+  directus_files_id: update_directus_files_input
 }
 
 input update_memberships_coshoppers_input {
-  id: ID
-  user_created: update_directus_users_input
   date_created: Date
-  user_updated: update_directus_users_input
   date_updated: Date
   first_name: String
+  id: ID
   last_name: String
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   membership_card_id: String
+  user_created: update_directus_users_input
+  user_updated: update_directus_users_input
 }
 
 input update_memberships_input {
-  date_created: Date
-  date_updated: Date
-
   """Diese Nummer identifiziert das Mitglied"""
   id: ID
-  memberships_date_applied: Date
-  memberships_date_approved: Date
-  memberships_date_cancelled: Date
-  memberships_date_ended: Date
-  memberships_date_excluded: Date
-
-  """Änderung generiert automatische Rechnung"""
-  memberships_shares: Int
 
   """Lebenszyklus von Beitritt bis Beendet"""
   memberships_status: String
-  memberships_type: String
-  memberships_user: update_directus_users_input
-  memberships_user_search: String
+  memberships_date_applied: Date
+  memberships_date_approved: Date
+  memberships_date_cancelled: Date
+  memberships_date_excluded: Date
+  memberships_date_ended: Date
+
+  """Änderung generiert automatische Rechnung"""
+  memberships_shares: Int
   user_created: String
+  date_created: Date
   user_updated: String
-
-  """Welche Art von Schichten macht dieses Mitglied?"""
-  shifts_user_type: String
-
-  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
-  shifts_counter: Int
+  date_updated: Date
+  memberships_user: update_directus_users_input
+  memberships_type: String
+  memberships_user_search: String
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
+
+  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
+  shifts_counter: Int
   shifts_skills: JSON
+
+  """Welche Art von Schichten macht dieses Mitglied?"""
+  shifts_user_type: String
+  shifts_orientation_date: Date
+  coshoppers: [update_memberships_memberships_coshoppers_input]
   memberships_invoices: [update_payments_invoices_out_input]
   kids: [update_memberships_memberships_coshoppers_1_input]
-  coshoppers: [update_memberships_memberships_coshoppers_input]
 }
 
 input update_memberships_memberships_coshoppers_1_input {
   id: ID
-  memberships_id: update_memberships_input
   memberships_coshoppers_id: update_memberships_coshoppers_input
+  memberships_id: update_memberships_input
 }
 
 input update_memberships_memberships_coshoppers_input {
   id: ID
-  memberships_id: update_memberships_input
   memberships_coshoppers_id: update_memberships_coshoppers_input
+  memberships_id: update_memberships_input
 }
 
 input update_messages_campaigns_directus_users_input {
-  directus_users_id: update_directus_users_input
   id: ID
   messages_campaigns_id: update_messages_campaigns_input
+  directus_users_id: update_directus_users_input
 }
 
 input update_messages_campaigns_input {
-  date_created: Date
-  date_updated: Date
   id: ID
+  user_created: String
+  date_created: Date
+  user_updated: String
+  date_updated: Date
   messages_campaign_status: String
   messages_template: update_messages_templates_input
-  user_created: String
-  user_updated: String
   messages_recipients: [update_messages_campaigns_directus_users_input]
 }
 
@@ -3832,50 +3835,50 @@ input update_messages_designs_input {
 }
 
 input update_messages_templates_input {
-  date_created: Date
-  date_updated: Date
   id: ID
+  user_created: String
+  date_created: Date
+  user_updated: String
+  date_updated: Date
+  messages_name: String
+
+  """The method that should be used to deliver the message."""
+  messages_method: String
+  messages_subject: String
 
   """
   Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
   """
   messages_content: String
   messages_design: update_messages_designs_input
-
-  """The method that should be used to deliver the message."""
-  messages_method: String
-  messages_name: String
-  messages_subject: String
-  user_created: String
-  user_updated: String
 }
 
 input update_payments_invoices_entries_input {
-  date_created: Date
-  date_updated: Date
   id: ID
-  payments_description: String
+  user_created: String
+  date_created: Date
+  user_updated: String
+  date_updated: Date
   payments_invoice: update_payments_invoices_out_input
+  payments_quantity: Int
 
   """Price is in cents."""
   payments_price: Int
-  payments_quantity: Int
-  user_created: String
-  user_updated: String
+  payments_description: String
 }
 
 input update_payments_invoices_out_input {
-  date_created: Date
-  date_updated: Date
   id: ID
-  lotzapp_id: String
-  memberships_membership: update_memberships_input
+  user_created: String
+  date_created: Date
+  user_updated: String
+  date_updated: Date
+  payments_status: String
+  payments_recipient_user: update_directus_users_input
   payments_date_issued: Date
   payments_date_paid: Date
   payments_notes: String
-  payments_recipient_user: update_directus_users_input
-  payments_status: String
-  user_created: String
-  user_updated: String
+  memberships_membership: update_memberships_input
+  lotzapp_id: String
   payments_entries: [update_payments_invoices_entries_input]
 }
