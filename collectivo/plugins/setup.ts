@@ -52,10 +52,17 @@ export default defineNuxtPlugin(() => {
       order: 0,
     },
     {
+      label: "Handbook",
+      icon: "i-heroicons-book-open",
+      to: "https://handbuch.mila.wien/books/mitglieder-handbuch",
+      external: true,
+      order: 1,
+    },
+    {
       label: "Shifts",
       icon: "i-heroicons-calendar-days-solid",
       to: "/shifts/dashboard",
-      order: 90,
+      order: 2,
       filter: async () => {
         return Boolean(
           user.membership && user.membership.shifts_user_type != "inactive",
@@ -284,7 +291,7 @@ export default defineNuxtPlugin(() => {
         },
         {
           value: "open",
-          label: "Offen",
+          label: "Open",
         },
         {
           value: "no-answer",
