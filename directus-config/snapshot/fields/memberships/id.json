@@ -9,15 +9,20 @@
     "display_options": null,
     "field": "id",
     "group": null,
-    "hidden": true,
+    "hidden": false,
     "interface": "numeric",
-    "note": null,
+    "note": "Diese Nummer identifiziert das Mitglied",
     "options": null,
     "readonly": true,
     "required": false,
-    "sort": 6,
+    "sort": 1,
     "special": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Mitgliedsnummer"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "half"

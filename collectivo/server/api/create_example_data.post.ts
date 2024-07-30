@@ -5,8 +5,11 @@ import {
   deleteItems,
   readRoles,
   readUsers,
+  readItems,
   updateUser,
 } from "@directus/sdk";
+
+import { DateTime } from "luxon";
 
 export default defineEventHandler(async (_event) => {
   create_examples();
@@ -32,9 +35,17 @@ async function getRole(name: string) {
 
 async function create_examples() {
   console.info("Creating example data for collectivo");
+  await create_users();
+  await create_memberships();
+  await create_tags();
+  await create_tiles();
+  await create_emails();
+  await create_shifts();
+  console.log("Seed successful");
+}
 
+async function create_users() {
   const directus = await useDirectusAdmin();
-
   const userRole = await getRole("collectivo_user");
   const editorRole = await getRole("collectivo_editor");
   const adminRole = await getRole("collectivo_admin");
@@ -61,6 +72,7 @@ async function create_examples() {
       first_name: userName,
       last_name: "Example",
       email: email,
+      password: `${userName.toLowerCase()}`,
       role: userRole,
       provider: "keycloak",
       status: "active",
@@ -90,10 +102,9 @@ async function create_examples() {
     if (usersDB.length > 0) {
       userID = usersDB[0].id;
       // tslint:disable-next-line:no-console
-      console.info("Updating user " + user.email + " with ID " + userID);
+      // console.info("Updating user " + user.email + " with ID " + userID);
       await directus.request(updateUser(userID, user));
       // tslint:disable-next-line:no-console
-      console.info("Updated good");
     } else {
       // tslint:disable-next-line:no-console
       console.info("Creating user " + user.email);
@@ -101,12 +112,17 @@ async function create_examples() {
       userID = us.id;
     }
   }
+}
+
+async function create_tags() {
+  const directus = await useDirectusAdmin();
 
   // Create some tags
   console.info("Creating tags");
+
   await directus.request(deleteItems("collectivo_tags", { limit: 1000 }));
   const tagNames = ["Has a dog", "Has a cat", "Has a bird", "Has a fish"];
-  const tags: any[] = [];
+  const tags: object[] = [];
 
   for (const tagName of tagNames) {
     tags.push({
@@ -132,7 +148,9 @@ async function create_examples() {
   } catch (error) {
     console.info(error);
   }
-
+}
+async function create_emails() {
+  const directus = await useDirectusAdmin();
   // Create email templates
   console.info("Creating email templates");
   await directus.request(deleteItems("messages_templates", { limit: 1000 }));
@@ -159,7 +177,9 @@ async function create_examples() {
   } catch (error) {
     console.info(error);
   }
-
+}
+async function create_tiles() {
+  const directus = await useDirectusAdmin();
   // Create some tiles
   console.info("Creating tiles");
   await directus.request(deleteItems("collectivo_tiles", { limit: 1000 }));
@@ -217,10 +237,278 @@ async function create_examples() {
   }
 }
 
-// export default async function examples() {
-//   console.info("Creating example data for payments");
+async function create_memberships() {
+  const directus = await useDirectusAdmin();
 
+  console.info("Creating memberships 1");
+
+  // Clean up old data
+  await directus.request(deleteItems("memberships", { limit: 1000 }));
+
+  console.info("Creating memberships 2");
+
+  // Create some memberships
+  const mships = [
+    ["Alice", "applied"],
+    ["Bob", "approved"],
+    ["Charlie", "approved"],
+    ["Dave", "in-cancellation"],
+    ["User", "approved"],
+    ["Editor", "approved"],
+    ["Admin", "approved"],
+  ];
+
+  for (const mship of mships) {
+    console.info("Creating memberships 3", mship);
+    // Get user id
+    const user_id = (
+      await directus.request(readUsers({ filter: { first_name: mship[0] } }))
+    )[0].id;
+
+    console.info("Creating memberships 4");
+
+    // Create membership
+    await directus.request(
+      createItem("memberships", {
+        memberships_user: user_id,
+        memberships_type: "Aktiv",
+        memberships_status: mship[1],
+        shifts_user_type: "regular",
+      }),
+    );
+  }
+
+  console.info("Creating memberships 5");
+}
+
+async function create_shifts() {
+  console.log("Creating shifts");
+  await cleanShiftsData();
+  await createShifts();
+  await createSlots();
+  // await createSkills();
+  await createAssignments();
+  // await addSkillsToUsers();
+  // await createLogs();
+}
+
+async function cleanShiftsData() {
+  const directus = await useDirectusAdmin();
+
+  const schemas = [
+    "shifts_shifts",
+    "shifts_slots",
+    "shifts_assignments",
+    "shifts_absences",
+    "shifts_logs",
+  ];
+
+  for (const schema of schemas) {
+    await directus.request(deleteItems(schema, { limit: 1000 }));
+  }
+}
+
+const SHIFT_TIMES_OF_DAY = [10, 13, 16, 19];
+const SHIFT_CYCLE_START = DateTime.local(2024, 1, 1);
+const SHIFT_CYCLE_DURATION_WEEKS = 4;
+
+async function createShifts() {
+  const directus = await useDirectusAdmin();
+
+  const monday = SHIFT_CYCLE_START;
+  const shiftsRequests: ShiftsShift[] = [];
+
+  const nb_weeks = SHIFT_CYCLE_DURATION_WEEKS;
+
+  for (let week = 0; week < nb_weeks; week++) {
+    for (let weekday = 0; weekday < 5; weekday++) {
+      const day = monday.plus({ days: weekday, week: week });
+
+      for (const time_of_day of SHIFT_TIMES_OF_DAY) {
+        shiftsRequests.push({
+          shifts_name:
+            ["A", "B", "C", "D"][week] +
+            "-" +
+            day.weekdayShort +
+            "-" +
+            time_of_day,
+          shifts_from: day.set({ hour: time_of_day }).toString(),
+          shifts_from_time: String(time_of_day) + ":00",
+          shifts_to_time: String(time_of_day + 3) + ":00",
+          shifts_repeats_every: nb_weeks * 7,
+          shifts_status: "published",
+          shifts_location: "Shop",
+        });
+      }
+    }
+  }
+
+  await directus.request(createItems("shifts_shifts", shiftsRequests));
+}
+
+async function createSlots() {
+  const directus = await useDirectusAdmin();
+
+  const shifts = await directus.request(readItems("shifts_shifts"));
+  const slotsRequests = [];
+
+  for (const shift of shifts) {
+    slotsRequests.push({
+      shifts_name: "Cleaning",
+      shifts_shift: shift.id,
+    });
+
+    slotsRequests.push({
+      shifts_name: "Cashier",
+      shifts_shift: shift.id,
+    });
+
+    slotsRequests.push({
+      shifts_name: "Shelves",
+      shifts_shift: shift.id,
+    });
+  }
+
+  await directus.request(createItems("shifts_slots", slotsRequests));
+}
+
+async function createAssignments() {
+  const directus = await useDirectusAdmin();
+
+  const slots = await directus.request(
+    readItems("shifts_slots", {
+      fields: ["id"],
+    }),
+  );
+
+  const mships = await directus.request(
+    readItems("memberships", {
+      fields: ["id"],
+    }),
+  );
+
+  const assignments = [];
+
+  for (const mship of mships) {
+    const slot = slots.pop();
+
+    if (!slot) {
+      break;
+    }
+
+    assignments.push({
+      shifts_from: DateTime.now().toString(),
+      shifts_slot: slot.id,
+      shifts_membership: mship.id,
+    });
+  }
+
+  await directus.request(createItems("shifts_assignments", assignments));
+}
+
+// async function addSkillsToUsers() {
 //   const directus = await useDirectusAdmin();
+
+//   const skills = await directus.request(
+//     readItems("shifts_skills", {
+//       fields: ["id", "shifts_name"],
+//     }),
+//   );
+
+//   if (!skills) return;
+
+//   const users = await directus.request(
+//     readUsers({
+//       fields: ["id"],
+//     }),
+//   );
+
+//   const links: ShiftsSkillUserLink[] = [];
+
+//   users.forEach((user, index) => {
+//     const skill = skills[index % skills.length];
+
+//     links.push({
+//       directus_users_id: user.id,
+//       shifts_skills_id: skill.id,
+//     });
+//   });
+
+//   await directus.request(createItems("shifts_skills_directus_users", links));
+// }
+
+// async function createLogs() {
+//   const directus = await useDirectusAdmin();
+
+//   const assignments = await directus.request(
+//     readItems("shifts_assignments", {
+//       fields: ["*"],
+//     }),
+//   );
+
+//   const requests: ShiftsLog[] = [];
+
+//   for (const assignment of assignments) {
+//     const nbLogs = getRandomInt(5, 20);
+
+//     for (let i = 0; i < nbLogs; i++) {
+//       const types = [
+//         ShiftLogType.ATTENDED,
+//         ShiftLogType.ATTENDED,
+//         ShiftLogType.MISSED,
+//         ShiftLogType.CANCELLED,
+//       ];
+
+//       requests.push({
+//         shifts_type: types[getRandomInt(0, types.length)],
+//         shifts_date: DateTime.now()
+//           .plus({ days: getRandomInt(-10, 10) })
+//           .toISO(),
+//         shifts_assignment: assignment.id,
+//         shifts_user: assignment.shifts_user,
+//       });
+//     }
+//   }
+
+//   await directus.request(createItems("shifts_logs", requests));
+// }
+
+// async function createSkills() {
+//   const directus = await useDirectusAdmin();
+
+//   const cashierSkill = await directus.request(
+//     createItem("shifts_skills", {
+//       shifts_name: "Cashier",
+//       shifts_status: ItemStatus.PUBLISHED,
+//     }),
+//   );
+
+//   await directus.request(
+//     createItem("shifts_skills", {
+//       shifts_name: "First aid",
+//       shifts_status: ItemStatus.PUBLISHED,
+//     }),
+//   );
+
+//   const slots = await directus.request(
+//     readItems("shifts_slots", {
+//       fields: ["id"],
+//       filter: { shifts_name: { _eq: "Cashier" } },
+//     }),
+//   );
+
+//   const requests = [];
+
+//   for (const slot of slots) {
+//     requests.push({
+//       shifts_skills_id: cashierSkill.id,
+//       shifts_slots_id: slot.id,
+//     });
+//   }
+//   await directus.request(createItems("shifts_skills_shifts_slots", requests));
+// }
+
+//   // Payments ----------------------------------------------------------------------
 
 //   // Clean up old data
 //   await directus.request(deleteItems("payments_invoices_out", { limit: 1000 }));
@@ -256,41 +544,3 @@ async function create_examples() {
 // }
 
 // import { createItem, deleteItems, readUsers } from "@directus/sdk";
-
-// export default async function examples() {
-//   console.info("Creating example data for memberships");
-
-//   const directus = await useDirectusAdmin();
-
-//   // Clean up old data
-//   await directus.request(deleteItems("memberships", { limit: 1000 }));
-
-//   // Create some memberships
-//   console.info("Creating memberships");
-
-//   const users = [
-//     ["Alice", "applied"],
-//     ["Bob", "approved"],
-//     ["Charlie", "approved"],
-//     ["Dave", "in-cancellation"],
-//     ["User", "approved"],
-//   ];
-
-//   for (const user of users) {
-//     console.log("reading user");
-//     // Get user id
-//     const user_id = (
-//       await directus.request(readUsers({ filter: { first_name: user[0] } }))
-//     )[0];
-
-//     // Create membership
-//     console.log("creating  mship", user_id);
-//     await directus.request(
-//       createItem("memberships", {
-//         memberships_user: user_id,
-//         memberships_type: "normal",
-//         memberships_status: user[1],
-//       }),
-//     );
-//   }
-// }

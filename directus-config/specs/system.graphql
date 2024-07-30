@@ -244,9 +244,13 @@ type Subscription {
   payments_invoices_out_mutated(event: EventEnum): payments_invoices_out_mutated
   payments_invoices_entries_mutated(event: EventEnum): payments_invoices_entries_mutated
   memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
-  memberships_mutated(event: EventEnum): memberships_mutated
+  shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
   memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
   memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
+  memberships_mutated(event: EventEnum): memberships_mutated
+  shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
+  shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
+  shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -666,6 +670,9 @@ type directus_files {
   metadata_func: count_functions
   focal_point_x: Int
   focal_point_y: Int
+  tus_id: String
+  tus_data: JSON
+  tus_data_func: count_functions
 }
 
 type directus_files_aggregated {
@@ -705,6 +712,8 @@ type directus_files_aggregated_count {
   metadata: Int
   focal_point_x: Int
   focal_point_y: Int
+  tus_id: Int
+  tus_data: Int
 }
 
 type directus_files_aggregated_fields {
@@ -1611,6 +1620,8 @@ type memberships {
   date_created_func: datetime_functions
   date_updated: Date
   date_updated_func: datetime_functions
+
+  """Diese Nummer identifiziert das Mitglied"""
   id: ID!
   memberships_date_applied: Date
   memberships_date_applied_func: date_functions
@@ -1622,11 +1633,11 @@ type memberships {
   memberships_date_ended_func: date_functions
   memberships_date_excluded: Date
   memberships_date_excluded_func: date_functions
+
+  """Änderung generiert automatische Rechnung"""
   memberships_shares: Int!
 
-  """
-  Lebenszyklus einer Mitgliedschaft. Ausstieg erfolgt durch das Mitglied, Ausschluss durch die Organisation. Während des Ausstiegs- oder Ausschlussverfahrens sind die Mitgliedschaften weiterhin aktiv. Wenn der Vorgang abgeschlossen ist, sollte der Status auf 'Beendet' gesetzt werden.
-  """
+  """Lebenszyklus von Beitritt bis Beendet"""
   memberships_status: String
   memberships_type: String
   memberships_user(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
@@ -1634,14 +1645,22 @@ type memberships {
   user_created: String
   user_updated: String
 
+  """Welche Art von Schichten macht dieses Mitglied?"""
+  shifts_user_type: String
+
+  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
+  shifts_counter: Int
+
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
-  membership_card_id: String
+  memberships_card_id: String
+  shifts_skills: JSON
+  shifts_skills_func: count_functions
   memberships_invoices(filter: payments_invoices_out_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [payments_invoices_out]
   memberships_invoices_func: count_functions
-  coshoppers(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers]
-  coshoppers_func: count_functions
   kids(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers_1]
   kids_func: count_functions
+  coshoppers(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers]
+  coshoppers_func: count_functions
 }
 
 type memberships_coshoppers {
@@ -1906,6 +1925,145 @@ type server_info_websocket_rest {
   path: String
 }
 
+type shifts_absences {
+  id: ID!
+  user_created: String
+  date_created: Date
+  date_created_func: datetime_functions
+  user_updated: String
+  date_updated: Date
+  date_updated_func: datetime_functions
+  shifts_from: Date!
+  shifts_from_func: date_functions
+  shifts_to: Date!
+  shifts_to_func: date_functions
+  shifts_assignment(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_assignments
+
+  """
+  Während einem Urlaub ist kein Einkauf möglich und es werden keine Schichtpunkte abgezogen.
+  """
+  shifts_is_holiday: Boolean!
+  shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+
+  """Nur angenommene Urlaube werden im Schichtkalender aktiv."""
+  shifts_status: String
+
+  """Eine allgemeine Abwesenheit gilt für alle Anmeldungen des Mitglieds"""
+  shifts_is_for_all_assignments: Boolean
+}
+
+type shifts_absences_mutated {
+  key: ID!
+  event: EventEnum
+  data: shifts_absences
+}
+
+type shifts_assignments {
+  id: ID!
+  user_created: String
+  date_created: Date
+  date_created_func: datetime_functions
+  user_updated: String
+  date_updated: Date
+  date_updated_func: datetime_functions
+  shifts_from: Date!
+  shifts_from_func: date_functions
+
+  """Kann freigelassen werden für fortwährende Anmeldung"""
+  shifts_to: Date
+  shifts_to_func: date_functions
+  shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+  shifts_shift(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_shifts
+
+  """Soll diese Anmeldung langfristig aktiv sein?"""
+  shifts_is_regular: Boolean
+  shifts_is_coordination: Boolean
+  shifts_absences(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_absences]
+  shifts_absences_func: count_functions
+}
+
+type shifts_assignments_mutated {
+  key: ID!
+  event: EventEnum
+  data: shifts_assignments
+}
+
+type shifts_logs {
+  id: ID!
+
+  """Was genau soll dokumentiert werden?"""
+  shifts_type: String!
+  shifts_date: Date
+  shifts_date_func: date_functions
+  shifts_score: Int
+  shifts_note: String
+  user_created: String
+  date_created: Date
+  date_created_func: datetime_functions
+  user_updated: String
+  date_updated: Date
+  date_updated_func: datetime_functions
+  shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+  shifts_shift(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_shifts
+}
+
+type shifts_logs_mutated {
+  key: ID!
+  event: EventEnum
+  data: shifts_logs
+}
+
+type shifts_shifts {
+  id: ID!
+  user_created: String
+  date_created: Date
+  date_created_func: datetime_functions
+  user_updated: String
+  date_updated: Date
+  date_updated_func: datetime_functions
+
+  """Nur veröffentlichte Schichten werden im Kalender angezeigt."""
+  shifts_status: String
+  shifts_name: String!
+  shifts_from: Date
+  shifts_from_func: date_functions
+
+  """Kann freigelassen werden für fortwährende Schicht"""
+  shifts_to: Date
+  shifts_to_func: date_functions
+  shifts_from_time: Date
+  shifts_from_time_func: time_functions
+  shifts_to_time: Date
+  shifts_to_time_func: time_functions
+
+  """Wiederholungsfrequenz in Tagen"""
+  shifts_repeats_every: Int
+  shifts_description: String
+  shifts_location: String
+  shifts_slots: Int
+
+  """Soll die Schicht sich regelmäßig wiederholen?"""
+  shifts_is_regular: Boolean
+  shifts_category: String
+  shifts_is_all_day: Boolean
+
+  """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
+  shifts_allow_self_assignment: Boolean
+  shifts_needs_coordinator: Boolean
+}
+
+type shifts_shifts_mutated {
+  key: ID!
+  event: EventEnum
+  data: shifts_shifts
+}
+
+type time_functions {
+  hour: Int
+  minute: Int
+  second: Int
+}
+
 type users_me_tfa_generate_data {
   secret: String
   otpauth_url: String
@@ -2076,6 +2234,8 @@ input create_directus_files_input {
   metadata: JSON
   focal_point_x: Int
   focal_point_y: Int
+  tus_id: String
+  tus_data: JSON
 }
 
 input create_directus_flows_input {
@@ -2328,17 +2488,19 @@ input create_memberships_coshoppers_input {
 input create_memberships_input {
   date_created: Date
   date_updated: Date
+
+  """Diese Nummer identifiziert das Mitglied"""
   id: ID
   memberships_date_applied: Date
   memberships_date_approved: Date
   memberships_date_cancelled: Date
   memberships_date_ended: Date
   memberships_date_excluded: Date
+
+  """Änderung generiert automatische Rechnung"""
   memberships_shares: Int!
 
-  """
-  Lebenszyklus einer Mitgliedschaft. Ausstieg erfolgt durch das Mitglied, Ausschluss durch die Organisation. Während des Ausstiegs- oder Ausschlussverfahrens sind die Mitgliedschaften weiterhin aktiv. Wenn der Vorgang abgeschlossen ist, sollte der Status auf 'Beendet' gesetzt werden.
-  """
+  """Lebenszyklus von Beitritt bis Beendet"""
   memberships_status: String
   memberships_type: String
   memberships_user: create_directus_users_input
@@ -2346,11 +2508,18 @@ input create_memberships_input {
   user_created: String
   user_updated: String
 
+  """Welche Art von Schichten macht dieses Mitglied?"""
+  shifts_user_type: String
+
+  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
+  shifts_counter: Int
+
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
-  membership_card_id: String
+  memberships_card_id: String
+  shifts_skills: JSON
   memberships_invoices: [create_payments_invoices_out_input]
-  coshoppers: [create_memberships_memberships_coshoppers_input]
   kids: [create_memberships_memberships_coshoppers_1_input]
+  coshoppers: [create_memberships_memberships_coshoppers_input]
 }
 
 input create_memberships_memberships_coshoppers_1_input {
@@ -2605,6 +2774,9 @@ input directus_files_filter {
   metadata_func: count_function_filter_operators
   focal_point_x: number_filter_operators
   focal_point_y: number_filter_operators
+  tus_id: string_filter_operators
+  tus_data: string_filter_operators
+  tus_data_func: count_function_filter_operators
   _and: [directus_files_filter]
   _or: [directus_files_filter]
 }
@@ -2971,13 +3143,17 @@ input memberships_filter {
   memberships_user_search: string_filter_operators
   user_created: string_filter_operators
   user_updated: string_filter_operators
-  membership_card_id: string_filter_operators
+  shifts_user_type: string_filter_operators
+  shifts_counter: number_filter_operators
+  memberships_card_id: string_filter_operators
+  shifts_skills: string_filter_operators
+  shifts_skills_func: count_function_filter_operators
   memberships_invoices: payments_invoices_out_filter
   memberships_invoices_func: count_function_filter_operators
-  coshoppers: memberships_memberships_coshoppers_filter
-  coshoppers_func: count_function_filter_operators
   kids: memberships_memberships_coshoppers_1_filter
   kids_func: count_function_filter_operators
+  coshoppers: memberships_memberships_coshoppers_filter
+  coshoppers_func: count_function_filter_operators
   _and: [memberships_filter]
   _or: [memberships_filter]
 }
@@ -3107,6 +3283,80 @@ input payments_invoices_out_filter {
   _or: [payments_invoices_out_filter]
 }
 
+input shifts_absences_filter {
+  id: number_filter_operators
+  user_created: string_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  user_updated: string_filter_operators
+  date_updated: date_filter_operators
+  date_updated_func: datetime_function_filter_operators
+  shifts_from: date_filter_operators
+  shifts_from_func: date_function_filter_operators
+  shifts_to: date_filter_operators
+  shifts_to_func: date_function_filter_operators
+  shifts_assignment: shifts_assignments_filter
+  shifts_is_holiday: boolean_filter_operators
+  shifts_membership: memberships_filter
+  shifts_status: string_filter_operators
+  shifts_is_for_all_assignments: boolean_filter_operators
+  _and: [shifts_absences_filter]
+  _or: [shifts_absences_filter]
+}
+
+input shifts_assignments_filter {
+  id: number_filter_operators
+  user_created: string_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  user_updated: string_filter_operators
+  date_updated: date_filter_operators
+  date_updated_func: datetime_function_filter_operators
+  shifts_from: date_filter_operators
+  shifts_from_func: date_function_filter_operators
+  shifts_to: date_filter_operators
+  shifts_to_func: date_function_filter_operators
+  shifts_membership: memberships_filter
+  shifts_shift: shifts_shifts_filter
+  shifts_is_regular: boolean_filter_operators
+  shifts_is_coordination: boolean_filter_operators
+  shifts_absences: shifts_absences_filter
+  shifts_absences_func: count_function_filter_operators
+  _and: [shifts_assignments_filter]
+  _or: [shifts_assignments_filter]
+}
+
+input shifts_shifts_filter {
+  id: number_filter_operators
+  user_created: string_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  user_updated: string_filter_operators
+  date_updated: date_filter_operators
+  date_updated_func: datetime_function_filter_operators
+  shifts_status: string_filter_operators
+  shifts_name: string_filter_operators
+  shifts_from: date_filter_operators
+  shifts_from_func: date_function_filter_operators
+  shifts_to: date_filter_operators
+  shifts_to_func: date_function_filter_operators
+  shifts_from_time: date_filter_operators
+  shifts_from_time_func: time_function_filter_operators
+  shifts_to_time: date_filter_operators
+  shifts_to_time_func: time_function_filter_operators
+  shifts_repeats_every: number_filter_operators
+  shifts_description: string_filter_operators
+  shifts_location: string_filter_operators
+  shifts_slots: number_filter_operators
+  shifts_is_regular: boolean_filter_operators
+  shifts_category: string_filter_operators
+  shifts_is_all_day: boolean_filter_operators
+  shifts_allow_self_assignment: boolean_filter_operators
+  shifts_needs_coordinator: boolean_filter_operators
+  _and: [shifts_shifts_filter]
+  _or: [shifts_shifts_filter]
+}
+
 input string_filter_operators {
   _eq: String
   _neq: String
@@ -3127,6 +3377,12 @@ input string_filter_operators {
   _nnull: Boolean
   _empty: Boolean
   _nempty: Boolean
+}
+
+input time_function_filter_operators {
+  hour: number_filter_operators
+  minute: number_filter_operators
+  second: number_filter_operators
 }
 
 input update_collectivo_tags_directus_users_input {
@@ -3202,6 +3458,8 @@ input update_directus_files_input {
   metadata: JSON
   focal_point_x: Int
   focal_point_y: Int
+  tus_id: String
+  tus_data: JSON
 }
 
 input update_directus_flows_input {
@@ -3498,17 +3756,19 @@ input update_memberships_coshoppers_input {
 input update_memberships_input {
   date_created: Date
   date_updated: Date
+
+  """Diese Nummer identifiziert das Mitglied"""
   id: ID
   memberships_date_applied: Date
   memberships_date_approved: Date
   memberships_date_cancelled: Date
   memberships_date_ended: Date
   memberships_date_excluded: Date
+
+  """Änderung generiert automatische Rechnung"""
   memberships_shares: Int
 
-  """
-  Lebenszyklus einer Mitgliedschaft. Ausstieg erfolgt durch das Mitglied, Ausschluss durch die Organisation. Während des Ausstiegs- oder Ausschlussverfahrens sind die Mitgliedschaften weiterhin aktiv. Wenn der Vorgang abgeschlossen ist, sollte der Status auf 'Beendet' gesetzt werden.
-  """
+  """Lebenszyklus von Beitritt bis Beendet"""
   memberships_status: String
   memberships_type: String
   memberships_user: update_directus_users_input
@@ -3516,11 +3776,18 @@ input update_memberships_input {
   user_created: String
   user_updated: String
 
+  """Welche Art von Schichten macht dieses Mitglied?"""
+  shifts_user_type: String
+
+  """Wenn negativ, dann müssen Schichten nachgeholt werden"""
+  shifts_counter: Int
+
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
-  membership_card_id: String
+  memberships_card_id: String
+  shifts_skills: JSON
   memberships_invoices: [update_payments_invoices_out_input]
-  coshoppers: [update_memberships_memberships_coshoppers_input]
   kids: [update_memberships_memberships_coshoppers_1_input]
+  coshoppers: [update_memberships_memberships_coshoppers_input]
 }
 
 input update_memberships_memberships_coshoppers_1_input {

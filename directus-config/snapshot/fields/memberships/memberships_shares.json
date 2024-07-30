@@ -8,14 +8,14 @@
     "display": null,
     "display_options": null,
     "field": "memberships_shares",
-    "group": null,
+    "group": "membership_group",
     "hidden": false,
     "interface": "input",
-    "note": null,
+    "note": "Änderung generiert automatische Rechnung",
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 4,
+    "sort": 3,
     "special": null,
     "translations": [
       {

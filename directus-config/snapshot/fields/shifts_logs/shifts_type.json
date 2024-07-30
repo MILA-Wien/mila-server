@@ -1,0 +1,88 @@
+{
+  "collection": "shifts_logs",
+  "field": "shifts_type",
+  "type": "string",
+  "meta": {
+    "collection": "shifts_logs",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "shifts_type",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown",
+    "note": "Was genau soll dokumentiert werden?",
+    "options": {
+      "choices": [
+        {
+          "text": "Schicht absolviert",
+          "value": "attended",
+          "color": "#2ECDA7"
+        },
+        {
+          "text": "Schicht abgesagt (keine Strafschicht)",
+          "value": "cancelled",
+          "color": "#FFA439"
+        },
+        {
+          "text": "Schicht verpasst (Strafschicht)",
+          "value": "missed",
+          "color": "#E35169"
+        },
+        {
+          "text": "Anderes",
+          "value": "other",
+          "color": "#2ECDA7"
+        },
+        {
+          "text": "4W Zyklus ",
+          "value": "cycle",
+          "color": "#3399FF",
+          "icon": "cycle"
+        },
+        {
+          "text": "4W Zyklus aktiviert",
+          "value": "cycle_activated",
+          "color": "#3399FF",
+          "icon": "autoplay"
+        },
+        {
+          "text": "4W Zyklus deaktiviert",
+          "value": "cycle_deactivated",
+          "color": "#3399FF",
+          "icon": "autostop"
+        }
+      ]
+    },
+    "readonly": false,
+    "required": true,
+    "sort": 2,
+    "special": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Aktion"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "shifts_type",
+    "table": "shifts_logs",
+    "data_type": "character varying",
+    "default_value": null,
+    "max_length": 255,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": false,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

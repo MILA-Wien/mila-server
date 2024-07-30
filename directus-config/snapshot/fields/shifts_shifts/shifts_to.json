@@ -1,0 +1,62 @@
+{
+  "collection": "shifts_shifts",
+  "field": "shifts_to",
+  "type": "date",
+  "meta": {
+    "collection": "shifts_shifts",
+    "conditions": [
+      {
+        "name": "show if regular",
+        "rule": {
+          "_and": [
+            {
+              "shifts_is_regular": {
+                "_eq": true
+              }
+            }
+          ]
+        },
+        "hidden": false,
+        "options": {}
+      }
+    ],
+    "display": null,
+    "display_options": null,
+    "field": "shifts_to",
+    "group": null,
+    "hidden": true,
+    "interface": null,
+    "note": "Kann freigelassen werden für fortwährende Schicht",
+    "options": null,
+    "readonly": false,
+    "required": false,
+    "sort": 6,
+    "special": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Enddatum"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "shifts_to",
+    "table": "shifts_shifts",
+    "data_type": "date",
+    "default_value": null,
+    "max_length": null,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

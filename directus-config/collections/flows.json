@@ -24,7 +24,7 @@
     "icon": "supervised_user_circle",
     "color": null,
     "description": null,
-    "status": "inactive",
+    "status": "active",
     "trigger": "event",
     "accountability": "all",
     "options": {
@@ -91,7 +91,6 @@
     "options": {
       "type": "action",
       "scope": [
-        "items.create",
         "items.update"
       ],
       "collections": [
@@ -202,6 +201,22 @@
     },
     "operation": "5bbba7d2-4d6a-4969-856b-f83c3347411d",
     "_syncId": "8b324a75-f005-403d-8197-48accc2d3538"
+  },
+  {
+    "name": "update_score_on_shift_cycle_start",
+    "icon": null,
+    "color": null,
+    "description": null,
+    "status": "inactive",
+    "trigger": "schedule",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "interval": "0 3 * * *",
+      "cron": "0 3 * * *"
+    },
+    "operation": "9e5efeae-a13a-4841-9653-b4efb31192c8",
+    "_syncId": "8fbda46c-8ed1-4578-a38a-5ddbd11ee4da"
   },
   {
     "name": "mila_new_membership_mail",

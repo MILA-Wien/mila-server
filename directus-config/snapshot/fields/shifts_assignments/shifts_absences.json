@@ -1,0 +1,34 @@
+{
+  "collection": "shifts_assignments",
+  "field": "shifts_absences",
+  "type": "alias",
+  "meta": {
+    "collection": "shifts_assignments",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "shifts_absences",
+    "group": null,
+    "hidden": true,
+    "interface": "list-o2m",
+    "note": "Abwesenheit gilt nur für diese Schicht",
+    "options": {
+      "enableSelect": false
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 7,
+    "special": [
+      "o2m"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Abwesenheiten"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}

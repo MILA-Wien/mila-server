@@ -42,6 +42,14 @@
       },
       {
         "type": "link",
+        "id": "nBS1_JPYtfvsOTMrT1zNF",
+        "name": "Schichtverwaltung",
+        "url": "http://localhost:3000/shifts/admin",
+        "icon": "calendar_month",
+        "enabled": true
+      },
+      {
+        "type": "link",
         "id": "docs",
         "name": "Dokumentation",
         "url": "https://docs.directus.io",
@@ -55,12 +63,12 @@
         "locked": true
       },
       {
-        "id": "OFx-eEKWKjugmN3ZAvik6",
         "type": "link",
-        "enabled": true,
-        "url": "https://mein.mila.wien/logout",
+        "id": "OFx-eEKWKjugmN3ZAvik6",
         "name": "Logout",
-        "icon": "logout"
+        "url": "https://mein.mila.wien/logout",
+        "icon": "logout",
+        "enabled": true
       }
     ],
     "project_descriptor": "Datenstudio",

@@ -1,0 +1,36 @@
+{
+  "collection": "memberships",
+  "field": "membership_group",
+  "type": "alias",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "membership_group",
+    "group": null,
+    "hidden": false,
+    "interface": "group-detail",
+    "note": null,
+    "options": {
+      "headerIcon": "account_box"
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 3,
+    "special": [
+      "alias",
+      "group",
+      "no-data"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Mitgliedschaft"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}

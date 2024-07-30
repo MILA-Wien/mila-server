@@ -16,17 +16,23 @@ export default defineEventHandler(async (event) => {
   ) {
     return;
   }
-
+  console.log(body.keys);
   for (const key of body.keys) {
-    assignTag(body, key);
+    try {
+      await assignTag(body, key);
+    } catch (e) {
+      console.error("Error assigning tag", e);
+    }
   }
 });
 
 async function assignTag(body: any, membership: string) {
   const directus = await useDirectusAdmin();
+
   const mship = await directus.request(
     readItem("memberships", membership, { fields: ["memberships_user"] }),
   );
+
   const userID = mship.memberships_user;
 
   const mitgliedstagIDs = await directus.request(

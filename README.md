@@ -15,7 +15,7 @@ Applications of [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/).
 - Apply schema with `npx directus-sync push`
 - Install packages with `pnpm i`
 - Start dev server with `pnpm dev`
-- Create example data with `pnpm seed` (run in a separate terminal while `pnpm dev` is running)
+- Create example data with `pnpm seed` (run in a separate terminal while `pnpm dev` is running, sometimes it needs to be run twice)
 - Go to http://localhost:3000 and http://localhost:8055
 
 ## Production setup

@@ -3,7 +3,7 @@
   "info": {
     "title": "Dynamic API Specification",
     "description": "This is a dynamically generated API specification for all endpoints existing on the current project.",
-    "version": "10.12.1"
+    "version": "10.13.1"
   },
   "servers": [
     {
@@ -13089,15 +13089,15 @@
         ]
       }
     },
-    "/items/memberships": {
+    "/items/shifts_assignments": {
       "post": {
         "summary": "Create an Item",
-        "description": "Create a new memberships item.",
+        "description": "Create a new shifts_assignments item.",
         "tags": [
           "Items",
-          "ItemsMemberships"
+          "ItemsShiftsAssignments"
         ],
-        "operationId": "createItemsMemberships",
+        "operationId": "createItemsShiftsAssignments",
         "parameters": [
           {
             "$ref": "#/components/parameters/Meta"
@@ -13111,11 +13111,11 @@
                   {
                     "type": "array",
                     "items": {
-                      "$ref": "#/components/schemas/ItemsMemberships"
+                      "$ref": "#/components/schemas/ItemsShiftsAssignments"
                     }
                   },
                   {
-                    "$ref": "#/components/schemas/ItemsMemberships"
+                    "$ref": "#/components/schemas/ItemsShiftsAssignments"
                   }
                 ]
               }
@@ -13132,7 +13132,7 @@
                   "properties": {
                     "data": {
                       "items": {
-                        "$ref": "#/components/schemas/ItemsMemberships"
+                        "$ref": "#/components/schemas/ItemsShiftsAssignments"
                       }
                     }
                   }
@@ -13147,12 +13147,12 @@
       },
       "get": {
         "summary": "List Items",
-        "description": "List the memberships items.",
+        "description": "List the shifts_assignments items.",
         "tags": [
           "Items",
-          "ItemsMemberships"
+          "ItemsShiftsAssignments"
         ],
-        "operationId": "readItemsMemberships",
+        "operationId": "readItemsShiftsAssignments",
         "security": [
           {
             "Auth": []
@@ -13193,7 +13193,7 @@
                       "type": "array",
                       "items": {
                         "type": "object",
-                        "$ref": "#/components/schemas/ItemsMemberships"
+                        "$ref": "#/components/schemas/ItemsShiftsAssignments"
                       }
                     },
                     "meta": {
@@ -13211,12 +13211,12 @@
       },
       "patch": {
         "summary": "Update Multiple Items",
-        "description": "Update multiple memberships items at the same time.",
+        "description": "Update multiple shifts_assignments items at the same time.",
         "tags": [
           "Items",
-          "ItemsMemberships"
+          "ItemsShiftsAssignments"
         ],
-        "operationId": "updateItemsMemberships",
+        "operationId": "updateItemsShiftsAssignments",
         "parameters": [
           {
             "$ref": "#/components/parameters/Fields"
@@ -13248,11 +13248,11 @@
                   {
                     "type": "array",
                     "items": {
-                      "$ref": "#/components/schemas/ItemsMemberships"
+                      "$ref": "#/components/schemas/ItemsShiftsAssignments"
                     }
                   },
                   {
-                    "$ref": "#/components/schemas/ItemsMemberships"
+                    "$ref": "#/components/schemas/ItemsShiftsAssignments"
                   }
                 ]
               }
@@ -13268,7 +13268,7 @@
                   "properties": {
                     "data": {
                       "items": {
-                        "$ref": "#/components/schemas/ItemsMemberships"
+                        "$ref": "#/components/schemas/ItemsShiftsAssignments"
                       }
                     }
                   }
@@ -13280,12 +13280,12 @@
       },
       "delete": {
         "summary": "Delete Multiple Items",
-        "description": "Delete multiple existing memberships items.",
+        "description": "Delete multiple existing shifts_assignments items.",
         "tags": [
           "Items",
-          "ItemsMemberships"
+          "ItemsShiftsAssignments"
         ],
-        "operationId": "deleteItemsMemberships",
+        "operationId": "deleteItemsShiftsAssignments",
         "responses": {
           "200": {
             "description": "Successful request"
@@ -13297,15 +13297,15 @@
         "parameters": []
       }
     },
-    "/items/memberships/{id}": {
+    "/items/shifts_assignments/{id}": {
       "get": {
         "summary": "Retrieve an Item",
-        "description": "Retrieve a single memberships item by unique identifier.",
+        "description": "Retrieve a single shifts_assignments item by unique identifier.",
         "tags": [
           "Items",
-          "ItemsMemberships"
+          "ItemsShiftsAssignments"
         ],
-        "operationId": "readSingleItemsMemberships",
+        "operationId": "readSingleItemsShiftsAssignments",
         "parameters": [
           {
             "$ref": "#/components/parameters/Fields"
@@ -13347,7 +13347,7 @@
                   "properties": {
                     "data": {
                       "type": "object",
-                      "$ref": "#/components/schemas/ItemsMemberships"
+                      "$ref": "#/components/schemas/ItemsShiftsAssignments"
                     }
                   }
                 }
@@ -13364,12 +13364,12 @@
       },
       "patch": {
         "summary": "Update an Item",
-        "description": "Update an existing memberships item.",
+        "description": "Update an existing shifts_assignments item.",
         "tags": [
           "Items",
-          "ItemsMemberships"
+          "ItemsShiftsAssignments"
         ],
-        "operationId": "updateSingleItemsMemberships",
+        "operationId": "updateSingleItemsShiftsAssignments",
         "parameters": [
           {
             "$ref": "#/components/parameters/Fields"
@@ -13403,7 +13403,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "$ref": "#/components/schemas/ItemsMemberships"
+                "$ref": "#/components/schemas/ItemsShiftsAssignments"
               }
             }
           }
@@ -13418,7 +13418,7 @@
                   "properties": {
                     "data": {
                       "type": "object",
-                      "$ref": "#/components/schemas/ItemsMemberships"
+                      "$ref": "#/components/schemas/ItemsShiftsAssignments"
                     }
                   }
                 }
@@ -13435,12 +13435,12 @@
       },
       "delete": {
         "summary": "Delete an Item",
-        "description": "Delete an existing memberships item.",
+        "description": "Delete an existing shifts_assignments item.",
         "tags": [
           "Items",
-          "ItemsMemberships"
+          "ItemsShiftsAssignments"
         ],
-        "operationId": "deleteSingleItemsMemberships",
+        "operationId": "deleteSingleItemsShiftsAssignments",
         "responses": {
           "200": {
             "description": "Successful request"
@@ -14249,6 +14249,1554 @@
           }
         ]
       }
+    },
+    "/items/memberships": {
+      "post": {
+        "summary": "Create an Item",
+        "description": "Create a new memberships item.",
+        "tags": [
+          "Items",
+          "ItemsMemberships"
+        ],
+        "operationId": "createItemsMemberships",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Meta"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ItemsMemberships"
+                    }
+                  },
+                  {
+                    "$ref": "#/components/schemas/ItemsMemberships"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "$ref": "#/components/schemas/ItemsMemberships"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "get": {
+        "summary": "List Items",
+        "description": "List the memberships items.",
+        "tags": [
+          "Items",
+          "ItemsMemberships"
+        ],
+        "operationId": "readItemsMemberships",
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/ItemsMemberships"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/x-metadata"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Multiple Items",
+        "description": "Update multiple memberships items at the same time.",
+        "tags": [
+          "Items",
+          "ItemsMemberships"
+        ],
+        "operationId": "updateItemsMemberships",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ItemsMemberships"
+                    }
+                  },
+                  {
+                    "$ref": "#/components/schemas/ItemsMemberships"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "$ref": "#/components/schemas/ItemsMemberships"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Multiple Items",
+        "description": "Delete multiple existing memberships items.",
+        "tags": [
+          "Items",
+          "ItemsMemberships"
+        ],
+        "operationId": "deleteItemsMemberships",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "parameters": []
+      }
+    },
+    "/items/memberships/{id}": {
+      "get": {
+        "summary": "Retrieve an Item",
+        "description": "Retrieve a single memberships item by unique identifier.",
+        "tags": [
+          "Items",
+          "ItemsMemberships"
+        ],
+        "operationId": "readSingleItemsMemberships",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Version"
+          },
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/ItemsMemberships"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update an Item",
+        "description": "Update an existing memberships item.",
+        "tags": [
+          "Items",
+          "ItemsMemberships"
+        ],
+        "operationId": "updateSingleItemsMemberships",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/ItemsMemberships"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/ItemsMemberships"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an Item",
+        "description": "Delete an existing memberships item.",
+        "tags": [
+          "Items",
+          "ItemsMemberships"
+        ],
+        "operationId": "deleteSingleItemsMemberships",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "/items/shifts_absences": {
+      "post": {
+        "summary": "Create an Item",
+        "description": "Create a new shifts_absences item.",
+        "tags": [
+          "Items",
+          "ItemsShiftsAbsences"
+        ],
+        "operationId": "createItemsShiftsAbsences",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Meta"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ItemsShiftsAbsences"
+                    }
+                  },
+                  {
+                    "$ref": "#/components/schemas/ItemsShiftsAbsences"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "$ref": "#/components/schemas/ItemsShiftsAbsences"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "get": {
+        "summary": "List Items",
+        "description": "List the shifts_absences items.",
+        "tags": [
+          "Items",
+          "ItemsShiftsAbsences"
+        ],
+        "operationId": "readItemsShiftsAbsences",
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/ItemsShiftsAbsences"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/x-metadata"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Multiple Items",
+        "description": "Update multiple shifts_absences items at the same time.",
+        "tags": [
+          "Items",
+          "ItemsShiftsAbsences"
+        ],
+        "operationId": "updateItemsShiftsAbsences",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ItemsShiftsAbsences"
+                    }
+                  },
+                  {
+                    "$ref": "#/components/schemas/ItemsShiftsAbsences"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "$ref": "#/components/schemas/ItemsShiftsAbsences"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Multiple Items",
+        "description": "Delete multiple existing shifts_absences items.",
+        "tags": [
+          "Items",
+          "ItemsShiftsAbsences"
+        ],
+        "operationId": "deleteItemsShiftsAbsences",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "parameters": []
+      }
+    },
+    "/items/shifts_absences/{id}": {
+      "get": {
+        "summary": "Retrieve an Item",
+        "description": "Retrieve a single shifts_absences item by unique identifier.",
+        "tags": [
+          "Items",
+          "ItemsShiftsAbsences"
+        ],
+        "operationId": "readSingleItemsShiftsAbsences",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Version"
+          },
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/ItemsShiftsAbsences"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update an Item",
+        "description": "Update an existing shifts_absences item.",
+        "tags": [
+          "Items",
+          "ItemsShiftsAbsences"
+        ],
+        "operationId": "updateSingleItemsShiftsAbsences",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/ItemsShiftsAbsences"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/ItemsShiftsAbsences"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an Item",
+        "description": "Delete an existing shifts_absences item.",
+        "tags": [
+          "Items",
+          "ItemsShiftsAbsences"
+        ],
+        "operationId": "deleteSingleItemsShiftsAbsences",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "/items/shifts_shifts": {
+      "post": {
+        "summary": "Create an Item",
+        "description": "Create a new shifts_shifts item.",
+        "tags": [
+          "Items",
+          "ItemsShiftsShifts"
+        ],
+        "operationId": "createItemsShiftsShifts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Meta"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ItemsShiftsShifts"
+                    }
+                  },
+                  {
+                    "$ref": "#/components/schemas/ItemsShiftsShifts"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "$ref": "#/components/schemas/ItemsShiftsShifts"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "get": {
+        "summary": "List Items",
+        "description": "List the shifts_shifts items.",
+        "tags": [
+          "Items",
+          "ItemsShiftsShifts"
+        ],
+        "operationId": "readItemsShiftsShifts",
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/ItemsShiftsShifts"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/x-metadata"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Multiple Items",
+        "description": "Update multiple shifts_shifts items at the same time.",
+        "tags": [
+          "Items",
+          "ItemsShiftsShifts"
+        ],
+        "operationId": "updateItemsShiftsShifts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ItemsShiftsShifts"
+                    }
+                  },
+                  {
+                    "$ref": "#/components/schemas/ItemsShiftsShifts"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "$ref": "#/components/schemas/ItemsShiftsShifts"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Multiple Items",
+        "description": "Delete multiple existing shifts_shifts items.",
+        "tags": [
+          "Items",
+          "ItemsShiftsShifts"
+        ],
+        "operationId": "deleteItemsShiftsShifts",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "parameters": []
+      }
+    },
+    "/items/shifts_shifts/{id}": {
+      "get": {
+        "summary": "Retrieve an Item",
+        "description": "Retrieve a single shifts_shifts item by unique identifier.",
+        "tags": [
+          "Items",
+          "ItemsShiftsShifts"
+        ],
+        "operationId": "readSingleItemsShiftsShifts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Version"
+          },
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/ItemsShiftsShifts"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update an Item",
+        "description": "Update an existing shifts_shifts item.",
+        "tags": [
+          "Items",
+          "ItemsShiftsShifts"
+        ],
+        "operationId": "updateSingleItemsShiftsShifts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/ItemsShiftsShifts"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/ItemsShiftsShifts"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an Item",
+        "description": "Delete an existing shifts_shifts item.",
+        "tags": [
+          "Items",
+          "ItemsShiftsShifts"
+        ],
+        "operationId": "deleteSingleItemsShiftsShifts",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "/items/shifts_logs": {
+      "post": {
+        "summary": "Create an Item",
+        "description": "Create a new shifts_logs item.",
+        "tags": [
+          "Items",
+          "ItemsShiftsLogs"
+        ],
+        "operationId": "createItemsShiftsLogs",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Meta"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ItemsShiftsLogs"
+                    }
+                  },
+                  {
+                    "$ref": "#/components/schemas/ItemsShiftsLogs"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "$ref": "#/components/schemas/ItemsShiftsLogs"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "get": {
+        "summary": "List Items",
+        "description": "List the shifts_logs items.",
+        "tags": [
+          "Items",
+          "ItemsShiftsLogs"
+        ],
+        "operationId": "readItemsShiftsLogs",
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/ItemsShiftsLogs"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/x-metadata"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Multiple Items",
+        "description": "Update multiple shifts_logs items at the same time.",
+        "tags": [
+          "Items",
+          "ItemsShiftsLogs"
+        ],
+        "operationId": "updateItemsShiftsLogs",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ItemsShiftsLogs"
+                    }
+                  },
+                  {
+                    "$ref": "#/components/schemas/ItemsShiftsLogs"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "$ref": "#/components/schemas/ItemsShiftsLogs"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Multiple Items",
+        "description": "Delete multiple existing shifts_logs items.",
+        "tags": [
+          "Items",
+          "ItemsShiftsLogs"
+        ],
+        "operationId": "deleteItemsShiftsLogs",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "parameters": []
+      }
+    },
+    "/items/shifts_logs/{id}": {
+      "get": {
+        "summary": "Retrieve an Item",
+        "description": "Retrieve a single shifts_logs item by unique identifier.",
+        "tags": [
+          "Items",
+          "ItemsShiftsLogs"
+        ],
+        "operationId": "readSingleItemsShiftsLogs",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Version"
+          },
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/ItemsShiftsLogs"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update an Item",
+        "description": "Update an existing shifts_logs item.",
+        "tags": [
+          "Items",
+          "ItemsShiftsLogs"
+        ],
+        "operationId": "updateSingleItemsShiftsLogs",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/ItemsShiftsLogs"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/ItemsShiftsLogs"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an Item",
+        "description": "Delete an existing shifts_logs item.",
+        "tags": [
+          "Items",
+          "ItemsShiftsLogs"
+        ],
+        "operationId": "deleteSingleItemsShiftsLogs",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ]
+      }
     }
   },
   "tags": [
@@ -14430,8 +15978,8 @@
       "x-collection": "memberships_coshoppers"
     },
     {
-      "name": "ItemsMemberships",
-      "x-collection": "memberships"
+      "name": "ItemsShiftsAssignments",
+      "x-collection": "shifts_assignments"
     },
     {
       "name": "ItemsMembershipsMembershipsCoshoppers1",
@@ -14440,6 +15988,22 @@
     {
       "name": "ItemsMembershipsMembershipsCoshoppers",
       "x-collection": "memberships_memberships_coshoppers"
+    },
+    {
+      "name": "ItemsMemberships",
+      "x-collection": "memberships"
+    },
+    {
+      "name": "ItemsShiftsAbsences",
+      "x-collection": "shifts_absences"
+    },
+    {
+      "name": "ItemsShiftsShifts",
+      "x-collection": "shifts_shifts"
+    },
+    {
+      "name": "ItemsShiftsLogs",
+      "x-collection": "shifts_logs"
     }
   ],
   "components": {
@@ -14663,6 +16227,13 @@
           "focal_point_y": {
             "nullable": true,
             "type": "integer"
+          },
+          "tus_id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "tus_data": {
+            "nullable": true
           }
         },
         "x-collection": "directus_files"
@@ -17216,94 +18787,78 @@
         },
         "x-collection": "memberships_coshoppers"
       },
-      "ItemsMemberships": {
+      "ItemsShiftsAssignments": {
         "type": "object",
         "properties": {
-          "date_created": {
-            "nullable": true,
-            "type": "string",
-            "format": "timestamp"
-          },
-          "date_updated": {
-            "nullable": true,
-            "type": "string",
-            "format": "timestamp"
-          },
           "id": {
             "nullable": false,
             "type": "integer"
-          },
-          "memberships_date_applied": {
-            "nullable": true,
-            "type": "string",
-            "format": "date"
-          },
-          "memberships_date_approved": {
-            "nullable": true,
-            "type": "string",
-            "format": "date"
-          },
-          "memberships_date_cancelled": {
-            "nullable": true,
-            "type": "string",
-            "format": "date"
-          },
-          "memberships_date_ended": {
-            "nullable": true,
-            "type": "string",
-            "format": "date"
-          },
-          "memberships_date_excluded": {
-            "nullable": true,
-            "type": "string",
-            "format": "date"
-          },
-          "memberships_shares": {
-            "nullable": false,
-            "type": "integer"
-          },
-          "memberships_status": {
-            "nullable": false,
-            "description": "Lebenszyklus einer Mitgliedschaft. Ausstieg erfolgt durch das Mitglied, Ausschluss durch die Organisation. Während des Ausstiegs- oder Ausschlussverfahrens sind die Mitgliedschaften weiterhin aktiv. Wenn der Vorgang abgeschlossen ist, sollte der Status auf 'Beendet' gesetzt werden.",
-            "type": "string"
-          },
-          "memberships_type": {
-            "nullable": true,
-            "type": "string"
-          },
-          "memberships_user": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "$ref": "#/components/schemas/Users"
-              }
-            ]
-          },
-          "memberships_user_search": {
-            "nullable": true,
-            "type": "string"
           },
           "user_created": {
             "nullable": true,
             "type": "string",
             "format": "uuid"
           },
+          "date_created": {
+            "nullable": true,
+            "type": "string",
+            "format": "timestamp"
+          },
           "user_updated": {
             "nullable": true,
             "type": "string",
             "format": "uuid"
           },
-          "membership_card_id": {
+          "date_updated": {
             "nullable": true,
-            "description": "Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren.",
-            "type": "string"
+            "type": "string",
+            "format": "timestamp"
           },
-          "memberships_invoices": {
+          "shifts_from": {
+            "nullable": false,
+            "type": "string",
+            "format": "date"
+          },
+          "shifts_to": {
             "nullable": true,
+            "description": "Kann freigelassen werden für fortwährende Anmeldung",
+            "type": "string",
+            "format": "date"
+          },
+          "shifts_membership": {
+            "nullable": false,
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsMemberships"
+              }
+            ]
+          },
+          "shifts_shift": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsShiftsShifts"
+              }
+            ]
+          },
+          "shifts_is_regular": {
+            "nullable": true,
+            "description": "Soll diese Anmeldung langfristig aktiv sein?",
+            "type": "boolean"
+          },
+          "shifts_is_coordination": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "shifts_absences": {
+            "nullable": true,
+            "description": "Abwesenheit gilt nur für diese Schicht",
             "type": "array",
             "items": {
               "oneOf": [
@@ -17311,41 +18866,13 @@
                   "type": "integer"
                 },
                 {
-                  "$ref": "#/components/schemas/ItemsPaymentsInvoicesOut"
-                }
-              ]
-            }
-          },
-          "coshoppers": {
-            "nullable": true,
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "$ref": "#/components/schemas/ItemsMembershipsMembershipsCoshoppers"
-                }
-              ]
-            }
-          },
-          "kids": {
-            "nullable": true,
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "$ref": "#/components/schemas/ItemsMembershipsMembershipsCoshoppers1"
+                  "$ref": "#/components/schemas/ItemsShiftsAbsences"
                 }
               ]
             }
           }
         },
-        "x-collection": "memberships"
+        "x-collection": "shifts_assignments"
       },
       "ItemsMembershipsMembershipsCoshoppers1": {
         "type": "object",
@@ -17410,6 +18937,402 @@
           }
         },
         "x-collection": "memberships_memberships_coshoppers"
+      },
+      "ItemsMemberships": {
+        "type": "object",
+        "properties": {
+          "date_created": {
+            "nullable": true,
+            "type": "string",
+            "format": "timestamp"
+          },
+          "date_updated": {
+            "nullable": true,
+            "type": "string",
+            "format": "timestamp"
+          },
+          "id": {
+            "nullable": false,
+            "description": "Diese Nummer identifiziert das Mitglied",
+            "type": "integer"
+          },
+          "memberships_date_applied": {
+            "nullable": true,
+            "type": "string",
+            "format": "date"
+          },
+          "memberships_date_approved": {
+            "nullable": true,
+            "type": "string",
+            "format": "date"
+          },
+          "memberships_date_cancelled": {
+            "nullable": true,
+            "type": "string",
+            "format": "date"
+          },
+          "memberships_date_ended": {
+            "nullable": true,
+            "type": "string",
+            "format": "date"
+          },
+          "memberships_date_excluded": {
+            "nullable": true,
+            "type": "string",
+            "format": "date"
+          },
+          "memberships_shares": {
+            "nullable": false,
+            "description": "Änderung generiert automatische Rechnung",
+            "type": "integer"
+          },
+          "memberships_status": {
+            "nullable": false,
+            "description": "Lebenszyklus von Beitritt bis Beendet",
+            "type": "string"
+          },
+          "memberships_type": {
+            "nullable": true,
+            "type": "string"
+          },
+          "memberships_user": {
+            "nullable": true,
+            "description": "Verknüpfter Account",
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "$ref": "#/components/schemas/Users"
+              }
+            ]
+          },
+          "memberships_user_search": {
+            "nullable": true,
+            "type": "string"
+          },
+          "user_created": {
+            "nullable": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_updated": {
+            "nullable": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          "shifts_user_type": {
+            "nullable": true,
+            "description": "Welche Art von Schichten macht dieses Mitglied?",
+            "type": "string"
+          },
+          "shifts_counter": {
+            "nullable": true,
+            "description": "Wenn negativ, dann müssen Schichten nachgeholt werden",
+            "type": "integer"
+          },
+          "memberships_card_id": {
+            "nullable": true,
+            "description": "Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren.",
+            "type": "string"
+          },
+          "shifts_skills": {
+            "nullable": true
+          },
+          "memberships_invoices": {
+            "nullable": true,
+            "description": "Rechnungen für Anteils-Zahlungen",
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "$ref": "#/components/schemas/ItemsPaymentsInvoicesOut"
+                }
+              ]
+            }
+          },
+          "kids": {
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "$ref": "#/components/schemas/ItemsMembershipsMembershipsCoshoppers1"
+                }
+              ]
+            }
+          },
+          "coshoppers": {
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "$ref": "#/components/schemas/ItemsMembershipsMembershipsCoshoppers"
+                }
+              ]
+            }
+          }
+        },
+        "x-collection": "memberships"
+      },
+      "ItemsShiftsAbsences": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "nullable": false,
+            "type": "integer"
+          },
+          "user_created": {
+            "nullable": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          "date_created": {
+            "nullable": true,
+            "type": "string",
+            "format": "timestamp"
+          },
+          "user_updated": {
+            "nullable": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          "date_updated": {
+            "nullable": true,
+            "type": "string",
+            "format": "timestamp"
+          },
+          "shifts_from": {
+            "nullable": false,
+            "type": "string",
+            "format": "date"
+          },
+          "shifts_to": {
+            "nullable": false,
+            "type": "string",
+            "format": "date"
+          },
+          "shifts_assignment": {
+            "nullable": true,
+            "description": "Abwesenheit gilt nur für diese spezifische Anmeldung",
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsShiftsAssignments"
+              }
+            ]
+          },
+          "shifts_is_holiday": {
+            "nullable": false,
+            "description": "Während einem Urlaub ist kein Einkauf möglich und es werden keine Schichtpunkte abgezogen.",
+            "type": "boolean"
+          },
+          "shifts_membership": {
+            "nullable": false,
+            "description": "Wähle entweder ein Mitglied oder eine verknüpfte Anmeldung aus.",
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsMemberships"
+              }
+            ]
+          },
+          "shifts_status": {
+            "nullable": true,
+            "description": "Nur angenommene Urlaube werden im Schichtkalender aktiv.",
+            "type": "string"
+          },
+          "shifts_is_for_all_assignments": {
+            "nullable": true,
+            "description": "Eine allgemeine Abwesenheit gilt für alle Anmeldungen des Mitglieds",
+            "type": "boolean"
+          }
+        },
+        "x-collection": "shifts_absences"
+      },
+      "ItemsShiftsShifts": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "nullable": false,
+            "type": "integer"
+          },
+          "user_created": {
+            "nullable": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          "date_created": {
+            "nullable": true,
+            "type": "string",
+            "format": "timestamp"
+          },
+          "user_updated": {
+            "nullable": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          "date_updated": {
+            "nullable": true,
+            "type": "string",
+            "format": "timestamp"
+          },
+          "shifts_status": {
+            "nullable": false,
+            "description": "Nur veröffentlichte Schichten werden im Kalender angezeigt.",
+            "type": "string"
+          },
+          "shifts_name": {
+            "nullable": false,
+            "type": "string"
+          },
+          "shifts_from": {
+            "nullable": true,
+            "type": "string",
+            "format": "date"
+          },
+          "shifts_to": {
+            "nullable": true,
+            "description": "Kann freigelassen werden für fortwährende Schicht",
+            "type": "string",
+            "format": "date"
+          },
+          "shifts_from_time": {
+            "nullable": true,
+            "type": "string",
+            "format": "time"
+          },
+          "shifts_to_time": {
+            "nullable": true,
+            "type": "string",
+            "format": "time"
+          },
+          "shifts_repeats_every": {
+            "nullable": true,
+            "description": "Wiederholungsfrequenz in Tagen",
+            "type": "integer"
+          },
+          "shifts_description": {
+            "nullable": true,
+            "type": "string"
+          },
+          "shifts_location": {
+            "nullable": true,
+            "type": "string"
+          },
+          "shifts_slots": {
+            "nullable": true,
+            "type": "integer"
+          },
+          "shifts_is_regular": {
+            "nullable": true,
+            "description": "Soll die Schicht sich regelmäßig wiederholen?",
+            "type": "boolean"
+          },
+          "shifts_category": {
+            "nullable": true,
+            "type": "string"
+          },
+          "shifts_is_all_day": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "shifts_allow_self_assignment": {
+            "nullable": true,
+            "description": "Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?",
+            "type": "boolean"
+          },
+          "shifts_needs_coordinator": {
+            "nullable": true,
+            "type": "boolean"
+          }
+        },
+        "x-collection": "shifts_shifts"
+      },
+      "ItemsShiftsLogs": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "nullable": false,
+            "type": "integer"
+          },
+          "shifts_type": {
+            "nullable": false,
+            "description": "Was genau soll dokumentiert werden?",
+            "type": "string"
+          },
+          "shifts_date": {
+            "nullable": true,
+            "type": "string",
+            "format": "date"
+          },
+          "shifts_score": {
+            "nullable": true,
+            "type": "integer"
+          },
+          "shifts_note": {
+            "nullable": true,
+            "type": "string"
+          },
+          "user_created": {
+            "nullable": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          "date_created": {
+            "nullable": true,
+            "type": "string",
+            "format": "timestamp"
+          },
+          "user_updated": {
+            "nullable": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          "date_updated": {
+            "nullable": true,
+            "type": "string",
+            "format": "timestamp"
+          },
+          "shifts_membership": {
+            "nullable": false,
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsMemberships"
+              }
+            ]
+          },
+          "shifts_shift": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsShiftsShifts"
+              }
+            ]
+          }
+        },
+        "x-collection": "shifts_logs"
       }
     },
     "parameters": {

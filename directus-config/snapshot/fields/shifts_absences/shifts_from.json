@@ -1,0 +1,49 @@
+{
+  "collection": "shifts_absences",
+  "field": "shifts_from",
+  "type": "date",
+  "meta": {
+    "collection": "shifts_absences",
+    "conditions": null,
+    "display": null,
+    "display_options": {
+      "format": "DD.MM.YYYY"
+    },
+    "field": "shifts_from",
+    "group": null,
+    "hidden": false,
+    "interface": null,
+    "note": null,
+    "options": null,
+    "readonly": false,
+    "required": true,
+    "sort": 8,
+    "special": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Startdatum"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "shifts_from",
+    "table": "shifts_absences",
+    "data_type": "date",
+    "default_value": null,
+    "max_length": null,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": false,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

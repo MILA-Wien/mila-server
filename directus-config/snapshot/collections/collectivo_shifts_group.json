@@ -1,0 +1,38 @@
+{
+  "collection": "collectivo_shifts_group",
+  "meta": {
+    "accountability": "all",
+    "archive_app_filter": true,
+    "archive_field": null,
+    "archive_value": null,
+    "collapse": "open",
+    "collection": "collectivo_shifts_group",
+    "color": null,
+    "display_template": null,
+    "group": null,
+    "hidden": false,
+    "icon": "calendar_month",
+    "item_duplication_fields": null,
+    "note": null,
+    "preview_url": null,
+    "singleton": false,
+    "sort": 10,
+    "sort_field": null,
+    "translations": [
+      {
+        "language": "en-US",
+        "translation": "Shifts",
+        "singular": "Shift",
+        "plural": "Shifts"
+      },
+      {
+        "language": "de-DE",
+        "translation": "Schichtensystem",
+        "singular": "Schicht",
+        "plural": "Schichten"
+      }
+    ],
+    "unarchive_value": null,
+    "versioning": false
+  }
+}
