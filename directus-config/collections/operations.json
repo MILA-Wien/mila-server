@@ -37,8 +37,8 @@
     "name": "Check if active",
     "key": "check_if_active",
     "type": "exec",
-    "position_x": 39,
-    "position_y": 19,
+    "position_x": 4,
+    "position_y": 35,
     "options": {
       "code": "module.exports = async function(data) {\n\t// Do something...\n    if (data[\"read_automation\"][0][\"mila_active\"] != true) {\n        throw new Error(\"Automation not active\")\n    }\n\treturn {};\n}"
     },
@@ -151,8 +151,8 @@
     "name": "Create campaign",
     "key": "create_campaign",
     "type": "item-create",
-    "position_x": 10,
-    "position_y": 55,
+    "position_x": 4,
+    "position_y": 54,
     "options": {
       "collection": "messages_campaigns",
       "payload": {
@@ -165,7 +165,7 @@
       "emitEvents": true,
       "permissions": "$full"
     },
-    "resolve": null,
+    "resolve": "ba9bdc64-5e33-4cee-8858-bb70e25d5d2c",
     "reject": null,
     "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
     "_syncId": "a1519dc1-5cce-4b7c-b64d-91397844174c"
@@ -174,8 +174,8 @@
     "name": "Create campaign",
     "key": "create_campaign",
     "type": "item-create",
-    "position_x": 56,
-    "position_y": 19,
+    "position_x": 22,
+    "position_y": 35,
     "options": {
       "collection": "messages_campaigns",
       "payload": {
@@ -189,12 +189,11 @@
               "messages_campaigns_id": "+"
             }
           ]
-        },
-        "messages_campaign_status": "pending"
+        }
       },
       "emitEvents": true
     },
-    "resolve": null,
+    "resolve": "a03c504e-2b79-49cd-9bd0-71f9e623131c",
     "reject": null,
     "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
     "_syncId": "0353178c-e17a-4cd8-977f-406d271ec4c7"
@@ -217,7 +216,7 @@
       "permissions": "$full",
       "collection": "messages_campaigns"
     },
-    "resolve": null,
+    "resolve": "db910638-a250-4e3d-b048-07032e2ffc94",
     "reject": null,
     "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
     "_syncId": "b9edf53d-de5a-4f62-b76b-fb4ec074d96f"
@@ -226,8 +225,8 @@
     "name": "createCampaign",
     "key": "createCampaign",
     "type": "item-create",
-    "position_x": 35,
-    "position_y": 17,
+    "position_x": 22,
+    "position_y": 19,
     "options": {
       "collection": "messages_campaigns",
       "permissions": "$full",
@@ -499,8 +498,8 @@
     "name": "prepareRecipients",
     "key": "prepareRecipients",
     "type": "exec",
-    "position_x": 17,
-    "position_y": 17,
+    "position_x": 5,
+    "position_y": 19,
     "options": {
       "code": "module.exports = async function(data) {\n\tconst recipients = []\n    for (i in data[\"readMemberships\"]) {\n \trecipients.push(\n            {\n                messages_campaigns_id: \"+\",\n           \t\tdirectus_users_id: { id: data[\"readMemberships\"][i].memberships_user }\n            }\n        )\n    }\n\treturn { recipients };\n}"
     },
@@ -535,7 +534,7 @@
     "name": "Read Automation",
     "key": "read_automation",
     "type": "item-read",
-    "position_x": 21,
+    "position_x": 22,
     "position_y": 19,
     "options": {
       "collection": "mila_automations",
@@ -674,8 +673,8 @@
     "name": "readMemberships",
     "key": "readMemberships",
     "type": "item-read",
-    "position_x": 1,
-    "position_y": 17,
+    "position_x": 19,
+    "position_y": 1,
     "options": {
       "collection": "memberships",
       "query": {
@@ -824,6 +823,72 @@
     "reject": null,
     "flow": "2d68cc8b-f561-4f7f-8cc2-a847cb57054c",
     "_syncId": "0bec9ec7-45cc-4375-89f9-27231942ddba"
+  },
+  {
+    "name": "send_campaign",
+    "key": "send_campaign",
+    "type": "item-update",
+    "position_x": 24,
+    "position_y": 53,
+    "options": {
+      "collection": "messages_campaigns",
+      "permissions": "$full",
+      "emitEvents": true,
+      "key": [
+        "{{create_campaign[0]}}"
+      ],
+      "payload": {
+        "messages_campaign_status": "pending"
+      }
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
+    "_syncId": "db910638-a250-4e3d-b048-07032e2ffc94"
+  },
+  {
+    "name": "send_campaign",
+    "key": "send_campaign",
+    "type": "item-update",
+    "position_x": 22,
+    "position_y": 54,
+    "options": {
+      "permissions": "$full",
+      "collection": "messages_campaigns",
+      "payload": {
+        "messages_campaign_status": "pending"
+      },
+      "key": [
+        "{{create_campaign[0]}}"
+      ],
+      "emitEvents": true
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
+    "_syncId": "ba9bdc64-5e33-4cee-8858-bb70e25d5d2c"
+  },
+  {
+    "name": "set_campaign_pending",
+    "key": "set_campaign_pending",
+    "type": "item-update",
+    "position_x": 4,
+    "position_y": 53,
+    "options": {
+      "payload": {
+        "messages_campaign_status": "pending"
+      },
+      "emitEvents": true,
+      "permissions": "$full",
+      "key": [
+        "{{create_campaign[0]}}"
+      ],
+      "collection": "messages_campaigns"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
+    "_syncId": "a03c504e-2b79-49cd-9bd0-71f9e623131c"
   },
   {
     "name": "set_status_to_pending",
