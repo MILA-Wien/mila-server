@@ -128,21 +128,21 @@ export const getShiftOccurrences = async (
 
     const today = getCurrentDate();
     let minDate = from.toJSDate();
-    let maxDate = to.toJSDate();
+    const maxDate = to.toJSDate();
 
     // Jumper and regular can only be into the future
     if ((isJumper || isRegular || isUnfilled) && minDate < today) {
       minDate = today;
     }
 
-    // Jumpers will only see the next 4 weeks
-    if (isJumper) {
-      const jumperLimit = getFutureDate(28);
+    // Possible feature: Jumpers will only see the next 4 weeks
+    // if (isJumper) {
+    //   const jumperLimit = getFutureDate(28);
 
-      if (jumperLimit < maxDate) {
-        maxDate = jumperLimit;
-      }
-    }
+    //   if (jumperLimit < maxDate) {
+    //     maxDate = jumperLimit;
+    //   }
+    // }
 
     const shiftOccurrences = getSingleShiftOccurrences(
       shift,
@@ -178,9 +178,19 @@ export const getSingleShiftOccurrences = (
   assignmentRrules: AssignmentRrule[],
   from: Date,
   to: Date,
+  // isJumper?: boolean,
 ): ShiftOccurrence[] => {
-  const dates: Date[] = shiftRule.between(from, to, true);
-
+  // Possible feature: Jumpers only see the next free instance of each shift
+  // let dates: Date[] = [];
+  // if (isJumper) {
+  //   const nextDate = shiftRule.after(new Date(), true);
+  //   if (nextDate) {
+  //     dates.push(nextDate);
+  //   }
+  // } else {
+  //   dates = shiftRule.between(from, to, true);
+  // }
+  const dates = shiftRule.between(from, to, true);
   const shiftOccurrences: ShiftOccurrence[] = [];
 
   for (const date of dates) {
