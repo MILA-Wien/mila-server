@@ -18,7 +18,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-public class AppTest {
+/* TODOs
+ * i. use docker-compose include/merge for selenium services 
+ * ii. dockerize maven
+*/
+public class MilaTest {
     private WebDriver driver;
     private WebDriverWait wait;
 
@@ -33,38 +37,31 @@ public class AppTest {
             options.addArguments("--no-sandbox");
             try{
             driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), options);
-            //driver = new ChromeDriver(options);
+            //driver = new ChromeDriver(options); //local
             } catch(Exception e){
                 e.printStackTrace();
             }
         }
-        wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(4));
     }
 
     /* 
-     * only http://keycloak:8080 works
-     * or via access via network e.g. -> http://192.168.0.199:3000/
-     * 
-     * all other services with `localhost:0000` will get connection refused
-     * 
+     * User can load collectivo sign-in page
+     * - RemoteWebDriver only: change DIRECTUS_URL to host.docker.internal
+     * - RemoteWebDriver only: any further action into login page (i.e. perform actual login) will get connection refused
      */
     @Test
-    public void testMethod1() {
-        System.out.println("testMethod1");
-        driver.get("http://keycloak:8080");
-        assertTrue(driver.getTitle().equalsIgnoreCase("Welcome to Keycloak"));
-    }
-
-    @Test
-    public void testMethod2() {
-        System.out.println("Page title: " + driver.getTitle());
+    public void isLoginPageAvailable() {
+        driver.get("http://host.docker.internal:3000"); // or localhost if testing locally
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h1[contains(text(), 'Sign in to your account')]")));
+        assertTrue(driver.getTitle().equalsIgnoreCase("Sign in to collectivo"));
     }
 
     @AfterClass
     public void teardown() {
-        // Quit the WebDriver
-        /* if (driver != null) {
+        // Disable condition to keep browser open
+        if (driver != null) {
             driver.quit();
-        } */
+        }
     }
 }

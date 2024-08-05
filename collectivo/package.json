@@ -6,7 +6,7 @@
   "author": "Joël Foramitti",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev --dotenv .env --p 3000 --host",
+    "dev": "nuxt dev --dotenv .env --p 3000 --host 0.0.0.0",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",

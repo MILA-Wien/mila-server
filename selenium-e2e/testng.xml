@@ -3,7 +3,7 @@
     <test name="ChromeTests">
         <parameter name="browser" value="chrome" />
         <classes>
-            <class name="com.myselenium.app.AppTest" />
+            <class name="com.myselenium.app.MilaTest" />
         </classes>
     </test>
 </suite>
