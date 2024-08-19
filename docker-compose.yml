@@ -42,7 +42,6 @@ services:
   
   collectivo-dev:
     container_name: collectivo-dev
-    image: node:18-alpine
     profiles: [dev]
     build:
       context: ./collectivo

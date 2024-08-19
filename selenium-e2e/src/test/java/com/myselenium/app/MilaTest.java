@@ -60,8 +60,8 @@ public class MilaTest {
     @AfterClass
     public void teardown() {
         // Disable condition to keep browser open
-        if (driver != null) {
+        /* if (driver != null) {
             driver.quit();
-        }
+        } */
     }
 }
