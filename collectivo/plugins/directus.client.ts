@@ -1,4 +1,4 @@
-import { createDirectus, authentication, rest } from "@directus/sdk";
+import { createDirectus, authentication, rest, readMe } from "@directus/sdk";
 
 // Set up directus client or redirect to keycloak if not authenticated
 export default defineNuxtPlugin({
@@ -28,11 +28,12 @@ export default defineNuxtPlugin({
     // Try to refresh token and set user to authenticated if successful
     try {
       await directus.refresh();
-
+      await user.value.init(directus);
       user.value.isAuthenticated = true;
     } catch (e: any) {
       // If error is not auth-related, throw error
       if (![400, 401, 403].includes("response" in e && e.response.status)) {
+        console.log(e);
         throw createError({
           statusMessage: "Server is unavailable",
           statusCode: 503,

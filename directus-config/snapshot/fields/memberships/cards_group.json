@@ -1,0 +1,36 @@
+{
+  "collection": "memberships",
+  "field": "cards_group",
+  "type": "alias",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "cards_group",
+    "group": null,
+    "hidden": false,
+    "interface": "group-detail",
+    "note": null,
+    "options": {
+      "headerIcon": "credit_card"
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 5,
+    "special": [
+      "alias",
+      "group",
+      "no-data"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Karten & Miteinkäufer*innen"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}

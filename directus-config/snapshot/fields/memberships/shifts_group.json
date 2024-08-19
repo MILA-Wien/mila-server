@@ -1,0 +1,36 @@
+{
+  "collection": "memberships",
+  "field": "shifts_group",
+  "type": "alias",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "shifts_group",
+    "group": null,
+    "hidden": false,
+    "interface": "group-detail",
+    "note": null,
+    "options": {
+      "headerIcon": "calendar_month"
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 4,
+    "special": [
+      "alias",
+      "group",
+      "no-data"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Schichten"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}

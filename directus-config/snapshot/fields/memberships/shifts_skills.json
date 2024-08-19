@@ -1,0 +1,68 @@
+{
+  "collection": "memberships",
+  "field": "shifts_skills",
+  "type": "json",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "shifts_skills",
+    "group": "shifts_group",
+    "hidden": false,
+    "interface": "select-multiple-checkbox",
+    "note": null,
+    "options": {
+      "choices": [
+        {
+          "text": "$t:shift-coordination",
+          "value": "shift-coordination"
+        },
+        {
+          "text": "$t:accounting",
+          "value": "accounting"
+        },
+        {
+          "text": "$t:it-support",
+          "value": "it-support"
+        },
+        {
+          "text": "$t:public-relations",
+          "value": "public-relations"
+        }
+      ]
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 3,
+    "special": [
+      "cast-json"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Fähigkeiten"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "shifts_skills",
+    "table": "memberships",
+    "data_type": "json",
+    "default_value": null,
+    "max_length": null,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

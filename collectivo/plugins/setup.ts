@@ -1,4 +1,5 @@
 import { electronicFormatIBAN, isValidIBAN } from "ibantools";
+import { boolean } from "yup";
 
 const europeanIBAN = [
   "AD",
@@ -40,7 +41,7 @@ const europeanIBAN = [
 
 export default defineNuxtPlugin(() => {
   const menu = useCollectivoMenus();
-  const user = useCollectivoUser();
+  const user = useCollectivoUser().value;
   const runtimeConfig = useRuntimeConfig();
 
   const items: CollectivoMenuItem[] = [
@@ -51,15 +52,32 @@ export default defineNuxtPlugin(() => {
       order: 0,
     },
     {
+      label: "Handbook",
+      icon: "i-heroicons-book-open",
+      to: "https://handbuch.mila.wien/books/mitglieder-handbuch",
+      external: true,
+      order: 1,
+    },
+    {
+      label: "Shifts",
+      icon: "i-heroicons-calendar-days-solid",
+      to: "/shifts/dashboard",
+      order: 2,
+      filter: async () => {
+        return Boolean(
+          user.membership && user.membership.shifts_user_type != "inactive",
+        );
+      },
+    },
+    {
       label: "Studio",
       icon: "i-heroicons-chart-bar-square",
       to: runtimeConfig.public.directusUrl,
       external: true,
       // hideOnMobile: true,
       order: 99,
-      filter: async (_item) => {
-        await user.value.load();
-        return user.value.data?.role?.app_access ?? false;
+      filter: async () => {
+        return user.user?.role?.app_access ?? false;
       },
     },
   ];
@@ -80,7 +98,7 @@ export default defineNuxtPlugin(() => {
     {
       label: "Login",
       icon: "i-heroicons-arrow-right-on-rectangle-solid",
-      click: user.value.login,
+      click: user.login,
       order: 100,
       filter: (_item) => {
         return true;
@@ -98,9 +116,7 @@ export default defineNuxtPlugin(() => {
     {
       label: "Logout",
       icon: "i-heroicons-arrow-left-on-rectangle-solid",
-      click: () => {
-        user.value.logout();
-      },
+      click: user.logout,
       order: 1000,
     },
     {
@@ -275,7 +291,7 @@ export default defineNuxtPlugin(() => {
         },
         {
           value: "open",
-          label: "Offen",
+          label: "Open",
         },
         {
           value: "no-answer",
@@ -373,7 +389,7 @@ export default defineNuxtPlugin(() => {
     },
   ];
 
-  user.value.fields.push(...profileInputs);
+  user.fields.push(...profileInputs);
 
   const form = useMembershipsRegistrationForm();
 

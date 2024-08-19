@@ -8,14 +8,14 @@
     "display": null,
     "display_options": null,
     "field": "memberships_date_excluded",
-    "group": null,
+    "group": "membership_group",
     "hidden": false,
     "interface": "datetime",
     "note": null,
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 10,
+    "sort": 7,
     "special": null,
     "translations": [
       {

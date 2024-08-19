@@ -1,0 +1,70 @@
+{
+  "collection": "shifts_absences",
+  "field": "shifts_assignment",
+  "type": "integer",
+  "meta": {
+    "collection": "shifts_absences",
+    "conditions": [
+      {
+        "name": "Hide if for all assignments",
+        "rule": {
+          "_and": [
+            {
+              "shifts_is_for_all_assignments": {
+                "_eq": true
+              }
+            }
+          ]
+        },
+        "hidden": true,
+        "options": {
+          "enableCreate": false,
+          "enableSelect": true
+        },
+        "required": false
+      }
+    ],
+    "display": null,
+    "display_options": null,
+    "field": "shifts_assignment",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown-m2o",
+    "note": "Abwesenheit gilt nur für diese spezifische Anmeldung",
+    "options": {
+      "enableCreate": false,
+      "filter": null,
+      "template": "{{shifts_shift.shifts_name}}"
+    },
+    "readonly": false,
+    "required": true,
+    "sort": 12,
+    "special": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Verknüpfte Schichtanmeldung"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "shifts_assignment",
+    "table": "shifts_absences",
+    "data_type": "integer",
+    "default_value": null,
+    "max_length": null,
+    "numeric_precision": 32,
+    "numeric_scale": 0,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": "shifts_assignments",
+    "foreign_key_column": "id"
+  }
+}

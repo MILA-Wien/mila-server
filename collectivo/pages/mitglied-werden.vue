@@ -8,20 +8,14 @@ const alreadyMemberError = ref(false);
 const data: any = ref({});
 
 async function prepare() {
-  try {
-    await user.value.load();
-  } catch (e) {
-    showForm.value = true;
-    return;
+  if (user.value.user) {
+    data.value["directus_users__first_name"] = user.value.user!["first_name"];
+    data.value["directus_users__last_name"] = user.value.user!["last_name"];
+
+    data.value["directus_users__memberships_person_type"] =
+      user.value.user!["memberships_person_type"];
   }
-
-  data.value["directus_users__first_name"] = user.value.data!["first_name"];
-  data.value["directus_users__last_name"] = user.value.data!["last_name"];
-
-  data.value["directus_users__memberships_person_type"] =
-    user.value.data!["memberships_person_type"];
-
-  if (user.value.data?.memberships && user.value.data?.memberships.length > 0) {
+  if (user.value.membership) {
     alreadyMemberError.value = true;
   } else {
     showForm.value = true;

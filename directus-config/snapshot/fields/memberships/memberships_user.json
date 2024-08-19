@@ -13,11 +13,11 @@
     "group": null,
     "hidden": false,
     "interface": "select-dropdown-m2o",
-    "note": null,
+    "note": "Verknüpfter Account",
     "options": null,
     "readonly": false,
     "required": true,
-    "sort": 1,
+    "sort": 2,
     "special": [
       "m2o"
     ],

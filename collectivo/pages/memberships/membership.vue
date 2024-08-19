@@ -15,8 +15,6 @@ const isMember = ref(false);
 const membership = ref<MembershipsMembership | null>(null);
 
 async function getMemberships() {
-  await user.value.load();
-
   memberships.value = await directus.request(
     readItems("memberships", {
       fields: ["id", "memberships_status", "memberships_type"],

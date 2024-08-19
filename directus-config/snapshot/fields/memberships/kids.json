@@ -8,7 +8,7 @@
     "display": null,
     "display_options": null,
     "field": "kids",
-    "group": null,
+    "group": "cards_group",
     "hidden": false,
     "interface": "list-m2m",
     "note": null,
@@ -18,7 +18,7 @@
     },
     "readonly": false,
     "required": false,
-    "sort": 15,
+    "sort": 4,
     "special": [
       "m2m"
     ],
@@ -30,6 +30,6 @@
     ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   }
 }

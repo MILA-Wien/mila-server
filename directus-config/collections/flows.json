@@ -1,8 +1,8 @@
 [
   {
-    "name": "mila_membership_approved_mail",
-    "icon": "bolt",
-    "color": null,
+    "name": "Mail Membership Approved",
+    "icon": "outgoing_mail",
+    "color": "#E35169",
     "description": "Infomail wenn eine Mitgliedschaft auf angenommen gestellt wird",
     "status": "active",
     "trigger": "event",
@@ -24,7 +24,7 @@
     "icon": "supervised_user_circle",
     "color": null,
     "description": null,
-    "status": "inactive",
+    "status": "active",
     "trigger": "event",
     "accountability": "all",
     "options": {
@@ -50,7 +50,6 @@
     "options": {
       "type": "action",
       "scope": [
-        "items.create",
         "items.update"
       ],
       "collections": [
@@ -61,9 +60,9 @@
     "_syncId": "24887665-6c92-44f5-b0ef-8fce13f01df2"
   },
   {
-    "name": "mila_invoice_paid_mail",
-    "icon": "bolt",
-    "color": null,
+    "name": "Mail Invoice Paid",
+    "icon": "outgoing_mail",
+    "color": "#E35169",
     "description": "Infomail wenn Rechnung auf bezahlt gestellt wird",
     "status": "active",
     "trigger": "event",
@@ -91,7 +90,6 @@
     "options": {
       "type": "action",
       "scope": [
-        "items.create",
         "items.update"
       ],
       "collections": [
@@ -204,10 +202,26 @@
     "_syncId": "8b324a75-f005-403d-8197-48accc2d3538"
   },
   {
-    "name": "mila_new_membership_mail",
-    "icon": "bolt",
+    "name": "update_score_on_shift_cycle_start",
+    "icon": null,
     "color": null,
-    "description": "Willkommensmail wenn ein neuer User erstellt wird",
+    "description": null,
+    "status": "inactive",
+    "trigger": "schedule",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "interval": "0 3 * * *",
+      "cron": "0 3 * * *"
+    },
+    "operation": "9e5efeae-a13a-4841-9653-b4efb31192c8",
+    "_syncId": "8fbda46c-8ed1-4578-a38a-5ddbd11ee4da"
+  },
+  {
+    "name": "Mail Membership Applied (New)",
+    "icon": "outgoing_mail",
+    "color": "#E35169",
+    "description": "Willkommensmail wenn eine neue Mitgliedschaft mit Status \"Beworben\" erstellt wird",
     "status": "active",
     "trigger": "event",
     "accountability": "all",
@@ -242,10 +256,10 @@
     "_syncId": "939f6a73-ceb3-4974-b4b2-65649be03c84"
   },
   {
-    "name": "memberships_send_messages",
+    "name": "Kampagne erstellen",
     "icon": "conveyor_belt",
     "color": null,
-    "description": null,
+    "description": "Manueller Button um eine Kampagne an ausgewählte MGer zu versenden",
     "status": "active",
     "trigger": "manual",
     "accountability": "all",
