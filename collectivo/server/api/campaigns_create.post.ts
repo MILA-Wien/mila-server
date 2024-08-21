@@ -1,11 +1,4 @@
-import {
-  createItem,
-  createItems,
-  readItem,
-  readItems,
-  readUser,
-  updateItem,
-} from "@directus/sdk";
+import { createItem, readItems, updateItem } from "@directus/sdk";
 
 export default defineEventHandler(async (event) => {
   try {
