@@ -37,15 +37,15 @@
     "name": "Check if active",
     "key": "check_if_active",
     "type": "exec",
-    "position_x": 4,
+    "position_x": 22,
     "position_y": 35,
     "options": {
       "code": "module.exports = async function(data) {\n\t// Do something...\n    if (data[\"read_automation\"][0][\"mila_active\"] != true) {\n        throw new Error(\"Automation not active\")\n    }\n\treturn {};\n}"
     },
-    "resolve": "0353178c-e17a-4cd8-977f-406d271ec4c7",
+    "resolve": "b9edf53d-de5a-4f62-b76b-fb4ec074d96f",
     "reject": null,
-    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
-    "_syncId": "486a5eb1-f379-4d7e-905b-d605170c5660"
+    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
+    "_syncId": "2b930398-56f4-4094-9d50-62ad6616117c"
   },
   {
     "name": "Check if active",
@@ -65,15 +65,15 @@
     "name": "Check if active",
     "key": "check_if_active",
     "type": "exec",
-    "position_x": 22,
+    "position_x": 4,
     "position_y": 35,
     "options": {
       "code": "module.exports = async function(data) {\n\t// Do something...\n    if (data[\"read_automation\"][0][\"mila_active\"] != true) {\n        throw new Error(\"Automation not active\")\n    }\n\treturn {};\n}"
     },
-    "resolve": "b9edf53d-de5a-4f62-b76b-fb4ec074d96f",
+    "resolve": "0353178c-e17a-4cd8-977f-406d271ec4c7",
     "reject": null,
-    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
-    "_syncId": "2b930398-56f4-4094-9d50-62ad6616117c"
+    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
+    "_syncId": "486a5eb1-f379-4d7e-905b-d605170c5660"
   },
   {
     "name": "Check if payload is status approved",
@@ -174,6 +174,29 @@
     "name": "Create campaign",
     "key": "create_campaign",
     "type": "item-create",
+    "position_x": 6,
+    "position_y": 53,
+    "options": {
+      "payload": {
+        "messages_template": "{{read_automation[0].mila_template}}",
+        "messages_recipients": {
+          "create": "{{user_ids.user_ids}}"
+        },
+        "messages_campaign_status": "pending"
+      },
+      "emitEvents": true,
+      "permissions": "$full",
+      "collection": "messages_campaigns"
+    },
+    "resolve": "db910638-a250-4e3d-b048-07032e2ffc94",
+    "reject": null,
+    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
+    "_syncId": "b9edf53d-de5a-4f62-b76b-fb4ec074d96f"
+  },
+  {
+    "name": "Create campaign",
+    "key": "create_campaign",
+    "type": "item-create",
     "position_x": 22,
     "position_y": 35,
     "options": {
@@ -193,33 +216,10 @@
       },
       "emitEvents": true
     },
-    "resolve": "a03c504e-2b79-49cd-9bd0-71f9e623131c",
+    "resolve": "0191c432-8d0d-4396-bec5-62defe2aa5ff",
     "reject": null,
     "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
     "_syncId": "0353178c-e17a-4cd8-977f-406d271ec4c7"
-  },
-  {
-    "name": "Create campaign",
-    "key": "create_campaign",
-    "type": "item-create",
-    "position_x": 6,
-    "position_y": 53,
-    "options": {
-      "payload": {
-        "messages_template": "{{read_automation[0].mila_template}}",
-        "messages_recipients": {
-          "create": "{{user_ids.user_ids}}"
-        },
-        "messages_campaign_status": "pending"
-      },
-      "emitEvents": true,
-      "permissions": "$full",
-      "collection": "messages_campaigns"
-    },
-    "resolve": "db910638-a250-4e3d-b048-07032e2ffc94",
-    "reject": null,
-    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
-    "_syncId": "b9edf53d-de5a-4f62-b76b-fb4ec074d96f"
   },
   {
     "name": "createCampaign",
@@ -410,6 +410,50 @@
   },
   {
     "name": "Daten aktualisieren",
+    "key": "item_update_2qyun",
+    "type": "item-update",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "collection": "messages_campaigns",
+      "permissions": "$full",
+      "emitEvents": true,
+      "key": [
+        "{{ $trigger.campaign_id }}"
+      ],
+      "payload": {
+        "messages_campaign_status": "pending"
+      }
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "f9895e5e-bb34-4e97-96af-5c8138c764df",
+    "_syncId": "baf4f756-398d-4f58-a3ac-7862e9f975bc"
+  },
+  {
+    "name": "Daten aktualisieren",
+    "key": "item_update_3dto8",
+    "type": "item-update",
+    "position_x": 74,
+    "position_y": 19,
+    "options": {
+      "collection": "messages_campaigns",
+      "permissions": "$full",
+      "payload": {
+        "messages_campaign_status": "pending"
+      },
+      "key": [
+        "{{create_campaign[0]}}"
+      ],
+      "emitEvents": true
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
+    "_syncId": "bd8b3e36-196a-40fa-be35-d02e1bace0b9"
+  },
+  {
+    "name": "Daten aktualisieren",
     "key": "item_update_rwk16",
     "type": "item-update",
     "position_x": 10,
@@ -429,26 +473,22 @@
     "_syncId": "f3c9decb-96dd-41be-8e8d-13b9e0036999"
   },
   {
-    "name": "postToNuxtAPI",
-    "key": "post_to_nuxt_api",
-    "type": "request",
-    "position_x": 37,
-    "position_y": 1,
+    "name": "Kampagne senden",
+    "key": "kampagne_senden",
+    "type": "trigger",
+    "position_x": 21,
+    "position_y": 52,
     "options": {
-      "method": "POST",
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/user_sync_keycloak",
-      "headers": [
-        {
-          "header": "Authorization",
-          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
-        }
-      ],
-      "body": "{{$trigger}}"
+      "flow": "f9895e5e-bb34-4e97-96af-5c8138c764df",
+      "iterationMode": "serial",
+      "payload": {
+        "campaign_id": "{{ create_campaign[0] }}"
+      }
     },
     "resolve": null,
     "reject": null,
-    "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
-    "_syncId": "0c188aa8-7df4-4fea-bd78-23758e8a9013"
+    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
+    "_syncId": "0191c432-8d0d-4396-bec5-62defe2aa5ff"
   },
   {
     "name": "postToNuxtAPI",
@@ -471,6 +511,28 @@
     "reject": null,
     "flow": "5ea28856-7cb2-49a4-86b8-eacbd27ac54d",
     "_syncId": "ad799be4-d215-4375-97d7-6308e05f46f4"
+  },
+  {
+    "name": "postToNuxtAPI",
+    "key": "post_to_nuxt_api",
+    "type": "request",
+    "position_x": 37,
+    "position_y": 1,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/user_sync_keycloak",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{{$trigger}}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
+    "_syncId": "0c188aa8-7df4-4fea-bd78-23758e8a9013"
   },
   {
     "name": "postToNuxtAPI",
@@ -513,6 +575,28 @@
     "key": "read_automation",
     "type": "item-read",
     "position_x": 4,
+    "position_y": 37,
+    "options": {
+      "collection": "mila_automations",
+      "query": {
+        "filter": {
+          "mila_key": {
+            "_eq": "invoice_update_paid"
+          }
+        }
+      },
+      "permissions": "$full"
+    },
+    "resolve": "91a893aa-5e01-4460-8bbb-83b2adcef6fb",
+    "reject": null,
+    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
+    "_syncId": "60b0542a-cba8-4e5f-bea8-b45e79c7c09e"
+  },
+  {
+    "name": "Read Automation",
+    "key": "read_automation",
+    "type": "item-read",
+    "position_x": 4,
     "position_y": 35,
     "options": {
       "permissions": "$full",
@@ -534,8 +618,8 @@
     "name": "Read Automation",
     "key": "read_automation",
     "type": "item-read",
-    "position_x": 22,
-    "position_y": 19,
+    "position_x": 48,
+    "position_y": 18,
     "options": {
       "collection": "mila_automations",
       "query": {
@@ -550,28 +634,6 @@
     "reject": null,
     "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
     "_syncId": "f241b35f-f3ba-47d8-a044-c9a3ddaa8ce8"
-  },
-  {
-    "name": "Read Automation",
-    "key": "read_automation",
-    "type": "item-read",
-    "position_x": 4,
-    "position_y": 37,
-    "options": {
-      "collection": "mila_automations",
-      "query": {
-        "filter": {
-          "mila_key": {
-            "_eq": "invoice_update_paid"
-          }
-        }
-      },
-      "permissions": "$full"
-    },
-    "resolve": "91a893aa-5e01-4460-8bbb-83b2adcef6fb",
-    "reject": null,
-    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
-    "_syncId": "60b0542a-cba8-4e5f-bea8-b45e79c7c09e"
   },
   {
     "name": "Read invoices",
@@ -738,6 +800,28 @@
   },
   {
     "name": "Webhook / Anfrage URL",
+    "key": "request_6ayym",
+    "type": "request",
+    "position_x": 21,
+    "position_y": 19,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_create",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{\n    \"automation_name\": \"memberships_applied_new\",\n    \"user_ids\": [\"{{read_user.memberships_user}}\"]\n}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
+    "_syncId": "68785ced-3a6b-4ea9-a156-0e6a9f57550e"
+  },
+  {
+    "name": "Webhook / Anfrage URL",
     "key": "request_asgww",
     "type": "request",
     "position_x": 37,
@@ -801,6 +885,50 @@
     "reject": null,
     "flow": "24887665-6c92-44f5-b0ef-8fce13f01df2",
     "_syncId": "686e608a-82b1-4116-8946-5b904e8f3c86"
+  },
+  {
+    "name": "Webhook / Anfrage URL",
+    "key": "request_cvpr9",
+    "type": "request",
+    "position_x": 38,
+    "position_y": 18,
+    "options": {
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_create",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{\n    \"automation_name\": \"membership_update_approved\",\n    \"user_ids\": {{user_ids.user_ids}}\n}",
+      "method": "POST"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
+    "_syncId": "e3494be9-be8b-4787-b63d-d0b485ca9158"
+  },
+  {
+    "name": "Webhook / Anfrage URL",
+    "key": "request_o180l",
+    "type": "request",
+    "position_x": 40,
+    "position_y": 19,
+    "options": {
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_create",
+      "method": "POST",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{\n    \"automation_name\": \"invoice_update_paid\",\n    \"user_ids\": {{user_ids.user_ids}}\n}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
+    "_syncId": "91166d55-508c-40f2-ac22-405e25ec647b"
   },
   {
     "name": "Webhook / Anfrage URL",
@@ -940,7 +1068,7 @@
         }
       }
     },
-    "resolve": "f241b35f-f3ba-47d8-a044-c9a3ddaa8ce8",
+    "resolve": "68785ced-3a6b-4ea9-a156-0e6a9f57550e",
     "reject": null,
     "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
     "_syncId": "9f110beb-6d08-47e3-930c-511045c1760b"
@@ -988,9 +1116,9 @@
     "position_x": 21,
     "position_y": 18,
     "options": {
-      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_memberships\"]) {\n    \tid = data[\"read_memberships\"][i].memberships_user\n        if (id) {\n            user_ids.push({\n                \"directus_users_id\": {\n                    \"id\": id\n                },\n                \"messages_campaigns_id\": \"+\"\n            })\n        }\n    }\n    \n\treturn { user_ids };\n}"
+      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_memberships\"]) {\n    \tid = data[\"read_memberships\"][i].memberships_user\n        if (id) {\n            user_ids.push(id)\n        }\n    }\n    \n\treturn { user_ids };\n}"
     },
-    "resolve": "3f29d4d6-c774-42e4-93f6-4feb0ae04768",
+    "resolve": "e3494be9-be8b-4787-b63d-d0b485ca9158",
     "reject": null,
     "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
     "_syncId": "1b8c6e64-414b-4ff4-a9ed-fd3ab6286ee8"
@@ -1002,9 +1130,9 @@
     "position_x": 22,
     "position_y": 19,
     "options": {
-      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_invoices\"]) {\n    \tid = data[\"read_invoices\"][i].payments_recipient_user\n        if (id) {\n            user_ids.push({\n                \"directus_users_id\": {\n                    \"id\": id\n                },\n                \"messages_campaigns_id\": \"+\"\n            })\n        }\n    }\n    \n\treturn { user_ids };\n}"
+      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_invoices\"]) {\n    \tid = data[\"read_invoices\"][i].payments_recipient_user\n        if (id) {\n            user_ids.push(id)\n        }\n    }\n    \n\treturn { user_ids };\n}"
     },
-    "resolve": "60b0542a-cba8-4e5f-bea8-b45e79c7c09e",
+    "resolve": "91166d55-508c-40f2-ac22-405e25ec647b",
     "reject": null,
     "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
     "_syncId": "4bb7b88f-e8cc-4b46-b7ed-a075b3cd334b"
