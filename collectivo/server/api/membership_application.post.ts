@@ -88,7 +88,7 @@ async function registerMembership(body: any, userID: string | undefined) {
 
   logger.info("Received membership application");
 
-  await refreshDirectus();
+  await useDirectusAdmin();
   const directus = await useDirectusAdmin();
   const config = useRuntimeConfig();
 

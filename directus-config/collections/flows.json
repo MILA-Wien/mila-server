@@ -40,7 +40,7 @@
     "_syncId": "1496bf80-5a7f-4218-97b6-ee9bfafe2d3e"
   },
   {
-    "name": "Campaign Update Send",
+    "name": "Kampagne Sende-Mechanismus",
     "icon": "send",
     "color": "#FFA439",
     "description": "Calls the Send Mail Endpoint if a Campaign is Sent",
@@ -186,7 +186,7 @@
     "name": "Kampagne senden",
     "icon": "send",
     "color": "#FFA439",
-    "description": null,
+    "description": "Manueller Button um Kampagne abzusenden",
     "status": "active",
     "trigger": "manual",
     "accountability": "all",
@@ -258,7 +258,7 @@
   {
     "name": "Kampagne erstellen",
     "icon": "conveyor_belt",
-    "color": null,
+    "color": "#FFC23B",
     "description": "Manueller Button um eine Kampagne an ausgewählte MGer zu versenden",
     "status": "active",
     "trigger": "manual",

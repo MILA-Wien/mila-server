@@ -75,36 +75,6 @@
     "_syncId": "0afbf417-f1fe-4d01-b3f7-8e9ff124ac4a"
   },
   {
-    "dashboard": "54976105-ca62-4135-9d4d-1c5c12ed7e34",
-    "name": "Mittelwert Anteile Investierend",
-    "icon": null,
-    "color": null,
-    "show_header": true,
-    "note": null,
-    "type": "metric",
-    "position_x": 52,
-    "position_y": 19,
-    "width": 15,
-    "height": 8,
-    "options": {
-      "collection": "memberships",
-      "field": "memberships_shares",
-      "function": "avg",
-      "filter": {
-        "_and": [
-          {
-            "memberships_type": {
-              "_eq": "Investierend"
-            }
-          }
-        ]
-      },
-      "minimumFractionDigits": 2,
-      "maximumFractionDigits": 2
-    },
-    "_syncId": "141758a0-46d2-445a-8d32-deac1ce7d6d3"
-  },
-  {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
     "name": "Beitrittsanträge pro Monat",
     "icon": null,
@@ -304,82 +274,6 @@
     "_syncId": "3c670681-a2e3-4a56-897d-d7003abce5d0"
   },
   {
-    "dashboard": "54976105-ca62-4135-9d4d-1c5c12ed7e34",
-    "name": null,
-    "icon": null,
-    "color": null,
-    "show_header": false,
-    "note": null,
-    "type": "bar-chart",
-    "position_x": 1,
-    "position_y": 66,
-    "width": 50,
-    "height": 121,
-    "options": {
-      "collection": "directus_users",
-      "xAxis": "memberships_postcode",
-      "yAxis": "memberships_postcode",
-      "function": "count",
-      "horizontal": true
-    },
-    "_syncId": "4bbab296-c46d-4762-bc7f-2b4eb96234e5"
-  },
-  {
-    "dashboard": "54976105-ca62-4135-9d4d-1c5c12ed7e34",
-    "name": "Mittelwert Anteile Aktiv",
-    "icon": null,
-    "color": null,
-    "show_header": true,
-    "note": null,
-    "type": "metric",
-    "position_x": 52,
-    "position_y": 10,
-    "width": 15,
-    "height": 8,
-    "options": {
-      "collection": "memberships",
-      "field": "memberships_shares",
-      "function": "avg",
-      "filter": {
-        "_and": [
-          {
-            "memberships_type": {
-              "_eq": "Aktiv"
-            }
-          }
-        ]
-      },
-      "minimumFractionDigits": 2,
-      "maximumFractionDigits": 2
-    },
-    "_syncId": "6b03257e-5f99-4ce5-9f74-555ea89eabe1"
-  },
-  {
-    "dashboard": "54976105-ca62-4135-9d4d-1c5c12ed7e34",
-    "name": "Anzahl Anteile",
-    "icon": null,
-    "color": null,
-    "show_header": true,
-    "note": null,
-    "type": "bar-chart",
-    "position_x": 1,
-    "position_y": 29,
-    "width": 50,
-    "height": 36,
-    "options": {
-      "collection": "memberships",
-      "column": "memberships_shares",
-      "showLabels": true,
-      "legend": "right",
-      "fn": "count",
-      "field": "memberships_shares",
-      "xAxis": "memberships_shares",
-      "yAxis": "memberships_shares",
-      "function": "count"
-    },
-    "_syncId": "6bc99dc7-e132-4188-a34e-55d590085e1e"
-  },
-  {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
     "name": "Mittelwert Anteile Aktiv",
     "icon": null,
@@ -551,37 +445,6 @@
       "conditionalFormatting": null
     },
     "_syncId": "8747641b-cb63-4c8e-9261-e0fc867443dc"
-  },
-  {
-    "dashboard": "54976105-ca62-4135-9d4d-1c5c12ed7e34",
-    "name": "Sozialanteil (von Aktiven)",
-    "icon": null,
-    "color": null,
-    "show_header": true,
-    "note": null,
-    "type": "pie-chart",
-    "position_x": 52,
-    "position_y": 29,
-    "width": 19,
-    "height": 17,
-    "options": {
-      "showLabels": true,
-      "collection": "memberships",
-      "column": "memberships_shares",
-      "legend": "bottom",
-      "filter": {
-        "_and": [
-          {
-            "memberships_type": {
-              "_eq": "Aktiv"
-            }
-          }
-        ]
-      },
-      "function": "count",
-      "field": "id"
-    },
-    "_syncId": "93e65617-c377-4a81-9f72-a57a1a8a6cac"
   },
   {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
@@ -823,96 +686,5 @@
       "conditionalFormatting": null
     },
     "_syncId": "c90fc392-ac51-4673-82a4-b367e4bf4c87"
-  },
-  {
-    "dashboard": "54976105-ca62-4135-9d4d-1c5c12ed7e34",
-    "name": null,
-    "icon": null,
-    "color": null,
-    "show_header": false,
-    "note": null,
-    "type": "pie-chart",
-    "position_x": 52,
-    "position_y": 48,
-    "width": 19,
-    "height": 17,
-    "options": {
-      "showLabels": true,
-      "collection": "memberships",
-      "column": "memberships_type",
-      "legend": "bottom"
-    },
-    "_syncId": "c9180caa-61af-4252-8698-46bbe6c3dd99"
-  },
-  {
-    "dashboard": "54976105-ca62-4135-9d4d-1c5c12ed7e34",
-    "name": "Anteile inkl. Beworben",
-    "icon": "switch_account",
-    "color": null,
-    "show_header": true,
-    "note": "Status: Angenommen, Beworben oder im Austritt/Ausschluss",
-    "type": "metric",
-    "position_x": 68,
-    "position_y": 12,
-    "width": 18,
-    "height": 10,
-    "options": {
-      "collection": "memberships",
-      "field": "memberships_shares",
-      "function": "sum",
-      "sortField": null,
-      "filter": {
-        "_and": [
-          {
-            "_or": [
-              {
-                "memberships_status": {
-                  "_eq": "approved"
-                }
-              },
-              {
-                "memberships_status": {
-                  "_eq": "in-exclusion"
-                }
-              },
-              {
-                "memberships_status": {
-                  "_eq": "applied"
-                }
-              },
-              {
-                "memberships_status": {
-                  "_eq": "in-cancellation"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "conditionalFormatting": null
-    },
-    "_syncId": "deee038e-581b-49a7-9c10-68099f19a93b"
-  },
-  {
-    "dashboard": "54976105-ca62-4135-9d4d-1c5c12ed7e34",
-    "name": "Mittelwert Anteile Alle",
-    "icon": null,
-    "color": null,
-    "show_header": true,
-    "note": null,
-    "type": "metric",
-    "position_x": 52,
-    "position_y": 1,
-    "width": 15,
-    "height": 8,
-    "options": {
-      "collection": "memberships",
-      "field": "memberships_shares",
-      "function": "avg",
-      "filter": null,
-      "minimumFractionDigits": 2,
-      "maximumFractionDigits": 2
-    },
-    "_syncId": "f7cf8bd8-1fd5-4e91-81e4-4ea26e22169d"
   }
 ]

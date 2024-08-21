@@ -1,42 +1,20 @@
 import type {
   DirectusClient,
-  AuthenticationClient,
+  StaticTokenClient,
   RestClient,
 } from "@directus/sdk";
-import { createDirectus, authentication, rest } from "@directus/sdk";
+import { createDirectus, staticToken, rest } from "@directus/sdk";
 
 // Shared server variable
-let directus: DirectusClient<any> & AuthenticationClient<any> & RestClient<any>;
-
-// Refresh Directus client with admin credentials
-// TODO: This does not show error messages in the console
-export async function refreshDirectus() {
-  const config = useRuntimeConfig();
-
-  directus = createDirectus(config.public.directusUrl)
-    .with(authentication())
-    .with(rest());
-
-  await directus.login(
-    config.directusAdminEmail,
-    config.directusAdminPassword,
-    {},
-  );
-}
+let directus: DirectusClient<any> & StaticTokenClient<any> & RestClient<any>;
 
 // Return Directus admin client for server plugins
 export async function useDirectusAdmin() {
   const config = useRuntimeConfig();
 
   directus = createDirectus(config.public.directusUrl)
-    .with(authentication())
+    .with(staticToken(config.directusAdminToken))
     .with(rest());
-
-  await directus.login(
-    config.directusAdminEmail,
-    config.directusAdminPassword,
-    {},
-  );
 
   return directus;
 }

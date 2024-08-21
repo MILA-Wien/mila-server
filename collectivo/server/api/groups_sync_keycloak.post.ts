@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    await refreshDirectus();
+    await useDirectusAdmin();
   } catch (e) {
     logger.error("Failed to connect to Directus", e);
   }

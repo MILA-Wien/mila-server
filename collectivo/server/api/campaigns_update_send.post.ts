@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
   try {
     return await handleCampaignUpdate(event);
   } catch (error) {
-    console.log("Error in campaigns_update_send.post.ts", error);
+    console.log("Error in campaigns_update_send.post.ts");
     throw error;
   }
 });
@@ -142,14 +142,8 @@ async function executeCampaign(campaignKey: number): Promise<string> {
 
     return campaignStatus;
   } catch (error) {
-    throw createError({
-      statusCode: 500,
-      statusMessage:
-        "Executing campaign " +
-        campaignKey +
-        " failed unexpectedly: " +
-        getErrorMessage(error),
-    });
+    console.log("Executing campaign " + campaignKey + " failed unexpectedly");
+    throw error;
   }
 }
 
@@ -184,6 +178,7 @@ async function updateMessageStatus(
 async function readCampaignData(campaignKey: number): Promise<CampaignData> {
   const directus = await useDirectusAdmin();
 
+  console.log("Reading campaign data for campaign " + campaignKey);
   const readResult: Record<string, any> = await directus.request(
     readItem("messages_campaigns", campaignKey, {
       fields: [
@@ -196,6 +191,7 @@ async function readCampaignData(campaignKey: number): Promise<CampaignData> {
       ],
     }),
   );
+  console.log("SUCCESS Reading campaign data for campaign " + campaignKey);
 
   return {
     campaignKey: campaignKey,
@@ -322,7 +318,6 @@ class MailSender {
 
   static fromRuntimeConfig() {
     const config = useRuntimeConfig();
-    console.log("Using email configuration", config);
     return new MailSender(
       {
         host: config.emailSmtpHost,

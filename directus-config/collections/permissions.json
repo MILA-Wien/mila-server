@@ -26,6 +26,30 @@
   {
     "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
     "collection": "collectivo_tiles_buttons",
+    "action": "create",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "e1bf528e-1a75-4dfd-a0b6-f4f203cabfec"
+  },
+  {
+    "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+    "collection": "collectivo_tiles_buttons",
+    "action": "delete",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "35a3f152-eef9-4284-968c-1c185bc65481"
+  },
+  {
+    "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+    "collection": "collectivo_tiles_buttons",
     "action": "read",
     "permissions": {},
     "validation": {},
@@ -34,6 +58,42 @@
       "*"
     ],
     "_syncId": "f57fa784-4ca0-44a9-bbff-a6514445ae00"
+  },
+  {
+    "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+    "collection": "collectivo_tiles_buttons",
+    "action": "update",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "5d500f1b-ae78-415b-95fa-0af0c1de2add"
+  },
+  {
+    "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+    "collection": "collectivo_tiles",
+    "action": "create",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "e07e756e-758d-43d9-8015-0b2ada9a3328"
+  },
+  {
+    "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+    "collection": "collectivo_tiles",
+    "action": "delete",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "33eb1c6b-6278-484e-a4ab-22fd51d8ea33"
   },
   {
     "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
@@ -46,6 +106,18 @@
       "*"
     ],
     "_syncId": "d49f1799-add6-4145-ae90-ab29fe72a69c"
+  },
+  {
+    "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+    "collection": "collectivo_tiles",
+    "action": "update",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "156ea822-b137-4d53-bc0e-9dd57b1b312b"
   },
   {
     "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",

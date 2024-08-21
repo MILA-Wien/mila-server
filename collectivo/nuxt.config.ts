@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     apiToken: process.env.COLLECTIVO_API_TOKEN || "badToken",
     directusAdminEmail: process.env.DIRECTUS_ADMIN_EMAIL || "api@example.com",
     directusAdminPassword: process.env.DIRECTUS_ADMIN_PASSWORD || "d1r3ctu5",
+    directusAdminToken: process.env.DIRECTUS_ADMIN_TOKEN || "badToken123",
     keycloakAdminClient: process.env.KEYCLOAK_ADMIN_CLIENT || "admin-cli",
     keycloakAdminSecret: process.env.KEYCLOAK_ADMIN_SECRET || "**********",
     emailFrom: process.env.EMAIL_FROM || "",
