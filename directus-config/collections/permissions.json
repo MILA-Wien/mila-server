@@ -456,23 +456,49 @@
   },
   {
     "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
-    "collection": "memberships",
+    "collection": "memberships_coshoppers",
     "action": "read",
-    "permissions": null,
-    "validation": null,
+    "permissions": {},
+    "validation": {},
     "presets": null,
     "fields": [
-      "memberships_shares",
-      "memberships_type",
-      "memberships_status",
-      "memberships_user",
-      "id",
-      "memberships_date_applied",
-      "memberships_date_approved",
-      "memberships_user_search",
-      "memberships_date_ended",
-      "memberships_date_excluded",
-      "memberships_date_cancelled"
+      "*"
+    ],
+    "_syncId": "9aa7fa53-5f99-4f80-a810-6d7dce665123"
+  },
+  {
+    "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+    "collection": "memberships_memberships_coshoppers_1",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "2e47cb6d-1353-44f6-9f95-a91d2fd5a1ef"
+  },
+  {
+    "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+    "collection": "memberships_memberships_coshoppers",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "5340d06a-5d35-4da5-b16e-ffc0c93fb2bb"
+  },
+  {
+    "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+    "collection": "memberships",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
     ],
     "_syncId": "4d7774a9-95fb-4adf-930d-22154f211f9e"
   },
@@ -487,6 +513,90 @@
       "memberships_date_approved"
     ],
     "_syncId": "2c07ee79-fc14-4d0c-ab5f-afd788298c31"
+  },
+  {
+    "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+    "collection": "milaccess_log",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "5b0bd922-7b8a-48b2-8bf3-4bc59494cc24"
+  },
+  {
+    "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+    "collection": "shifts_absences",
+    "action": "create",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "89b6bc91-d934-4d19-9f22-cf89297ccb19"
+  },
+  {
+    "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+    "collection": "shifts_absences",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "7c5137ff-15e1-4d84-b8a9-58e4aadb59af"
+  },
+  {
+    "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+    "collection": "shifts_assignments",
+    "action": "create",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "f4c7b9c2-fd3b-4d1d-a3a2-da56d2a1558c"
+  },
+  {
+    "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+    "collection": "shifts_assignments",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "867e8711-5dfb-4bc5-8cba-8af0e6fc80f6"
+  },
+  {
+    "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+    "collection": "shifts_logs",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "146d1128-61f2-403a-9c00-6bfd4a68abcd"
+  },
+  {
+    "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+    "collection": "shifts_shifts",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "b6e19901-f739-4e9f-b340-1bed32ec9a02"
   },
   {
     "role": "a0e8cf61-114b-4eed-b619-140c3b077f25",
@@ -3266,6 +3376,42 @@
   },
   {
     "role": "ecc860e3-b05e-4280-ad01-95c77ec69a01",
+    "collection": "memberships_coshoppers",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "836829a8-caa2-4ad1-9484-5825b223214f"
+  },
+  {
+    "role": "ecc860e3-b05e-4280-ad01-95c77ec69a01",
+    "collection": "memberships_memberships_coshoppers_1",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "4821b716-c279-423d-9ec2-e37e21da03b2"
+  },
+  {
+    "role": "ecc860e3-b05e-4280-ad01-95c77ec69a01",
+    "collection": "memberships_memberships_coshoppers",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "bb9ca1da-850d-465e-8a26-0ac451575255"
+  },
+  {
+    "role": "ecc860e3-b05e-4280-ad01-95c77ec69a01",
     "collection": "memberships",
     "action": "read",
     "permissions": {},
@@ -3383,6 +3529,78 @@
       "*"
     ],
     "_syncId": "9d64ac4a-ba2b-4f77-b784-eaccd0137af2"
+  },
+  {
+    "role": "ecc860e3-b05e-4280-ad01-95c77ec69a01",
+    "collection": "shifts_absences",
+    "action": "create",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "069f31aa-9e99-4e10-bbc1-4e102926615e"
+  },
+  {
+    "role": "ecc860e3-b05e-4280-ad01-95c77ec69a01",
+    "collection": "shifts_absences",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "4471b6dc-bfa0-4b65-b0a0-3ada07702e3e"
+  },
+  {
+    "role": "ecc860e3-b05e-4280-ad01-95c77ec69a01",
+    "collection": "shifts_assignments",
+    "action": "create",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "61323a27-5926-4cbc-986e-bc9ae498d47f"
+  },
+  {
+    "role": "ecc860e3-b05e-4280-ad01-95c77ec69a01",
+    "collection": "shifts_assignments",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "57e956bc-ae15-493f-b9e8-2f4960d743c1"
+  },
+  {
+    "role": "ecc860e3-b05e-4280-ad01-95c77ec69a01",
+    "collection": "shifts_logs",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "a780f4f7-1e5a-4b52-885a-0595bc37ae8d"
+  },
+  {
+    "role": "ecc860e3-b05e-4280-ad01-95c77ec69a01",
+    "collection": "shifts_shifts",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "f63bca9b-1118-4f3a-aa1b-35ba29a0e358"
   },
   {
     "role": null,
