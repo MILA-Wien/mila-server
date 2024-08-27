@@ -151,6 +151,15 @@ declare global {
     shifts_user_type: ShiftsUserType;
     shifts_counter: number;
     shifts_skills?: string[];
+    coshoppers?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
+    kids?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
+  }
+
+  interface MembershipsCoshopper {
+    id: number;
+    first_name: string;
+    last_name: string;
+    membership_card_id: string;
   }
 
   interface CollectivoTag {

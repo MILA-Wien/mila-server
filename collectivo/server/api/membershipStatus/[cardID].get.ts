@@ -1,4 +1,4 @@
-import { readItems } from "@directus/sdk";
+import { createItem, readItems } from "@directus/sdk";
 
 // TODO: Also include miteinkäufer*innen and children
 // TODO: Include holidays
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
   const memberships = (await directus.request(
     readItems("memberships", {
       filter: {
-        memberships_card_id: { _eq: cardID },
+        _or: [{ memberships_card_id: { _eq: cardID } }],
       },
       fields: [
         "id",
@@ -40,13 +40,80 @@ export default defineEventHandler(async (event) => {
     }),
   )) as MembershipsMembership[];
 
-  if (!memberships.length) {
+  if (memberships.length > 1) {
     return {
-      error: "No membership found for this card ID",
+      error: "Multiple memberships found for this card ID",
     };
   }
 
-  const mship = memberships[0];
+  let mship;
+  let coshopper;
+  if (memberships.length) {
+    mship = memberships[0];
+  } else {
+    const memberships2 = (await directus.request(
+      readItems("memberships", {
+        filter: {
+          _or: [
+            {
+              coshoppers: {
+                memberships_coshoppers_id: {
+                  membership_card_id: { _eq: cardID },
+                },
+              },
+            },
+            {
+              kids: {
+                memberships_coshoppers_id: {
+                  membership_card_id: { _eq: cardID },
+                },
+              },
+            },
+          ],
+        },
+        fields: [
+          "id",
+          "shifts_counter",
+          "shifts_user_type",
+          { memberships_user: ["first_name", "last_name"] },
+        ],
+      }),
+    )) as MembershipsMembership[];
+
+    if (!memberships2.length) {
+      return {
+        error: "No membership found for this card ID",
+      };
+    }
+
+    if (memberships2.length > 1) {
+      return {
+        error: "Multiple coshoppers found for this card ID",
+      };
+    }
+
+    const coshoppers = (await directus.request(
+      readItems("memberships_coshoppers", {
+        filter: { membership_card_id: { _eq: cardID } },
+        fields: ["id", "first_name", "last_name"],
+      }),
+    )) as MembershipsCoshopper[];
+
+    if (!coshoppers.length) {
+      return {
+        error: "No coshopper found for this card ID",
+      };
+    }
+
+    if (coshoppers.length > 1) {
+      return {
+        error: "Multiple coshoppers found for this card ID",
+      };
+    }
+
+    mship = memberships2[0];
+    coshopper = coshoppers[0];
+  }
 
   const absences = await directus.request(
     readItems("shifts_absences", {
@@ -75,7 +142,28 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  return {
+  // Create log entry
+  const logs = await directus.request(
+    readItems("milaccess_log", {
+      filter: {
+        membership: { _eq: mship.id },
+        date: { _eq: nowStr },
+        coshopper: { _eq: coshopper?.id },
+      },
+    }),
+  );
+
+  if (logs.length == 0) {
+    await directus.request(
+      createItem("milaccess_log", {
+        membership: mship.id,
+        date: nowStr,
+        coshopper: coshopper?.id,
+      }),
+    );
+  }
+
+  const returnObject = {
     membership: mship.id,
     firstName: mship.memberships_user.first_name,
     lastName: mship.memberships_user.last_name,
@@ -83,5 +171,10 @@ export default defineEventHandler(async (event) => {
     shiftsType: mship.shifts_user_type,
     isOnHoliday: absences.length > 0,
     canShop: canShop,
+    isCoshopper: coshopper != undefined,
+    coshopperFirstName: coshopper?.first_name,
+    coshopperLastName: coshopper?.last_name,
   };
+
+  return returnObject;
 });
