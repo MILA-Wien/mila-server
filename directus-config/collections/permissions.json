@@ -2064,6 +2064,18 @@
   },
   {
     "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
+    "collection": "milaccess_log",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "372532a9-fcd6-4f63-88b6-bcf1c472e554"
+  },
+  {
+    "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
     "collection": "payments_invoices_entries",
     "action": "create",
     "permissions": null,
@@ -3335,6 +3347,18 @@
       "*"
     ],
     "_syncId": "7b38e570-d109-4d09-8def-097e187aff0c"
+  },
+  {
+    "role": "ecc860e3-b05e-4280-ad01-95c77ec69a01",
+    "collection": "milaccess_log",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "_syncId": "a50cf681-4924-4822-a2e8-056a968f72e9"
   },
   {
     "role": "ecc860e3-b05e-4280-ad01-95c77ec69a01",

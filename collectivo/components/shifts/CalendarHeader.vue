@@ -181,7 +181,7 @@ de:
   One-time: Einmalig
   Shift type: Schichttyp
   Display: Anzeige
-  "Registration regular": "Anmeldung Regulär"
+  "Registration regular": "Anmeldung Festschicht"
   "Registration one-time": "Anmeldung Einmalig"
   "Unfilled shifts": "Ungefüllte Schichten"
   "All shifts": "Alle Schichten"

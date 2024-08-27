@@ -333,7 +333,7 @@ de:
   During a holiday, shopping is not allowed and no shift points are deducted.: "Während eines Urlaubs ist das Einkaufen nicht erlaubt und es werden keine Schichtpunkte abgezogen."
   "During an absence, all shift assignments are paused.": "Während einer Abwesenheit werden alle Schichtanmeldung pausiert."
   This absence affects only the shift: "Diese Abwesenheit betrifft nur die Schicht"
-  "t:regular": "Regulär"
+  "t:regular": "Festschicht"
   "t:jumper": "Springer*in"
   "t:exempt": "Befreit"
   "t:inactive": "Nicht aktiv"

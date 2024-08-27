@@ -87,6 +87,10 @@ type Query {
   shifts_logs_by_id(id: ID!, version: String): shifts_logs
   shifts_logs_aggregated(groupBy: [String], filter: shifts_logs_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_logs_aggregated!]!
   shifts_logs_by_version(version: String!, id: ID!): version_shifts_logs
+  milaccess_log(filter: milaccess_log_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [milaccess_log!]!
+  milaccess_log_by_id(id: ID!, version: String): milaccess_log
+  milaccess_log_aggregated(groupBy: [String], filter: milaccess_log_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [milaccess_log_aggregated!]!
+  milaccess_log_by_version(version: String!, id: ID!): version_milaccess_log
 }
 
 type Mutation {
@@ -134,6 +138,8 @@ type Mutation {
   create_shifts_shifts_item(data: create_shifts_shifts_input!): shifts_shifts
   create_shifts_logs_items(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_logs_input!]): [shifts_logs!]!
   create_shifts_logs_item(data: create_shifts_logs_input!): shifts_logs
+  create_milaccess_log_items(filter: milaccess_log_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_milaccess_log_input!]): [milaccess_log!]!
+  create_milaccess_log_item(data: create_milaccess_log_input!): milaccess_log
   update_directus_sync_id_map_items(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_sync_id_map_input!): [directus_sync_id_map!]!
   update_directus_sync_id_map_batch(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_sync_id_map_input!]): [directus_sync_id_map!]!
   update_directus_sync_id_map_item(id: ID!, data: update_directus_sync_id_map_input!): directus_sync_id_map
@@ -200,6 +206,9 @@ type Mutation {
   update_shifts_logs_items(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_logs_input!): [shifts_logs!]!
   update_shifts_logs_batch(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_logs_input!]): [shifts_logs!]!
   update_shifts_logs_item(id: ID!, data: update_shifts_logs_input!): shifts_logs
+  update_milaccess_log_items(filter: milaccess_log_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_milaccess_log_input!): [milaccess_log!]!
+  update_milaccess_log_batch(filter: milaccess_log_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_milaccess_log_input!]): [milaccess_log!]!
+  update_milaccess_log_item(id: ID!, data: update_milaccess_log_input!): milaccess_log
   delete_directus_sync_id_map_items(ids: [ID]!): delete_many
   delete_directus_sync_id_map_item(id: ID!): delete_one
   delete_collectivo_tags_items(ids: [ID]!): delete_many
@@ -244,6 +253,8 @@ type Mutation {
   delete_shifts_shifts_item(id: ID!): delete_one
   delete_shifts_logs_items(ids: [ID]!): delete_many
   delete_shifts_logs_item(id: ID!): delete_one
+  delete_milaccess_log_items(ids: [ID]!): delete_many
+  delete_milaccess_log_item(id: ID!): delete_one
 }
 
 type Subscription {
@@ -287,6 +298,7 @@ type Subscription {
   shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
+  milaccess_log_mutated(event: EventEnum): milaccess_log_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -1674,6 +1686,46 @@ type mila_automations_mutated {
   data: mila_automations
 }
 
+type milaccess_log {
+  id: ID!
+  membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+  coshopper(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships_coshoppers
+  date: Date
+  date_func: date_functions
+}
+
+type milaccess_log_aggregated {
+  group: JSON
+  countAll: Int
+  count: milaccess_log_aggregated_count
+  countDistinct: milaccess_log_aggregated_count
+  avg: milaccess_log_aggregated_fields
+  sum: milaccess_log_aggregated_fields
+  avgDistinct: milaccess_log_aggregated_fields
+  sumDistinct: milaccess_log_aggregated_fields
+  min: milaccess_log_aggregated_fields
+  max: milaccess_log_aggregated_fields
+}
+
+type milaccess_log_aggregated_count {
+  id: Int
+  membership: Int
+  coshopper: Int
+  date: Int
+}
+
+type milaccess_log_aggregated_fields {
+  id: Float
+  membership: Float
+  coshopper: Float
+}
+
+type milaccess_log_mutated {
+  key: ID!
+  event: EventEnum
+  data: milaccess_log
+}
+
 type payments_invoices_entries {
   date_created: Date
   date_created_func: datetime_functions
@@ -2325,6 +2377,14 @@ type version_mila_automations {
 }
 
 """"""
+type version_milaccess_log {
+  id: ID
+  membership: JSON
+  coshopper: JSON
+  date: Date
+}
+
+""""""
 type version_payments_invoices_entries {
   date_created: Date
   date_updated: Date
@@ -2837,6 +2897,13 @@ input create_mila_automations_input {
   mila_template: create_messages_templates_input
   user_created: create_directus_users_input
   user_updated: create_directus_users_input
+}
+
+input create_milaccess_log_input {
+  id: ID
+  membership: create_memberships_input
+  coshopper: create_memberships_coshoppers_input
+  date: Date
 }
 
 input create_payments_invoices_entries_input {
@@ -3434,6 +3501,16 @@ input mila_automations_filter {
   _or: [mila_automations_filter]
 }
 
+input milaccess_log_filter {
+  id: number_filter_operators
+  membership: memberships_filter
+  coshopper: memberships_coshoppers_filter
+  date: date_filter_operators
+  date_func: date_function_filter_operators
+  _and: [milaccess_log_filter]
+  _or: [milaccess_log_filter]
+}
+
 input number_filter_operators {
   _eq: GraphQLStringOrFloat
   _neq: GraphQLStringOrFloat
@@ -3906,6 +3983,13 @@ input update_mila_automations_input {
   mila_template: update_messages_templates_input
   user_created: update_directus_users_input
   user_updated: update_directus_users_input
+}
+
+input update_milaccess_log_input {
+  id: ID
+  membership: update_memberships_input
+  coshopper: update_memberships_coshoppers_input
+  date: Date
 }
 
 input update_payments_invoices_entries_input {

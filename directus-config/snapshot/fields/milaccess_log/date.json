@@ -1,39 +1,32 @@
 {
-  "collection": "shifts_assignments",
-  "field": "shifts_is_regular",
-  "type": "boolean",
+  "collection": "milaccess_log",
+  "field": "date",
+  "type": "date",
   "meta": {
-    "collection": "shifts_assignments",
+    "collection": "milaccess_log",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_is_regular",
+    "field": "date",
     "group": null,
     "hidden": false,
-    "interface": "boolean",
-    "note": "Soll diese Anmeldung langfristig aktiv sein?",
+    "interface": "datetime",
+    "note": null,
     "options": null,
     "readonly": false,
     "required": true,
-    "sort": 3,
-    "special": [
-      "cast-boolean"
-    ],
-    "translations": [
-      {
-        "language": "de-DE",
-        "translation": "Ist Festschicht"
-      }
-    ],
+    "sort": 8,
+    "special": null,
+    "translations": null,
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "shifts_is_regular",
-    "table": "shifts_assignments",
-    "data_type": "boolean",
-    "default_value": false,
+    "name": "date",
+    "table": "milaccess_log",
+    "data_type": "date",
+    "default_value": null,
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,

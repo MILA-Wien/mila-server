@@ -42,7 +42,7 @@
     "options": {
       "choices": [
         {
-          "text": "Regulär",
+          "text": "Festschicht",
           "value": "regular",
           "icon": "transfer_within_a_station",
           "color": "#2ECDA7"
