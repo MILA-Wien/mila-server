@@ -1,22 +1,24 @@
-import { createItems, readItems, readUsers } from "@directus/sdk";
+import {
+  createItem,
+  createItems,
+  readItems,
+  readUsers,
+  updateItems,
+} from "@directus/sdk";
 import { RRule, RRuleSet } from "rrule";
 
 export default defineEventHandler(async (event) => {
   verifyCollectivoApiToken(event);
-
   console.log("Receiving request to send reminders");
-  getAssignments();
-  //   const users = (await directus.request(
-  //     readUsers({
-  //       fields: ["id", "shifts_user_type"],
-  //     }),
-  //   )) as ShiftUser[];
+  const automation = await getAutomation("shifts_reminder");
+  const assignments = await getAssignments();
+  await sendReminders(assignments, automation);
 });
 
 async function getAssignments() {
   const directus = await useDirectusAdmin();
+
   const targetDate = getFutureDate(2);
-  console.log("Goal is to get assignments for", targetDate);
 
   const shifts: ShiftsShift[] = (await directus.request(
     readItems("shifts_shifts", {
@@ -116,18 +118,84 @@ async function getAssignments() {
     }
   }
 
+  return occurrences;
+}
+
+async function getAutomation(name: string) {
+  const directus = await useDirectusAdmin();
+  const automations = await directus.request(
+    readItems("mila_automations", {
+      filter: {
+        mila_key: {
+          _eq: name,
+        },
+      },
+    }),
+  );
+
+  if (!automations.length) {
+    throw new Error("Automation not found");
+  }
+
+  const automation = automations[0];
+
+  if (!automation.mila_active) {
+    throw new Error("Automation is not active");
+  }
+
+  return automation;
+}
+
+async function sendReminders(occurrences: any[], automation: any) {
+  const directus = await useDirectusAdmin();
+  const payloads: any[] = [];
+
   for (const occ of occurrences) {
     const assignment = occ.assignment.assignment;
     const user = assignment.shifts_membership.memberships_user;
+    const shift = occ.assignment.shift!;
 
-    console.log(
-      "Sending reminder for assignment",
-      user.first_name,
-      user.last_name,
-      user.email,
-      user.id,
-    );
+    const context = {
+      shift_date: occ.date.toISOString().split("T")[0],
+      shift_start: shift.shifts_from_time?.slice(0, -3),
+      shift_end: shift.shifts_to_time?.slice(0, -3),
+      shift_description: "markdown:" + shift.shifts_description,
+    };
+
+    payloads.push([
+      {
+        messages_recipients: {
+          create: [
+            {
+              directus_users_id: {
+                id: user.id,
+              },
+              messages_campaigns_id: "+",
+            },
+          ],
+        },
+        messages_context: context,
+        messages_template: automation.mila_template,
+      },
+    ]);
   }
+
+  const campaign_ids = [];
+
+  for (const payload of payloads) {
+    const campaign = await directus.request(
+      createItem("messages_campaigns", payload, { fields: ["id"] }),
+    );
+
+    campaign_ids.push(campaign[0].id);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
+
+  await directus.request(
+    updateItems("messages_campaigns", campaign_ids, {
+      messages_campaign_status: "pending",
+    }),
+  );
 }
 
 // Create a RRule object for a shift
@@ -199,6 +267,7 @@ export const getAssignmentRrules = (
     }
 
     assignmentRules.push({
+      shift: shift,
       assignment: assignment,
       absences: filteredAbsences,
       rrule: assRrule,
