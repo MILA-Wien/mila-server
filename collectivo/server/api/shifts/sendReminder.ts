@@ -157,8 +157,8 @@ async function sendReminders(occurrences: any[], automation: any) {
 
     const context = {
       shift_date: occ.date.toISOString().split("T")[0],
-      shift_start: shift.shifts_from_time?.slice(0, -3),
-      shift_end: shift.shifts_to_time?.slice(0, -3),
+      shift_time_start: shift.shifts_from_time?.slice(0, -3),
+      shift_time_end: shift.shifts_to_time?.slice(0, -3),
       shift_description: "markdown:" + shift.shifts_description,
     };
 
@@ -178,6 +178,8 @@ async function sendReminders(occurrences: any[], automation: any) {
         messages_template: automation.mila_template,
       },
     ]);
+
+    console.log("Sending reminder to", user.email);
   }
 
   const campaign_ids = [];
@@ -189,6 +191,10 @@ async function sendReminders(occurrences: any[], automation: any) {
 
     campaign_ids.push(campaign[0].id);
     await new Promise((resolve) => setTimeout(resolve, 10));
+  }
+
+  if (!campaign_ids.length) {
+    return;
   }
 
   await directus.request(

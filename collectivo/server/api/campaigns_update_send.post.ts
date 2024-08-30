@@ -3,10 +3,15 @@ import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import { createItems, readItem, readUser, updateItem } from "@directus/sdk";
 import { parse } from "marked";
 
+// Disable for development
+const SENDING_ACTIVE = true;
+
+// Wait for given milliseconds
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// Handle endpoint calls
 export default defineEventHandler(async (event) => {
   try {
     return await handleCampaignUpdate(event);
@@ -374,13 +379,14 @@ class MailSender {
   }
 
   async sendMailOnce(mail: Mail): Promise<string> {
-    await this.transporter.sendMail({
-      from: this.fromAddress ? this.fromAddress : "",
-      to: mail.to,
-      subject: mail.subject,
-      html: mail.htmlBody,
-    });
-
+    if (SENDING_ACTIVE) {
+      await this.transporter.sendMail({
+        from: this.fromAddress ? this.fromAddress : "",
+        to: mail.to,
+        subject: mail.subject,
+        html: mail.htmlBody,
+      });
+    }
     return "success";
   }
 }

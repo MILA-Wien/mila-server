@@ -52,12 +52,16 @@ async function handleCampaignUpdate(event: any) {
     });
   }
 
+  delete body.user_ids;
+  delete body.automation_name;
+
   const campaign = await directus.request(
     createItem("messages_campaigns", {
       messages_template: automation.mila_template,
       messages_recipients: {
         create: createList,
       },
+      messages_context: body,
     }),
   );
 
