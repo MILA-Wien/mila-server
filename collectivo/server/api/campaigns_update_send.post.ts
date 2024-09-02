@@ -1,11 +1,17 @@
 import nodemailer, { type Transporter } from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import { createItems, readItem, readUser, updateItem } from "@directus/sdk";
+import { parse } from "marked";
 
+// Disable for development
+const SENDING_ACTIVE = true;
+
+// Wait for given milliseconds
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// Handle endpoint calls
 export default defineEventHandler(async (event) => {
   try {
     return await handleCampaignUpdate(event);
@@ -98,6 +104,7 @@ async function executeCampaign(campaignKey: number): Promise<string> {
         const emailBody = renderTemplateForRecipient(
           unpersonalizedTemplate,
           recipientData,
+          campaignData.campaignContext,
         );
 
         const sendMailOutcome = await mailSender.sendMail({
@@ -178,11 +185,11 @@ async function updateMessageStatus(
 async function readCampaignData(campaignKey: number): Promise<CampaignData> {
   const directus = await useDirectusAdmin();
 
-  console.log("Reading campaign data for campaign " + campaignKey);
   const readResult: Record<string, any> = await directus.request(
     readItem("messages_campaigns", campaignKey, {
       fields: [
         "messages_campaign_status",
+        "messages_context",
         "messages_template.messages_method",
         "messages_template.messages_subject",
         "messages_template.messages_content",
@@ -191,11 +198,11 @@ async function readCampaignData(campaignKey: number): Promise<CampaignData> {
       ],
     }),
   );
-  console.log("SUCCESS Reading campaign data for campaign " + campaignKey);
 
   return {
     campaignKey: campaignKey,
     campaignStatus: readResult["messages_campaign_status"],
+    campaignContext: readResult["messages_context"],
     templateMethod: readResult["messages_template"]["messages_method"],
     templateSubject: readResult["messages_template"]["messages_subject"],
     templateContent: readResult["messages_template"]["messages_content"],
@@ -255,20 +262,35 @@ function toMessageRecord(writeResult: Record<string, any>): MessageRecord {
   };
 }
 
+function replaceTemplateTags(
+  template: string,
+  context: { [key: string]: string },
+): string {
+  return template.replace(/{{\s*([^}]+)\s*}}/g, (match, p1) => {
+    const value = context[p1.trim()] || "";
+    if (value.startsWith("markdown:")) {
+      return parse(value.split("markdown:")[1]);
+    }
+    return value;
+  });
+}
+
 function renderTemplateForRecipient(
   unpersonalizedTemplate: string,
   recipientData: RecipientData,
+  campaignContext: any,
 ): string {
-  let renderedContent = unpersonalizedTemplate;
+  //let renderedContent = unpersonalizedTemplate;
 
-  renderedContent = renderedContent.replaceAll(
-    "{{recipient_first_name}}",
-    recipientData.first_name,
-  );
+  campaignContext = campaignContext ? campaignContext : {};
 
-  renderedContent = renderedContent.replaceAll(
-    "{{recipient_last_name}}",
-    recipientData.last_name,
+  campaignContext.recipient_first_name = recipientData.first_name;
+  campaignContext.recipient_last_name = recipientData.last_name;
+  campaignContext.recipient_email = recipientData.email;
+
+  const renderedContent = replaceTemplateTags(
+    unpersonalizedTemplate,
+    campaignContext,
   );
 
   return renderedContent;
@@ -286,6 +308,7 @@ interface MessageRecord {
 
 interface CampaignData {
   campaignKey: number;
+  campaignContext: string;
   campaignStatus: string;
   templateMethod: string;
   templateSubject: string;
@@ -357,13 +380,14 @@ class MailSender {
   }
 
   async sendMailOnce(mail: Mail): Promise<string> {
-    await this.transporter.sendMail({
-      from: this.fromAddress ? this.fromAddress : "",
-      to: mail.to,
-      subject: mail.subject,
-      html: mail.htmlBody,
-    });
-
+    if (SENDING_ACTIVE) {
+      await this.transporter.sendMail({
+        from: this.fromAddress ? this.fromAddress : "",
+        to: mail.to,
+        subject: mail.subject,
+        html: mail.htmlBody,
+      });
+    }
     return "success";
   }
 }

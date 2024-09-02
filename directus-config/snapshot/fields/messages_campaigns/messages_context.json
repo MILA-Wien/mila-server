@@ -1,39 +1,34 @@
 {
-  "collection": "mila_automations",
-  "field": "mila_active",
-  "type": "boolean",
+  "collection": "messages_campaigns",
+  "field": "messages_context",
+  "type": "json",
   "meta": {
-    "collection": "mila_automations",
+    "collection": "messages_campaigns",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "mila_active",
+    "field": "messages_context",
     "group": null,
     "hidden": false,
-    "interface": "boolean",
+    "interface": null,
     "note": null,
     "options": null,
     "readonly": false,
-    "required": true,
-    "sort": 9,
+    "required": false,
+    "sort": 13,
     "special": [
-      "cast-boolean"
+      "cast-json"
     ],
-    "translations": [
-      {
-        "language": "de-DE",
-        "translation": "Aktiv"
-      }
-    ],
+    "translations": null,
     "validation": null,
     "validation_message": null,
     "width": "full"
   },
   "schema": {
-    "name": "mila_active",
-    "table": "mila_automations",
-    "data_type": "boolean",
-    "default_value": false,
+    "name": "messages_context",
+    "table": "messages_campaigns",
+    "data_type": "json",
+    "default_value": null,
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,

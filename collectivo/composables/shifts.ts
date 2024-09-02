@@ -305,18 +305,19 @@ export const getAssignmentRrules = (
     const assRrule = new RRuleSet();
     const assRruleWithAbs = new RRuleSet();
 
-    assRrule.rrule(
-      new RRule({
-        freq: RRule.DAILY,
-        interval: shift.shifts_repeats_every,
-        dtstart: shiftRule.after(new Date(assignment.shifts_from), true),
-        until: assignment.shifts_is_regular
-          ? assignment.shifts_to
-            ? shiftRule.before(new Date(assignment.shifts_to), true)
-            : null
-          : shiftRule.before(new Date(assignment.shifts_from), true),
-      }),
-    );
+    const mainRule = new RRule({
+      freq: RRule.DAILY,
+      interval: shift.shifts_repeats_every,
+      dtstart: shiftRule.after(new Date(assignment.shifts_from), true),
+      until: assignment.shifts_is_regular
+        ? assignment.shifts_to
+          ? shiftRule.before(new Date(assignment.shifts_to), true)
+          : null
+        : shiftRule.before(new Date(assignment.shifts_from), true),
+    });
+
+    assRrule.rrule(mainRule);
+    assRruleWithAbs.rrule(mainRule);
 
     // Case 1: Absence for this assignment
     // Case 2: Absence for the same membership and all assignments

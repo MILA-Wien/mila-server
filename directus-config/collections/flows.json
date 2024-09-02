@@ -40,6 +40,26 @@
     "_syncId": "1496bf80-5a7f-4218-97b6-ee9bfafe2d3e"
   },
   {
+    "name": "Mail Abwesenheit Status Update",
+    "icon": "outgoing_mail",
+    "color": "#E35169",
+    "description": null,
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "scope": [
+        "items.update"
+      ],
+      "collections": [
+        "shifts_absences"
+      ]
+    },
+    "operation": "cb8ea7e4-d20a-4466-af9c-d5e59bae36a6",
+    "_syncId": "1b86184f-c905-4bd2-afb8-1b1546c82471"
+  },
+  {
     "name": "Kampagne Sende-Mechanismus",
     "icon": "send",
     "color": "#FFA439",
@@ -121,6 +141,26 @@
     "_syncId": "3bfde787-1881-4718-b02f-743d5f1f2a74"
   },
   {
+    "name": "Mail Schicht Anmeldung",
+    "icon": "outgoing_mail",
+    "color": "#E35169",
+    "description": "Immer wenn eine Anmeldung erstellt wird",
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "scope": [
+        "items.create"
+      ],
+      "collections": [
+        "shifts_assignments"
+      ]
+    },
+    "operation": "56545fbc-5162-43b7-84fa-55e38ab983e3",
+    "_syncId": "4132f37d-df4d-4d17-ae4f-f048b8a74af5"
+  },
+  {
     "name": "memberships_create_invoice_for_shares",
     "icon": "receipt",
     "color": null,
@@ -181,6 +221,26 @@
     },
     "operation": "ad799be4-d215-4375-97d7-6308e05f46f4",
     "_syncId": "5ea28856-7cb2-49a4-86b8-eacbd27ac54d"
+  },
+  {
+    "name": "Mail Urlaub Antrag an MGB",
+    "icon": "outgoing_mail",
+    "color": "#E35169",
+    "description": null,
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "scope": [
+        "items.create"
+      ],
+      "collections": [
+        "shifts_absences"
+      ]
+    },
+    "operation": "af82e607-1ee7-4289-8752-49531f48ab86",
+    "_syncId": "610aa314-bd89-461e-b8a0-10d0ad75f2d4"
   },
   {
     "name": "Kampagne senden",
@@ -254,6 +314,20 @@
     },
     "operation": "0b6f13b8-c0ce-4b3a-830f-c68221337073",
     "_syncId": "939f6a73-ceb3-4974-b4b2-65649be03c84"
+  },
+  {
+    "name": "Mail Schichterinnerung",
+    "icon": "outgoing_mail",
+    "color": "#E35169",
+    "description": "Immer 48h vor Schichtbeginn",
+    "status": "active",
+    "trigger": "schedule",
+    "accountability": "all",
+    "options": {
+      "cron": "0 0 9 * * * "
+    },
+    "operation": "01f9ffa9-a030-4608-b5c5-26d51c24c1eb",
+    "_syncId": "9cab27b6-fd7e-4125-b542-fc0399fb881b"
   },
   {
     "name": "Kampagne erstellen",
@@ -349,7 +423,7 @@
     "icon": "bolt",
     "color": "#FFC23B",
     "description": "Folgeflow für Kampagne senden",
-    "status": "active",
+    "status": "inactive",
     "trigger": "operation",
     "accountability": "all",
     "options": {

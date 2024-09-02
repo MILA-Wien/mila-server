@@ -3,23 +3,6 @@ import { createItem, readItems } from "@directus/sdk";
 // TODO: Also include miteinkäufer*innen and children
 // TODO: Include holidays
 
-function getCurrentDate() {
-  const now = new Date();
-
-  const currentDateUTC = new Date(
-    Date.UTC(
-      now.getUTCFullYear(),
-      now.getUTCMonth(),
-      now.getUTCDate(),
-      0,
-      0,
-      0,
-    ),
-  );
-
-  return currentDateUTC;
-}
-
 export default defineEventHandler(async (event) => {
   const cardID = getRouterParam(event, "cardID");
   const now = getCurrentDate();

@@ -99,6 +99,7 @@ declare global {
   interface AssignmentRrule {
     assignment: ShiftsAssignment;
     absences: ShiftsAbsence[];
+    shift?: ShiftsShift;
     rrule: RRule | RRuleSet;
     rruleWithAbsences: RRule | RRuleSet;
   }

@@ -27,10 +27,6 @@ type Query {
   messages_templates_by_id(id: ID!, version: String): messages_templates
   messages_templates_aggregated(groupBy: [String], filter: messages_templates_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [messages_templates_aggregated!]!
   messages_templates_by_version(version: String!, id: ID!): version_messages_templates
-  messages_campaigns(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_campaigns!]!
-  messages_campaigns_by_id(id: ID!, version: String): messages_campaigns
-  messages_campaigns_aggregated(groupBy: [String], filter: messages_campaigns_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [messages_campaigns_aggregated!]!
-  messages_campaigns_by_version(version: String!, id: ID!): version_messages_campaigns
   messages_campaigns_directus_users(filter: messages_campaigns_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_campaigns_directus_users!]!
   messages_campaigns_directus_users_by_id(id: ID!, version: String): messages_campaigns_directus_users
   messages_campaigns_directus_users_aggregated(groupBy: [String], filter: messages_campaigns_directus_users_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [messages_campaigns_directus_users_aggregated!]!
@@ -75,6 +71,10 @@ type Query {
   memberships_memberships_coshoppers_by_id(id: ID!, version: String): memberships_memberships_coshoppers
   memberships_memberships_coshoppers_aggregated(groupBy: [String], filter: memberships_memberships_coshoppers_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_memberships_coshoppers_aggregated!]!
   memberships_memberships_coshoppers_by_version(version: String!, id: ID!): version_memberships_memberships_coshoppers
+  messages_campaigns(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_campaigns!]!
+  messages_campaigns_by_id(id: ID!, version: String): messages_campaigns
+  messages_campaigns_aggregated(groupBy: [String], filter: messages_campaigns_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [messages_campaigns_aggregated!]!
+  messages_campaigns_by_version(version: String!, id: ID!): version_messages_campaigns
   shifts_absences(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_absences!]!
   shifts_absences_by_id(id: ID!, version: String): shifts_absences
   shifts_absences_aggregated(groupBy: [String], filter: shifts_absences_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_absences_aggregated!]!
@@ -108,8 +108,6 @@ type Mutation {
   create_junction_directus_users_files_item(data: create_junction_directus_users_files_input!): junction_directus_users_files
   create_messages_templates_items(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_messages_templates_input!]): [messages_templates!]!
   create_messages_templates_item(data: create_messages_templates_input!): messages_templates
-  create_messages_campaigns_items(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_messages_campaigns_input!]): [messages_campaigns!]!
-  create_messages_campaigns_item(data: create_messages_campaigns_input!): messages_campaigns
   create_messages_campaigns_directus_users_items(filter: messages_campaigns_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_messages_campaigns_directus_users_input!]): [messages_campaigns_directus_users!]!
   create_messages_campaigns_directus_users_item(data: create_messages_campaigns_directus_users_input!): messages_campaigns_directus_users
   create_messages_designs_items(filter: messages_designs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_messages_designs_input!]): [messages_designs!]!
@@ -132,6 +130,8 @@ type Mutation {
   create_memberships_memberships_coshoppers_1_item(data: create_memberships_memberships_coshoppers_1_input!): memberships_memberships_coshoppers_1
   create_memberships_memberships_coshoppers_items(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_memberships_coshoppers_input!]): [memberships_memberships_coshoppers!]!
   create_memberships_memberships_coshoppers_item(data: create_memberships_memberships_coshoppers_input!): memberships_memberships_coshoppers
+  create_messages_campaigns_items(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_messages_campaigns_input!]): [messages_campaigns!]!
+  create_messages_campaigns_item(data: create_messages_campaigns_input!): messages_campaigns
   create_shifts_absences_items(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_absences_input!]): [shifts_absences!]!
   create_shifts_absences_item(data: create_shifts_absences_input!): shifts_absences
   create_shifts_shifts_items(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_shifts_input!]): [shifts_shifts!]!
@@ -161,9 +161,6 @@ type Mutation {
   update_messages_templates_items(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_messages_templates_input!): [messages_templates!]!
   update_messages_templates_batch(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_messages_templates_input!]): [messages_templates!]!
   update_messages_templates_item(id: ID!, data: update_messages_templates_input!): messages_templates
-  update_messages_campaigns_items(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_messages_campaigns_input!): [messages_campaigns!]!
-  update_messages_campaigns_batch(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_messages_campaigns_input!]): [messages_campaigns!]!
-  update_messages_campaigns_item(id: ID!, data: update_messages_campaigns_input!): messages_campaigns
   update_messages_campaigns_directus_users_items(filter: messages_campaigns_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_messages_campaigns_directus_users_input!): [messages_campaigns_directus_users!]!
   update_messages_campaigns_directus_users_batch(filter: messages_campaigns_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_messages_campaigns_directus_users_input!]): [messages_campaigns_directus_users!]!
   update_messages_campaigns_directus_users_item(id: ID!, data: update_messages_campaigns_directus_users_input!): messages_campaigns_directus_users
@@ -197,6 +194,9 @@ type Mutation {
   update_memberships_memberships_coshoppers_items(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_memberships_coshoppers_input!): [memberships_memberships_coshoppers!]!
   update_memberships_memberships_coshoppers_batch(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_memberships_coshoppers_input!]): [memberships_memberships_coshoppers!]!
   update_memberships_memberships_coshoppers_item(id: ID!, data: update_memberships_memberships_coshoppers_input!): memberships_memberships_coshoppers
+  update_messages_campaigns_items(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_messages_campaigns_input!): [messages_campaigns!]!
+  update_messages_campaigns_batch(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_messages_campaigns_input!]): [messages_campaigns!]!
+  update_messages_campaigns_item(id: ID!, data: update_messages_campaigns_input!): messages_campaigns
   update_shifts_absences_items(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_absences_input!): [shifts_absences!]!
   update_shifts_absences_batch(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_absences_input!]): [shifts_absences!]!
   update_shifts_absences_item(id: ID!, data: update_shifts_absences_input!): shifts_absences
@@ -223,8 +223,6 @@ type Mutation {
   delete_junction_directus_users_files_item(id: ID!): delete_one
   delete_messages_templates_items(ids: [ID]!): delete_many
   delete_messages_templates_item(id: ID!): delete_one
-  delete_messages_campaigns_items(ids: [ID]!): delete_many
-  delete_messages_campaigns_item(id: ID!): delete_one
   delete_messages_campaigns_directus_users_items(ids: [ID]!): delete_many
   delete_messages_campaigns_directus_users_item(id: ID!): delete_one
   delete_messages_designs_items(ids: [ID]!): delete_many
@@ -247,6 +245,8 @@ type Mutation {
   delete_memberships_memberships_coshoppers_1_item(id: ID!): delete_one
   delete_memberships_memberships_coshoppers_items(ids: [ID]!): delete_many
   delete_memberships_memberships_coshoppers_item(id: ID!): delete_one
+  delete_messages_campaigns_items(ids: [ID]!): delete_many
+  delete_messages_campaigns_item(id: ID!): delete_one
   delete_shifts_absences_items(ids: [ID]!): delete_many
   delete_shifts_absences_item(id: ID!): delete_one
   delete_shifts_shifts_items(ids: [ID]!): delete_many
@@ -283,7 +283,6 @@ type Subscription {
   collectivo_tiles_buttons_mutated(event: EventEnum): collectivo_tiles_buttons_mutated
   junction_directus_users_files_mutated(event: EventEnum): junction_directus_users_files_mutated
   messages_templates_mutated(event: EventEnum): messages_templates_mutated
-  messages_campaigns_mutated(event: EventEnum): messages_campaigns_mutated
   messages_campaigns_directus_users_mutated(event: EventEnum): messages_campaigns_directus_users_mutated
   messages_designs_mutated(event: EventEnum): messages_designs_mutated
   messages_messages_mutated(event: EventEnum): messages_messages_mutated
@@ -295,6 +294,7 @@ type Subscription {
   memberships_mutated(event: EventEnum): memberships_mutated
   memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
   memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
+  messages_campaigns_mutated(event: EventEnum): messages_campaigns_mutated
   shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
@@ -1397,6 +1397,8 @@ type messages_campaigns {
   messages_template(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_templates
   user_created: String
   user_updated: String
+  messages_context: JSON
+  messages_context_func: count_functions
   messages_recipients(filter: messages_campaigns_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_campaigns_directus_users]
   messages_recipients_func: count_functions
 }
@@ -1422,6 +1424,7 @@ type messages_campaigns_aggregated_count {
   messages_template: Int
   user_created: Int
   user_updated: Int
+  messages_context: Int
   messages_recipients: Int
 }
 
@@ -2307,6 +2310,7 @@ type version_messages_campaigns {
   messages_template: JSON
   user_created: String
   user_updated: String
+  messages_context: JSON
   messages_recipients: JSON
 }
 
@@ -2841,6 +2845,7 @@ input create_messages_campaigns_input {
   messages_template: create_messages_templates_input
   user_created: String
   user_updated: String
+  messages_context: JSON
   messages_recipients: [create_messages_campaigns_directus_users_input]
 }
 
@@ -3432,6 +3437,8 @@ input messages_campaigns_filter {
   messages_template: messages_templates_filter
   user_created: string_filter_operators
   user_updated: string_filter_operators
+  messages_context: string_filter_operators
+  messages_context_func: count_function_filter_operators
   messages_recipients: messages_campaigns_directus_users_filter
   messages_recipients_func: count_function_filter_operators
   _and: [messages_campaigns_filter]
@@ -3927,6 +3934,7 @@ input update_messages_campaigns_input {
   messages_template: update_messages_templates_input
   user_created: String
   user_updated: String
+  messages_context: JSON
   messages_recipients: [update_messages_campaigns_directus_users_input]
 }
 
