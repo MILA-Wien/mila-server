@@ -14,6 +14,13 @@
     "_syncId": "a5061cae-2e64-4b77-ae26-38e683a60bbb"
   },
   {
+    "name": "Mitgliederzahlen Dynamisch",
+    "icon": "interactive_space",
+    "note": null,
+    "color": null,
+    "_syncId": "c936b3bd-901b-41d3-97b3-ef8a83aee628"
+  },
+  {
     "name": "Mitgliederzahlen",
     "icon": "interactive_space",
     "note": null,

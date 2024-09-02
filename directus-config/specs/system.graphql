@@ -236,7 +236,6 @@ type Subscription {
   collectivo_tiles_buttons_mutated(event: EventEnum): collectivo_tiles_buttons_mutated
   junction_directus_users_files_mutated(event: EventEnum): junction_directus_users_files_mutated
   messages_templates_mutated(event: EventEnum): messages_templates_mutated
-  messages_campaigns_mutated(event: EventEnum): messages_campaigns_mutated
   messages_campaigns_directus_users_mutated(event: EventEnum): messages_campaigns_directus_users_mutated
   messages_designs_mutated(event: EventEnum): messages_designs_mutated
   messages_messages_mutated(event: EventEnum): messages_messages_mutated
@@ -248,6 +247,7 @@ type Subscription {
   memberships_mutated(event: EventEnum): memberships_mutated
   memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
   memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
+  messages_campaigns_mutated(event: EventEnum): messages_campaigns_mutated
   shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
@@ -1727,6 +1727,8 @@ type messages_campaigns {
   messages_template(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_templates
   user_created: String
   user_updated: String
+  messages_context: JSON
+  messages_context_func: count_functions
   messages_recipients(filter: messages_campaigns_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_campaigns_directus_users]
   messages_recipients_func: count_functions
 }
@@ -2566,6 +2568,7 @@ input create_messages_campaigns_input {
   messages_template: create_messages_templates_input
   user_created: String
   user_updated: String
+  messages_context: JSON
   messages_recipients: [create_messages_campaigns_directus_users_input]
 }
 
@@ -3212,6 +3215,8 @@ input messages_campaigns_filter {
   messages_template: messages_templates_filter
   user_created: string_filter_operators
   user_updated: string_filter_operators
+  messages_context: string_filter_operators
+  messages_context_func: count_function_filter_operators
   messages_recipients: messages_campaigns_directus_users_filter
   messages_recipients_func: count_function_filter_operators
   _and: [messages_campaigns_filter]
@@ -3837,6 +3842,7 @@ input update_messages_campaigns_input {
   messages_template: update_messages_templates_input
   user_created: String
   user_updated: String
+  messages_context: JSON
   messages_recipients: [update_messages_campaigns_directus_users_input]
 }
 

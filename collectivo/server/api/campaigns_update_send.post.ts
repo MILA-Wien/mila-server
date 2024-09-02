@@ -286,6 +286,7 @@ function renderTemplateForRecipient(
 
   campaignContext.recipient_first_name = recipientData.first_name;
   campaignContext.recipient_last_name = recipientData.last_name;
+  campaignContext.recipient_email = recipientData.email;
 
   const renderedContent = replaceTemplateTags(
     unpersonalizedTemplate,

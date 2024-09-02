@@ -274,6 +274,55 @@
     "_syncId": "3c670681-a2e3-4a56-897d-d7003abce5d0"
   },
   {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": "Davon INVESTIEREND",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 26,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Investierend"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "41293c64-9db2-4ffe-9230-0a8dd9afd341"
+  },
+  {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
     "name": "Mittelwert Anteile Aktiv",
     "icon": null,
@@ -396,6 +445,55 @@
       "legend": "bottom"
     },
     "_syncId": "75d68252-26fa-46ad-925e-fb7f2e3b6991"
+  },
+  {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": "Davon AKTIV",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 17,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Aktiv"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "75e9a5c4-a60f-4cd4-a9b6-a0234d440a5a"
   },
   {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
@@ -686,5 +784,69 @@
       "conditionalFormatting": null
     },
     "_syncId": "c90fc392-ac51-4673-82a4-b367e4bf4c87"
+  },
+  {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": "Mitglieder zu Stichtag",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 8,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "d01ab647-232e-4797-af45-c63456f20c30"
+  },
+  {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": "Stichtag",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "variable",
+    "position_x": 1,
+    "position_y": 1,
+    "width": 20,
+    "height": 6,
+    "options": {
+      "type": "date",
+      "inter": "datetime",
+      "field": "stichtag",
+      "defaultValue": null
+    },
+    "_syncId": "d2a04220-e4e8-476b-95c5-6258590ba089"
   }
 ]

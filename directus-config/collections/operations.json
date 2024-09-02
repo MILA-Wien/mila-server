@@ -20,6 +20,34 @@
     "_syncId": "f6ff8f73-2405-41a9-acee-1365b411e163"
   },
   {
+    "name": "Skript ausführen",
+    "key": "automation_name",
+    "type": "exec",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "code": "module.exports = async function(data) {\n    if (data[\"$trigger\"].payload.shifts_status==\"accepted\") {\n        return {\"automation_name\":\"shifts_absence_accepted\"};\n    }\n    if (data[\"$trigger\"].payload.shifts_status==\"denied\") {\n        return {\"automation_name\":\"shifts_absence_denied\"};\n    }\n\t\n    throw new Error(\"Only for status changes\")\n}"
+    },
+    "resolve": "d77f14d0-af63-48d8-9a6e-04978f3bcdd3",
+    "reject": null,
+    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
+    "_syncId": "cb8ea7e4-d20a-4466-af9c-d5e59bae36a6"
+  },
+  {
+    "name": "Skript ausführen",
+    "key": "automation_name",
+    "type": "exec",
+    "position_x": 8,
+    "position_y": 54,
+    "options": {
+      "code": "module.exports = async function(data) {\n\tif (data[\"read_assignment\"][\"shifts_is_regular\"]){\n\t\treturn { \"automation_name\": \"shifts_assignment_created_regular\" }\n    }\n\treturn { \"automation_name\": \"shifts_assignment_created_jumper\" }\n}"
+    },
+    "resolve": "594dbc33-1c9e-4e63-a503-70bd92f784d3",
+    "reject": null,
+    "flow": "4132f37d-df4d-4d17-ae4f-f048b8a74af5",
+    "_syncId": "b72ff107-a5c3-452a-bd54-9179161c97b6"
+  },
+  {
     "name": "calcShares",
     "key": "calcShares",
     "type": "exec",
@@ -146,6 +174,35 @@
     "reject": null,
     "flow": "f714c75a-e78a-4c80-9b4d-4b39943d6444",
     "_syncId": "b3d317db-f563-46be-ae8e-4d7222cbf349"
+  },
+  {
+    "name": "Kondition",
+    "key": "condition_k2lb6",
+    "type": "condition",
+    "position_x": 3,
+    "position_y": 51,
+    "options": {
+      "filter": {
+        "$trigger": {
+          "payload": {
+            "shifts_status": {
+              "_or": [
+                {
+                  "_eq": "requested"
+                },
+                {
+                  "_null": true
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "610aa314-bd89-461e-b8a0-10d0ad75f2d4",
+    "_syncId": "9f05fe37-fb6e-48c8-abad-59b205972a9c"
   },
   {
     "name": "Create campaign",
@@ -337,6 +394,34 @@
     "reject": "c5485f09-f7da-4912-a005-c505ea996de6",
     "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
     "_syncId": "fdb6da80-fa90-4f76-8d09-bf653ded0f32"
+  },
+  {
+    "name": "Skript ausführen",
+    "key": "exec_je9ti",
+    "type": "exec",
+    "position_x": 3,
+    "position_y": 17,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t// Do something...\n    if (!data[\"$trigger\"].payload.shifts_status || \n        data[\"$trigger\"].payload.shifts_status == \"requested\") {\n    \n\treturn {};\n    }\n    \n    throw new Error(\"Skip because not requested\")\n}"
+    },
+    "resolve": "d3b67397-8a80-4eb4-b0e3-1efb24a935b7",
+    "reject": null,
+    "flow": "610aa314-bd89-461e-b8a0-10d0ad75f2d4",
+    "_syncId": "af82e607-1ee7-4289-8752-49531f48ab86"
+  },
+  {
+    "name": "Skript ausführen",
+    "key": "exec_xtr5y",
+    "type": "exec",
+    "position_x": 23,
+    "position_y": 20,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_assignments\"]) {\n    \tid = data[\"read_assignments\"][i].read_assignments.memberships_user\n        if (id) {\n            user_ids.push(id)\n        }\n    }\n    \n\treturn { user_ids };\n}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "4132f37d-df4d-4d17-ae4f-f048b8a74af5",
+    "_syncId": "1f512365-ff4e-4e6c-bb20-0412e886ba0a"
   },
   {
     "name": "Daten lesen",
@@ -571,6 +656,49 @@
     "_syncId": "c6b1bdc0-86e7-4523-908b-d00c06bc84b7"
   },
   {
+    "name": "Daten lesen",
+    "key": "read_absences",
+    "type": "item-read",
+    "position_x": 5,
+    "position_y": 19,
+    "options": {
+      "collection": "shifts_absences",
+      "query": {
+        "filter": {
+          "id": {
+            "_in": "{{ $trigger.keys }}"
+          }
+        },
+        "fields": [
+          "shifts_membership.memberships_user"
+        ]
+      }
+    },
+    "resolve": "204eeadb-0643-4626-8f35-a4fea89e5d65",
+    "reject": null,
+    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
+    "_syncId": "d77f14d0-af63-48d8-9a6e-04978f3bcdd3"
+  },
+  {
+    "name": "Daten lesen",
+    "key": "read_assignment",
+    "type": "item-read",
+    "position_x": 18,
+    "position_y": 1,
+    "options": {
+      "collection": "shifts_assignments",
+      "query": null,
+      "key": [
+        "{{$trigger.key}}"
+      ],
+      "permissions": "$full"
+    },
+    "resolve": "208af1eb-eaa7-49a5-92c9-22360a4a2b5b",
+    "reject": null,
+    "flow": "4132f37d-df4d-4d17-ae4f-f048b8a74af5",
+    "_syncId": "56545fbc-5162-43b7-84fa-55e38ab983e3"
+  },
+  {
     "name": "Read Automation",
     "key": "read_automation",
     "type": "item-read",
@@ -661,6 +789,54 @@
     "_syncId": "2a74014a-0cef-478e-90ff-bc13def7c780"
   },
   {
+    "name": "Daten lesen",
+    "key": "read_membership",
+    "type": "item-read",
+    "position_x": 5,
+    "position_y": 20,
+    "options": {
+      "collection": "memberships",
+      "key": [
+        "{{ read_assignment.shifts_membership }}"
+      ],
+      "query": {
+        "fields": [
+          "memberships_user"
+        ]
+      },
+      "permissions": "$full"
+    },
+    "resolve": "01c9fbc5-b143-4ca3-9ab9-9325c28d7446",
+    "reject": null,
+    "flow": "4132f37d-df4d-4d17-ae4f-f048b8a74af5",
+    "_syncId": "208af1eb-eaa7-49a5-92c9-22360a4a2b5b"
+  },
+  {
+    "name": "Daten lesen",
+    "key": "read_memberships",
+    "type": "item-read",
+    "position_x": 53,
+    "position_y": 32,
+    "options": {
+      "permissions": "$full",
+      "collection": "memberships",
+      "query": {
+        "fields": [
+          "memberships_user"
+        ],
+        "filter": {
+          "id": {
+            "_in": "{{$trigger.keys}}"
+          }
+        }
+      }
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
+    "_syncId": "f971c8b1-cb1a-4bb6-8534-896a37f2ffd2"
+  },
+  {
     "name": "Read memberships",
     "key": "read_memberships",
     "type": "item-read",
@@ -684,6 +860,24 @@
     "reject": null,
     "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
     "_syncId": "05cd9d73-3167-4510-ab92-60e4a0cb8b35"
+  },
+  {
+    "name": "Daten lesen",
+    "key": "read_shift",
+    "type": "item-read",
+    "position_x": 5,
+    "position_y": 36,
+    "options": {
+      "permissions": "$full",
+      "collection": "shifts_shifts",
+      "key": [
+        "{{ read_assignment.shifts_shift }}"
+      ]
+    },
+    "resolve": "b72ff107-a5c3-452a-bd54-9179161c97b6",
+    "reject": null,
+    "flow": "4132f37d-df4d-4d17-ae4f-f048b8a74af5",
+    "_syncId": "01c9fbc5-b143-4ca3-9ab9-9325c28d7446"
   },
   {
     "name": "Read User",
@@ -910,6 +1104,49 @@
   },
   {
     "name": "Webhook / Anfrage URL",
+    "key": "request_f478k",
+    "type": "request",
+    "position_x": 6,
+    "position_y": 41,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_create",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{\n    \"automation_name\": \"{{automation_name.automation_name}}\",\n    \"user_ids\": {{user_ids.user_ids}}\n}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
+    "_syncId": "c3c444aa-0b91-4855-8a24-ceb0e0ba594e"
+  },
+  {
+    "name": "Webhook / Anfrage URL",
+    "key": "request_fa0z0",
+    "type": "request",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/shifts/sendReminder",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ]
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "9cab27b6-fd7e-4125-b542-fc0399fb881b",
+    "_syncId": "01f9ffa9-a030-4608-b5c5-26d51c24c1eb"
+  },
+  {
+    "name": "Webhook / Anfrage URL",
     "key": "request_o180l",
     "type": "request",
     "position_x": 40,
@@ -932,6 +1169,28 @@
   },
   {
     "name": "Webhook / Anfrage URL",
+    "key": "request_q45vs",
+    "type": "request",
+    "position_x": 3,
+    "position_y": 33,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/send_admin_mail",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{\n    \"subject\": \"Neue Schicht-Abwesenheit beantragt\",\n    \"body\": \"Neue Schicht-Abwesenheit beantragt: {{$env.PUBLIC_URL}}/admin/content/shifts_absences/{{$trigger.key}}\"\n}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "610aa314-bd89-461e-b8a0-10d0ad75f2d4",
+    "_syncId": "d3b67397-8a80-4eb4-b0e3-1efb24a935b7"
+  },
+  {
+    "name": "Webhook / Anfrage URL",
     "key": "request_tsrb6",
     "type": "request",
     "position_x": 19,
@@ -951,6 +1210,28 @@
     "reject": null,
     "flow": "2d68cc8b-f561-4f7f-8cc2-a847cb57054c",
     "_syncId": "0bec9ec7-45cc-4375-89f9-27231942ddba"
+  },
+  {
+    "name": "Webhook / Anfrage URL",
+    "key": "request_u68ix",
+    "type": "request",
+    "position_x": 8,
+    "position_y": 73,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_create",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{\n    \"automation_name\": \"{{automation_name.automation_name}}\",\n    \"user_ids\": [\"{{ read_membership.memberships_user }}\"],\n    \"assignment_date_start\": \"{{ read_assignment.shifts_from }}\",\n    \"assignment_date_end\": \"{{ read_assignment.shifts_to }}\",\n    \"shift_time_start\": \"{{ read_shift.shifts_from_time }}\",\n    \"shift_time_end\": \"{{ read_shift.shifts_to_time }}\",\n    \"shift_name\": \"{{ read_shift.shifts_name }}\"\n}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "4132f37d-df4d-4d17-ae4f-f048b8a74af5",
+    "_syncId": "594dbc33-1c9e-4e63-a503-70bd92f784d3"
   },
   {
     "name": "send_campaign",
@@ -1108,6 +1389,20 @@
     "reject": null,
     "flow": "493c1260-3bb9-47e7-940d-115b8b0f1ccc",
     "_syncId": "cfd6218a-7de5-4c15-9757-597a1312f9a6"
+  },
+  {
+    "name": "Skript ausführen",
+    "key": "user_ids",
+    "type": "exec",
+    "position_x": 22,
+    "position_y": 20,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_absences\"]) {\n    \tid = data[\"read_absences\"][i].shifts_membership.memberships_user\n        if (id) {\n            user_ids.push(id)\n        }\n    }\n    \n\treturn { user_ids };\n}"
+    },
+    "resolve": "c3c444aa-0b91-4855-8a24-ceb0e0ba594e",
+    "reject": null,
+    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
+    "_syncId": "204eeadb-0643-4626-8f35-a4fea89e5d65"
   },
   {
     "name": "User ids",

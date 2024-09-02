@@ -5,21 +5,30 @@
   "meta": {
     "collection": "mila_automations",
     "conditions": null,
-    "display": null,
-    "display_options": null,
+    "display": "related-values",
+    "display_options": {
+      "template": "{{messages_name}}"
+    },
     "field": "mila_template",
     "group": null,
     "hidden": false,
     "interface": "select-dropdown-m2o",
     "note": null,
-    "options": null,
+    "options": {
+      "template": "{{messages_name}}"
+    },
     "readonly": false,
     "required": false,
     "sort": 8,
     "special": [
       "m2o"
     ],
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Vorlage"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"
