@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { t } = useI18n();
 const user = useCollectivoUser();
-setCollectivoTitle("MILA Membership Application");
+setCollectivoTitle("MILA Beitrittserklärung - imGrätzl");
 const showForm = ref(false);
 const alreadyMemberError = ref(false);
 const data: any = ref({});
@@ -92,19 +92,6 @@ const form: Ref<CollectivoForm> = ref({
   submitPath: "/api/membership_application",
   submitLabel: "Submit application",
   beforeSubmit: async (data: any) => {
-    if (data.shares_options === "normal") {
-      data.memberships__memberships_shares = 9;
-    } else if (data.shares_options === "social") {
-      data.memberships__memberships_shares = 1;
-    }
-
-    if (
-      !data.memberships__memberships_shares ||
-      data.memberships__memberships_shares <= 0
-    ) {
-      throw new Error("Incorrect number of shares.");
-    }
-
     return data;
   },
   fields: [
@@ -388,117 +375,6 @@ const form: Ref<CollectivoForm> = ref({
           label: "Investing",
         },
       ],
-    },
-    {
-      type: "select",
-      key: "shares_options",
-      expand: true,
-      label: "How many shares do you want?",
-      required: true,
-      order: 620,
-      conditions: is_active,
-      choices: [
-        { label: "Standard (9 shares) 180€", value: "normal" },
-        { label: "Social (1 share) 20 €", value: "social" },
-        { label: "More (10 or more)", value: "more" },
-      ],
-    },
-    {
-      type: "select",
-      key: "shares_options",
-      expand: true,
-      label: "How many shares do you want?",
-      required: true,
-      order: 620,
-      conditions: is_investing,
-      choices: [
-        { label: "Standard (9 shares) 180€", value: "normal" },
-        { label: "More (10 or more)", value: "more" },
-      ],
-    },
-    {
-      type: "number",
-      key: "memberships__memberships_shares",
-      label: "Number of shares (10 or more, 20€ per share)",
-      required: true,
-      order: 620,
-      conditions: [
-        {
-          key: "shares_options",
-          value: "more",
-        },
-      ],
-      validators: [
-        {
-          type: "min",
-          value: 10,
-        },
-      ],
-    },
-    {
-      type: "description",
-      order: 630,
-      label: "Chosen shares",
-      boxed: true,
-      description: "t:mila_form_shares_normal",
-      conditions: shares_normal,
-    },
-    {
-      type: "description",
-      order: 630,
-      label: "Chosen shares",
-      boxed: true,
-      description: "t:mila_form_shares_social",
-      conditions: shares_social,
-    },
-    {
-      type: "description",
-      order: 630,
-      label: "Chosen shares",
-      boxed: true,
-      description: "t:mila_form_shares_more",
-      conditions: shares_more,
-    },
-    {
-      type: "section",
-      order: 700,
-      title: "Payment details",
-      description: "t:mila_form_payment",
-    },
-    {
-      label: "Payment type",
-      key: "directus_users__payments_type",
-      type: "select",
-      order: 710,
-      // width: "lg",
-      required: true,
-      choices: [
-        {
-          value: "sepa",
-          label: "I approve SEPA direct debit",
-        },
-        {
-          value: "transfer",
-          label: "I transfer the amount myself",
-        },
-      ],
-    },
-    {
-      label: "Bank account IBAN",
-      key: "directus_users__payments_account_iban",
-      type: "text",
-      order: 720,
-      conditions: is_sepa,
-      validators: [{ type: "test", value: "payments_iban_sepa" }],
-      required: true,
-    },
-    {
-      label: "Bank account owner",
-      key: "directus_users__payments_account_owner",
-      type: "text",
-      order: 730,
-      conditions: is_sepa,
-      required: true,
     },
     {
       type: "section",
