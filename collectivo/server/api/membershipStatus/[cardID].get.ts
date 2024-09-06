@@ -4,6 +4,7 @@ import { createItem, readItems } from "@directus/sdk";
 // TODO: Include holidays
 
 export default defineEventHandler(async (event) => {
+  verifyCollectivoApiToken(event);
   const cardID = getRouterParam(event, "cardID");
   const now = getCurrentDate();
   const nowStr = now.toISOString();
