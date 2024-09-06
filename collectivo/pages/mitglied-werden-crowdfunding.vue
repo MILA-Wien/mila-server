@@ -331,7 +331,7 @@ const form: Ref<CollectivoForm> = ref({
       type: "section",
       order: 600,
       title: "Type of membership",
-      description: "t:mila_form_mtype_orga",
+      description: "t:mila_form_mtype_orga2",
       conditions: is_legal,
     },
     {
@@ -339,7 +339,7 @@ const form: Ref<CollectivoForm> = ref({
       order: 600,
       title: "Type of membership",
 
-      description: "t:mila_form_mtype_natural",
+      description: "t:mila_form_mtype_natural2",
       conditions: is_natural,
     },
     {
