@@ -34,6 +34,7 @@ async function createOrUpdateLotzappUser(user: any) {
     bankeinzug: user.payments_type == "sepa" ? "1" : "0",
     mail: [{ email: user.email }],
     bankverbindungen: [{ IBAN: user.payments_account_iban }],
+    kunde: "-1",
   };
 
   const endpoint = lotzapp_url + "adressen/";
