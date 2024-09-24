@@ -1037,11 +1037,7 @@ type directus_users {
   memberships_stair: String
   memberships_street: String
   memberships_streetnumber: String
-  mila_groups_interested: JSON
-  mila_groups_interested_func: count_functions
   mila_pr_approved: Boolean
-  mila_skills: JSON
-  mila_skills_func: count_functions
   mila_survey_contact: String
   mila_survey_motivation: String
   payments_account_iban: String
@@ -2750,9 +2746,7 @@ input create_directus_users_input {
   memberships_stair: String
   memberships_street: String
   memberships_streetnumber: String
-  mila_groups_interested: JSON
   mila_pr_approved: Boolean
-  mila_skills: JSON
   mila_survey_contact: String
   mila_survey_motivation: String
   payments_account_iban: String
@@ -3298,11 +3292,7 @@ input directus_users_filter {
   memberships_stair: string_filter_operators
   memberships_street: string_filter_operators
   memberships_streetnumber: string_filter_operators
-  mila_groups_interested: string_filter_operators
-  mila_groups_interested_func: count_function_filter_operators
   mila_pr_approved: boolean_filter_operators
-  mila_skills: string_filter_operators
-  mila_skills_func: count_function_filter_operators
   mila_survey_contact: string_filter_operators
   mila_survey_motivation: string_filter_operators
   payments_account_iban: string_filter_operators
@@ -3843,9 +3833,7 @@ input update_directus_users_input {
   memberships_stair: String
   memberships_street: String
   memberships_streetnumber: String
-  mila_groups_interested: JSON
   mila_pr_approved: Boolean
-  mila_skills: JSON
   mila_survey_contact: String
   mila_survey_motivation: String
   payments_account_iban: String

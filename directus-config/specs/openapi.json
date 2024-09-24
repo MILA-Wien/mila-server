@@ -16975,15 +16975,9 @@
             "nullable": true,
             "type": "string"
           },
-          "mila_groups_interested": {
-            "nullable": true
-          },
           "mila_pr_approved": {
             "nullable": true,
             "type": "boolean"
-          },
-          "mila_skills": {
-            "nullable": true
           },
           "mila_survey_contact": {
             "nullable": true,
