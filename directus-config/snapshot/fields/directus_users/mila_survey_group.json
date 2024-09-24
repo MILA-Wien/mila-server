@@ -18,7 +18,7 @@
     },
     "readonly": false,
     "required": false,
-    "sort": 107,
+    "sort": 8,
     "special": [
       "alias",
       "group",

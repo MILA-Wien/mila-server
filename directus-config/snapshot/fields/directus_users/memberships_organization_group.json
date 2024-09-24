@@ -32,7 +32,7 @@
     },
     "readonly": false,
     "required": false,
-    "sort": 105,
+    "sort": 6,
     "special": [
       "alias",
       "group",

@@ -23,20 +23,6 @@
     "name": "Skript ausführen",
     "key": "automation_name",
     "type": "exec",
-    "position_x": 19,
-    "position_y": 1,
-    "options": {
-      "code": "module.exports = async function(data) {\n    if (data[\"$trigger\"].payload.shifts_status==\"accepted\") {\n        return {\"automation_name\":\"shifts_absence_accepted\"};\n    }\n    if (data[\"$trigger\"].payload.shifts_status==\"denied\") {\n        return {\"automation_name\":\"shifts_absence_denied\"};\n    }\n\t\n    throw new Error(\"Only for status changes\")\n}"
-    },
-    "resolve": "d77f14d0-af63-48d8-9a6e-04978f3bcdd3",
-    "reject": null,
-    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
-    "_syncId": "cb8ea7e4-d20a-4466-af9c-d5e59bae36a6"
-  },
-  {
-    "name": "Skript ausführen",
-    "key": "automation_name",
-    "type": "exec",
     "position_x": 8,
     "position_y": 54,
     "options": {
@@ -46,6 +32,20 @@
     "reject": null,
     "flow": "4132f37d-df4d-4d17-ae4f-f048b8a74af5",
     "_syncId": "b72ff107-a5c3-452a-bd54-9179161c97b6"
+  },
+  {
+    "name": "Skript ausführen",
+    "key": "automation_name",
+    "type": "exec",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "code": "module.exports = async function(data) {\n    if (data[\"$trigger\"].payload.shifts_status==\"accepted\") {\n        return {\"automation_name\":\"shifts_absence_accepted\"};\n    }\n    if (data[\"$trigger\"].payload.shifts_status==\"denied\") {\n        return {\"automation_name\":\"shifts_absence_denied\"};\n    }\n\t\n    throw new Error(\"Only for status changes\")\n}"
+    },
+    "resolve": "d77f14d0-af63-48d8-9a6e-04978f3bcdd3",
+    "reject": null,
+    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
+    "_syncId": "cb8ea7e4-d20a-4466-af9c-d5e59bae36a6"
   },
   {
     "name": "calcShares",
@@ -79,20 +79,6 @@
     "name": "Check if active",
     "key": "check_if_active",
     "type": "exec",
-    "position_x": 22,
-    "position_y": 37,
-    "options": {
-      "code": "module.exports = async function(data) {\n\t// Do something...\n    if (data[\"read_automation\"][0][\"mila_active\"] != true) {\n        throw new Error(\"Automation not active\")\n    }\n\treturn {};\n}"
-    },
-    "resolve": "a1519dc1-5cce-4b7c-b64d-91397844174c",
-    "reject": null,
-    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
-    "_syncId": "91a893aa-5e01-4460-8bbb-83b2adcef6fb"
-  },
-  {
-    "name": "Check if active",
-    "key": "check_if_active",
-    "type": "exec",
     "position_x": 4,
     "position_y": 35,
     "options": {
@@ -102,6 +88,20 @@
     "reject": null,
     "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
     "_syncId": "486a5eb1-f379-4d7e-905b-d605170c5660"
+  },
+  {
+    "name": "Check if active",
+    "key": "check_if_active",
+    "type": "exec",
+    "position_x": 22,
+    "position_y": 37,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t// Do something...\n    if (data[\"read_automation\"][0][\"mila_active\"] != true) {\n        throw new Error(\"Automation not active\")\n    }\n\treturn {};\n}"
+    },
+    "resolve": "a1519dc1-5cce-4b7c-b64d-91397844174c",
+    "reject": null,
+    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
+    "_syncId": "91a893aa-5e01-4460-8bbb-83b2adcef6fb"
   },
   {
     "name": "Check if payload is status approved",
@@ -208,24 +208,29 @@
     "name": "Create campaign",
     "key": "create_campaign",
     "type": "item-create",
-    "position_x": 4,
-    "position_y": 54,
+    "position_x": 22,
+    "position_y": 35,
     "options": {
       "collection": "messages_campaigns",
       "payload": {
         "messages_template": "{{read_automation[0].mila_template}}",
         "messages_recipients": {
-          "create": "{{user_ids.user_ids}}"
-        },
-        "messages_campaign_status": "pending"
+          "create": [
+            {
+              "directus_users_id": {
+                "id": "{{read_user.memberships_user}}"
+              },
+              "messages_campaigns_id": "+"
+            }
+          ]
+        }
       },
-      "emitEvents": true,
-      "permissions": "$full"
+      "emitEvents": true
     },
-    "resolve": "ba9bdc64-5e33-4cee-8858-bb70e25d5d2c",
+    "resolve": "0191c432-8d0d-4396-bec5-62defe2aa5ff",
     "reject": null,
-    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
-    "_syncId": "a1519dc1-5cce-4b7c-b64d-91397844174c"
+    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
+    "_syncId": "0353178c-e17a-4cd8-977f-406d271ec4c7"
   },
   {
     "name": "Create campaign",
@@ -254,29 +259,24 @@
     "name": "Create campaign",
     "key": "create_campaign",
     "type": "item-create",
-    "position_x": 22,
-    "position_y": 35,
+    "position_x": 4,
+    "position_y": 54,
     "options": {
       "collection": "messages_campaigns",
       "payload": {
         "messages_template": "{{read_automation[0].mila_template}}",
         "messages_recipients": {
-          "create": [
-            {
-              "directus_users_id": {
-                "id": "{{read_user.memberships_user}}"
-              },
-              "messages_campaigns_id": "+"
-            }
-          ]
-        }
+          "create": "{{user_ids.user_ids}}"
+        },
+        "messages_campaign_status": "pending"
       },
-      "emitEvents": true
+      "emitEvents": true,
+      "permissions": "$full"
     },
-    "resolve": "0191c432-8d0d-4396-bec5-62defe2aa5ff",
+    "resolve": "ba9bdc64-5e33-4cee-8858-bb70e25d5d2c",
     "reject": null,
-    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
-    "_syncId": "0353178c-e17a-4cd8-977f-406d271ec4c7"
+    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
+    "_syncId": "a1519dc1-5cce-4b7c-b64d-91397844174c"
   },
   {
     "name": "createCampaign",
@@ -579,28 +579,6 @@
     "name": "postToNuxtAPI",
     "key": "post_to_nuxt_api",
     "type": "request",
-    "position_x": 19,
-    "position_y": 1,
-    "options": {
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/user_create",
-      "method": "POST",
-      "body": "{{$trigger}}",
-      "headers": [
-        {
-          "header": "Authorization",
-          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
-        }
-      ]
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "5ea28856-7cb2-49a4-86b8-eacbd27ac54d",
-    "_syncId": "ad799be4-d215-4375-97d7-6308e05f46f4"
-  },
-  {
-    "name": "postToNuxtAPI",
-    "key": "post_to_nuxt_api",
-    "type": "request",
     "position_x": 37,
     "position_y": 1,
     "options": {
@@ -618,6 +596,28 @@
     "reject": null,
     "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
     "_syncId": "0c188aa8-7df4-4fea-bd78-23758e8a9013"
+  },
+  {
+    "name": "postToNuxtAPI",
+    "key": "post_to_nuxt_api",
+    "type": "request",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/user_create",
+      "method": "POST",
+      "body": "{{$trigger}}",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ]
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "5ea28856-7cb2-49a4-86b8-eacbd27ac54d",
+    "_syncId": "ad799be4-d215-4375-97d7-6308e05f46f4"
   },
   {
     "name": "postToNuxtAPI",
@@ -703,28 +703,6 @@
     "key": "read_automation",
     "type": "item-read",
     "position_x": 4,
-    "position_y": 37,
-    "options": {
-      "collection": "mila_automations",
-      "query": {
-        "filter": {
-          "mila_key": {
-            "_eq": "invoice_update_paid"
-          }
-        }
-      },
-      "permissions": "$full"
-    },
-    "resolve": "91a893aa-5e01-4460-8bbb-83b2adcef6fb",
-    "reject": null,
-    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
-    "_syncId": "60b0542a-cba8-4e5f-bea8-b45e79c7c09e"
-  },
-  {
-    "name": "Read Automation",
-    "key": "read_automation",
-    "type": "item-read",
-    "position_x": 4,
     "position_y": 35,
     "options": {
       "permissions": "$full",
@@ -741,6 +719,28 @@
     "reject": null,
     "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
     "_syncId": "3f29d4d6-c774-42e4-93f6-4feb0ae04768"
+  },
+  {
+    "name": "Read Automation",
+    "key": "read_automation",
+    "type": "item-read",
+    "position_x": 4,
+    "position_y": 37,
+    "options": {
+      "collection": "mila_automations",
+      "query": {
+        "filter": {
+          "mila_key": {
+            "_eq": "invoice_update_paid"
+          }
+        }
+      },
+      "permissions": "$full"
+    },
+    "resolve": "91a893aa-5e01-4460-8bbb-83b2adcef6fb",
+    "reject": null,
+    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
+    "_syncId": "60b0542a-cba8-4e5f-bea8-b45e79c7c09e"
   },
   {
     "name": "Read Automation",
@@ -812,31 +812,6 @@
     "_syncId": "208af1eb-eaa7-49a5-92c9-22360a4a2b5b"
   },
   {
-    "name": "Daten lesen",
-    "key": "read_memberships",
-    "type": "item-read",
-    "position_x": 53,
-    "position_y": 32,
-    "options": {
-      "permissions": "$full",
-      "collection": "memberships",
-      "query": {
-        "fields": [
-          "memberships_user"
-        ],
-        "filter": {
-          "id": {
-            "_in": "{{$trigger.keys}}"
-          }
-        }
-      }
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
-    "_syncId": "f971c8b1-cb1a-4bb6-8534-896a37f2ffd2"
-  },
-  {
     "name": "Read memberships",
     "key": "read_memberships",
     "type": "item-read",
@@ -860,6 +835,31 @@
     "reject": null,
     "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
     "_syncId": "05cd9d73-3167-4510-ab92-60e4a0cb8b35"
+  },
+  {
+    "name": "Daten lesen",
+    "key": "read_memberships",
+    "type": "item-read",
+    "position_x": 53,
+    "position_y": 32,
+    "options": {
+      "permissions": "$full",
+      "collection": "memberships",
+      "query": {
+        "fields": [
+          "memberships_user"
+        ],
+        "filter": {
+          "id": {
+            "_in": "{{$trigger.keys}}"
+          }
+        }
+      }
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
+    "_syncId": "f971c8b1-cb1a-4bb6-8534-896a37f2ffd2"
   },
   {
     "name": "Daten lesen",
@@ -1391,6 +1391,20 @@
     "_syncId": "cfd6218a-7de5-4c15-9757-597a1312f9a6"
   },
   {
+    "name": "User ids",
+    "key": "user_ids",
+    "type": "exec",
+    "position_x": 22,
+    "position_y": 19,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_invoices\"]) {\n    \tid = data[\"read_invoices\"][i].payments_recipient_user\n        if (id) {\n            user_ids.push(id)\n        }\n    }\n    \n\treturn { user_ids };\n}"
+    },
+    "resolve": "91166d55-508c-40f2-ac22-405e25ec647b",
+    "reject": null,
+    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
+    "_syncId": "4bb7b88f-e8cc-4b46-b7ed-a075b3cd334b"
+  },
+  {
     "name": "Skript ausführen",
     "key": "user_ids",
     "type": "exec",
@@ -1417,19 +1431,5 @@
     "reject": null,
     "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
     "_syncId": "1b8c6e64-414b-4ff4-a9ed-fd3ab6286ee8"
-  },
-  {
-    "name": "User ids",
-    "key": "user_ids",
-    "type": "exec",
-    "position_x": 22,
-    "position_y": 19,
-    "options": {
-      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_invoices\"]) {\n    \tid = data[\"read_invoices\"][i].payments_recipient_user\n        if (id) {\n            user_ids.push(id)\n        }\n    }\n    \n\treturn { user_ids };\n}"
-    },
-    "resolve": "91166d55-508c-40f2-ac22-405e25ec647b",
-    "reject": null,
-    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
-    "_syncId": "4bb7b88f-e8cc-4b46-b7ed-a075b3cd334b"
   }
 ]

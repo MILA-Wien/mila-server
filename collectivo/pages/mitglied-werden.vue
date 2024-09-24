@@ -526,7 +526,7 @@ const form: Ref<CollectivoForm> = ref({
     },
     {
       label: "Would you be interested to join a working group?",
-      key: "directus_users__mila_groups_interested",
+      key: "directus_users__mila_groups_interested_2",
       width: "md",
       description:
         "You can find more information about the working groups here: https://www.mila.wien/mitmachen/arbeitsgruppen/",
@@ -554,7 +554,7 @@ const form: Ref<CollectivoForm> = ref({
     },
     {
       label: "What are your occupations/skills/interests?",
-      key: "directus_users__mila_skills",
+      key: "directus_users__mila_skills_2",
       width: "md",
       type: "select",
       multiple: true,

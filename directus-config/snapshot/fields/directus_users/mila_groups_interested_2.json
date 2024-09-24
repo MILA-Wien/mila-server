@@ -1,40 +1,38 @@
 {
   "collection": "directus_users",
-  "field": "mila_pr_approved",
-  "type": "boolean",
+  "field": "mila_groups_interested_2",
+  "type": "string",
   "meta": {
     "collection": "directus_users",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "mila_pr_approved",
-    "group": null,
+    "field": "mila_groups_interested_2",
+    "group": "mila_survey_group",
     "hidden": false,
-    "interface": "boolean",
+    "interface": "input",
     "note": null,
     "options": null,
     "readonly": false,
-    "required": true,
-    "sort": 9,
-    "special": [
-      "cast-boolean"
-    ],
+    "required": false,
+    "sort": 5,
+    "special": null,
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Öffentlichkeitsarbeit"
+        "translation": "AG Interesse"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
-    "name": "mila_pr_approved",
+    "name": "mila_groups_interested_2",
     "table": "directus_users",
-    "data_type": "boolean",
-    "default_value": false,
-    "max_length": null,
+    "data_type": "character varying",
+    "default_value": null,
+    "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,
     "is_nullable": true,

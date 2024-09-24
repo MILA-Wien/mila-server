@@ -61,11 +61,7 @@
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Fähigkeiten"
-      },
-      {
-        "language": "en-US",
-        "translation": "Skills"
+        "translation": "Veraltet 2"
       }
     ],
     "validation": null,
