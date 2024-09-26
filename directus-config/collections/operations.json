@@ -66,34 +66,6 @@
     "key": "check_if_active",
     "type": "exec",
     "position_x": 22,
-    "position_y": 35,
-    "options": {
-      "code": "module.exports = async function(data) {\n\t// Do something...\n    if (data[\"read_automation\"][0][\"mila_active\"] != true) {\n        throw new Error(\"Automation not active\")\n    }\n\treturn {};\n}"
-    },
-    "resolve": "b9edf53d-de5a-4f62-b76b-fb4ec074d96f",
-    "reject": null,
-    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
-    "_syncId": "2b930398-56f4-4094-9d50-62ad6616117c"
-  },
-  {
-    "name": "Check if active",
-    "key": "check_if_active",
-    "type": "exec",
-    "position_x": 4,
-    "position_y": 35,
-    "options": {
-      "code": "module.exports = async function(data) {\n\t// Do something...\n    if (data[\"read_automation\"][0][\"mila_active\"] != true) {\n        throw new Error(\"Automation not active\")\n    }\n\treturn {};\n}"
-    },
-    "resolve": "0353178c-e17a-4cd8-977f-406d271ec4c7",
-    "reject": null,
-    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
-    "_syncId": "486a5eb1-f379-4d7e-905b-d605170c5660"
-  },
-  {
-    "name": "Check if active",
-    "key": "check_if_active",
-    "type": "exec",
-    "position_x": 22,
     "position_y": 37,
     "options": {
       "code": "module.exports = async function(data) {\n\t// Do something...\n    if (data[\"read_automation\"][0][\"mila_active\"] != true) {\n        throw new Error(\"Automation not active\")\n    }\n\treturn {};\n}"
@@ -203,57 +175,6 @@
     "reject": null,
     "flow": "610aa314-bd89-461e-b8a0-10d0ad75f2d4",
     "_syncId": "9f05fe37-fb6e-48c8-abad-59b205972a9c"
-  },
-  {
-    "name": "Create campaign",
-    "key": "create_campaign",
-    "type": "item-create",
-    "position_x": 22,
-    "position_y": 35,
-    "options": {
-      "collection": "messages_campaigns",
-      "payload": {
-        "messages_template": "{{read_automation[0].mila_template}}",
-        "messages_recipients": {
-          "create": [
-            {
-              "directus_users_id": {
-                "id": "{{read_user.memberships_user}}"
-              },
-              "messages_campaigns_id": "+"
-            }
-          ]
-        }
-      },
-      "emitEvents": true
-    },
-    "resolve": "0191c432-8d0d-4396-bec5-62defe2aa5ff",
-    "reject": null,
-    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
-    "_syncId": "0353178c-e17a-4cd8-977f-406d271ec4c7"
-  },
-  {
-    "name": "Create campaign",
-    "key": "create_campaign",
-    "type": "item-create",
-    "position_x": 6,
-    "position_y": 53,
-    "options": {
-      "payload": {
-        "messages_template": "{{read_automation[0].mila_template}}",
-        "messages_recipients": {
-          "create": "{{user_ids.user_ids}}"
-        },
-        "messages_campaign_status": "pending"
-      },
-      "emitEvents": true,
-      "permissions": "$full",
-      "collection": "messages_campaigns"
-    },
-    "resolve": "db910638-a250-4e3d-b048-07032e2ffc94",
-    "reject": null,
-    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
-    "_syncId": "b9edf53d-de5a-4f62-b76b-fb4ec074d96f"
   },
   {
     "name": "Create campaign",
@@ -517,28 +438,6 @@
   },
   {
     "name": "Daten aktualisieren",
-    "key": "item_update_3dto8",
-    "type": "item-update",
-    "position_x": 74,
-    "position_y": 19,
-    "options": {
-      "collection": "messages_campaigns",
-      "permissions": "$full",
-      "payload": {
-        "messages_campaign_status": "pending"
-      },
-      "key": [
-        "{{create_campaign[0]}}"
-      ],
-      "emitEvents": true
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
-    "_syncId": "bd8b3e36-196a-40fa-be35-d02e1bace0b9"
-  },
-  {
-    "name": "Daten aktualisieren",
     "key": "item_update_rwk16",
     "type": "item-update",
     "position_x": 10,
@@ -556,24 +455,6 @@
     "reject": null,
     "flow": "e67933a7-f0df-41e2-b905-d49a8f2482db",
     "_syncId": "f3c9decb-96dd-41be-8e8d-13b9e0036999"
-  },
-  {
-    "name": "Kampagne senden",
-    "key": "kampagne_senden",
-    "type": "trigger",
-    "position_x": 21,
-    "position_y": 52,
-    "options": {
-      "flow": "f9895e5e-bb34-4e97-96af-5c8138c764df",
-      "iterationMode": "serial",
-      "payload": {
-        "campaign_id": "{{ create_campaign[0] }}"
-      }
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
-    "_syncId": "0191c432-8d0d-4396-bec5-62defe2aa5ff"
   },
   {
     "name": "postToNuxtAPI",
@@ -703,28 +584,6 @@
     "key": "read_automation",
     "type": "item-read",
     "position_x": 4,
-    "position_y": 35,
-    "options": {
-      "permissions": "$full",
-      "query": {
-        "filter": {
-          "mila_key": {
-            "_eq": "membership_update_approved"
-          }
-        }
-      },
-      "collection": "mila_automations"
-    },
-    "resolve": "2b930398-56f4-4094-9d50-62ad6616117c",
-    "reject": null,
-    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
-    "_syncId": "3f29d4d6-c774-42e4-93f6-4feb0ae04768"
-  },
-  {
-    "name": "Read Automation",
-    "key": "read_automation",
-    "type": "item-read",
-    "position_x": 4,
     "position_y": 37,
     "options": {
       "collection": "mila_automations",
@@ -741,27 +600,6 @@
     "reject": null,
     "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
     "_syncId": "60b0542a-cba8-4e5f-bea8-b45e79c7c09e"
-  },
-  {
-    "name": "Read Automation",
-    "key": "read_automation",
-    "type": "item-read",
-    "position_x": 48,
-    "position_y": 18,
-    "options": {
-      "collection": "mila_automations",
-      "query": {
-        "filter": {
-          "mila_key": {
-            "_eq": "memberships_applied_new"
-          }
-        }
-      }
-    },
-    "resolve": "486a5eb1-f379-4d7e-905b-d605170c5660",
-    "reject": null,
-    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
-    "_syncId": "f241b35f-f3ba-47d8-a044-c9a3ddaa8ce8"
   },
   {
     "name": "Read invoices",
@@ -893,7 +731,8 @@
       "query": {
         "fields": [
           "memberships_user",
-          "memberships_status"
+          "memberships_status",
+          "memberships_type"
         ]
       }
     },
@@ -996,7 +835,7 @@
     "name": "Webhook / Anfrage URL",
     "key": "request_6ayym",
     "type": "request",
-    "position_x": 21,
+    "position_x": 22,
     "position_y": 19,
     "options": {
       "method": "POST",
@@ -1007,7 +846,7 @@
           "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
         }
       ],
-      "body": "{\n    \"automation_name\": \"memberships_applied_new\",\n    \"user_ids\": [\"{{read_user.memberships_user}}\"]\n}"
+      "body": "{\n    \"automation_name\": \"memberships_applied_new_{{read_user.memberships_type}}\",\n    \"user_ids\": [\"{{read_user.memberships_user}}\"]\n}"
     },
     "resolve": null,
     "reject": null,
@@ -1084,8 +923,8 @@
     "name": "Webhook / Anfrage URL",
     "key": "request_cvpr9",
     "type": "request",
-    "position_x": 38,
-    "position_y": 18,
+    "position_x": 4,
+    "position_y": 36,
     "options": {
       "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_create",
       "headers": [
@@ -1237,28 +1076,6 @@
     "name": "send_campaign",
     "key": "send_campaign",
     "type": "item-update",
-    "position_x": 24,
-    "position_y": 53,
-    "options": {
-      "collection": "messages_campaigns",
-      "permissions": "$full",
-      "emitEvents": true,
-      "key": [
-        "{{create_campaign[0]}}"
-      ],
-      "payload": {
-        "messages_campaign_status": "pending"
-      }
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
-    "_syncId": "db910638-a250-4e3d-b048-07032e2ffc94"
-  },
-  {
-    "name": "send_campaign",
-    "key": "send_campaign",
-    "type": "item-update",
     "position_x": 22,
     "position_y": 54,
     "options": {
@@ -1276,28 +1093,6 @@
     "reject": null,
     "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
     "_syncId": "ba9bdc64-5e33-4cee-8858-bb70e25d5d2c"
-  },
-  {
-    "name": "set_campaign_pending",
-    "key": "set_campaign_pending",
-    "type": "item-update",
-    "position_x": 4,
-    "position_y": 53,
-    "options": {
-      "payload": {
-        "messages_campaign_status": "pending"
-      },
-      "emitEvents": true,
-      "permissions": "$full",
-      "key": [
-        "{{create_campaign[0]}}"
-      ],
-      "collection": "messages_campaigns"
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
-    "_syncId": "a03c504e-2b79-49cd-9bd0-71f9e623131c"
   },
   {
     "name": "set_status_to_pending",

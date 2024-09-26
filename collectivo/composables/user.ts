@@ -15,6 +15,7 @@ class CollectivoUserStore {
   tags: number[];
   fields: CollectivoFormField[];
   isAuthenticated: boolean;
+  isMember: boolean;
   saving: boolean;
   loading: boolean;
   error: unknown;
@@ -25,6 +26,7 @@ class CollectivoUserStore {
     this.fields = [];
     this.tags = [];
     this.isAuthenticated = false;
+    this.isMember = false;
     this.saving = false;
     this.loading = false;
     this.error = null;
@@ -49,6 +51,14 @@ class CollectivoUserStore {
 
     if (this.user.memberships.length > 0) {
       this.membership = this.user.memberships[0];
+
+      if (
+        ["approved", "in_exclusion", "in_cancellation"].includes(
+          this.membership.memberships_status,
+        )
+      ) {
+        this.isMember = true;
+      }
     }
   }
 

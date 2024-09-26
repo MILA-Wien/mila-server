@@ -11,15 +11,20 @@
     "group": null,
     "hidden": false,
     "interface": "select-dropdown-m2o",
-    "note": null,
+    "note": "Nur Personen mit diesem Tag sehen diese Kachel",
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 13,
+    "sort": 7,
     "special": [
       "m2o"
     ],
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Anzeigen für Tag"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"

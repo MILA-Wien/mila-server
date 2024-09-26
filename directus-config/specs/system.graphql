@@ -230,9 +230,9 @@ type Subscription {
   directus_webhooks_mutated(event: EventEnum): directus_webhooks_mutated
   directus_sync_id_map_mutated(event: EventEnum): directus_sync_id_map_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
+  collectivo_tiles_mutated(event: EventEnum): collectivo_tiles_mutated
   collectivo_tags_mutated(event: EventEnum): collectivo_tags_mutated
   collectivo_tags_directus_users_mutated(event: EventEnum): collectivo_tags_directus_users_mutated
-  collectivo_tiles_mutated(event: EventEnum): collectivo_tiles_mutated
   collectivo_tiles_buttons_mutated(event: EventEnum): collectivo_tiles_buttons_mutated
   junction_directus_users_files_mutated(event: EventEnum): junction_directus_users_files_mutated
   memberships_mutated(event: EventEnum): memberships_mutated
@@ -375,11 +375,10 @@ type collectivo_tiles {
   tiles_color: String
   tiles_content: String
   tiles_name: String!
-  tiles_status: String
-  tiles_tag_blocked(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): collectivo_tags
   tiles_tag_required(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): collectivo_tags
   user_created: String
   user_updated: String
+  tiles_view_for: String
   tiles_buttons(filter: collectivo_tiles_buttons_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_tiles_buttons]
   tiles_buttons_func: count_functions
 }
@@ -2160,11 +2159,10 @@ input collectivo_tiles_filter {
   tiles_color: string_filter_operators
   tiles_content: string_filter_operators
   tiles_name: string_filter_operators
-  tiles_status: string_filter_operators
-  tiles_tag_blocked: collectivo_tags_filter
   tiles_tag_required: collectivo_tags_filter
   user_created: string_filter_operators
   user_updated: string_filter_operators
+  tiles_view_for: string_filter_operators
   tiles_buttons: collectivo_tiles_buttons_filter
   tiles_buttons_func: count_function_filter_operators
   _and: [collectivo_tiles_filter]

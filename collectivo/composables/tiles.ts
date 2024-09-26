@@ -22,22 +22,41 @@ class CollectivoTileStore {
     const directus = useDirectus();
 
     try {
-      // @ts-expect-error
-      // directus typing seems to be faulty with "fields: ["*.*"]"
-      this.data = await directus.request(
+      const allTiles = await directus.request(
         readItems("collectivo_tiles", {
-          fields: ["*", "tiles_buttons.*"],
+          fields: ["*", { tiles_buttons: ["*"] }],
           filter: {
-            tiles_status: {
-              _eq: "published",
+            tiles_view_for: {
+              _neq: "hide",
             },
           },
         }),
       );
+      this.data = filterTiles(allTiles);
     } catch (error) {
       this.error = error;
     }
 
     this.loading = false;
   }
+}
+
+function filterTiles(tiles: CollectivoTile[]) {
+  const user = useCollectivoUser();
+  return tiles.filter((tile) => {
+    let display = true;
+
+    if (tile.tiles_tag_required) {
+      display = user.value.tags.includes(tile.tiles_tag_required);
+    }
+
+    if (
+      (tile.tiles_view_for === "members" && !user.value.isMember) ||
+      (tile.tiles_view_for === "non-members" && user.value.isMember)
+    ) {
+      display = false;
+    }
+
+    return display;
+  });
 }

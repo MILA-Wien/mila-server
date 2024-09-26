@@ -1,13 +1,13 @@
 {
   "collection": "collectivo_tiles",
-  "field": "tiles_color",
+  "field": "tiles_view_for",
   "type": "string",
   "meta": {
     "collection": "collectivo_tiles",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "tiles_color",
+    "field": "tiles_view_for",
     "group": null,
     "hidden": false,
     "interface": "select-dropdown",
@@ -15,43 +15,31 @@
     "options": {
       "choices": [
         {
-          "text": "$t:primary",
-          "value": "primary"
+          "text": "Alle Nutzer*innen",
+          "value": "all"
         },
         {
-          "text": "$t:green",
-          "value": "green"
+          "text": "Nur Mitglieder",
+          "value": "members"
         },
         {
-          "text": "$t:orange",
-          "value": "orange"
+          "text": "Nur Nicht-Mitglieder",
+          "value": "non-members"
         },
         {
-          "text": "$t:blue",
-          "value": "blue"
-        },
-        {
-          "text": "$t:pink",
-          "value": "pink"
-        },
-        {
-          "text": "$t:red",
-          "value": "red"
+          "text": "Nicht sichtbar",
+          "value": "hide"
         }
       ]
     },
     "readonly": false,
     "required": false,
-    "sort": 4,
+    "sort": 6,
     "special": null,
     "translations": [
       {
-        "language": "en-US",
-        "translation": "Color"
-      },
-      {
         "language": "de-DE",
-        "translation": "Farbe"
+        "translation": "Anzeigen für"
       }
     ],
     "validation": null,
@@ -59,10 +47,10 @@
     "width": "full"
   },
   "schema": {
-    "name": "tiles_color",
+    "name": "tiles_view_for",
     "table": "collectivo_tiles",
     "data_type": "character varying",
-    "default_value": "primary",
+    "default_value": "all",
     "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,

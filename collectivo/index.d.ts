@@ -174,12 +174,11 @@ declare global {
     sort: number;
     tiles_name: string;
     tiles_content: string;
-    tiles_status: "published" | "draft" | "archived";
     tiles_buttons: CollectivoTileButton[];
     tiles_color: string;
     tiles_component: string;
     tiles_tag_required: number | null;
-    tiles_tag_blocked: number | null;
+    tiles_view_for: "all" | "members" | "non-members" | "hide";
   }
 
   interface CollectivoTileButton {

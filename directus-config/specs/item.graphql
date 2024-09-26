@@ -3,6 +3,10 @@ type Query {
   directus_sync_id_map_by_id(id: ID!, version: String): directus_sync_id_map
   directus_sync_id_map_aggregated(groupBy: [String], filter: directus_sync_id_map_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_sync_id_map_aggregated!]!
   directus_sync_id_map_by_version(version: String!, id: ID!): version_directus_sync_id_map
+  collectivo_tiles(filter: collectivo_tiles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_tiles!]!
+  collectivo_tiles_by_id(id: ID!, version: String): collectivo_tiles
+  collectivo_tiles_aggregated(groupBy: [String], filter: collectivo_tiles_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [collectivo_tiles_aggregated!]!
+  collectivo_tiles_by_version(version: String!, id: ID!): version_collectivo_tiles
   collectivo_tags(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_tags!]!
   collectivo_tags_by_id(id: ID!, version: String): collectivo_tags
   collectivo_tags_aggregated(groupBy: [String], filter: collectivo_tags_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [collectivo_tags_aggregated!]!
@@ -11,10 +15,6 @@ type Query {
   collectivo_tags_directus_users_by_id(id: ID!, version: String): collectivo_tags_directus_users
   collectivo_tags_directus_users_aggregated(groupBy: [String], filter: collectivo_tags_directus_users_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [collectivo_tags_directus_users_aggregated!]!
   collectivo_tags_directus_users_by_version(version: String!, id: ID!): version_collectivo_tags_directus_users
-  collectivo_tiles(filter: collectivo_tiles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_tiles!]!
-  collectivo_tiles_by_id(id: ID!, version: String): collectivo_tiles
-  collectivo_tiles_aggregated(groupBy: [String], filter: collectivo_tiles_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [collectivo_tiles_aggregated!]!
-  collectivo_tiles_by_version(version: String!, id: ID!): version_collectivo_tiles
   collectivo_tiles_buttons(filter: collectivo_tiles_buttons_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_tiles_buttons!]!
   collectivo_tiles_buttons_by_id(id: ID!, version: String): collectivo_tiles_buttons
   collectivo_tiles_buttons_aggregated(groupBy: [String], filter: collectivo_tiles_buttons_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [collectivo_tiles_buttons_aggregated!]!
@@ -96,12 +96,12 @@ type Query {
 type Mutation {
   create_directus_sync_id_map_items(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_sync_id_map_input!]): [directus_sync_id_map!]!
   create_directus_sync_id_map_item(data: create_directus_sync_id_map_input!): directus_sync_id_map
+  create_collectivo_tiles_items(filter: collectivo_tiles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_collectivo_tiles_input!]): [collectivo_tiles!]!
+  create_collectivo_tiles_item(data: create_collectivo_tiles_input!): collectivo_tiles
   create_collectivo_tags_items(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_collectivo_tags_input!]): [collectivo_tags!]!
   create_collectivo_tags_item(data: create_collectivo_tags_input!): collectivo_tags
   create_collectivo_tags_directus_users_items(filter: collectivo_tags_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_collectivo_tags_directus_users_input!]): [collectivo_tags_directus_users!]!
   create_collectivo_tags_directus_users_item(data: create_collectivo_tags_directus_users_input!): collectivo_tags_directus_users
-  create_collectivo_tiles_items(filter: collectivo_tiles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_collectivo_tiles_input!]): [collectivo_tiles!]!
-  create_collectivo_tiles_item(data: create_collectivo_tiles_input!): collectivo_tiles
   create_collectivo_tiles_buttons_items(filter: collectivo_tiles_buttons_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_collectivo_tiles_buttons_input!]): [collectivo_tiles_buttons!]!
   create_collectivo_tiles_buttons_item(data: create_collectivo_tiles_buttons_input!): collectivo_tiles_buttons
   create_junction_directus_users_files_items(filter: junction_directus_users_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_junction_directus_users_files_input!]): [junction_directus_users_files!]!
@@ -143,15 +143,15 @@ type Mutation {
   update_directus_sync_id_map_items(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_sync_id_map_input!): [directus_sync_id_map!]!
   update_directus_sync_id_map_batch(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_sync_id_map_input!]): [directus_sync_id_map!]!
   update_directus_sync_id_map_item(id: ID!, data: update_directus_sync_id_map_input!): directus_sync_id_map
+  update_collectivo_tiles_items(filter: collectivo_tiles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_collectivo_tiles_input!): [collectivo_tiles!]!
+  update_collectivo_tiles_batch(filter: collectivo_tiles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_collectivo_tiles_input!]): [collectivo_tiles!]!
+  update_collectivo_tiles_item(id: ID!, data: update_collectivo_tiles_input!): collectivo_tiles
   update_collectivo_tags_items(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_collectivo_tags_input!): [collectivo_tags!]!
   update_collectivo_tags_batch(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_collectivo_tags_input!]): [collectivo_tags!]!
   update_collectivo_tags_item(id: ID!, data: update_collectivo_tags_input!): collectivo_tags
   update_collectivo_tags_directus_users_items(filter: collectivo_tags_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_collectivo_tags_directus_users_input!): [collectivo_tags_directus_users!]!
   update_collectivo_tags_directus_users_batch(filter: collectivo_tags_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_collectivo_tags_directus_users_input!]): [collectivo_tags_directus_users!]!
   update_collectivo_tags_directus_users_item(id: ID!, data: update_collectivo_tags_directus_users_input!): collectivo_tags_directus_users
-  update_collectivo_tiles_items(filter: collectivo_tiles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_collectivo_tiles_input!): [collectivo_tiles!]!
-  update_collectivo_tiles_batch(filter: collectivo_tiles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_collectivo_tiles_input!]): [collectivo_tiles!]!
-  update_collectivo_tiles_item(id: ID!, data: update_collectivo_tiles_input!): collectivo_tiles
   update_collectivo_tiles_buttons_items(filter: collectivo_tiles_buttons_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_collectivo_tiles_buttons_input!): [collectivo_tiles_buttons!]!
   update_collectivo_tiles_buttons_batch(filter: collectivo_tiles_buttons_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_collectivo_tiles_buttons_input!]): [collectivo_tiles_buttons!]!
   update_collectivo_tiles_buttons_item(id: ID!, data: update_collectivo_tiles_buttons_input!): collectivo_tiles_buttons
@@ -211,12 +211,12 @@ type Mutation {
   update_shifts_logs_item(id: ID!, data: update_shifts_logs_input!): shifts_logs
   delete_directus_sync_id_map_items(ids: [ID]!): delete_many
   delete_directus_sync_id_map_item(id: ID!): delete_one
+  delete_collectivo_tiles_items(ids: [ID]!): delete_many
+  delete_collectivo_tiles_item(id: ID!): delete_one
   delete_collectivo_tags_items(ids: [ID]!): delete_many
   delete_collectivo_tags_item(id: ID!): delete_one
   delete_collectivo_tags_directus_users_items(ids: [ID]!): delete_many
   delete_collectivo_tags_directus_users_item(id: ID!): delete_one
-  delete_collectivo_tiles_items(ids: [ID]!): delete_many
-  delete_collectivo_tiles_item(id: ID!): delete_one
   delete_collectivo_tiles_buttons_items(ids: [ID]!): delete_many
   delete_collectivo_tiles_buttons_item(id: ID!): delete_one
   delete_junction_directus_users_files_items(ids: [ID]!): delete_many
@@ -277,9 +277,9 @@ type Subscription {
   directus_webhooks_mutated(event: EventEnum): directus_webhooks_mutated
   directus_sync_id_map_mutated(event: EventEnum): directus_sync_id_map_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
+  collectivo_tiles_mutated(event: EventEnum): collectivo_tiles_mutated
   collectivo_tags_mutated(event: EventEnum): collectivo_tags_mutated
   collectivo_tags_directus_users_mutated(event: EventEnum): collectivo_tags_directus_users_mutated
-  collectivo_tiles_mutated(event: EventEnum): collectivo_tiles_mutated
   collectivo_tiles_buttons_mutated(event: EventEnum): collectivo_tiles_buttons_mutated
   junction_directus_users_files_mutated(event: EventEnum): junction_directus_users_files_mutated
   memberships_mutated(event: EventEnum): memberships_mutated
@@ -443,11 +443,10 @@ type collectivo_tiles {
   tiles_color: String
   tiles_content: String
   tiles_name: String!
-  tiles_status: String
-  tiles_tag_blocked(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): collectivo_tags
   tiles_tag_required(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): collectivo_tags
   user_created: String
   user_updated: String
+  tiles_view_for: String
   tiles_buttons(filter: collectivo_tiles_buttons_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_tiles_buttons]
   tiles_buttons_func: count_functions
 }
@@ -473,18 +472,20 @@ type collectivo_tiles_aggregated_count {
   tiles_color: Int
   tiles_content: Int
   tiles_name: Int
-  tiles_status: Int
-  tiles_tag_blocked: Int
+
+  """Nur Personen mit diesem Tag sehen diese Kachel"""
   tiles_tag_required: Int
   user_created: Int
   user_updated: Int
+  tiles_view_for: Int
   tiles_buttons: Int
 }
 
 type collectivo_tiles_aggregated_fields {
   id: Float
   sort: Float
-  tiles_tag_blocked: Float
+
+  """Nur Personen mit diesem Tag sehen diese Kachel"""
   tiles_tag_required: Float
 }
 
@@ -2194,11 +2195,10 @@ type version_collectivo_tiles {
   tiles_color: String
   tiles_content: String
   tiles_name: String
-  tiles_status: String
-  tiles_tag_blocked: JSON
   tiles_tag_required: JSON
   user_created: String
   user_updated: String
+  tiles_view_for: String
   tiles_buttons: JSON
 }
 
@@ -2587,11 +2587,10 @@ input collectivo_tiles_filter {
   tiles_color: string_filter_operators
   tiles_content: string_filter_operators
   tiles_name: string_filter_operators
-  tiles_status: string_filter_operators
-  tiles_tag_blocked: collectivo_tags_filter
   tiles_tag_required: collectivo_tags_filter
   user_created: string_filter_operators
   user_updated: string_filter_operators
+  tiles_view_for: string_filter_operators
   tiles_buttons: collectivo_tiles_buttons_filter
   tiles_buttons_func: count_function_filter_operators
   _and: [collectivo_tiles_filter]
@@ -2641,11 +2640,10 @@ input create_collectivo_tiles_input {
   tiles_color: String
   tiles_content: String
   tiles_name: String!
-  tiles_status: String
-  tiles_tag_blocked: create_collectivo_tags_input
   tiles_tag_required: create_collectivo_tags_input
   user_created: String
   user_updated: String
+  tiles_view_for: String
   tiles_buttons: [create_collectivo_tiles_buttons_input]
 }
 
@@ -3728,11 +3726,10 @@ input update_collectivo_tiles_input {
   tiles_color: String
   tiles_content: String
   tiles_name: String
-  tiles_status: String
-  tiles_tag_blocked: update_collectivo_tags_input
   tiles_tag_required: update_collectivo_tags_input
   user_created: String
   user_updated: String
+  tiles_view_for: String
   tiles_buttons: [update_collectivo_tiles_buttons_input]
 }
 
