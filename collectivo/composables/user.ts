@@ -60,6 +60,8 @@ class CollectivoUserStore {
       }
     }
     delete this.user.memberships;
+
+    console.log("User", this.user);
   }
 
   async save(data: CollectivoUser) {
