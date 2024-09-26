@@ -21,7 +21,7 @@ const _ = defineProps({
 
 <style lang="scss" scoped>
 .card {
-  @apply h-fit w-full rounded-[15px] relative overflow-hidden p-6;
+  @apply h-fit w-full rounded-[15px] relative overflow-hidden p-6 inline-block;
   &__title {
     @apply mb-1 font-semibold text-lg leading-[22px];
   }
