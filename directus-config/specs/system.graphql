@@ -14,6 +14,9 @@ type Query {
   relations_by_name(collection: String!, field: String!): directus_relations
   extensions: [directus_extensions!]!
   users_me: directus_users
+  permissions_me: permissions_me_type
+  roles_me: [directus_roles]
+  policies_me_globals: policy_me_globals_type
   roles(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_roles!]!
   roles_by_id(id: ID!, version: String): directus_roles
   roles_aggregated(groupBy: [String], filter: directus_roles_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_roles_aggregated!]!
@@ -26,12 +29,12 @@ type Query {
   activity(filter: directus_activity_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_activity!]!
   activity_by_id(id: ID!, version: String): directus_activity
   activity_aggregated(groupBy: [String], filter: directus_activity_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_activity_aggregated!]!
-  permissions(filter: directus_permissions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_permissions!]!
-  permissions_by_id(id: ID!, version: String): directus_permissions
-  permissions_aggregated(groupBy: [String], filter: directus_permissions_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_permissions_aggregated!]!
   files(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_files!]!
   files_by_id(id: ID!, version: String): directus_files
   files_aggregated(groupBy: [String], filter: directus_files_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_files_aggregated!]!
+  permissions(filter: directus_permissions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_permissions!]!
+  permissions_by_id(id: ID!, version: String): directus_permissions
+  permissions_aggregated(groupBy: [String], filter: directus_permissions_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_permissions_aggregated!]!
   presets(filter: directus_presets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_presets!]!
   presets_by_id(id: ID!, version: String): directus_presets
   presets_aggregated(groupBy: [String], filter: directus_presets_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_presets_aggregated!]!
@@ -66,6 +69,12 @@ type Query {
   users(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_users!]!
   users_by_id(id: ID!, version: String): directus_users
   users_aggregated(groupBy: [String], filter: directus_users_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_users_aggregated!]!
+  policies(filter: directus_policies_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_policies!]!
+  policies_by_id(id: ID!, version: String): directus_policies
+  policies_aggregated(groupBy: [String], filter: directus_policies_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_policies_aggregated!]!
+  access(filter: directus_access_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_access!]!
+  access_by_id(id: ID!, version: String): directus_access
+  access_aggregated(groupBy: [String], filter: directus_access_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_access_aggregated!]!
 }
 
 type Mutation {
@@ -106,10 +115,10 @@ type Mutation {
   create_roles_item(data: create_directus_roles_input!): directus_roles
   create_folders_items(filter: directus_folders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_folders_input!]): [directus_folders!]!
   create_folders_item(data: create_directus_folders_input!): directus_folders
-  create_permissions_items(filter: directus_permissions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_permissions_input!]): [directus_permissions!]!
-  create_permissions_item(data: create_directus_permissions_input!): directus_permissions
   create_files_items(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_files_input!]): [directus_files!]!
   create_files_item(data: create_directus_files_input!): directus_files
+  create_permissions_items(filter: directus_permissions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_permissions_input!]): [directus_permissions!]!
+  create_permissions_item(data: create_directus_permissions_input!): directus_permissions
   create_presets_items(filter: directus_presets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_presets_input!]): [directus_presets!]!
   create_presets_item(data: create_directus_presets_input!): directus_presets
   create_panels_items(filter: directus_panels_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_panels_input!]): [directus_panels!]!
@@ -132,18 +141,22 @@ type Mutation {
   create_webhooks_item(data: create_directus_webhooks_input!): directus_webhooks
   create_users_items(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_users_input!]): [directus_users!]!
   create_users_item(data: create_directus_users_input!): directus_users
+  create_policies_items(filter: directus_policies_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_policies_input!]): [directus_policies!]!
+  create_policies_item(data: create_directus_policies_input!): directus_policies
+  create_access_items(filter: directus_access_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_access_input!]): [directus_access!]!
+  create_access_item(data: create_directus_access_input!): directus_access
   update_roles_items(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_roles_input!): [directus_roles!]!
   update_roles_batch(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_roles_input!]): [directus_roles!]!
   update_roles_item(id: ID!, data: update_directus_roles_input!): directus_roles
   update_folders_items(filter: directus_folders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_folders_input!): [directus_folders!]!
   update_folders_batch(filter: directus_folders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_folders_input!]): [directus_folders!]!
   update_folders_item(id: ID!, data: update_directus_folders_input!): directus_folders
-  update_permissions_items(filter: directus_permissions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_permissions_input!): [directus_permissions!]!
-  update_permissions_batch(filter: directus_permissions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_permissions_input!]): [directus_permissions!]!
-  update_permissions_item(id: ID!, data: update_directus_permissions_input!): directus_permissions
   update_files_items(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_files_input!): [directus_files!]!
   update_files_batch(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_files_input!]): [directus_files!]!
   update_files_item(id: ID!, data: update_directus_files_input!): directus_files
+  update_permissions_items(filter: directus_permissions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_permissions_input!): [directus_permissions!]!
+  update_permissions_batch(filter: directus_permissions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_permissions_input!]): [directus_permissions!]!
+  update_permissions_item(id: ID!, data: update_directus_permissions_input!): directus_permissions
   update_presets_items(filter: directus_presets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_presets_input!): [directus_presets!]!
   update_presets_batch(filter: directus_presets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_presets_input!]): [directus_presets!]!
   update_presets_item(id: ID!, data: update_directus_presets_input!): directus_presets
@@ -178,14 +191,20 @@ type Mutation {
   update_users_items(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_users_input!): [directus_users!]!
   update_users_batch(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_users_input!]): [directus_users!]!
   update_users_item(id: ID!, data: update_directus_users_input!): directus_users
+  update_policies_items(filter: directus_policies_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_policies_input!): [directus_policies!]!
+  update_policies_batch(filter: directus_policies_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_policies_input!]): [directus_policies!]!
+  update_policies_item(id: ID!, data: update_directus_policies_input!): directus_policies
+  update_access_items(filter: directus_access_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_access_input!): [directus_access!]!
+  update_access_batch(filter: directus_access_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_access_input!]): [directus_access!]!
+  update_access_item(id: ID!, data: update_directus_access_input!): directus_access
   delete_roles_items(ids: [ID]!): delete_many
   delete_roles_item(id: ID!): delete_one
   delete_folders_items(ids: [ID]!): delete_many
   delete_folders_item(id: ID!): delete_one
-  delete_permissions_items(ids: [ID]!): delete_many
-  delete_permissions_item(id: ID!): delete_one
   delete_files_items(ids: [ID]!): delete_many
   delete_files_item(id: ID!): delete_one
+  delete_permissions_items(ids: [ID]!): delete_many
+  delete_permissions_item(id: ID!): delete_one
   delete_presets_items(ids: [ID]!): delete_many
   delete_presets_item(id: ID!): delete_one
   delete_panels_items(ids: [ID]!): delete_many
@@ -208,6 +227,10 @@ type Mutation {
   delete_webhooks_item(id: ID!): delete_one
   delete_users_items(ids: [ID]!): delete_many
   delete_users_item(id: ID!): delete_one
+  delete_policies_items(ids: [ID]!): delete_many
+  delete_policies_item(id: ID!): delete_one
+  delete_access_items(ids: [ID]!): delete_many
+  delete_access_item(id: ID!): delete_one
 }
 
 type Subscription {
@@ -215,8 +238,8 @@ type Subscription {
   directus_revisions_mutated(event: EventEnum): directus_revisions_mutated
   directus_folders_mutated(event: EventEnum): directus_folders_mutated
   directus_activity_mutated(event: EventEnum): directus_activity_mutated
-  directus_permissions_mutated(event: EventEnum): directus_permissions_mutated
   directus_files_mutated(event: EventEnum): directus_files_mutated
+  directus_permissions_mutated(event: EventEnum): directus_permissions_mutated
   directus_presets_mutated(event: EventEnum): directus_presets_mutated
   directus_settings_mutated(event: EventEnum): directus_settings_mutated
   directus_panels_mutated(event: EventEnum): directus_panels_mutated
@@ -231,6 +254,8 @@ type Subscription {
   directus_sync_id_map_mutated(event: EventEnum): directus_sync_id_map_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
   collectivo_tiles_mutated(event: EventEnum): collectivo_tiles_mutated
+  directus_policies_mutated(event: EventEnum): directus_policies_mutated
+  directus_access_mutated(event: EventEnum): directus_access_mutated
   collectivo_tags_mutated(event: EventEnum): collectivo_tags_mutated
   collectivo_tags_directus_users_mutated(event: EventEnum): collectivo_tags_directus_users_mutated
   collectivo_tiles_buttons_mutated(event: EventEnum): collectivo_tiles_buttons_mutated
@@ -288,6 +313,8 @@ scalar Int
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSON
+
+scalar permissions_me_type
 
 """
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
@@ -453,6 +480,45 @@ type delete_one {
 type delete_relation {
   collection: String
   field: String
+}
+
+type directus_access {
+  id: ID!
+  role(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_roles
+  user(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  policy(filter: directus_policies_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_policies
+  sort: Int
+}
+
+type directus_access_aggregated {
+  group: JSON
+  countAll: Int
+  count: directus_access_aggregated_count
+  countDistinct: directus_access_aggregated_count
+  avg: directus_access_aggregated_fields
+  sum: directus_access_aggregated_fields
+  avgDistinct: directus_access_aggregated_fields
+  sumDistinct: directus_access_aggregated_fields
+  min: directus_access_aggregated_fields
+  max: directus_access_aggregated_fields
+}
+
+type directus_access_aggregated_count {
+  id: Int
+  role: Int
+  user: Int
+  policy: Int
+  sort: Int
+}
+
+type directus_access_aggregated_fields {
+  sort: Float
+}
+
+type directus_access_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_access
 }
 
 type directus_activity {
@@ -651,8 +717,8 @@ type directus_files {
   type: String
   folder(filter: directus_folders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_folders
   uploaded_by(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
-  uploaded_on: Date
-  uploaded_on_func: datetime_functions
+  created_on: Date
+  created_on_func: datetime_functions
   modified_by(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   modified_on: Date
   modified_on_func: datetime_functions
@@ -673,6 +739,8 @@ type directus_files {
   tus_id: String
   tus_data: JSON
   tus_data_func: count_functions
+  uploaded_on: Date
+  uploaded_on_func: datetime_functions
 }
 
 type directus_files_aggregated {
@@ -697,7 +765,7 @@ type directus_files_aggregated_count {
   type: Int
   folder: Int
   uploaded_by: Int
-  uploaded_on: Int
+  created_on: Int
   modified_by: Int
   modified_on: Int
   charset: Int
@@ -714,6 +782,7 @@ type directus_files_aggregated_count {
   focal_point_y: Int
   tus_id: Int
   tus_data: Int
+  uploaded_on: Int
 }
 
 type directus_files_aggregated_fields {
@@ -974,7 +1043,6 @@ type directus_panels_mutated {
 
 type directus_permissions {
   id: ID
-  role(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_roles
   collection: String!
   action: String!
   permissions: JSON
@@ -984,6 +1052,7 @@ type directus_permissions {
   presets: JSON
   presets_func: count_functions
   fields: [String]
+  policy(filter: directus_policies_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_policies
 }
 
 type directus_permissions_aggregated {
@@ -1001,13 +1070,13 @@ type directus_permissions_aggregated {
 
 type directus_permissions_aggregated_count {
   id: Int
-  role: Int
   collection: Int
   action: Int
   permissions: Int
   validation: Int
   presets: Int
   fields: Int
+  policy: Int
 }
 
 type directus_permissions_aggregated_fields {
@@ -1018,6 +1087,54 @@ type directus_permissions_mutated {
   key: ID!
   event: EventEnum
   data: directus_permissions
+}
+
+type directus_policies {
+  id: ID!
+  name: String!
+  icon: String
+  description: String
+  ip_access: [String]
+
+  """$t:field_options.directus_policies.enforce_tfa"""
+  enforce_tfa: Boolean!
+  admin_access: Boolean!
+  app_access: Boolean!
+  permissions(filter: directus_permissions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_permissions]
+  permissions_func: count_functions
+  users(filter: directus_access_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_access]
+  users_func: count_functions
+  roles(filter: directus_access_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_access]
+  roles_func: count_functions
+}
+
+type directus_policies_aggregated {
+  group: JSON
+  countAll: Int
+  count: directus_policies_aggregated_count
+  countDistinct: directus_policies_aggregated_count
+}
+
+type directus_policies_aggregated_count {
+  id: Int
+  name: Int
+  icon: Int
+  description: Int
+  ip_access: Int
+
+  """$t:field_options.directus_policies.enforce_tfa"""
+  enforce_tfa: Int
+  admin_access: Int
+  app_access: Int
+  permissions: Int
+  users: Int
+  roles: Int
+}
+
+type directus_policies_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_policies
 }
 
 type directus_presets {
@@ -1164,10 +1281,11 @@ type directus_roles {
   name: String!
   icon: String
   description: String
-  ip_access: [String]
-  enforce_tfa: Boolean!
-  admin_access: Boolean!
-  app_access: Boolean
+  parent(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_roles
+  children(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_roles]
+  children_func: count_functions
+  policies(filter: directus_access_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_access]
+  policies_func: count_functions
   users(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_users]
   users_func: count_functions
 }
@@ -1184,10 +1302,13 @@ type directus_roles_aggregated_count {
   name: Int
   icon: Int
   description: Int
-  ip_access: Int
-  enforce_tfa: Int
-  admin_access: Int
-  app_access: Int
+
+  """$t:field_options.directus_roles.parent_note"""
+  parent: Int
+
+  """$t:field_options.directus_roles.children_note"""
+  children: Int
+  policies: Int
   users: Int
 }
 
@@ -1436,6 +1557,8 @@ type directus_users {
   memberships_func: count_functions
   mila_documents(filter: junction_directus_users_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [junction_directus_users_files]
   mila_documents_func: count_functions
+  policies(filter: directus_access_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_access]
+  policies_func: count_functions
 }
 
 type directus_users_aggregated {
@@ -1500,6 +1623,7 @@ type directus_users_aggregated_count {
   messages_campaigns: Int
   memberships: Int
   mila_documents: Int
+  policies: Int
 }
 
 type directus_users_mutated {
@@ -1898,6 +2022,12 @@ type payments_invoices_out_mutated {
   data: payments_invoices_out
 }
 
+type policy_me_globals_type {
+  enforce_tfa: Boolean
+  app_access: Boolean
+  admin_access: Boolean
+}
+
 type server_info {
   project: server_info_project
   rateLimit: Boolean
@@ -2191,6 +2321,14 @@ input create_collectivo_tags_input {
   tags_users: [create_collectivo_tags_directus_users_input]
 }
 
+input create_directus_access_input {
+  id: ID
+  role: create_directus_roles_input
+  user: create_directus_users_input
+  policy: create_directus_policies_input
+  sort: Int
+}
+
 input create_directus_collections_fields_input {
   collection: String
   field: String
@@ -2234,7 +2372,7 @@ input create_directus_files_input {
   type: String
   folder: create_directus_folders_input
   uploaded_by: create_directus_users_input
-  uploaded_on: Date
+  created_on: Date
   modified_by: create_directus_users_input
   modified_on: Date
   charset: String
@@ -2251,6 +2389,7 @@ input create_directus_files_input {
   focal_point_y: Int
   tus_id: String
   tus_data: JSON
+  uploaded_on: Date
 }
 
 input create_directus_flows_input {
@@ -2322,13 +2461,29 @@ input create_directus_panels_input {
 
 input create_directus_permissions_input {
   id: ID
-  role: create_directus_roles_input
   collection: String!
   action: String!
   permissions: JSON
   validation: JSON
   presets: JSON
   fields: [String]
+  policy: create_directus_policies_input
+}
+
+input create_directus_policies_input {
+  id: ID
+  name: String!
+  icon: String
+  description: String
+  ip_access: [String]
+
+  """$t:field_options.directus_policies.enforce_tfa"""
+  enforce_tfa: Boolean!
+  admin_access: Boolean!
+  app_access: Boolean!
+  permissions: [create_directus_permissions_input]
+  users: [create_directus_access_input]
+  roles: [create_directus_access_input]
 }
 
 input create_directus_presets_input {
@@ -2360,10 +2515,9 @@ input create_directus_roles_input {
   name: String!
   icon: String
   description: String
-  ip_access: [String]
-  enforce_tfa: Boolean!
-  admin_access: Boolean!
-  app_access: Boolean
+  parent: create_directus_roles_input
+  children: [create_directus_roles_input]
+  policies: [create_directus_access_input]
   users: [create_directus_users_input]
 }
 
@@ -2452,6 +2606,7 @@ input create_directus_users_input {
   messages_campaigns: [create_messages_campaigns_directus_users_input]
   memberships: [create_memberships_input]
   mila_documents: [create_junction_directus_users_files_input]
+  policies: [create_directus_access_input]
 }
 
 input create_directus_versions_input {
@@ -2663,6 +2818,16 @@ input datetime_function_filter_operators {
   second: number_filter_operators
 }
 
+input directus_access_filter {
+  id: string_filter_operators
+  role: directus_roles_filter
+  user: directus_users_filter
+  policy: directus_policies_filter
+  sort: number_filter_operators
+  _and: [directus_access_filter]
+  _or: [directus_access_filter]
+}
+
 input directus_activity_filter {
   id: number_filter_operators
   action: string_filter_operators
@@ -2772,8 +2937,8 @@ input directus_files_filter {
   type: string_filter_operators
   folder: directus_folders_filter
   uploaded_by: directus_users_filter
-  uploaded_on: date_filter_operators
-  uploaded_on_func: datetime_function_filter_operators
+  created_on: date_filter_operators
+  created_on_func: datetime_function_filter_operators
   modified_by: directus_users_filter
   modified_on: date_filter_operators
   modified_on_func: datetime_function_filter_operators
@@ -2794,6 +2959,8 @@ input directus_files_filter {
   tus_id: string_filter_operators
   tus_data: string_filter_operators
   tus_data_func: count_function_filter_operators
+  uploaded_on: date_filter_operators
+  uploaded_on_func: datetime_function_filter_operators
   _and: [directus_files_filter]
   _or: [directus_files_filter]
 }
@@ -2885,7 +3052,6 @@ input directus_panels_filter {
 
 input directus_permissions_filter {
   id: number_filter_operators
-  role: directus_roles_filter
   collection: string_filter_operators
   action: string_filter_operators
   permissions: string_filter_operators
@@ -2895,8 +3061,28 @@ input directus_permissions_filter {
   presets: string_filter_operators
   presets_func: count_function_filter_operators
   fields: string_filter_operators
+  policy: directus_policies_filter
   _and: [directus_permissions_filter]
   _or: [directus_permissions_filter]
+}
+
+input directus_policies_filter {
+  id: string_filter_operators
+  name: string_filter_operators
+  icon: string_filter_operators
+  description: string_filter_operators
+  ip_access: string_filter_operators
+  enforce_tfa: boolean_filter_operators
+  admin_access: boolean_filter_operators
+  app_access: boolean_filter_operators
+  permissions: directus_permissions_filter
+  permissions_func: count_function_filter_operators
+  users: directus_access_filter
+  users_func: count_function_filter_operators
+  roles: directus_access_filter
+  roles_func: count_function_filter_operators
+  _and: [directus_policies_filter]
+  _or: [directus_policies_filter]
 }
 
 input directus_presets_filter {
@@ -2963,10 +3149,11 @@ input directus_roles_filter {
   name: string_filter_operators
   icon: string_filter_operators
   description: string_filter_operators
-  ip_access: string_filter_operators
-  enforce_tfa: boolean_filter_operators
-  admin_access: boolean_filter_operators
-  app_access: boolean_filter_operators
+  parent: directus_roles_filter
+  children: directus_roles_filter
+  children_func: count_function_filter_operators
+  policies: directus_access_filter
+  policies_func: count_function_filter_operators
   users: directus_users_filter
   users_func: count_function_filter_operators
   _and: [directus_roles_filter]
@@ -3067,6 +3254,8 @@ input directus_users_filter {
   memberships_func: count_function_filter_operators
   mila_documents: junction_directus_users_files_filter
   mila_documents_func: count_function_filter_operators
+  policies: directus_access_filter
+  policies_func: count_function_filter_operators
   _and: [directus_users_filter]
   _or: [directus_users_filter]
 }
@@ -3422,6 +3611,14 @@ input update_collectivo_tags_input {
   tags_users: [update_collectivo_tags_directus_users_input]
 }
 
+input update_directus_access_input {
+  id: ID
+  role: update_directus_roles_input
+  user: update_directus_users_input
+  policy: update_directus_policies_input
+  sort: Int
+}
+
 input update_directus_collections_input {
   meta: directus_collections_meta_input
 }
@@ -3462,7 +3659,7 @@ input update_directus_files_input {
   type: String
   folder: update_directus_folders_input
   uploaded_by: update_directus_users_input
-  uploaded_on: Date
+  created_on: Date
   modified_by: update_directus_users_input
   modified_on: Date
   charset: String
@@ -3479,6 +3676,7 @@ input update_directus_files_input {
   focal_point_y: Int
   tus_id: String
   tus_data: JSON
+  uploaded_on: Date
 }
 
 input update_directus_flows_input {
@@ -3550,13 +3748,29 @@ input update_directus_panels_input {
 
 input update_directus_permissions_input {
   id: ID
-  role: update_directus_roles_input
   collection: String
   action: String
   permissions: JSON
   validation: JSON
   presets: JSON
   fields: [String]
+  policy: update_directus_policies_input
+}
+
+input update_directus_policies_input {
+  id: ID
+  name: String
+  icon: String
+  description: String
+  ip_access: [String]
+
+  """$t:field_options.directus_policies.enforce_tfa"""
+  enforce_tfa: Boolean
+  admin_access: Boolean
+  app_access: Boolean
+  permissions: [update_directus_permissions_input]
+  users: [update_directus_access_input]
+  roles: [update_directus_access_input]
 }
 
 input update_directus_presets_input {
@@ -3588,10 +3802,9 @@ input update_directus_roles_input {
   name: String
   icon: String
   description: String
-  ip_access: [String]
-  enforce_tfa: Boolean
-  admin_access: Boolean
-  app_access: Boolean
+  parent: update_directus_roles_input
+  children: [update_directus_roles_input]
+  policies: [update_directus_access_input]
   users: [update_directus_users_input]
 }
 
@@ -3724,6 +3937,7 @@ input update_directus_users_input {
   messages_campaigns: [update_messages_campaigns_directus_users_input]
   memberships: [update_memberships_input]
   mila_documents: [update_junction_directus_users_files_input]
+  policies: [update_directus_access_input]
 }
 
 input update_directus_versions_input {
