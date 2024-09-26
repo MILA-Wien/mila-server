@@ -103,8 +103,6 @@ async function registerMembership(body: any, userID: string | undefined) {
     }
   }
 
-  const user_password = userData.password;
-
   // Connect to keycloak
   const keycloak = new KcAdminClient({
     baseUrl: config.public.keycloakUrl,

@@ -31,6 +31,11 @@ for (const item of menuItemsStore) {
     click:
       item.click ||
       (() => {
+        if (item.external) {
+          window.open(item.to, "_blank");
+          return;
+        }
+
         router.push(item.to);
       }),
   });
