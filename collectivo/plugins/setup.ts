@@ -69,17 +69,6 @@ export default defineNuxtPlugin(() => {
         );
       },
     },
-    {
-      label: "Studio",
-      icon: "i-heroicons-chart-bar-square",
-      to: runtimeConfig.public.directusUrl,
-      external: true,
-      // hideOnMobile: true,
-      order: 99,
-      filter: async () => {
-        return user.user?.role?.app_access ?? false;
-      },
-    },
   ];
 
   const publicItems: CollectivoMenuItem[] = [
@@ -114,16 +103,23 @@ export default defineNuxtPlugin(() => {
       order: 1,
     },
     {
-      label: "Logout",
-      icon: "i-heroicons-arrow-left-on-rectangle-solid",
-      click: user.logout,
-      order: 1000,
-    },
-    {
       label: "Membership",
       to: "/memberships/membership",
       icon: "i-heroicons-identification",
       order: 20,
+    },
+    {
+      label: "Admin Bereich",
+      icon: "i-heroicons-chart-bar-square",
+      to: runtimeConfig.public.directusUrl,
+      external: true,
+      order: 99,
+    },
+    {
+      label: "Logout",
+      icon: "i-heroicons-arrow-left-on-rectangle-solid",
+      click: user.logout,
+      order: 1000,
     },
   ];
 

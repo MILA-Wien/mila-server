@@ -9,6 +9,8 @@ export const useCollectivoUser = () => {
   return state;
 };
 
+const ISMEMBER_STATUS_LIST = ["approved", "in_exclusion", "in_cancellation"];
+
 class CollectivoUserStore {
   user: CollectivoUser | null;
   membership: MembershipsMembership | null;
@@ -37,7 +39,6 @@ class CollectivoUserStore {
       readMe({
         fields: [
           "*",
-          "role.*",
           "memberships.*",
           "memberships.shifts_skills.shifts_skills_id.*",
           "collectivo_tags.collectivo_tags_id",
@@ -45,21 +46,20 @@ class CollectivoUserStore {
       }),
     )) as CollectivoUser;
 
+    // Process tags
     for (const field of this.user.collectivo_tags ?? []) {
       this.tags.push(field.collectivo_tags_id);
     }
+    delete this.user.collectivo_tags;
 
-    if (this.user.memberships.length > 0) {
+    // Process membership
+    if (this.user.memberships && this.user.memberships.length > 0) {
       this.membership = this.user.memberships[0];
-
-      if (
-        ["approved", "in_exclusion", "in_cancellation"].includes(
-          this.membership.memberships_status,
-        )
-      ) {
+      if (ISMEMBER_STATUS_LIST.includes(this.membership.memberships_status)) {
         this.isMember = true;
       }
     }
+    delete this.user.memberships;
   }
 
   async save(data: CollectivoUser) {
@@ -72,8 +72,7 @@ class CollectivoUserStore {
   }
 
   async login(force: boolean = false) {
-    const user = useCollectivoUser();
-    if (user.value.isAuthenticated === true && !force) return;
+    if (useCollectivoUser().value.isAuthenticated === true && !force) return;
     return navigateTo("/login");
   }
 

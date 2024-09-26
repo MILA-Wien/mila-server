@@ -134,9 +134,8 @@ declare global {
     first_name: string;
     last_name: string;
     email: string;
-    role?: DirectusRole;
-    collectivo_tags: { collectivo_tags_id: number }[];
-    memberships: MembershipsMembership[];
+    collectivo_tags?: { collectivo_tags_id: number }[];
+    memberships?: MembershipsMembership[];
     [key: string]: string | undefined;
   }
 

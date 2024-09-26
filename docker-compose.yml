@@ -40,7 +40,7 @@ services:
       NUXT_LOTZAPP_PASSWORD: ${LOTZAPP_PASSWORD}
 
   directus:
-    image: directus/directus:10.13.1
+    image: directus/directus:11.1.0
     container_name: ${DIRECTUS_CONTAINER_NAME}
     depends_on:
       - directus-db
