@@ -45,74 +45,10 @@
         "sort": 1
       }
     ],
-    "_syncId": "14e84f5a-c3b7-43dd-b48c-dcbba33f1a29"
+    "_syncId": "0288ddc8-4ca7-4d85-ab2f-1e8301a2dba1"
   },
   {
-    "name": "collectivo_user",
-    "icon": "supervised_user_circle",
-    "description": null,
-    "ip_access": null,
-    "enforce_tfa": false,
-    "admin_access": false,
-    "app_access": false,
-    "roles": [
-      {
-        "role": "e600443a-e943-4061-b7c5-30482fca92ad",
-        "sort": 1
-      }
-    ],
-    "_syncId": "272dae5c-59c7-4c41-89bd-2b22dc6437f0"
-  },
-  {
-    "name": "OT Lesen + Kacheln",
-    "icon": "menu_book",
-    "description": null,
-    "ip_access": null,
-    "enforce_tfa": false,
-    "admin_access": false,
-    "app_access": true,
-    "roles": [
-      {
-        "role": "ecc860e3-b05e-4280-ad01-95c77ec69a01",
-        "sort": 1
-      }
-    ],
-    "_syncId": "408ed4d1-71af-49de-983e-9c2e253b566b"
-  },
-  {
-    "name": "aaron_admin",
-    "icon": "supervised_user_circle",
-    "description": null,
-    "ip_access": null,
-    "enforce_tfa": false,
-    "admin_access": true,
-    "app_access": true,
-    "roles": [
-      {
-        "role": "be21c983-36bd-447b-b74c-893ec9a6abc4",
-        "sort": 1
-      }
-    ],
-    "_syncId": "49d381fe-da3b-48de-84ef-128092eab29d"
-  },
-  {
-    "name": "collectivo_admin",
-    "icon": "supervised_user_circle",
-    "description": null,
-    "ip_access": null,
-    "enforce_tfa": false,
-    "admin_access": true,
-    "app_access": true,
-    "roles": [
-      {
-        "role": "f51856b0-ec8f-48c5-948f-7f05934dfc20",
-        "sort": 1
-      }
-    ],
-    "_syncId": "e4e9a04d-447d-496c-aef9-d179c661bd9e"
-  },
-  {
-    "name": "collectivo_editor",
+    "name": "Mitgliederverwaltung",
     "icon": "supervised_user_circle",
     "description": null,
     "ip_access": null,
@@ -125,22 +61,22 @@
         "sort": 1
       }
     ],
-    "_syncId": "eb9919f6-2bcb-4659-b48f-7730269f7e5a"
+    "_syncId": "3c58faed-6e16-4a09-8184-ac5fe6bde810"
   },
   {
-    "name": "3 Mitgliederbüro",
+    "name": "NutzerInnen",
     "icon": "supervised_user_circle",
-    "description": null,
+    "description": "Basisrechte für Frontend NutzerInnen",
     "ip_access": null,
     "enforce_tfa": false,
     "admin_access": false,
-    "app_access": true,
+    "app_access": false,
     "roles": [
       {
-        "role": "a0e8cf61-114b-4eed-b619-140c3b077f25",
+        "role": "e600443a-e943-4061-b7c5-30482fca92ad",
         "sort": 1
       }
     ],
-    "_syncId": "fe6c6eba-824c-41b3-9cd7-33b18f8957d5"
+    "_syncId": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0"
   }
 ]

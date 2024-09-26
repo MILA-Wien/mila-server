@@ -545,6 +545,55 @@
     "_syncId": "8747641b-cb63-4c8e-9261-e0fc867443dc"
   },
   {
+    "dashboard": "54976105-ca62-4135-9d4d-1c5c12ed7e34",
+    "name": "Davon INVESTIEREND",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 26,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Investierend"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "9f490198-4d0d-4550-bc94-ab9987621ee1"
+  },
+  {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
     "name": "Aussteigende MG",
     "icon": "switch_account",
@@ -786,6 +835,55 @@
     "_syncId": "c90fc392-ac51-4673-82a4-b367e4bf4c87"
   },
   {
+    "dashboard": "54976105-ca62-4135-9d4d-1c5c12ed7e34",
+    "name": "Davon AKTIV",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 17,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Aktiv"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "ca30ea57-cc44-498d-a271-834bb7fb76fb"
+  },
+  {
     "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
     "name": "Mitglieder zu Stichtag",
     "icon": "switch_account",
@@ -848,5 +946,25 @@
       "defaultValue": null
     },
     "_syncId": "d2a04220-e4e8-476b-95c5-6258590ba089"
+  },
+  {
+    "dashboard": "54976105-ca62-4135-9d4d-1c5c12ed7e34",
+    "name": "Stichtag",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "variable",
+    "position_x": 1,
+    "position_y": 1,
+    "width": 20,
+    "height": 6,
+    "options": {
+      "type": "date",
+      "inter": "datetime",
+      "field": "stichtag",
+      "defaultValue": null
+    },
+    "_syncId": "f941419e-a237-454f-a0ed-11f2b84f2b0d"
   }
 ]

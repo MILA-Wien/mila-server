@@ -23,20 +23,6 @@
     "name": "Skript ausführen",
     "key": "automation_name",
     "type": "exec",
-    "position_x": 8,
-    "position_y": 54,
-    "options": {
-      "code": "module.exports = async function(data) {\n\tif (data[\"read_assignment\"][\"shifts_is_regular\"]){\n\t\treturn { \"automation_name\": \"shifts_assignment_created_regular\" }\n    }\n\treturn { \"automation_name\": \"shifts_assignment_created_jumper\" }\n}"
-    },
-    "resolve": "594dbc33-1c9e-4e63-a503-70bd92f784d3",
-    "reject": null,
-    "flow": "4132f37d-df4d-4d17-ae4f-f048b8a74af5",
-    "_syncId": "b72ff107-a5c3-452a-bd54-9179161c97b6"
-  },
-  {
-    "name": "Skript ausführen",
-    "key": "automation_name",
-    "type": "exec",
     "position_x": 19,
     "position_y": 1,
     "options": {
@@ -46,6 +32,20 @@
     "reject": null,
     "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
     "_syncId": "cb8ea7e4-d20a-4466-af9c-d5e59bae36a6"
+  },
+  {
+    "name": "Skript ausführen",
+    "key": "automation_name",
+    "type": "exec",
+    "position_x": 8,
+    "position_y": 54,
+    "options": {
+      "code": "module.exports = async function(data) {\n\tif (data[\"read_assignment\"][\"shifts_is_regular\"]){\n\t\treturn { \"automation_name\": \"shifts_assignment_created_regular\" }\n    }\n\treturn { \"automation_name\": \"shifts_assignment_created_jumper\" }\n}"
+    },
+    "resolve": "594dbc33-1c9e-4e63-a503-70bd92f784d3",
+    "reject": null,
+    "flow": "4132f37d-df4d-4d17-ae4f-f048b8a74af5",
+    "_syncId": "b72ff107-a5c3-452a-bd54-9179161c97b6"
   },
   {
     "name": "calcShares",
@@ -650,31 +650,6 @@
     "_syncId": "208af1eb-eaa7-49a5-92c9-22360a4a2b5b"
   },
   {
-    "name": "Read memberships",
-    "key": "read_memberships",
-    "type": "item-read",
-    "position_x": 3,
-    "position_y": 18,
-    "options": {
-      "collection": "memberships",
-      "permissions": "$full",
-      "query": {
-        "fields": [
-          "memberships_user"
-        ],
-        "filter": {
-          "id": {
-            "_in": "{{$trigger.keys}}"
-          }
-        }
-      }
-    },
-    "resolve": "1b8c6e64-414b-4ff4-a9ed-fd3ab6286ee8",
-    "reject": null,
-    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
-    "_syncId": "05cd9d73-3167-4510-ab92-60e4a0cb8b35"
-  },
-  {
     "name": "Daten lesen",
     "key": "read_memberships",
     "type": "item-read",
@@ -698,6 +673,31 @@
     "reject": null,
     "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
     "_syncId": "f971c8b1-cb1a-4bb6-8534-896a37f2ffd2"
+  },
+  {
+    "name": "Read memberships",
+    "key": "read_memberships",
+    "type": "item-read",
+    "position_x": 3,
+    "position_y": 18,
+    "options": {
+      "collection": "memberships",
+      "permissions": "$full",
+      "query": {
+        "fields": [
+          "memberships_user"
+        ],
+        "filter": {
+          "id": {
+            "_in": "{{$trigger.keys}}"
+          }
+        }
+      }
+    },
+    "resolve": "1b8c6e64-414b-4ff4-a9ed-fd3ab6286ee8",
+    "reject": null,
+    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
+    "_syncId": "05cd9d73-3167-4510-ab92-60e4a0cb8b35"
   },
   {
     "name": "Daten lesen",
@@ -1200,20 +1200,6 @@
     "_syncId": "4bb7b88f-e8cc-4b46-b7ed-a075b3cd334b"
   },
   {
-    "name": "Skript ausführen",
-    "key": "user_ids",
-    "type": "exec",
-    "position_x": 22,
-    "position_y": 20,
-    "options": {
-      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_absences\"]) {\n    \tid = data[\"read_absences\"][i].shifts_membership.memberships_user\n        if (id) {\n            user_ids.push(id)\n        }\n    }\n    \n\treturn { user_ids };\n}"
-    },
-    "resolve": "c3c444aa-0b91-4855-8a24-ceb0e0ba594e",
-    "reject": null,
-    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
-    "_syncId": "204eeadb-0643-4626-8f35-a4fea89e5d65"
-  },
-  {
     "name": "User ids",
     "key": "user_ids",
     "type": "exec",
@@ -1226,5 +1212,19 @@
     "reject": null,
     "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
     "_syncId": "1b8c6e64-414b-4ff4-a9ed-fd3ab6286ee8"
+  },
+  {
+    "name": "Skript ausführen",
+    "key": "user_ids",
+    "type": "exec",
+    "position_x": 22,
+    "position_y": 20,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_absences\"]) {\n    \tid = data[\"read_absences\"][i].shifts_membership.memberships_user\n        if (id) {\n            user_ids.push(id)\n        }\n    }\n    \n\treturn { user_ids };\n}"
+    },
+    "resolve": "c3c444aa-0b91-4855-8a24-ceb0e0ba594e",
+    "reject": null,
+    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
+    "_syncId": "204eeadb-0643-4626-8f35-a4fea89e5d65"
   }
 ]
