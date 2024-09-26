@@ -1,6 +1,14 @@
 # MILA Server
 
-Applications of [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/).
+Anwendungen des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/), inklusive Mitglieder- und Schichtenverwaltung. Weitere Informationen für Mitglieder unter https://handbuch.mila.wien/.
+
+## Services
+
+- Mitgliederplattform (collectivo)
+- Datenstudio (directus & directus-db)
+- Zugangsverwaltung (keycloak & keycloak-db)
+- Direktkreditverwaltung (habidat & habidat-db)
+- Backups (directus-db-backup & keycloak-db-backup)
 
 ## Local setup
 
@@ -21,6 +29,7 @@ Applications of [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/).
 ## Production setup
 
 - Install Docker and PNPM
+- Set .env vars (including `COMPOSE_PROFILES="production"`)
 - [Set up a reverse proxy](https://www.linode.com/docs/guides/using-nginx-proxy-manager/) with a docker network called `proxiable`
 - Set the following [custom Nginx configuration](https://stackoverflow.com/questions/56126864) for Keycloak
   ```
