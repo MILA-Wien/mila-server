@@ -15,7 +15,6 @@ class CollectivoUserStore {
   user: CollectivoUser | null;
   membership: MembershipsMembership | null;
   tags: number[];
-  fields: CollectivoFormField[];
   isAuthenticated: boolean;
   isMember: boolean;
   saving: boolean;
@@ -25,7 +24,6 @@ class CollectivoUserStore {
   constructor() {
     this.user = null;
     this.membership = null;
-    this.fields = [];
     this.tags = [];
     this.isAuthenticated = false;
     this.isMember = false;

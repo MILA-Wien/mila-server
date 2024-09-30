@@ -489,7 +489,7 @@ const form: Ref<CollectivoForm> = ref({
       type: "text",
       order: 720,
       conditions: is_sepa,
-      validators: [{ type: "test", value: "payments_iban_sepa" }],
+      validators: [{ type: "iban" }],
       required: true,
     },
     {

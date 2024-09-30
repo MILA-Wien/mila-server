@@ -8,6 +8,10 @@ const currentDir = dirname(fileURLToPath(import.meta.url));
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
+  routeRules: {
+    "/mitglied-werden": { redirect: "/register" },
+    "/memberships/register": { redirect: "/register" },
+  },
   runtimeConfig: {
     collectivoVersion: pkg.version,
     apiToken: process.env.COLLECTIVO_API_TOKEN || "badToken",
