@@ -35,14 +35,18 @@ async function saveProfile(data: CollectivoUser) {
 </script>
 
 <template>
-  <!-- <CollectivoMenuTabs :items="profileMenu" /> -->
-  <CollectivoContainer>
-    <CollectivoFormBuilder
-      v-if="user.user"
-      :data="user.user"
-      :fields="user.fields"
-      :submit="saveProfile"
-      submit-label="Save"
-    />
-  </CollectivoContainer>
+  <div id="mila-profile">
+    <CollectivoContainer color="blue">
+      <h2>Mitgliedschaft</h2>
+    </CollectivoContainer>
+    <CollectivoContainer>
+      <CollectivoFormBuilder
+        v-if="user.user"
+        :data="user.user"
+        :fields="user.fields"
+        :submit="saveProfile"
+        submit-label="Save"
+      />
+    </CollectivoContainer>
+  </div>
 </template>
