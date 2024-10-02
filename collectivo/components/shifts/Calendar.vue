@@ -133,7 +133,7 @@ function getUserShiftCategories() {
 
 const propsShiftTypeToList: { [key: string]: ShiftType[] } = {
   jumper: [possibleShiftTypes.jumper],
-  admin: [possibleShiftTypes.unfilled, possibleShiftTypes.all],
+  admin: [possibleShiftTypes.all, possibleShiftTypes.unfilled],
 };
 
 const propsShiftCategoryToList: { [key: string]: ShiftType[] } = {
