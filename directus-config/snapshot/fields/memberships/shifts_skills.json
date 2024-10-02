@@ -29,6 +29,10 @@
         {
           "text": "$t:public-relations",
           "value": "public-relations"
+        },
+        {
+          "text": "Operativos",
+          "value": "operativos"
         }
       ]
     },
