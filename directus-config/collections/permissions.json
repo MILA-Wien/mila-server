@@ -1084,34 +1084,50 @@
   {
     "collection": "directus_users",
     "action": "create",
-    "permissions": {
-      "_and": [
-        {
-          "id": {
-            "_nnull": true
-          }
-        }
-      ]
-    },
+    "permissions": null,
     "validation": null,
     "presets": null,
     "fields": [
       "first_name",
+      "collectivo_tags_divider",
       "last_name",
+      "collectivo_tags",
       "email",
-      "title",
-      "description",
-      "first_name",
-      "last_name",
-      "email",
-      "title",
-      "description",
       "messages_campaigns",
-      "first_name",
-      "last_name",
-      "email",
       "password",
+      "payments_profile_group",
+      "payments_type",
+      "payments_account_iban",
+      "payments_account_owner",
+      "avatar",
+      "memberships_profile_group",
+      "memberships_phone",
+      "memberships_birthday",
+      "memberships_occupation",
+      "memberships_gender",
+      "memberships_person_type",
+      "location",
+      "memberships_organization_group",
+      "memberships_organization_name",
+      "memberships_organization_id",
+      "memberships_organization_type",
       "title",
+      "memberships_address_group",
+      "memberships_street",
+      "memberships_streetnumber",
+      "memberships_stair",
+      "memberships_door",
+      "memberships_postcode",
+      "memberships_city",
+      "memberships_country",
+      "mila_survey_group",
+      "mila_survey_contact",
+      "mila_survey_motivation",
+      "mila_groups_interested_2",
+      "mila_skills_2",
+      "mila_pr_approved",
+      "mila_documents",
+      "id",
       "description"
     ],
     "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
@@ -1120,34 +1136,11 @@
   {
     "collection": "directus_users",
     "action": "delete",
-    "permissions": {
-      "_and": [
-        {
-          "id": {
-            "_nnull": true
-          }
-        }
-      ]
-    },
+    "permissions": null,
     "validation": null,
     "presets": null,
     "fields": [
-      "first_name",
-      "last_name",
-      "email",
-      "title",
-      "description",
-      "first_name",
-      "last_name",
-      "email",
-      "title",
-      "description",
-      "first_name",
-      "last_name",
-      "email",
-      "password",
-      "title",
-      "description"
+      "*"
     ],
     "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
     "_syncId": "688c9062-0328-45b0-a2b3-cc77f2045d57"
@@ -1155,104 +1148,57 @@
   {
     "collection": "directus_users",
     "action": "read",
-    "permissions": {
-      "_and": [
-        {
-          "id": {
-            "_nnull": true
-          }
-        }
-      ]
-    },
+    "permissions": null,
     "validation": null,
     "presets": null,
     "fields": [
-      "first_name",
-      "last_name",
-      "email",
-      "title",
-      "description",
-      "collectivo_tags",
-      "messages_campaigns",
-      "payments_profile_group",
-      "payments_type",
-      "payments_account_iban",
-      "payments_account_owner",
-      "memberships_profile_group",
-      "memberships_occupation",
-      "memberships_gender",
-      "memberships_birthday",
-      "memberships_phone",
-      "memberships_person_type",
-      "memberships_organization_group",
-      "memberships_organization_name",
-      "memberships_organization_id",
-      "memberships_organization_type",
-      "memberships_address_group",
-      "memberships_street",
-      "memberships_streetnumber",
-      "memberships_stair",
-      "memberships_door",
-      "memberships_postcode",
-      "memberships_city",
-      "memberships_country",
-      "mila_survey_group",
-      "mila_groups_interested",
-      "mila_skills",
-      "mila_survey_contact",
-      "mila_survey_motivation",
-      "mila_pr_approved",
-      "memberships",
-      "last_access",
-      "lotzapp_id",
-      "mila_documents",
-      "collectivo_tags_divider",
-      "first_name",
-      "last_name",
-      "email",
-      "password",
-      "title",
-      "description"
+      "*"
     ],
     "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
     "_syncId": "68915fc1-b191-4aa6-8955-572e6ffe4a95"
   },
   {
     "collection": "directus_users",
+    "action": "share",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "83aa390a-55f6-466a-a5d3-d1caaa9a9dbf"
+  },
+  {
+    "collection": "directus_users",
     "action": "update",
-    "permissions": {
-      "_and": [
-        {
-          "id": {
-            "_nnull": true
-          }
-        }
-      ]
-    },
+    "permissions": null,
     "validation": null,
     "presets": null,
     "fields": [
       "first_name",
+      "collectivo_tags_divider",
       "last_name",
-      "email",
-      "title",
-      "description",
       "collectivo_tags",
+      "email",
       "messages_campaigns",
+      "password",
       "payments_profile_group",
       "payments_type",
       "payments_account_iban",
       "payments_account_owner",
       "memberships_profile_group",
+      "memberships_phone",
+      "memberships_birthday",
       "memberships_occupation",
       "memberships_gender",
-      "memberships_birthday",
-      "memberships_phone",
       "memberships_person_type",
+      "location",
       "memberships_organization_group",
       "memberships_organization_name",
       "memberships_organization_id",
       "memberships_organization_type",
+      "title",
       "memberships_address_group",
       "memberships_street",
       "memberships_streetnumber",
@@ -1261,23 +1207,16 @@
       "memberships_postcode",
       "memberships_city",
       "memberships_country",
+      "description",
       "mila_survey_group",
       "mila_survey_contact",
       "mila_survey_motivation",
-      "mila_groups_interested",
-      "mila_skills",
+      "mila_groups_interested_2",
+      "mila_skills_2",
+      "tags",
       "mila_pr_approved",
-      "collectivo_tags_divider",
-      "id",
-      "mila_documents",
-      "lotzapp_id",
       "memberships",
-      "first_name",
-      "last_name",
-      "email",
-      "password",
-      "title",
-      "description"
+      "id"
     ],
     "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
     "_syncId": "cc075e8f-1648-463a-878e-44421be73f52"

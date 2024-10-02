@@ -10,6 +10,7 @@ export const useCollectivoUser = () => {
 };
 
 const ISMEMBER_STATUS_LIST = ["approved", "in_exclusion", "in_cancellation"];
+const ADMIN_ROLES = ["Administrator", "Mitgliederverwaltung"];
 
 class CollectivoUserStore {
   user: CollectivoUser | null;
@@ -17,6 +18,7 @@ class CollectivoUserStore {
   tags: number[];
   fields: CollectivoFormField[];
   isAuthenticated: boolean;
+  isAdmin: boolean;
   isMember: boolean;
   saving: boolean;
   loading: boolean;
@@ -28,6 +30,7 @@ class CollectivoUserStore {
     this.fields = [];
     this.tags = [];
     this.isAuthenticated = false;
+    this.isAdmin = false;
     this.isMember = false;
     this.saving = false;
     this.loading = false;
@@ -39,12 +42,16 @@ class CollectivoUserStore {
       readMe({
         fields: [
           "*",
+          "role.name",
           "memberships.*",
           "memberships.shifts_skills.shifts_skills_id.*",
           "collectivo_tags.collectivo_tags_id",
         ],
       }),
     )) as CollectivoUser;
+
+    // Check if admin
+    this.isAdmin = ADMIN_ROLES.includes(this.user.role.name);
 
     // Process tags
     for (const field of this.user.collectivo_tags ?? []) {
@@ -60,8 +67,6 @@ class CollectivoUserStore {
       }
     }
     delete this.user.memberships;
-
-    console.log("User", this.user);
   }
 
   async save(data: CollectivoUser) {

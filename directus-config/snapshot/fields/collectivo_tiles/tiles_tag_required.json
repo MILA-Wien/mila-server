@@ -12,7 +12,9 @@
     "hidden": false,
     "interface": "select-dropdown-m2o",
     "note": "Nur Personen mit diesem Tag sehen diese Kachel",
-    "options": null,
+    "options": {
+      "template": "{{tags_name}}"
+    },
     "readonly": false,
     "required": false,
     "sort": 7,

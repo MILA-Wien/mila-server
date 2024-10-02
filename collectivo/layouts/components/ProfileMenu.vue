@@ -2,10 +2,21 @@
 const { setLocale, t } = useI18n();
 const user = useCollectivoUser();
 const router = useRouter();
-const menus = useCollectivoMenus();
-const config = useAppConfig();
-const profileMenu: any = ref([[]]);
-const languageMenu: any = ref([[]]);
+const runtimeConfig = useRuntimeConfig();
+
+const locales = {
+  de: "Deutsch",
+  en: "English",
+};
+
+interface MenuItem {
+  label: string;
+  icon?: string;
+  click?: () => void;
+}
+
+const profileMenu: Ref<MenuItem[][]> = ref([[]]);
+const languageMenu: Ref<MenuItem[][]> = ref([[]]);
 
 const topRightMenus = ref([
   {
@@ -20,11 +31,50 @@ const topRightMenus = ref([
   },
 ]);
 
-const menuItemsStore = Object.values(
-  user.value.isAuthenticated ? menus.value.profile : menus.value.profile_public,
-).sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
+const profileItems: CollectivoMenuItem[] = [
+  {
+    label: "Profile",
+    icon: "i-heroicons-user-circle",
+    to: "/profile/",
+  },
+  {
+    label: "Membership",
+    to: "/memberships/membership",
+    icon: "i-heroicons-identification",
+  },
+];
 
-for (const item of menuItemsStore) {
+const profilePublicItems: CollectivoMenuItem[] = [
+  {
+    label: "Login",
+    icon: "i-heroicons-arrow-right-on-rectangle-solid",
+    click: user.value.login,
+  },
+];
+
+if (user.value.isAdmin) {
+  profileItems.push({
+    label: "Datenstudio",
+    icon: "i-heroicons-chart-bar-square",
+    to: runtimeConfig.public.directusUrl,
+    external: true,
+  });
+  profileItems.push({
+    label: "Schichtverwaltung",
+    icon: "i-heroicons-calendar-days-solid",
+    to: "/shifts/admin",
+  });
+}
+
+profileItems.push({
+  label: "Logout",
+  icon: "i-heroicons-arrow-left-on-rectangle-solid",
+  click: user.value.logout,
+});
+
+const items = user.value.isAuthenticated ? profileItems : profilePublicItems;
+
+for (const item of items) {
   profileMenu.value[0].push({
     label: item.label,
     icon: item.icon,
@@ -36,26 +86,19 @@ for (const item of menuItemsStore) {
           return;
         }
 
-        router.push(item.to);
+        router.push(item.to ?? "/");
       }),
   });
 }
 
-const locales = {
-  de: "Deutsch",
-  en: "English",
-};
-
-for (const i in config.collectivo.locales) {
-  const key = config.collectivo.locales[i];
-
+Object.entries(locales).forEach(([key, label]) => {
   languageMenu.value[0].push({
-    label: locales[key],
+    label: label,
     click: () => {
       setLocale(key);
     },
   });
-}
+});
 </script>
 
 <template>
@@ -72,5 +115,3 @@ for (const i in config.collectivo.locales) {
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped></style>

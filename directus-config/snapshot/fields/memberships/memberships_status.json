@@ -48,10 +48,6 @@
     "options": {
       "choices": [
         {
-          "text": "$t:draft",
-          "value": "draft"
-        },
-        {
           "text": "$t:applied",
           "value": "applied"
         },
@@ -91,7 +87,7 @@
     "name": "memberships_status",
     "table": "memberships",
     "data_type": "character varying",
-    "default_value": "draft",
+    "default_value": "applied",
     "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,

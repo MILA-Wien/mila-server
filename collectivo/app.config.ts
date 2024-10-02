@@ -4,7 +4,6 @@ export default defineAppConfig({
     projectDescription:
       "Partizipationsplattform für die Mitglieder der MILA Mitmach-Supermarkt e.G.",
     logoPath: "/img/mila_logo_subline.png",
-    locales: ["de", "en"],
     sidebarWidth: 160,
   },
   ui: {
@@ -38,6 +37,9 @@ export default defineAppConfig({
           lg: "h-5 w-5",
           xl: "h-6 w-6",
         },
+      },
+      default: {
+        size: "md",
       },
     },
     card: {

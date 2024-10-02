@@ -154,7 +154,7 @@ async function createCustomLog() {
 
 const mshipData = ref<MembershipsMembership | null>(null);
 const mshipError = ref<boolean>(false);
-const mshipID = ref<number | null>(null);
+const mshipID = ref<number | undefined>(undefined);
 
 watch(mshipID, () => {
   mshipData.value = null;
@@ -270,7 +270,7 @@ const createAssignmentModalIsOpen = ref(false);
 const createAssignmentCoordinator = ref(false);
 
 function startCreateAssignmentFlow() {
-  mshipID.value = null;
+  mshipID.value = undefined;
   createAssignmentModalIsOpen.value = true;
   createAssignmentCoordinator.value = false;
 }
@@ -401,7 +401,7 @@ function checkIfMshipInAssignments(mship: number) {
 
         <div>
           {{ t("Category") }}:
-          {{ t("cat:" + shift.shifts_category) }}
+          {{ t("shifts:" + shift.shifts_category) }}
         </div>
 
         <div v-if="shift.shifts_location">
@@ -641,12 +641,15 @@ function checkIfMshipInAssignments(mship: number) {
               </div>
             </UFormGroup>
             <div class="flex flex-wrap gap-2 mt-3">
-              <UButton @click="createAssignment(true)">{{
+              <UButton class="w-full" @click="createAssignment(true)">{{
                 t("Create one-time assignment")
               }}</UButton>
-              <UButton @click="createAssignment(false)">{{
-                t("Create regular assignment")
-              }}</UButton>
+              <UButton
+                v-if="props.shiftOccurence.shift.shifts_is_regular"
+                class="w-full"
+                @click="createAssignment(false)"
+                >{{ t("Create regular assignment") }}</UButton
+              >
             </div>
           </div>
         </div>
@@ -802,17 +805,11 @@ de:
   All day: "Ganztägig"
   "Shift coordinator": "Schichtkoordinator*in"
   "Shift coordination": "Schichtkoordination"
-  "cat:normal": "Normal"
-  "cat:accounting": "Buchhaltung"
-  "cat:it-support": "IT-Support"
-  "cat:public-relations": "Öffentlichkeitsarbeit"
+
   "Required skills": "Benötigte Fähigkeiten"
   "Shift needs coordinator": "Schicht benötigt Koordinator*in"
   "Assign this person as coordinator": "Diese Person als Koordinator*in eintragen"
-  "skill:shift-coordination": "Schichtkoordination"
-  "skill:accounting": "Buchhaltung"
-  "skill:it-support": "IT-Support"
-  "skill:public-relations": "Öffentlichkeitsarbeit"
+
   Skills: "Fähigkeiten"
   Category: Kategorie
   Member is already assigned  for this shift: "Mitglied ist bereits für diese Schicht angemeldet"

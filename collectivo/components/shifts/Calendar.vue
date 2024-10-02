@@ -15,6 +15,7 @@ const props = defineProps({
   },
 });
 
+const user = useCollectivoUser();
 const shiftActionModalisOpen = ref(false);
 const selectedShiftOccurence = ref(null);
 const showCalendar = ref(true);
@@ -97,6 +98,10 @@ const possibleShiftCategories: { [key: string]: ShiftType } = {
     label: "Normal",
     value: "normal",
   },
+  operativos: {
+    label: "Operativos",
+    value: "operativos",
+  },
   accounting: {
     label: "Accounting",
     value: "accounting",
@@ -111,13 +116,28 @@ const possibleShiftCategories: { [key: string]: ShiftType } = {
   },
 };
 
+// List of shift categories that match with user.membership?.shifts_skills
+function getUserShiftCategories() {
+  const userSkills = user.value.membership?.shifts_skills || [];
+  return [
+    possibleShiftCategories.normal,
+    ...Object.values(
+      Object.fromEntries(
+        Object.entries(possibleShiftCategories).filter(([key]) =>
+          userSkills.includes(key),
+        ),
+      ),
+    ),
+  ];
+}
+
 const propsShiftTypeToList: { [key: string]: ShiftType[] } = {
   jumper: [possibleShiftTypes.jumper],
   admin: [possibleShiftTypes.unfilled, possibleShiftTypes.all],
 };
 
 const propsShiftCategoryToList: { [key: string]: ShiftType[] } = {
-  jumper: [possibleShiftCategories.all],
+  jumper: getUserShiftCategories(), //[possibleShiftCategories.all],
   admin: [...Object.values(possibleShiftCategories)],
 };
 
@@ -130,16 +150,13 @@ const customSettings = ref({
 
 const calendarRef = ref(null);
 
+// Watch changes in settings and update events
 watch(
-  () => customSettings.value.selectedShiftType,
-  (value) => {
-    registerEventUpdate();
-  },
-);
-
-watch(
-  () => customSettings.value.selectedShiftCategory,
-  (value) => {
+  [
+    () => customSettings.value.selectedShiftType,
+    () => customSettings.value.selectedShiftCategory,
+  ],
+  (_) => {
     registerEventUpdate();
   },
 );
@@ -198,6 +215,15 @@ async function updateEvents(from, to) {
       }
     }
     if (props.mode === "admin" && !isPast) {
+      if (occurrence.shift.shifts_category === "operativos") {
+        if (occurrence.n_assigned > 0) {
+          const assignedUser =
+            occurrence.assignments[0].assignment.shifts_membership
+              .memberships_user;
+          title +=
+            " [" + assignedUser.first_name + " " + assignedUser.last_name + "]";
+        }
+      }
       title +=
         " [" +
         occurrence.n_assigned +

@@ -42,7 +42,6 @@ const europeanIBAN = [
 export default defineNuxtPlugin(() => {
   const menu = useCollectivoMenus();
   const user = useCollectivoUser().value;
-  const runtimeConfig = useRuntimeConfig();
 
   const items: CollectivoMenuItem[] = [
     {
@@ -71,61 +70,7 @@ export default defineNuxtPlugin(() => {
     },
   ];
 
-  const publicItems: CollectivoMenuItem[] = [
-    {
-      label: "Register",
-      icon: "i-heroicons-document-text",
-      to: "/memberships/register",
-      order: 200,
-      filter: (_item) => {
-        return true;
-      },
-    },
-  ];
-
-  const profilePublicItems: CollectivoMenuItem[] = [
-    {
-      label: "Login",
-      icon: "i-heroicons-arrow-right-on-rectangle-solid",
-      click: user.login,
-      order: 100,
-      filter: (_item) => {
-        return true;
-      },
-    },
-  ];
-
-  const profileItems: CollectivoMenuItem[] = [
-    {
-      label: "Profile",
-      icon: "i-heroicons-user-circle",
-      to: "/profile/",
-      order: 1,
-    },
-    {
-      label: "Membership",
-      to: "/memberships/membership",
-      icon: "i-heroicons-identification",
-      order: 20,
-    },
-    {
-      label: "Admin Bereich",
-      icon: "i-heroicons-chart-bar-square",
-      to: runtimeConfig.public.directusUrl,
-      external: true,
-      order: 99,
-    },
-    {
-      label: "Logout",
-      icon: "i-heroicons-arrow-left-on-rectangle-solid",
-      click: user.logout,
-      order: 1000,
-    },
-  ];
-
   menu.value.main.push(...items);
-  menu.value.profile.push(...profileItems);
-  menu.value.profile_public.push(...profilePublicItems);
 
   const validators = useCollectivoValidators();
 
