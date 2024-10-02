@@ -52,13 +52,15 @@ const profilePublicItems: CollectivoMenuItem[] = [
   },
 ];
 
-if (user.value.isAdmin) {
+if (user.value.isStudioAdmin) {
   profileItems.push({
     label: "Datenstudio",
     icon: "i-heroicons-chart-bar-square",
     to: runtimeConfig.public.directusUrl,
     external: true,
   });
+}
+if (user.value.isShiftAdmin) {
   profileItems.push({
     label: "Schichtverwaltung",
     icon: "i-heroicons-calendar-days-solid",
