@@ -47,9 +47,17 @@ export const getUserAssignments = async (mship: MembershipsMembership) => {
   )) as ShiftsAbsenceGet[];
 
   const holidays = [] as ShiftsAbsenceGet[];
+  const holidaysCurrent = [] as ShiftsAbsenceGet[];
+
   for (const absence of absences) {
     if (absence.shifts_is_holiday) {
       holidays.push(absence);
+      if (
+        new Date(absence.shifts_from) < new Date(nowStr) &&
+        absence.shifts_status === "accepted"
+      ) {
+        holidaysCurrent.push(absence);
+      }
     }
   }
 
@@ -98,6 +106,7 @@ export const getUserAssignments = async (mship: MembershipsMembership) => {
     assignmentRules: assignmentRules.filter((rule) => rule.nextOccurrence),
     absences: absences,
     holidays: holidays,
+    holidaysCurrent: holidaysCurrent,
   };
 };
 

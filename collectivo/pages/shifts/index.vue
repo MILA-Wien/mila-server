@@ -14,7 +14,8 @@ const user = useCollectivoUser().value.user!;
 const mship = useCollectivoUser().value.membership!;
 const isActive = mship.shifts_user_type != "inactive";
 const activeAssignments: Ref<ShiftsAssignmentRules[]> = ref([]);
-const activeHolidays: Ref<ShiftsAbsenceGet[]> = ref([]);
+const holidaysAll: Ref<ShiftsAbsenceGet[]> = ref([]);
+const holidaysCurrent: Ref<ShiftsAbsenceGet[]> = ref([]);
 const activeAbsences: Ref<ShiftsAbsenceGet[]> = ref([]);
 const directus = useDirectus();
 
@@ -38,10 +39,12 @@ async function loadData() {
   dataLoaded.value = false;
   const res = await getUserAssignments(mship);
   activeAssignments.value = res.assignmentRules;
-  activeHolidays.value = res.holidays;
+  holidaysAll.value = res.holidays;
+  holidaysCurrent.value = res.holidaysCurrent;
+
   activeAbsences.value = res.absences;
   canShop.value =
-    (mship.shifts_counter > -1 && activeHolidays.value.length == 0) ||
+    (mship.shifts_counter > -1 && holidaysCurrent.value.length == 0) ||
     mship.shifts_user_type == "exempt";
 
   dataLoaded.value = true;
@@ -72,7 +75,7 @@ if (isActive) loadData();
       <template #content>
         <div>
           <p class="font-bold">
-            <span v-if="activeHolidays.length > 0">
+            <span v-if="holidaysCurrent.length > 0">
               {{ t("Holiday") }}: {{ t("Shopping is not allowed") }}
             </span>
             <span
@@ -139,12 +142,12 @@ if (isActive) loadData();
 
     <!-- HOLIDAYS -->
 
-    <div v-if="activeHolidays.length">
+    <div v-if="holidaysAll.length">
       <h2>{{ t("Holidays") }}</h2>
       <p>{{ t("t:holiday") }}</p>
       <div class="flex flex-col gap-4 my-4">
         <CollectivoCard
-          v-for="absence in activeHolidays"
+          v-for="absence in holidaysAll"
           :key="absence.id"
           :title="absence.shifts_is_holiday ? t('Holiday') : t('Absence')"
           :color="'blue'"
