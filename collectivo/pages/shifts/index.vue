@@ -103,7 +103,7 @@ if (isActive) loadData();
       </template>
     </CollectivoCard>
 
-    <div v-if="isActive" class="flex flex-wrap py-6 gap-5">
+    <div v-if="isActive" class="flex flex-wrap py-6 gap-5 mb-2">
       <NuxtLink to="/shifts/signup-jumper"
         ><UButton size="lg" icon="i-heroicons-plus-circle">{{
           t("Sign up for a shift")
@@ -127,23 +127,27 @@ if (isActive) loadData();
 
     <!-- SHIFT OCCURRENCES -->
 
-    <h2>{{ t("My shifts") }}</h2>
-    <p v-if="!activeAssignments.length">
-      {{ t("No upcoming shifts") }}
-    </p>
-    <div class="flex flex-col gap-4 my-4">
-      <ShiftsAssignmentCard
-        v-for="assignment in activeAssignments"
-        :key="assignment.assignment.id"
-        :shift-assignment="assignment"
-        @reload="loadData"
-      />
+    <div>
+      <h2>{{ t("Shifts") }}</h2>
+      <p v-if="!activeAssignments.length">
+        {{ t("No upcoming shifts") }}
+      </p>
+      <div class="flex flex-col gap-4 my-4">
+        <ShiftsAssignmentCard
+          v-for="assignment in activeAssignments"
+          :key="assignment.assignment.id"
+          :shift-assignment="assignment"
+          @reload="loadData"
+        />
+      </div>
     </div>
-
     <!-- HOLIDAYS -->
 
-    <div v-if="holidaysAll.length">
-      <h2>{{ t("Holidays") }}</h2>
+    <h2>{{ t("Holidays") }}</h2>
+    <div v-if="!holidaysAll.length">
+      {{ t("No upcoming holidays") }}
+    </div>
+    <div v-else>
       <p>{{ t("t:holiday") }}</p>
       <div class="flex flex-col gap-4 my-4">
         <CollectivoCard
@@ -192,71 +196,3 @@ if (isActive) loadData();
     />
   </div>
 </template>
-
-<i18n lang="yaml">
-de:
-  "Membership number": "Mitgliedsnummer"
-  "Shifttype": "Schichttyp"
-  "Shiftcounter": "Schichtzähler"
-  "Request change": "Änderung beantragen"
-  "t:shift_status_good": "Gut!"
-  "t:shift_status_bad": "Du musst Schichten nachholen"
-  "t:shift_status_exempt": "Du bist von Schichten befreit"
-  "Choose shift type": "Schichttyp wählen"
-  "Shifts": "Schichten"
-  "My shifts": "Meine Schichten"
-  "My next shifts": "Meine nächsten Schichten"
-  "My absences": "Meine Abwesenheiten"
-  "My activities": "Meine Aktivitäten"
-  "Upcoming shifts": "Kommende Schichten"
-  "No upcoming shifts": "Keine kommenden Schichten"
-  "shifts": "Schichten"
-  "shift": "Schicht"
-  "ahead": "voraus"
-  "to catch up": "nachzuholen"
-  "Skills": "Fähigkeiten"
-
-  "None": "Keine"
-  requested: "Beantragt"
-  accepted: "Angenommen"
-  denied: "Abgelehnt"
-  Other request: "Andere Anfrage"
-  Request vacation: "Urlaub beantragen"
-  From: "Von"
-  To: "Bis"
-  Absence: "Abwesenheit"
-  Holiday: "Urlaub"
-  Holidays: "Urlaube"
-  Missing shifts: "Fehlende Schichten"
-  Shopping is allowed: "Einkaufen ist erlaubt"
-  Shopping is not allowed: "Einkaufen ist nicht erlaubt"
-  "Please fill out every field.": "Bitte fülle jedes Feld aus."
-  "Absence must start in the future.": "Abwesenheit muss in der Zukunft beginnen."
-  "Absence must end after it starts.": "Abwesenheit muss nach dem Start enden."
-  "Please select a valid date range.": "Bitte wähle einen validen Datumsbereich aus."
-  Absence has been requested: "Abwesenheit wurde beantragt"
-  Success: "Erfolg"
-  During a holiday, shopping is not allowed and no shift points are deducted.: "Während eines Urlaubs ist das Einkaufen nicht erlaubt und es werden keine Schichtpunkte abgezogen."
-  "During an absence, all shift assignments are paused.": "Während einer Abwesenheit werden alle Schichtanmeldung pausiert."
-  This absence affects only the shift: "Diese Abwesenheit betrifft nur die Schicht"
-  "t:regular": "Festschicht"
-  "t:jumper": "Springer*in"
-  "t:exempt": "Befreit"
-  "t:inactive": "Nicht aktiv"
-
-  "log:attended": "Schicht absolviert"
-  "log:missed": "Schicht verpasst"
-  "log:cancelled": "Schicht abgesagt"
-  "log:other": "Anderes"
-
-en:
-  "t:regular": "Regular"
-  "t:jumper": "Jumper"
-  "t:exempt": "Exempt"
-  "t:inactive": "Inactive"
-
-  "log:attended": "Shift done"
-  "log:missed": "Shift missed"
-  "log:cancelled": "Shift cancelled"
-  "log:other": "Other"
-</i18n>
