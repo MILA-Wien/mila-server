@@ -37,11 +37,6 @@ const profileItems: CollectivoMenuItem[] = [
     icon: "i-heroicons-user-circle",
     to: "/profile/",
   },
-  {
-    label: "Membership",
-    to: "/memberships/membership",
-    icon: "i-heroicons-identification",
-  },
 ];
 
 const profilePublicItems: CollectivoMenuItem[] = [

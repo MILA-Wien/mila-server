@@ -282,7 +282,7 @@ async function saveProfile(data: CollectivoUser) {
           <p>
             Du bist Mitglied
             <span v-if="user.membership.memberships_date_approved"
-              >seit dem {{ user.membership.memberships_date_approved }}</span
+              >seit {{ user.membership.memberships_date_approved }}</span
             >
           </p>
           <p>
@@ -290,7 +290,7 @@ async function saveProfile(data: CollectivoUser) {
             {{ user.membership.id }}
           </p>
           <p>
-            Dein Mitgliedsart ist
+            Deine Mitgliedsart ist
             {{ user.membership.memberships_type }}
           </p>
         </div>
@@ -299,7 +299,7 @@ async function saveProfile(data: CollectivoUser) {
         </div>
         <div v-else>
           <p>Du bist noch kein Mitglied.</p>
-          <UButton to="/mitglied-werden">Jetzt Mitglied werden</UButton>
+          <UButton to="/register">Jetzt Mitglied werden</UButton>
         </div>
       </div>
     </CollectivoContainer>
