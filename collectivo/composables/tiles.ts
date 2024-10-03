@@ -52,7 +52,11 @@ function filterTiles(tiles: CollectivoTile[]) {
 
     if (
       (tile.tiles_view_for === "members" && !user.value.isMember) ||
-      (tile.tiles_view_for === "non-members" && user.value.isMember)
+      (tile.tiles_view_for === "non-members" && user.value.isMember) ||
+      (tile.tiles_view_for === "members-active" &&
+        user.value.membership?.memberships_type !== "Aktiv") ||
+      (tile.tiles_view_for === "members-investing" &&
+        user.value.membership?.memberships_type !== "Investierend")
     ) {
       display = false;
     }

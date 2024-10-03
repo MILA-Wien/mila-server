@@ -81,7 +81,7 @@ const form: Ref<CollectivoForm> = ref({
     {
       type: "section",
       order: 200,
-      title: "User account",
+      title: "Create MILA user account",
       description: "t:mila_form_account",
       conditions: is_not_authenticated,
     },

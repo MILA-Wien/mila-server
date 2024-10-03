@@ -80,7 +80,13 @@ declare global {
     tiles_color: string;
     tiles_component: string;
     tiles_tag_required: number | null;
-    tiles_view_for: "all" | "members" | "non-members" | "hide";
+    tiles_view_for:
+      | "all"
+      | "members"
+      | "members-active"
+      | "members-investing"
+      | "non-members"
+      | "hide";
   }
 
   interface CollectivoTileButton {
