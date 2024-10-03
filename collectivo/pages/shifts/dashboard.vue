@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { createItem, readItems } from "@directus/sdk";
+import { readItems } from "@directus/sdk";
 
 definePageMeta({
   middleware: ["auth"],
@@ -18,64 +18,9 @@ const activeHolidays: Ref<ShiftsAbsence[]> = ref([]);
 const activeAbsences: Ref<ShiftsAbsence[]> = ref([]);
 const directus = useDirectus();
 
-const absencePostModalOpen = ref(false);
-const absenceFromDate = ref<Date | undefined>(undefined);
-const absenceToDate = ref<Date | undefined>(undefined);
-const absenceIsHoliday = ref(false);
 const canShop = ref(false);
 const dataLoaded = ref(false);
-
-async function postAbsence() {
-  if (!absenceFromDate.value || !absenceToDate.value) {
-    showToast({
-      type: "error",
-      title: "Error",
-      description: t("Please fill out every field."),
-    });
-    return;
-  }
-
-  if (absenceFromDate.value < new Date()) {
-    showToast({
-      type: "error",
-      title: "Error",
-      description: t("Absence must start in the future."),
-    });
-    return;
-  }
-
-  if (absenceFromDate.value > absenceToDate.value) {
-    showToast({
-      type: "error",
-      title: "Error",
-      description: t("Absence must end after it starts."),
-    });
-    return;
-  }
-
-  const payload = {
-    shifts_membership: mship.id,
-    shifts_from: absenceFromDate.value?.toISOString(),
-    shifts_to: absenceToDate.value?.toISOString(),
-    shifts_is_holiday: absenceIsHoliday.value,
-  };
-
-  console.log(payload);
-  await directus.request(createItem("shifts_absences", payload));
-  absencePostModalOpen.value = false;
-  absenceFromDate.value = undefined;
-  absenceToDate.value = undefined;
-  absenceIsHoliday.value = false;
-
-  showToast({
-    type: "success",
-    title: t("Success"),
-    description: t("Absence has been requested"),
-  });
-
-  loadData();
-}
-
+const absencePostModalOpen = ref(false);
 const logs = ref<ShiftsLog[]>([]);
 
 async function getLogs() {
@@ -90,6 +35,7 @@ async function getLogs() {
 getLogs();
 
 async function loadData() {
+  dataLoaded.value = false;
   const res = await getMembershipAssignmentsAndHolidays(mship);
   activeAssignments.value = res.assignemntRules;
   activeHolidays.value = res.holidays;
@@ -165,7 +111,7 @@ if (isActive) loadData();
         size="lg"
         icon="i-heroicons-pause-circle"
         @click="absencePostModalOpen = true"
-        >{{ t("Ask for absence") }}</UButton
+        >{{ t("Request vacation") }}</UButton
       >
 
       <!-- <NuxtLink to="/shifts/signup"
@@ -191,13 +137,14 @@ if (isActive) loadData();
         v-for="assignment in activeAssignments"
         :key="assignment.assignment.id"
         :shift-assignment="assignment"
+        @reload="loadData"
       />
     </div>
-    <div v-if="activeAbsences.length">
-      <h2>{{ t("My absences") }}</h2>
+    <div v-if="activeHolidays.length">
+      <h2>{{ t("Holidays") }}</h2>
       <div class="flex flex-col gap-4 my-4">
         <CollectivoCard
-          v-for="absence in activeAbsences"
+          v-for="absence in activeHolidays"
           :key="absence.id"
           :title="absence.shifts_is_holiday ? t('Holiday') : t('Absence')"
           :color="'blue'"
@@ -243,46 +190,11 @@ if (isActive) loadData();
     </div>
 
     <!-- MODALS -->
-
-    <UModal v-model="absencePostModalOpen">
-      <div class="p-10">
-        <h2>{{ t("Ask for absence") }}</h2>
-        <p>{{ t("During an absence, all shift assignments are paused.") }}</p>
-        <UFormGroup :label="t('From')" class="my-5">
-          <CollectivoFormDate
-            v-model="absenceFromDate"
-            :max-years-past="1"
-            :max-years-future="1"
-          />
-        </UFormGroup>
-        <UFormGroup :label="t('To')" class="my-5">
-          <CollectivoFormDate
-            v-model="absenceToDate"
-            :max-years-past="1"
-            :max-years-future="1"
-          />
-        </UFormGroup>
-
-        <UFormGroup :label="t('Holiday') + '?'" class="my-5">
-          <div class="form-box flex flex-row">
-            <UToggle v-model="absenceIsHoliday" class="mt-0.5 mr-2" />
-            <span>{{
-              t(
-                "During a holiday, shopping is not allowed and no shift points are deducted.",
-              )
-            }}</span>
-          </div>
-        </UFormGroup>
-        <UButton
-          class="w-full"
-          size="lg"
-          icon="i-heroicons-pencil-square"
-          @click="postAbsence()"
-        >
-          {{ t("Ask for absence") }}
-        </UButton>
-      </div>
-    </UModal>
+    <ShiftsHolidayModal
+      v-model="absencePostModalOpen"
+      :mship-i-d="mship.id"
+      @reload="loadData"
+    />
   </div>
 </template>
 
@@ -316,11 +228,12 @@ de:
   accepted: "Angenommen"
   denied: "Abgelehnt"
   Other request: "Andere Anfrage"
-  Ask for absence: "Abwesenheit beantragen"
+  Request vacation: "Urlaub beantragen"
   From: "Von"
   To: "Bis"
   Absence: "Abwesenheit"
   Holiday: "Urlaub"
+  Holidays: "Urlaube"
   Missing shifts: "Fehlende Schichten"
   Shopping is allowed: "Einkaufen ist erlaubt"
   Shopping is not allowed: "Einkaufen ist nicht erlaubt"
