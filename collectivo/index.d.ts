@@ -1,4 +1,3 @@
-import type { DirectusRole } from "@directus/sdk";
 import type { DateTime } from "luxon";
 
 declare global {
@@ -16,6 +15,104 @@ declare global {
     shifts_shifts: ShiftsShift[];
   }
 
+  interface MembershipsMembership {
+    id: number;
+    name: string;
+    memberships_user: DirectusUser | number;
+    memberships_status: string;
+    memberships_type: string;
+    memberships_shares: number;
+    memberships_date_approved: string;
+  }
+
+  interface DataWrapper<T> {
+    data: T | null | undefined;
+    error: Error | null | undefined | unknown;
+    loading: boolean;
+    saving: boolean;
+  }
+
+  interface CollectivoUser {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    collectivo_tags?: { collectivo_tags_id: number }[];
+    memberships?: MembershipsMembership[];
+    [key: string]: string | undefined;
+  }
+
+  export type ShiftsUserType = "jumper" | "regular" | "exempt" | "inactive";
+
+  interface MembershipsMembership {
+    id: number;
+    name: string;
+    memberships_user: DirectusUser | number;
+    memberships_status: string;
+    memberships_type: string;
+    memberships_shares: number;
+    shifts_user_type: ShiftsUserType;
+    shifts_counter: number;
+    shifts_skills?: string[];
+    coshoppers?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
+    kids?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
+  }
+
+  interface MembershipsCoshopper {
+    id: number;
+    first_name: string;
+    last_name: string;
+    membership_card_id: string;
+  }
+
+  interface CollectivoTag {
+    id: number;
+    tags_name: string;
+    tags_users: CollectivoUser[] | number[];
+  }
+
+  interface CollectivoTile {
+    id: number;
+    sort: number;
+    tiles_name: string;
+    tiles_content: string;
+    tiles_buttons: CollectivoTileButton[];
+    tiles_color: string;
+    tiles_component: string;
+    tiles_tag_required: number | null;
+    tiles_view_for:
+      | "all"
+      | "members"
+      | "members-active"
+      | "members-investing"
+      | "non-members"
+      | "hide";
+  }
+
+  interface CollectivoTileButton {
+    id: number;
+    tiles_label: string;
+    tiles_path: string;
+    tiles_is_external: boolean;
+  }
+
+  interface CollectivoExtension {
+    id: number;
+    extensions_name: string;
+    extensions_version: string;
+    extensions_schema_version: number;
+    extensions_schema_is_latest: boolean;
+  }
+
+  interface CollectivoSettings {
+    id: number;
+    collectivo_project_name: string;
+    collectivo_project_description: string;
+    collectivo_members_role: string;
+    collectivo_admin_role: string;
+  }
+
+  // Shifts
   interface ShiftsShift {
     id?: number;
     shifts_name: string;
@@ -48,16 +145,8 @@ declare global {
   }
 
   interface ShiftsAssignmentGet extends ShiftsAssignment {
-    shifts_membership: number;
-  }
-
-  interface ShiftsAssignmentRules {
-    assignment: ShiftsAssignment;
-    absences: ShiftsAbsence[];
-    assignmentRule: RRuleSet;
-    absencesRule: RRuleSet;
-    nextOccurrence: Date | null;
-    isRegular: boolean;
+    shifts_membership: MembershipsMembership;
+    shifts_shift: ShiftsShift;
   }
 
   interface ShiftsAbsence {
@@ -70,6 +159,19 @@ declare global {
     shifts_is_for_all_assignments: boolean;
     shifts_is_holiday?: boolean;
     _rrule?: RRule | RRuleSet;
+  }
+
+  interface ShiftsAbsenceGet extends ShiftsAbsence {
+    shifts_assignment: number;
+  }
+
+  interface ShiftsAssignmentRules {
+    assignment: ShiftsAssignmentGet;
+    absences: ShiftsAbsenceGet[];
+    assignmentRule: RRuleSet;
+    absencesRule: RRuleSet;
+    nextOccurrence: Date | null;
+    isRegular: boolean;
   }
 
   interface ShiftsLog {
@@ -115,97 +217,6 @@ declare global {
     isActive?: boolean;
     logged?: boolean;
     removed?: boolean;
-  }
-
-  interface MembershipsMembership {
-    id: number;
-    name: string;
-    memberships_user: DirectusUser | number;
-    memberships_status: string;
-    memberships_type: string;
-    memberships_shares: number;
-  }
-
-  interface DataWrapper<T> {
-    data: T | null | undefined;
-    error: Error | null | undefined | unknown;
-    loading: boolean;
-    saving: boolean;
-  }
-
-  interface CollectivoUser {
-    id: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    collectivo_tags?: { collectivo_tags_id: number }[];
-    memberships?: MembershipsMembership[];
-    role: { name: string };
-    [key: string]: string | undefined;
-  }
-
-  export type ShiftsUserType = "jumper" | "regular" | "exempt" | "inactive";
-
-  interface MembershipsMembership {
-    id: number;
-    name: string;
-    memberships_user: DirectusUser | number;
-    memberships_status: string;
-    memberships_type: string;
-    memberships_shares: number;
-    shifts_user_type: ShiftsUserType;
-    shifts_counter: number;
-    shifts_skills?: string[];
-    coshoppers?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
-    kids?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
-  }
-
-  interface MembershipsCoshopper {
-    id: number;
-    first_name: string;
-    last_name: string;
-    membership_card_id: string;
-  }
-
-  interface CollectivoTag {
-    id: number;
-    tags_name: string;
-    tags_users: CollectivoUser[] | number[];
-  }
-
-  interface CollectivoTile {
-    id: number;
-    sort: number;
-    tiles_name: string;
-    tiles_content: string;
-    tiles_buttons: CollectivoTileButton[];
-    tiles_color: string;
-    tiles_component: string;
-    tiles_tag_required: number | null;
-    tiles_view_for: "all" | "members" | "non-members" | "hide";
-  }
-
-  interface CollectivoTileButton {
-    id: number;
-    tiles_label: string;
-    tiles_path: string;
-    tiles_is_external: boolean;
-  }
-
-  interface CollectivoExtension {
-    id: number;
-    extensions_name: string;
-    extensions_version: string;
-    extensions_schema_version: number;
-    extensions_schema_is_latest: boolean;
-  }
-
-  interface CollectivoSettings {
-    id: number;
-    collectivo_project_name: string;
-    collectivo_project_description: string;
-    collectivo_members_role: string;
-    collectivo_admin_role: string;
   }
 
   // Layout
@@ -322,20 +333,13 @@ declare global {
     type?: "==" | "authenticated" | "notAuthenticated";
     key?: string;
     value?: string | number | boolean;
-    // TODO: Add operator?: "==" | "!=" | ">" | "<" | ">=" | "<=";
   }
 
-  type FormValidator =
-    | {
-        type: "min" | "max" | "email" | "url" | "regex";
-        value?: string | number | RegExp;
-        message?: string;
-      }
-    | {
-        type: "test" | "transform";
-        value: string;
-        message?: string;
-      };
+  type FormValidator = {
+    type: "min" | "max" | "email" | "url" | "regex" | "iban";
+    value?: string | number | RegExp;
+    message?: string;
+  };
 }
 
 // Types for input of app.config.ts

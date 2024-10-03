@@ -11,8 +11,46 @@ import {
 } from "yup";
 import type { FormErrorEvent, FormSubmitEvent } from "#ui/types";
 import { parse } from "marked";
+import { electronicFormatIBAN, isValidIBAN } from "ibantools";
 
-const customValidators = useCollectivoValidators();
+const europeanIBAN = [
+  "AD",
+  "AT",
+  "BE",
+  "BG",
+  "CH",
+  "CY",
+  "CZ",
+  "DE",
+  "DK",
+  "EE",
+  "ES",
+  "FI",
+  "FR",
+  "GB",
+  "GI",
+  "GR",
+  "HR",
+  "HU",
+  "IE",
+  "IS",
+  "IT",
+  "LI",
+  "LT",
+  "LU",
+  "LV",
+  "MC",
+  "MT",
+  "NL",
+  "NO",
+  "PL",
+  "PT",
+  "RO",
+  "SE",
+  "SI",
+  "SK",
+];
+
 const user = useCollectivoUser();
 const toast = useToast();
 const { t } = useI18n();
@@ -104,6 +142,17 @@ function addInputToSchema(
   }
 }
 
+function valIban(value: string, context: any, state: { [key: string]: any }) {
+  const iban = electronicFormatIBAN(value);
+  state[context.path] = iban;
+
+  if (iban && europeanIBAN.includes(iban.substring(0, 2))) {
+    return isValidIBAN(iban || "");
+  }
+
+  return false;
+}
+
 function valString(validators: FormValidator[] | undefined) {
   let schema = string();
 
@@ -118,20 +167,19 @@ function valString(validators: FormValidator[] | undefined) {
       schema = schema.url();
     } else if (validator.type === "regex") {
       schema = schema.matches(validator.value as RegExp);
-    } else if (validator.type === "test") {
-      const test = customValidators.value.tests[validator.value];
-
+    } else if (validator.type === "iban") {
       schema = schema.test(
-        validator.type,
-        validator.message ?? test.message ?? "Field is not valid",
+        "iban",
+        "IBAN not valid for SEPA",
         (value, context) => {
-          return test.test(value, context, state);
+          return valIban(value, context, state);
         },
       );
-    } else if (validator.type === "transform") {
-      const transformer = customValidators.value.transformers[validator.value];
-      schema = schema.transform(transformer);
     }
+    // else if (validator.type === "transform") {
+    //   const transformer = customValidators.transformers[validator.value];
+    //   schema = schema.transform(transformer);
+    // }
   }
 
   return schema;

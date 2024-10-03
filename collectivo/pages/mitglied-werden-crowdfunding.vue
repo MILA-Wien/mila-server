@@ -37,48 +37,6 @@ const is_natural = [
   },
 ];
 
-const is_sepa = [
-  {
-    key: "directus_users__payments_type",
-    value: "sepa",
-  },
-];
-
-const shares_normal = [
-  {
-    key: "shares_options",
-    value: "normal",
-  },
-];
-
-const shares_social = [
-  {
-    key: "shares_options",
-    value: "social",
-  },
-];
-
-const shares_more = [
-  {
-    key: "shares_options",
-    value: "more",
-  },
-];
-
-const is_investing = [
-  {
-    key: "memberships__memberships_type",
-    value: "Investierend",
-  },
-];
-
-const is_active = [
-  {
-    key: "memberships__memberships_type",
-    value: "Aktiv",
-  },
-];
-
 const is_not_authenticated = [
   {
     type: "notAuthenticated",
@@ -123,7 +81,7 @@ const form: Ref<CollectivoForm> = ref({
     {
       type: "section",
       order: 200,
-      title: "User account",
+      title: "Create MILA user account",
       description: "t:mila_form_account",
       conditions: is_not_authenticated,
     },

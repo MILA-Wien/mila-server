@@ -8,6 +8,11 @@ const currentDir = dirname(fileURLToPath(import.meta.url));
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
+  routeRules: {
+    "/mitglied-werden": { redirect: "/register" },
+    "/memberships/register": { redirect: "/register" },
+    "/shifts/dashboard": { redirect: "/shifts" },
+  },
   runtimeConfig: {
     collectivoVersion: pkg.version,
     apiToken: process.env.COLLECTIVO_API_TOKEN || "badToken",
@@ -48,13 +53,13 @@ export default defineNuxtConfig({
   hooks: {},
   modules: ["@nuxt/ui", "@nuxtjs/i18n", "@nuxtjs/google-fonts", "@nuxt/eslint"],
   i18n: {
-    lazy: false, // TODO: Lazy loading does not work with current switch
+    lazy: true, // TODO: Lazy loading does not work with current switch
     strategy: "no_prefix",
-    defaultLocale: "en",
+    defaultLocale: "de",
     langDir: "./lang",
     locales: [
-      { code: "en", file: "en.json" },
-      { code: "de", file: "de.json" },
+      { code: "en", files: ["de.json", "shifts/en.json"] },
+      { code: "de", files: ["de.json", "shifts/de.json"] },
     ],
   },
   css: [join(currentDir, "./assets/css/main.css")],

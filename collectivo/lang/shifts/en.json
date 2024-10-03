@@ -1,0 +1,13 @@
+{
+  "t:holiday": "During a holiday, you cannot go shopping and do not have to take on any shifts. Your registered shifts will be taken over by other members during this time.",
+
+  "t:regular": "Regular",
+  "t:jumper": "Jumper",
+  "t:exempt": "Exempt",
+  "t:inactive": "Inactive",
+
+  "log:attended": "Shift done",
+  "log:missed": "Shift missed",
+  "log:cancelled": "Shift cancelled",
+  "log:other": "Other"
+}
