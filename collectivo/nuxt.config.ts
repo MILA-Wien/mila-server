@@ -52,13 +52,13 @@ export default defineNuxtConfig({
   hooks: {},
   modules: ["@nuxt/ui", "@nuxtjs/i18n", "@nuxtjs/google-fonts", "@nuxt/eslint"],
   i18n: {
-    lazy: false, // TODO: Lazy loading does not work with current switch
+    lazy: true, // TODO: Lazy loading does not work with current switch
     strategy: "no_prefix",
-    defaultLocale: "en",
+    defaultLocale: "de",
     langDir: "./lang",
     locales: [
-      { code: "en", file: "en.json" },
-      { code: "de", file: "de.json" },
+      { code: "en", files: ["de.json", "shifts/en.json"] },
+      { code: "de", files: ["de.json", "shifts/de.json"] },
     ],
   },
   css: [join(currentDir, "./assets/css/main.css")],

@@ -157,14 +157,6 @@ if (isActive) loadData();
               {{ t("This absence affects only the shift") }}
               {{ getShiftName(absence.shifts_assignment) }}
             </div>
-            <div v-if="absence.shifts_is_holiday">
-              {{ t("Info") }}:
-              {{
-                t(
-                  "During a holiday, shopping is not allowed and no shift points are deducted.",
-                )
-              }}
-            </div>
           </template>
         </CollectivoCard>
       </div>
