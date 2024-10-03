@@ -1,3 +1,16 @@
 {
-  "Shift test": "Schicht Test"
+  "From": "Von",
+  "To": "Bis",
+  "Close": "Schließen",
+
+  "We will inform you when your request is accepted.": "Wir melden uns, sobald Dein Antrag angenommen wurde.",
+  "Something went wrong": "Etwas ist schief gelaufen",
+  "Please try again later or contact us.": "Bitte versuche es später erneut oder kontaktiere uns.",
+
+  "Sign up for a shift": "Schicht anmelden",
+
+  "Request holiday": "Urlaub beantragen",
+  "Holiday request submitted": "Urlaubsantrag abgesendet",
+
+  "t:holiday": "Während eines Urlaubes kannst Du nicht einkaufen gehen und musst auch keine Schichten übernehmen. Deine angemeldeten Schichten werden in dieser Zeit von anderen Mitgliedern übernommen."
 }

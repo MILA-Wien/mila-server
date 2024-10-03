@@ -139,16 +139,8 @@ declare global {
   }
 
   interface ShiftsAssignmentGet extends ShiftsAssignment {
-    shifts_membership: number;
-  }
-
-  interface ShiftsAssignmentRules {
-    assignment: ShiftsAssignment;
-    absences: ShiftsAbsence[];
-    assignmentRule: RRuleSet;
-    absencesRule: RRuleSet;
-    nextOccurrence: Date | null;
-    isRegular: boolean;
+    shifts_membership: MembershipsMembership;
+    shifts_shift: ShiftsShift;
   }
 
   interface ShiftsAbsence {
@@ -161,6 +153,19 @@ declare global {
     shifts_is_for_all_assignments: boolean;
     shifts_is_holiday?: boolean;
     _rrule?: RRule | RRuleSet;
+  }
+
+  interface ShiftsAbsenceGet extends ShiftsAbsence {
+    shifts_assignment: number;
+  }
+
+  interface ShiftsAssignmentRules {
+    assignment: ShiftsAssignmentGet;
+    absences: ShiftsAbsenceGet[];
+    assignmentRule: RRuleSet;
+    absencesRule: RRuleSet;
+    nextOccurrence: Date | null;
+    isRegular: boolean;
   }
 
   interface ShiftsLog {

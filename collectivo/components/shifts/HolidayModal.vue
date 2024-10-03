@@ -4,8 +4,6 @@ import { createItem } from "@directus/sdk";
 const isOpen = defineModel<boolean>();
 const absenceFromDate = ref<Date | undefined>(undefined);
 const absenceToDate = ref<Date | undefined>(undefined);
-// const absenceIsHoliday = ref(false);
-
 const success: Ref<null | boolean> = ref(null);
 const { t } = useI18n();
 const directus = useDirectus();
@@ -120,19 +118,3 @@ function closeModal() {
     </div>
   </UModal>
 </template>
-
-<i18n lang="yaml">
-de:
-  Holiday request submitted: "Urlaubsantrag abgesendet"
-  We will inform you when your request is accepted.: "Wir melden uns, sobald Dein Antrag angenommen wurde."
-  Something went wrong: "Etwas ist schief gelaufen"
-  Please try again later or contact us.: "Bitte versuche es später erneut oder kontaktiere uns."
-  From: "Von"
-  To: "Bis"
-  Close: "Schließen"
-  Request holiday: "Urlaub beantragen"
-  t:holiday: Während eines Urlaubes kannst Du nicht einkaufen gehen und musst auch keine Schichten übernehmen. Deine angemeldeten Schichten werden in dieser Zeit von anderen Mitgliedern übernommen.
-
-en:
-  t:holiday: During a holiday, you cannot go shopping and do not have to take on any shifts. Your registered shifts will be taken over by other members during this time.
-</i18n>

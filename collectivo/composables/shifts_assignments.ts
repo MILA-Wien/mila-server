@@ -1,9 +1,7 @@
 import { RRule, RRuleSet } from "rrule";
 import { readItems } from "@directus/sdk";
 
-export const getMembershipAssignmentsAndHolidays = async (
-  mship: MembershipsMembership,
-) => {
+export const getUserAssignments = async (mship: MembershipsMembership) => {
   const directus = useDirectus();
   const now = getCurrentDate();
   const nowStr = now.toISOString();
@@ -24,7 +22,7 @@ export const getMembershipAssignmentsAndHolidays = async (
         },
       ],
     }),
-  )) as ShiftsAssignment[];
+  )) as ShiftsAssignmentGet[];
 
   const absences = (await directus.request(
     readItems("shifts_absences", {
@@ -46,9 +44,9 @@ export const getMembershipAssignmentsAndHolidays = async (
         },
       ],
     }),
-  )) as ShiftsAbsence[];
+  )) as ShiftsAbsenceGet[];
 
-  const holidays = [] as ShiftsAbsence[];
+  const holidays = [] as ShiftsAbsenceGet[];
   for (const absence of absences) {
     if (absence.shifts_is_holiday) {
       holidays.push(absence);
@@ -97,7 +95,7 @@ export const getMembershipAssignmentsAndHolidays = async (
   });
 
   return {
-    assignemntRules: assignmentRules,
+    assignmentRules: assignmentRules.filter((rule) => rule.nextOccurrence),
     absences: absences,
     holidays: holidays,
   };

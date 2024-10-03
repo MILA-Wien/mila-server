@@ -14,8 +14,8 @@ const user = useCollectivoUser().value.user!;
 const mship = useCollectivoUser().value.membership!;
 const isActive = mship.shifts_user_type != "inactive";
 const activeAssignments: Ref<ShiftsAssignmentRules[]> = ref([]);
-const activeHolidays: Ref<ShiftsAbsence[]> = ref([]);
-const activeAbsences: Ref<ShiftsAbsence[]> = ref([]);
+const activeHolidays: Ref<ShiftsAbsenceGet[]> = ref([]);
+const activeAbsences: Ref<ShiftsAbsenceGet[]> = ref([]);
 const directus = useDirectus();
 
 const canShop = ref(false);
@@ -36,8 +36,8 @@ getLogs();
 
 async function loadData() {
   dataLoaded.value = false;
-  const res = await getMembershipAssignmentsAndHolidays(mship);
-  activeAssignments.value = res.assignemntRules;
+  const res = await getUserAssignments(mship);
+  activeAssignments.value = res.assignmentRules;
   activeHolidays.value = res.holidays;
   activeAbsences.value = res.absences;
   canShop.value =
@@ -103,7 +103,7 @@ if (isActive) loadData();
     <div v-if="isActive" class="flex flex-wrap py-6 gap-5">
       <NuxtLink to="/shifts/signup-jumper"
         ><UButton size="lg" icon="i-heroicons-plus-circle">{{
-          t("Sign up for a one-time shift")
+          t("Sign up for a shift")
         }}</UButton>
       </NuxtLink>
 
@@ -113,12 +113,6 @@ if (isActive) loadData();
         @click="absencePostModalOpen = true"
         >{{ t("Request vacation") }}</UButton
       >
-
-      <!-- <NuxtLink to="/shifts/signup"
-        ><UButton size="lg" icon="i-heroicons-plus-circle">{{
-          t("Sign up for a shift")
-        }}</UButton></NuxtLink
-      > -->
       <a :href="`mailto:${config.public.contactEmail}`">
         <UButton
           size="lg"
@@ -128,7 +122,9 @@ if (isActive) loadData();
       </a>
     </div>
 
-    <h2>{{ t("My next shifts") }}</h2>
+    <!-- SHIFT OCCURRENCES -->
+
+    <h2>{{ t("My shifts") }}</h2>
     <p v-if="!activeAssignments.length">
       {{ t("No upcoming shifts") }}
     </p>
@@ -140,8 +136,12 @@ if (isActive) loadData();
         @reload="loadData"
       />
     </div>
+
+    <!-- HOLIDAYS -->
+
     <div v-if="activeHolidays.length">
       <h2>{{ t("Holidays") }}</h2>
+      <p>{{ t("t:holiday") }}</p>
       <div class="flex flex-col gap-4 my-4">
         <CollectivoCard
           v-for="absence in activeHolidays"
@@ -212,10 +212,8 @@ de:
   "ahead": "voraus"
   "to catch up": "nachzuholen"
   "Skills": "Fähigkeiten"
-  "Sign up for a shift": "Neue Schicht eintragen"
 
   "None": "Keine"
-  "Sign up for a one-time shift": "Einmalige Schicht eintragen"
   requested: "Beantragt"
   accepted: "Angenommen"
   denied: "Abgelehnt"

@@ -11,6 +11,7 @@ export default defineNuxtConfig({
   routeRules: {
     "/mitglied-werden": { redirect: "/register" },
     "/memberships/register": { redirect: "/register" },
+    "/shifts/dashboard": { redirect: "/shifts" },
   },
   runtimeConfig: {
     collectivoVersion: pkg.version,
