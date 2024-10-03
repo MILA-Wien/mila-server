@@ -10,12 +10,20 @@ export const useCollectivoUser = () => {
 };
 
 const ISMEMBER_STATUS_LIST = ["approved", "in_exclusion", "in_cancellation"];
+const SHIFT_ADMIN_ROLES = ["Administrator", "Mitgliederverwaltung"];
+const STUDIO_ADMIN_ROLES = [
+  "Administrator",
+  "Mitgliederverwaltung",
+  "Vorstand",
+];
 
 class CollectivoUserStore {
   user: CollectivoUser | null;
   membership: MembershipsMembership | null;
   tags: number[];
   isAuthenticated: boolean;
+  isShiftAdmin: boolean;
+  isStudioAdmin: boolean;
   isMember: boolean;
   saving: boolean;
   loading: boolean;
@@ -26,6 +34,8 @@ class CollectivoUserStore {
     this.membership = null;
     this.tags = [];
     this.isAuthenticated = false;
+    this.isShiftAdmin = false;
+    this.isStudioAdmin = false;
     this.isMember = false;
     this.saving = false;
     this.loading = false;
@@ -37,12 +47,17 @@ class CollectivoUserStore {
       readMe({
         fields: [
           "*",
+          "role.name",
           "memberships.*",
           "memberships.shifts_skills.shifts_skills_id.*",
           "collectivo_tags.collectivo_tags_id",
         ],
       }),
     )) as CollectivoUser;
+
+    // Check if admin
+    this.isShiftAdmin = SHIFT_ADMIN_ROLES.includes(this.user.role.name);
+    this.isStudioAdmin = STUDIO_ADMIN_ROLES.includes(this.user.role.name);
 
     // Process tags
     for (const field of this.user.collectivo_tags ?? []) {
@@ -58,8 +73,6 @@ class CollectivoUserStore {
       }
     }
     delete this.user.memberships;
-
-    console.log("User", this.user);
   }
 
   async save(data: CollectivoUser) {

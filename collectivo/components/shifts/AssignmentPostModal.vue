@@ -55,6 +55,7 @@ async function postAssignmentInner() {
     shifts_shift: shift.id!,
     shifts_from: shiftStartString,
     shifts_is_regular: false,
+    shifts_is_coordination: false,
   };
 
   // One-time shifts have same start and end date
@@ -74,42 +75,46 @@ async function postAssignmentInner() {
     <div class="m-10">
       <h2>{{ shift.shifts_name }}</h2>
 
-      <p v-if="shiftType" class="font-bold text-lg my-5 leading-7">
-        <span v-if="shiftType === 'jumper'">
-          {{ t("One-time shift") }}
-          <br />
-          {{ start.toLocaleString(DateTime.DATE_MED) }} {{ t("from") }}
-          {{ start.toLocaleString(DateTime.TIME_24_SIMPLE) }}
-          {{ t("to") }}
-          {{ end.toLocaleString(DateTime.TIME_24_SIMPLE) }}
-        </span>
-        <span v-else>
-          {{ t("Regular shift") }}
-          <br />
-          {{ start.weekdayLong }} {{ t("from") }}
-          {{ start.toLocaleString(DateTime.TIME_24_SIMPLE) }}
-          {{ t("to") }}
-          {{ end.toLocaleString(DateTime.TIME_24_SIMPLE) }}
-          <br />
-          {{ t("Repeating every") }}
-          {{ frequency }} {{ isWeeks ? t("weeks") : t("days") }}
-          <br />
-          {{ t("Starting from") }}
-          {{ start.toLocaleString(DateTime.DATE_MED) }}
-        </span>
-        <br />
-        <span v-if="shift.shifts_location">
-          {{ t("Location") }}:
-          {{ shift.shifts_location }}
-        </span>
-      </p>
+      <div v-if="shiftType" class="shift-infos">
+        <div v-if="shiftType === 'jumper'">
+          <p>{{ t("One-time shift") }}</p>
+          <p>
+            {{ start.toLocaleString(DateTime.DATE_MED) }} {{ t("from") }}
+            {{ start.toLocaleString(DateTime.TIME_24_SIMPLE) }}
+            {{ t("to") }}
+            {{ end.toLocaleString(DateTime.TIME_24_SIMPLE) }}
+          </p>
+        </div>
+        <div v-else>
+          <p>{{ t("Regular shift") }}</p>
+          <p>
+            {{ start.weekdayLong }} {{ t("from") }}
+            {{ start.toLocaleString(DateTime.TIME_24_SIMPLE) }}
+            {{ t("to") }}
+            {{ end.toLocaleString(DateTime.TIME_24_SIMPLE) }}
+          </p>
+          <p>
+            {{ t("Repeating every") }}
+            {{ frequency }} {{ isWeeks ? t("weeks") : t("days") }}
+          </p>
+          <p>
+            {{ t("Starting from") }}
+            {{ start.toLocaleString(DateTime.DATE_MED) }}
+          </p>
+        </div>
+        <p v-if="shift.shifts_category && shift.shifts_category !== 'normal'">
+          {{ t("Category") }}: {{ t("shifts:" + shift.shifts_category) }}
+        </p>
+      </div>
 
       <!-- Shift infos -->
+      <!-- eslint-disable vue/no-v-html -->
       <p
         v-if="shift.shifts_description"
         class="mb-5"
         v-html="parse(shift.shifts_description)"
       />
+      <!-- eslint-enable -->
 
       <UButton
         class="w-full"
@@ -123,6 +128,15 @@ async function postAssignmentInner() {
     </div>
   </UModal>
 </template>
+
+<style lang="scss" scoped>
+.shift-infos {
+  @apply flex flex-col gap-2 text-lg my-5 leading-7;
+}
+.shift-infos p {
+  @apply font-bold;
+}
+</style>
 
 <i18n lang="yaml">
 de:

@@ -19,6 +19,10 @@
           "value": "normal"
         },
         {
+          "text": "Operativos",
+          "value": "operativos"
+        },
+        {
           "text": "$t:accounting",
           "value": "accounting"
         },

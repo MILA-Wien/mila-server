@@ -81,8 +81,8 @@ export const getShiftOccurrences = async (
                 ]
               : ["*"],
           }),
-        )) as ShiftsAssignment[])
-      : ([] as ShiftsAssignment[]);
+        )) as ShiftsAssignmentGet[])
+      : ([] as ShiftsAssignmentGet[]);
 
   const assignmentIds = assignments.map((assignment) => assignment.id);
 

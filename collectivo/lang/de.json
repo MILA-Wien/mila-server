@@ -17,6 +17,15 @@
   "Remove": "Entfernen",
   "Submit": "Absenden",
 
+  "Category": "Kategorie",
+
+  "shifts:normal": "Normal",
+  "shifts:accounting": "Buchhaltung",
+  "shifts:it-support": "IT-Support",
+  "shifts:public-relations": "Öffentlichkeitsarbeit",
+  "shifts:operativos": "Operativos",
+  "shifts:shift-coordination": "Schichtkoordination",
+
   "There was an error": "Es ist ein Fehler aufgetreten",
   "This field is required": "Dieses Feld ist erforderlich",
   "This email address is not valid": "Diese E-Mail-Adresse ist nicht gültig",

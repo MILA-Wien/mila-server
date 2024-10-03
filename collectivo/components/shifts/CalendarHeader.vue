@@ -185,10 +185,4 @@ de:
   "Registration one-time": "Anmeldung Einmalig"
   "Unfilled shifts": "Ungefüllte Schichten"
   "All shifts": "Alle Schichten"
-  Category: Kategorie
-  "Public relations": "Öffentlichkeitsarbeit"
-  "IT Support": "IT Support"
-  Accounting: Buchhaltung
-  Normal: Normal
-  All: Alle
 </i18n>

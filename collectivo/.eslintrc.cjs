@@ -2,6 +2,7 @@ const basicRules = {
   // No console & debugger statements in production
   "no-console": process.env.NODE_ENV !== "development" ? "error" : "off",
   "no-debugger": process.env.NODE_ENV !== "development" ? "error" : "off",
+  "vue/no-v-html": "off",
   // Require empty line between certain statements
   "padding-line-between-statements": [
     "error",

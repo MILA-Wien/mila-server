@@ -138,6 +138,10 @@ declare global {
     shifts_is_coordination: boolean;
   }
 
+  interface ShiftsAssignmentGet extends ShiftsAssignment {
+    shifts_membership: number;
+  }
+
   interface ShiftsAssignmentRules {
     assignment: ShiftsAssignment;
     absences: ShiftsAbsence[];
@@ -219,7 +223,6 @@ declare global {
     click?: () => void;
     external?: boolean; // Defaults to false
     target?: string; // Default "_self"
-    order?: number; // Default 100
     hideOnMobile?: boolean; // Default false
     filter?: (item: CollectivoMenuItem) => Promise<boolean> | boolean;
   }
