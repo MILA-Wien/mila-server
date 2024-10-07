@@ -54,8 +54,8 @@ export const getShiftOccurrences = async (
     shiftIDs.length > 0
       ? ((await directus.request(
           readItems("shifts_assignments", {
+            limit: -1,
             filter: {
-              limit: -1,
               shifts_to: {
                 _or: [{ _gte: from.toISO() }, { _null: true }],
               },
