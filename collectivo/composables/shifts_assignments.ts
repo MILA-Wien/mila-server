@@ -14,6 +14,7 @@ export const getUserAssignments = async (mship: MembershipsMembership) => {
   const assignments = (await directus.request(
     readItems("shifts_assignments", {
       filter: filter,
+      limit: -1,
       fields: [
         "*",
         { shifts_shift: ["*"] },
@@ -26,6 +27,7 @@ export const getUserAssignments = async (mship: MembershipsMembership) => {
 
   const absences = (await directus.request(
     readItems("shifts_absences", {
+      limit: -1,
       filter: {
         _or: [
           { shifts_membership: { id: { _eq: mship.id } } },
