@@ -323,7 +323,7 @@
     "position_x": 3,
     "position_y": 17,
     "options": {
-      "code": "module.exports = async function(data) {\n\t// Do something...\n    if (!data[\"$trigger\"].payload.shifts_status || \n        data[\"$trigger\"].payload.shifts_status == \"requested\") {\n    \n\treturn {};\n    }\n    \n    throw new Error(\"Skip because not requested\")\n}"
+      "code": "module.exports = async function(data) {\n\t// Do something...\n    if (!data[\"$trigger\"].payload.shifts_status || \n        data[\"$trigger\"].payload.shifts_status == \"requested\") {\n    \n\treturn {};\n    }\n    // actually we want notification for all\n    //throw new Error(\"Skip because not requested\")\n    return {};\n}"
     },
     "resolve": "d3b67397-8a80-4eb4-b0e3-1efb24a935b7",
     "reject": null,
@@ -660,7 +660,8 @@
       "permissions": "$full",
       "query": {
         "fields": [
-          "memberships_user"
+          "memberships_user",
+          "memberships_type"
         ],
         "filter": {
           "id": {
@@ -933,13 +934,35 @@
           "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
         }
       ],
-      "body": "{\n    \"automation_name\": \"membership_update_approved\",\n    \"user_ids\": {{user_ids.user_ids}}\n}",
+      "body": "{\n    \"automation_name\": \"membership_update_approved_active\",\n    \"user_ids\": {{user_ids.user_ids_active}}\n}",
+      "method": "POST"
+    },
+    "resolve": "b1deaa64-a9c2-4f06-a598-7ec6c7be45ee",
+    "reject": null,
+    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
+    "_syncId": "e3494be9-be8b-4787-b63d-d0b485ca9158"
+  },
+  {
+    "name": "Webhook / Anfrage URL",
+    "key": "request_cvpr9_owdut",
+    "type": "request",
+    "position_x": 22,
+    "position_y": 36,
+    "options": {
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_create",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{\n    \"automation_name\": \"membership_update_approved_investing\",\n    \"user_ids\": {{user_ids.user_ids_investing}}\n}",
       "method": "POST"
     },
     "resolve": null,
     "reject": null,
     "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
-    "_syncId": "e3494be9-be8b-4787-b63d-d0b485ca9158"
+    "_syncId": "b1deaa64-a9c2-4f06-a598-7ec6c7be45ee"
   },
   {
     "name": "Webhook / Anfrage URL",
@@ -1021,7 +1044,7 @@
           "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
         }
       ],
-      "body": "{\n    \"subject\": \"Neue Schicht-Abwesenheit beantragt\",\n    \"body\": \"Neue Schicht-Abwesenheit beantragt: {{$env.PUBLIC_URL}}/admin/content/shifts_absences/{{$trigger.key}}\"\n}"
+      "body": "{\n    \"subject\": \"Neue Schicht-Abwesenheit\",\n    \"body\": `Eine neue Schicht-Abwesenheit wurde erstellt: \n<a href=\"{{$env.PUBLIC_URL}}/admin/content/shifts_absences/{{$trigger.key}}\">{{$env.PUBLIC_URL}}/admin/content/shifts_absences/{{$trigger.key}}</a>  \n\nDetails: {{$trigger.payload}}\"`\n}"
     },
     "resolve": null,
     "reject": null,
@@ -1220,7 +1243,7 @@
     "position_x": 21,
     "position_y": 18,
     "options": {
-      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_memberships\"]) {\n    \tid = data[\"read_memberships\"][i].memberships_user\n        if (id) {\n            user_ids.push(id)\n        }\n    }\n    \n\treturn { user_ids };\n}"
+      "code": "module.exports = async function(data) {\n\t\n    const user_ids_active = []\n    const user_ids_investing = []\n    let id = undefined\n    \n    for (i in data[\"read_memberships\"]) {\n    \tconst mship = data[\"read_memberships\"][i]\n        const id = mship.memberships_user\n        const isActive = mship.memberships_type === \"Aktiv\"\n        if (id) {\n            if (isActive) {\n               user_ids_active.push(id)\n            } else {\n               user_ids_investing.push(id)\n            }\n        }\n    }\n    \n\treturn { user_ids_active, user_ids_investing };\n}"
     },
     "resolve": "e3494be9-be8b-4787-b63d-d0b485ca9158",
     "reject": null,

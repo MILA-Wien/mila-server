@@ -23,6 +23,14 @@
           "value": "members"
         },
         {
+          "text": "Nur aktive Mitglieder",
+          "value": "members-active"
+        },
+        {
+          "text": "Nur investierende Mitglieder",
+          "value": "members-investing"
+        },
+        {
           "text": "Nur Nicht-Mitglieder",
           "value": "non-members"
         },

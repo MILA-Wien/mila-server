@@ -2412,7 +2412,8 @@
       "shifts_membership",
       "shifts_assignment",
       "shifts_is_holiday",
-      "shifts_is_for_all_assignments"
+      "shifts_is_for_all_assignments",
+      "shifts_status"
     ],
     "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
     "_syncId": "2f4a76d4-7d44-4d04-b318-01b4414005e2"
