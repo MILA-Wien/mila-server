@@ -18,6 +18,7 @@ Anwendungen des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/), inklusiv
 - Create a network `docker network create proxiable`
 - Run `docker compose up -d keycloak keycloak-db`
 - When keycloak is running, run `docker compose up -d`
+- Run `docker compose exec -u root directus chown -R node:node /directus/extensions /directus/uploads`
 - Log in at http://localhost:8055 with `api@example.com` and `d1r3ctu5`
 - Install the [directus-sync](https://www.npmjs.com/package/directus-extension-sync) extension
 - Apply schema with `npx directus-sync push`

@@ -17,6 +17,7 @@ habidat/
 # Directus
 directus/database/
 directus/uploads/*
+directus/extensions/*
 keycloak/export
 keycloak/imported/imported.flag
 

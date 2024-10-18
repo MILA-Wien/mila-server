@@ -1,6 +1,10 @@
 import { readUser, updateUser } from "@directus/sdk";
 import KcAdminClient from "@keycloak/keycloak-admin-client";
+import type { H3Event } from "h3";
 
+// Synchronise user data with keycloak
+// Handle create/update/delete user events
+// Skip users without provider set to keycloak
 async function useKeycloak() {
   const config = useRuntimeConfig();
 
@@ -28,19 +32,7 @@ export default defineEventHandler(async (event) => {
   }
 });
 
-async function syncKeycloakUser(event: any) {
-  const config = useRuntimeConfig();
-
-  if (config.public.authService !== "keycloak") {
-    return;
-  }
-
-  try {
-    await useDirectusAdmin();
-  } catch (e) {
-    logger.error("Failed to connect to Directus", e);
-  }
-
+async function syncKeycloakUser(event: H3Event) {
   verifyCollectivoApiToken(event);
   const body = await readBody(event);
   const keycloak = await useKeycloak();
@@ -48,12 +40,10 @@ async function syncKeycloakUser(event: any) {
   const isCreate = body.event === "users.create";
   const isDelete = body.event === "users.delete";
 
-  // console.log("event is", body.event);
-  // console.log("payload is", body);
+  let user: Partial<CollectivoUser> = {};
 
-  let user: any = {};
+  // Get user key(s) (they are in different locations for create/update/delete)
   body.keys = body.keys || [body.key];
-
   if (isDelete) {
     body.keys = body.payload;
   }
@@ -67,21 +57,20 @@ async function syncKeycloakUser(event: any) {
           fields: ["id", "email", "provider", "external_identifier"],
         }),
       );
-
-      // console.log("user:", user);
-
       if (!user || !user.email) {
         if (isDelete) {
           return;
         }
-
         throw new Error("User not found");
       }
     }
 
-    const email = body.payload.email || user.email;
+    // Get user data from body or existing & remove whitespace from email
+    const email = (body.payload.email || user.email).replace(/\s+/g, "");
     let provider = body.payload.provider || user.provider;
-    let extid = body.payload.external_identifier || user.external_identifier;
+    let extid = (
+      body.payload.external_identifier || user.external_identifier
+    ).replace(/\s+/g, "");
 
     // If new user is created, set provider to keycloak
     if (isCreate) {
@@ -96,8 +85,6 @@ async function syncKeycloakUser(event: any) {
 
     // Set external identifier to match new email
     if (user.id && body.payload.email && email != extid) {
-      // console.log("updating external identifier", email);
-
       await directus.request(
         updateUser(user.id, { external_identifier: email }),
       );
@@ -142,8 +129,6 @@ async function syncKeycloakUser(event: any) {
 
     // If still no keycloak user found, create new
     if (!kc_user_id) {
-      // console.log("creating new keycloak user");
-
       const kc_user = await keycloak.users.create({
         email: email,
         emailVerified: false,
@@ -156,20 +141,14 @@ async function syncKeycloakUser(event: any) {
 
     // Update keycloak user
     if ("email" in body.payload && body.payload.email !== user.email) {
-      // console.log("updating email");
-      // console.log("kc_user_id", kc_user_id);
-      // console.log("email", body.payload.email);
-
       await keycloak.users.update(
         { id: kc_user_id },
         {
           username: body.payload.email,
           email: body.payload.email,
-          emailVerified: true, // to prevent loops
+          emailVerified: true,
         },
       );
-
-      // console.log("email updated");
     }
 
     if ("first_name" in body.payload) {
@@ -191,7 +170,7 @@ async function syncKeycloakUser(event: any) {
     }
 
     // Update keycloak user password
-    // Only if password is not masked (only stars)
+    // Masked passwords (e.g. "********") are not updated
     if (
       "password" in body.payload &&
       body.payload.password &&

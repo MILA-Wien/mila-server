@@ -1216,7 +1216,8 @@
       "tags",
       "mila_pr_approved",
       "memberships",
-      "id"
+      "id",
+      "mila_documents"
     ],
     "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
     "_syncId": "cc075e8f-1648-463a-878e-44421be73f52"
@@ -2203,6 +2204,26 @@
     "_syncId": "25a89821-b083-4c94-a9bf-a2e912c035d8"
   },
   {
+    "collection": "collectivo_tags_directus_users",
+    "action": "read",
+    "permissions": {
+      "_and": [
+        {
+          "directus_users_id": {
+            "_eq": "$CURRENT_USER"
+          }
+        }
+      ]
+    },
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
+    "_syncId": "1bcf74a0-a5c1-4575-990b-4835799991a2"
+  },
+  {
     "collection": "collectivo_tags",
     "action": "read",
     "permissions": {},
@@ -2395,7 +2416,10 @@
       "membership_card_id",
       "coshoppers",
       "kids",
-      "memberships_user_search"
+      "memberships_user_search",
+      "shifts_skills",
+      "shifts_orientation_date",
+      "memberships_card_id"
     ],
     "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
     "_syncId": "1414e20a-39a0-4b70-9dce-108135a7c406"
