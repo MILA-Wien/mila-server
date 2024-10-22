@@ -1,13 +1,13 @@
 {
   "collection": "directus_users",
-  "field": "mila_skills_2",
+  "field": "survey_languages_additional",
   "type": "string",
   "meta": {
     "collection": "directus_users",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "mila_skills_2",
+    "field": "survey_languages_additional",
     "group": "mila_survey_group",
     "hidden": false,
     "interface": "input",
@@ -15,12 +15,12 @@
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 4,
+    "sort": 6,
     "special": null,
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Fähigkeiten"
+        "translation": "Sprachen (Manuell)"
       }
     ],
     "validation": null,
@@ -28,7 +28,7 @@
     "width": "half"
   },
   "schema": {
-    "name": "mila_skills_2",
+    "name": "survey_languages_additional",
     "table": "directus_users",
     "data_type": "character varying",
     "default_value": null,

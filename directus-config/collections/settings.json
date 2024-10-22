@@ -50,10 +50,10 @@
       },
       {
         "type": "link",
-        "id": "docs",
-        "name": "Dokumentation",
-        "url": "https://docs.directus.io",
-        "icon": "help",
+        "id": "dKqLWvXjp0ciVCD_YorT_",
+        "name": "Handbuch",
+        "url": "https://handbuch.mila.wien",
+        "icon": "menu_book",
         "enabled": true
       },
       {

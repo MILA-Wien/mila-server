@@ -12,7 +12,9 @@
     "hidden": false,
     "interface": "list-m2m",
     "note": null,
-    "options": null,
+    "options": {
+      "enableCreate": false
+    },
     "readonly": false,
     "required": false,
     "sort": 2,

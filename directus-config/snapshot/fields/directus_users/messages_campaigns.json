@@ -9,10 +9,13 @@
     "display_options": null,
     "field": "messages_campaigns",
     "group": null,
-    "hidden": false,
+    "hidden": true,
     "interface": "list-m2m",
     "note": null,
-    "options": null,
+    "options": {
+      "enableCreate": false,
+      "enableSelect": false
+    },
     "readonly": false,
     "required": false,
     "sort": 3,
