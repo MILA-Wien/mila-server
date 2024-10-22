@@ -3,7 +3,6 @@ import Sidebar from "./components/Sidebar.vue";
 import MobileHeader from "./components/MobileHeader.vue";
 import MobileMenu from "./components/MobileMenu.vue";
 import ProfileMenu from "./components/ProfileMenu.vue";
-import { useCollectivoBackLink } from "~/composables/page";
 
 const { t } = useI18n();
 const config = useAppConfig();
@@ -79,7 +78,7 @@ const sidebarWidthLg = String(config.collectivo.sidebarWidth + 90) + "px";
         </div>
 
         <div class="main__top__right">
-          <ProfileMenu />
+          <ProfileMenu placement="bottom-start" />
         </div>
       </div>
       <slot />
@@ -99,6 +98,8 @@ const sidebarWidthLg = String(config.collectivo.sidebarWidth + 90) + "px";
 
 .layout {
   @apply md:py-8 h-full;
+  overflow-x: auto; /* or overflow-x: hidden; */
+  max-width: 100%; /* Ensure it doesn't expand beyond the viewport */
 
   &__bg {
     @apply hidden md:block fixed top-0 left-0 -z-10;

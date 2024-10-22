@@ -4,6 +4,13 @@ const user = useCollectivoUser();
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 
+defineProps({
+  placement: {
+    type: String,
+    default: "bottom",
+  },
+});
+
 const locales = {
   de: "Deutsch",
   en: "English",
@@ -101,7 +108,7 @@ Object.entries(locales).forEach(([key, label]) => {
 <template>
   <div class="flex flex-row gap-2">
     <div v-for="menu in topRightMenus" :key="menu.label">
-      <UDropdown :items="menu.items" :popper="{ placement: 'bottom-start' }">
+      <UDropdown :items="menu.items" :popper="{ placement: placement }">
         <UIcon class="h-7 w-7" :name="menu.icon" />
 
         <template #item="{ item }">

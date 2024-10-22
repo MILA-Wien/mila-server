@@ -26,7 +26,7 @@ const headerClass = computed(() =>
 <template>
   <div>
     <div :class="headerClass">
-      <div class="mobile-page-title">
+      <div class="text-2xl font-bold truncate">
         {{ t(pageTitle) }}
       </div>
       <div class="pt-[1px]"><ProfileMenu /></div>
@@ -36,10 +36,6 @@ const headerClass = computed(() =>
 </template>
 
 <style lang="scss" scoped>
-.mobile-page-title {
-  @apply text-2xl font-bold;
-}
-
 .border-bottom {
   @apply border-b-[1px] bg-white border-gray-200;
 }
@@ -49,6 +45,6 @@ const headerClass = computed(() =>
 }
 
 .mobile-header {
-  @apply h-[68px] px-[25px] pt-[24px] md:hidden flex items-start justify-between transition fixed top-0 w-full z-10;
+  @apply h-[68px] px-[25px] pt-[24px] md:hidden flex gap-2 items-start justify-between transition fixed top-0 w-screen z-10;
 }
 </style>
