@@ -144,11 +144,6 @@ declare global {
     shifts_is_coordination: boolean;
   }
 
-  interface ShiftsAssignmentGet extends ShiftsAssignment {
-    shifts_membership: MembershipsMembership;
-    shifts_shift: ShiftsShift;
-  }
-
   interface ShiftsAbsence {
     id?: number;
     shifts_status: string;

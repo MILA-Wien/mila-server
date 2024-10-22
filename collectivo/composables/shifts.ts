@@ -9,6 +9,11 @@ interface GetShiftOccurrencesOptions {
   admin?: boolean;
 }
 
+interface ShiftsAssignmentGet extends ShiftsAssignment {
+  shifts_membership: MembershipsMembership;
+  shifts_shift: number;
+}
+
 export const getShiftOccurrences = async (
   from: DateTime,
   to: DateTime,
@@ -20,6 +25,8 @@ export const getShiftOccurrences = async (
   const isRegular = shiftType === "regular";
   const isUnfilled = shiftType === "unfilled";
   const isAll = shiftType === "all";
+
+  // Get shifts within timeframe
   const filter: QueryFilter<CollectivoSchema, ShiftsShift> = {
     shifts_to: {
       _or: [{ _gte: from.toISO() }, { _null: true }],
@@ -88,6 +95,7 @@ export const getShiftOccurrences = async (
 
   const assignmentIds = assignments.map((assignment) => assignment.id);
 
+  // Get absences within timeframe
   const absences = [];
   if (assignmentIds.length) {
     const absences_ = (await directus.request(
@@ -134,7 +142,10 @@ export const getShiftOccurrences = async (
     const maxDate = to.toJSDate();
 
     // Jumper and regular can only be into the future
-    if ((isJumper || isRegular || isUnfilled) && minDate < today) {
+    if (
+      (isJumper || isRegular || isUnfilled) &&
+      minDate.getTime() < today.getTime()
+    ) {
       minDate = today;
     }
 
@@ -221,6 +232,7 @@ const getSingleShiftOccurence = (
   let needsCoordinator = shift.shifts_needs_coordinator;
 
   for (const ass of assignmentRrules ?? []) {
+    // This rule is true, should be false
     if (ass.rrule.between(date, date, true).length > 0) {
       const occ: AssignmentOccurrence = {
         assignment: ass.assignment,
@@ -312,11 +324,16 @@ export const getAssignmentRrules = (
       freq: RRule.DAILY,
       interval: shift.shifts_repeats_every,
       dtstart: shiftRule.after(new Date(assignment.shifts_from), true),
-      until: assignment.shifts_is_regular
-        ? assignment.shifts_to
-          ? shiftRule.before(new Date(assignment.shifts_to), true)
-          : null
-        : shiftRule.before(new Date(assignment.shifts_from), true),
+      until:
+        assignment.shifts_is_regular && assignment.shifts_to
+          ? new Date(assignment.shifts_to)
+          : new Date(assignment.shifts_from),
+      // Old code, preserved if new one causes errors
+      // until: assignment.shifts_is_regular
+      //   ? assignment.shifts_to
+      //     ? shiftRule.before(new Date(assignment.shifts_to), true)
+      //     : null
+      //   : shiftRule.before(new Date(assignment.shifts_from), true),
     });
 
     assRrule.rrule(mainRule);
