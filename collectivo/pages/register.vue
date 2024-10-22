@@ -1,10 +1,14 @@
 <script setup lang="ts">
 const { t } = useI18n();
 const user = useCollectivoUser();
-setCollectivoTitle("MILA Membership Application");
+setCollectivoTitle("Membership Application");
 const showForm = ref(false);
 const alreadyMemberError = ref(false);
 const data: any = ref({});
+
+definePageMeta({
+  layout: "forms",
+});
 
 async function prepare() {
   if (user.value.user) {

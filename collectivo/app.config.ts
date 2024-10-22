@@ -6,6 +6,10 @@ export default defineAppConfig({
     logoPath: "/img/mila_logo_subline.png",
     sidebarWidth: 160,
   },
+  localesDict: {
+    de: "Deutsch",
+    en: "English",
+  },
   ui: {
     primary: "meteorite",
     gray: "cool",
