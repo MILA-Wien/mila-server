@@ -65,14 +65,15 @@ async function syncKeycloakUser(event: H3Event) {
       }
     }
 
-    // Get user data from body or existing & remove whitespace from email
-    const email = (body.payload.email || user.email).replace(/\s+/g, "");
+    // Get user data from body or existing
+    // Remove whitespace from email
+    const email = (body.payload.email || user.email).trim();
     let provider = body.payload.provider || user.provider;
     let extid = (
       body.payload.external_identifier || user.external_identifier
-    ).replace(/\s+/g, "");
+    ).trim();
 
-    // If new user is created, set provider to keycloak
+    // If new user is created, override provider and extid
     if (isCreate) {
       provider = "keycloak";
       extid = email;

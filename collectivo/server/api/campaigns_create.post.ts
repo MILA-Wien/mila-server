@@ -1,16 +1,22 @@
 import { createItem, readItems, updateItem } from "@directus/sdk";
+import type { H3Event } from "h3";
+
+interface RequestBody {
+  automation_name?: string;
+  user_ids?: string[];
+}
 
 export default defineEventHandler(async (event) => {
   try {
     return await createCampaign(event);
   } catch (error) {
     console.log("Error in campaigns_create.post.ts");
+    console.error(error);
     throw error;
   }
 });
 
-async function createCampaign(event: any) {
-  // Protect route with API Token
+async function createCampaign(event: H3Event) {
   verifyCollectivoApiToken(event);
   const body = await readBody(event);
   console.log("Received request in campaigns_create.post.ts", body);
@@ -19,20 +25,36 @@ async function createCampaign(event: any) {
     throw new Error("Missing required fields");
   }
 
-  const directus = await useDirectusAdmin();
+  if (Array.isArray(body.automation_name)) {
+    for (const name of body.automation_name) {
+      try {
+        await createCampaignSingle(body, name);
+      } catch (error) {
+        console.error("Skipping automation", name, error);
+      }
+    }
+  } else {
+    await createCampaignSingle(body, body.automation_name);
+  }
+}
 
+async function createCampaignSingle(
+  body: RequestBody,
+  automation_name: string,
+) {
+  const directus = await useDirectusAdmin();
   const automations = await directus.request(
     readItems("mila_automations", {
       filter: {
         mila_key: {
-          _eq: body.automation_name,
+          _eq: automation_name,
         },
       },
     }),
   );
 
   if (!automations.length) {
-    throw new Error("Automation not found");
+    throw new Error(`Automation not found: ${automation_name}`);
   }
 
   const automation = automations[0];
