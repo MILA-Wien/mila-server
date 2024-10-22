@@ -61,14 +61,14 @@ export default defineEventHandler(async (event) => {
     }
 
     if ("message" in e) {
-      logger.error(e.message);
+      console.error(e.message);
     } else if (
       "errors" in e &&
       Array.isArray(e.errors) &&
       e.errors.length > 0
     ) {
       for (const error of e.errors) {
-        logger.error(error.message);
+        console.error(error.message);
       }
 
       throw createError({
@@ -76,7 +76,7 @@ export default defineEventHandler(async (event) => {
         statusMessage: e.errors[0].message,
       });
     } else {
-      logger.error("Unknown error");
+      console.error("Unknown error");
     }
 
     throw e;
@@ -86,7 +86,7 @@ export default defineEventHandler(async (event) => {
 async function registerMembership(body: any, userID: string | undefined) {
   const isAuthenticated = userID !== undefined;
 
-  logger.info("Received membership application");
+  console.info("Received membership application");
 
   await useDirectusAdmin();
   const directus = await useDirectusAdmin();
