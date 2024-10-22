@@ -43,7 +43,7 @@ watch(
       v-for="choice in choices"
       :key="choice.value"
       v-model="choice_values[choice.value]"
-      :label="choice.label"
+      :label="t(choice.label)"
     />
   </div>
 </template>
