@@ -58,7 +58,7 @@ export default defineNuxtConfig({
     defaultLocale: "de",
     langDir: "./lang",
     locales: [
-      { code: "en", files: ["de.json", "shifts/en.json"] },
+      { code: "en", files: ["en.json", "shifts/en.json"] },
       { code: "de", files: ["de.json", "shifts/de.json"] },
     ],
   },

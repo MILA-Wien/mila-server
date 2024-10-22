@@ -1,10 +1,14 @@
 <script setup lang="ts">
 const { t } = useI18n();
 const user = useCollectivoUser();
-setCollectivoTitle("MILA Membership Application");
+setCollectivoTitle("Membership Application");
 const showForm = ref(false);
 const alreadyMemberError = ref(false);
 const data: any = ref({});
+
+definePageMeta({
+  layout: "forms",
+});
 
 async function prepare() {
   if (user.value.user) {
@@ -583,6 +587,29 @@ const form: Ref<CollectivoForm> = ref({
           value: "personal",
         },
       ],
+    },
+    {
+      label: "What languages do you speak?",
+      key: "directus_users__survey_languages",
+      width: "md",
+      type: "select",
+      multiple: true,
+      order: 840,
+      choices: [
+        { label: "German", value: "Deutsch" },
+        { label: "English", value: "Englisch" },
+        { label: "Turkish", value: "Türkisch" },
+        { label: "BKS", value: "BKS" },
+        { label: "Ukrainian", value: "Ukrainisch" },
+        { label: "Russian", value: "Russisch" },
+      ],
+    },
+    {
+      label: "Additional languages",
+      key: "directus_users__survey_languages_additional",
+      width: "md",
+      type: "text",
+      order: 850,
     },
     {
       type: "section",

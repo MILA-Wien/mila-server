@@ -69,9 +69,7 @@ async function syncKeycloakUser(event: H3Event) {
     // Remove whitespace from email
     const email = (body.payload.email || user.email).trim();
     let provider = body.payload.provider || user.provider;
-    let extid = (
-      body.payload.external_identifier || user.external_identifier
-    ).trim();
+    let extid = body.payload.external_identifier || user.external_identifier;
 
     // If new user is created, override provider and extid
     if (isCreate) {

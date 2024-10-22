@@ -148,9 +148,9 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .calendar-header {
-  @apply flex items-center justify-between mb-6;
+  @apply flex flex-wrap items-start justify-between mb-6 gap-4;
   &__left {
-    @apply flex flex-col items-start gap-2 justify-between lg:justify-start w-full;
+    @apply flex flex-col items-start grow gap-2 justify-between lg:justify-start;
     &__title {
       @apply font-semibold text-2xl;
     }
@@ -164,7 +164,7 @@ onMounted(async () => {
   }
 
   &__right {
-    @apply flex items-center gap-5;
+    @apply flex flex-wrap items-center gap-5;
     &__btn {
       @apply h-auto py-2 pl-4 pr-2.5 rounded-[10px] gap-0;
     }

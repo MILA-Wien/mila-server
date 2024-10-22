@@ -184,7 +184,7 @@
     "name": "User Sync Keycloak",
     "icon": "sync",
     "color": "#6644FF",
-    "description": null,
+    "description": "Synchronise user data with keycloak",
     "status": "active",
     "trigger": "event",
     "accountability": null,

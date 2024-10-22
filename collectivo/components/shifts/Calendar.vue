@@ -35,6 +35,7 @@ const calendarOptions: Ref<CalendarOptions> = ref({
   ],
   initialView: "dayGridMonth",
   headerToolbar: false,
+  firstDay: 1, // Monday
   locale: locale.value,
   events: [],
   eventDisplay: "block",

@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
   try {
     await useDirectusAdmin();
   } catch (e) {
-    logger.error("Failed to connect to Directus", e);
+    console.error("Failed to connect to Directus", e);
   }
 
   verifyCollectivoApiToken(event);
