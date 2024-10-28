@@ -364,7 +364,7 @@ const form: Ref<CollectivoForm> = ref({
     },
     {
       label: "Would you be interested to join a working group?",
-      key: "directus_users__mila_groups_interested",
+      key: "directus_users__mila_groups_interested_2",
       width: "md",
       description:
         "You can find more information about the working groups here: https://www.mila.wien/mitmachen/arbeitsgruppen/",
@@ -378,9 +378,9 @@ const form: Ref<CollectivoForm> = ref({
         { label: "Finanzen", value: "Finanzen" },
         { label: "Genossenschaft", value: "Genossenschaft" },
         { label: "Standort", value: "Standort" },
-        { label: "IT und Digitales", value: "IT und Digitales" },
+        { label: "IT und Digitales", value: "ITundDigitales" },
         { label: "Diversität", value: "Diversität" },
-        { label: "Events/Infogespräche", value: "Events/Infogespräche" },
+        { label: "Events/Infogespräche", value: "EventsInfogespräche" },
         {
           label:
             "Personalkomitee (Beratung bei Personalagenden, Bewerbungsprozessen, etc.)",

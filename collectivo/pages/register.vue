@@ -544,9 +544,9 @@ const form: Ref<CollectivoForm> = ref({
         { label: "Finanzen", value: "Finanzen" },
         { label: "Genossenschaft", value: "Genossenschaft" },
         { label: "Standort", value: "Standort" },
-        { label: "IT und Digitales", value: "IT und Digitales" },
+        { label: "IT und Digitales", value: "ITundDigitales" },
         { label: "Diversität", value: "Diversität" },
-        { label: "Events/Infogespräche", value: "Events/Infogespräche" },
+        { label: "Events/Infogespräche", value: "EventsInfogespräche" },
         {
           label:
             "Personalkomitee (Beratung bei Personalagenden, Bewerbungsprozessen, etc.)",
