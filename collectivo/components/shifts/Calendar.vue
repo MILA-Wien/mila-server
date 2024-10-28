@@ -51,8 +51,12 @@ const calendarOptions: Ref<CalendarOptions> = ref({
   },
   nowIndicator: true,
   eventClick: (info) => {
-    selectedShiftOccurence.value = info.event.extendedProps.shiftOccurence;
-    shiftActionModalisOpen.value = true;
+    const prop = info.event.extendedProps;
+
+    if (prop.shiftOccurence) {
+      selectedShiftOccurence.value = info.event.extendedProps.shiftOccurence;
+      shiftActionModalisOpen.value = true;
+    }
   },
 });
 
@@ -189,7 +193,7 @@ const registerEventUpdate = async () => {
 const colors = ["#2E8B57", "#FF8C00", "#B22222"];
 
 async function updateEvents(from, to) {
-  const occurrences = await getShiftOccurrences(from, to, {
+  const [occurrences, publicHolidays] = await getShiftOccurrences(from, to, {
     shiftType: customSettings.value.selectedShiftType,
     shiftCategory: customSettings.value.selectedShiftCategory,
     admin: props.mode === "admin",
@@ -197,6 +201,18 @@ async function updateEvents(from, to) {
 
   const events = [];
 
+  // Display public holidays
+  for (const holiday of publicHolidays) {
+    events.push({
+      title: holiday.name,
+      start: holiday.date,
+
+      allDay: true,
+      color: "gray",
+    });
+  }
+
+  // Display occurrences
   for (const occurrence of occurrences) {
     const n_missing = occurrence.shift.shifts_slots - occurrence.n_assigned;
     const start = occurrence.start.toJSDate();

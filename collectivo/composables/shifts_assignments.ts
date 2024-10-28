@@ -1,6 +1,12 @@
 import { RRule, RRuleSet } from "rrule";
 import { readItems } from "@directus/sdk";
 
+// TODO There is no max-date / clear timeframe for API calls
+// Either define max-date for absences and public holidays
+// Or find another way to find out which absences/public holidays are matching
+// Otherwise ALL future absences and holidays are fetched
+// Get absences and public holidays between now and next occasion to display
+
 export const getUserAssignments = async (mship: MembershipsMembership) => {
   const directus = useDirectus();
   const now = getCurrentDate();
@@ -51,6 +57,7 @@ export const getUserAssignments = async (mship: MembershipsMembership) => {
   const holidays = [] as ShiftsAbsenceGet[];
   const holidaysCurrent = [] as ShiftsAbsenceGet[];
 
+  // Get holidays
   for (const absence of absences) {
     if (absence.shifts_is_holiday) {
       holidays.push(absence);
@@ -63,6 +70,29 @@ export const getUserAssignments = async (mship: MembershipsMembership) => {
     }
   }
 
+  // Get public holidays
+  const publicHolidays = (await directus.request(
+    readItems("shifts_holidays_public", {
+      filter: {
+        date: {
+          _and: [{ _gte: now }],
+        },
+      },
+      limit: -1,
+      fields: ["date"],
+    }),
+  )) as ShiftsPublicHoliday[];
+
+  const publicHolidaRruleSet = new RRuleSet();
+  publicHolidays.forEach((holiday) => {
+    publicHolidaRruleSet.rrule(
+      new RRule({
+        dtstart: new Date(holiday.date),
+        count: 1,
+      }),
+    );
+  });
+
   const assignmentRules: ShiftsAssignmentRules[] = assignments.map(
     (assignment) => {
       const filteredAbsences = absences.filter(
@@ -72,7 +102,11 @@ export const getUserAssignments = async (mship: MembershipsMembership) => {
           absence.shifts_status == "accepted",
       );
 
-      const rules = getAssignmentRRule(assignment, filteredAbsences);
+      const rules = getAssignmentRRule(
+        assignment,
+        filteredAbsences,
+        publicHolidaRruleSet,
+      );
 
       const assignmentRule = rules[0];
       const absencesRule = rules[1];
@@ -117,6 +151,7 @@ export const getUserAssignments = async (mship: MembershipsMembership) => {
 export const getAssignmentRRule = (
   assignment: ShiftsAssignment,
   absences?: ShiftsAbsence[],
+  publicHolidayDates?: RRuleSet,
 ) => {
   const shift = assignment.shifts_shift as ShiftsShift;
 
@@ -125,7 +160,7 @@ export const getAssignmentRRule = (
   const assignmentRule = new RRuleSet();
   const absencesRule = new RRuleSet();
 
-  // Main shift rule
+  // Main assignment rule
   assignmentRule.rrule(
     new RRule({
       freq: RRule.DAILY,
@@ -152,6 +187,9 @@ export const getAssignmentRRule = (
     absencesRule.rrule(absenceRule);
     assignmentRule.exrule(absenceRule);
   });
+
+  // Exclude public holidays
+  assignmentRule.exrule(publicHolidayDates as RRule);
 
   return [assignmentRule, absencesRule];
 };
