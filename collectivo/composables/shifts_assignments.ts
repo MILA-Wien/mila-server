@@ -1,6 +1,12 @@
 import { RRule, RRuleSet } from "rrule";
 import { readItems } from "@directus/sdk";
 
+// TODO There is no max-date / clear timeframe for API calls
+// Either define max-date for absences and public holidays
+// Or find another way to find out which absences/public holidays are matching
+// Otherwise ALL future absences and holidays are fetched
+// Get absences and public holidays between now and next occasion to display
+
 export const getUserAssignments = async (mship: MembershipsMembership) => {
   const directus = useDirectus();
   const now = getCurrentDate();
@@ -51,23 +57,7 @@ export const getUserAssignments = async (mship: MembershipsMembership) => {
   const holidays = [] as ShiftsAbsenceGet[];
   const holidaysCurrent = [] as ShiftsAbsenceGet[];
 
-  // Get public holidays within timeframe
-  // TODO Define max-date
-  const publicHolidays = (await directus.request(
-    readItems("shifts_holidays_public", {
-      filter: {
-        date: {
-          _and: [{ _gte: now }],
-        },
-      },
-      limit: -1,
-      fields: ["*"],
-    }),
-  )) as ShiftsPublicHoliday[];
-  const publicHolidayDates = publicHolidays.map((holiday) =>
-    holiday.date.getTime(),
-  );
-
+  // Get holidays
   for (const absence of absences) {
     if (absence.shifts_is_holiday) {
       holidays.push(absence);
@@ -79,6 +69,29 @@ export const getUserAssignments = async (mship: MembershipsMembership) => {
       }
     }
   }
+
+  // Get public holidays
+  const publicHolidays = (await directus.request(
+    readItems("shifts_holidays_public", {
+      filter: {
+        date: {
+          _and: [{ _gte: now }],
+        },
+      },
+      limit: -1,
+      fields: ["date"],
+    }),
+  )) as ShiftsPublicHoliday[];
+
+  const publicHolidaRruleSet = new RRuleSet();
+  publicHolidays.forEach((holiday) => {
+    publicHolidaRruleSet.rrule(
+      new RRule({
+        dtstart: new Date(holiday.date),
+        count: 1,
+      }),
+    );
+  });
 
   const assignmentRules: ShiftsAssignmentRules[] = assignments.map(
     (assignment) => {
@@ -92,7 +105,7 @@ export const getUserAssignments = async (mship: MembershipsMembership) => {
       const rules = getAssignmentRRule(
         assignment,
         filteredAbsences,
-        publicHolidayDates,
+        publicHolidaRruleSet,
       );
 
       const assignmentRule = rules[0];
@@ -138,7 +151,7 @@ export const getUserAssignments = async (mship: MembershipsMembership) => {
 export const getAssignmentRRule = (
   assignment: ShiftsAssignment,
   absences?: ShiftsAbsence[],
-  publicHolidayDates?: number[],
+  publicHolidayDates?: RRuleSet,
 ) => {
   const shift = assignment.shifts_shift as ShiftsShift;
 
@@ -176,28 +189,7 @@ export const getAssignmentRRule = (
   });
 
   // Exclude public holidays
-  let checkForPublicHoliday = true;
-  while (checkForPublicHoliday) {
-    const nextOccurrence = assignmentRule.after(getCurrentDate(), true);
-
-    if (nextOccurrence) {
-      const nextOccurrenceDate = nextOccurrence.getTime();
-      for (const publicHoliday of publicHolidayDates ?? []) {
-        if (nextOccurrenceDate == publicHoliday) {
-          assignmentRule.exrule(
-            new RRule({
-              freq: RRule.DAILY,
-              interval: 1,
-              dtstart: nextOccurrence,
-              until: nextOccurrence,
-            }),
-          );
-        } else {
-          checkForPublicHoliday = false;
-        }
-      }
-    }
-  }
+  assignmentRule.exrule(publicHolidayDates as RRule);
 
   return [assignmentRule, absencesRule];
 };

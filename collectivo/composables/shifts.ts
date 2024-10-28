@@ -347,16 +347,13 @@ export const getAssignmentRrules = (
       freq: RRule.DAILY,
       interval: shift.shifts_repeats_every,
       dtstart: shiftRule.after(new Date(assignment.shifts_from), true),
-      until:
-        assignment.shifts_is_regular && assignment.shifts_to
+      until: !assignment.shifts_is_regular
+        ? new Date(assignment.shifts_from)
+        : assignment.shifts_to
           ? new Date(assignment.shifts_to)
-          : new Date(assignment.shifts_from),
-      // Old code, preserved if new one causes errors
-      // until: assignment.shifts_is_regular
-      //   ? assignment.shifts_to
-      //     ? shiftRule.before(new Date(assignment.shifts_to), true)
-      //     : null
-      //   : shiftRule.before(new Date(assignment.shifts_from), true),
+          : shift.shifts_to
+            ? new Date(shift.shifts_to)
+            : null,
     });
 
     assRrule.rrule(mainRule);
