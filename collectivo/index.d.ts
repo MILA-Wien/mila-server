@@ -7,12 +7,12 @@ declare global {
     collectivo_tags: CollectivoTag[];
     directus_users: CollectivoUser[];
     memberships: MembershipsMembership[];
-    shifts_slots: ShiftsSlot[];
     shifts_skills: ShiftsSkill[];
     shifts_assignments: ShiftsAssignment[];
     shifts_absences: ShiftsAbsence[];
     shifts_logs: ShiftsLog[];
     shifts_shifts: ShiftsShift[];
+    shifts_holidays_public: ShiftsPublicHoliday[];
   }
 
   interface MembershipsMembership {
@@ -132,6 +132,17 @@ declare global {
     shifts_location?: string;
     shifts_needs_coordinator: boolean;
     shifts_assignments?: ShiftsAssignment[] | number[];
+    exclude_public_holidays?: boolean;
+  }
+
+  interface ShiftsShiftGet extends ShiftsShift {
+    id: number;
+  }
+
+  interface ShiftsPublicHoliday {
+    id: number;
+    name: string;
+    date: Date;
   }
 
   interface ShiftsAssignment {
@@ -142,6 +153,12 @@ declare global {
     shifts_shift: ShiftsShift | number;
     shifts_membership: MembershipsMembership | number;
     shifts_is_coordination: boolean;
+  }
+
+  interface ShiftsAssignmentGet extends ShiftsAssignment {
+    id: number;
+    shifts_membership: MembershipsMembership;
+    shifts_shift: number;
   }
 
   interface ShiftsAbsence {
@@ -188,13 +205,6 @@ declare global {
     assignments: AssignmentOccurrence[];
     selfAssigned?: boolean;
     needsCoordinator?: boolean;
-  }
-
-  interface SlotRrule {
-    id: number;
-    slot: ShiftsSlot;
-    rrule: RRule | RRuleSet;
-    assignments: AssignmentRrule[];
   }
 
   interface AssignmentRrule {

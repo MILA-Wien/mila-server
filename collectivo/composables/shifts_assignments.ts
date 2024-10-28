@@ -51,6 +51,23 @@ export const getUserAssignments = async (mship: MembershipsMembership) => {
   const holidays = [] as ShiftsAbsenceGet[];
   const holidaysCurrent = [] as ShiftsAbsenceGet[];
 
+  // Get public holidays within timeframe
+  // TODO Define max-date
+  const publicHolidays = (await directus.request(
+    readItems("shifts_holidays_public", {
+      filter: {
+        date: {
+          _and: [{ _gte: now }],
+        },
+      },
+      limit: -1,
+      fields: ["*"],
+    }),
+  )) as ShiftsPublicHoliday[];
+  const publicHolidayDates = publicHolidays.map((holiday) =>
+    holiday.date.getTime(),
+  );
+
   for (const absence of absences) {
     if (absence.shifts_is_holiday) {
       holidays.push(absence);
@@ -72,7 +89,11 @@ export const getUserAssignments = async (mship: MembershipsMembership) => {
           absence.shifts_status == "accepted",
       );
 
-      const rules = getAssignmentRRule(assignment, filteredAbsences);
+      const rules = getAssignmentRRule(
+        assignment,
+        filteredAbsences,
+        publicHolidayDates,
+      );
 
       const assignmentRule = rules[0];
       const absencesRule = rules[1];
@@ -117,6 +138,7 @@ export const getUserAssignments = async (mship: MembershipsMembership) => {
 export const getAssignmentRRule = (
   assignment: ShiftsAssignment,
   absences?: ShiftsAbsence[],
+  publicHolidayDates?: number[],
 ) => {
   const shift = assignment.shifts_shift as ShiftsShift;
 
@@ -125,7 +147,7 @@ export const getAssignmentRRule = (
   const assignmentRule = new RRuleSet();
   const absencesRule = new RRuleSet();
 
-  // Main shift rule
+  // Main assignment rule
   assignmentRule.rrule(
     new RRule({
       freq: RRule.DAILY,
@@ -152,6 +174,30 @@ export const getAssignmentRRule = (
     absencesRule.rrule(absenceRule);
     assignmentRule.exrule(absenceRule);
   });
+
+  // Exclude public holidays
+  let checkForPublicHoliday = true;
+  while (checkForPublicHoliday) {
+    const nextOccurrence = assignmentRule.after(getCurrentDate(), true);
+
+    if (nextOccurrence) {
+      const nextOccurrenceDate = nextOccurrence.getTime();
+      for (const publicHoliday of publicHolidayDates ?? []) {
+        if (nextOccurrenceDate == publicHoliday) {
+          assignmentRule.exrule(
+            new RRule({
+              freq: RRule.DAILY,
+              interval: 1,
+              dtstart: nextOccurrence,
+              until: nextOccurrence,
+            }),
+          );
+        } else {
+          checkForPublicHoliday = false;
+        }
+      }
+    }
+  }
 
   return [assignmentRule, absencesRule];
 };

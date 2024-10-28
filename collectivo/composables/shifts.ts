@@ -9,11 +9,6 @@ interface GetShiftOccurrencesOptions {
   admin?: boolean;
 }
 
-interface ShiftsAssignmentGet extends ShiftsAssignment {
-  shifts_membership: MembershipsMembership;
-  shifts_shift: number;
-}
-
 export const getShiftOccurrences = async (
   from: DateTime,
   to: DateTime,
@@ -40,25 +35,19 @@ export const getShiftOccurrences = async (
   if (options.shiftCategory != "all") {
     filter.shifts_category = { _eq: options.shiftCategory };
   }
-  const shifts: ShiftsShift[] = (await directus.request(
+  const shifts = (await directus.request(
     readItems("shifts_shifts", {
       filter: filter,
       limit: -1,
       fields: ["*"],
     }),
-  )) as ShiftsShift[];
-
-  // Create array of slot ids from shift.shift_slots in shifts
-  const shiftIDs = [];
-  for (const shift of shifts) {
-    shiftIDs.push(shift.id);
-  }
+  )) as ShiftsShiftGet[];
 
   const shiftIds = shifts.map((shift) => shift.id);
 
   // Get assignments within timeframe
   const assignments =
-    shiftIDs.length > 0
+    shiftIds.length > 0
       ? ((await directus.request(
           readItems("shifts_assignments", {
             limit: -1,
@@ -121,10 +110,23 @@ export const getShiftOccurrences = async (
     absences.push(...absences_);
   }
 
+  // Get public holidays within timeframe
+  const publicHolidays = (await directus.request(
+    readItems("shifts_holidays_public", {
+      filter: {
+        date: {
+          _and: [{ _gte: from.toISO() }, { _lte: to.toISO() }],
+        },
+      },
+      limit: -1,
+      fields: ["*"],
+    }),
+  )) as ShiftsPublicHoliday[];
+
   const occurrences = [];
 
   for (const shift of shifts) {
-    const shiftRule = getShiftRrule(shift);
+    const shiftRule = getShiftRrule(shift, publicHolidays);
 
     const filteredAssignments = assignments.filter(
       (assignment) => assignment.shifts_shift === shift.id,
@@ -292,8 +294,13 @@ const getSingleShiftOccurence = (
 // Shifts without end date run forever
 // Shifts without repetition run once
 // Dates are with T=00:00:00 UTC
-export const getShiftRrule = (shift: ShiftsShift): RRule => {
-  return new RRule({
+export const getShiftRrule = (
+  shift: ShiftsShift,
+  publicHolidays?: ShiftsPublicHoliday[],
+): RRuleSet => {
+  const rruleSet = new RRuleSet();
+
+  const mainShiftRule = new RRule({
     freq: RRule.DAILY,
     interval: shift.shifts_repeats_every,
     count: shift.shifts_is_regular ? null : 1,
@@ -304,6 +311,22 @@ export const getShiftRrule = (shift: ShiftsShift): RRule => {
         : null
       : new Date(shift.shifts_from),
   });
+
+  rruleSet.rrule(mainShiftRule);
+
+  // Exclude public holidays
+  if (shift.exclude_public_holidays) {
+    for (const holiday of publicHolidays ?? []) {
+      const holidayRule = new RRule({
+        freq: RRule.DAILY,
+        interval: 1,
+        dtstart: new Date(holiday.date),
+        until: new Date(holiday.date),
+      });
+      rruleSet.exrule(holidayRule);
+    }
+  }
+  return rruleSet;
 };
 
 // SlotRrule is a RRuleSet that shows only free occurences
