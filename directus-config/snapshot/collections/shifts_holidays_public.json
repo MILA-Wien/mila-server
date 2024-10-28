@@ -1,35 +1,35 @@
 {
-  "collection": "milaccess_log",
+  "collection": "shifts_holidays_public",
   "meta": {
     "accountability": "all",
     "archive_app_filter": true,
     "archive_field": null,
     "archive_value": null,
     "collapse": "open",
-    "collection": "milaccess_log",
+    "collection": "shifts_holidays_public",
     "color": null,
     "display_template": null,
-    "group": null,
-    "hidden": true,
-    "icon": "desk",
+    "group": "collectivo_shifts_group",
+    "hidden": false,
+    "icon": "free_cancellation",
     "item_duplication_fields": null,
     "note": null,
     "preview_url": null,
     "singleton": false,
-    "sort": 9,
+    "sort": 4,
     "sort_field": null,
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Logs Empfang",
-        "singular": "Log Empfang",
-        "plural": "Logs Empfang"
+        "translation": "Feiertage",
+        "singular": "Feiertag",
+        "plural": "Feiertage"
       }
     ],
     "unarchive_value": null,
     "versioning": false
   },
   "schema": {
-    "name": "milaccess_log"
+    "name": "shifts_holidays_public"
   }
 }

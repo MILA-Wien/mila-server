@@ -1,35 +1,31 @@
 {
-  "collection": "shifts_shifts",
-  "field": "user_updated",
-  "type": "uuid",
+  "collection": "shifts_holidays_public",
+  "field": "date",
+  "type": "date",
   "meta": {
-    "collection": "shifts_shifts",
+    "collection": "shifts_holidays_public",
     "conditions": null,
-    "display": "user",
+    "display": null,
     "display_options": null,
-    "field": "user_updated",
+    "field": "date",
     "group": null,
-    "hidden": true,
-    "interface": "select-dropdown-m2o",
+    "hidden": false,
+    "interface": "datetime",
     "note": null,
-    "options": {
-      "template": "{{avatar.$thumbnail}} {{first_name}} {{last_name}}"
-    },
-    "readonly": true,
-    "required": false,
-    "sort": 20,
-    "special": [
-      "user-updated"
-    ],
+    "options": null,
+    "readonly": false,
+    "required": true,
+    "sort": 7,
+    "special": null,
     "translations": null,
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "user_updated",
-    "table": "shifts_shifts",
-    "data_type": "uuid",
+    "name": "date",
+    "table": "shifts_holidays_public",
+    "data_type": "date",
     "default_value": null,
     "max_length": null,
     "numeric_precision": null,

@@ -2502,6 +2502,18 @@
     "_syncId": "9d335557-9fcf-45eb-96f7-11f9a1839667"
   },
   {
+    "collection": "shifts_holidays_public",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
+    "_syncId": "6e3a0548-0693-4aee-831f-f10500455dc9"
+  },
+  {
     "collection": "shifts_logs",
     "action": "read",
     "permissions": {

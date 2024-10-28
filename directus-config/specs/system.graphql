@@ -275,8 +275,9 @@ type Subscription {
   payments_invoices_entries_mutated(event: EventEnum): payments_invoices_entries_mutated
   shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
   shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
-  shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
+  shifts_holidays_public_mutated(event: EventEnum): shifts_holidays_public_mutated
+  shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -2138,6 +2139,25 @@ type shifts_assignments_mutated {
   data: shifts_assignments
 }
 
+type shifts_holidays_public {
+  id: ID!
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  date_created: Date
+  date_created_func: datetime_functions
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  date_updated: Date
+  date_updated_func: datetime_functions
+  name: String
+  date: Date
+  date_func: date_functions
+}
+
+type shifts_holidays_public_mutated {
+  key: ID!
+  event: EventEnum
+  data: shifts_holidays_public
+}
+
 type shifts_logs {
   date_created: Date
   date_created_func: datetime_functions
@@ -2182,7 +2202,6 @@ type shifts_shifts {
 
   """Soll die Schicht sich regelmäßig wiederholen?"""
   shifts_is_regular: Boolean
-  shifts_location: String
   shifts_name: String!
   shifts_needs_coordinator: Boolean
 
@@ -2200,6 +2219,9 @@ type shifts_shifts {
   shifts_to_time_func: time_functions
   user_created: String
   user_updated: String
+
+  """Schicht findet NICHT an Feiertagen statt"""
+  exclude_public_holidays: Boolean
 }
 
 type shifts_shifts_mutated {
@@ -3557,7 +3579,6 @@ input shifts_shifts_filter {
   shifts_from_time_func: time_function_filter_operators
   shifts_is_all_day: boolean_filter_operators
   shifts_is_regular: boolean_filter_operators
-  shifts_location: string_filter_operators
   shifts_name: string_filter_operators
   shifts_needs_coordinator: boolean_filter_operators
   shifts_repeats_every: number_filter_operators
@@ -3569,6 +3590,7 @@ input shifts_shifts_filter {
   shifts_to_time_func: time_function_filter_operators
   user_created: string_filter_operators
   user_updated: string_filter_operators
+  exclude_public_holidays: boolean_filter_operators
   _and: [shifts_shifts_filter]
   _or: [shifts_shifts_filter]
 }

@@ -1,40 +1,33 @@
 {
-  "collection": "shifts_shifts",
-  "field": "shifts_needs_coordinator",
-  "type": "boolean",
+  "collection": "shifts_holidays_public",
+  "field": "name",
+  "type": "string",
   "meta": {
-    "collection": "shifts_shifts",
+    "collection": "shifts_holidays_public",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_needs_coordinator",
+    "field": "name",
     "group": null,
     "hidden": false,
-    "interface": "boolean",
+    "interface": "input",
     "note": null,
     "options": null,
     "readonly": false,
     "required": true,
-    "sort": 14,
-    "special": [
-      "cast-boolean"
-    ],
-    "translations": [
-      {
-        "language": "de-DE",
-        "translation": "Braucht Koordinator*in"
-      }
-    ],
+    "sort": 6,
+    "special": null,
+    "translations": null,
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "shifts_needs_coordinator",
-    "table": "shifts_shifts",
-    "data_type": "boolean",
-    "default_value": false,
-    "max_length": null,
+    "name": "name",
+    "table": "shifts_holidays_public",
+    "data_type": "character varying",
+    "default_value": null,
+    "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,
     "is_nullable": true,

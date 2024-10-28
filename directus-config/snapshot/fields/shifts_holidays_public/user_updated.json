@@ -1,9 +1,9 @@
 {
-  "collection": "shifts_shifts",
+  "collection": "shifts_holidays_public",
   "field": "user_updated",
   "type": "uuid",
   "meta": {
-    "collection": "shifts_shifts",
+    "collection": "shifts_holidays_public",
     "conditions": null,
     "display": "user",
     "display_options": null,
@@ -17,7 +17,7 @@
     },
     "readonly": true,
     "required": false,
-    "sort": 20,
+    "sort": 4,
     "special": [
       "user-updated"
     ],
@@ -28,7 +28,7 @@
   },
   "schema": {
     "name": "user_updated",
-    "table": "shifts_shifts",
+    "table": "shifts_holidays_public",
     "data_type": "uuid",
     "default_value": null,
     "max_length": null,
@@ -40,7 +40,7 @@
     "is_generated": false,
     "generation_expression": null,
     "has_auto_increment": false,
-    "foreign_key_table": null,
-    "foreign_key_column": null
+    "foreign_key_table": "directus_users",
+    "foreign_key_column": "id"
   }
 }

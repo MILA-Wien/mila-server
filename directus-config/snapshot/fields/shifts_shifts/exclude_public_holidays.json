@@ -1,41 +1,43 @@
 {
   "collection": "shifts_shifts",
-  "field": "shifts_location",
-  "type": "string",
+  "field": "exclude_public_holidays",
+  "type": "boolean",
   "meta": {
     "collection": "shifts_shifts",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_location",
+    "field": "exclude_public_holidays",
     "group": null,
     "hidden": false,
-    "interface": "input",
-    "note": null,
+    "interface": "boolean",
+    "note": "Schicht findet NICHT an Feiertagen statt",
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 14,
-    "special": null,
+    "sort": 13,
+    "special": [
+      "cast-boolean"
+    ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Schichtort"
+        "translation": "Feiertage auslassen"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
-    "name": "shifts_location",
+    "name": "exclude_public_holidays",
     "table": "shifts_shifts",
-    "data_type": "character varying",
-    "default_value": null,
-    "max_length": 255,
+    "data_type": "boolean",
+    "default_value": true,
+    "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
-    "is_nullable": true,
+    "is_nullable": false,
     "is_unique": false,
     "is_primary_key": false,
     "is_generated": false,
