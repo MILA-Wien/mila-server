@@ -13,7 +13,7 @@ export const getShiftOccurrences = async (
   from: DateTime,
   to: DateTime,
   options: GetShiftOccurrencesOptions = {},
-): Promise<ShiftOccurrence[]> => {
+): Promise<[ShiftOccurrence[], ShiftsPublicHoliday[]]> => {
   const directus = useDirectus();
   const { shiftType } = options;
   const isJumper = shiftType === "jumper";
@@ -184,7 +184,7 @@ export const getShiftOccurrences = async (
     return a.start.toMillis() - b.start.toMillis();
   });
 
-  return occurrences;
+  return [occurrences, publicHolidays];
 };
 
 // Get all occurrences for a shift in a given timeframe
@@ -329,8 +329,6 @@ export const getShiftRrule = (
   return rruleSet;
 };
 
-// SlotRrule is a RRuleSet that shows only free occurences
-// Occurences with existing assignments are excluded
 export const getAssignmentRrules = (
   shift: ShiftsShift,
   shiftRule: RRule,
