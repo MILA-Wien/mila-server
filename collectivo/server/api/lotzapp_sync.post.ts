@@ -14,162 +14,42 @@ const lotzapp_auth =
 
 const lotzapp_url = "https://www.lotzapp.org/api/" + lotzapp_mandant + "/";
 
-async function createOrUpdateLotzappUser(user: any) {
-  console.log("Creating or updating user in Lotzapp: " + user.first_name);
-
-  const data = {
-    name2: user.first_name,
-    name: user.last_name,
-    typ: user.memberships_person_type == "legal" ? "0" : "1",
-    anschrift:
-      (user.memberships_street ?? "") +
-      " " +
-      (user.memberships_streetnumber ?? "") +
-      " " +
-      (user.memberships_stair ?? "") +
-      " " +
-      (user.memberships_door ?? ""),
-    plz: user.memberships_postcode,
-    ort: user.memberships_city,
-    bankeinzug: user.payments_type == "sepa" ? "1" : "0",
-    mail: [{ email: user.email }],
-    bankverbindungen: [{ IBAN: user.payments_account_iban }],
-    kunde: "-1",
-  };
-
-  const endpoint = lotzapp_url + "adressen/";
-
-  if (user.lotzapp_id == null) {
-    const res = (await $fetch(endpoint, {
-      method: "POST",
-      headers: {
-        Authorization: lotzapp_auth,
-      },
-      body: JSON.stringify(data),
-    })) as any;
-
-    console.log("Lotzapp address created new: " + res.ID);
-    return res.ID;
-  }
-
-  const endpointWithID = endpoint + user.lotzapp_id + "/";
-
-  const resGet = (await $fetch(endpointWithID, {
-    method: "GET",
-    headers: {
-      Authorization: lotzapp_auth,
-    },
-  })) as any;
-
-  if (!resGet) {
-    // ID does not exist, create new
-    const res = (await $fetch(endpoint, {
-      method: "POST",
-      headers: {
-        Authorization: lotzapp_auth,
-      },
-      body: JSON.stringify(data),
-    })) as any;
-
-    console.log(
-      "Lotzapp address created new, as old id not found: " + user.lotzapp_id,
-      +"new id is " + res.ID,
-    );
-
-    return res.ID;
-  }
-
-  // ID exists, update
-  const res = (await $fetch(endpointWithID, {
-    method: "PUT",
-    headers: {
-      Authorization: lotzapp_auth,
-    },
-    body: JSON.stringify(data),
-  })) as any;
-
-  console.log("Lotzapp address updated for id " + user.lotzapp_id);
-  return user.lotzapp_id;
+interface LotzappResponse {
+  ID: string;
 }
 
-// INVOICE
-
-async function createLotzappInvoice(user: any, invoice: any) {
-  if (invoice.payments_status !== "pending") {
-    console.log("skipping invoice because not pending");
-    return null; // invoice should not be created
-  }
-
-  // # Prepare invoice data for lotzapp
-  const zahlungsmethode =
-    user.payments_type == "sepa" ? lotzapp_sepa_id : lotzapp_transfer_id;
-
-  const entry = invoice.payments_entries[0];
-
-  const data = {
-    datum: invoice.payments_date_issued,
-    adresse: user.lotzapp_id,
-    zahlungsmethode: zahlungsmethode,
-    positionen: [
-      {
-        name: "Genossenschaftsanteil",
-        wert: entry.payments_quantity.toString(),
-        einheit: "mal",
-        netto: entry.payments_price.toString().slice(0, -2),
-      },
-    ],
-  };
-
-  const endpoint = lotzapp_url + "ar/";
-
-  if (invoice.lotzapp_id == null) {
-    const res = (await $fetch(endpoint, {
-      method: "POST",
-      headers: {
-        Authorization: lotzapp_auth,
-      },
-      body: JSON.stringify(data),
-    })) as any;
-
-    console.log("Lotzapp invoice created new: " + res.ID);
-    return res.ID;
-  }
-
-  const endpointWithID = endpoint + invoice.lotzapp_id + "/";
-
-  const resGet = (await $fetch(endpointWithID, {
-    method: "GET",
-    headers: {
-      Authorization: lotzapp_auth,
-    },
-  })) as any;
-
-  if (!resGet) {
-    // ID does not exist, create new
-    const res = (await $fetch(endpoint, {
-      method: "POST",
-      headers: {
-        Authorization: lotzapp_auth,
-      },
-      body: JSON.stringify(data),
-    })) as any;
-
-    console.log(
-      "Lotzapp invoice created new, as old id not found: " + user.lotzapp_id,
-    );
-
-    return res.ID;
-  }
-
-  // ID exists, skip
-  console.log(
-    "Skipping as Lotzapp invoice already exists for id " + invoice.lotzapp_id,
-  );
-
-  return null;
+interface CollectivoInvoice {
+  id: number;
+  lotzapp_id: string;
+  payments_status: string;
+  payments_recipient_user: CollectivoUser;
+  payments_date_issued: string;
+  payments_entries: {
+    payments_quantity: number;
+    payments_price: number;
+  }[];
 }
 
-async function syncItem(item: any) {
+export default defineEventHandler(async (event) => {
+  // Protect route with API Token
+  verifyCollectivoApiToken(event);
+
+  try {
+    await useDirectusAdmin();
+  } catch (e) {
+    console.error("Failed to connect to Directus", e);
+  }
+
+  const body = await readBody(event);
+  console.log("Syncing lotzapp data: " + body.length + " items");
+
+  // loop through body
+  for (const item of body) {
+    await syncItem(item);
+  }
+});
+
+async function syncItem(item: CollectivoInvoice) {
   const user = item.payments_recipient_user;
   const directus = await useDirectusAdmin();
 
@@ -204,21 +84,160 @@ async function syncItem(item: any) {
   );
 }
 
-export default defineEventHandler(async (event) => {
-  // Protect route with API Token
-  verifyCollectivoApiToken(event);
+async function createOrUpdateLotzappUser(user: CollectivoUser) {
+  console.log("Creating or updating user in Lotzapp: " + user.first_name);
 
-  try {
-    await useDirectusAdmin();
-  } catch (e) {
-    console.error("Failed to connect to Directus", e);
+  const data = {
+    name2: user.first_name,
+    name: user.last_name,
+    typ: user.memberships_person_type == "legal" ? "0" : "1",
+    anschrift:
+      (user.memberships_street ?? "") +
+      " " +
+      (user.memberships_streetnumber ?? "") +
+      " " +
+      (user.memberships_stair ?? "") +
+      " " +
+      (user.memberships_door ?? ""),
+    plz: user.memberships_postcode,
+    ort: user.memberships_city,
+    bankeinzug: user.payments_type == "sepa" ? "1" : "0",
+    mail: [{ email: user.email }],
+    bankverbindungen: [{ IBAN: user.payments_account_iban }],
+    kunde: "-1",
+  };
+
+  const endpoint = lotzapp_url + "adressen/";
+
+  if (user.lotzapp_id == null) {
+    const res = (await $fetch(endpoint, {
+      method: "POST",
+      headers: {
+        Authorization: lotzapp_auth,
+      },
+      body: JSON.stringify(data),
+    })) as LotzappResponse;
+
+    console.log("Lotzapp address created new: " + res.ID);
+    return res.ID;
   }
 
-  const body = await readBody(event);
-  console.log("Syncing lotzapp data: " + body.length + " items");
+  const endpointWithID = endpoint + user.lotzapp_id + "/";
 
-  // loop through body
-  for (const item of body) {
-    await syncItem(item);
+  const resGet = (await $fetch(endpointWithID, {
+    method: "GET",
+    headers: {
+      Authorization: lotzapp_auth,
+    },
+  })) as LotzappResponse;
+
+  if (!resGet) {
+    // ID does not exist, create new
+    const res = (await $fetch(endpoint, {
+      method: "POST",
+      headers: {
+        Authorization: lotzapp_auth,
+      },
+      body: JSON.stringify(data),
+    })) as LotzappResponse;
+
+    console.log(
+      "Lotzapp address created new, as old id not found: " + user.lotzapp_id,
+      +"new id is " + res.ID,
+    );
+
+    return res.ID;
   }
-});
+
+  // ID exists, update
+  await $fetch(endpointWithID, {
+    method: "PUT",
+    headers: {
+      Authorization: lotzapp_auth,
+    },
+    body: JSON.stringify(data),
+  });
+
+  console.log("Lotzapp address updated for id " + user.lotzapp_id);
+  return user.lotzapp_id;
+}
+
+// INVOICE
+
+async function createLotzappInvoice(
+  user: CollectivoUser,
+  invoice: CollectivoInvoice,
+) {
+  if (invoice.payments_status !== "pending") {
+    console.log("skipping invoice because not pending");
+    return null; // invoice should not be created
+  }
+
+  // # Prepare invoice data for lotzapp
+  const zahlungsmethode =
+    user.payments_type == "sepa" ? lotzapp_sepa_id : lotzapp_transfer_id;
+
+  const entry = invoice.payments_entries[0];
+
+  const data = {
+    datum: invoice.payments_date_issued,
+    adresse: user.lotzapp_id,
+    zahlungsmethode: zahlungsmethode,
+    positionen: [
+      {
+        name: "Genossenschaftsanteil",
+        wert: entry.payments_quantity.toString(),
+        einheit: "mal",
+        netto: entry.payments_price.toString().slice(0, -2),
+      },
+    ],
+  };
+
+  const endpoint = lotzapp_url + "ar/";
+
+  if (invoice.lotzapp_id == null) {
+    const res = (await $fetch(endpoint, {
+      method: "POST",
+      headers: {
+        Authorization: lotzapp_auth,
+      },
+      body: JSON.stringify(data),
+    })) as LotzappResponse;
+
+    console.log("Lotzapp invoice created new: " + res.ID);
+    return res.ID;
+  }
+
+  const endpointWithID = endpoint + invoice.lotzapp_id + "/";
+
+  const resGet = (await $fetch(endpointWithID, {
+    method: "GET",
+    headers: {
+      Authorization: lotzapp_auth,
+    },
+  })) as LotzappResponse;
+
+  if (!resGet) {
+    // ID does not exist, create new
+    const res = (await $fetch(endpoint, {
+      method: "POST",
+      headers: {
+        Authorization: lotzapp_auth,
+      },
+      body: JSON.stringify(data),
+    })) as LotzappResponse;
+
+    console.log(
+      "Lotzapp invoice created new, as old id not found: " + user.lotzapp_id,
+    );
+
+    return res.ID;
+  }
+
+  // ID exists, skip
+  console.log(
+    "Skipping as Lotzapp invoice already exists for id " + invoice.lotzapp_id,
+  );
+
+  return null;
+}
