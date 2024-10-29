@@ -21,7 +21,7 @@ const selectedShiftOccurence = ref(null);
 const showCalendar = ref(true);
 
 // Watch locale change
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 
 // Dates are used without time, time always being set to UTC 00:00
 const calendarOptions: Ref<CalendarOptions> = ref({
@@ -192,7 +192,9 @@ const registerEventUpdate = async () => {
 
 const colors = ["#2E8B57", "#FF8C00", "#B22222"];
 
-async function updateEvents(from, to) {
+// Update events in calendar
+// This reloads occurrences in a given timeframe
+async function updateEvents(from: DateTime, to: DateTime) {
   const [occurrences, publicHolidays] = await getShiftOccurrences(from, to, {
     shiftType: customSettings.value.selectedShiftType,
     shiftCategory: customSettings.value.selectedShiftCategory,
@@ -202,9 +204,10 @@ async function updateEvents(from, to) {
   const events = [];
 
   // Display public holidays
+  // Todo translation
   for (const holiday of publicHolidays) {
     events.push({
-      title: holiday.name,
+      title: t("Public holiday"),
       start: holiday.date,
 
       allDay: true,
@@ -305,3 +308,8 @@ async function updateEvents(from, to) {
   flex-direction: column;
 }
 </style>
+
+<i18n lang="yaml">
+de:
+  "Public holiday": "Feiertag"
+</i18n>
