@@ -1,5 +1,16 @@
 import type { DateTime } from "luxon";
 
+declare module "h3" {
+  interface EventHandlerRequest {
+    context: {
+      auth?: {
+        user: string;
+        email: string;
+      };
+    };
+  }
+}
+
 declare global {
   interface CollectivoSchema {
     collectivo_extensions: CollectivoExtension[];
@@ -142,7 +153,7 @@ declare global {
   interface ShiftsPublicHoliday {
     id: number;
     name: string;
-    date: Date;
+    date: string;
   }
 
   interface ShiftsAssignment {

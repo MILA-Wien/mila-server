@@ -37,7 +37,8 @@
     "rrule": "^2.8.1",
     "sanitize-html": "^2.13.0",
     "v-calendar": "^3.1.2",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.232",

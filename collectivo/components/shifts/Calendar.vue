@@ -195,7 +195,13 @@ const colors = ["#2E8B57", "#FF8C00", "#B22222"];
 // Update events in calendar
 // This reloads occurrences in a given timeframe
 async function updateEvents(from: DateTime, to: DateTime) {
-  const [occurrences, publicHolidays] = await getShiftOccurrences(from, to, {
+  // New experiment
+  const { data } = await useFetch("/api/shifts/occurrences", {
+    query: { from: from.toISO(), to: to.toISO() },
+  });
+  console.log("response", data.value);
+
+  const occurrences = await getShiftOccurrences(from, to, {
     shiftType: customSettings.value.selectedShiftType,
     shiftCategory: customSettings.value.selectedShiftCategory,
     admin: props.mode === "admin",
@@ -204,12 +210,11 @@ async function updateEvents(from: DateTime, to: DateTime) {
   const events = [];
 
   // Display public holidays
-  // Todo translation
-  for (const holiday of publicHolidays) {
+  const publicHolidays = await getPublicHolidays();
+  for (const date of publicHolidays) {
     events.push({
       title: t("Public holiday"),
-      start: holiday.date,
-
+      start: date,
       allDay: true,
       color: "gray",
     });
