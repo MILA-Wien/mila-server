@@ -16,9 +16,9 @@ export default defineEventHandler(async (event) => {
     .split(";")[0];
 
   // Try to use cached user token
-  const cachedUser = tokenCache.get(directusSessionToken);
-  if (cachedUser && cachedUser.expiresAt > Date.now()) {
-    event.context.auth = { user: cachedUser.id, email: cachedUser.email };
+  const cachedTokenInfo = tokenCache.get(directusSessionToken);
+  if (cachedTokenInfo && cachedTokenInfo.expiresAt > Date.now()) {
+    event.context.auth = cachedTokenInfo.authContext;
     return;
   }
 
@@ -30,30 +30,40 @@ export default defineEventHandler(async (event) => {
       withToken(
         directusSessionToken,
         readMe({
-          fields: ["id", "email"],
+          fields: [
+            "id",
+            "email",
+            {
+              memberships: ["id"],
+            },
+          ],
         }),
       ),
     );
 
+    let mship = null;
+    if (user.memberships.length > 0) {
+      mship = user.memberships[0].id;
+    }
+
     // Cache user token for one hour
     const expiresAt = Date.now() + EXPIRATION_TIME;
-    tokenCache.set(directusSessionToken, {
-      id: user.id,
-      email: user.email,
-      expiresAt,
-    });
-    event.context.auth = { user: user.id, email: user.email };
+    const authContext = { user: user.id, email: user.email, mship: mship };
+    tokenCache.set(directusSessionToken, { expiresAt, authContext });
+    event.context.auth = authContext;
     return;
   } catch (e) {
     return;
   }
 });
 
+interface TokenCacheEntry {
+  authContext: ServerUserInfo;
+  expiresAt: number;
+}
+
 // Token cache to store user tokens
-const tokenCache = new Map<
-  string,
-  { id: string; email: string; expiresAt: number }
->();
+const tokenCache = new Map<string, TokenCacheEntry>();
 
 // Cleanup function to remove expired tokens
 const cleanupExpiredTokens = () => {

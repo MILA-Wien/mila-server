@@ -1,35 +1,46 @@
 <script setup lang="ts">
+import type { CalendarApi } from "@fullcalendar/core";
+
 const props = defineProps({
-  calendarRef: Object as PropType<{ getApi: Promise<() => FullCalendar> }>,
-  locale: String,
+  calendarApi: {
+    type: Object as PropType<CalendarApi>,
+    required: true,
+  },
 });
 
 const { t } = useI18n();
-const model = defineModel();
-const shiftTypes = model.value.allowedShiftTypes;
-const shiftCategories = model.value.allowedShiftCategories;
+const calConfig = defineModel<ShiftsCalendarConfig>({ required: true });
+const shiftTypes = calConfig.value.allowedShiftTypes;
+const shiftCategories = calConfig.value.allowedShiftCategories;
 const displayedDate = ref();
-const calendarApi = ref(null);
+
+onMounted(async () => {
+  // const calendar = await props.calendarRef.value.getApi;
+  // calendarApi.value = calendar();
+  setView("dayGridMonth");
+});
+
+const calendarApi = props.calendarApi;
 
 // Get shift type with value from props
 const selectedShiftType = ref(
-  shiftTypes.find((type) => type.value === model.value.selectedShiftType),
+  shiftTypes.find((type) => type.value === calConfig.value.selectedShiftType),
 );
 
 const selectedShiftCategory = ref(
   shiftCategories.find(
-    (type) => type.value === model.value.selectedShiftCategory,
+    (type) => type.value === calConfig.value.selectedShiftCategory,
   ),
 );
 
 const prevHandler = () => {
-  calendarApi.value.prev();
-  displayedDate.value = calendarApi.value.view.title;
+  calendarApi.prev();
+  displayedDate.value = calendarApi.view.title;
 };
 
 const nextHandler = () => {
-  calendarApi.value.next();
-  displayedDate.value = calendarApi.value.view.title;
+  calendarApi.next();
+  displayedDate.value = calendarApi.view.title;
 };
 
 const views = [
@@ -53,8 +64,8 @@ const views = [
 const selectedView = ref(views[0]);
 
 function setView(view: string) {
-  calendarApi.value.changeView(view);
-  displayedDate.value = calendarApi.value.view.title;
+  calendarApi.changeView(view);
+  displayedDate.value = calendarApi.view.title;
 }
 
 watch(selectedView, (value) => {
@@ -62,17 +73,11 @@ watch(selectedView, (value) => {
 });
 
 watch(selectedShiftType, (value) => {
-  model.value.selectedShiftType = value.value;
+  calConfig.value.selectedShiftType = value.value;
 });
 
 watch(selectedShiftCategory, (value) => {
-  model.value.selectedShiftCategory = value.value;
-});
-
-onMounted(async () => {
-  const calendar = await props.calendarRef.value.getApi;
-  calendarApi.value = calendar();
-  setView("dayGridMonth");
+  calConfig.value.selectedShiftCategory = value.value;
 });
 </script>
 

@@ -6,7 +6,7 @@ import listPlugin from "@fullcalendar/list";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import luxonPlugin from "@fullcalendar/luxon3";
 import { DateTime } from "luxon";
-import type { CalendarOptions } from "@fullcalendar/core";
+import type { CalendarOptions, CalendarApi } from "@fullcalendar/core";
 
 const props = defineProps({
   mode: {
@@ -14,15 +14,12 @@ const props = defineProps({
     default: null,
   },
 });
-
+const { locale, t } = useI18n();
 const user = useCollectivoUser();
 const shiftActionModalisOpen = ref(false);
 const selectedShiftOccurence = ref(null);
-const showCalendar = ref(true);
 
-// Watch locale change
-const { locale, t } = useI18n();
-
+// Full calendar settings
 // Dates are used without time, time always being set to UTC 00:00
 const calendarOptions: Ref<CalendarOptions> = ref({
   timeZone: "UTC",
@@ -60,6 +57,8 @@ const calendarOptions: Ref<CalendarOptions> = ref({
   },
 });
 
+// Re-render the calendar after locale change
+const showCalendar = ref(true);
 watch(locale, () => {
   showCalendar.value = false;
   calendarOptions.value.locale = locale.value;
@@ -146,14 +145,14 @@ const propsShiftCategoryToList: { [key: string]: ShiftType[] } = {
   admin: [...Object.values(possibleShiftCategories)],
 };
 
-const customSettings = ref({
+const customSettings = ref<ShiftsCalendarConfig>({
   allowedShiftTypes: propsShiftTypeToList[props.mode],
   selectedShiftType: propsShiftTypeToList[props.mode][0].value,
   allowedShiftCategories: propsShiftCategoryToList[props.mode],
   selectedShiftCategory: propsShiftCategoryToList[props.mode][0].value,
 });
 
-const calendarRef = ref(null);
+const calendarRef = ref<{ getApi: () => CalendarApi } | null>(null);
 
 // Watch changes in settings and update events
 watch(
@@ -165,17 +164,12 @@ watch(
     registerEventUpdate();
   },
 );
-
-const calendarComputed = () => {
-  return calendarRef;
-};
-
 onMounted(() => {
   registerEventUpdate();
 });
 
 const registerEventUpdate = async () => {
-  const calendar = await calendarRef.value.getApi();
+  const calendar = await calendarRef.value!.getApi();
 
   calendar.on("datesSet", (infos) => {
     updateEvents(
@@ -195,17 +189,21 @@ const colors = ["#2E8B57", "#FF8C00", "#B22222"];
 // Update events in calendar
 // This reloads occurrences in a given timeframe
 async function updateEvents(from: DateTime, to: DateTime) {
-  // New experiment
-  const { data } = await useFetch("/api/shifts/occurrences", {
+  const data = await $fetch("/api/shifts/occurrences", {
     query: { from: from.toISO(), to: to.toISO() },
   });
-  console.log("response", data.value);
 
-  const occurrences = await getShiftOccurrences(from, to, {
-    shiftType: customSettings.value.selectedShiftType,
-    shiftCategory: customSettings.value.selectedShiftCategory,
-    admin: props.mode === "admin",
-  });
+  if (!data) {
+    return;
+  }
+
+  const occurrences = data;
+
+  // const occurrences = await getShiftOccurrences(from, to, {
+  //   shiftType: customSettings.value.selectedShiftType,
+  //   shiftCategory: customSettings.value.selectedShiftCategory,
+  //   admin: props.mode === "admin",
+  // });
 
   const events = [];
 
@@ -223,7 +221,7 @@ async function updateEvents(from: DateTime, to: DateTime) {
   // Display occurrences
   for (const occurrence of occurrences) {
     const n_missing = occurrence.shift.shifts_slots - occurrence.n_assigned;
-    const start = occurrence.start.toJSDate();
+    const start = new Date(occurrence.start);
     const isPast = start < new Date();
     let title = occurrence.shift.shifts_name;
     let color = "";
@@ -242,9 +240,11 @@ async function updateEvents(from: DateTime, to: DateTime) {
     if (props.mode === "admin" && !isPast) {
       if (occurrence.shift.shifts_category === "operativos") {
         if (occurrence.n_assigned > 0) {
-          const assignedUser =
-            occurrence.assignments[0].assignment.shifts_membership
-              .memberships_user;
+          // TODO Fix typing
+          const assignedUser = (
+            occurrence.assignments[0].assignment
+              .shifts_membership as unknown as MembershipsMembership
+          ).memberships_user;
           title +=
             " [" + assignedUser.first_name + " " + assignedUser.last_name + "]";
         }
@@ -259,8 +259,8 @@ async function updateEvents(from: DateTime, to: DateTime) {
 
     events.push({
       title: title,
-      start: occurrence.start.toJSDate(),
-      end: occurrence.end.toJSDate(),
+      start: occurrence.start,
+      end: occurrence.end,
       allDay: occurrence.shift.shifts_is_all_day,
       shiftOccurence: occurrence,
       color: color,
@@ -274,8 +274,9 @@ async function updateEvents(from: DateTime, to: DateTime) {
 <template>
   <div v-if="showCalendar" class="">
     <ShiftsCalendarHeader
+      v-if="calendarRef"
       v-model="customSettings"
-      :calendar-ref="calendarComputed()"
+      :calendar-api="calendarRef.getApi()"
     />
     <full-calendar ref="calendarRef" :options="calendarOptions" />
   </div>

@@ -1,17 +1,18 @@
-import type { DateTime } from "luxon";
-
 declare module "h3" {
   interface EventHandlerRequest {
     context: {
-      auth?: {
-        user: string;
-        email: string;
-      };
+      auth?: ServerUserInfo;
     };
   }
 }
 
 declare global {
+  interface ServerUserInfo {
+    user: string;
+    email: string;
+    mship: number | null;
+  }
+
   interface CollectivoSchema {
     collectivo_extensions: CollectivoExtension[];
     collectivo_tiles: CollectivoTile[];
@@ -107,25 +108,16 @@ declare global {
     tiles_is_external: boolean;
   }
 
-  interface CollectivoExtension {
-    id: number;
-    extensions_name: string;
-    extensions_version: string;
-    extensions_schema_version: number;
-    extensions_schema_is_latest: boolean;
-  }
-
-  interface CollectivoSettings {
-    id: number;
-    collectivo_project_name: string;
-    collectivo_project_description: string;
-    collectivo_members_role: string;
-    collectivo_admin_role: string;
-  }
-
   // Shifts
+  interface ShiftsCalendarConfig {
+    allowedShiftTypes: ShiftType[];
+    selectedShiftType: string;
+    allowedShiftCategories: ShiftType[];
+    selectedShiftCategory: string;
+  }
+
   interface ShiftsShift {
-    id?: number;
+    id: number;
     shifts_name: string;
     shifts_from: string;
     shifts_to?: string;
@@ -157,7 +149,7 @@ declare global {
   }
 
   interface ShiftsAssignment {
-    id?: number;
+    id: number;
     shifts_is_regular: boolean;
     shifts_from: string;
     shifts_to?: string;
@@ -181,7 +173,6 @@ declare global {
     shifts_membership: MembershipsMembership | number;
     shifts_is_for_all_assignments: boolean;
     shifts_is_holiday?: boolean;
-    _rrule?: RRule | RRuleSet;
   }
 
   interface ShiftsAbsenceGet extends ShiftsAbsence {
@@ -209,8 +200,8 @@ declare global {
 
   interface ShiftOccurrence {
     shift: ShiftsShift;
-    start: DateTime;
-    end: DateTime;
+    start: Date;
+    end: Date;
     shiftRule: RRuleSet;
     n_assigned: number;
     assignments: AssignmentOccurrence[];
@@ -220,10 +211,15 @@ declare global {
 
   interface AssignmentRrule {
     assignment: ShiftsAssignment;
-    absences: ShiftsAbsence[];
+    absences: AbsenceRrule[];
     shift?: ShiftsShift;
     rrule: RRule | RRuleSet;
     rruleWithAbsences: RRule | RRuleSet;
+  }
+
+  interface AbsenceRrule {
+    absence: ShiftsAbsence;
+    rrule: RRule | RRuleSet;
   }
 
   interface AssignmentOccurrence {
