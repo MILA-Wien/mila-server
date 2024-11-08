@@ -35,9 +35,16 @@ async function getLogs() {
 
 getLogs();
 
+type LoadedAssignments = Awaited<ReturnType<typeof fetchAssignments>>;
+const loadedAssignments = ref<LoadedAssignments | null>(null);
+
+async function fetchAssignments() {
+  return await $fetch("/api/shifts/assignments");
+}
+
 async function loadData() {
   dataLoaded.value = false;
-  const res = await getUserAssignments(mship);
+  const res = await fetchAssignments();
   activeAssignments.value = res.assignmentRules;
   holidaysAll.value = res.holidays;
   holidaysCurrent.value = res.holidaysCurrent;

@@ -57,16 +57,6 @@ const calendarOptions: Ref<CalendarOptions> = ref({
 // Admin view includes all categories + filters
 // User view includes only allowed categories
 const calendarFilters = ref<ShiftsFilterState>({
-  filters: [
-    {
-      label: "Kein Filter",
-      value: "none",
-    },
-  ],
-  selectedFilter: {
-    label: "Kein Filter",
-    value: "none",
-  },
   categories: [
     {
       id: 0,
@@ -78,13 +68,10 @@ const calendarFilters = ref<ShiftsFilterState>({
     name: "Normal",
   },
   displayNames: false,
+  displayUnfilled: adminMode ? false : true,
 });
 props.mode == "admin" ? loadFiltersAdmin() : loadFiltersUser();
 async function loadFiltersAdmin() {
-  calendarFilters.value.filters.push({
-    label: "Unfilled shifts",
-    value: "unfilled",
-  });
   calendarFilters.value.categories.unshift({
     id: -1,
     name: "Alle",
@@ -111,7 +98,6 @@ onMounted(async () => {
   // Watch changes in date selection and update events
   const calendar = await calendarRef.value!.getApi();
   calendar.on("datesSet", (infos) => {
-    console.log("datesSet", infos);
     loadEventsInner(infos.start, infos.end, true);
   });
 });
@@ -119,8 +105,9 @@ onMounted(async () => {
 // Watch changes in settings and update events
 watch(
   [
-    () => calendarFilters.value.selectedFilter,
     () => calendarFilters.value.selectedCategory,
+    () => calendarFilters.value.displayNames,
+    () => calendarFilters.value.displayUnfilled,
   ],
   (_) => {
     loadEvents();
@@ -150,6 +137,7 @@ type LoadedOccurrences = Awaited<ReturnType<typeof fetchOccurrences>>;
 const loadedOccurrences = ref<LoadedOccurrences | null>(null);
 
 async function fetchOccurrences(from: Date, to: Date) {
+  console.log("adminmode", adminMode);
   return await $fetch("/api/shifts/occurrences", {
     query: {
       from: from.toISOString(),
@@ -171,7 +159,7 @@ async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
   // Prepare events array
   const events = [];
   const allCats = calendarFilters.value.selectedCategory.id === -1;
-  const unfilled = calendarFilters.value.selectedFilter.value === "unfilled";
+  const unfilled = calendarFilters.value.displayUnfilled;
 
   // Add public holidays
   for (const holiday of loadedOccurrences.value.publicHolidays) {
@@ -213,6 +201,15 @@ async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
         "]";
     }
 
+    if (calendarFilters.value.displayNames) {
+      for (const assignment of occurrence.assignments) {
+        const u = assignment.assignment.shifts_membership.memberships_user;
+        if (u.first_name) {
+          title += "\n" + u.first_name + " " + u.last_name;
+        }
+      }
+    }
+
     // Apply filters
     if (unfilled && occurrence.n_assigned >= occurrence.shift.shifts_slots) {
       continue;
@@ -249,7 +246,6 @@ async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
 </script>
 
 <template>
-  {{ calendarFilters.displayNames }}
   <div v-if="showCalendar" class="">
     <ShiftsCalendarHeader
       v-if="calendarRef"

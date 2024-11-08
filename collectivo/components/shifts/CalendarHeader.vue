@@ -10,7 +10,6 @@ const props = defineProps({
 
 const { t } = useI18n();
 const filterState = defineModel<ShiftsFilterState>({ required: true });
-const filters = filterState.value.filters;
 const categories = filterState.value.categories;
 const displayedDate = ref();
 
@@ -21,9 +20,9 @@ onMounted(async () => {
 const calendarApi = props.calendarApi;
 
 // Get shift type with value from props
-const selectedFilter = ref(filterState.value.selectedFilter);
 const selectedCategory = ref(filterState.value.selectedCategory);
-const displayNames = ref(false);
+const displayNames = ref(filterState.value.displayNames);
+const displayUnfilled = ref(filterState.value.displayUnfilled);
 
 const prevHandler = () => {
   calendarApi.prev();
@@ -64,16 +63,16 @@ watch(selectedView, (value) => {
   setView(value.view);
 });
 
-watch(selectedFilter, (value) => {
-  filterState.value.selectedFilter = value;
-});
-
 watch(selectedCategory, (value) => {
   filterState.value.selectedCategory = value;
 });
 
 watch(displayNames, (value) => {
   filterState.value.displayNames = value;
+});
+
+watch(displayUnfilled, (value) => {
+  filterState.value.displayUnfilled = value;
 });
 </script>
 
@@ -118,14 +117,6 @@ watch(displayNames, (value) => {
           </template>
         </USelectMenu>
       </UFormGroup>
-      <UFormGroup v-if="filters.length > 1" :label="t('Filters')">
-        <USelectMenu v-model="selectedFilter" :options="filters" class="w-36">
-          <template #label>{{ t(selectedFilter?.label) }}</template>
-          <template #option="{ option }">
-            {{ t(option.label) }}
-          </template>
-        </USelectMenu>
-      </UFormGroup>
       <UFormGroup :label="t('Display')">
         <USelectMenu
           v-model="selectedView"
@@ -139,8 +130,12 @@ watch(displayNames, (value) => {
           </template>
         </USelectMenu>
       </UFormGroup>
-
-      <UCheckbox v-model="displayNames" label="Display names" />
+      <UFormGroup :label="t('Settings')">
+        <div class="flex flex-col gap-2">
+          <UCheckbox v-model="displayNames" :label="t('Display names')" />
+          <UCheckbox v-model="displayUnfilled" :label="t('Unfilled shifts')" />
+        </div>
+      </UFormGroup>
     </div>
   </div>
 </template>
@@ -181,8 +176,10 @@ de:
   Shift type: Schichttyp
   Display: Anzeige
   Filters: Filter
+  Settings: Einstellungen
   "Registration regular": "Anmeldung Festschicht"
   "Registration one-time": "Anmeldung Einmalig"
-  "Unfilled shifts": "Ungefüllte Schichten"
+  "Unfilled shifts": "Offene Schichten"
+  "Display names": "Namen anzeigen"
   "All shifts": "Alle Schichten"
 </i18n>

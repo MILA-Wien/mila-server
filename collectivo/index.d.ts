@@ -101,10 +101,9 @@ declare global {
     value: string;
   }
   interface ShiftsFilterState {
-    filters: ShiftsFilter[];
-    selectedFilter: ShiftsFilter;
     categories: ShiftsCategory[];
     selectedCategory: ShiftsCategory;
+    displayUnfilled: boolean;
     displayNames: boolean;
   }
 

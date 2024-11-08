@@ -21,8 +21,8 @@ const shift = assignment.shifts_shift as ShiftsShift;
 const user = useCollectivoUser();
 const emit = defineEmits(["reload"]);
 
-function getTimeString(occurence: Date) {
-  const occ = DateTime.fromJSDate(occurence);
+function getTimeString(occurence: string) {
+  const occ = DateTime.fromISO(occurence);
   const weekday = occ.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
   const startTime = shift.shifts_from_time?.slice(0, 5);
   const endTime = shift.shifts_to_time?.slice(0, 5);
