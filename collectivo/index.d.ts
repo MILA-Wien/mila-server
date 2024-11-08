@@ -105,6 +105,7 @@ declare global {
     selectedFilter: ShiftsFilter;
     categories: ShiftsCategory[];
     selectedCategory: ShiftsCategory;
+    displayNames: boolean;
   }
 
   interface ShiftsShift {

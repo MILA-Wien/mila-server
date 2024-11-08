@@ -34,7 +34,7 @@ export const getShiftOccurrences = async (
   from: Date,
   to: Date,
   admin: boolean = false,
-): Promise<ShiftOccurrence[]> => {
+) => {
   // Get shifts within timeframe
   const shifts = await getShiftShifts(from, to);
   const shiftIds = shifts.map((shift) => shift.id);
@@ -72,7 +72,7 @@ export const getShiftOccurrences = async (
     return a.start.getTime() - b.start.getTime();
   });
 
-  return occurrences;
+  return { occurrences, publicHolidays };
 };
 
 // Get all occurrences for a shift in a given timeframe

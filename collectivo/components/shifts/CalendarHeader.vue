@@ -23,6 +23,7 @@ const calendarApi = props.calendarApi;
 // Get shift type with value from props
 const selectedFilter = ref(filterState.value.selectedFilter);
 const selectedCategory = ref(filterState.value.selectedCategory);
+const displayNames = ref(false);
 
 const prevHandler = () => {
   calendarApi.prev();
@@ -69,6 +70,10 @@ watch(selectedFilter, (value) => {
 
 watch(selectedCategory, (value) => {
   filterState.value.selectedCategory = value;
+});
+
+watch(displayNames, (value) => {
+  filterState.value.displayNames = value;
 });
 </script>
 
@@ -134,6 +139,8 @@ watch(selectedCategory, (value) => {
           </template>
         </USelectMenu>
       </UFormGroup>
+
+      <UCheckbox v-model="displayNames" label="Display names" />
     </div>
   </div>
 </template>

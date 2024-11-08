@@ -77,6 +77,7 @@ const calendarFilters = ref<ShiftsFilterState>({
     id: 0,
     name: "Normal",
   },
+  displayNames: false,
 });
 props.mode == "admin" ? loadFiltersAdmin() : loadFiltersUser();
 async function loadFiltersAdmin() {
@@ -145,22 +146,27 @@ const loadEvents = async (reload = false) => {
   );
 };
 
-const currentOccurrences = ref<ShiftOccurrence[]>([]);
+type LoadedOccurrences = Awaited<ReturnType<typeof fetchOccurrences>>;
+const loadedOccurrences = ref<LoadedOccurrences | null>(null);
+
+async function fetchOccurrences(from: Date, to: Date) {
+  return await $fetch("/api/shifts/occurrences", {
+    query: {
+      from: from.toISOString(),
+      to: to.toISOString(),
+      admin: adminMode,
+    },
+  });
+}
 
 // Fetch events based on given timespan
 async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
   // Fetch shift occurrences from API
   if (reload) {
-    currentOccurrences.value = await $fetch("/api/shifts/occurrences", {
-      query: {
-        from: from.toISOString(),
-        to: to.toISOString(),
-        admin: adminMode,
-      },
-    });
+    loadedOccurrences.value = await fetchOccurrences(from, to);
   }
 
-  if (!currentOccurrences.value) return;
+  if (!loadedOccurrences.value) return;
 
   // Prepare events array
   const events = [];
@@ -168,18 +174,17 @@ async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
   const unfilled = calendarFilters.value.selectedFilter.value === "unfilled";
 
   // Add public holidays
-  const publicHolidays = await getPublicHolidays();
-  for (const date of publicHolidays) {
+  for (const holiday of loadedOccurrences.value.publicHolidays) {
     events.push({
       title: t("Public holiday"),
-      start: date,
+      start: holiday.date,
       allDay: true,
       color: "gray",
     });
   }
 
   // Add shift occurrences
-  for (const occurrence of currentOccurrences.value) {
+  for (const occurrence of loadedOccurrences.value.occurrences) {
     const n_missing = occurrence.shift.shifts_slots - occurrence.n_assigned;
     const start = new Date(occurrence.start);
     const isPast = start < new Date();
@@ -244,6 +249,7 @@ async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
 </script>
 
 <template>
+  {{ calendarFilters.displayNames }}
   <div v-if="showCalendar" class="">
     <ShiftsCalendarHeader
       v-if="calendarRef"
