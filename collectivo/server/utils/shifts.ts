@@ -6,7 +6,6 @@ const directus = useDirectusAdmin();
 export async function getShiftShifts(
   from: Date,
   to: Date,
-  filterCategory?: string,
 ): Promise<ShiftsShift[]> {
   const filter: QueryFilter<CollectivoSchema, ShiftsShift> = {
     shifts_to: {
@@ -15,9 +14,6 @@ export async function getShiftShifts(
     shifts_from: { _lte: to.toISOString() },
     shifts_status: { _eq: "published" },
   };
-  if (filterCategory) {
-    filter.shifts_category = { _eq: filterCategory };
-  }
   const shifts = await directus.request(
     readItems("shifts_shifts", {
       filter: filter,
@@ -33,7 +29,6 @@ export async function getShiftAssignments(
   shiftIds: number[],
   from: Date,
   to: Date,
-  admin: boolean,
 ): Promise<ShiftsAssignment[]> {
   if (shiftIds.length === 0) {
     return [];
@@ -50,24 +45,27 @@ export async function getShiftAssignments(
           _in: shiftIds,
         },
       },
-      fields: admin
-        ? [
+      fields: [
+        "id",
+        "shifts_from",
+        "shifts_to",
+        "shifts_shift",
+        "shifts_is_regular",
+        "shifts_is_coordination",
+        {
+          shifts_membership: [
             "id",
-            "shifts_from",
-            "shifts_to",
-            "shifts_shift",
-            "shifts_is_regular",
-            "shifts_is_coordination",
             {
-              shifts_membership: [
-                "id",
-                {
-                  memberships_user: ["first_name", "last_name", "email"],
-                },
+              memberships_user: [
+                "first_name",
+                "last_name",
+                "email",
+                "hide_name",
               ],
             },
-          ]
-        : ["*"],
+          ],
+        },
+      ],
     }),
   );
 }

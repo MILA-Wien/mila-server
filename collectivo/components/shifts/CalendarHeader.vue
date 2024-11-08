@@ -9,29 +9,20 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
-const calConfig = defineModel<ShiftsCalendarConfig>({ required: true });
-const shiftTypes = calConfig.value.allowedShiftTypes;
-const shiftCategories = calConfig.value.allowedShiftCategories;
+const filterState = defineModel<ShiftsFilterState>({ required: true });
+const filters = filterState.value.filters;
+const categories = filterState.value.categories;
 const displayedDate = ref();
 
 onMounted(async () => {
-  // const calendar = await props.calendarRef.value.getApi;
-  // calendarApi.value = calendar();
   setView("dayGridMonth");
 });
 
 const calendarApi = props.calendarApi;
 
 // Get shift type with value from props
-const selectedShiftType = ref(
-  shiftTypes.find((type) => type.value === calConfig.value.selectedShiftType),
-);
-
-const selectedShiftCategory = ref(
-  shiftCategories.find(
-    (type) => type.value === calConfig.value.selectedShiftCategory,
-  ),
-);
+const selectedFilter = ref(filterState.value.selectedFilter);
+const selectedCategory = ref(filterState.value.selectedCategory);
 
 const prevHandler = () => {
   calendarApi.prev();
@@ -72,12 +63,12 @@ watch(selectedView, (value) => {
   setView(value.view);
 });
 
-watch(selectedShiftType, (value) => {
-  calConfig.value.selectedShiftType = value.value;
+watch(selectedFilter, (value) => {
+  filterState.value.selectedFilter = value;
 });
 
-watch(selectedShiftCategory, (value) => {
-  calConfig.value.selectedShiftCategory = value.value;
+watch(selectedCategory, (value) => {
+  filterState.value.selectedCategory = value;
 });
 </script>
 
@@ -110,25 +101,21 @@ watch(selectedShiftCategory, (value) => {
       </div>
     </div>
     <div class="calendar-header__right">
-      <UFormGroup v-if="shiftCategories.length > 1" :label="t('Category')">
+      <UFormGroup v-if="categories.length > 1" :label="t('Category')">
         <USelectMenu
-          v-model="selectedShiftCategory"
-          :options="shiftCategories"
+          v-model="selectedCategory"
+          :options="categories"
           class="w-36"
         >
-          <template #label>{{ t(selectedShiftCategory.label) }}</template>
+          <template #label>{{ t(selectedCategory.name) }}</template>
           <template #option="{ option }">
-            {{ t(option.label) }}
+            {{ t(option.name) }}
           </template>
         </USelectMenu>
       </UFormGroup>
-      <UFormGroup v-if="shiftTypes.length > 1" :label="t('Shift type')">
-        <USelectMenu
-          v-model="selectedShiftType"
-          :options="shiftTypes"
-          class="w-36"
-        >
-          <template #label>{{ t(selectedShiftType.label) }}</template>
+      <UFormGroup v-if="filters.length > 1" :label="t('Filters')">
+        <USelectMenu v-model="selectedFilter" :options="filters" class="w-36">
+          <template #label>{{ t(selectedFilter?.label) }}</template>
           <template #option="{ option }">
             {{ t(option.label) }}
           </template>
@@ -141,7 +128,7 @@ watch(selectedShiftCategory, (value) => {
           option-attribute="label"
           class="w-36"
         >
-          <template #label>{{ t(selectedView.label) }}</template>
+          <template #label>{{ t(selectedView?.label) }}</template>
           <template #option="{ option }">
             {{ t(option.label) }}
           </template>
@@ -186,6 +173,7 @@ de:
   One-time: Einmalig
   Shift type: Schichttyp
   Display: Anzeige
+  Filters: Filter
   "Registration regular": "Anmeldung Festschicht"
   "Registration one-time": "Anmeldung Einmalig"
   "Unfilled shifts": "Ungefüllte Schichten"

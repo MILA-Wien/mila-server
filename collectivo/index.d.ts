@@ -11,6 +11,8 @@ declare global {
     user: string;
     email: string;
     mship: number | null;
+    studioAdmin: boolean;
+    shiftAdmin: boolean;
   }
 
   interface CollectivoSchema {
@@ -19,29 +21,12 @@ declare global {
     collectivo_tags: CollectivoTag[];
     directus_users: CollectivoUser[];
     memberships: MembershipsMembership[];
-    shifts_skills: ShiftsSkill[];
     shifts_assignments: ShiftsAssignment[];
     shifts_absences: ShiftsAbsence[];
     shifts_logs: ShiftsLog[];
     shifts_shifts: ShiftsShift[];
+    shifts_categories: ShiftsCategory[];
     shifts_holidays_public: ShiftsPublicHoliday[];
-  }
-
-  interface MembershipsMembership {
-    id: number;
-    name: string;
-    memberships_user: DirectusUser | number;
-    memberships_status: string;
-    memberships_type: string;
-    memberships_shares: number;
-    memberships_date_approved: string;
-  }
-
-  interface DataWrapper<T> {
-    data: T | null | undefined;
-    error: Error | null | undefined | unknown;
-    loading: boolean;
-    saving: boolean;
   }
 
   interface CollectivoUser {
@@ -49,6 +34,7 @@ declare global {
     first_name: string;
     last_name: string;
     email: string;
+    hide_name: boolean;
     collectivo_tags?: { collectivo_tags_id: number }[];
     memberships?: MembershipsMembership[];
     [key: string]: string | undefined;
@@ -65,7 +51,8 @@ declare global {
     memberships_shares: number;
     shifts_user_type: ShiftsUserType;
     shifts_counter: number;
-    shifts_skills?: string[];
+    shifts_can_be_coordinator: boolean;
+    shifts_categories_allowed: { shifts_category_id: ShiftsCategory }[];
     coshoppers?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
     kids?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
   }
@@ -109,11 +96,15 @@ declare global {
   }
 
   // Shifts
-  interface ShiftsCalendarConfig {
-    allowedShiftTypes: ShiftType[];
-    selectedShiftType: string;
-    allowedShiftCategories: ShiftType[];
-    selectedShiftCategory: string;
+  interface ShiftsFilter {
+    label: string;
+    value: string;
+  }
+  interface ShiftsFilterState {
+    filters: ShiftsFilter[];
+    selectedFilter: ShiftsFilter;
+    categories: ShiftsCategory[];
+    selectedCategory: ShiftsCategory;
   }
 
   interface ShiftsShift {
@@ -128,7 +119,7 @@ declare global {
     shifts_needs_coordinator: boolean;
     shifts_allow_self_assignment: boolean;
     shifts_is_regular: boolean;
-    shifts_category: string;
+    shifts_category_2?: number;
     shifts_repeats_every?: number;
     shifts_status: string;
     shifts_description?: string;
@@ -196,6 +187,11 @@ declare global {
     shifts_date: string;
     shifts_score: number;
     shifts_shift?: ShiftsShift | number;
+  }
+
+  interface ShiftsCategory {
+    id: number;
+    name: string;
   }
 
   interface ShiftOccurrence {

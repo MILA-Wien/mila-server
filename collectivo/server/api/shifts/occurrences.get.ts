@@ -12,20 +12,19 @@ type ResAbsences = Awaited<ReturnType<typeof getShiftAbsences>>;
 const querySchema = z.object({
   from: z.coerce.date(),
   to: z.coerce.date(),
-  filterStatus: z.enum(["regular", "jumper", "unfilled"]).optional(),
-  filterCategory: z.string().optional(),
-  admin: z.boolean().optional(),
+  admin: z.coerce.boolean().optional(),
 });
 
 export default defineEventHandler(async (event) => {
   const params = await getValidatedQuery(event, querySchema.parse);
+  const user = event.context.auth;
+  if (params.admin && !user.shiftAdmin) {
+    throw new Error("Unauthorized");
+  }
   return getShiftOccurrences(
     event.context.auth,
     params.from,
     params.to,
-    params.filterStatus,
-    params.filterCategory,
-    false,
     params.admin,
   );
 });
@@ -34,18 +33,19 @@ export const getShiftOccurrences = async (
   userInfo: ServerUserInfo,
   from: Date,
   to: Date,
-  filterStatus?: "regular" | "jumper" | "unfilled",
-  filterCategory?: string,
-  filterUnfilled: boolean = false,
   admin: boolean = false,
 ): Promise<ShiftOccurrence[]> => {
   // Get shifts within timeframe
-  const shifts = await getShiftShifts(from, to, filterCategory);
+  const shifts = await getShiftShifts(from, to);
   const shiftIds = shifts.map((shift) => shift.id);
 
   // Get assignments within timeframe
-  const assignments = await getShiftAssignments(shiftIds, from, to, admin);
+  const assignments = await getShiftAssignments(shiftIds, from, to);
   const assignmentIds = assignments.map((assignment) => assignment.id);
+
+  if (!admin) {
+    // Todo remove names!
+  }
 
   // Get absences within timeframe
   const absences = await getShiftAbsences(assignmentIds, from, to);
@@ -71,13 +71,6 @@ export const getShiftOccurrences = async (
   occurrences.sort((a, b) => {
     return a.start.getTime() - b.start.getTime();
   });
-
-  // Show only shifts with unfilled slots
-  if (filterUnfilled) {
-    return occurrences.filter(
-      (occurrence) => occurrence.n_assigned < occurrence.shift.shifts_slots,
-    );
-  }
 
   return occurrences;
 };

@@ -3,6 +3,13 @@ import { createDirectus, readMe, withToken, rest } from "@directus/sdk";
 const EXPIRATION_TIME = 3600000; // 1 hour
 const CLEANUP_INTERVAL = 3600000; // 1 hour
 
+const SHIFT_ADMIN_ROLES = ["Administrator", "Mitgliederverwaltung"];
+const STUDIO_ADMIN_ROLES = [
+  "Administrator",
+  "Mitgliederverwaltung",
+  "Vorstand",
+];
+
 // Check for directus session token in cookie
 // Authenticated user is stored in event.context.auth
 // Valid user tokens are cached for one hour
@@ -25,7 +32,9 @@ export default defineEventHandler(async (event) => {
   // Fetch user from directus
   try {
     const config = useRuntimeConfig();
-    const directus = createDirectus(config.public.directusUrl).with(rest());
+    const directus = createDirectus<CollectivoSchema>(
+      config.public.directusUrl,
+    ).with(rest());
     const user = await directus.request(
       withToken(
         directusSessionToken,
@@ -33,8 +42,12 @@ export default defineEventHandler(async (event) => {
           fields: [
             "id",
             "email",
+            "hide_name",
             {
               memberships: ["id"],
+            },
+            {
+              role: ["name"],
             },
           ],
         }),
@@ -46,9 +59,18 @@ export default defineEventHandler(async (event) => {
       mship = user.memberships[0].id;
     }
 
+    const isShiftAdmin = SHIFT_ADMIN_ROLES.includes(user.role.name);
+    const isStudioAdmin = STUDIO_ADMIN_ROLES.includes(user.role.name);
+
     // Cache user token for one hour
     const expiresAt = Date.now() + EXPIRATION_TIME;
-    const authContext = { user: user.id, email: user.email, mship: mship };
+    const authContext: ServerUserInfo = {
+      user: user.id,
+      email: user.email!,
+      mship: mship,
+      studioAdmin: isStudioAdmin,
+      shiftAdmin: isShiftAdmin,
+    };
     tokenCache.set(directusSessionToken, { expiresAt, authContext });
     event.context.auth = authContext;
     return;

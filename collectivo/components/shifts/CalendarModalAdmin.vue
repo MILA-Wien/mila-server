@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { DateTime } from "luxon";
 import { parse } from "marked";
 import {
   createItem,
@@ -23,14 +22,17 @@ const directus = useDirectus();
 
 const occ = props.shiftOccurence;
 const shift = occ.shift;
-const start = occ.start;
-const startDate = start.toISO()!.split("T")[0];
-const end = occ.end;
+const start = new Date(occ.start);
+const end = new Date(occ.end);
+const startDateString = start.toISOString().split("T")[0];
 const repeats = shift.shifts_repeats_every ?? 0;
 const isWeeks = repeats % 7 === 0;
 const frequency = isWeeks ? repeats / 7 : repeats;
-const isPast = start < DateTime.now();
+const now = new Date();
+const isPast = start.getTime() < now.getTime();
 const runtimeConfig = useRuntimeConfig();
+
+const categories = useShiftsCategories();
 
 const mainModalIsOpen = defineModel("isOpen", {
   required: true,
@@ -51,7 +53,7 @@ async function getLogs() {
     readItems("shifts_logs", {
       filter: {
         shifts_shift: { _eq: shift.id },
-        shifts_date: { _eq: startDate },
+        shifts_date: { _eq: startDateString },
       },
       fields: [
         "id",
@@ -61,6 +63,7 @@ async function getLogs() {
         {
           shifts_membership: [
             "id",
+
             { memberships_user: ["first_name", "last_name", "email"] },
           ],
         },
@@ -101,7 +104,7 @@ async function createLog(
       {
         shifts_membership: mshipID,
         shifts_type: type,
-        shifts_date: startDate,
+        shifts_date: startDateString,
         shifts_score: score,
         shifts_note: note,
         shifts_shift: shift_ ?? Number(shift.id),
@@ -151,8 +154,8 @@ async function createCustomLog() {
 }
 
 // MEMBERSHIP DATA FLOW
-
-const mshipData = ref<MembershipsMembership | null>(null);
+type mship = Awaited<ReturnType<typeof fetchMship>>;
+const mshipData = ref<mship | null>(null);
 const mshipError = ref<boolean>(false);
 const mshipID = ref<number | undefined>(undefined);
 
@@ -161,24 +164,30 @@ watch(mshipID, () => {
   mshipError.value = false;
 });
 
+async function fetchMship(id: number) {
+  return await directus.request(
+    readItem("memberships", id, {
+      fields: [
+        "id",
+        { memberships_user: ["first_name", "last_name"] },
+        "memberships_type",
+        "memberships_status",
+        "shifts_categories_allowed",
+        "shifts_user_type",
+        "shifts_can_be_coordinator",
+      ],
+    }),
+  );
+}
+
 async function loadMembership() {
+  mshipID.value;
   if (!mshipID.value) {
     mshipError.value = true;
     return;
   }
   try {
-    mshipData.value = (await directus.request(
-      readItem("memberships", mshipID.value, {
-        fields: [
-          "id",
-          { memberships_user: ["first_name", "last_name"] },
-          "memberships_type",
-          "memberships_status",
-          "shifts_skills",
-          "shifts_user_type",
-        ],
-      }),
-    )) as MembershipsMembership;
+    mshipData.value = await fetchMship(mshipID.value);
   } catch (e) {
     console.error(e);
     mshipData.value = null;
@@ -217,7 +226,7 @@ async function removeAssignment(onetime: boolean) {
   if (
     !removeAssignmentObject.value.assignment.shifts_is_regular ||
     (!onetime &&
-      removeAssignmentObject.value.assignment.shifts_from == startDate)
+      removeAssignmentObject.value.assignment.shifts_from == startDateString)
   ) {
     // Remove one-time assignment or regular shift starting here
     await directus.request(
@@ -236,19 +245,21 @@ async function removeAssignment(onetime: boolean) {
         ).id,
         shifts_assignment: removeAssignmentObject.value.assignment.id,
         shifts_is_for_all_assignments: false,
-        shifts_from: startDate,
-        shifts_to: startDate,
+        shifts_from: startDateString,
+        shifts_to: startDateString,
         shifts_status: "accepted",
       }),
     );
   } else {
     // Stop regular assignment on the day before
+    const startMinusOneDay = new Date();
+    startMinusOneDay.setDate(start.getDate() - 1);
     await directus.request(
       updateItem(
         "shifts_assignments",
         removeAssignmentObject.value.assignment.id!,
         {
-          shifts_to: start.minus({ days: 1 }).toISO()!.split("T")[0],
+          shifts_to: startMinusOneDay.toISOString().split("T")[0],
         },
       ),
     );
@@ -281,10 +292,10 @@ async function createAssignment(onetime: boolean) {
     return;
   }
 
-  const payload: ShiftsAssignment = {
+  const payload: Partial<ShiftsAssignment> = {
     shifts_membership: mshipID.value,
     shifts_shift: shift.id!,
-    shifts_from: startDate,
+    shifts_from: startDateString,
     shifts_is_regular: !onetime,
     shifts_is_coordination: createAssignmentCoordinator.value,
   };
@@ -386,7 +397,7 @@ function checkIfMshipInAssignments(mship: number) {
 
         <div>
           {{ t("Date") }}:
-          {{ start.toLocaleString(DateTime.DATE_MED) }}
+          {{ start.toLocaleDateString() }}
         </div>
 
         <div v-if="shift.shifts_is_all_day">
@@ -394,14 +405,20 @@ function checkIfMshipInAssignments(mship: number) {
         </div>
         <div v-else>
           {{ t("Time") }}:
-          {{ start.toLocaleString(DateTime.TIME_24_SIMPLE) }}
+          {{ start.toLocaleTimeString() }}
           {{ t("to") }}
-          {{ end.toLocaleString(DateTime.TIME_24_SIMPLE) }}
+          {{ end.toLocaleTimeString() }}
         </div>
 
-        <div>
+        <div v-if="categories.loaded">
           {{ t("Category") }}:
-          {{ t("shifts:" + shift.shifts_category) }}
+          {{
+            t(
+              categories.data.value.find(
+                (category) => category.id === shift.shifts_category_2,
+              )?.name ?? "Normal",
+            )
+          }}
         </div>
 
         <div v-if="shift.shifts_location">
@@ -433,6 +450,7 @@ function checkIfMshipInAssignments(mship: number) {
               :label="t('Create assignment')"
               size="md"
               icon="i-heroicons-plus-16-solid"
+              :disabled="occ.n_assigned >= occ.shift.shifts_slots"
               @click="startCreateAssignmentFlow()"
             />
           </div>
@@ -623,11 +641,7 @@ function checkIfMshipInAssignments(mship: number) {
           </div>
           <div v-else>
             <UFormGroup
-              v-if="
-                occ.needsCoordinator &&
-                mshipData.shifts_skills &&
-                mshipData.shifts_skills.includes('shift-coordination')
-              "
+              v-if="occ.needsCoordinator && mshipData.shifts_can_be_coordinator"
               :label="t('Shift coordinator')"
               name="createShiftCoordinator"
               class="my-5"
@@ -691,13 +705,13 @@ function checkIfMshipInAssignments(mship: number) {
         </div>
         <div class="flex flex-wrap gap-2 mt-3">
           <UButton @click="removeAssignment(true)">
-            {{ t("Remove assignment for") }} {{ startDate }}
+            {{ t("Remove assignment for") }} {{ startDateString }}
           </UButton>
           <UButton
             v-if="removeAssignmentObject.assignment.shifts_is_regular"
             @click="removeAssignment(false)"
           >
-            {{ t("Remove for ") }} {{ startDate }}
+            {{ t("Remove for ") }} {{ startDateString }}
             {{ t("and all future dates") }}
           </UButton>
         </div>
