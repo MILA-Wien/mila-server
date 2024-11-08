@@ -18,6 +18,7 @@ const { locale, t } = useI18n();
 const user = useCollectivoUser();
 const shiftActionModalisOpen = ref(false);
 const selectedShiftOccurence = ref(null);
+const colors = ["#2E8B57", "#FF8C00", "#B22222"];
 
 // Full calendar settings
 // Dates are used without time, time always being set to UTC 00:00
@@ -62,7 +63,7 @@ const showCalendar = ref(true);
 watch(locale, () => {
   showCalendar.value = false;
   calendarOptions.value.locale = locale.value;
-  registerEventUpdate();
+  loadEvents();
   showCalendar.value = true;
 });
 
@@ -154,6 +155,21 @@ const customSettings = ref<ShiftsCalendarConfig>({
 
 const calendarRef = ref<{ getApi: () => CalendarApi } | null>(null);
 
+// Mount component and load events
+onMounted(async () => {
+  loadEvents();
+
+  // Watch changes in date selection and update events
+  const calendar = await calendarRef.value!.getApi();
+  calendar.on("datesSet", (infos) => {
+    console.log("datesSet", infos);
+    loadEventsInner(
+      DateTime.fromJSDate(infos.start),
+      DateTime.fromJSDate(infos.end),
+    );
+  });
+});
+
 // Watch changes in settings and update events
 watch(
   [
@@ -161,34 +177,24 @@ watch(
     () => customSettings.value.selectedShiftCategory,
   ],
   (_) => {
-    registerEventUpdate();
+    loadEvents();
   },
 );
-onMounted(() => {
-  registerEventUpdate();
-});
 
-const registerEventUpdate = async () => {
+const loadEvents = async () => {
+  console.log("registerEventUpdate");
   const calendar = await calendarRef.value!.getApi();
 
-  calendar.on("datesSet", (infos) => {
-    updateEvents(
-      DateTime.fromJSDate(infos.start),
-      DateTime.fromJSDate(infos.end),
-    );
-  });
-
-  await updateEvents(
+  await loadEventsInner(
     DateTime.fromJSDate(calendar.view.activeStart),
     DateTime.fromJSDate(calendar.view.activeEnd),
   );
 };
 
-const colors = ["#2E8B57", "#FF8C00", "#B22222"];
-
 // Update events in calendar
 // This reloads occurrences in a given timeframe
-async function updateEvents(from: DateTime, to: DateTime) {
+async function loadEventsInner(from: DateTime, to: DateTime) {
+  console.log("updateEvents", from, to);
   const data = await $fetch("/api/shifts/occurrences", {
     query: { from: from.toISO(), to: to.toISO() },
   });
@@ -295,7 +301,7 @@ async function updateEvents(from: DateTime, to: DateTime) {
       v-model:is-open="shiftActionModalisOpen"
       :shift-occurence="selectedShiftOccurence"
       :shift-type="customSettings.selectedShiftType"
-      @data-has-changed="registerEventUpdate"
+      @data-has-changed="loadEvents"
     />
   </template>
 </template>
