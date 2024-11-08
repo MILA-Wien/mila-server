@@ -37,7 +37,7 @@ tiles.value.load();
               <UButton
                 :label="button.tiles_label"
                 :color="tile.tiles_color"
-                size="md"
+                size="sm"
                 icon="i-heroicons-arrow-top-right-on-square-16-solid"
                 trailing
               />
@@ -46,7 +46,7 @@ tiles.value.load();
               <UButton
                 :label="button.tiles_label"
                 :color="tile.tiles_color"
-                size="md"
+                size="sm"
               />
             </NuxtLink>
           </template>

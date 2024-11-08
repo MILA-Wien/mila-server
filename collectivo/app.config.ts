@@ -1,45 +1,32 @@
 export default defineAppConfig({
-  collectivo: {
-    projectName: "MILA Mitgliederplattform",
-    projectDescription:
-      "Partizipationsplattform für die Mitglieder der MILA Mitmach-Supermarkt e.G.",
-    logoPath: "/img/mila_logo_subline.png",
-    sidebarWidth: 160,
-  },
   localesDict: {
     de: "Deutsch",
     en: "English",
   },
   ui: {
-    primary: "meteorite",
+    primary: "purple",
     gray: "cool",
     button: {
       font: "font-semibold tracking-wider",
-      rounded: "rounded-lg",
+      rounded: "rounded-sm",
       size: {
         sm: "text-sm",
-        md: "text-sm",
-        lg: "text-base",
-        xl: "text-base",
+        md: "text-base",
       },
       gap: {
-        sm: "gap-x-2",
-        md: "gap-x-2",
-        lg: "gap-x-2.5",
-        xl: "gap-x-2.5",
+        sm: "gap-x-2.5",
+        md: "gap-x-2.5",
       },
       padding: {
-        sm: "px-2.5 py-1.5",
+        sm: "px-3 py-2",
         md: "px-3.5 py-2.5",
         lg: "px-4 py-3",
-        xl: "px-3.5 py-2.5",
       },
       icon: {
         size: {
           sm: "h-4 w-4",
-          md: "h-4 w-4",
+          md: "h-5 w-5",
           lg: "h-5 w-5",
-          xl: "h-6 w-6",
         },
       },
       default: {

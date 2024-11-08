@@ -2,19 +2,20 @@
 const _ = defineProps({
   title: {
     type: String,
+    default: "",
   },
   color: {
     type: String,
+    default: "green",
   },
 });
 </script>
-
+<!-- bg-${color ?? 'primary'}-50 -->
 <template>
-  <div :class="`card bg-${color ?? 'primary'}-50`">
-    <div :class="`card-corner bg-${color ?? 'primary'}-100`" />
-    <p v-if="title" class="card__title">
+  <div class="px-6 py-4 border-l-[5px] border-milaGreen">
+    <h3 v-if="title" class="font-Avory">
       {{ title }}
-    </p>
+    </h3>
     <slot name="content" />
   </div>
 </template>

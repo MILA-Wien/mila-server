@@ -119,6 +119,7 @@ async function requestSignOut() {
           <div class="flex flex-wrap gap-3 pt-4">
             <UButton
               v-if="!assignment.shifts_is_regular"
+              size="sm"
               @click="signOutModalIsOpen = true"
               >{{ t("Sign out") }}
             </UButton>
@@ -140,7 +141,9 @@ async function requestSignOut() {
           <UButton color="gray" @click="signOutModalIsOpen = false">
             {{ t("Cancel") }}
           </UButton>
-          <UButton @click="requestSignOut">{{ t("Sign out") }}</UButton>
+          <UButton size="sm" @click="requestSignOut">{{
+            t("Sign out")
+          }}</UButton>
         </div>
       </div>
     </UModal>

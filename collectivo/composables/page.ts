@@ -15,14 +15,37 @@ export const setCollectivoTitle = (
   useCollectivoTitle().value = title;
   useCollectivoBackLink().value = options?.backLink;
   useHead({
-    title: title + " - " + useAppConfig().collectivo.projectName,
+    title: title + " - MILA",
   });
 };
 
 export const useCollectivoMenus = () =>
   useState<CollectivoMenus>("collectivoMenus", () => {
+    const user = useCollectivoUser().value;
     return {
-      main: [],
+      main: [
+        {
+          label: "Home",
+          icon: "i-heroicons-home",
+          to: "/",
+        },
+        {
+          label: "Handbook",
+          icon: "i-heroicons-book-open",
+          to: "https://handbuch.mila.wien/books/mitglieder-handbuch",
+          external: true,
+        },
+        {
+          label: "Shifts",
+          icon: "i-heroicons-calendar-days-solid",
+          to: "/shifts/dashboard",
+          filter: async () => {
+            return Boolean(
+              user.membership && user.membership.shifts_user_type != "inactive",
+            );
+          },
+        },
+      ],
       main_public: [],
       profile: [],
       profile_public: [],

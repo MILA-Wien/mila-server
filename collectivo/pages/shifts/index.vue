@@ -35,9 +35,6 @@ async function getLogs() {
 
 getLogs();
 
-type LoadedAssignments = Awaited<ReturnType<typeof fetchAssignments>>;
-const loadedAssignments = ref<LoadedAssignments | null>(null);
-
 async function fetchAssignments() {
   return await $fetch("/api/shifts/assignments");
 }
@@ -48,7 +45,6 @@ async function loadData() {
   activeAssignments.value = res.assignmentRules;
   holidaysAll.value = res.holidays;
   holidaysCurrent.value = res.holidaysCurrent;
-
   activeAbsences.value = res.absences;
   canShop.value =
     (mship.shifts_counter > -1 && holidaysCurrent.value.length == 0) ||
@@ -78,10 +74,11 @@ if (isActive) loadData();
     </p>
   </div>
   <div v-else-if="dataLoaded">
-    <CollectivoCard :color="canShop ? 'green' : 'red'" :title="t('Status')">
+    <!-- <h1>{{ t("My status") }}</h1> -->
+    <CollectivoCard :color="canShop ? 'green' : 'red'" class="mb-8">
       <template #content>
         <div>
-          <p class="font-bold">
+          <h3>
             <span v-if="holidaysCurrent.length > 0">
               {{ t("Holiday") }}: {{ t("Shopping is not allowed") }}
             </span>
@@ -95,7 +92,7 @@ if (isActive) loadData();
             <span v-else>
               {{ t("Missing shifts") }}: {{ t("Shopping is not allowed") }}
             </span>
-          </p>
+          </h3>
           <p class="pt-3">
             {{ t("Membership") }}: {{ mship.id }} ({{
               user.first_name + " " + user.last_name
@@ -110,22 +107,21 @@ if (isActive) loadData();
       </template>
     </CollectivoCard>
 
-    <div v-if="isActive" class="flex flex-wrap py-6 gap-5 mb-2">
+    <!-- Action Buttons -->
+    <div v-if="isActive" class="flex flex-wrap mb-16 gap-4">
       <NuxtLink to="/shifts/signup-jumper"
-        ><UButton size="lg" icon="i-heroicons-plus-circle">{{
+        ><UButton icon="i-heroicons-plus-circle">{{
           t("Sign up for a shift")
         }}</UButton>
       </NuxtLink>
 
       <UButton
-        size="lg"
         icon="i-heroicons-pause-circle"
         @click="absencePostModalOpen = true"
         >{{ t("Request vacation") }}</UButton
       >
       <a :href="`mailto:${config.public.contactEmail}`">
         <UButton
-          size="lg"
           :label="t('Other request') + ': ' + config.public.contactEmail"
           :icon="'i-heroicons-pencil-square'"
         />
@@ -133,9 +129,8 @@ if (isActive) loadData();
     </div>
 
     <!-- SHIFT OCCURRENCES -->
-
-    <div>
-      <h2>{{ t("Shifts") }}</h2>
+    <div class="mb-12">
+      <h1>{{ t("My shifts") }}</h1>
       <p v-if="!activeAssignments.length">
         {{ t("No upcoming shifts") }}
       </p>
@@ -148,37 +143,39 @@ if (isActive) loadData();
         />
       </div>
     </div>
-    <!-- HOLIDAYS -->
 
-    <h2>{{ t("Holidays") }}</h2>
-    <div v-if="!holidaysAll.length">
-      {{ t("No upcoming holidays") }}
-    </div>
-    <div v-else>
-      <p>{{ t("t:holiday") }}</p>
-      <div class="flex flex-col gap-4 my-4">
-        <CollectivoCard
-          v-for="absence in holidaysAll"
-          :key="absence.id"
-          :title="absence.shifts_is_holiday ? t('Holiday') : t('Absence')"
-          :color="'blue'"
-        >
-          <template #content>
-            <div>{{ absence.shifts_from }} - {{ absence.shifts_to }}</div>
-            <div>{{ t("Status") }}: {{ t(absence.shifts_status) }}</div>
-            <div v-if="!absence.shifts_is_for_all_assignments">
-              {{ t("Info") }}:
-              {{ t("This absence affects only the shift") }}
-              {{ getShiftName(absence.shifts_assignment) }}
-            </div>
-          </template>
-        </CollectivoCard>
+    <!-- HOLIDAYS -->
+    <div class="mb-12">
+      <h1>{{ t("My holidays") }}</h1>
+      <div v-if="!holidaysAll.length">
+        {{ t("No upcoming holidays") }}
+      </div>
+      <div v-else>
+        <p>{{ t("t:holiday") }}</p>
+        <div class="flex flex-col gap-4 my-4">
+          <CollectivoCard
+            v-for="absence in holidaysAll"
+            :key="absence.id"
+            :title="absence.shifts_is_holiday ? t('Holiday') : t('Absence')"
+            :color="'blue'"
+          >
+            <template #content>
+              <div>{{ absence.shifts_from }} - {{ absence.shifts_to }}</div>
+              <div>{{ t("Status") }}: {{ t(absence.shifts_status) }}</div>
+              <div v-if="!absence.shifts_is_for_all_assignments">
+                {{ t("Info") }}:
+                {{ t("This absence affects only the shift") }}
+                {{ getShiftName(absence.shifts_assignment) }}
+              </div>
+            </template>
+          </CollectivoCard>
+        </div>
       </div>
     </div>
 
     <!-- LOGS -->
 
-    <div v-if="logs.length">
+    <div v-if="logs.length" class="mb-12">
       <h2>{{ t("My activities") }}</h2>
       <div class="my-4">
         <CollectivoCard :color="'blue'">
@@ -203,3 +200,11 @@ if (isActive) loadData();
     />
   </div>
 </template>
+
+<i18n lang="yaml">
+de:
+  "My status": "Mein Status"
+  "My shifts": "Meine Schichten"
+  "My holidays": "Meine Urlaube"
+  "My activities": "Meine Aktivitäten"
+</i18n>

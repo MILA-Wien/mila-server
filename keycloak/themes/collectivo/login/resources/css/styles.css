@@ -1,42 +1,42 @@
 :root {
-    --pf-global--primary-color--100: #2db3a5;
-    --pf-global--primary-color--200: #24968b;
-    --default-background-color: #97A1CDFF;
-    --link-hover-color: #02679a;
+  --pf-global--primary-color--100: #26a195;
+  --pf-global--primary-color--200: #228f84;
+  --default-background-color: #97a1cdff;
+  --link-hover-color: #228f84;
 }
 
 .login-pf body {
-    background-image: none;
-    background-color:  #f6f0e7;
+  background-image: none;
+  background-color: #26a195;
 }
 
 .login-pf a:hover {
-    color: var(--link-hover-color);
-    text-decoration: none;
+  color: var(--link-hover-color);
+  text-decoration: none;
 }
 
 .pf-c-form-control {
-    --pf-global--primary-color--100: unset;
+  --pf-global--primary-color--100: unset;
 }
-div.kc-logo-text{
-    background-image: none;
-    background-size: contain;
-    padding: 20px;
-    background-position: center;
+div.kc-logo-text {
+  background-image: none;
+  background-size: contain;
+  padding: 20px;
+  background-position: center;
 }
 #kc-header-wrapper {
-    font-size: 0px;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    line-height: 1.2em;
-    padding: 62px 10px 20px;
-    white-space: normal;
-    background-image: url(../img/mila_logo_subline_transparent.png);
-    background-size: contain;
-    padding: 20px;
-    /* background-color: #FFF; */
-    background-position: center;
-    background-repeat: no-repeat;
-    min-height: 150px;
-    margin-top: 20px;
+  font-size: 0px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  line-height: 1.2em;
+  padding: 62px 10px 20px;
+  white-space: normal;
+  background-image: url(../img/mila_logo_white_4.png);
+  background-size: contain;
+  padding: 20px;
+  /* background-color: #FFF; */
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 200px;
+  margin-top: 20px;
 }

@@ -1,25 +1,48 @@
+@font-face {
+  font-family: "AvoryII";
+  src: url("~/assets/fonts/AvoryIIPE-Bl.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "OpenSans";
+  src: url("~/assets/fonts/OpenSans-Regular-webfont.woff") format("woff");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "OpenSans";
+  src: url("~/assets/fonts/OpenSans-Semibold-webfont.woff") format("woff");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "OpenSans";
+  src: url("~/assets/fonts/OpenSans-Bold-webfont.woff") format("woff");
+  font-weight: 700;
+}
+
 html {
-  @apply text-black font-normal font-[Urbanist] tracking-wide subpixel-antialiased;
+  @apply text-black font-normal font-OpenSans tracking-wide subpixel-antialiased;
 }
 
 h1 {
-  @apply font-bold text-4xl tracking-[0.6px];
+  @apply font-Avory text-3xl md:text-4xl mt-8 mb-2;
 }
 
 h2 {
-  @apply font-semibold text-3xl mb-2;
+  @apply font-Avory text-2xl md:text-3xl mb-2;
 }
 
 h3 {
-  @apply font-semibold text-2xl;
+  @apply font-Avory text-2xl;
 }
 
 h4 {
-  @apply font-semibold text-xl;
+  @apply font-Avory text-xl;
 }
 
 h5 {
-  @apply font-semibold text-lg;
+  @apply font-Avory text-lg;
 }
 
 p {

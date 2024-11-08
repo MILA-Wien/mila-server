@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ProfileMenu from "./ProfileMenu.vue";
+import MobileProfileMenu from "./MobileProfileMenu.vue";
 
 const pageTitle = useCollectivoTitle();
 const { t } = useI18n();
@@ -26,10 +26,10 @@ const headerClass = computed(() =>
 <template>
   <div>
     <div :class="headerClass">
-      <div class="text-2xl font-bold truncate">
+      <div class="text-2xl font-Avory truncate">
         {{ t(pageTitle) }}
       </div>
-      <div class="pt-[1px]"><ProfileMenu /></div>
+      <div class="pt-[1px]"><MobileProfileMenu /></div>
     </div>
     <div class="h-header" />
   </div>
