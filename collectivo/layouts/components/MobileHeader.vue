@@ -3,29 +3,13 @@ import MobileProfileMenu from "./MobileProfileMenu.vue";
 
 const pageTitle = useCollectivoTitle();
 const { t } = useI18n();
-
-const scrollY = ref(0);
-
-const updateScroll = () => {
-  scrollY.value = window.scrollY;
-};
-
-onMounted(() => {
-  window.addEventListener("scroll", updateScroll);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("scroll", updateScroll);
-});
-
-const headerClass = computed(() =>
-  scrollY.value === 0 ? "mobile-header" : "mobile-header border-bottom",
-);
 </script>
 
 <template>
   <div>
-    <div :class="headerClass">
+    <div
+      class="h-[68px] px-[25px] pt-[24px] md:hidden flex gap-2 items-start justify-between w-screen"
+    >
       <div class="text-2xl font-Avory truncate">
         {{ t(pageTitle) }}
       </div>
@@ -35,16 +19,4 @@ const headerClass = computed(() =>
   </div>
 </template>
 
-<style lang="scss" scoped>
-.border-bottom {
-  @apply border-b-[1px] bg-white border-gray-200;
-}
-
-.h-header {
-  @apply h-[60px] md:hidden;
-}
-
-.mobile-header {
-  @apply h-[68px] px-[25px] pt-[24px] md:hidden flex gap-2 items-start justify-between transition fixed top-0 w-screen z-10;
-}
-</style>
+<style lang="scss" scoped></style>

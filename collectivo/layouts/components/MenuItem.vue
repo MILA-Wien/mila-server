@@ -33,18 +33,14 @@ async function filterItem(item: CollectivoMenuItem) {
     </div>
     <div v-else-if="item.external">
       <a :href="item.to" :target="item.target ?? '_blank'" class="item">
-        <slot name="icon">
-          <UIcon v-if="item.icon" :name="item.icon" class="item__icon" />
-        </slot>
+        <UIcon v-if="item.icon" :name="item.icon" class="item__icon" />
 
         <span class="item__title">{{ t(item.label) }}</span>
       </a>
     </div>
     <div v-else>
       <NuxtLink :to="item.to" class="item">
-        <slot name="icon">
-          <UIcon v-if="item.icon" :name="item.icon" class="item__icon" />
-        </slot>
+        <UIcon v-if="item.icon" :name="item.icon" class="item__icon" />
 
         <span class="item__title">{{ t(item.label) }}</span>
       </NuxtLink>
@@ -54,9 +50,9 @@ async function filterItem(item: CollectivoMenuItem) {
 
 <style lang="scss">
 .item {
-  @apply text-white flex flex-col gap-2 items-center px-3 py-4 mb-2 transition-all cursor-pointer;
+  @apply text-white flex flex-col gap-1 items-center px-3 py-4 mb-2 transition-all cursor-pointer;
   &__icon {
-    @apply h-6 w-6 mb-0;
+    @apply h-5 w-5 mb-0;
   }
 
   &__title {
@@ -73,11 +69,7 @@ async function filterItem(item: CollectivoMenuItem) {
   @apply p-0 mb-0;
 
   .item {
-    @apply py-2.5 px-2.5 mb-0 mx-0 min-w-16;
-
-    &__icon {
-      @apply mb-1;
-    }
+    @apply py-2 px-2.5 mb-0 mx-0 min-w-16;
 
     &__title {
       @apply text-xs;
