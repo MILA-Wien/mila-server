@@ -4,6 +4,7 @@ import type { H3Event } from "h3";
 interface RequestBody {
   automation_name?: string;
   user_ids?: string[];
+  draft?: boolean;
 }
 
 export default defineEventHandler(async (event) => {
@@ -92,10 +93,12 @@ async function createCampaignSingle(
     );
 
     // Send campaign
-    await directus.request(
-      updateItem("messages_campaigns", campaign.id, {
-        messages_campaign_status: "pending",
-      }),
-    );
+    if (!body.draft) {
+      await directus.request(
+        updateItem("messages_campaigns", campaign.id, {
+          messages_campaign_status: "pending",
+        }),
+      );
+    }
   }
 }
