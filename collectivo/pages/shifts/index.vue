@@ -157,15 +157,13 @@ if (isActive) loadData();
             :title="absence.shifts_is_holiday ? t('Holiday') : t('Absence')"
             :color="'blue'"
           >
-            <template #content>
-              <div>{{ absence.shifts_from }} - {{ absence.shifts_to }}</div>
-              <div>{{ t("Status") }}: {{ t(absence.shifts_status) }}</div>
-              <div v-if="!absence.shifts_is_for_all_assignments">
-                {{ t("Info") }}:
-                {{ t("This absence affects only the shift") }}
-                {{ getShiftName(absence.shifts_assignment) }}
-              </div>
-            </template>
+            <div>{{ absence.shifts_from }} - {{ absence.shifts_to }}</div>
+            <div>{{ t("Status") }}: {{ t(absence.shifts_status) }}</div>
+            <div v-if="!absence.shifts_is_for_all_assignments">
+              {{ t("Info") }}:
+              {{ t("This absence affects only the shift") }}
+              {{ getShiftName(absence.shifts_assignment) }}
+            </div>
           </CollectivoCard>
         </div>
       </div>
@@ -177,15 +175,13 @@ if (isActive) loadData();
       <h2>{{ t("My activities") }}</h2>
       <div class="my-4">
         <CollectivoCard :color="'blue'">
-          <template #content>
-            <div class="flex flex-col gap-1">
-              <div v-for="log in logs" :key="log.id">
-                {{ log.shifts_date }}: {{ t("log:" + log.shifts_type) }} ({{
-                  displayShiftScore(log.shifts_score)
-                }}) {{ log.shifts_note }}
-              </div>
+          <div class="flex flex-col gap-1">
+            <div v-for="log in logs" :key="log.id">
+              {{ log.shifts_date }}: {{ t("log:" + log.shifts_type) }} ({{
+                displayShiftScore(log.shifts_score)
+              }}) {{ log.shifts_note }}
             </div>
-          </template>
+          </div>
         </CollectivoCard>
       </div>
     </div>

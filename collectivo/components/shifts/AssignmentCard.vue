@@ -67,65 +67,61 @@ async function requestSignOut() {
       :title="getTimeString(nextOccurrence)"
       :color="shiftAssignment.isRegular ? 'primary' : 'green'"
     >
-      <template #content>
-        <div>
-          <!-- Repetition info -->
-          <p v-if="shift.shifts_repeats_every && shiftAssignment.isRegular">
-            {{ t("Shift repeats every") }} {{ shift.shifts_repeats_every }}
-            {{ t("days") }}
+      <div>
+        <!-- Repetition info -->
+        <p v-if="shift.shifts_repeats_every && shiftAssignment.isRegular">
+          {{ t("Shift repeats every") }} {{ shift.shifts_repeats_every }}
+          {{ t("days") }}
 
-            <span v-if="assignment.shifts_to">
-              {{ t("until") }} {{ getEndDate(assignment.shifts_to) }}
-            </span>
-          </p>
-          <p v-else>
-            {{ t("One-time shift") }}
-          </p>
+          <span v-if="assignment.shifts_to">
+            {{ t("until") }} {{ getEndDate(assignment.shifts_to) }}
+          </span>
+        </p>
+        <p v-else>
+          {{ t("One-time shift") }}
+        </p>
 
-          <!-- Absences -->
-          <p v-if="absences.length > 0" class="mt-2">
-            {{ t("Absences") }}:
+        <!-- Absences -->
+        <p v-if="absences.length > 0" class="mt-2">
+          {{ t("Absences") }}:
 
-            <span
-              v-for="absenceDate in shiftAssignment.absencesRule.all()"
-              :key="absenceDate"
-            >
-              {{
-                DateTime.fromJSDate(absenceDate).toLocaleString(
-                  DateTime.DATE_MED,
-                )
-              }}
-              &nbsp;
-            </span>
-          </p>
+          <span
+            v-for="absenceDate in shiftAssignment.absencesRule.all()"
+            :key="absenceDate"
+          >
+            {{
+              DateTime.fromJSDate(absenceDate).toLocaleString(DateTime.DATE_MED)
+            }}
+            &nbsp;
+          </span>
+        </p>
 
-          <!-- Shift name -->
-          <p class="mt-2">{{ t("Shift name") }}: {{ shift.shifts_name }}</p>
+        <!-- Shift name -->
+        <p class="mt-2">{{ t("Shift name") }}: {{ shift.shifts_name }}</p>
 
-          <!-- Shift location -->
-          <p v-if="shift.shifts_location">
-            {{ t("Location") }}: {{ shift.shifts_location }}
-          </p>
+        <!-- Shift location -->
+        <p v-if="shift.shifts_location">
+          {{ t("Location") }}: {{ shift.shifts_location }}
+        </p>
 
-          <!-- Shift infos -->
-          <!-- eslint-disable vue/no-v-html -->
-          <p
-            v-if="shift.shifts_description"
-            v-html="parse(shift.shifts_description)"
-          />
-          <!-- eslint-enable vue/no-v-html -->
+        <!-- Shift infos -->
+        <!-- eslint-disable vue/no-v-html -->
+        <p
+          v-if="shift.shifts_description"
+          v-html="parse(shift.shifts_description)"
+        />
+        <!-- eslint-enable vue/no-v-html -->
 
-          <!-- Space for buttons -->
-          <div class="flex flex-wrap gap-3 pt-4">
-            <UButton
-              v-if="!assignment.shifts_is_regular"
-              size="sm"
-              @click="signOutModalIsOpen = true"
-              >{{ t("Sign out") }}
-            </UButton>
-          </div>
+        <!-- Space for buttons -->
+        <div class="flex flex-wrap gap-3 pt-4">
+          <UButton
+            v-if="!assignment.shifts_is_regular"
+            size="sm"
+            @click="signOutModalIsOpen = true"
+            >{{ t("Sign out") }}
+          </UButton>
         </div>
-      </template>
+      </div>
     </CollectivoCard>
 
     <!-- Signout Modal -->
