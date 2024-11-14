@@ -3,7 +3,7 @@ import { createItem } from "@directus/sdk";
 import { DateTime } from "luxon";
 import { parse } from "marked";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const directus = useDirectus();
 const signOutModalIsOpen = ref(false);
 const props = defineProps({
@@ -22,7 +22,7 @@ const user = useCollectivoUser();
 const emit = defineEmits(["reload"]);
 
 function getTimeString(occurence: string) {
-  const occ = DateTime.fromISO(occurence);
+  const occ = DateTime.fromISO(occurence, { locale: locale.value });
   const weekday = occ.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
   const startTime = shift.shifts_from_time?.slice(0, 5);
   const endTime = shift.shifts_to_time?.slice(0, 5);

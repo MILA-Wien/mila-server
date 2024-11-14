@@ -2,6 +2,7 @@
 import { DateTime } from "luxon";
 import { parse } from "marked";
 import { createItem } from "@directus/sdk";
+const { locale } = useI18n();
 
 const props = defineProps({
   shiftOccurence: {
@@ -19,8 +20,12 @@ const { t } = useI18n();
 const directus = useDirectus();
 const user = useCollectivoUser();
 const shift = props.shiftOccurence.shift;
-const start = DateTime.fromISO(props.shiftOccurence.start);
-const end = DateTime.fromISO(props.shiftOccurence.end);
+const start = DateTime.fromISO(props.shiftOccurence.start, {
+  locale: locale.value,
+});
+const end = DateTime.fromISO(props.shiftOccurence.end, {
+  locale: locale.value,
+});
 const submitLoading = ref(false);
 const repeats = shift.shifts_repeats_every ?? 0;
 const isWeeks = repeats % 7 === 0;
