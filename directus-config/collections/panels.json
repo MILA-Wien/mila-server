@@ -1,5 +1,116 @@
 [
   {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": "Anteile zu Stichtag",
+    "icon": "switch_account",
+    "color": "#6644FF",
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 15,
+    "position_y": 8,
+    "width": 27,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "memberships_shares",
+      "function": "sum",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#6644FF"
+        }
+      ]
+    },
+    "_syncId": "032f6e82-8c52-44ca-9f5c-0497ed90d35d"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": "Beworbene Mitglieder: Vorstand JA",
+    "icon": null,
+    "color": "#8080FF",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 67,
+    "position_y": 25,
+    "width": 22,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_eq": "applied"
+            }
+          },
+          {
+            "memberships_date_approved": {
+              "_nnull": true
+            }
+          },
+          {
+            "memberships_invoices": {
+              "count(payments_entries)": {
+                "_neq": "0"
+              }
+            }
+          },
+          {
+            "memberships_invoices": {
+              "payments_status": {
+                "_neq": "paid"
+              }
+            }
+          },
+          {
+            "memberships_invoices": {
+              "payments_date_issued": {
+                "_gt": "2024-09-01"
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#8080FF"
+        }
+      ]
+    },
+    "_syncId": "03d1d04f-7e97-43e1-8359-782df99bd46f"
+  },
+  {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
     "name": "Sozialanteil (von Aktiven)",
     "icon": null,
@@ -29,6 +140,46 @@
       "field": "id"
     },
     "_syncId": "08f9a01f-d8ee-4dcc-b70d-d60ecd450621"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": "Beworbene Mitglieder: Vorstand JA",
+    "icon": null,
+    "color": "#8080FF",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 21,
+    "position_y": 17,
+    "width": 22,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_eq": "applied"
+            }
+          },
+          {
+            "memberships_date_approved": {
+              "_nnull": true
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#8080FF"
+        }
+      ]
+    },
+    "_syncId": "0973480e-f23b-4abf-acde-e6960cfab269"
   },
   {
     "dashboard": "54976105-ca62-4135-9d4d-1c5c12ed7e34",
@@ -73,6 +224,60 @@
       "conditionalFormatting": null
     },
     "_syncId": "0afbf417-f1fe-4d01-b3f7-8e9ff124ac4a"
+  },
+  {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": "Davon AKTIV UND SOZIAL",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 24,
+    "width": 20,
+    "height": 6,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Aktiv"
+            }
+          },
+          {
+            "memberships_shares": {
+              "_eq": "1"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "11863c3d-cef7-4c06-9ef7-192c390f23a0"
   },
   {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
@@ -272,6 +477,164 @@
       "maximumFractionDigits": 2
     },
     "_syncId": "3c670681-a2e3-4a56-897d-d7003abce5d0"
+  },
+  {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": "Davon AKTIV & MEIDLING & UMGEBUNG",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 31,
+    "width": 20,
+    "height": 6,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Aktiv"
+            }
+          },
+          {
+            "memberships_user": {
+              "memberships_postcode": {
+                "_in": [
+                  "1120",
+                  "1050",
+                  "1150",
+                  "1130",
+                  "1140",
+                  "1100",
+                  "1230"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "3c69e3bc-c2ac-49b4-a779-a4731e19c3c1"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": "Beworbene Mitglieder: Nicht Bezahlt",
+    "icon": null,
+    "color": "#FF0000",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 40,
+    "position_y": 75,
+    "width": 20,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_eq": "applied"
+            }
+          },
+          {
+            "memberships_invoices": {
+              "payments_date_issued": {
+                "_lt": "2024-09-01"
+              }
+            }
+          },
+          {
+            "memberships_invoices": {
+              "payments_status": {
+                "_eq": "pending"
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#FF0000"
+        }
+      ]
+    },
+    "_syncId": "3ead4401-6203-48a1-a9d7-0c85f736503d"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": "Nach 4.11",
+    "icon": null,
+    "color": "#8080FF",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 44,
+    "position_y": 50,
+    "width": 22,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_eq": "applied"
+            }
+          },
+          {
+            "memberships_date_approved": {
+              "_null": true
+            }
+          },
+          {
+            "memberships_date_applied": {
+              "_gt": "2024-11-03"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#8080FF"
+        }
+      ]
+    },
+    "_syncId": "3fb9d739-82bc-4c74-9cfe-546e893ccc28"
   },
   {
     "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
@@ -496,6 +859,152 @@
     "_syncId": "75e9a5c4-a60f-4cd4-a9b6-a0234d440a5a"
   },
   {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": "Nicht Bezahlt",
+    "icon": null,
+    "color": "#FF0000",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 44,
+    "position_y": 25,
+    "width": 22,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_eq": "applied"
+            }
+          },
+          {
+            "memberships_date_approved": {
+              "_nnull": true
+            }
+          },
+          {
+            "memberships_invoices": {
+              "count(payments_entries)": {
+                "_neq": "0"
+              }
+            }
+          },
+          {
+            "memberships_invoices": {
+              "payments_status": {
+                "_neq": "paid"
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#FF0000"
+        }
+      ]
+    },
+    "_syncId": "7ac58d17-065d-4404-9f99-33d07e5737d7"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": "Nicht Beazhlt",
+    "icon": null,
+    "color": "#FF0000",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 67,
+    "position_y": 33,
+    "width": 22,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_eq": "applied"
+            }
+          },
+          {
+            "memberships_date_approved": {
+              "_nnull": true
+            }
+          },
+          {
+            "memberships_invoices": {
+              "count(payments_entries)": {
+                "_neq": "0"
+              }
+            }
+          },
+          {
+            "memberships_invoices": {
+              "payments_status": {
+                "_eq": "pending"
+              }
+            }
+          },
+          {
+            "memberships_invoices": {
+              "payments_date_issued": {
+                "_lt": "2024-09-01"
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#FF0000"
+        }
+      ]
+    },
+    "_syncId": "7f451b2d-7cd4-49c9-8187-097766f6b71a"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": "Aufgenommene & Beworbene Mitglieder",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 2,
+    "position_y": 75,
+    "width": 16,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_in": [
+                "approved",
+                "applied"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "_syncId": "7fb2241a-bde0-4c7d-935c-d8d49ca68358"
+  },
+  {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
     "name": "Anteile inkl. Beworben",
     "icon": "switch_account",
@@ -543,6 +1052,113 @@
       "conditionalFormatting": null
     },
     "_syncId": "8747641b-cb63-4c8e-9261-e0fc867443dc"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": "Gekündigte Mitglieder",
+    "icon": null,
+    "color": "#FF0000",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 9,
+    "width": 16,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_in": [
+                "in-cancellation",
+                "in-exclusion",
+                "ended"
+              ]
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#FF0000"
+        }
+      ]
+    },
+    "_syncId": "8a9ff1ad-61ac-4b22-b5ee-fea6d47aeeab"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": "Beworbene Mitglieder: Vorstand NEIN",
+    "icon": null,
+    "color": "#8080FF",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 21,
+    "position_y": 50,
+    "width": 22,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_eq": "applied"
+            }
+          },
+          {
+            "memberships_date_approved": {
+              "_null": true
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#8080FF"
+        }
+      ]
+    },
+    "_syncId": "98473e70-4876-4a76-a8bb-240ec4cf5ad3"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": "Aufgenommene Mitglieder",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 1,
+    "width": 16,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_eq": "approved"
+            }
+          }
+        ]
+      }
+    },
+    "_syncId": "99fd07f2-8d45-4d3d-95a2-dcccc9bbcc97"
   },
   {
     "dashboard": "54976105-ca62-4135-9d4d-1c5c12ed7e34",
@@ -594,6 +1210,105 @@
     "_syncId": "9f490198-4d0d-4550-bc94-ab9987621ee1"
   },
   {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": "CF Mitglieder",
+    "icon": null,
+    "color": "#FF8040",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 44,
+    "position_y": 17,
+    "width": 22,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_eq": "applied"
+            }
+          },
+          {
+            "memberships_date_approved": {
+              "_nnull": true
+            }
+          },
+          {
+            "memberships_invoices": {
+              "count(payments_entries)": {
+                "_eq": "0"
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#FF8040"
+        }
+      ]
+    },
+    "_syncId": "9f8caaeb-dff3-4a39-940a-a053c4fa3b33"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": "Nach 4.11",
+    "icon": null,
+    "color": "#FF8040",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 67,
+    "position_y": 50,
+    "width": 22,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_eq": "applied"
+            }
+          },
+          {
+            "memberships_date_approved": {
+              "_null": true
+            }
+          },
+          {
+            "memberships_date_applied": {
+              "_gt": "2024-11-03"
+            }
+          },
+          {
+            "memberships_invoices": {
+              "count(payments_entries)": {
+                "_eq": "0"
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#FF8040"
+        }
+      ]
+    },
+    "_syncId": "a3feeb6a-78d7-4aa9-9e47-5fe16c05270d"
+  },
+  {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
     "name": "Aussteigende MG",
     "icon": "switch_account",
@@ -631,6 +1346,62 @@
       "conditionalFormatting": null
     },
     "_syncId": "a44fba33-e2ea-4904-be30-b68e12b1a9b6"
+  },
+  {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": "Davon AKTIV & MEIDLING",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 38,
+    "width": 20,
+    "height": 6,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Aktiv"
+            }
+          },
+          {
+            "memberships_user": {
+              "memberships_postcode": {
+                "_eq": "1120"
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "a7f2ff3b-9587-4755-80b7-e766fe0fc99c"
   },
   {
     "dashboard": "a5061cae-2e64-4b77-ae26-38e683a60bbb",
@@ -791,6 +1562,156 @@
     "_syncId": "b47024e7-7b7e-4f56-8480-60f45946f976"
   },
   {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": "Beworbene Mitglieder: Vorstand NEIN",
+    "icon": null,
+    "color": "#8080FF",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 44,
+    "position_y": 50,
+    "width": 22,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_eq": "applied"
+            }
+          },
+          {
+            "memberships_date_approved": {
+              "_null": true
+            }
+          },
+          {
+            "memberships_invoices": {
+              "payments_status": {
+                "_eq": "paid"
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#8080FF"
+        }
+      ]
+    },
+    "_syncId": "be411b3a-2835-43e1-8561-ef285625ddbc"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": "Crowdfunding Mitglieder",
+    "icon": null,
+    "color": "#FF8000",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 19,
+    "position_y": 75,
+    "width": 20,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_eq": "applied"
+            }
+          },
+          {
+            "memberships_invoices": {
+              "count(payments_entries)": {
+                "_eq": "0"
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#FF8040"
+        }
+      ]
+    },
+    "_syncId": "c3fd5ce1-1cc9-4f01-9a67-b70c8949e73e"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": "Zahlung Abgebrochen",
+    "icon": null,
+    "color": "#FF0000",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 67,
+    "position_y": 41,
+    "width": 22,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_eq": "applied"
+            }
+          },
+          {
+            "memberships_date_approved": {
+              "_nnull": true
+            }
+          },
+          {
+            "memberships_invoices": {
+              "count(payments_entries)": {
+                "_neq": "0"
+              }
+            }
+          },
+          {
+            "memberships_invoices": {
+              "payments_status": {
+                "_eq": "failed"
+              }
+            }
+          },
+          {
+            "memberships_invoices": {
+              "payments_date_issued": {
+                "_lt": "2024-09-01"
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#FF0000"
+        }
+      ]
+    },
+    "_syncId": "c629ce44-0585-468d-9730-cfbb09b251b5"
+  },
+  {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
     "name": "Aufgenommene Mitglieder",
     "icon": "switch_account",
@@ -948,6 +1869,116 @@
     "_syncId": "d2a04220-e4e8-476b-95c5-6258590ba089"
   },
   {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": "Davon AKTIV MIT MITEINKÄUFERINNEN",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 45,
+    "width": 20,
+    "height": 6,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Aktiv"
+            }
+          },
+          {
+            "coshoppers": {
+              "id": {
+                "_nnull": true
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "e5e7da7e-9b56-4a19-acca-d94e96418d2d"
+  },
+  {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": "Davon INVESTIEREND UND SOZIAL",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 22,
+    "position_y": 24,
+    "width": 20,
+    "height": 6,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Investierend"
+            }
+          },
+          {
+            "memberships_shares": {
+              "_eq": "1"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "eb9f7535-6aff-4859-afd9-e5a4b78ba769"
+  },
+  {
     "dashboard": "54976105-ca62-4135-9d4d-1c5c12ed7e34",
     "name": "Stichtag",
     "icon": null,
@@ -966,5 +1997,40 @@
       "defaultValue": null
     },
     "_syncId": "f941419e-a237-454f-a0ed-11f2b84f2b0d"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": "Beworbene Mitglieder",
+    "icon": null,
+    "color": "#8080FF",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 17,
+    "width": 16,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_eq": "applied"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#8080FF"
+        }
+      ]
+    },
+    "_syncId": "fc2c74f8-3d1f-4e47-94e7-55a0777bc06a"
   }
 ]

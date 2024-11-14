@@ -68,6 +68,10 @@ Collectivo uses [directus-sync](https://github.com/tractr/directus-sync) for cha
 - Make a database backup of the production system (see below)
 - Run `npx directus-sync push -u "https://studio.mila.wien" -e "<EMAIL>" -p "<PASSWORD>"` to apply the new database schema to the production system
 
+Troubleshooting
+
+- Changing flows often creates errors on push, this can be solved by deleting the changed flows manually before pushing.
+
 ## Database backups
 
 Backups are created automatically for `directus-db` and `keycloak-db`, using [`postgres-backup-local`](https://github.com/prodrigestivill/docker-postgres-backup-local?tab=readme-ov-file#how-the-backups-folder-works). The backups can be found in the directories `directus-db-backups` and `keycloak-db-backups`.
