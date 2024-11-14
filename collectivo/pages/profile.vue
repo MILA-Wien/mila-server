@@ -48,12 +48,13 @@ const profileInputs: Ref<CollectivoFormField[]> = ref([
     type: "text",
     order: 103,
   },
-  {
-    label: "Password",
-    key: "password",
-    type: "password",
-    order: 104,
-  },
+  // TODO: PW is written even if not changed
+  // {
+  //   label: "Password",
+  //   key: "password",
+  //   type: "password",
+  //   order: 104,
+  // },
   {
     label: "Stay anonymous",
     content: "Do not show my name to other members on the platform.",
