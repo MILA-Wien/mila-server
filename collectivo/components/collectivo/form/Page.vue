@@ -97,7 +97,7 @@ async function onSubmit(data: any) {
     </template>
     <div v-if="debug">
       <div class="">
-        <UButton class="btn" @click="submitted = !submitted">
+        <UButton class="btn w-full" @click="submitted = !submitted">
           {{ t("Toggle success page") }}
         </UButton>
       </div>

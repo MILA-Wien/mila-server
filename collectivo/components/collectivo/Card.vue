@@ -19,7 +19,7 @@ const _ = defineProps({
     <h3 v-if="title" class="font-Avory">
       {{ title }}
     </h3>
-    <slot name="content" />
+    <slot />
   </div>
 </template>
 

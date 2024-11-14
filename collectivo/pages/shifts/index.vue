@@ -76,35 +76,33 @@ if (isActive) loadData();
   <div v-else-if="dataLoaded">
     <!-- <h1>{{ t("My status") }}</h1> -->
     <CollectivoCard :color="canShop ? 'green' : 'red'" class="mb-8">
-      <template #content>
-        <div>
-          <h3>
-            <span v-if="holidaysCurrent.length > 0">
-              {{ t("Holiday") }}: {{ t("Shopping is not allowed") }}
-            </span>
-            <span
-              v-else-if="
-                mship.shifts_counter > -1 || mship.shifts_user_type == 'exempt'
-              "
-            >
-              {{ t("Shopping is allowed") }}
-            </span>
-            <span v-else>
-              {{ t("Missing shifts") }}: {{ t("Shopping is not allowed") }}
-            </span>
-          </h3>
-          <p class="pt-3">
-            {{ t("Membership") }}: {{ mship.id }} ({{
-              user.first_name + " " + user.last_name
-            }})
-          </p>
-          <p>{{ t("Shifttype") }}: {{ t("t:" + mship.shifts_user_type) }}</p>
+      <div>
+        <h3>
+          <span v-if="holidaysCurrent.length > 0">
+            {{ t("Holiday") }}: {{ t("Shopping is not allowed") }}
+          </span>
+          <span
+            v-else-if="
+              mship.shifts_counter > -1 || mship.shifts_user_type == 'exempt'
+            "
+          >
+            {{ t("Shopping is allowed") }}
+          </span>
+          <span v-else>
+            {{ t("Missing shifts") }}: {{ t("Shopping is not allowed") }}
+          </span>
+        </h3>
+        <p class="pt-3">
+          {{ t("Membership") }}: {{ mship.id }} ({{
+            user.first_name + " " + user.last_name
+          }})
+        </p>
+        <p>{{ t("Shifttype") }}: {{ t("t:" + mship.shifts_user_type) }}</p>
 
-          <p v-if="mship.shifts_user_type != 'exempt'">
-            {{ t("Shiftcounter") }}: {{ mship.shifts_counter }}
-          </p>
-        </div>
-      </template>
+        <p v-if="mship.shifts_user_type != 'exempt'">
+          {{ t("Shiftcounter") }}: {{ mship.shifts_counter }}
+        </p>
+      </div>
     </CollectivoCard>
 
     <!-- Action Buttons -->

@@ -275,7 +275,7 @@ async function saveProfile(data: CollectivoUser) {
 
 <template>
   <div id="mila-profile">
-    <CollectivoContainer color="blue">
+    <CollectivoCard class="mb-8">
       <div class="flex flex-col gap-2">
         <h2>Mitgliedschaft</h2>
         <div v-if="user.isMember && user.membership">
@@ -302,15 +302,14 @@ async function saveProfile(data: CollectivoUser) {
           <UButton to="/register">Jetzt Mitglied werden</UButton>
         </div>
       </div>
-    </CollectivoContainer>
-    <CollectivoContainer>
-      <CollectivoFormBuilder
-        v-if="user.user"
-        :data="user.user"
-        :fields="profileInputs"
-        :submit="saveProfile"
-        submit-label="Save"
-      />
-    </CollectivoContainer>
+    </CollectivoCard>
+
+    <CollectivoFormBuilder
+      v-if="user.user"
+      :data="user.user"
+      :fields="profileInputs"
+      :submit="saveProfile"
+      submit-label="Save changes"
+    />
   </div>
 </template>

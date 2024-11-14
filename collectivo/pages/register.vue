@@ -146,7 +146,7 @@ const form: Ref<CollectivoForm> = ref({
     },
     {
       key: "directus_users__email",
-      label: "Email",
+      label: "E-Mail",
       type: "email",
       order: 210,
       required: true,
@@ -394,6 +394,21 @@ const form: Ref<CollectivoForm> = ref({
       ],
     },
     {
+      type: "section",
+      order: 619,
+      title: "Cooperative shares",
+      description: "t:mila_form_cshares_orga",
+      conditions: is_legal,
+    },
+    {
+      type: "section",
+      order: 619,
+      title: "Cooperative shares",
+
+      description: "t:mila_form_cshares_natural",
+      conditions: is_natural,
+    },
+    {
       type: "select",
       key: "shares_options",
       expand: true,
@@ -529,7 +544,7 @@ const form: Ref<CollectivoForm> = ref({
       order: 825,
     },
     {
-      label: "Would you be interested to join a working group?",
+      label: "Do you want to participate in a working group?",
       key: "directus_users__mila_groups_interested_2",
       width: "md",
       description:
@@ -547,17 +562,12 @@ const form: Ref<CollectivoForm> = ref({
         { label: "IT und Digitales", value: "ITundDigitales" },
         { label: "Diversität", value: "Diversität" },
         { label: "Events/Infogespräche", value: "EventsInfogespräche" },
-        {
-          label:
-            "Personalkomitee (Beratung bei Personalagenden, Bewerbungsprozessen, etc.)",
-          value: "Personalkomitee",
-        },
         { label: "Mitgliedergewinnung", value: "Mitgliedergewinnung" },
         { label: "Mitgliederbüro", value: "Mitgliederbüro" },
       ],
     },
     {
-      label: "What are your occupations/skills/interests?",
+      label: "What are your skills?",
       key: "directus_users__mila_skills_2",
       width: "md",
       type: "select",
@@ -567,23 +577,13 @@ const form: Ref<CollectivoForm> = ref({
         { label: "Handwerk (Elektrik, Tischlerei, …)", value: "handwerk" },
         { label: "Einzelhandel", value: "handel" },
         {
-          label: "Genossenschaft/Partizipation/Organisationsentwicklung",
+          label: "Organisationsentwicklung",
           value: "geno",
         },
         { label: "Finanzen (BWL, Buchhaltung,…)", value: "finanzen" },
+        { label: "Immobilien/Architektur/Planung/Bau", value: "immo" },
         {
-          label: "Kommunikation (Medien, Grafik, Text,…)",
-          value: "kommunikation",
-        },
-        { label: "IT/Digitales", value: "digit" },
-        { label: "Immobilien/Architektur/Planung", value: "immo" },
-        {
-          label:
-            "Diversitäts-Kompetenz: (Erfahrungs-)Wissen zu Inklusionsprozessen & Diskriminierungstrukturen",
-          value: "diversitaet",
-        },
-        {
-          label: "Personalführung, -administration, -management",
+          label: "Personalmanagement",
           value: "personal",
         },
       ],
@@ -599,9 +599,10 @@ const form: Ref<CollectivoForm> = ref({
         { label: "German", value: "Deutsch" },
         { label: "English", value: "Englisch" },
         { label: "Turkish", value: "Türkisch" },
-        { label: "BKS", value: "BKS" },
+        { label: "BKMS", value: "BKMS" },
         { label: "Ukrainian", value: "Ukrainisch" },
         { label: "Russian", value: "Russisch" },
+        { label: "Arabic", value: "Arabisch" },
       ],
     },
     {
@@ -659,13 +660,6 @@ const form: Ref<CollectivoForm> = ref({
       order: 960,
       label: "Revocation",
       description: "t:mila_form_final3",
-    },
-    {
-      type: "description",
-      order: 970,
-      label: "Vereinsmitgliedschaft",
-      description:
-        "Wenn du bereits Mitglied des Vereins MILA bist, wirst du mit der Registrierung bei der Genossenschaft NICHT automatisch vom Verein abgemeldet. Der Verein betreibt aktive Öffentlichkeits- und Bildungsarbeit für die Idee von MILA und wir freuen uns, wenn du weiterhin Vereinsmitglied bleiben möchtest. Wenn du das nicht möchtest, dann schick uns ein kurzes Mail an mitmachen@mila.wien mit der Vereinskündigung.",
     },
   ],
 });
