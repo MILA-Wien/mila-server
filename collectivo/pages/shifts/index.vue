@@ -118,12 +118,12 @@ if (isActive) loadData();
         @click="absencePostModalOpen = true"
         >{{ t("Request vacation") }}</UButton
       >
-      <a :href="`mailto:${config.public.contactEmail}`">
+      <NuxtLink to="/help">
         <UButton
-          :label="t('Other request') + ': ' + config.public.contactEmail"
+          :label="t('Other request')"
           :icon="'i-heroicons-pencil-square'"
         />
-      </a>
+      </NuxtLink>
     </div>
 
     <!-- SHIFT OCCURRENCES -->
