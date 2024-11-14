@@ -85,9 +85,11 @@ async function loadFiltersAdmin() {
   );
 }
 async function loadFiltersUser() {
+  const cats = await useShiftsCategories().loadPromise;
+  console.log("usercats", user.value.membership?.shifts_categories_allowed);
   for (const category of user.value.membership?.shifts_categories_allowed ||
     []) {
-    calendarFilters.value.categories.push(category.shifts_category_id);
+    calendarFilters.value.categories.push(cats.find((c) => c.id === category));
   }
 }
 

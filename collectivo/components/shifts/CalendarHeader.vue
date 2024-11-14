@@ -11,6 +11,7 @@ const props = defineProps({
 const { t } = useI18n();
 const filterState = defineModel<ShiftsFilterState>({ required: true });
 const categories = filterState.value.categories;
+console.log("cats", categories);
 const displayedDate = ref();
 
 onMounted(async () => {
@@ -146,7 +147,7 @@ watch(displayUnfilled, (value) => {
   &__left {
     @apply flex flex-col items-start grow gap-2 justify-between lg:justify-start;
     &__title {
-      @apply font-semibold text-2xl;
+      @apply text-2xl;
     }
 
     &__buttons {
