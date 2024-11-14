@@ -55,53 +55,12 @@ const profileInputs: Ref<CollectivoFormField[]> = ref([
     order: 104,
   },
   {
-    type: "section",
-    order: 700,
-    title: "Payment details",
-  },
-  {
-    label: "Payment type",
-    key: "payments_type",
-    type: "select",
-    required: true,
-    order: 710,
-    choices: [
-      {
-        value: "sepa",
-        label: "SEPA Direct Debit",
-      },
-      {
-        value: "transfer",
-        label: "Transfer",
-      },
-    ],
-  },
-  {
-    label: "Bank account IBAN",
-    key: "payments_account_iban",
-    type: "text",
-    required: true,
-    conditions: [
-      {
-        key: "payments_type",
-        value: "sepa",
-      },
-    ],
-    validators: [{ type: "iban" }],
-    order: 720,
-  },
-  {
-    label: "Bank account owner",
-    key: "payments_account_owner",
-    required: true,
-    conditions: [
-      {
-        key: "payments_type",
-        value: "sepa",
-      },
-    ],
-    type: "text",
-    order: 730,
+    label: "Stay anonymous",
+    content: "Do not show my name to other members on the platform.",
+    key: "hide_name",
+    type: "checkbox",
+    width: "lg",
+    order: 105,
   },
   {
     type: "section",
@@ -247,6 +206,55 @@ const profileInputs: Ref<CollectivoFormField[]> = ref([
     type: "text",
     order: 516,
     required: true,
+  },
+  {
+    type: "section",
+    order: 700,
+    title: "Payment details",
+  },
+  {
+    label: "Payment type",
+    key: "payments_type",
+    type: "select",
+    required: true,
+    order: 710,
+    choices: [
+      {
+        value: "sepa",
+        label: "SEPA Direct Debit",
+      },
+      {
+        value: "transfer",
+        label: "Transfer",
+      },
+    ],
+  },
+  {
+    label: "Bank account IBAN",
+    key: "payments_account_iban",
+    type: "text",
+    required: true,
+    conditions: [
+      {
+        key: "payments_type",
+        value: "sepa",
+      },
+    ],
+    validators: [{ type: "iban" }],
+    order: 720,
+  },
+  {
+    label: "Bank account owner",
+    key: "payments_account_owner",
+    required: true,
+    conditions: [
+      {
+        key: "payments_type",
+        value: "sepa",
+      },
+    ],
+    type: "text",
+    order: 730,
   },
 ]);
 
