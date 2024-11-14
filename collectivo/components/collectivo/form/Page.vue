@@ -71,7 +71,7 @@ async function onSubmit(data: any) {
 </script>
 
 <template>
-  <CollectivoContainer v-if="form">
+  <template v-if="form">
     <CollectivoFormBuilder
       v-if="!submitted"
       :fields="form.fields"
@@ -102,5 +102,5 @@ async function onSubmit(data: any) {
         </UButton>
       </div>
     </div>
-  </CollectivoContainer>
+  </template>
 </template>
