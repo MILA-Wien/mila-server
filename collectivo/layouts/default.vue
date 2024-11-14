@@ -15,8 +15,10 @@ const backLink = useCollectivoBackLink();
     <Sidebar />
     <MobileHeader />
     <div class="md:pl-44 lg:pl-52 pb-10">
-      <div class="hidden md:flex fixed p-8 right-0 z-50"><ProfileMenu2 /></div>
-      <div class="px-6 py-3 md:px-12 md:py-20 lg:px-20 lg:py-20">
+      <div class="hidden md:flex w-full justify-end px-8 pt-8 pb-4 right-0">
+        <ProfileMenu2 />
+      </div>
+      <div class="px-6 py-3 md:px-12 md:pb-20 lg:px-20">
         <div class="hidden md:flex justify-between items-start mb-7 lg:mb-11">
           <div class="">
             <h1
