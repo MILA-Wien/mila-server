@@ -204,8 +204,9 @@ async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
 
     if (calendarFilters.value.displayNames) {
       for (const assignment of occurrence.assignments) {
-        const u = assignment.assignment.shifts_membership.memberships_user;
-        if (u.first_name) {
+        const u = assignment.assignment.shifts_membership
+          .memberships_user as CollectivoUser;
+        if (u.first_name && assignment.isActive) {
           title += "\n" + u.first_name + " " + u.last_name;
         }
       }
