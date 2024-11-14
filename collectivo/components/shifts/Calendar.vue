@@ -69,6 +69,7 @@ const calendarFilters = ref<ShiftsFilterState>({
   },
   displayNames: false,
   displayUnfilled: adminMode ? false : true,
+  adminMode: adminMode,
 });
 props.mode == "admin" ? loadFiltersAdmin() : loadFiltersUser();
 async function loadFiltersAdmin() {
@@ -213,8 +214,13 @@ async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
     }
 
     // Apply filters
-    if (unfilled && occurrence.n_assigned >= occurrence.shift.shifts_slots) {
-      continue;
+    if (unfilled) {
+      if (isPast) {
+        continue;
+      }
+      if (occurrence.n_assigned >= occurrence.shift.shifts_slots) {
+        continue;
+      }
     }
 
     if (

@@ -134,7 +134,11 @@ watch(displayUnfilled, (value) => {
       <UFormGroup :label="t('Settings')">
         <div class="flex flex-col gap-2">
           <UCheckbox v-model="displayNames" :label="t('Display names')" />
-          <UCheckbox v-model="displayUnfilled" :label="t('Unfilled shifts')" />
+          <UCheckbox
+            v-model="displayUnfilled"
+            :label="t('Unfilled shifts')"
+            :disabled="!filterState.adminMode"
+          />
         </div>
       </UFormGroup>
     </div>
