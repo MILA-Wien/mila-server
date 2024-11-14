@@ -1,39 +1,32 @@
 {
-  "collection": "shifts_shifts",
-  "field": "shifts_slots",
+  "collection": "memberships_shifts_categories",
+  "field": "shifts_categories_id",
   "type": "integer",
   "meta": {
-    "collection": "shifts_shifts",
+    "collection": "memberships_shifts_categories",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_slots",
+    "field": "shifts_categories_id",
     "group": null,
-    "hidden": false,
-    "interface": "input",
+    "hidden": true,
+    "interface": null,
     "note": null,
-    "options": {
-      "min": 1
-    },
+    "options": null,
     "readonly": false,
-    "required": true,
-    "sort": 12,
+    "required": false,
+    "sort": 3,
     "special": null,
-    "translations": [
-      {
-        "language": "de-DE",
-        "translation": "Anzahl Personen"
-      }
-    ],
+    "translations": null,
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "shifts_slots",
-    "table": "shifts_shifts",
+    "name": "shifts_categories_id",
+    "table": "memberships_shifts_categories",
     "data_type": "integer",
-    "default_value": 1,
+    "default_value": null,
     "max_length": null,
     "numeric_precision": 32,
     "numeric_scale": 0,
@@ -43,7 +36,7 @@
     "is_generated": false,
     "generation_expression": null,
     "has_auto_increment": false,
-    "foreign_key_table": null,
-    "foreign_key_column": null
+    "foreign_key_table": "shifts_categories",
+    "foreign_key_column": "id"
   }
 }

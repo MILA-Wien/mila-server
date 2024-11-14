@@ -15,7 +15,7 @@
     "options": null,
     "readonly": false,
     "required": true,
-    "sort": 14,
+    "sort": 15,
     "special": [
       "cast-boolean"
     ],

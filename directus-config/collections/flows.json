@@ -1,5 +1,25 @@
 [
   {
+    "name": "Rechnungen Outer",
+    "icon": "bolt",
+    "color": null,
+    "description": null,
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "filter",
+      "scope": [
+        "items.update"
+      ],
+      "collections": [
+        "memberships"
+      ]
+    },
+    "operation": "427ccca3-cdea-470b-b7ad-bdea1cb50516",
+    "_syncId": "093c3c49-f5f8-41e0-bc77-7a6ec9fe7a80"
+  },
+  {
     "name": "Mail Membership Approved",
     "icon": "outgoing_mail",
     "color": "#E35169",
@@ -161,7 +181,7 @@
     "_syncId": "4132f37d-df4d-4d17-ae4f-f048b8a74af5"
   },
   {
-    "name": "memberships_create_invoice_for_shares",
+    "name": "Rechnungen Mship Create Trigger",
     "icon": "receipt",
     "color": null,
     "description": null,
@@ -399,23 +419,17 @@
     "_syncId": "e67933a7-f0df-41e2-b905-d49a8f2482db"
   },
   {
-    "name": "memberships_update_invoice_for_shares",
+    "name": "Rechnungen Inner",
     "icon": "receipt",
     "color": null,
     "description": null,
     "status": "active",
-    "trigger": "event",
+    "trigger": "operation",
     "accountability": "all",
     "options": {
-      "type": "filter",
-      "scope": [
-        "items.update"
-      ],
-      "collections": [
-        "memberships"
-      ]
+      "return": "$last"
     },
-    "operation": "7c3b51f8-043a-4b5a-a88d-21b5eab5c707",
+    "operation": "0c32433c-4785-46f0-9e73-ec8747a61aa2",
     "_syncId": "f714c75a-e78a-4c80-9b4d-4b39943d6444"
   },
   {

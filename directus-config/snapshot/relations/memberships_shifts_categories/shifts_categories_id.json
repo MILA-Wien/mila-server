@@ -1,0 +1,25 @@
+{
+  "collection": "memberships_shifts_categories",
+  "field": "shifts_categories_id",
+  "related_collection": "shifts_categories",
+  "meta": {
+    "junction_field": "memberships_id",
+    "many_collection": "memberships_shifts_categories",
+    "many_field": "shifts_categories_id",
+    "one_allowed_collections": null,
+    "one_collection": "shifts_categories",
+    "one_collection_field": null,
+    "one_deselect_action": "nullify",
+    "one_field": null,
+    "sort_field": null
+  },
+  "schema": {
+    "table": "memberships_shifts_categories",
+    "column": "shifts_categories_id",
+    "foreign_key_table": "shifts_categories",
+    "foreign_key_column": "id",
+    "constraint_name": "memberships_shifts_categories_shifts_categories_id_foreign",
+    "on_update": "NO ACTION",
+    "on_delete": "SET NULL"
+  }
+}

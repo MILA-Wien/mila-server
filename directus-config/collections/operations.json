@@ -51,15 +51,29 @@
     "name": "calcShares",
     "key": "calcShares",
     "type": "exec",
-    "position_x": 3,
-    "position_y": 38,
+    "position_x": 23,
+    "position_y": 20,
     "options": {
-      "code": "module.exports = async function(data) {\n\tconsole.log(\"calcShares\")\n    let sharesInvoiced = 0\n    console.log(data[\"readSharesEntries\"])\n    for (i in data[\"readSharesEntries\"]) {\n        entry = data[\"readSharesEntries\"][i]\n        console.log(\"entry\", entry)\n    \tsharesInvoiced = sharesInvoiced + entry.payments_quantity\n\t}\n\tsharesTotal = data[\"$trigger\"].payload.memberships_shares\n\tsharesToBeInvoiced = sharesTotal - sharesInvoiced\n\tconsole.log(\"sharesToBeInvoiced\", sharesToBeInvoiced)\n\treturn {sharesToBeInvoiced};\n}"
+      "code": "module.exports = async function(data) {\n\tconsole.log(\"calcShares\")\n    let sharesInvoiced = 0\n    console.log(data[\"readSharesEntries\"])\n    for (i in data[\"readSharesEntries\"]) {\n        entry = data[\"readSharesEntries\"][i]\n        console.log(\"entry\", entry)\n    \tsharesInvoiced = sharesInvoiced + entry.payments_quantity\n\t}\n\tsharesTotal = data[\"$trigger\"].shares\n\tsharesToBeInvoiced = sharesTotal - sharesInvoiced\n\tconsole.log(\"sharesToBeInvoiced\", sharesToBeInvoiced)\n\treturn {sharesToBeInvoiced};\n}"
     },
     "resolve": "62270ee8-3614-45dd-96a7-b8b2d6e10493",
     "reject": null,
     "flow": "f714c75a-e78a-4c80-9b4d-4b39943d6444",
     "_syncId": "427cd01e-36f0-4e42-b525-48cd6fcbab28"
+  },
+  {
+    "name": "checkHasShares",
+    "key": "check_has_shares",
+    "type": "exec",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "code": "module.exports = async function(data) {\n\tconsole.log(\"prepareInvoice\")\n\tconsole.log(data[\"$trigger\"])\n\tif (!(\"memberships_shares\" in data[\"$trigger\"].payload)) {\n\t\tthrow new Error(\"No shares in payload\")\n    }\n    const payloads = []\n     for (i in data[\"$trigger\"].keys) {\n\t\tpayloads.push({\n        \tmembership: data[\"$trigger\"].keys[i],\n            shares: data[\"$trigger\"].payload.memberships_shares\n        })\n\t}\n\treturn payloads\n}"
+    },
+    "resolve": "37ed69b5-8376-4ff7-bdc8-c8614fdce196",
+    "reject": "d8876f06-ea68-4be5-aee8-d4ef6b57404f",
+    "flow": "093c3c49-f5f8-41e0-bc77-7a6ec9fe7a80",
+    "_syncId": "427ccca3-cdea-470b-b7ad-bdea1cb50516"
   },
   {
     "name": "Check if active",
@@ -118,34 +132,6 @@
     "reject": null,
     "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
     "_syncId": "ecafe208-21b8-4aa9-ab60-ad3663271ffe"
-  },
-  {
-    "name": "checkHasShares",
-    "key": "checkHasShares",
-    "type": "exec",
-    "position_x": 19,
-    "position_y": 1,
-    "options": {
-      "code": "module.exports = async function(data) {\n\tconsole.log(\"prepareInvoice\")\n\tconsole.log(data[\"$trigger\"])\n\tif (!(\"memberships_shares\" in data[\"$trigger\"].payload)) {\n\t\tthrow new Error(\"No shares in payload\")\n    }\n\treturn {}\n}"
-    },
-    "resolve": "b3d317db-f563-46be-ae8e-4d7222cbf349",
-    "reject": "dae7abf0-723a-4576-87f4-a95c5ae98ded",
-    "flow": "f714c75a-e78a-4c80-9b4d-4b39943d6444",
-    "_syncId": "7c3b51f8-043a-4b5a-a88d-21b5eab5c707"
-  },
-  {
-    "name": "checkIsBulk",
-    "key": "checkIsBulk",
-    "type": "exec",
-    "position_x": 37,
-    "position_y": 1,
-    "options": {
-      "code": "module.exports = async function(data) {\n\tif (data[\"$trigger\"].keys.length != 1) {\n\t\tconsole.log(\"multiple keys in payload\")\n    \tthrow new Error(\"Memberships invoice flow: Cannot bulk edit shares\")\n\t}\n\treturn {}\n}"
-    },
-    "resolve": "0c32433c-4785-46f0-9e73-ec8747a61aa2",
-    "reject": null,
-    "flow": "f714c75a-e78a-4c80-9b4d-4b39943d6444",
-    "_syncId": "b3d317db-f563-46be-ae8e-4d7222cbf349"
   },
   {
     "name": "Kondition",
@@ -223,7 +209,7 @@
     "name": "createInvoice",
     "key": "createInvoice",
     "type": "item-create",
-    "position_x": 21,
+    "position_x": 6,
     "position_y": 38,
     "options": {
       "collection": "payments_invoices_out",
@@ -231,7 +217,7 @@
       "payload": {
         "payments_recipient_user": "{{readMembership.memberships_user}}",
         "payments_status": "pending",
-        "memberships_membership": "{{$trigger.keys[0]}}"
+        "memberships_membership": "{{$trigger.membership}}"
       }
     },
     "resolve": "9f3db152-9448-4751-b187-f12ea93b543a",
@@ -243,7 +229,7 @@
     "name": "createInvoiceEntries",
     "key": "createInvoiceEntries",
     "type": "item-create",
-    "position_x": 41,
+    "position_x": 25,
     "position_y": 38,
     "options": {
       "collection": "payments_invoices_entries",
@@ -261,18 +247,18 @@
     "_syncId": "9f3db152-9448-4751-b187-f12ea93b543a"
   },
   {
-    "name": "endFlowWithoutBlocking",
-    "key": "endFlowWithoutBlocking",
+    "name": "endNoBlock",
+    "key": "end_no_block",
     "type": "exec",
-    "position_x": 3,
-    "position_y": 20,
+    "position_x": 14,
+    "position_y": 27,
     "options": {
-      "code": "module.exports = async function(data) {\n\t// Do nothing, just to let the reject path pass without blocking\n    console.log(\"has no shares\")\n\treturn {};\n}"
+      "code": "module.exports = async function(data) {\n\t// Do something...\n\treturn {\n    \t\"nothing\":\"nothing\"\n    };\n}"
     },
     "resolve": null,
     "reject": null,
-    "flow": "f714c75a-e78a-4c80-9b4d-4b39943d6444",
-    "_syncId": "dae7abf0-723a-4576-87f4-a95c5ae98ded"
+    "flow": "093c3c49-f5f8-41e0-bc77-7a6ec9fe7a80",
+    "_syncId": "d8876f06-ea68-4be5-aee8-d4ef6b57404f"
   },
   {
     "name": "Skript ausführen",
@@ -351,7 +337,7 @@
     "position_x": 23,
     "position_y": 19,
     "options": {
-      "code": "module.exports = async function(data) {\n    const automations = [\"memberships_applied_new_\" + data[\"read_user\"][\"memberships_type\"]]\n    const groups = data[\"read_user\"][\"memberships_user\"][\"mila_groups_interested_2\"]\n    try {\n    if (groups) {\n        \n        for (const group of JSON.parse(groups)) {\n            automations.push(\"ag_willkommensmail_\"+group)\n        }\n    }\n    } catch(e) {\n    console.error(\"Error parsing groups for ag_willkommensmail:\", e);\n    }\n\treturn {\n    automations\n    };\n}"
+      "code": "module.exports = async function(data) {\n    const automations1 = [\"memberships_applied_new_\" + data[\"read_user\"][\"memberships_type\"]]\n    const automations2 = []\n    const groups = data[\"read_user\"][\"memberships_user\"][\"mila_groups_interested_2\"]\n    try {\n    if (groups) {\n        \n        for (const group of JSON.parse(groups)) {\n            automations2.push(\"ag_willkommensmail_\"+group)\n        }\n    }\n    } catch(e) {\n    console.error(\"Error parsing groups for ag_willkommensmail:\", e);\n    }\n\treturn {\n    automations1, automations2\n    };\n}"
     },
     "resolve": "68785ced-3a6b-4ea9-a156-0e6a9f57550e",
     "reject": null,
@@ -762,11 +748,11 @@
     "key": "readMembership",
     "type": "item-read",
     "position_x": 20,
-    "position_y": 20,
+    "position_y": 1,
     "options": {
       "collection": "memberships",
       "key": [
-        "{{$trigger.keys[0]}}"
+        "{{$trigger.membership}}"
       ],
       "permissions": "$full",
       "query": {
@@ -829,14 +815,14 @@
     "name": "readSharesEntries",
     "key": "readSharesEntries",
     "type": "item-read",
-    "position_x": 37,
+    "position_x": 5,
     "position_y": 20,
     "options": {
       "collection": "payments_invoices_entries",
       "query": {
         "filter": {
           "payments_invoice": {
-            "memberships_membership": "{{$trigger.keys[0]}}"
+            "memberships_membership": "{{$trigger.membership}}"
           },
           "payments_description": "MILA Genossenschaftsanteil"
         }
@@ -851,8 +837,8 @@
     "name": "Webhook / Anfrage URL",
     "key": "request_6ayym",
     "type": "request",
-    "position_x": 23,
-    "position_y": 37,
+    "position_x": 5,
+    "position_y": 38,
     "options": {
       "method": "POST",
       "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_create",
@@ -862,12 +848,34 @@
           "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
         }
       ],
-      "body": "{\n\t    \"user_ids\": [\"{{read_user.memberships_user.id}}\"],    \n    \"automation_name\": {{get_automations.automations}}\n}"
+      "body": "{\n\t    \"user_ids\": [\"{{read_user.memberships_user.id}}\"],    \n    \"automation_name\": {{get_automations.automations1}}\n}"
+    },
+    "resolve": "69782931-b5b3-469c-abc5-20b329da87a7",
+    "reject": null,
+    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
+    "_syncId": "68785ced-3a6b-4ea9-a156-0e6a9f57550e"
+  },
+  {
+    "name": "Webhook / Anfrage URL",
+    "key": "request_6ayym_cjkez",
+    "type": "request",
+    "position_x": 22,
+    "position_y": 38,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_create",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{\n\t  \"user_ids\": [\"{{read_user.memberships_user.id}}\"],    \n    \"automation_name\": {{get_automations.automations2}},\n    \"draft\": \"true\"\n}"
     },
     "resolve": null,
     "reject": null,
     "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
-    "_syncId": "68785ced-3a6b-4ea9-a156-0e6a9f57550e"
+    "_syncId": "69782931-b5b3-469c-abc5-20b329da87a7"
   },
   {
     "name": "Webhook / Anfrage URL",
@@ -1186,6 +1194,22 @@
     "reject": null,
     "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
     "_syncId": "9f110beb-6d08-47e3-930c-511045c1760b"
+  },
+  {
+    "name": "Flow auslösen",
+    "key": "trigger_8p2e7",
+    "type": "trigger",
+    "position_x": 4,
+    "position_y": 21,
+    "options": {
+      "iterationMode": "serial",
+      "flow": "f714c75a-e78a-4c80-9b4d-4b39943d6444",
+      "payload": "{{ $last }}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "093c3c49-f5f8-41e0-bc77-7a6ec9fe7a80",
+    "_syncId": "37ed69b5-8376-4ff7-bdc8-c8614fdce196"
   },
   {
     "name": "Flow auslösen",

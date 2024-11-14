@@ -1,42 +1,33 @@
 {
-  "collection": "memberships",
-  "field": "memberships_date_approved",
-  "type": "date",
+  "collection": "shifts_categories",
+  "field": "name",
+  "type": "string",
   "meta": {
-    "collection": "memberships",
+    "collection": "shifts_categories",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "memberships_date_approved",
-    "group": "membership_group",
+    "field": "name",
+    "group": null,
     "hidden": false,
-    "interface": "datetime",
+    "interface": "input",
     "note": null,
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 6,
+    "sort": 2,
     "special": null,
-    "translations": [
-      {
-        "language": "de-DE",
-        "translation": "Datum Aufgenommen"
-      },
-      {
-        "language": "en-US",
-        "translation": "Date Approved"
-      }
-    ],
+    "translations": null,
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "memberships_date_approved",
-    "table": "memberships",
-    "data_type": "date",
+    "name": "name",
+    "table": "shifts_categories",
+    "data_type": "character varying",
     "default_value": null,
-    "max_length": null,
+    "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,
     "is_nullable": true,

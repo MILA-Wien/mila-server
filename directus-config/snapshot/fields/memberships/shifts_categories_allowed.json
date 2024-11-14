@@ -1,0 +1,34 @@
+{
+  "collection": "memberships",
+  "field": "shifts_categories_allowed",
+  "type": "alias",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "shifts_categories_allowed",
+    "group": "shifts_group",
+    "hidden": false,
+    "interface": "list-m2m",
+    "note": "Für folgende Schichtkategorien darf sich diese Person selbstständig eintragen.",
+    "options": {
+      "enableCreate": false
+    },
+    "readonly": false,
+    "required": false,
+    "sort": 5,
+    "special": [
+      "m2m"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Erlaubte Kategorien"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}
