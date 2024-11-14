@@ -11,7 +11,7 @@ const props = defineProps({
 const { t } = useI18n();
 const filterState = defineModel<ShiftsFilterState>({ required: true });
 const categories = filterState.value.categories;
-console.log("cats", categories);
+
 const displayedDate = ref();
 
 onMounted(async () => {
@@ -134,7 +134,11 @@ watch(displayUnfilled, (value) => {
       <UFormGroup :label="t('Settings')">
         <div class="flex flex-col gap-2">
           <UCheckbox v-model="displayNames" :label="t('Display names')" />
-          <UCheckbox v-model="displayUnfilled" :label="t('Unfilled shifts')" />
+          <UCheckbox
+            v-model="displayUnfilled"
+            :label="t('Unfilled shifts')"
+            :disabled="!filterState.adminMode"
+          />
         </div>
       </UFormGroup>
     </div>

@@ -13,7 +13,8 @@
     "interface": "list-m2m",
     "note": "Für folgende Schichtkategorien darf sich diese Person selbstständig eintragen.",
     "options": {
-      "enableCreate": false
+      "enableCreate": false,
+      "template": "{{shifts_categories_id.name}}"
     },
     "readonly": false,
     "required": false,

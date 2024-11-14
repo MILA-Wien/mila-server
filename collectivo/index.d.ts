@@ -105,6 +105,7 @@ declare global {
     selectedCategory: ShiftsCategory;
     displayUnfilled: boolean;
     displayNames: boolean;
+    adminMode: boolean;
   }
 
   interface ShiftsShift {

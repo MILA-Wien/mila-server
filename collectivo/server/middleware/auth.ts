@@ -15,7 +15,6 @@ const STUDIO_ADMIN_ROLES = [
 // Valid user tokens are cached for one hour
 export default defineEventHandler(async (event) => {
   const cookie = getHeader(event, "Cookie");
-
   if (!(cookie && cookie.includes("directus_session_token="))) return;
 
   const directusSessionToken = cookie
@@ -59,8 +58,12 @@ export default defineEventHandler(async (event) => {
       mship = user.memberships[0].id;
     }
 
-    const isShiftAdmin = SHIFT_ADMIN_ROLES.includes(user.role.name);
-    const isStudioAdmin = STUDIO_ADMIN_ROLES.includes(user.role.name);
+    const isShiftAdmin = user.role
+      ? SHIFT_ADMIN_ROLES.includes(user.role.name)
+      : false;
+    const isStudioAdmin = user.role
+      ? STUDIO_ADMIN_ROLES.includes(user.role.name)
+      : false;
 
     // Cache user token for one hour
     const expiresAt = Date.now() + EXPIRATION_TIME;
@@ -75,6 +78,7 @@ export default defineEventHandler(async (event) => {
     event.context.auth = authContext;
     return;
   } catch (e) {
+    // Careful, this can hide errors
     return;
   }
 });

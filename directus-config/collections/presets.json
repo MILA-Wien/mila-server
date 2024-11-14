@@ -45,5 +45,47 @@
     "icon": "edit_square",
     "color": "#6644FF",
     "_syncId": "8ab0587d-6ff8-4385-a0eb-ad3837801abe"
+  },
+  {
+    "bookmark": "Register",
+    "role": null,
+    "collection": "memberships",
+    "search": null,
+    "layout": "tabular",
+    "layout_query": {
+      "tabular": {
+        "page": 1,
+        "fields": [
+          "id",
+          "memberships_user.first_name",
+          "memberships_user.last_name",
+          "memberships_date_approved",
+          "memberships_status",
+          "memberships_type",
+          "memberships_user.memberships_occupation",
+          "memberships_user.email"
+        ]
+      }
+    },
+    "layout_options": {
+      "tabular": {
+        "widths": {
+          "id": 127
+        }
+      }
+    },
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "memberships_date_approved": {
+            "_nnull": true
+          }
+        }
+      ]
+    },
+    "icon": "lens_blur",
+    "color": "#6644FF",
+    "_syncId": "e4214269-8668-4644-a19a-cecbc62baca4"
   }
 ]

@@ -69,6 +69,7 @@ const calendarFilters = ref<ShiftsFilterState>({
   },
   displayNames: false,
   displayUnfilled: adminMode ? false : true,
+  adminMode: adminMode,
 });
 props.mode == "admin" ? loadFiltersAdmin() : loadFiltersUser();
 async function loadFiltersAdmin() {
@@ -86,7 +87,7 @@ async function loadFiltersAdmin() {
 }
 async function loadFiltersUser() {
   const cats = await useShiftsCategories().loadPromise;
-  console.log("usercats", user.value.membership?.shifts_categories_allowed);
+
   for (const category of user.value.membership?.shifts_categories_allowed ||
     []) {
     calendarFilters.value.categories.push(cats.find((c) => c.id === category));
@@ -139,7 +140,6 @@ type LoadedOccurrences = Awaited<ReturnType<typeof fetchOccurrences>>;
 const loadedOccurrences = ref<LoadedOccurrences | null>(null);
 
 async function fetchOccurrences(from: Date, to: Date) {
-  console.log("adminmode", adminMode);
   return await $fetch("/api/shifts/occurrences", {
     query: {
       from: from.toISOString(),
@@ -205,16 +205,22 @@ async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
 
     if (calendarFilters.value.displayNames) {
       for (const assignment of occurrence.assignments) {
-        const u = assignment.assignment.shifts_membership.memberships_user;
-        if (u.first_name) {
+        const u = assignment.assignment.shifts_membership
+          .memberships_user as CollectivoUser;
+        if (u.first_name && assignment.isActive) {
           title += "\n" + u.first_name + " " + u.last_name;
         }
       }
     }
 
     // Apply filters
-    if (unfilled && occurrence.n_assigned >= occurrence.shift.shifts_slots) {
-      continue;
+    if (unfilled) {
+      if (isPast) {
+        continue;
+      }
+      if (occurrence.n_assigned >= occurrence.shift.shifts_slots) {
+        continue;
+      }
     }
 
     if (
