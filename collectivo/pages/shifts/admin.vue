@@ -12,9 +12,7 @@ definePageMeta({
 </script>
 
 <template>
-  <CollectivoContainer>
-    <ShiftsCalendar mode="admin" />
-  </CollectivoContainer>
+  <ShiftsCalendar mode="admin" />
 </template>
 
 <i18n lang="yaml">

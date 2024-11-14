@@ -1,7 +1,7 @@
 [
   {
     "project_name": "MILA",
-    "project_color": "#2DB3A5",
+    "project_color": "#26A195",
     "public_note": null,
     "auth_login_attempts": 25,
     "auth_password_policy": null,
@@ -75,7 +75,7 @@
     "default_language": "de-DE",
     "custom_aspect_ratios": null,
     "default_appearance": "auto",
-    "default_theme_light": null,
+    "default_theme_light": "Directus Default",
     "theme_light_overrides": null,
     "default_theme_dark": null,
     "theme_dark_overrides": null,

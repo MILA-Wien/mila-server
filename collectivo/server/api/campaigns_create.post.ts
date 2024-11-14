@@ -4,6 +4,7 @@ import type { H3Event } from "h3";
 interface RequestBody {
   automation_name?: string;
   user_ids?: string[];
+  draft?: boolean;
 }
 
 export default defineEventHandler(async (event) => {
@@ -19,7 +20,6 @@ export default defineEventHandler(async (event) => {
 async function createCampaign(event: H3Event) {
   verifyCollectivoApiToken(event);
   const body = await readBody(event);
-  console.log("Received request in campaigns_create.post.ts", body);
 
   if (!body.automation_name || !body.user_ids) {
     throw new Error("Missing required fields");
@@ -30,7 +30,7 @@ async function createCampaign(event: H3Event) {
       try {
         await createCampaignSingle(body, name);
       } catch (error) {
-        console.error("Skipping automation", name, error);
+        console.log("Skipping automation", name, error);
       }
     }
   } else {
@@ -54,13 +54,15 @@ async function createCampaignSingle(
   );
 
   if (!automations.length) {
-    throw new Error(`Automation not found: ${automation_name}`);
+    console.log(`Automation not found: ${automation_name}`);
+    return;
   }
 
   const automation = automations[0];
 
   if (!automation.mila_active) {
-    throw new Error("Automation is not active");
+    console.log(`Automation not active: ${automation_name}`);
+    return;
   }
 
   const createList = [];
@@ -91,10 +93,12 @@ async function createCampaignSingle(
     );
 
     // Send campaign
-    await directus.request(
-      updateItem("messages_campaigns", campaign.id, {
-        messages_campaign_status: "pending",
-      }),
-    );
+    if (!body.draft) {
+      await directus.request(
+        updateItem("messages_campaigns", campaign.id, {
+          messages_campaign_status: "pending",
+        }),
+      );
+    }
   }
 }

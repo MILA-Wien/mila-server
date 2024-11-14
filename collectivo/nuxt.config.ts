@@ -51,7 +51,7 @@ export default defineNuxtConfig({
     preference: "light",
   },
   hooks: {},
-  modules: ["@nuxt/ui", "@nuxtjs/i18n", "@nuxtjs/google-fonts", "@nuxt/eslint"],
+  modules: ["@nuxt/ui", "@nuxtjs/i18n", "@nuxt/eslint"],
   i18n: {
     lazy: true, // TODO: Lazy loading does not work with current switch
     strategy: "no_prefix",
@@ -62,16 +62,10 @@ export default defineNuxtConfig({
       { code: "de", files: ["de.json", "shifts/de.json"] },
     ],
   },
-  css: [join(currentDir, "./assets/css/main.css")],
+  css: ["~/assets/css/main.css"],
   ui: {
     global: true,
     icons: ["heroicons"],
     safelistColors: ["primary", "green", "orange", "blue", "pink", "red"],
-  },
-  googleFonts: {
-    download: true,
-    families: {
-      Urbanist: "100..900",
-    },
   },
 });

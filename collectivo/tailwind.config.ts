@@ -4,21 +4,42 @@ export default <Partial<Config>>{
   theme: {
     extend: {
       colors: {
-        black: "#0F1A2B",
+        black: "#333333",
         white: "#ffffff",
 
-        meteorite: {
-          "50": "#ededff",
-          "100": "#dedeff",
-          "200": "#c6c4ff",
-          "300": "#a6a0ff",
-          "400": "#8e7aff",
-          "500": "#7d5afa",
-          "600": "#723cef",
-          "700": "#632fd3",
-          "800": "#5129aa",
-          "900": "#3b2476",
-          "950": "#28184e",
+        milaGreen: "#26a195",
+        milaGreenHover: "#2db3a5", // original
+        milaPurple: "#3b2776",
+        milaPurpleHover: "#4d3e7b",
+
+        // Main color
+        green: {
+          "50": "#f2fbf9",
+          "100": "#d1f6ee",
+          "200": "#a4ebde",
+          "300": "#6edaca",
+          "400": "#40c1b3",
+          "500": "#26a195",
+          "600": "#1d847c",
+          "700": "#1b6a65",
+          "800": "#1a5552",
+          "900": "#1a4745",
+          "950": "#092a29",
+        },
+
+        // All the same for nuxt ui
+        purple: {
+          "50": "#f1f1fc",
+          "100": "#e5e6fa",
+          "200": "#cfcff6",
+          "300": "#b4b2ef",
+          "400": "#9c93e6",
+          "500": "#6b4eb4",
+          "600": "#574291",
+          "700": "#4d3e7b",
+          "800": "#4d3e7b",
+          "900": "#4d3e7b",
+          "950": "#2b2244",
         },
 
         blue: {
@@ -47,20 +68,6 @@ export default <Partial<Config>>{
           "800": "#894323",
           "900": "#6f391f",
           "950": "#3b1b0f",
-        },
-
-        green: {
-          "50": "#f2fbf9",
-          "100": "#d2f5ee",
-          "200": "#a4ebdd",
-          "300": "#6fd9c9",
-          "400": "#42bfb1",
-          "500": "#2cb3a5",
-          "600": "#1e837b",
-          "700": "#1c6963",
-          "800": "#1b5451",
-          "900": "#1a4744",
-          "950": "#092a29",
         },
 
         red: {
@@ -105,15 +112,9 @@ export default <Partial<Config>>{
           "950": "#333438",
         },
       },
-      boxShadow: {
-        sidebar: "0px 0px 48px 0px rgba(220, 226, 239, 0.50)",
-      },
-      fontSize: {
-        lg: ["1.125rem", { lineHeight: "22px" }],
-        xl: ["1.25rem", { lineHeight: "24px" }],
-        "2xl": ["1.5rem", { lineHeight: "30px" }],
-        "3xl": ["1.625rem", { lineHeight: "32px" }],
-        "4xl": ["1.875rem", { lineHeight: "36px" }],
+      fontFamily: {
+        Avory: ["AvoryII"],
+        OpenSans: ["OpenSans"],
       },
     },
   },

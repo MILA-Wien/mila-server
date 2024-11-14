@@ -255,12 +255,12 @@ type Subscription {
   collectivo_tiles_mutated(event: EventEnum): collectivo_tiles_mutated
   directus_policies_mutated(event: EventEnum): directus_policies_mutated
   directus_access_mutated(event: EventEnum): directus_access_mutated
-  directus_users_mutated(event: EventEnum): directus_users_mutated
+  shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
+  shifts_categories_mutated(event: EventEnum): shifts_categories_mutated
   collectivo_tags_mutated(event: EventEnum): collectivo_tags_mutated
   collectivo_tags_directus_users_mutated(event: EventEnum): collectivo_tags_directus_users_mutated
   collectivo_tiles_buttons_mutated(event: EventEnum): collectivo_tiles_buttons_mutated
   junction_directus_users_files_mutated(event: EventEnum): junction_directus_users_files_mutated
-  memberships_mutated(event: EventEnum): memberships_mutated
   memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
   memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
   memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
@@ -277,7 +277,9 @@ type Subscription {
   shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
   shifts_holidays_public_mutated(event: EventEnum): shifts_holidays_public_mutated
-  shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
+  memberships_mutated(event: EventEnum): memberships_mutated
+  memberships_shifts_categories_mutated(event: EventEnum): memberships_shifts_categories_mutated
+  directus_users_mutated(event: EventEnum): directus_users_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -1552,6 +1554,7 @@ type directus_users {
   mila_skills_2: String
   survey_languages: String
   survey_languages_additional: String
+  hide_name: Boolean
   memberships(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships]
   memberships_func: count_functions
   mila_documents(filter: junction_directus_users_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [junction_directus_users_files]
@@ -1624,6 +1627,7 @@ type directus_users_aggregated_count {
   mila_skills_2: Int
   survey_languages: Int
   survey_languages_additional: Int
+  hide_name: Int
   memberships: Int
   mila_documents: Int
   collectivo_tags: Int
@@ -1777,19 +1781,20 @@ type memberships {
   shifts_counter: Int
   shifts_orientation_date: Date
   shifts_orientation_date_func: date_functions
-  shifts_skills: JSON
-  shifts_skills_func: count_functions
 
   """Welche Art von Schichten macht dieses Mitglied?"""
   shifts_user_type: String
   user_created: String
   user_updated: String
+  shifts_can_be_coordinator: Boolean
   coshoppers(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers]
   coshoppers_func: count_functions
   kids(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers_1]
   kids_func: count_functions
   memberships_invoices(filter: payments_invoices_out_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [payments_invoices_out]
   memberships_invoices_func: count_functions
+  shifts_categories_allowed(filter: memberships_shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_shifts_categories]
+  shifts_categories_allowed_func: count_functions
 }
 
 type memberships_coshoppers {
@@ -1841,6 +1846,18 @@ type memberships_mutated {
   key: ID!
   event: EventEnum
   data: memberships
+}
+
+type memberships_shifts_categories {
+  id: ID!
+  memberships_id(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+  shifts_categories_id(filter: shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_categories
+}
+
+type memberships_shifts_categories_mutated {
+  key: ID!
+  event: EventEnum
+  data: memberships_shifts_categories
 }
 
 type messages_campaigns {
@@ -2139,6 +2156,17 @@ type shifts_assignments_mutated {
   data: shifts_assignments
 }
 
+type shifts_categories {
+  id: ID!
+  name: String
+}
+
+type shifts_categories_mutated {
+  key: ID!
+  event: EventEnum
+  data: shifts_categories
+}
+
 type shifts_holidays_public {
   id: ID!
   user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
@@ -2192,7 +2220,6 @@ type shifts_shifts {
 
   """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
   shifts_allow_self_assignment: Boolean
-  shifts_category: String
   shifts_description: String
   shifts_from: Date
   shifts_from_func: date_functions
@@ -2222,6 +2249,7 @@ type shifts_shifts {
 
   """Schicht findet NICHT an Feiertagen statt"""
   exclude_public_holidays: Boolean
+  shifts_category_2(filter: shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_categories
 }
 
 type shifts_shifts_mutated {
@@ -2630,6 +2658,7 @@ input create_directus_users_input {
   mila_skills_2: String
   survey_languages: String
   survey_languages_additional: String
+  hide_name: Boolean
   memberships: [create_memberships_input]
   mila_documents: [create_junction_directus_users_files_input]
   collectivo_tags: [create_collectivo_tags_directus_users_input]
@@ -2710,15 +2739,16 @@ input create_memberships_input {
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
   shifts_counter: Int
   shifts_orientation_date: Date
-  shifts_skills: JSON
 
   """Welche Art von Schichten macht dieses Mitglied?"""
   shifts_user_type: String
   user_created: String
   user_updated: String
+  shifts_can_be_coordinator: Boolean
   coshoppers: [create_memberships_memberships_coshoppers_input]
   kids: [create_memberships_memberships_coshoppers_1_input]
   memberships_invoices: [create_payments_invoices_out_input]
+  shifts_categories_allowed: [create_memberships_shifts_categories_input]
 }
 
 input create_memberships_memberships_coshoppers_1_input {
@@ -2731,6 +2761,12 @@ input create_memberships_memberships_coshoppers_input {
   id: ID
   memberships_coshoppers_id: create_memberships_coshoppers_input
   memberships_id: create_memberships_input
+}
+
+input create_memberships_shifts_categories_input {
+  id: ID
+  memberships_id: create_memberships_input
+  shifts_categories_id: create_shifts_categories_input
 }
 
 input create_messages_campaigns_directus_users_input {
@@ -2810,6 +2846,11 @@ input create_payments_invoices_out_input {
   user_created: String
   user_updated: String
   payments_entries: [create_payments_invoices_entries_input]
+}
+
+input create_shifts_categories_input {
+  id: ID
+  name: String
 }
 
 input date_filter_operators {
@@ -3276,6 +3317,7 @@ input directus_users_filter {
   mila_skills_2: string_filter_operators
   survey_languages: string_filter_operators
   survey_languages_additional: string_filter_operators
+  hide_name: boolean_filter_operators
   memberships: memberships_filter
   memberships_func: count_function_filter_operators
   mila_documents: junction_directus_users_files_filter
@@ -3379,17 +3421,18 @@ input memberships_filter {
   shifts_counter: number_filter_operators
   shifts_orientation_date: date_filter_operators
   shifts_orientation_date_func: date_function_filter_operators
-  shifts_skills: string_filter_operators
-  shifts_skills_func: count_function_filter_operators
   shifts_user_type: string_filter_operators
   user_created: string_filter_operators
   user_updated: string_filter_operators
+  shifts_can_be_coordinator: boolean_filter_operators
   coshoppers: memberships_memberships_coshoppers_filter
   coshoppers_func: count_function_filter_operators
   kids: memberships_memberships_coshoppers_1_filter
   kids_func: count_function_filter_operators
   memberships_invoices: payments_invoices_out_filter
   memberships_invoices_func: count_function_filter_operators
+  shifts_categories_allowed: memberships_shifts_categories_filter
+  shifts_categories_allowed_func: count_function_filter_operators
   _and: [memberships_filter]
   _or: [memberships_filter]
 }
@@ -3408,6 +3451,14 @@ input memberships_memberships_coshoppers_filter {
   memberships_id: memberships_filter
   _and: [memberships_memberships_coshoppers_filter]
   _or: [memberships_memberships_coshoppers_filter]
+}
+
+input memberships_shifts_categories_filter {
+  id: number_filter_operators
+  memberships_id: memberships_filter
+  shifts_categories_id: shifts_categories_filter
+  _and: [memberships_shifts_categories_filter]
+  _or: [memberships_shifts_categories_filter]
 }
 
 input messages_campaigns_directus_users_filter {
@@ -3564,6 +3615,13 @@ input shifts_assignments_filter {
   _or: [shifts_assignments_filter]
 }
 
+input shifts_categories_filter {
+  id: number_filter_operators
+  name: string_filter_operators
+  _and: [shifts_categories_filter]
+  _or: [shifts_categories_filter]
+}
+
 input shifts_shifts_filter {
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
@@ -3571,7 +3629,6 @@ input shifts_shifts_filter {
   date_updated_func: datetime_function_filter_operators
   id: number_filter_operators
   shifts_allow_self_assignment: boolean_filter_operators
-  shifts_category: string_filter_operators
   shifts_description: string_filter_operators
   shifts_from: date_filter_operators
   shifts_from_func: date_function_filter_operators
@@ -3591,6 +3648,7 @@ input shifts_shifts_filter {
   user_created: string_filter_operators
   user_updated: string_filter_operators
   exclude_public_holidays: boolean_filter_operators
+  shifts_category_2: shifts_categories_filter
   _and: [shifts_shifts_filter]
   _or: [shifts_shifts_filter]
 }
@@ -3965,6 +4023,7 @@ input update_directus_users_input {
   mila_skills_2: String
   survey_languages: String
   survey_languages_additional: String
+  hide_name: Boolean
   memberships: [update_memberships_input]
   mila_documents: [update_junction_directus_users_files_input]
   collectivo_tags: [update_collectivo_tags_directus_users_input]
@@ -4045,15 +4104,16 @@ input update_memberships_input {
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
   shifts_counter: Int
   shifts_orientation_date: Date
-  shifts_skills: JSON
 
   """Welche Art von Schichten macht dieses Mitglied?"""
   shifts_user_type: String
   user_created: String
   user_updated: String
+  shifts_can_be_coordinator: Boolean
   coshoppers: [update_memberships_memberships_coshoppers_input]
   kids: [update_memberships_memberships_coshoppers_1_input]
   memberships_invoices: [update_payments_invoices_out_input]
+  shifts_categories_allowed: [update_memberships_shifts_categories_input]
 }
 
 input update_memberships_memberships_coshoppers_1_input {
@@ -4066,6 +4126,12 @@ input update_memberships_memberships_coshoppers_input {
   id: ID
   memberships_coshoppers_id: update_memberships_coshoppers_input
   memberships_id: update_memberships_input
+}
+
+input update_memberships_shifts_categories_input {
+  id: ID
+  memberships_id: update_memberships_input
+  shifts_categories_id: update_shifts_categories_input
 }
 
 input update_messages_campaigns_directus_users_input {
@@ -4145,4 +4211,9 @@ input update_payments_invoices_out_input {
   user_created: String
   user_updated: String
   payments_entries: [update_payments_invoices_entries_input]
+}
+
+input update_shifts_categories_input {
+  id: ID
+  name: String
 }

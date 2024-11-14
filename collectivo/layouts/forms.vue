@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import ProfileMenu2 from "./components/ProfileMenu2.vue";
+
 const pageTitle = useCollectivoTitle();
 const appConfig = useAppConfig();
 const { setLocale, t, locale } = useI18n();
@@ -15,30 +17,10 @@ const userMenu = [
 </script>
 
 <template>
-  <div class="h-screen max-w-full overflow-x-auto bg-[#f2fbf9] p-6 md:p-12">
+  <div class="h-screen max-w-full overflow-x-auto p-6 md:p-12">
     <!-- TOP RIGHT USER MENU -->
     <div class="flex justify-end">
-      <div v-if="user.isAuthenticated">
-        <UDropdown :items="userMenu" :popper="{ placement: 'bottom' }">
-          <div class="flex flex-row items-center">
-            <UIcon name="i-heroicons-user-circle" class="h-7 w-7 mr-2" />
-            <h4>{{ user.user?.first_name }} {{ user.user?.last_name }}</h4>
-          </div>
-
-          <template #item="{ item }">
-            <UIcon v-if="item.icon" class="h-5 w-5" :name="item.icon" />
-            <span>{{ t(item.label) }}</span>
-          </template>
-        </UDropdown>
-      </div>
-      <div v-else>
-        <NuxtLink to="/login">
-          <div class="flex flex-row items-center">
-            <UIcon name="i-heroicons-user-circle" class="h-7 w-7 mr-2" />
-            <h4>{{ t("Login") }}</h4>
-          </div>
-        </NuxtLink>
-      </div>
+      <ProfileMenu2 />
     </div>
 
     <!-- PAGE CONTENT -->

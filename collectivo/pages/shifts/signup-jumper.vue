@@ -14,9 +14,7 @@ definePageMeta({
 </script>
 
 <template>
-  <CollectivoContainer>
-    <ShiftsCalendar mode="jumper" />
-  </CollectivoContainer>
+  <ShiftsCalendar mode="jumper" />
 </template>
 
 <i18n lang="yaml">

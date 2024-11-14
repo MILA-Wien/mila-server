@@ -1,35 +1,38 @@
 <script setup lang="ts">
+import type { CalendarApi } from "@fullcalendar/core";
+
 const props = defineProps({
-  calendarRef: Object as PropType<{ getApi: Promise<() => FullCalendar> }>,
-  locale: String,
+  calendarApi: {
+    type: Object as PropType<CalendarApi>,
+    required: true,
+  },
 });
 
 const { t } = useI18n();
-const model = defineModel();
-const shiftTypes = model.value.allowedShiftTypes;
-const shiftCategories = model.value.allowedShiftCategories;
+const filterState = defineModel<ShiftsFilterState>({ required: true });
+const categories = filterState.value.categories;
+console.log("cats", categories);
 const displayedDate = ref();
-const calendarApi = ref(null);
+
+onMounted(async () => {
+  setView("dayGridMonth");
+});
+
+const calendarApi = props.calendarApi;
 
 // Get shift type with value from props
-const selectedShiftType = ref(
-  shiftTypes.find((type) => type.value === model.value.selectedShiftType),
-);
-
-const selectedShiftCategory = ref(
-  shiftCategories.find(
-    (type) => type.value === model.value.selectedShiftCategory,
-  ),
-);
+const selectedCategory = ref(filterState.value.selectedCategory);
+const displayNames = ref(filterState.value.displayNames);
+const displayUnfilled = ref(filterState.value.displayUnfilled);
 
 const prevHandler = () => {
-  calendarApi.value.prev();
-  displayedDate.value = calendarApi.value.view.title;
+  calendarApi.prev();
+  displayedDate.value = calendarApi.view.title;
 };
 
 const nextHandler = () => {
-  calendarApi.value.next();
-  displayedDate.value = calendarApi.value.view.title;
+  calendarApi.next();
+  displayedDate.value = calendarApi.view.title;
 };
 
 const views = [
@@ -53,26 +56,24 @@ const views = [
 const selectedView = ref(views[0]);
 
 function setView(view: string) {
-  calendarApi.value.changeView(view);
-  displayedDate.value = calendarApi.value.view.title;
+  calendarApi.changeView(view);
+  displayedDate.value = calendarApi.view.title;
 }
 
 watch(selectedView, (value) => {
   setView(value.view);
 });
 
-watch(selectedShiftType, (value) => {
-  model.value.selectedShiftType = value.value;
+watch(selectedCategory, (value) => {
+  filterState.value.selectedCategory = value;
 });
 
-watch(selectedShiftCategory, (value) => {
-  model.value.selectedShiftCategory = value.value;
+watch(displayNames, (value) => {
+  filterState.value.displayNames = value;
 });
 
-onMounted(async () => {
-  const calendar = await props.calendarRef.value.getApi;
-  calendarApi.value = calendar();
-  setView("dayGridMonth");
+watch(displayUnfilled, (value) => {
+  filterState.value.displayUnfilled = value;
 });
 </script>
 
@@ -105,27 +106,15 @@ onMounted(async () => {
       </div>
     </div>
     <div class="calendar-header__right">
-      <UFormGroup v-if="shiftCategories.length > 1" :label="t('Category')">
+      <UFormGroup v-if="categories.length > 1" :label="t('Category')">
         <USelectMenu
-          v-model="selectedShiftCategory"
-          :options="shiftCategories"
+          v-model="selectedCategory"
+          :options="categories"
           class="w-36"
         >
-          <template #label>{{ t(selectedShiftCategory.label) }}</template>
+          <template #label>{{ t(selectedCategory.name) }}</template>
           <template #option="{ option }">
-            {{ t(option.label) }}
-          </template>
-        </USelectMenu>
-      </UFormGroup>
-      <UFormGroup v-if="shiftTypes.length > 1" :label="t('Shift type')">
-        <USelectMenu
-          v-model="selectedShiftType"
-          :options="shiftTypes"
-          class="w-36"
-        >
-          <template #label>{{ t(selectedShiftType.label) }}</template>
-          <template #option="{ option }">
-            {{ t(option.label) }}
+            {{ t(option.name) }}
           </template>
         </USelectMenu>
       </UFormGroup>
@@ -136,11 +125,17 @@ onMounted(async () => {
           option-attribute="label"
           class="w-36"
         >
-          <template #label>{{ t(selectedView.label) }}</template>
+          <template #label>{{ t(selectedView?.label) }}</template>
           <template #option="{ option }">
             {{ t(option.label) }}
           </template>
         </USelectMenu>
+      </UFormGroup>
+      <UFormGroup :label="t('Settings')">
+        <div class="flex flex-col gap-2">
+          <UCheckbox v-model="displayNames" :label="t('Display names')" />
+          <UCheckbox v-model="displayUnfilled" :label="t('Unfilled shifts')" />
+        </div>
       </UFormGroup>
     </div>
   </div>
@@ -152,7 +147,7 @@ onMounted(async () => {
   &__left {
     @apply flex flex-col items-start grow gap-2 justify-between lg:justify-start;
     &__title {
-      @apply font-semibold text-2xl;
+      @apply text-2xl;
     }
 
     &__buttons {
@@ -181,8 +176,11 @@ de:
   One-time: Einmalig
   Shift type: Schichttyp
   Display: Anzeige
+  Filters: Filter
+  Settings: Einstellungen
   "Registration regular": "Anmeldung Festschicht"
   "Registration one-time": "Anmeldung Einmalig"
-  "Unfilled shifts": "Ungefüllte Schichten"
+  "Unfilled shifts": "Offene Schichten"
+  "Display names": "Namen anzeigen"
   "All shifts": "Alle Schichten"
 </i18n>

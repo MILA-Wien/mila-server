@@ -1,35 +1,32 @@
-import type { DateTime } from "luxon";
+declare module "h3" {
+  interface EventHandlerRequest {
+    context: {
+      auth?: ServerUserInfo;
+    };
+  }
+}
 
 declare global {
+  interface ServerUserInfo {
+    user: string;
+    email: string;
+    mship: number | null;
+    studioAdmin: boolean;
+    shiftAdmin: boolean;
+  }
+
   interface CollectivoSchema {
     collectivo_extensions: CollectivoExtension[];
     collectivo_tiles: CollectivoTile[];
     collectivo_tags: CollectivoTag[];
     directus_users: CollectivoUser[];
     memberships: MembershipsMembership[];
-    shifts_skills: ShiftsSkill[];
     shifts_assignments: ShiftsAssignment[];
     shifts_absences: ShiftsAbsence[];
     shifts_logs: ShiftsLog[];
     shifts_shifts: ShiftsShift[];
+    shifts_categories: ShiftsCategory[];
     shifts_holidays_public: ShiftsPublicHoliday[];
-  }
-
-  interface MembershipsMembership {
-    id: number;
-    name: string;
-    memberships_user: DirectusUser | number;
-    memberships_status: string;
-    memberships_type: string;
-    memberships_shares: number;
-    memberships_date_approved: string;
-  }
-
-  interface DataWrapper<T> {
-    data: T | null | undefined;
-    error: Error | null | undefined | unknown;
-    loading: boolean;
-    saving: boolean;
   }
 
   interface CollectivoUser {
@@ -37,6 +34,7 @@ declare global {
     first_name: string;
     last_name: string;
     email: string;
+    hide_name: boolean;
     collectivo_tags?: { collectivo_tags_id: number }[];
     memberships?: MembershipsMembership[];
     [key: string]: string | undefined;
@@ -53,7 +51,8 @@ declare global {
     memberships_shares: number;
     shifts_user_type: ShiftsUserType;
     shifts_counter: number;
-    shifts_skills?: string[];
+    shifts_can_be_coordinator: boolean;
+    shifts_categories_allowed: { shifts_category_id: ShiftsCategory }[];
     coshoppers?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
     kids?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
   }
@@ -96,25 +95,20 @@ declare global {
     tiles_is_external: boolean;
   }
 
-  interface CollectivoExtension {
-    id: number;
-    extensions_name: string;
-    extensions_version: string;
-    extensions_schema_version: number;
-    extensions_schema_is_latest: boolean;
-  }
-
-  interface CollectivoSettings {
-    id: number;
-    collectivo_project_name: string;
-    collectivo_project_description: string;
-    collectivo_members_role: string;
-    collectivo_admin_role: string;
-  }
-
   // Shifts
+  interface ShiftsFilter {
+    label: string;
+    value: string;
+  }
+  interface ShiftsFilterState {
+    categories: ShiftsCategory[];
+    selectedCategory: ShiftsCategory;
+    displayUnfilled: boolean;
+    displayNames: boolean;
+  }
+
   interface ShiftsShift {
-    id?: number;
+    id: number;
     shifts_name: string;
     shifts_from: string;
     shifts_to?: string;
@@ -125,7 +119,7 @@ declare global {
     shifts_needs_coordinator: boolean;
     shifts_allow_self_assignment: boolean;
     shifts_is_regular: boolean;
-    shifts_category: string;
+    shifts_category_2?: number;
     shifts_repeats_every?: number;
     shifts_status: string;
     shifts_description?: string;
@@ -142,11 +136,11 @@ declare global {
   interface ShiftsPublicHoliday {
     id: number;
     name: string;
-    date: Date;
+    date: string;
   }
 
   interface ShiftsAssignment {
-    id?: number;
+    id: number;
     shifts_is_regular: boolean;
     shifts_from: string;
     shifts_to?: string;
@@ -170,7 +164,6 @@ declare global {
     shifts_membership: MembershipsMembership | number;
     shifts_is_for_all_assignments: boolean;
     shifts_is_holiday?: boolean;
-    _rrule?: RRule | RRuleSet;
   }
 
   interface ShiftsAbsenceGet extends ShiftsAbsence {
@@ -196,10 +189,15 @@ declare global {
     shifts_shift?: ShiftsShift | number;
   }
 
+  interface ShiftsCategory {
+    id: number;
+    name: string;
+  }
+
   interface ShiftOccurrence {
     shift: ShiftsShift;
-    start: DateTime;
-    end: DateTime;
+    start: Date;
+    end: Date;
     shiftRule: RRuleSet;
     n_assigned: number;
     assignments: AssignmentOccurrence[];
@@ -209,10 +207,15 @@ declare global {
 
   interface AssignmentRrule {
     assignment: ShiftsAssignment;
-    absences: ShiftsAbsence[];
+    absences: AbsenceRrule[];
     shift?: ShiftsShift;
     rrule: RRule | RRuleSet;
     rruleWithAbsences: RRule | RRuleSet;
+  }
+
+  interface AbsenceRrule {
+    absence: ShiftsAbsence;
+    rrule: RRule | RRuleSet;
   }
 
   interface AssignmentOccurrence {

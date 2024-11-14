@@ -1,0 +1,25 @@
+{
+  "collection": "shifts_shifts",
+  "field": "shifts_category_2",
+  "related_collection": "shifts_categories",
+  "meta": {
+    "junction_field": null,
+    "many_collection": "shifts_shifts",
+    "many_field": "shifts_category_2",
+    "one_allowed_collections": null,
+    "one_collection": "shifts_categories",
+    "one_collection_field": null,
+    "one_deselect_action": "nullify",
+    "one_field": null,
+    "sort_field": null
+  },
+  "schema": {
+    "table": "shifts_shifts",
+    "column": "shifts_category_2",
+    "foreign_key_table": "shifts_categories",
+    "foreign_key_column": "id",
+    "constraint_name": "shifts_shifts_shifts_category_2_foreign",
+    "on_update": "NO ACTION",
+    "on_delete": "SET NULL"
+  }
+}

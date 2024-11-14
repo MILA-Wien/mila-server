@@ -1,0 +1,42 @@
+{
+  "collection": "memberships_shifts_categories",
+  "field": "memberships_id",
+  "type": "integer",
+  "meta": {
+    "collection": "memberships_shifts_categories",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "memberships_id",
+    "group": null,
+    "hidden": true,
+    "interface": null,
+    "note": null,
+    "options": null,
+    "readonly": false,
+    "required": false,
+    "sort": 2,
+    "special": null,
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "memberships_id",
+    "table": "memberships_shifts_categories",
+    "data_type": "integer",
+    "default_value": null,
+    "max_length": null,
+    "numeric_precision": 32,
+    "numeric_scale": 0,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": "memberships",
+    "foreign_key_column": "id"
+  }
+}

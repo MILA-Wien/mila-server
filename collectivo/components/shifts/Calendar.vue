@@ -4,35 +4,28 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import luxonPlugin from "@fullcalendar/luxon3";
-import { DateTime } from "luxon";
-import type { CalendarOptions } from "@fullcalendar/core";
+
+import type { CalendarOptions, CalendarApi } from "@fullcalendar/core";
 
 const props = defineProps({
   mode: {
-    type: String,
+    type: String as PropType<"jumper" | "admin">,
     default: null,
   },
 });
-
+const { locale, t } = useI18n();
 const user = useCollectivoUser();
 const shiftActionModalisOpen = ref(false);
 const selectedShiftOccurence = ref(null);
-const showCalendar = ref(true);
+const adminMode = props.mode === "admin";
+const colors = ["#26a195", "#FF8C00", "#B22222"];
 
-// Watch locale change
-const { locale } = useI18n();
-
+// Set up full calendar
 // Dates are used without time, time always being set to UTC 00:00
+const calendarRef = ref<{ getApi: () => CalendarApi } | null>(null);
 const calendarOptions: Ref<CalendarOptions> = ref({
   timeZone: "UTC",
-  plugins: [
-    dayGridPlugin,
-    listPlugin,
-    timeGridPlugin,
-    interactionPlugin,
-    luxonPlugin,
-  ],
+  plugins: [dayGridPlugin, listPlugin, timeGridPlugin, interactionPlugin],
   initialView: "dayGridMonth",
   headerToolbar: false,
   firstDay: 1, // Monday
@@ -60,162 +53,130 @@ const calendarOptions: Ref<CalendarOptions> = ref({
   },
 });
 
-watch(locale, () => {
-  showCalendar.value = false;
-  calendarOptions.value.locale = locale.value;
-  registerEventUpdate();
-  showCalendar.value = true;
+// Set up calendar filters (async)
+// Admin view includes all categories + filters
+// User view includes only allowed categories
+const calendarFilters = ref<ShiftsFilterState>({
+  categories: [
+    {
+      id: 0,
+      name: "Normal",
+    },
+  ],
+  selectedCategory: {
+    id: 0,
+    name: "Normal",
+  },
+  displayNames: false,
+  displayUnfilled: adminMode ? false : true,
 });
-
-interface ShiftType {
-  label: string;
-  value: string;
-  icon?: string;
+props.mode == "admin" ? loadFiltersAdmin() : loadFiltersUser();
+async function loadFiltersAdmin() {
+  calendarFilters.value.categories.unshift({
+    id: -1,
+    name: "Alle",
+  });
+  calendarFilters.value.selectedCategory = {
+    id: -1,
+    name: "Alle",
+  };
+  calendarFilters.value.categories.push(
+    ...(await useShiftsCategories().loadPromise),
+  );
+}
+async function loadFiltersUser() {
+  const cats = await useShiftsCategories().loadPromise;
+  console.log("usercats", user.value.membership?.shifts_categories_allowed);
+  for (const category of user.value.membership?.shifts_categories_allowed ||
+    []) {
+    calendarFilters.value.categories.push(cats.find((c) => c.id === category));
+  }
 }
 
-const possibleShiftTypes: { [key: string]: ShiftType } = {
-  regular: {
-    label: "Registration regular",
-    value: "regular",
-    icon: "i-heroicons-squares-plus",
-  },
-  jumper: {
-    label: "Registration one-time",
-    value: "jumper",
-    icon: "i-heroicons-stop",
-  },
-  unfilled: {
-    label: "Unfilled shifts",
-    value: "unfilled",
-  },
-  all: {
-    label: "All shifts",
-    value: "all",
-  },
-};
+// Mount component and load events
+onMounted(async () => {
+  loadEvents(true);
 
-const possibleShiftCategories: { [key: string]: ShiftType } = {
-  all: {
-    label: "Alle",
-    value: "all",
-  },
-  normal: {
-    label: "Normal",
-    value: "normal",
-  },
-  operativos: {
-    label: "Operativos",
-    value: "operativos",
-  },
-  accounting: {
-    label: "Accounting",
-    value: "accounting",
-  },
-  "it-support": {
-    label: "IT Support",
-    value: "it-support",
-  },
-  "public-relations": {
-    label: "Public relations",
-    value: "public-relations",
-  },
-};
-
-// List of shift categories that match with user.membership?.shifts_skills
-function getUserShiftCategories() {
-  const userSkills = user.value.membership?.shifts_skills || [];
-  return [
-    possibleShiftCategories.normal,
-    ...Object.values(
-      Object.fromEntries(
-        Object.entries(possibleShiftCategories).filter(([key]) =>
-          userSkills.includes(key),
-        ),
-      ),
-    ),
-  ];
-}
-
-const propsShiftTypeToList: { [key: string]: ShiftType[] } = {
-  jumper: [possibleShiftTypes.jumper],
-  admin: [possibleShiftTypes.all, possibleShiftTypes.unfilled],
-};
-
-const propsShiftCategoryToList: { [key: string]: ShiftType[] } = {
-  jumper: getUserShiftCategories(), //[possibleShiftCategories.all],
-  admin: [...Object.values(possibleShiftCategories)],
-};
-
-const customSettings = ref({
-  allowedShiftTypes: propsShiftTypeToList[props.mode],
-  selectedShiftType: propsShiftTypeToList[props.mode][0].value,
-  allowedShiftCategories: propsShiftCategoryToList[props.mode],
-  selectedShiftCategory: propsShiftCategoryToList[props.mode][0].value,
+  // Watch changes in date selection and update events
+  const calendar = await calendarRef.value!.getApi();
+  calendar.on("datesSet", (infos) => {
+    loadEventsInner(infos.start, infos.end, true);
+  });
 });
-
-const calendarRef = ref(null);
 
 // Watch changes in settings and update events
 watch(
   [
-    () => customSettings.value.selectedShiftType,
-    () => customSettings.value.selectedShiftCategory,
+    () => calendarFilters.value.selectedCategory,
+    () => calendarFilters.value.displayNames,
+    () => calendarFilters.value.displayUnfilled,
   ],
   (_) => {
-    registerEventUpdate();
+    loadEvents();
   },
 );
 
-const calendarComputed = () => {
-  return calendarRef;
-};
-
-onMounted(() => {
-  registerEventUpdate();
+// Watch changes in locale (needs re-render)
+const showCalendar = ref(true);
+watch(locale, () => {
+  showCalendar.value = false;
+  calendarOptions.value.locale = locale.value;
+  loadEvents();
+  showCalendar.value = true;
 });
 
-const registerEventUpdate = async () => {
-  const calendar = await calendarRef.value.getApi();
-
-  calendar.on("datesSet", (infos) => {
-    updateEvents(
-      DateTime.fromJSDate(infos.start),
-      DateTime.fromJSDate(infos.end),
-    );
-  });
-
-  await updateEvents(
-    DateTime.fromJSDate(calendar.view.activeStart),
-    DateTime.fromJSDate(calendar.view.activeEnd),
+// Fetch events based on selected calendar dates
+const loadEvents = async (reload = false) => {
+  const calendar = await calendarRef.value!.getApi();
+  await loadEventsInner(
+    calendar.view.activeStart,
+    calendar.view.activeEnd,
+    reload,
   );
 };
 
-const colors = ["#2E8B57", "#FF8C00", "#B22222"];
+type LoadedOccurrences = Awaited<ReturnType<typeof fetchOccurrences>>;
+const loadedOccurrences = ref<LoadedOccurrences | null>(null);
 
-async function updateEvents(from, to) {
-  const [occurrences, publicHolidays] = await getShiftOccurrences(from, to, {
-    shiftType: customSettings.value.selectedShiftType,
-    shiftCategory: customSettings.value.selectedShiftCategory,
-    admin: props.mode === "admin",
+async function fetchOccurrences(from: Date, to: Date) {
+  console.log("adminmode", adminMode);
+  return await $fetch("/api/shifts/occurrences", {
+    query: {
+      from: from.toISOString(),
+      to: to.toISOString(),
+      admin: adminMode,
+    },
   });
+}
 
+// Fetch events based on given timespan
+async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
+  // Fetch shift occurrences from API
+  if (reload) {
+    loadedOccurrences.value = await fetchOccurrences(from, to);
+  }
+
+  if (!loadedOccurrences.value) return;
+
+  // Prepare events array
   const events = [];
+  const allCats = calendarFilters.value.selectedCategory.id === -1;
+  const unfilled = calendarFilters.value.displayUnfilled;
 
-  // Display public holidays
-  for (const holiday of publicHolidays) {
+  // Add public holidays
+  for (const holiday of loadedOccurrences.value.publicHolidays) {
     events.push({
-      title: holiday.name,
+      title: t("Public holiday"),
       start: holiday.date,
-
       allDay: true,
       color: "gray",
     });
   }
 
-  // Display occurrences
-  for (const occurrence of occurrences) {
+  // Add shift occurrences
+  for (const occurrence of loadedOccurrences.value.occurrences) {
     const n_missing = occurrence.shift.shifts_slots - occurrence.n_assigned;
-    const start = occurrence.start.toJSDate();
+    const start = new Date(occurrence.start);
     const isPast = start < new Date();
     let title = occurrence.shift.shifts_name;
     let color = "";
@@ -231,16 +192,9 @@ async function updateEvents(from, to) {
         continue;
       }
     }
+
+    // Special: show operativo names
     if (props.mode === "admin" && !isPast) {
-      if (occurrence.shift.shifts_category === "operativos") {
-        if (occurrence.n_assigned > 0) {
-          const assignedUser =
-            occurrence.assignments[0].assignment.shifts_membership
-              .memberships_user;
-          title +=
-            " [" + assignedUser.first_name + " " + assignedUser.last_name + "]";
-        }
-      }
       title +=
         " [" +
         occurrence.n_assigned +
@@ -249,10 +203,40 @@ async function updateEvents(from, to) {
         "]";
     }
 
+    if (calendarFilters.value.displayNames) {
+      for (const assignment of occurrence.assignments) {
+        const u = assignment.assignment.shifts_membership.memberships_user;
+        if (u.first_name) {
+          title += "\n" + u.first_name + " " + u.last_name;
+        }
+      }
+    }
+
+    // Apply filters
+    if (unfilled && occurrence.n_assigned >= occurrence.shift.shifts_slots) {
+      continue;
+    }
+
+    if (
+      calendarFilters.value.selectedCategory.id == 0 &&
+      occurrence.shift.shifts_category_2 != null
+    ) {
+      continue;
+    }
+
+    if (
+      !allCats &&
+      calendarFilters.value.selectedCategory.id != 0 &&
+      occurrence.shift.shifts_category_2 !==
+        calendarFilters.value.selectedCategory.id
+    ) {
+      continue;
+    }
+
     events.push({
       title: title,
-      start: occurrence.start.toJSDate(),
-      end: occurrence.end.toJSDate(),
+      start: occurrence.start,
+      end: occurrence.end,
       allDay: occurrence.shift.shifts_is_all_day,
       shiftOccurence: occurrence,
       color: color,
@@ -266,32 +250,32 @@ async function updateEvents(from, to) {
 <template>
   <div v-if="showCalendar" class="">
     <ShiftsCalendarHeader
-      v-model="customSettings"
-      :calendar-ref="calendarComputed()"
+      v-if="calendarRef"
+      v-model="calendarFilters"
+      :calendar-api="calendarRef.getApi()"
     />
     <full-calendar ref="calendarRef" :options="calendarOptions" />
   </div>
-
-  <template v-if="props.mode != 'admin'">
-    <ShiftsAssignmentPostModal
+  <template v-if="adminMode">
+    <ShiftsCalendarModalAdmin
       v-if="shiftActionModalisOpen && selectedShiftOccurence"
       v-model:is-open="shiftActionModalisOpen"
       :shift-occurence="selectedShiftOccurence"
-      :shift-type="customSettings.selectedShiftType"
+      @data-has-changed="loadEvents"
     />
   </template>
   <template v-else>
-    <ShiftsAdminModal
+    <ShiftsCalendarModalUser
       v-if="shiftActionModalisOpen && selectedShiftOccurence"
       v-model:is-open="shiftActionModalisOpen"
       :shift-occurence="selectedShiftOccurence"
-      :shift-type="customSettings.selectedShiftType"
-      @data-has-changed="registerEventUpdate"
+      :shift-type="props.mode"
     />
   </template>
 </template>
 
 <style scoped>
+/* Cursor style on calendar events */
 :deep(.fc-event) {
   cursor: pointer;
 }
@@ -300,8 +284,12 @@ async function updateEvents(from, to) {
 :deep(.fc-event-title) {
   white-space: pre-line;
 }
-
 :deep(.fc-event-main-frame) {
   flex-direction: column;
 }
 </style>
+
+<i18n lang="yaml">
+de:
+  "Public holiday": "Feiertag"
+</i18n>

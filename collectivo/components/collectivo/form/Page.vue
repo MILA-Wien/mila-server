@@ -71,7 +71,7 @@ async function onSubmit(data: any) {
 </script>
 
 <template>
-  <CollectivoContainer v-if="form">
+  <template v-if="form">
     <CollectivoFormBuilder
       v-if="!submitted"
       :fields="form.fields"
@@ -97,10 +97,10 @@ async function onSubmit(data: any) {
     </template>
     <div v-if="debug">
       <div class="">
-        <UButton class="btn" @click="submitted = !submitted">
+        <UButton class="btn w-full" @click="submitted = !submitted">
           {{ t("Toggle success page") }}
         </UButton>
       </div>
     </div>
-  </CollectivoContainer>
+  </template>
 </template>

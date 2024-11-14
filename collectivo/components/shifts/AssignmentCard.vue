@@ -21,8 +21,8 @@ const shift = assignment.shifts_shift as ShiftsShift;
 const user = useCollectivoUser();
 const emit = defineEmits(["reload"]);
 
-function getTimeString(occurence: Date) {
-  const occ = DateTime.fromJSDate(occurence);
+function getTimeString(occurence: string) {
+  const occ = DateTime.fromISO(occurence);
   const weekday = occ.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
   const startTime = shift.shifts_from_time?.slice(0, 5);
   const endTime = shift.shifts_to_time?.slice(0, 5);
@@ -119,6 +119,7 @@ async function requestSignOut() {
           <div class="flex flex-wrap gap-3 pt-4">
             <UButton
               v-if="!assignment.shifts_is_regular"
+              size="sm"
               @click="signOutModalIsOpen = true"
               >{{ t("Sign out") }}
             </UButton>
@@ -140,7 +141,9 @@ async function requestSignOut() {
           <UButton color="gray" @click="signOutModalIsOpen = false">
             {{ t("Cancel") }}
           </UButton>
-          <UButton @click="requestSignOut">{{ t("Sign out") }}</UButton>
+          <UButton size="sm" @click="requestSignOut">{{
+            t("Sign out")
+          }}</UButton>
         </div>
       </div>
     </UModal>

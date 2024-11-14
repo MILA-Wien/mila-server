@@ -499,10 +499,10 @@ async function fillOutAll() {
       </template>
     </template>
     <div class="basis-full" />
-    <div class="form-field mt-2">
+    <div class="form-field mt-2 w-full">
       <UButton
         v-if="props.submit"
-        class="btn"
+        class="btn w-full"
         variant="solid"
         color="green"
         size="lg"
@@ -549,7 +549,7 @@ async function fillOutAll() {
 }
 
 .form-field {
-  @apply p-2;
+  @apply py-2 pr-4;
 }
 
 .form-field-lg {

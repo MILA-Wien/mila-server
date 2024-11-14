@@ -13,7 +13,7 @@ export const getShiftOccurrences = async (
   from: DateTime,
   to: DateTime,
   options: GetShiftOccurrencesOptions = {},
-): Promise<[ShiftOccurrence[], ShiftsPublicHoliday[]]> => {
+): Promise<ShiftOccurrence[]> => {
   const directus = useDirectus();
   const { shiftType } = options;
   const isJumper = shiftType === "jumper";
@@ -184,7 +184,7 @@ export const getShiftOccurrences = async (
     return a.start.toMillis() - b.start.toMillis();
   });
 
-  return [occurrences, publicHolidays];
+  return occurrences;
 };
 
 // Get all occurrences for a shift in a given timeframe
