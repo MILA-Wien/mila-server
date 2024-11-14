@@ -1463,6 +1463,66 @@
     "_syncId": "7737c340-96ae-4212-8205-bd8f06c255c0"
   },
   {
+    "collection": "memberships_shifts_categories",
+    "action": "create",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "ca3234d9-3ab2-4895-b2fe-0e8c68539f4f"
+  },
+  {
+    "collection": "memberships_shifts_categories",
+    "action": "delete",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "2a48ffcf-d6d9-4ff7-a93a-905be3e03ad2"
+  },
+  {
+    "collection": "memberships_shifts_categories",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "5d7c5d62-525d-4ad7-b6dd-12a0c6e41f37"
+  },
+  {
+    "collection": "memberships_shifts_categories",
+    "action": "share",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "613c9b4f-eded-42bd-a7e6-3c5cd0140377"
+  },
+  {
+    "collection": "memberships_shifts_categories",
+    "action": "update",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "813cf6c5-3da7-47be-9889-95798b264ff0"
+  },
+  {
     "collection": "memberships",
     "action": "create",
     "permissions": {},
@@ -2084,6 +2144,126 @@
     "_syncId": "e49736cc-c802-4933-8625-4d8eb964dbfe"
   },
   {
+    "collection": "shifts_categories",
+    "action": "create",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "4f9a752a-edfe-4e37-8216-697c19741cb7"
+  },
+  {
+    "collection": "shifts_categories",
+    "action": "delete",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "5cb063ee-234c-4a19-87a9-20b4a3f82667"
+  },
+  {
+    "collection": "shifts_categories",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "6ec23e90-d61c-4f23-9503-84ee6a0e7fa9"
+  },
+  {
+    "collection": "shifts_categories",
+    "action": "share",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "d722796f-4311-48e8-abaa-48b49b5f96f7"
+  },
+  {
+    "collection": "shifts_categories",
+    "action": "update",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "2e96f51d-2487-4905-ac15-57eb74774474"
+  },
+  {
+    "collection": "shifts_holidays_public",
+    "action": "create",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "137b7e64-56cd-464f-a1cf-2d5a74e9ab18"
+  },
+  {
+    "collection": "shifts_holidays_public",
+    "action": "delete",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "1a6696ee-90f3-458f-a4bc-b43049361b2a"
+  },
+  {
+    "collection": "shifts_holidays_public",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "8a54dcae-217e-40dd-9159-3628ffb2a6c8"
+  },
+  {
+    "collection": "shifts_holidays_public",
+    "action": "share",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "1ca0aba6-65cf-473d-aca0-2c27729ff8ee"
+  },
+  {
+    "collection": "shifts_holidays_public",
+    "action": "update",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "8ef567da-1d62-45a4-9125-1251b749fb09"
+  },
+  {
     "collection": "shifts_logs",
     "action": "create",
     "permissions": {},
@@ -2379,6 +2559,18 @@
     "_syncId": "1f766693-f4f4-4c53-9819-447a78656099"
   },
   {
+    "collection": "memberships_shifts_categories",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
+    "_syncId": "ac7a3654-2ca0-48e9-9a89-235cd9059701"
+  },
+  {
     "collection": "memberships",
     "action": "read",
     "permissions": {
@@ -2419,7 +2611,9 @@
       "memberships_user_search",
       "shifts_skills",
       "shifts_orientation_date",
-      "memberships_card_id"
+      "memberships_card_id",
+      "shifts_can_be_coordinator",
+      "shifts_categories_allowed"
     ],
     "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
     "_syncId": "1414e20a-39a0-4b70-9dce-108135a7c406"
@@ -2500,6 +2694,18 @@
     ],
     "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
     "_syncId": "9d335557-9fcf-45eb-96f7-11f9a1839667"
+  },
+  {
+    "collection": "shifts_categories",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
+    "_syncId": "94963f74-0f73-45fc-b9dc-762218f40743"
   },
   {
     "collection": "shifts_holidays_public",
