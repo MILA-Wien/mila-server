@@ -8,11 +8,13 @@ const currentDir = dirname(fileURLToPath(import.meta.url));
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
+
   routeRules: {
     "/mitglied-werden": { redirect: "/register" },
     "/memberships/register": { redirect: "/register" },
     "/shifts/dashboard": { redirect: "/shifts" },
   },
+
   runtimeConfig: {
     collectivoVersion: pkg.version,
     apiToken: process.env.COLLECTIVO_API_TOKEN || "badToken",
@@ -42,30 +44,38 @@ export default defineNuxtConfig({
       directusUrl: process.env.DIRECTUS_URL || "http://localhost:8055",
     },
   },
+
   vite: {
     optimizeDeps: {
       include: ["yup"],
     },
   },
+
   colorMode: {
     preference: "light",
   },
+
   hooks: {},
   modules: ["@nuxt/ui", "@nuxtjs/i18n", "@nuxt/eslint"],
+
   i18n: {
-    lazy: true, // TODO: Lazy loading does not work with current switch
+    lazy: true,
     strategy: "no_prefix",
+    langDir: "i18n/locales/",
     defaultLocale: "de",
-    langDir: "./lang",
     locales: [
       { code: "en", files: ["en.json", "shifts/en.json"] },
       { code: "de", files: ["de.json", "shifts/de.json"] },
     ],
   },
+
   css: ["~/assets/css/main.css"],
+
   ui: {
     global: true,
     icons: ["heroicons"],
     safelistColors: ["primary", "green", "orange", "blue", "pink", "red"],
   },
+
+  compatibilityDate: "2024-11-14",
 });
