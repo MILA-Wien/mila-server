@@ -1,4 +1,8 @@
 export default defineAppConfig({
+  mila: {
+    supportNumber: "0670 202 63 68",
+    supportNumberLink: "tel:+436702026368",
+  },
   localesDict: {
     de: "Deutsch",
     en: "English",

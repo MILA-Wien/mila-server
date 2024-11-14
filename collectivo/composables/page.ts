@@ -30,12 +30,6 @@ export const useCollectivoMenus = () =>
           to: "/",
         },
         {
-          label: "Handbook",
-          icon: "i-heroicons-book-open",
-          to: "https://handbuch.mila.wien/books/mitglieder-handbuch",
-          external: true,
-        },
-        {
           label: "Shifts",
           icon: "i-heroicons-calendar-days-solid",
           to: "/shifts/dashboard",
@@ -44,6 +38,11 @@ export const useCollectivoMenus = () =>
               user.membership && user.membership.shifts_user_type != "inactive",
             );
           },
+        },
+        {
+          label: "Help",
+          icon: "i-heroicons-question-mark-circle",
+          to: "/help",
         },
       ],
       main_public: [],
