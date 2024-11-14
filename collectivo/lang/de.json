@@ -18,8 +18,10 @@
   "Add": "Hinzufügen",
   "Remove": "Entfernen",
   "Submit": "Absenden",
-
   "Category": "Kategorie",
+
+  "Stay anonymous": "Anonym bleiben",
+  "Do not show my name to other members on the platform.": "Meinen Namen nicht für andere Mitglieder auf der Plattform anzeigen.",
 
   "shifts:normal": "Normal",
   "shifts:accounting": "Buchhaltung",
