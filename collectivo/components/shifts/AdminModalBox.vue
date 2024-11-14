@@ -16,7 +16,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="flex flex-col w-full rounded-md p-3">
+  <div class="flex flex-col w-full p-3">
     <div class="flex flex-row mb-2">
       <div class="grow">
         <h5><slot name="header" /></h5>

@@ -474,17 +474,15 @@ function checkIfMshipInAssignments(mship: number) {
               collection="shifts_assignments"
             >
               <template #header>
-                <p class="font-bold">
-                  <span v-if="assignment.assignment.shifts_is_coordination">
-                    {{ t("Shift coordination") }}:
-                  </span>
-                  {{
-                    displayMembership(
-                      assignment.assignment
-                        .shifts_membership as MembershipsMembership,
-                    )
-                  }}
-                </p>
+                <span v-if="assignment.assignment.shifts_is_coordination">
+                  {{ t("Shift coordination") }}:
+                </span>
+                {{
+                  displayMembership(
+                    assignment.assignment
+                      .shifts_membership as MembershipsMembership,
+                  )
+                }}
               </template>
 
               <template #bottom-right>
@@ -494,7 +492,7 @@ function checkIfMshipInAssignments(mship: number) {
                 >
                   <UButton
                     icon="i-heroicons-trash-16-solid"
-                    color="gray"
+                    size="sm"
                     :label="t('Remove')"
                     @click="startRemoveAssignmentFlow(assignment, ai)"
                   />
