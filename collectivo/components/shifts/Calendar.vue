@@ -86,7 +86,7 @@ async function loadFiltersAdmin() {
 }
 async function loadFiltersUser() {
   const cats = await useShiftsCategories().loadPromise;
-  console.log("usercats", user.value.membership?.shifts_categories_allowed);
+
   for (const category of user.value.membership?.shifts_categories_allowed ||
     []) {
     calendarFilters.value.categories.push(cats.find((c) => c.id === category));
@@ -139,7 +139,6 @@ type LoadedOccurrences = Awaited<ReturnType<typeof fetchOccurrences>>;
 const loadedOccurrences = ref<LoadedOccurrences | null>(null);
 
 async function fetchOccurrences(from: Date, to: Date) {
-  console.log("adminmode", adminMode);
   return await $fetch("/api/shifts/occurrences", {
     query: {
       from: from.toISOString(),
