@@ -1,13 +1,13 @@
 :root {
-  --pf-global--primary-color--100: #26a195;
-  --pf-global--primary-color--200: #228f84;
+  --pf-global--primary-color--100: #00867a;
+  --pf-global--primary-color--200: #00867a;
   --default-background-color: #97a1cdff;
-  --link-hover-color: #228f84;
+  --link-hover-color: #009a8c;
 }
 
 .login-pf body {
   background-image: none;
-  background-color: #26a195;
+  background-color: #00867a;
 }
 
 .login-pf a:hover {

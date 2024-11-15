@@ -18,7 +18,7 @@ const user = useCollectivoUser();
 const shiftActionModalisOpen = ref(false);
 const selectedShiftOccurence = ref(null);
 const adminMode = props.mode === "admin";
-const colors = ["#26a195", "#FF8C00", "#B22222"];
+const colors = ["#00867a", "#ce6a28", "#942020"];
 
 // Set up full calendar
 // Dates are used without time, time always being set to UTC 00:00
@@ -183,7 +183,7 @@ async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
 
     if (props.mode === "admin") {
       color = isPast
-        ? "#808080"
+        ? "#6d6d6d"
         : colors[n_missing >= 0 && n_missing < 3 ? n_missing : 2];
     } else {
       color = colors[0];

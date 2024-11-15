@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss";
 
+// See https://uicolors.app/
+
 export default <Partial<Config>>{
   theme: {
     extend: {
@@ -7,10 +9,10 @@ export default <Partial<Config>>{
         black: "#333333",
         white: "#ffffff",
 
-        milaGreen: "#26a195",
-        milaGreenHover: "#2db3a5", // original
-        milaPurple: "#3b2776",
-        milaPurpleHover: "#4d3e7b",
+        milaGreen: "#00867a", // Elf Green 700 - CI
+        milaGreenHover: "#009a8c",
+        milaPurple: "#3b2776", // Meteorite 900 - CI
+        milaPurpleHover: "#554588",
 
         // Main color
         green: {

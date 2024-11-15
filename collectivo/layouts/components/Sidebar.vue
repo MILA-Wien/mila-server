@@ -12,7 +12,7 @@ const publicMenuItems = menus.value.main_public;
 
 <template>
   <div
-    class="hidden md:flex w-44 lg:w-52 flex-col text-white fixed h-screen bg-[#26a195]"
+    class="hidden md:flex w-44 lg:w-52 flex-col text-white fixed h-screen bg-milaGreen"
   >
     <div
       class="flex justify-center items-center p-1 mt-8 lg:mt-10 mx-7 lg:mx-8"

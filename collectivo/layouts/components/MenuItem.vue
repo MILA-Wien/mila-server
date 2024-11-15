@@ -61,7 +61,7 @@ async function filterItem(item: CollectivoMenuItem) {
 
   &:hover,
   &.router-link-exact-active {
-    @apply bg-[#2db3a5];
+    @apply bg-milaGreenHover;
   }
 }
 
