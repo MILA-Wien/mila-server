@@ -27,14 +27,17 @@ html {
 
 h1 {
   @apply font-Avory text-3xl md:text-4xl mt-8 mb-2;
+  letter-spacing: 1.5px;
 }
 
 h2 {
   @apply font-Avory text-2xl md:text-3xl mb-2;
+  letter-spacing: 0.7px;
 }
 
 h3 {
   @apply font-Avory text-2xl;
+  letter-spacing: 0.7px;
 }
 
 h4 {
