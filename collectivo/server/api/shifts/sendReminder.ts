@@ -49,6 +49,7 @@ async function getAssignments() {
         "shifts_shift",
         "shifts_is_regular",
         "shifts_is_coordination",
+        "send_reminder",
         {
           shifts_membership: [
             "id",
@@ -165,6 +166,11 @@ async function sendReminders(occurrences: any[], automation: any) {
 
   for (const occ of occurrences) {
     const assignment = occ.assignment.assignment;
+
+    if (!assignment.send_reminder) {
+      continue;
+    }
+
     const user = assignment.shifts_membership.memberships_user;
     const shift = occ.assignment.shift!;
 

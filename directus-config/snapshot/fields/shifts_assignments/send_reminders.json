@@ -1,28 +1,28 @@
 {
   "collection": "shifts_assignments",
-  "field": "shifts_is_coordination",
+  "field": "send_reminders",
   "type": "boolean",
   "meta": {
     "collection": "shifts_assignments",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_is_coordination",
+    "field": "send_reminders",
     "group": null,
     "hidden": false,
     "interface": "boolean",
-    "note": null,
+    "note": "Erinnerungs-E-Mails vor Schichtantritt aktivieren",
     "options": null,
     "readonly": false,
-    "required": true,
-    "sort": 7,
+    "required": false,
+    "sort": 6,
     "special": [
       "cast-boolean"
     ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Schichtkoordinator*in"
+        "translation": "Erinnerung senden"
       }
     ],
     "validation": null,
@@ -30,10 +30,10 @@
     "width": "half"
   },
   "schema": {
-    "name": "shifts_is_coordination",
+    "name": "send_reminders",
     "table": "shifts_assignments",
     "data_type": "boolean",
-    "default_value": false,
+    "default_value": true,
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
