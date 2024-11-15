@@ -22,7 +22,7 @@
 }
 
 html {
-  @apply text-black font-normal font-OpenSans tracking-wide subpixel-antialiased;
+  @apply text-black break-words font-normal font-OpenSans tracking-wide subpixel-antialiased;
 }
 
 h1 {
