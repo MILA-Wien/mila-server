@@ -40,7 +40,7 @@ setCollectivoTitle(t("You have questions?"));
             {{ config.public.contactEmail }}
           </span>
         </a>
-        {{ t(" or via phone under ") }}
+        {{ t("or via phone under") }}
         <a :href="appConfig.mila.supportNumberLink" class="font-bold">
           {{ appConfig.mila.supportNumber }} </a
         >.
