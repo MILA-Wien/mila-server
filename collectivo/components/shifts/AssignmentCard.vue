@@ -47,8 +47,8 @@ async function requestSignOut() {
   const payload = {
     shifts_status: "accepted",
     shifts_membership: user.value.membership?.id,
-    shifts_from: nextOccurrence.toISOString(),
-    shifts_to: nextOccurrence.toISOString(),
+    shifts_from: nextOccurrence,
+    shifts_to: nextOccurrence,
     shifts_is_holiday: false,
     shifts_is_for_all_assignments: false,
     shifts_assignment: assignment.id,
