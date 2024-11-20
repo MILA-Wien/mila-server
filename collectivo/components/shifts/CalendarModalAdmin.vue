@@ -511,6 +511,15 @@ function checkIfMshipInAssignments(mship: number) {
                 </span>
               </span>
 
+              <span
+                v-if="
+                  assignment.assignment.shifts_membership
+                    .shifts_assignments_count <= 1
+                "
+              >
+                {{ t("(first shift!)") }}
+              </span>
+
               <span v-if="assignment.removed"> ({{ t("Removed") }}) </span>
 
               <div v-for="absence of assignment.absences" :key="absence.id">
