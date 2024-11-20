@@ -9,6 +9,10 @@ import {
 } from "@directus/sdk";
 import sanitizeHtml from "sanitize-html";
 
+function getTime(date: Date) {
+  return `${String(date.getUTCHours()).padStart(2, "0")}:${String(date.getUTCMinutes()).padStart(2, "0")}`;
+}
+
 const emit = defineEmits(["data-has-changed"]);
 const props = defineProps({
   shiftOccurence: {
@@ -397,19 +401,15 @@ function checkIfMshipInAssignments(mship: number) {
 
         <div>
           {{ t("Date") }}:
-          {{ start.toLocaleDateString() }}
+          {{ start.toISOString().split("T")[0] }}
         </div>
 
         <div v-if="shift.shifts_is_all_day">
           {{ t("All day") }}
         </div>
         <div v-else>
-          {{ t("Time") }}:
-          {{ start.toLocaleTimeString() }}
-          {{ t("to") }}
-          {{ end.toLocaleTimeString() }}
+          {{ t("Time") }}: {{ getTime(start) }} - {{ getTime(end) }}
         </div>
-
         <div v-if="categories.loaded">
           {{ t("Category") }}:
           {{

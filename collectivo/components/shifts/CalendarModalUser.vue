@@ -22,9 +22,11 @@ const user = useCollectivoUser();
 const shift = props.shiftOccurence.shift;
 const start = DateTime.fromISO(props.shiftOccurence.start, {
   locale: locale.value,
+  zone: "utc",
 });
 const end = DateTime.fromISO(props.shiftOccurence.end, {
   locale: locale.value,
+  zone: "utc",
 });
 const submitLoading = ref(false);
 const repeats = shift.shifts_repeats_every ?? 0;
