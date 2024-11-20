@@ -14,27 +14,23 @@ try {
   console.error("Failed to log out from Directus:", error);
 }
 
-if (config.public.authService === "keycloak") {
-  try {
-    const keycloak = new Keycloak({
-      url: config.public.keycloakUrl,
-      realm: config.public.keycloakRealm,
-      clientId: config.public.keycloakClient,
-    });
+try {
+  const keycloak = new Keycloak({
+    url: config.public.keycloakUrl,
+    realm: config.public.keycloakRealm,
+    clientId: config.public.keycloakClient,
+  });
 
-    await keycloak.init({
-      onLoad: "check-sso",
-      redirectUri: config.public.collectivoUrl + "/logout",
-    });
+  await keycloak.init({
+    onLoad: "check-sso",
+    redirectUri: config.public.collectivoUrl + "/logout",
+  });
 
-    await keycloak.logout({
-      redirectUri: config.public.collectivoUrl,
-    });
-  } catch (error) {
-    console.error("Failed to log out from Keycloak:", error);
-  }
-} else {
-  reloadNuxtApp({ path: "/" });
+  await keycloak.logout({
+    redirectUri: config.public.collectivoUrl,
+  });
+} catch (error) {
+  console.error("Failed to log out from Keycloak:", error);
 }
 </script>
 
