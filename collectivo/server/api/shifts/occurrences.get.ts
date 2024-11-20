@@ -175,7 +175,6 @@ const createShiftOccurrence = (
           selfAssigned = true;
         }
       }
-
       assignments.push(occ);
     }
   }

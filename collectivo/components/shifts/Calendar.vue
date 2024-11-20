@@ -193,7 +193,7 @@ async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
       }
     }
 
-    // Special: show operativo names
+    // Show slot status for future shifts in admin mode
     if (props.mode === "admin" && !isPast) {
       title +=
         " [" +
@@ -203,12 +203,16 @@ async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
         "]";
     }
 
+    // Show assigned names
     if (calendarFilters.value.displayNames) {
       for (const assignment of occurrence.assignments) {
-        const u = assignment.assignment.shifts_membership
-          .memberships_user as CollectivoUser;
+        const m = assignment.assignment.shifts_membership;
+        const u = m.memberships_user as CollectivoUser;
         if (u.first_name && assignment.isActive) {
           title += "\n" + u.first_name + " " + u.last_name;
+          if (m.shifts_assignments_count <= 1) {
+            title += "*";
+          }
         }
       }
     }
