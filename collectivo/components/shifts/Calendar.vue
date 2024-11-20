@@ -87,10 +87,12 @@ async function loadFiltersAdmin() {
 }
 async function loadFiltersUser() {
   const cats = await useShiftsCategories().loadPromise;
-
+  console.log("cats", user.value.membership?.shifts_categories_allowed);
   for (const category of user.value.membership?.shifts_categories_allowed ||
     []) {
-    calendarFilters.value.categories.push(cats.find((c) => c.id === category));
+    calendarFilters.value.categories.push(
+      cats.find((c) => c.id === category.shifts_categories_id),
+    );
   }
 }
 

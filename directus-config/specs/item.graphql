@@ -1273,6 +1273,8 @@ type memberships {
   memberships_invoices_func: count_functions
   shifts_categories_allowed(filter: memberships_shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_shifts_categories]
   shifts_categories_allowed_func: count_functions
+  shifts_assignments(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_assignments]
+  shifts_assignments_func: count_functions
 }
 
 type memberships_aggregated {
@@ -1333,6 +1335,7 @@ type memberships_aggregated_count {
   Für folgende Schichtkategorien darf sich diese Person selbstständig eintragen.
   """
   shifts_categories_allowed: Int
+  shifts_assignments: Int
 }
 
 type memberships_aggregated_fields {
@@ -2492,6 +2495,7 @@ type version_memberships {
   kids: JSON
   memberships_invoices: JSON
   shifts_categories_allowed: JSON
+  shifts_assignments: JSON
 }
 
 """"""
@@ -3105,6 +3109,7 @@ input create_memberships_input {
   kids: [create_memberships_memberships_coshoppers_1_input]
   memberships_invoices: [create_payments_invoices_out_input]
   shifts_categories_allowed: [create_memberships_shifts_categories_input]
+  shifts_assignments: [create_shifts_assignments_input]
 }
 
 input create_memberships_memberships_coshoppers_1_input {
@@ -3765,6 +3770,8 @@ input memberships_filter {
   memberships_invoices_func: count_function_filter_operators
   shifts_categories_allowed: memberships_shifts_categories_filter
   shifts_categories_allowed_func: count_function_filter_operators
+  shifts_assignments: shifts_assignments_filter
+  shifts_assignments_func: count_function_filter_operators
   _and: [memberships_filter]
   _or: [memberships_filter]
 }
@@ -4342,6 +4349,7 @@ input update_memberships_input {
   kids: [update_memberships_memberships_coshoppers_1_input]
   memberships_invoices: [update_payments_invoices_out_input]
   shifts_categories_allowed: [update_memberships_shifts_categories_input]
+  shifts_assignments: [update_shifts_assignments_input]
 }
 
 input update_memberships_memberships_coshoppers_1_input {

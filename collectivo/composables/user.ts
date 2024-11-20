@@ -49,7 +49,7 @@ class CollectivoUserStore {
           "*",
           "role.name",
           "memberships.*",
-          "memberships.shifts_skills.shifts_skills_id.*",
+          "memberships.shifts_categories_allowed.shifts_categories_id",
           "collectivo_tags.collectivo_tags_id",
         ],
       }),

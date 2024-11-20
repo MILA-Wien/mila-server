@@ -20963,6 +20963,20 @@
                 }
               ]
             }
+          },
+          "shifts_assignments": {
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "$ref": "#/components/schemas/ItemsShiftsAssignments"
+                }
+              ]
+            }
           }
         },
         "x-collection": "memberships"

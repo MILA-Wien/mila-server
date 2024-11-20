@@ -1795,6 +1795,8 @@ type memberships {
   memberships_invoices_func: count_functions
   shifts_categories_allowed(filter: memberships_shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_shifts_categories]
   shifts_categories_allowed_func: count_functions
+  shifts_assignments(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_assignments]
+  shifts_assignments_func: count_functions
 }
 
 type memberships_coshoppers {
@@ -2752,6 +2754,7 @@ input create_memberships_input {
   kids: [create_memberships_memberships_coshoppers_1_input]
   memberships_invoices: [create_payments_invoices_out_input]
   shifts_categories_allowed: [create_memberships_shifts_categories_input]
+  shifts_assignments: [create_shifts_assignments_input]
 }
 
 input create_memberships_memberships_coshoppers_1_input {
@@ -2851,9 +2854,89 @@ input create_payments_invoices_out_input {
   payments_entries: [create_payments_invoices_entries_input]
 }
 
+input create_shifts_absences_input {
+  date_created: Date
+  date_updated: Date
+  id: ID
+  shifts_assignment: create_shifts_assignments_input
+  shifts_from: Date!
+
+  """Eine allgemeine Abwesenheit gilt für alle Anmeldungen des Mitglieds"""
+  shifts_is_for_all_assignments: Boolean
+
+  """
+  Während einem Urlaub ist kein Einkauf möglich und es werden keine Schichtpunkte abgezogen.
+  """
+  shifts_is_holiday: Boolean!
+  shifts_membership: create_memberships_input
+
+  """Nur angenommene Urlaube werden im Schichtkalender aktiv."""
+  shifts_status: String
+  shifts_to: Date!
+  user_created: String
+  user_updated: String
+}
+
+input create_shifts_assignments_input {
+  date_created: Date
+  date_updated: Date
+  id: ID
+  shifts_from: Date!
+  shifts_is_coordination: Boolean
+
+  """Soll diese Anmeldung langfristig aktiv sein?"""
+  shifts_is_regular: Boolean
+  shifts_membership: create_memberships_input
+  shifts_shift: create_shifts_shifts_input
+
+  """Kann freigelassen werden für fortwährende Anmeldung"""
+  shifts_to: Date
+  user_created: String
+  user_updated: String
+
+  """Erinnerungs-E-Mails vor Schichtantritt aktivieren"""
+  send_reminders: Boolean
+  shifts_absences: [create_shifts_absences_input]
+}
+
 input create_shifts_categories_input {
   id: ID
   name: String
+}
+
+input create_shifts_shifts_input {
+  date_created: Date
+  date_updated: Date
+  id: ID
+
+  """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
+  shifts_allow_self_assignment: Boolean
+  shifts_description: String
+  shifts_from: Date
+  shifts_from_time: Date
+  shifts_is_all_day: Boolean
+
+  """Soll die Schicht sich regelmäßig wiederholen?"""
+  shifts_is_regular: Boolean
+  shifts_name: String!
+  shifts_needs_coordinator: Boolean
+
+  """Wiederholungsfrequenz in Tagen"""
+  shifts_repeats_every: Int
+  shifts_slots: Int
+
+  """Nur veröffentlichte Schichten werden im Kalender angezeigt."""
+  shifts_status: String
+
+  """Kann freigelassen werden für fortwährende Schicht"""
+  shifts_to: Date
+  shifts_to_time: Date
+  user_created: String
+  user_updated: String
+
+  """Schicht findet NICHT an Feiertagen statt"""
+  exclude_public_holidays: Boolean
+  shifts_category_2: create_shifts_categories_input
 }
 
 input date_filter_operators {
@@ -3436,6 +3519,8 @@ input memberships_filter {
   memberships_invoices_func: count_function_filter_operators
   shifts_categories_allowed: memberships_shifts_categories_filter
   shifts_categories_allowed_func: count_function_filter_operators
+  shifts_assignments: shifts_assignments_filter
+  shifts_assignments_func: count_function_filter_operators
   _and: [memberships_filter]
   _or: [memberships_filter]
 }
@@ -4118,6 +4203,7 @@ input update_memberships_input {
   kids: [update_memberships_memberships_coshoppers_1_input]
   memberships_invoices: [update_payments_invoices_out_input]
   shifts_categories_allowed: [update_memberships_shifts_categories_input]
+  shifts_assignments: [update_shifts_assignments_input]
 }
 
 input update_memberships_memberships_coshoppers_1_input {
@@ -4217,7 +4303,87 @@ input update_payments_invoices_out_input {
   payments_entries: [update_payments_invoices_entries_input]
 }
 
+input update_shifts_absences_input {
+  date_created: Date
+  date_updated: Date
+  id: ID
+  shifts_assignment: update_shifts_assignments_input
+  shifts_from: Date
+
+  """Eine allgemeine Abwesenheit gilt für alle Anmeldungen des Mitglieds"""
+  shifts_is_for_all_assignments: Boolean
+
+  """
+  Während einem Urlaub ist kein Einkauf möglich und es werden keine Schichtpunkte abgezogen.
+  """
+  shifts_is_holiday: Boolean
+  shifts_membership: update_memberships_input
+
+  """Nur angenommene Urlaube werden im Schichtkalender aktiv."""
+  shifts_status: String
+  shifts_to: Date
+  user_created: String
+  user_updated: String
+}
+
+input update_shifts_assignments_input {
+  date_created: Date
+  date_updated: Date
+  id: ID
+  shifts_from: Date
+  shifts_is_coordination: Boolean
+
+  """Soll diese Anmeldung langfristig aktiv sein?"""
+  shifts_is_regular: Boolean
+  shifts_membership: update_memberships_input
+  shifts_shift: update_shifts_shifts_input
+
+  """Kann freigelassen werden für fortwährende Anmeldung"""
+  shifts_to: Date
+  user_created: String
+  user_updated: String
+
+  """Erinnerungs-E-Mails vor Schichtantritt aktivieren"""
+  send_reminders: Boolean
+  shifts_absences: [update_shifts_absences_input]
+}
+
 input update_shifts_categories_input {
   id: ID
   name: String
+}
+
+input update_shifts_shifts_input {
+  date_created: Date
+  date_updated: Date
+  id: ID
+
+  """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
+  shifts_allow_self_assignment: Boolean
+  shifts_description: String
+  shifts_from: Date
+  shifts_from_time: Date
+  shifts_is_all_day: Boolean
+
+  """Soll die Schicht sich regelmäßig wiederholen?"""
+  shifts_is_regular: Boolean
+  shifts_name: String
+  shifts_needs_coordinator: Boolean
+
+  """Wiederholungsfrequenz in Tagen"""
+  shifts_repeats_every: Int
+  shifts_slots: Int
+
+  """Nur veröffentlichte Schichten werden im Kalender angezeigt."""
+  shifts_status: String
+
+  """Kann freigelassen werden für fortwährende Schicht"""
+  shifts_to: Date
+  shifts_to_time: Date
+  user_created: String
+  user_updated: String
+
+  """Schicht findet NICHT an Feiertagen statt"""
+  exclude_public_holidays: Boolean
+  shifts_category_2: update_shifts_categories_input
 }
