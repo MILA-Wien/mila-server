@@ -17,6 +17,7 @@ const querySchema = z.object({
     .enum(["true", "false"])
     .transform((val) => val === "true")
     .optional(),
+  shiftID: z.coerce.number().optional(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -30,6 +31,7 @@ export default defineEventHandler(async (event) => {
     params.from,
     params.to,
     params.admin,
+    params.shiftID,
   );
 });
 
@@ -38,9 +40,10 @@ export const getShiftOccurrences = async (
   from: Date,
   to: Date,
   admin: boolean = false,
+  shiftID?: number,
 ) => {
   // Get shifts within timeframe
-  const shifts = await getShiftShifts(from, to);
+  const shifts = await getShiftShifts(from, to, shiftID);
   const shiftIds = shifts.map((shift) => shift.id);
 
   // Get assignments within timeframe

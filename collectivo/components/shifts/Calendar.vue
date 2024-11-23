@@ -87,7 +87,6 @@ async function loadFiltersAdmin() {
 }
 async function loadFiltersUser() {
   const cats = await useShiftsCategories().loadPromise;
-  console.log("cats", user.value.membership?.shifts_categories_allowed);
   for (const category of user.value.membership?.shifts_categories_allowed ||
     []) {
     calendarFilters.value.categories.push(
@@ -282,6 +281,7 @@ async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
       v-model:is-open="shiftActionModalisOpen"
       :shift-occurence="selectedShiftOccurence"
       :shift-type="props.mode"
+      @reload="loadEvents(true)"
     />
   </template>
 </template>

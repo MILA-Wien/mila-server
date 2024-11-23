@@ -15,6 +15,7 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["reload"]);
 const isOpen = defineModel("isOpen", { required: true, type: Boolean });
 const { t } = useI18n();
 const directus = useDirectus();
@@ -34,6 +35,7 @@ const isWeeks = repeats % 7 === 0;
 const frequency = isWeeks ? repeats / 7 : repeats;
 
 async function postAssignment() {
+  console.log("postAssignment");
   try {
     await postAssignmentInner();
 
@@ -44,17 +46,54 @@ async function postAssignment() {
 
     navigateTo("dashboard");
   } catch (e) {
+    console.error(e);
     showToast({
       type: "error",
       description: "Shift assignment failed",
     });
+    submitLoading.value = false;
   }
+}
+
+async function fetchOccurrences(from: DateTime, to: DateTime, shiftID: number) {
+  return await $fetch("/api/shifts/occurrences", {
+    query: {
+      from: from.toISODate(),
+      to: to.toISODate(),
+      shiftID: shiftID,
+    },
+  });
 }
 
 async function postAssignmentInner() {
   submitLoading.value = true;
 
   const shiftStartString = start.toISO()!;
+
+  // Check if shift is already full (parallel signup)
+  const res = await fetchOccurrences(start, end, shift.id!);
+  const occurrences = res.occurrences as ShiftOccurrence[];
+  console.log("occurrences", occurrences);
+  if (occurrences.length != 1) {
+    throw new Error("No or multiple occurrences found");
+  }
+  const occ = occurrences[0];
+  console.log(
+    "occ",
+    occ.n_assigned,
+    occ.shift.shifts_slots,
+    occ.n_assigned >= occ.shift.shifts_slots,
+  );
+  if (occ.n_assigned >= occ.shift.shifts_slots) {
+    const m = "Somebody else has just signed up for this shift";
+    showToast({
+      type: "info",
+      description: m,
+    });
+    emit("reload");
+    submitLoading.value = false;
+    throw new Error(m);
+  }
 
   const payload: Partial<ShiftsAssignment> = {
     shifts_membership: user.value.membership!.id,
