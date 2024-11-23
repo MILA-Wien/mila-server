@@ -290,10 +290,38 @@ function startCreateAssignmentFlow() {
   createAssignmentCoordinator.value = false;
 }
 
+async function fetchOccurrences(date: string, shiftID: number) {
+  return await $fetch("/api/shifts/occurrences", {
+    query: {
+      from: date,
+      to: date,
+      shiftID: shiftID,
+    },
+  });
+}
+
 async function createAssignment(onetime: boolean) {
   if (!mshipID.value) {
     console.error("No membership ID chosen");
     return;
+  }
+
+  // Check if shift is already full (parallel signup)
+  const ress = await fetchOccurrences(startDateString, shift.id!);
+  const occurrences = ress.occurrences as ShiftOccurrence[];
+
+  if (occurrences.length != 1) {
+    throw new Error("No or multiple occurrences found");
+  }
+  const occ = occurrences[0];
+  if (occ.n_assigned >= occ.shift.shifts_slots) {
+    const m = "Somebody else has just signed up for this shift";
+    showToast({
+      type: "info",
+      description: m,
+    });
+    emit("data-has-changed");
+    throw new Error(m);
   }
 
   const payload: Partial<ShiftsAssignment> = {

@@ -73,17 +73,12 @@ async function postAssignmentInner() {
   // Check if shift is already full (parallel signup)
   const res = await fetchOccurrences(start, end, shift.id!);
   const occurrences = res.occurrences as ShiftOccurrence[];
-  console.log("occurrences", occurrences);
+
   if (occurrences.length != 1) {
     throw new Error("No or multiple occurrences found");
   }
   const occ = occurrences[0];
-  console.log(
-    "occ",
-    occ.n_assigned,
-    occ.shift.shifts_slots,
-    occ.n_assigned >= occ.shift.shifts_slots,
-  );
+
   if (occ.n_assigned >= occ.shift.shifts_slots) {
     const m = "Somebody else has just signed up for this shift";
     showToast({
