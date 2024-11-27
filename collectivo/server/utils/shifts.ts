@@ -7,6 +7,7 @@ const directus = useDirectusAdmin();
 export async function getShiftShifts(
   from: Date,
   to: Date,
+  shiftID?: number,
 ): Promise<ShiftsShift[]> {
   const filter: QueryFilter<CollectivoSchema, ShiftsShift> = {
     shifts_to: {
@@ -15,6 +16,9 @@ export async function getShiftShifts(
     shifts_from: { _lte: to.toISOString() },
     shifts_status: { _eq: "published" },
   };
+  if (shiftID) {
+    filter.id = { _eq: shiftID };
+  }
   const shifts = await directus.request(
     readItems("shifts_shifts", {
       filter: filter,
