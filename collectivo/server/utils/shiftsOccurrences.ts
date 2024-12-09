@@ -24,6 +24,7 @@ export const getShiftOccurrences = async (
   const assignments = await getShiftAssignments(shiftIds, from, to);
   const assignmentIds = assignments.map((assignment) => assignment.id);
 
+  // Hide names if not admin
   if (!admin) {
     for (const assignment of assignments) {
       if (assignment.shifts_membership.memberships_user.hide_name) {
