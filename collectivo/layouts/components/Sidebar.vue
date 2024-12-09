@@ -15,13 +15,13 @@ const publicMenuItems = menus.value.main_public;
     class="hidden md:flex w-44 lg:w-52 flex-col text-white fixed h-screen bg-milaGreen"
   >
     <div
-      class="flex justify-center items-center p-1 mt-8 lg:mt-10 mx-7 lg:mx-8"
+      class="flex justify-center items-center mt-8 p-1 lg:mt-10 mx-7 lg:mx-8"
     >
       <router-link to="/" class="logo__image">
         <img
-          src="/img/mila_logo_white.png"
+          src="/img/MILA_Logo_neg.svg"
           alt="MILA Logo"
-          class="object-cover"
+          class="object-cover w-72"
         />
       </router-link>
     </div>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="Ebene_1"
+   data-name="Ebene 1"
+   version="1.1"
+   viewBox="0 0 231333.58 327162.3"
+   sodipodi:docname="MILA_Logo_neg_Mgbereich_ohneHG.svg"
+   width="231333.58"
+   height="327162.31"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview20"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
+  <defs
+     id="defs1">
+    <style
+       id="style1">
+      .cls-1 {
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 137.4px;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        stroke-width: 0px;
+      }
+    </style>
+  </defs>
+  <g
+     id="g3"
+     transform="translate(-61613.55,-190690.35)">
+    <polygon
+       class="cls-2"
+       points="202.3,300.9 198.5,349.4 194.6,300.5 190.9,264.9 151.6,264.9 144.2,372.8 168.9,372.8 170.4,324.4 171.1,285.5 173.4,285.5 177.7,322.3 183.6,372.8 213.4,372.8 219.2,323.4 223.6,285.5 226.1,285.5 226.9,324.7 228.8,372.8 253.6,372.8 245.5,264.9 206.2,264.9 "
+       id="polygon2" />
+    <path
+       class="cls-2"
+       d="m 274.4,264.9 v 107.9 h 25.4 V 264.9 Z m 49.8,0 v 107.9 h 47 v -22.4 h -21.6 v -85.5 z m 62.3,107.9 h 25.4 l 1.6,-21.6 H 426 l 1.6,21.6 H 453 L 441,264.9 h -42.7 l -12,107.9 z M 415,331 l 2.9,-45.8 h 4 l 2.9,45.8 z"
+       id="path2" />
+    <path
+       class="cls-2"
+       d="M 103.5,226.5 V 615.1 H 492.1 V 226.5 Z M 478.4,601.3 H 117.2 V 240.2 h 361.2 v 361.2 z"
+       id="path3" />
+  </g>
+</svg>
