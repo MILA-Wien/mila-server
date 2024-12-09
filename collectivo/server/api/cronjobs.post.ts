@@ -11,6 +11,7 @@ import { getShiftOccurrences } from "~/server/utils/shiftsOccurrences";
 
 export default defineEventHandler(async (event) => {
   verifyCollectivoApiToken(event);
+  console.log("Running cronjobs");
   try {
     await runCronjobs();
   } catch (e) {

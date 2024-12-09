@@ -508,14 +508,14 @@
     "position_y": 1,
     "options": {
       "method": "POST",
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/updateScoreOnShiftCycleStart",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/cronjobs",
       "headers": [
         {
           "header": "Authorization",
           "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
         }
       ],
-      "body": "{{$trigger}}"
+      "body": null
     },
     "resolve": null,
     "reject": null,

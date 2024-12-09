@@ -103,6 +103,8 @@ type Query {
   shifts_assignments_by_id(id: ID!, version: String): shifts_assignments
   shifts_assignments_aggregated(groupBy: [String], filter: shifts_assignments_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_assignments_aggregated!]!
   shifts_assignments_by_version(version: String!, id: ID!): version_shifts_assignments
+  settings_hidden(version: String): settings_hidden
+  settings_hidden_by_version(version: String!): version_settings_hidden
 }
 
 type Mutation {
@@ -236,6 +238,7 @@ type Mutation {
   update_shifts_assignments_items(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_assignments_input!): [shifts_assignments!]!
   update_shifts_assignments_batch(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_assignments_input!]): [shifts_assignments!]!
   update_shifts_assignments_item(id: ID!, data: update_shifts_assignments_input!): shifts_assignments
+  update_settings_hidden(data: update_settings_hidden_input!): settings_hidden
   delete_directus_sync_id_map_items(ids: [ID]!): delete_many
   delete_directus_sync_id_map_item(id: ID!): delete_one
   delete_collectivo_tiles_items(ids: [ID]!): delete_many
@@ -337,6 +340,7 @@ type Subscription {
   memberships_shifts_categories_mutated(event: EventEnum): memberships_shifts_categories_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
   shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
+  settings_hidden_mutated(event: EventEnum): settings_hidden_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -1978,6 +1982,18 @@ type payments_invoices_out_mutated {
   data: payments_invoices_out
 }
 
+type settings_hidden {
+  id: ID!
+  last_cronjob: Date
+  last_cronjob_func: datetime_functions
+}
+
+type settings_hidden_mutated {
+  key: ID!
+  event: EventEnum
+  data: settings_hidden
+}
+
 type shifts_absences {
   date_created: Date
   date_created_func: datetime_functions
@@ -2650,6 +2666,12 @@ type version_payments_invoices_out {
   user_created: String
   user_updated: String
   payments_entries: JSON
+}
+
+""""""
+type version_settings_hidden {
+  id: ID
+  last_cronjob: Date
 }
 
 """"""
@@ -4478,6 +4500,11 @@ input update_payments_invoices_out_input {
   user_created: String
   user_updated: String
   payments_entries: [update_payments_invoices_entries_input]
+}
+
+input update_settings_hidden_input {
+  id: ID
+  last_cronjob: Date
 }
 
 input update_shifts_absences_input {

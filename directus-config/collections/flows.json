@@ -282,17 +282,17 @@
     "_syncId": "8b324a75-f005-403d-8197-48accc2d3538"
   },
   {
-    "name": "update_score_on_shift_cycle_start",
-    "icon": null,
+    "name": "Run Cronjobs",
+    "icon": "nest_clock_farsight_analog",
     "color": null,
-    "description": null,
-    "status": "inactive",
+    "description": "Every 30 minutes",
+    "status": "active",
     "trigger": "schedule",
     "accountability": "all",
     "options": {
       "type": "action",
       "interval": "0 3 * * *",
-      "cron": "0 3 * * *"
+      "cron": "*/30 * * * *"
     },
     "operation": "9e5efeae-a13a-4841-9653-b4efb31192c8",
     "_syncId": "8fbda46c-8ed1-4578-a38a-5ddbd11ee4da"

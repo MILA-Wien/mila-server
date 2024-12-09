@@ -15,7 +15,11 @@
     "options": {
       "choices": [
         {
-          "text": "Schicht absolviert",
+          "text": "Schicht absolviert (unbestätigt)",
+          "value": "attended_draft"
+        },
+        {
+          "text": "Schicht absolviert (bestätigt)",
           "value": "attended",
           "color": "#2ECDA7"
         },

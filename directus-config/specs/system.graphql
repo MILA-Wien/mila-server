@@ -280,6 +280,7 @@ type Subscription {
   memberships_shifts_categories_mutated(event: EventEnum): memberships_shifts_categories_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
   shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
+  settings_hidden_mutated(event: EventEnum): settings_hidden_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -2093,6 +2094,18 @@ type server_info_websocket_graphql {
 type server_info_websocket_rest {
   authentication: server_info_websocket_rest_authentication
   path: String
+}
+
+type settings_hidden {
+  id: ID!
+  last_cronjob: Date
+  last_cronjob_func: datetime_functions
+}
+
+type settings_hidden_mutated {
+  key: ID!
+  event: EventEnum
+  data: settings_hidden
 }
 
 type shifts_absences {
