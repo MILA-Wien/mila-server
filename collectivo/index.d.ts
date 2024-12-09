@@ -15,6 +15,10 @@ declare global {
     shiftAdmin: boolean;
   }
 
+  interface SettingsHidden {
+    last_cronjob: string;
+  }
+
   interface CollectivoSchema {
     collectivo_extensions: CollectivoExtension[];
     collectivo_tiles: CollectivoTile[];
@@ -27,6 +31,7 @@ declare global {
     shifts_shifts: ShiftsShift[];
     shifts_categories: ShiftsCategory[];
     shifts_holidays_public: ShiftsPublicHoliday[];
+    settings_hidden: SettingsHidden;
   }
 
   interface CollectivoUser {
