@@ -211,7 +211,8 @@ async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
         const u = m.memberships_user as UserProfile;
         if (u.first_name && assignment.isActive) {
           title += "\n" + u.first_name + " " + u.last_name;
-          if (m.shifts_assignments_count <= 1) {
+          // TODO Count only logs with "attended"
+          if (m.shifts_logs_count <= 1) {
             title += "*";
           }
         }
