@@ -22,7 +22,7 @@ interface CollectivoInvoice {
   id: number;
   lotzapp_id: string;
   payments_status: string;
-  payments_recipient_user: CollectivoUser;
+  payments_recipient_user: UserProfile;
   payments_date_issued: string;
   payments_entries: {
     payments_quantity: number;
@@ -84,7 +84,7 @@ async function syncItem(item: CollectivoInvoice) {
   );
 }
 
-async function createOrUpdateLotzappUser(user: CollectivoUser) {
+async function createOrUpdateLotzappUser(user: UserProfile) {
   console.log("Creating or updating user in Lotzapp: " + user.first_name);
 
   const data = {
@@ -165,7 +165,7 @@ async function createOrUpdateLotzappUser(user: CollectivoUser) {
 // INVOICE
 
 async function createLotzappInvoice(
-  user: CollectivoUser,
+  user: UserProfile,
   invoice: CollectivoInvoice,
 ) {
   if (invoice.payments_status !== "pending") {

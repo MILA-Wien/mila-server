@@ -2,7 +2,7 @@
 import MenuItem from "./MenuItem.vue";
 
 const menus = useCollectivoMenus();
-const user = useCollectivoUser();
+const user = useCurrentUser();
 
 const mainMenuItems = Object.values(menus.value.main);
 

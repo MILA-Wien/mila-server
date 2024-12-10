@@ -18,7 +18,7 @@ const nextOccurrence = props.shiftAssignment.nextOccurrence;
 const assignment = props.shiftAssignment.assignment as ShiftsAssignment;
 const absences = props.shiftAssignment.absences as ShiftsAbsence[];
 const shift = assignment.shifts_shift as ShiftsShift;
-const user = useCollectivoUser();
+const user = useCurrentUser();
 const emit = defineEmits(["reload"]);
 
 function getTimeString(occurence: string) {

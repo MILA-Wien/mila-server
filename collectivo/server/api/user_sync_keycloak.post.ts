@@ -40,7 +40,7 @@ async function syncKeycloakUser(event: H3Event) {
   const isCreate = body.event === "users.create";
   const isDelete = body.event === "users.delete";
 
-  let user: Partial<CollectivoUser> = {};
+  let user: Partial<UserProfile> = {};
 
   // Get user key(s) (they are in different locations for create/update/delete)
   body.keys = body.keys || [body.key];

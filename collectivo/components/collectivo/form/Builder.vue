@@ -51,7 +51,7 @@ const europeanIBAN = [
   "SK",
 ];
 
-const user = useCollectivoUser();
+const user = useCurrentUser();
 const toast = useToast();
 const { t } = useI18n();
 const debug = useRuntimeConfig().public.debug;

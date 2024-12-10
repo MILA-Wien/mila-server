@@ -10,8 +10,8 @@ const config = useRuntimeConfig();
 const { t } = useI18n();
 setCollectivoTitle(t("Shifts"));
 
-const user = useCollectivoUser().value.user!;
-const mship = useCollectivoUser().value.membership!;
+const user = useCurrentUser().value.user!;
+const mship = useCurrentUser().value.membership!;
 const isActive = mship.shifts_user_type != "inactive";
 const activeAssignments: Ref<ShiftsAssignmentRules[]> = ref([]);
 const holidaysAll: Ref<ShiftsAbsenceGet[]> = ref([]);

@@ -5,7 +5,7 @@ definePageMeta({
 
 setCollectivoTitle("Dashboard");
 
-const tiles = useCollectivoTiles();
+const tiles = useDashboardTiles();
 
 tiles.value.load();
 </script>

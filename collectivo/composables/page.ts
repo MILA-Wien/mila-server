@@ -21,7 +21,7 @@ export const setCollectivoTitle = (
 
 export const useCollectivoMenus = () =>
   useState<CollectivoMenus>("collectivoMenus", () => {
-    const user = useCollectivoUser().value;
+    const user = useCurrentUser().value;
     return {
       main: [
         {

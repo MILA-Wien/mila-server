@@ -31,9 +31,9 @@ export default defineEventHandler(async (event) => {
   // Fetch user from directus
   try {
     const config = useRuntimeConfig();
-    const directus = createDirectus<CollectivoSchema>(
-      config.public.directusUrl,
-    ).with(rest());
+    const directus = createDirectus<DbSchema>(config.public.directusUrl).with(
+      rest(),
+    );
     const user = await directus.request(
       withToken(
         directusSessionToken,

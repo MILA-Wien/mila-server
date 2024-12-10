@@ -19,7 +19,7 @@ const emit = defineEmits(["reload"]);
 const isOpen = defineModel("isOpen", { required: true, type: Boolean });
 const { t } = useI18n();
 const directus = useDirectus();
-const user = useCollectivoUser();
+const user = useCurrentUser();
 const shift = props.shiftOccurence.shift;
 const start = DateTime.fromISO(props.shiftOccurence.start, {
   locale: locale.value,

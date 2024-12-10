@@ -1,9 +1,9 @@
 import { readMe, updateMe } from "@directus/sdk";
 import type { RestClient } from "@directus/sdk";
 
-export const useCollectivoUser = () => {
-  const state = useState<CollectivoUserStore>("collectivo_user", () => {
-    return new CollectivoUserStore();
+export const useCurrentUser = () => {
+  const state = useState<CurrentUserStore>("collectivo_user", () => {
+    return new CurrentUserStore();
   });
 
   return state;
@@ -17,8 +17,8 @@ const STUDIO_ADMIN_ROLES = [
   "Vorstand",
 ];
 
-class CollectivoUserStore {
-  user: CollectivoUser | null;
+class CurrentUserStore {
+  user: UserProfile | null;
   membership: MembershipsMembership | null;
   tags: number[];
   isAuthenticated: boolean;
@@ -42,7 +42,7 @@ class CollectivoUserStore {
     this.error = null;
   }
 
-  async init(directus: RestClient<CollectivoSchema>) {
+  async init(directus: RestClient<DbSchema>) {
     this.user = (await directus.request(
       readMe({
         fields: [
@@ -53,7 +53,7 @@ class CollectivoUserStore {
           "collectivo_tags.collectivo_tags_id",
         ],
       }),
-    )) as CollectivoUser;
+    )) as UserProfile;
 
     // Check if admin
     this.isShiftAdmin = SHIFT_ADMIN_ROLES.includes(this.user.role.name);
@@ -75,7 +75,7 @@ class CollectivoUserStore {
     delete this.user.memberships;
   }
 
-  async save(data: CollectivoUser) {
+  async save(data: UserProfile) {
     const { $directus } = useNuxtApp();
     this.saving = true;
     await $directus?.request(updateMe(data));
@@ -85,7 +85,7 @@ class CollectivoUserStore {
   }
 
   async login(force: boolean = false) {
-    if (useCollectivoUser().value.isAuthenticated === true && !force) return;
+    if (useCurrentUser().value.isAuthenticated === true && !force) return;
     return navigateTo("/login");
   }
 

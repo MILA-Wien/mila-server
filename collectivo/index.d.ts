@@ -1,30 +1,9 @@
-declare module "h3" {
-  interface EventHandlerRequest {
-    context: {
-      auth?: ServerUserInfo;
-    };
-  }
-}
-
 declare global {
-  interface ServerUserInfo {
-    user: string;
-    email: string;
-    mship: number | null;
-    studioAdmin: boolean;
-    shiftAdmin: boolean;
-  }
-
-  interface SettingsHidden {
-    last_cronjob: string;
-  }
-
-  interface CollectivoSchema {
-    collectivo_extensions: CollectivoExtension[];
-    collectivo_tiles: CollectivoTile[];
-    collectivo_tags: CollectivoTag[];
-    directus_users: CollectivoUser[];
+  interface DbSchema {
+    directus_users: UserProfile[];
+    collectivo_tags: UserTag[];
     memberships: MembershipsMembership[];
+    collectivo_tiles: DashboardTile[];
     shifts_assignments: ShiftsAssignment[];
     shifts_absences: ShiftsAbsence[];
     shifts_logs: ShiftsLog[];
@@ -34,7 +13,7 @@ declare global {
     settings_hidden: SettingsHidden;
   }
 
-  interface CollectivoUser {
+  interface UserProfile {
     id: string;
     first_name: string;
     last_name: string;
@@ -45,12 +24,18 @@ declare global {
     [key: string]: string | undefined;
   }
 
+  interface UserTag {
+    id: number;
+    tags_name: string;
+    tags_users: UserProfile[] | number[];
+  }
+
   export type ShiftsUserType = "jumper" | "regular" | "exempt" | "inactive";
 
   interface MembershipsMembership {
     id: number;
     name: string;
-    memberships_user: DirectusUser | number;
+    memberships_user: UserProfile | number;
     memberships_status: string;
     memberships_type: string;
     memberships_shares: number;
@@ -69,18 +54,12 @@ declare global {
     membership_card_id: string;
   }
 
-  interface CollectivoTag {
-    id: number;
-    tags_name: string;
-    tags_users: CollectivoUser[] | number[];
-  }
-
-  interface CollectivoTile {
+  interface DashboardTile {
     id: number;
     sort: number;
     tiles_name: string;
     tiles_content: string;
-    tiles_buttons: CollectivoTileButton[];
+    tiles_buttons: DashboardTileButton[];
     tiles_color: string;
     tiles_component: string;
     tiles_tag_required: number | null;
@@ -93,11 +72,15 @@ declare global {
       | "hide";
   }
 
-  interface CollectivoTileButton {
+  interface DashboardTileButton {
     id: number;
     tiles_label: string;
     tiles_path: string;
     tiles_is_external: boolean;
+  }
+
+  interface SettingsHidden {
+    last_cronjob: string;
   }
 
   // Shifts
@@ -355,11 +338,29 @@ declare global {
     value?: string | number | RegExp;
     message?: string;
   };
+
+  // Server middleware
+  interface ServerUserInfo {
+    user: string;
+    email: string;
+    mship: number | null;
+    studioAdmin: boolean;
+    shiftAdmin: boolean;
+  }
 }
 
 // Types for input of app.config.ts
 declare module "nuxt/schema" {
   interface AppConfigInput {}
+}
+
+// Server middleware
+declare module "h3" {
+  interface EventHandlerRequest {
+    context: {
+      auth?: ServerUserInfo;
+    };
+  }
 }
 
 export {};

@@ -6,7 +6,7 @@ definePageMeta({
 setCollectivoTitle("Profile");
 const toast = useToast();
 const { t } = useI18n();
-const user = useCollectivoUser();
+const user = useCurrentUser();
 
 const is_legal_profile = [
   {
@@ -260,7 +260,7 @@ const profileInputs: Ref<CollectivoFormField[]> = ref([
 ]);
 
 // Submit form data
-async function saveProfile(data: CollectivoUser) {
+async function saveProfile(data: UserProfile) {
   try {
     await user.value.save(data);
 

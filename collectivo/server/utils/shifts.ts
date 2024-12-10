@@ -9,7 +9,7 @@ export async function getShiftShifts(
   to: Date,
   shiftID?: number,
 ): Promise<ShiftsShift[]> {
-  const filter: QueryFilter<CollectivoSchema, ShiftsShift> = {
+  const filter: QueryFilter<DbSchema, ShiftsShift> = {
     shifts_to: {
       _or: [{ _gte: from.toISOString() }, { _null: true }],
     },

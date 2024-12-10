@@ -14,7 +14,7 @@ const props = defineProps({
   },
 });
 const { locale, t } = useI18n();
-const user = useCollectivoUser();
+const user = useCurrentUser();
 const shiftActionModalisOpen = ref(false);
 const selectedShiftOccurence = ref(null);
 const adminMode = props.mode === "admin";
@@ -208,7 +208,7 @@ async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
     if (calendarFilters.value.displayNames) {
       for (const assignment of occurrence.assignments) {
         const m = assignment.assignment.shifts_membership;
-        const u = m.memberships_user as CollectivoUser;
+        const u = m.memberships_user as UserProfile;
         if (u.first_name && assignment.isActive) {
           title += "\n" + u.first_name + " " + u.last_name;
           if (m.shifts_assignments_count <= 1) {

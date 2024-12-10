@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const user = useCollectivoUser();
+const user = useCurrentUser();
 const { t } = useI18n();
 const runtimeConfig = useRuntimeConfig();
 const router = useRouter();

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { t } = useI18n();
-const user = useCollectivoUser();
+const user = useCurrentUser();
 setCollectivoTitle("Beitrittserklärung - imGrätzl");
 const showForm = ref(false);
 const alreadyMemberError = ref(false);
