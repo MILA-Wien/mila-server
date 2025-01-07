@@ -160,15 +160,13 @@ async function registerMembership(body: any, userID: string | undefined) {
     }
 
     // Check if keycloak user exists and extract password
-    if (config.public.authService == "keycloak") {
-      const kcUser = await keycloak.users.find({ email: userData.email });
+    const kcUser = await keycloak.users.find({ email: userData.email });
 
-      if (kcUser.length > 0) {
-        throw createError({
-          statusCode: 400,
-          statusMessage: "User already exists (Keycloak)",
-        });
-      }
+    if (kcUser.length > 0) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: "User already exists (Keycloak)",
+      });
     }
   }
 

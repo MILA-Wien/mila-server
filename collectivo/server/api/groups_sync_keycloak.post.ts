@@ -19,12 +19,7 @@ async function useKeycloak() {
 }
 
 export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig();
   console.log("Syncing tags");
-
-  if (config.public.authService !== "keycloak") {
-    return;
-  }
 
   try {
     await useDirectusAdmin();
