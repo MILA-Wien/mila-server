@@ -4,6 +4,7 @@ declare global {
     collectivo_tags: UserTag[];
     memberships: MembershipsMembership[];
     collectivo_tiles: DashboardTile[];
+    memberships_coshoppers: MembershipsCoshopper[];
     shifts_assignments: ShiftsAssignment[];
     shifts_absences: ShiftsAbsence[];
     shifts_logs: ShiftsLog[];
@@ -11,6 +12,14 @@ declare global {
     shifts_categories: ShiftsCategory[];
     shifts_holidays_public: ShiftsPublicHoliday[];
     settings_hidden: SettingsHidden;
+    milaccess_log: CheckinLogEntry[];
+  }
+
+  interface CheckinLogEntry {
+    id: number;
+    membership: MembershipsMembership | number;
+    date: string;
+    coshopper: MembershipsCoshopper | number;
   }
 
   interface UserProfile {
