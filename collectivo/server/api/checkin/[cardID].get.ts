@@ -1,10 +1,35 @@
+/**
+ * Handles the check-in process for a given card ID.
+ *
+ * This endpoint retrieves the membership associated with the given card ID,
+ * checks the membership status, and logs the check-in event.
+ * It returns information about the membership, including
+ * whether the member is allowed to shop.
+ *
+ * The request requires a valid `checkinToken` to be provided.
+ *
+ * @returns An object containing membership details, including:
+ * - `membership`: The membership ID.
+ * - `firstName`: The first name of the member.
+ * - `lastName`: The last name of the member.
+ * - `shiftScore`: The current shift score of the member.
+ * - `shiftsType`: The type of shifts the member is assigned to.
+ * - `isOnHoliday`: Whether the member is currently on holiday.
+ * - `canShop`: Whether the member is allowed to shop.
+ * - `isCoshopper`: Whether the card ID belongs to a coshopper.
+ * - `coshopperFirstName`: The first name of the coshopper (if applicable).
+ * - `coshopperLastName`: The last name of the coshopper (if applicable).
+ *
+ * Possible errors:
+ * - "Multiple memberships found for this card ID": More than one membership is associated with the card ID.
+ * - "No membership found for this card ID": No membership is associated with the card ID.
+ * - "Multiple coshoppers found for this card ID": More than one coshopper is associated with the card ID.
+ * - "No coshopper found for this card ID": No coshopper is associated with the card ID.
+ */
 import { createItem, readItems } from "@directus/sdk";
 
-// TODO: Also include miteinkäufer*innen and children
-// TODO: Include holidays
-
 export default defineEventHandler(async (event) => {
-  verifyCollectivoApiToken(event);
+  verifyCollectivoApiToken(event, "checkinToken");
   const cardID = getRouterParam(event, "cardID");
   const now = getCurrentDate();
   const nowStr = now.toISOString();
@@ -76,12 +101,12 @@ export default defineEventHandler(async (event) => {
       };
     }
 
-    const coshoppers = (await directus.request(
+    const coshoppers = await directus.request(
       readItems("memberships_coshoppers", {
         filter: { membership_card_id: { _eq: cardID } },
         fields: ["id", "first_name", "last_name"],
       }),
-    )) as MembershipsCoshopper[];
+    );
 
     if (!coshoppers.length) {
       return {
@@ -113,7 +138,7 @@ export default defineEventHandler(async (event) => {
       fields: ["id"],
     }),
   );
-
+  const isOnHoliday = absences.length > 0;
   let canShop = true;
 
   if (mship.shifts_user_type == "inactive") {
@@ -121,7 +146,7 @@ export default defineEventHandler(async (event) => {
   }
 
   if (mship.shifts_user_type != "exempt") {
-    if (mship.shifts_counter < -1 || absences.length > 0) {
+    if (mship.shifts_counter < -1 || isOnHoliday) {
       canShop = false;
     }
   }
@@ -153,7 +178,7 @@ export default defineEventHandler(async (event) => {
     lastName: mship.memberships_user.last_name,
     shiftScore: mship.shifts_counter,
     shiftsType: mship.shifts_user_type,
-    isOnHoliday: absences.length > 0,
+    isOnHoliday: isOnHoliday,
     canShop: canShop,
     isCoshopper: coshopper != undefined,
     coshopperFirstName: coshopper?.first_name,
