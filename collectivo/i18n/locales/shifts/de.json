@@ -62,6 +62,7 @@
   "t:exempt": "Befreit",
   "t:inactive": "Nicht aktiv",
 
+  "log:attended_draft": "Schicht absolviert",
   "log:attended": "Schicht absolviert",
   "log:missed": "Schicht verpasst",
   "log:cancelled": "Schicht abgesagt",

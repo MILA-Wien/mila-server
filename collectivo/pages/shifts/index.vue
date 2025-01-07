@@ -5,8 +5,6 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-const config = useRuntimeConfig();
-
 const { t } = useI18n();
 setCollectivoTitle(t("Shifts"));
 
@@ -29,6 +27,7 @@ async function getLogs() {
     readItems("shifts_logs", {
       filter: { shifts_membership: mship.id },
       sort: ["-shifts_date"],
+      limit: 10,
     }),
   );
 }
@@ -61,7 +60,8 @@ function getShiftName(assignmentID: number) {
 }
 
 function displayShiftScore(score: number) {
-  return score > 0 ? "+" + score : score;
+  if (score == 0) return "";
+  return " (" + (score > 0 ? "+" + score : score) + ")";
 }
 
 if (isActive) loadData();
@@ -74,7 +74,6 @@ if (isActive) loadData();
     </p>
   </div>
   <div v-else-if="dataLoaded">
-    <!-- <h1>{{ t("My status") }}</h1> -->
     <CollectivoCard :color="canShop ? 'green' : 'red'" class="mb-8">
       <div>
         <h3>
@@ -93,11 +92,8 @@ if (isActive) loadData();
           </span>
         </h3>
         <p class="pt-3">
-          {{ t("Membership") }}: {{ mship.id }} ({{
-            user.first_name + " " + user.last_name
-          }})
+          {{ t("Shifttype") }}: {{ t("t:" + mship.shifts_user_type) }}
         </p>
-        <p>{{ t("Shifttype") }}: {{ t("t:" + mship.shifts_user_type) }}</p>
 
         <p v-if="mship.shifts_user_type != 'exempt'">
           {{ t("Shiftcounter") }}: {{ mship.shifts_counter }}
@@ -128,7 +124,7 @@ if (isActive) loadData();
 
     <!-- SHIFT OCCURRENCES -->
     <div class="mb-12">
-      <h1>{{ t("My shifts") }}</h1>
+      <h2>{{ t("My shifts") }}</h2>
       <p v-if="!activeAssignments.length">
         {{ t("No upcoming shifts") }}
       </p>
@@ -144,7 +140,7 @@ if (isActive) loadData();
 
     <!-- HOLIDAYS -->
     <div class="mb-12">
-      <h1>{{ t("My holidays") }}</h1>
+      <h2>{{ t("My holidays") }}</h2>
       <div v-if="!holidaysAll.length">
         {{ t("No upcoming holidays") }}
       </div>
@@ -170,19 +166,15 @@ if (isActive) loadData();
     </div>
 
     <!-- LOGS -->
-
     <div v-if="logs.length" class="mb-12">
       <h2>{{ t("My activities") }}</h2>
       <div class="my-4">
-        <CollectivoCard :color="'blue'">
-          <div class="flex flex-col gap-1">
-            <div v-for="log in logs" :key="log.id">
-              {{ log.shifts_date }}: {{ t("log:" + log.shifts_type) }} ({{
-                displayShiftScore(log.shifts_score)
-              }}) {{ log.shifts_note }}
-            </div>
+        <div class="flex flex-col gap-1">
+          <div v-for="log in logs" :key="log.id">
+            {{ log.shifts_date }}: {{ t("log:" + log.shifts_type)
+            }}{{ displayShiftScore(log.shifts_score) }}. {{ log.shifts_note }}
           </div>
-        </CollectivoCard>
+        </div>
       </div>
     </div>
 
@@ -197,7 +189,6 @@ if (isActive) loadData();
 
 <i18n lang="yaml">
 de:
-  "My status": "Mein Status"
   "My shifts": "Meine Schichten"
   "My holidays": "Meine Urlaube"
   "My activities": "Meine Aktivitäten"
