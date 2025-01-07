@@ -1,10 +1,11 @@
-import {
-  createItem,
-  createItems,
-  readItems,
-  readUsers,
-  updateItems,
-} from "@directus/sdk";
+/*
+ * This endpoint handles sending reminders for shift assignments.
+ * It is called by a directus cron job.
+ * It sends reminders to users for shifts that lie 2 days in the future.
+ * Requires an active automation with the name "shifts_reminder".
+ * Request requires collectivo api token.
+ */
+import { createItem, readItems, updateItems } from "@directus/sdk";
 import { RRule, RRuleSet } from "rrule";
 
 export default defineEventHandler(async (event) => {
@@ -15,8 +16,7 @@ export default defineEventHandler(async (event) => {
 });
 
 async function getAssignments() {
-  const directus = await useDirectusAdmin();
-
+  const directus = useDirectusAdmin();
   const targetDate = getFutureDate(2);
   const shifts: ShiftsShift[] = (await directus.request(
     readItems("shifts_shifts", {
