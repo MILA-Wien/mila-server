@@ -8,16 +8,16 @@
 import { createItem, readItems, updateItems } from "@directus/sdk";
 import { RRule, RRuleSet } from "rrule";
 
-export default defineEventHandler(async (event) => {
-  verifyCollectivoApiToken(event);
+export async function sendShiftReminders(date: Date) {
   const automation = await getAutomation("shifts_reminder");
-  const assignments = await getAssignments();
-  await sendReminders(assignments, automation);
-});
+  const assignments = await getAssignments(date);
+  await sendRemindersInner(assignments, automation);
+}
 
-async function getAssignments() {
+async function getAssignments(date: Date) {
   const directus = useDirectusAdmin();
-  const targetDate = getFutureDate(2);
+  const targetDate = new Date(date);
+  targetDate.setDate(targetDate.getDate() + 2);
   const shifts: ShiftsShift[] = (await directus.request(
     readItems("shifts_shifts", {
       filter: {
@@ -158,7 +158,7 @@ async function getAutomation(name: string) {
   return automation;
 }
 
-async function sendReminders(occurrences: any[], automation: any) {
+async function sendRemindersInner(occurrences: any[], automation: any) {
   const directus = await useDirectusAdmin();
   const payloads: any[] = [];
 
@@ -223,7 +223,7 @@ async function sendReminders(occurrences: any[], automation: any) {
 // Shifts without end date run forever
 // Shifts without repetition run once
 // Dates are with T=00:00:00 UTC
-export const getShiftRrule = (
+const getShiftRrule = (
   shift: ShiftsShift,
   publicHolidays?: ShiftsPublicHoliday[],
 ): RRule => {
@@ -260,7 +260,7 @@ export const getShiftRrule = (
 
 // SlotRrule is a RRuleSet that shows only free occurences
 // Occurences with existing assignments are excluded
-export const getAssignmentRrules = (
+const getAssignmentRrules = (
   shift: ShiftsShift,
   shiftRule: RRule,
   assignments: ShiftsAssignment[],

@@ -3,9 +3,9 @@ import {
   readItems,
   readSingleton,
   updateItem,
-  updateSingleton,
 } from "@directus/sdk";
 import { getShiftOccurrences } from "~/server/utils/shiftsOccurrences";
+import { sendShiftReminders } from "../utils/shiftsReminder";
 
 // Runs once a day, called by directus API
 // Only runs cronjob in interval since last successful cronjob
@@ -41,18 +41,18 @@ async function runCronjobs() {
   for (const date of dates_since_last_cronjob) {
     const holidays = await getActiveHolidays(date);
     await create_shift_logs(date, date, holidays, settings);
-
+    await sendShiftReminders(date);
     if (settings.shift_point_system) {
       await decrement_shifts_counter(holidays);
     }
   }
 
   // Update last cronjob timestamp
-  await directus.request(
-    updateSingleton("settings_hidden", {
-      last_cronjob: new Date().toISOString(),
-    }),
-  );
+  // await directus.request(
+  //   updateSingleton("settings_hidden", {
+  //     last_cronjob: new Date().toISOString(),
+  //   }),
+  // );
 }
 
 async function getActiveHolidays(date: Date): Promise<number[]> {
@@ -74,7 +74,10 @@ async function getActiveHolidays(date: Date): Promise<number[]> {
   return holidays.map((holiday) => holiday.shifts_membership as number);
 }
 
-// Decrement shifts counter for all users that are not on holiday
+// Decrement shifts counter for all users that
+// 1) are not on holiday
+// 2) are active as well as jumpers or regulars
+// 3) have a shifts counter < 0 (if counter hits zero, user is blocked)
 async function decrement_shifts_counter(mshipIdsOnHoliday: number[]) {
   const directus = await useDirectusAdmin();
   const memberships = await directus.request(
@@ -90,12 +93,12 @@ async function decrement_shifts_counter(mshipIdsOnHoliday: number[]) {
       fields: ["id", "shifts_counter"],
     }),
   );
-
   const membershipsToUpdate = memberships.filter(
     (membership) => !mshipIdsOnHoliday.includes(membership.id),
   );
 
   for (const membership of membershipsToUpdate) {
+    if (membership.shifts_counter < 0) continue;
     await directus.request(
       updateItem("memberships", membership.id, {
         shifts_counter: membership.shifts_counter - 1,
@@ -150,13 +153,6 @@ async function create_shift_logs(
           shifts_type: "attended_draft",
           shifts_score: settings.shift_point_system ? CYCLE_DAYS : 0,
           shifts_shift: occurrence.shift.id,
-        }),
-      );
-
-      // Increment shifts counter
-      await directus.request(
-        updateItem("memberships", mship.id, {
-          shifts_counter: mship.shifts_counter + CYCLE_DAYS,
         }),
       );
     }
