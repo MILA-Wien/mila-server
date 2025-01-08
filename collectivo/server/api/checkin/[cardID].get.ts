@@ -10,6 +10,7 @@
  *
  * @returns An object containing membership details, including:
  * - `membership`: The membership ID.
+ * - `membershipsType`: The type of the membership.
  * - `firstName`: The first name of the member.
  * - `lastName`: The last name of the member.
  * - `shiftScore`: The current shift score of the member.
@@ -82,6 +83,7 @@ export default defineEventHandler(async (event) => {
         },
         fields: [
           "id",
+          "memberships_type",
           "shifts_counter",
           "shifts_user_type",
           { memberships_user: ["first_name", "last_name"] },
@@ -151,6 +153,10 @@ export default defineEventHandler(async (event) => {
     }
   }
 
+  if (mship.memberships_type != "Aktiv") {
+    canShop = false;
+  }
+
   // Create log entry
   const logs = await directus.request(
     readItems("milaccess_log", {
@@ -174,6 +180,7 @@ export default defineEventHandler(async (event) => {
 
   const returnObject = {
     membership: mship.id,
+    membershipsType: mship.memberships_type,
     firstName: mship.memberships_user.first_name,
     lastName: mship.memberships_user.last_name,
     shiftScore: mship.shifts_counter,

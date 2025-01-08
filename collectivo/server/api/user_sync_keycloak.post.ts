@@ -25,9 +25,10 @@ async function useKeycloak() {
 // Update keycloak user
 export default defineEventHandler(async (event) => {
   try {
+    console.log("Running user_sync_keycloak");
     return await syncKeycloakUser(event);
   } catch (e) {
-    console.error("Error in auth.patch.ts", e);
+    console.error("Error in user_sync_keycloak.post.ts", e);
     throw e;
   }
 });

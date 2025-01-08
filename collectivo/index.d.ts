@@ -90,6 +90,7 @@ declare global {
 
   interface SettingsHidden {
     last_cronjob: string;
+    shift_point_system: boolean;
   }
 
   // Shifts

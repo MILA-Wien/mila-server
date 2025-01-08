@@ -61,6 +61,7 @@ export async function getShiftAssignments(
           shifts_membership: [
             "id",
             "count(shifts_logs)",
+            "shifts_counter",
             {
               memberships_user: ["first_name", "last_name", "hide_name"],
             },
