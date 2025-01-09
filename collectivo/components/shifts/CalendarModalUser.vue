@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { DateTime } from "luxon";
 import { parse } from "marked";
-import { createItem } from "@directus/sdk";
+import { createItem, readItem, readItems } from "@directus/sdk";
 const { locale } = useI18n();
 
 const props = defineProps({
@@ -70,6 +70,8 @@ async function postAssignmentInner() {
 
   const shiftStartString = start.toISO()!;
 
+  const isFirstShift = await checkLogsIfFirstShift(user.value.membership!.id);
+
   // Check if shift is already full (parallel signup)
   const res = await fetchOccurrences(start, end, shift.id!);
   const occurrences = res.occurrences as ShiftOccurrence[];
@@ -96,6 +98,7 @@ async function postAssignmentInner() {
     shifts_from: shiftStartString,
     shifts_is_regular: false,
     shifts_is_coordination: false,
+    is_first_shift: isFirstShift,
   };
 
   // One-time shifts have same start and end date

@@ -1,8 +1,20 @@
+/**
+ * Handles the API request for retrieving shift occurrences within a specified timeframe.
+ *
+ * @param event - The event object containing the request context and parameters.
+ *
+ * @returns A promise that resolves to the shift occurrences within the specified timeframe.
+ *
+ * @throws {Error} If the user is not authorized to access the requested data.
+ *
+ * @typedef {Object} QueryParams
+ * @property {Date} from - The start date of the timeframe.
+ * @property {Date} to - The end date of the timeframe.
+ * @property {boolean} [admin] - Whether to include sensible information in the response.
+ * @property {number} [shiftID] - The ID of the specific shift to retrieve occurrences for.
+ */
 import { z } from "zod";
 import { getShiftOccurrences } from "~/server/utils/shiftsOccurrences";
-
-// This is the main API for the shifts calendar
-// It returns all the shifts occurrences within a given timeframe
 
 const querySchema = z.object({
   from: z.coerce.date(),

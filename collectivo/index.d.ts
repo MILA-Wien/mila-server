@@ -147,6 +147,7 @@ declare global {
     shifts_membership: MembershipsMembership | number;
     shifts_is_coordination: boolean;
     send_reminders: boolean;
+    is_first_shift: boolean;
   }
 
   interface ShiftsAssignmentGet extends ShiftsAssignment {

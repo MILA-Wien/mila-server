@@ -226,6 +226,7 @@ async function createAssignment(onetime: boolean) {
 
   // Check if shift is already full (parallel signup)
   const ress = await fetchOccurrences(startDateString, shift.id!);
+  const isFirstShift = await checkLogsIfFirstShift(mshipID.value);
   const occurrences = ress.occurrences;
 
   if (occurrences.length != 1) {
@@ -248,6 +249,7 @@ async function createAssignment(onetime: boolean) {
     shifts_from: startDateString,
     shifts_is_regular: !onetime,
     shifts_is_coordination: createAssignmentCoordinator.value,
+    is_first_shift: isFirstShift,
   };
 
   const res = (await directus.request(

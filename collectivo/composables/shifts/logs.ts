@@ -69,3 +69,21 @@ export async function createShiftLog(
     ),
   );
 }
+
+export async function checkLogsIfFirstShift(mshipId: number) {
+  const directus = useDirectus();
+  const logs = await directus.request(
+    readItems("shifts_logs", {
+      filter: {
+        shifts_membership: {
+          _eq: mshipId,
+        },
+        shifts_type: {
+          _in: ["attended", "attended_draft"],
+        },
+      },
+      limit: 1,
+    }),
+  );
+  return logs.length === 0;
+}
