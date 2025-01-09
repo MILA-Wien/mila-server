@@ -35,7 +35,7 @@ const selectedDate = ref(
 async function fetchOccurrences(
   from: Date,
   to: Date,
-): Promise<ShiftOccurrenceFrontend> {
+): Promise<ShiftOccurrenceApiResponse> {
   return await $fetch("/api/shifts/occurrences", {
     query: {
       from: from.toISOString(),
@@ -45,7 +45,7 @@ async function fetchOccurrences(
   });
 }
 
-const events = ref<ShiftOccurrenceFrontend | null>(null);
+const events = ref<ShiftOccurrenceApiResponse | null>(null);
 const startDate = ref(new Date());
 const endDate = ref(new Date());
 
@@ -86,11 +86,7 @@ async function loadCategories() {
 
 // Date navigation
 
-function changeMonth(directionPositive: boolean) {
-  const newMonth = new Date(selectedDate.value);
-  newMonth.setMonth(newMonth.getMonth() + (directionPositive ? 1 : -1));
-  selectedDate.value = newMonth;
-
+function setMonthDates() {
   startDate.value = new Date(
     selectedDate.value.getFullYear(),
     selectedDate.value.getMonth(),
@@ -102,6 +98,13 @@ function changeMonth(directionPositive: boolean) {
     selectedDate.value.getMonth() + 1,
     0,
   );
+}
+
+function changeMonth(directionPositive: boolean) {
+  const newMonth = new Date(selectedDate.value);
+  newMonth.setMonth(newMonth.getMonth() + (directionPositive ? 1 : -1));
+  selectedDate.value = newMonth;
+  setMonthDates();
 
   loadEvents();
 }
@@ -126,12 +129,16 @@ function changeWeek(directionPositive: boolean) {
   loadEvents();
 }
 
+function setDayDates() {
+  startDate.value = new Date(selectedDate.value);
+  endDate.value = new Date(selectedDate.value);
+}
+
 function changeDay(directionPositive: boolean) {
   const newDay = new Date(selectedDate.value);
   newDay.setDate(newDay.getDate() + (directionPositive ? 1 : -1));
   selectedDate.value = newDay;
-  startDate.value = new Date(selectedDate.value);
-  endDate.value = new Date(selectedDate.value);
+  setDayDates();
   loadEvents();
 }
 
@@ -187,6 +194,21 @@ function getDateString() {
   }
 }
 
+watch(selectedView, () => {
+  switch (selectedView.value.value) {
+    case "month":
+      setMonthDates();
+      break;
+    case "week":
+      setWeekDates();
+      break;
+    case "day":
+      setDayDates();
+      break;
+  }
+  loadEvents();
+});
+
 loadCategories();
 setWeekDates();
 loadEvents();
@@ -221,18 +243,6 @@ loadEvents();
     </UFormGroup>
 
     <div class="flex flex-wrap gap-4">
-      <UFormGroup v-if="categories.length > 1" :label="t('Category')">
-        <USelectMenu
-          v-model="selectedCategory"
-          :options="categories"
-          class="w-36"
-        >
-          <template #label>{{ t(selectedCategory.name) }}</template>
-          <template #option="{ option }">
-            {{ t(option.name) }}
-          </template>
-        </USelectMenu>
-      </UFormGroup>
       <UFormGroup :label="t('Display')">
         <USelectMenu
           v-model="selectedView"
@@ -246,7 +256,8 @@ loadEvents();
           </template>
         </USelectMenu>
       </UFormGroup>
-      <UFormGroup :label="t('Filter')">
+
+      <UFormGroup :label="t('Signup')">
         <USelectMenu
           v-model="selectedFilter"
           :options="filterOptions"
@@ -256,6 +267,19 @@ loadEvents();
           <template #label>{{ t(selectedFilter?.label) }}</template>
           <template #option="{ option }">
             {{ t(option.label) }}
+          </template>
+        </USelectMenu>
+      </UFormGroup>
+
+      <UFormGroup v-if="categories.length > 1" :label="t('Category')">
+        <USelectMenu
+          v-model="selectedCategory"
+          :options="categories"
+          class="w-36"
+        >
+          <template #label>{{ t(selectedCategory.name) }}</template>
+          <template #option="{ option }">
+            {{ t(option.name) }}
           </template>
         </USelectMenu>
       </UFormGroup>
@@ -289,6 +313,7 @@ de:
   One-time: Einmalig
   Display: Anzeige
   Filters: Filter
+  Signup: Anmeldung
   "All shifts": "Alle Schichten"
   "Open shifts": "Offene Schichten"
 </i18n>

@@ -195,17 +195,19 @@ declare global {
     name: string;
   }
 
+  interface ShiftOccurrenceApiResponse {
+    occurrences: ShiftOccurrenceFrontend[];
+  }
+
   interface ShiftOccurrenceFrontend {
-    occurrences: {
-      shift: ShiftsShift;
-      start: string;
-      end: string;
-      shiftRule: RRuleSet;
-      n_assigned: number;
-      assignments: AssignmentOccurrence[];
-      selfAssigned?: boolean;
-      needsCoordinator?: boolean;
-    }[];
+    shift: ShiftsShift;
+    start: string;
+    end: string;
+    shiftRule: RRuleSet;
+    n_assigned: number;
+    assignments: AssignmentOccurrence[];
+    selfAssigned?: boolean;
+    needsCoordinator?: boolean;
   }
 
   interface ShiftOccurrence {
