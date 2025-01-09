@@ -2,11 +2,17 @@
 import type { PropType } from "vue";
 
 const props = defineProps({
+  admin: {
+    type: Boolean,
+    default: false,
+  },
   events: {
     type: Object as PropType<ShiftOccurrenceApiResponse>,
     required: true,
   },
 });
+
+const emit = defineEmits(["openOccurrence"]);
 
 const { locale, t } = useI18n();
 
@@ -41,6 +47,10 @@ props.events.publicHolidays.forEach((holiday) => {
     groups[dateString].isPublicHoliday = true;
   }
 });
+
+function emitOcc(occ: ShiftOccurrenceFrontend) {
+  emit("openOccurrence", occ);
+}
 </script>
 
 <template>
@@ -53,7 +63,11 @@ props.events.publicHolidays.forEach((holiday) => {
 
       <div class="flex flex-col gap-2">
         <div v-for="(occurrence, index) in group.occurrences" :key="index">
-          <ShiftsListTile :occurrence="occurrence" />
+          <ShiftsListTile
+            :occurrence="occurrence"
+            :admin="admin"
+            @open-occurrence="emitOcc"
+          />
         </div>
       </div>
     </div>

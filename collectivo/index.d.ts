@@ -197,6 +197,7 @@ declare global {
 
   interface ShiftOccurrenceApiResponse {
     occurrences: ShiftOccurrenceFrontend[];
+    publicHolidays: ShiftsPublicHoliday[];
   }
 
   interface ShiftOccurrenceFrontend {

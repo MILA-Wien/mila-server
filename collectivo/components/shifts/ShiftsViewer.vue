@@ -12,6 +12,30 @@ const props = defineProps({
 
 const { locale, t } = useI18n();
 
+// Modal controls
+const modalIsOpen = ref(false);
+const modalOccurrence = ref<ShiftOccurrenceFrontend | null>(null);
+function openModal(occ: ShiftOccurrenceFrontend) {
+  modalOccurrence.value = occ;
+  modalIsOpen.value = true;
+}
+
+// Fetching events from API (occurrences and public holidays)
+const events = ref<ShiftOccurrenceApiResponse | null>(null);
+const startDate = ref(new Date());
+const endDate = ref(new Date());
+async function loadEvents() {
+  events.value = null;
+  events.value = await $fetch("/api/shifts/occurrences", {
+    query: {
+      from: startDate.value.toISOString(),
+      to: endDate.value.toISOString(),
+      admin: props.admin,
+    },
+  });
+}
+
+// View options
 const viewOptions = [
   { label: "Day", value: "day" },
   { label: "Week", value: "week" },
@@ -27,32 +51,6 @@ const selectedFilter = ref(
   filterOptions.find((filter) => filter.value === props.filter) ||
     filterOptions[0],
 );
-
-const selectedDate = ref(
-  new Date(new Date().toISOString().split("T")[0] + "T00:00:00.000Z"),
-);
-
-async function fetchOccurrences(
-  from: Date,
-  to: Date,
-): Promise<ShiftOccurrenceApiResponse> {
-  return await $fetch("/api/shifts/occurrences", {
-    query: {
-      from: from.toISOString(),
-      to: to.toISOString(),
-      admin: props.admin,
-    },
-  });
-}
-
-const events = ref<ShiftOccurrenceApiResponse | null>(null);
-const startDate = ref(new Date());
-const endDate = ref(new Date());
-
-async function loadEvents() {
-  events.value = null;
-  events.value = await fetchOccurrences(startDate.value, endDate.value);
-}
 
 // Categories
 const categoriesLoaded = ref(false);
@@ -85,18 +83,31 @@ async function loadCategories() {
 }
 
 // Date navigation
+const selectedDate = ref(
+  new Date(new Date().toISOString().split("T")[0] + "T00:00:00.000Z"),
+);
 
 function setMonthDates() {
   startDate.value = new Date(
-    selectedDate.value.getFullYear(),
-    selectedDate.value.getMonth(),
-    1,
+    Date.UTC(
+      selectedDate.value.getFullYear(),
+      selectedDate.value.getMonth(),
+      1,
+      0,
+      0,
+      0,
+    ),
   );
 
   endDate.value = new Date(
-    selectedDate.value.getFullYear(),
-    selectedDate.value.getMonth() + 1,
-    0,
+    Date.UTC(
+      selectedDate.value.getFullYear(),
+      selectedDate.value.getMonth() + 1,
+      1,
+      0,
+      0,
+      0,
+    ),
   );
 }
 
@@ -209,6 +220,14 @@ watch(selectedView, () => {
   loadEvents();
 });
 
+// Watch changes in locale (needs re-render)
+const showCalendar = ref(true);
+watch(locale, () => {
+  console.log("Locale changed");
+  showCalendar.value = false;
+  showCalendar.value = true;
+});
+
 loadCategories();
 setWeekDates();
 loadEvents();
@@ -296,15 +315,39 @@ loadEvents();
     <ShiftsList
       v-if="selectedView.value === 'week' || selectedView.value === 'day'"
       :events="events"
+      :admin="admin"
+      @open-occurrence="openModal"
     />
-    <div v-else-if="selectedView.value === 'month'">
-      CALENDAR
-      <!-- <ShiftsCalendar v-if="events" :events="events" /> -->
-    </div>
+    <ShiftsCalendar
+      v-else-if="selectedView.value === 'month' && showCalendar"
+      :admin="admin"
+      :events="events"
+      :from-date="startDate"
+      :to-date="endDate"
+      @open-occurrence="openModal"
+    />
   </div>
   <div v-else class="pt-10">
     <USkeleton class="h-24 w-full" />
   </div>
+
+  <template v-if="props.admin">
+    <ShiftsCalendarModalAdmin
+      v-if="modalIsOpen && modalOccurrence"
+      v-model:is-open="modalIsOpen"
+      :shift-occurence="modalOccurrence"
+      @data-has-changed="loadEvents"
+    />
+  </template>
+  <template v-else>
+    <ShiftsCalendarModalUser
+      v-if="modalIsOpen && modalOccurrence"
+      v-model:is-open="modalIsOpen"
+      :shift-occurence="modalOccurrence"
+      :shift-type="'jumper'"
+      @reload="loadEvents"
+    />
+  </template>
 </template>
 
 <style lang="scss" scoped></style>

@@ -11,6 +11,7 @@ export default defineAppConfig({
     primary: "purple",
     gray: "cool",
     button: {
+      base: "focus:outline-none focus-visible:outline-0 disabled:cursor-default disabled:opacity-75 aria-disabled:cursor-default aria-disabled:opacity-75 flex-shrink-0",
       font: "font-semibold tracking-wider",
       rounded: "rounded-sm",
       size: {
