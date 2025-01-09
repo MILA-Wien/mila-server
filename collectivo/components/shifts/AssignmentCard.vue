@@ -14,25 +14,12 @@ const props = defineProps({
 });
 
 // This is the next occurence of the assignment, not the shift itself!
-const nextOccurrence = props.shiftAssignment.nextOccurrence;
+const nextOccurrence = props.shiftAssignment.nextOccurrence as String;
 const assignment = props.shiftAssignment.assignment as ShiftsAssignment;
 const absences = props.shiftAssignment.absences as ShiftsAbsence[];
 const shift = assignment.shifts_shift as ShiftsShift;
 const user = useCurrentUser();
 const emit = defineEmits(["reload"]);
-
-function getTimeString(occurence: string) {
-  const occ = DateTime.fromISO(occurence, { locale: locale.value });
-  const weekday = occ.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
-  const startTime = shift.shifts_from_time?.slice(0, 5);
-  const endTime = shift.shifts_to_time?.slice(0, 5);
-
-  if (!startTime || !endTime) {
-    return weekday;
-  }
-
-  return `${weekday} ${t("from")} ${startTime} ${t("to")} ${endTime}`;
-}
 
 function getEndDate(endDate: string) {
   return DateTime.fromISO(endDate).toLocaleString(DateTime.DATE_MED);
@@ -64,7 +51,7 @@ async function requestSignOut() {
 <template>
   <div v-if="nextOccurrence">
     <CollectivoCard
-      :title="getTimeString(nextOccurrence)"
+      :title="getTimeString(shift, nextOccurrence, locale, t)"
       :color="shiftAssignment.isRegular ? 'primary' : 'green'"
     >
       <div>
@@ -98,11 +85,6 @@ async function requestSignOut() {
 
         <!-- Shift name -->
         <p class="mt-2">{{ t("Shift name") }}: {{ shift.shifts_name }}</p>
-
-        <!-- Shift location -->
-        <p v-if="shift.shifts_location">
-          {{ t("Location") }}: {{ shift.shifts_location }}
-        </p>
 
         <!-- Shift infos -->
         <!-- eslint-disable vue/no-v-html -->

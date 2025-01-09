@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 // Always start of the day, in UTC
 export function getCurrentDate() {
   const now = new Date();
@@ -19,4 +21,22 @@ export function getCurrentDate() {
 export function getFutureDate(days: number) {
   const currentDate = getCurrentDate();
   return new Date(currentDate.setDate(currentDate.getDate() + days));
+}
+
+export function getTimeString(
+  shift: ShiftsShift,
+  occurence: string,
+  locale: string,
+  t: any,
+) {
+  const occ = DateTime.fromISO(occurence, { locale: locale });
+  const weekday = occ.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
+  const startTime = shift.shifts_from_time?.slice(0, 5);
+  const endTime = shift.shifts_to_time?.slice(0, 5);
+
+  if (!startTime || !endTime) {
+    return weekday;
+  }
+
+  return `${weekday} ${t("from")} ${startTime} ${t("to")} ${endTime}`;
 }
