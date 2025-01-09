@@ -215,9 +215,14 @@ loadEvents();
 </script>
 
 <template>
-  <div v-if="categoriesLoaded" class="flex flex-wrap items-center gap-4">
-    <UFormGroup :label="t(selectedView.label)">
-      <div class="flex flex-row items-center h-[50px] bg-blue-50">
+  <div
+    v-if="categoriesLoaded"
+    class="flex flex-wrap justify-between items-center gap-4"
+  >
+    <UFormGroup :label="t(selectedView.label)" class="flex-[1_0_0]">
+      <div
+        class="flex flex-row justify-between items-center h-[50px] bg-blue-50"
+      >
         <UButton
           size="sm"
           variant="ghost"
@@ -227,7 +232,7 @@ loadEvents();
         >
           <UIcon name="i-heroicons-chevron-left-16-solid" class="text-2xl" />
         </UButton>
-        <span class="p-0 m-0">
+        <span class="p-0 m-0 whitespace-nowrap">
           {{ getDateString() }}
         </span>
         <UButton
@@ -242,48 +247,50 @@ loadEvents();
       </div>
     </UFormGroup>
 
-    <div class="flex flex-wrap gap-4">
-      <UFormGroup :label="t('Display')">
-        <USelectMenu
-          v-model="selectedView"
-          :options="viewOptions"
-          option-attribute="label"
-          class="min-w-36"
-        >
-          <template #label>{{ t(selectedView?.label) }}</template>
-          <template #option="{ option }">
-            {{ t(option.label) }}
-          </template>
-        </USelectMenu>
-      </UFormGroup>
+    <UFormGroup :label="t('Display')" class="flex-1">
+      <USelectMenu
+        v-model="selectedView"
+        :options="viewOptions"
+        option-attribute="label"
+        class="whitespace-nowrap"
+      >
+        <template #label>{{ t(selectedView?.label) }}</template>
+        <template #option="{ option }">
+          {{ t(option.label) }}
+        </template>
+      </USelectMenu>
+    </UFormGroup>
 
-      <UFormGroup :label="t('Signup')">
-        <USelectMenu
-          v-model="selectedFilter"
-          :options="filterOptions"
-          option-attribute="label"
-          class="min-w-36"
-        >
-          <template #label>{{ t(selectedFilter?.label) }}</template>
-          <template #option="{ option }">
-            {{ t(option.label) }}
-          </template>
-        </USelectMenu>
-      </UFormGroup>
+    <UFormGroup :label="t('Signup')" class="flex-1">
+      <USelectMenu
+        v-model="selectedFilter"
+        :options="filterOptions"
+        option-attribute="label"
+        class="whitespace-nowrap"
+      >
+        <template #label>{{ t(selectedFilter?.label) }}</template>
+        <template #option="{ option }">
+          {{ t(option.label) }}
+        </template>
+      </USelectMenu>
+    </UFormGroup>
 
-      <UFormGroup v-if="categories.length > 1" :label="t('Category')">
-        <USelectMenu
-          v-model="selectedCategory"
-          :options="categories"
-          class="w-36"
-        >
-          <template #label>{{ t(selectedCategory.name) }}</template>
-          <template #option="{ option }">
-            {{ t(option.name) }}
-          </template>
-        </USelectMenu>
-      </UFormGroup>
-    </div>
+    <UFormGroup
+      v-if="categories.length > 1"
+      :label="t('Category')"
+      class="flex-1"
+    >
+      <USelectMenu
+        v-model="selectedCategory"
+        :options="categories"
+        class="whitespace-nowrap"
+      >
+        <template #label>{{ t(selectedCategory.name) }}</template>
+        <template #option="{ option }">
+          {{ t(option.name) }}
+        </template>
+      </USelectMenu>
+    </UFormGroup>
   </div>
   <div v-if="events != null" class="pt-10">
     <ShiftsList
