@@ -21,6 +21,7 @@ function openModal(occ: ShiftOccurrenceFrontend) {
 }
 
 // Fetching events from API (occurrences and public holidays)
+const render = ref(false);
 const events = ref<ShiftOccurrenceApiResponse | null>(null);
 const startDate = ref(new Date());
 const endDate = ref(new Date());
@@ -33,6 +34,7 @@ async function loadEvents() {
       admin: props.admin,
     },
   });
+  render.value = true;
 }
 
 // View options
@@ -57,7 +59,7 @@ const categoriesLoaded = ref(false);
 const categories = ref<ShiftsCategory[]>([
   {
     id: -1,
-    name: "Alle",
+    name: "Alle Kategorien",
   },
   {
     id: 0,
@@ -220,6 +222,20 @@ watch(selectedView, () => {
   loadEvents();
 });
 
+async function rerender() {
+  render.value = false;
+  await nextTick();
+  render.value = true;
+}
+
+watch(selectedFilter, async () => {
+  rerender();
+});
+
+watch(selectedCategory, async () => {
+  rerender();
+});
+
 // Watch changes in locale (needs re-render)
 const showCalendar = ref(true);
 watch(locale, () => {
@@ -280,7 +296,7 @@ loadEvents();
       </USelectMenu>
     </UFormGroup>
 
-    <UFormGroup :label="t('Signup')" class="flex-1">
+    <UFormGroup :label="t('Filter')" class="flex-1">
       <USelectMenu
         v-model="selectedFilter"
         :options="filterOptions"
@@ -311,11 +327,13 @@ loadEvents();
       </USelectMenu>
     </UFormGroup>
   </div>
-  <div v-if="events != null" class="pt-10">
+  <div v-if="render && events != null" class="pt-10">
     <ShiftsList
       v-if="selectedView.value === 'week' || selectedView.value === 'day'"
       :events="events"
       :admin="admin"
+      :status="selectedFilter.value"
+      :category="selectedCategory.id"
       @open-occurrence="openModal"
     />
     <ShiftsCalendar
@@ -324,6 +342,8 @@ loadEvents();
       :events="events"
       :from-date="startDate"
       :to-date="endDate"
+      :status="selectedFilter.value"
+      :category="selectedCategory.id"
       @open-occurrence="openModal"
     />
   </div>
@@ -350,7 +370,16 @@ loadEvents();
   </template>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep {
+  .fc-daygrid-event {
+    border-radius: 0;
+  }
+  .fc-event-main {
+    padding: 4px 0px 4px 5px;
+  }
+}
+</style>
 
 <i18n lang="yaml">
 de:

@@ -33,10 +33,13 @@ const props = defineProps({
     required: true,
   },
 });
-const { locale, t } = useI18n();
-const colors = ["#00867a", "#e3a065", "#942020"];
-const emit = defineEmits(["openOccurrence"]);
 
+console.log("status2", props.status);
+
+const { locale, t } = useI18n();
+const colors = ["#00867a", "#ce6a28", "#942020"];
+const emit = defineEmits(["openOccurrence"]);
+console.log("status", props.status);
 // Set up full calendar
 // Dates are used without time, time always being set to UTC 00:00
 const calendarRef = ref<{ getApi: () => CalendarApi } | null>(null);
@@ -80,14 +83,14 @@ async function prepareEvents() {
   const events = [];
   const allCats = props.category === -1;
   const unfilled = props.status === "unfilled";
-
+  console.log("unfilled", unfilled);
   // Add public holidays
   for (const holiday of props.events.publicHolidays) {
     events.push({
       title: t("Public holiday"),
       start: holiday.date,
       allDay: true,
-      color: "gray",
+      color: "#385ad8",
     });
   }
 
@@ -99,17 +102,9 @@ async function prepareEvents() {
     let title = occurrence.shift.shifts_name;
     let color = "";
 
-    if (props.admin) {
-      color = isPast
-        ? "#6d6d6d"
-        : colors[n_missing >= 0 && n_missing < 3 ? n_missing : 2];
-    } else {
-      color = colors[0];
-      if (occurrence.selfAssigned) {
-        // Do not add occurrences that the user themselves is already assigned to
-        continue;
-      }
-    }
+    color = isPast
+      ? "#6d6d6d"
+      : colors[n_missing >= 0 && n_missing < 3 ? n_missing : 2];
 
     // Show slot status for future shifts in admin mode
     if (props.admin && !isPast) {
@@ -121,22 +116,14 @@ async function prepareEvents() {
         "]";
     }
 
-    // Show assigned names
-    // if (calendarFilters.value.displayNames) {
-    //   for (const assignment of occurrence.assignments) {
-    //     const m = assignment.assignment.shifts_membership;
-    //     const u = m.memberships_user as UserProfile;
-    //     if (u.first_name && assignment.isActive) {
-    //       title += "\n" + u.first_name + " " + u.last_name;
-    //       if (m.shifts_logs_count < 1) {
-    //         title += "*";
-    //       }
-    //     }
-    //   }
-    //}
-
     // Apply filters
+    if (!props.admin && occurrence.selfAssigned) {
+      // Do not add occurrences that the user themselves is already assigned to
+      continue;
+    }
+
     if (unfilled) {
+      console.log("doing unfilled stuff");
       if (isPast) {
         continue;
       }
