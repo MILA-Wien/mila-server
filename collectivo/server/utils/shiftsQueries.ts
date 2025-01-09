@@ -35,7 +35,6 @@ export async function getShiftAssignments(
   from: Date,
   to: Date,
 ) {
-  console.log("getting assignments");
   if (shiftIds.length === 0) {
     return [];
   }

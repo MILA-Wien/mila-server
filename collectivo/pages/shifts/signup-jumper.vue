@@ -14,7 +14,7 @@ definePageMeta({
 </script>
 
 <template>
-  <ShiftsCalendar mode="jumper" />
+  <ShiftsViewer />
 </template>
 
 <i18n lang="yaml">

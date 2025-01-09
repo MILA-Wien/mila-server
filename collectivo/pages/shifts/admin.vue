@@ -12,7 +12,7 @@ definePageMeta({
 </script>
 
 <template>
-  <ShiftsCalendar mode="admin" />
+  <ShiftsViewer :admin="true" />
 </template>
 
 <i18n lang="yaml">

@@ -8,7 +8,6 @@ definePageMeta({
 const { t } = useI18n();
 setCollectivoTitle(t("Shifts"));
 
-const user = useCurrentUser().value.user!;
 const mship = useCurrentUser().value.membership!;
 const isActive = mship.shifts_user_type != "inactive";
 const activeAssignments: Ref<ShiftsAssignmentRules[]> = ref([]);

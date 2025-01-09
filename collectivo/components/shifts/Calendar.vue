@@ -71,7 +71,11 @@ const calendarFilters = ref<ShiftsFilterState>({
   displayUnfilled: adminMode ? false : true,
   adminMode: adminMode,
 });
-props.mode == "admin" ? loadFiltersAdmin() : loadFiltersUser();
+if (props.mode == "admin") {
+  loadFiltersAdmin();
+} else {
+  loadFiltersUser();
+}
 async function loadFiltersAdmin() {
   calendarFilters.value.categories.unshift({
     id: -1,

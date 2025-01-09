@@ -52,7 +52,7 @@ declare global {
     shifts_counter: number;
     shifts_logs?: ShiftsLog[];
     shifts_can_be_coordinator: boolean;
-    shifts_categories_allowed: { shifts_category_id: ShiftsCategory }[];
+    shifts_categories_allowed: { shifts_categories_id: number }[];
     coshoppers?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
     kids?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
   }
@@ -196,14 +196,16 @@ declare global {
   }
 
   interface ShiftOccurrenceFrontend {
-    shift: ShiftsShift;
-    start: string;
-    end: string;
-    shiftRule: RRuleSet;
-    n_assigned: number;
-    assignments: AssignmentOccurrence[];
-    selfAssigned?: boolean;
-    needsCoordinator?: boolean;
+    occurrences: {
+      shift: ShiftsShift;
+      start: string;
+      end: string;
+      shiftRule: RRuleSet;
+      n_assigned: number;
+      assignments: AssignmentOccurrence[];
+      selfAssigned?: boolean;
+      needsCoordinator?: boolean;
+    }[];
   }
 
   interface ShiftOccurrence {
