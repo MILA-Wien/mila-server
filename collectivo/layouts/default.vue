@@ -18,27 +18,29 @@ const backLink = useCollectivoBackLink();
       <div class="hidden md:flex w-full justify-end px-8 pt-8 pb-4 right-0">
         <ProfileMenu2 />
       </div>
-      <div class="px-6 py-3 md:px-12 md:pb-20 lg:px-20">
-        <div class="hidden md:flex justify-between items-start mb-7 lg:mb-11">
-          <div class="">
-            <h1
-              class="flex flex-wrap text-4xl lg:text-5xl align-middle items-center gap-3 mt-0"
-            >
-              <NuxtLink
-                v-if="backLink"
-                :to="backLink"
-                class="flex items-center"
+      <div class="flex flex-row justify-center">
+        <div class="px-6 py-3 md:px-12 md:pb-20 lg:px-20 w-full max-w-7xl">
+          <div class="hidden md:flex justify-between items-start mb-7 lg:mb-11">
+            <div class="">
+              <h1
+                class="flex flex-wrap text-4xl lg:text-5xl align-middle items-center gap-3 mt-0"
               >
-                <UIcon name="i-heroicons-arrow-left-circle-16-solid" />
-              </NuxtLink>
+                <NuxtLink
+                  v-if="backLink"
+                  :to="backLink"
+                  class="flex items-center"
+                >
+                  <UIcon name="i-heroicons-arrow-left-circle-16-solid" />
+                </NuxtLink>
 
-              {{ t(pageTitle) }}
-            </h1>
+                {{ t(pageTitle) }}
+              </h1>
+            </div>
           </div>
-        </div>
 
-        <!-- Main content -->
-        <slot />
+          <!-- Main content -->
+          <slot />
+        </div>
       </div>
     </div>
     <MobileMenu />
