@@ -140,7 +140,10 @@ const loadEvents = async (reload = false) => {
 type LoadedOccurrences = Awaited<ReturnType<typeof fetchOccurrences>>;
 const loadedOccurrences = ref<LoadedOccurrences | null>(null);
 
-async function fetchOccurrences(from: Date, to: Date) {
+async function fetchOccurrences(
+  from: Date,
+  to: Date,
+): Promise<{ occurrences: ShiftOccurrenceFrontend[] }> {
   return await $fetch("/api/shifts/occurrences", {
     query: {
       from: from.toISOString(),
@@ -211,8 +214,7 @@ async function loadEventsInner(from: Date, to: Date, reload: boolean = false) {
         const u = m.memberships_user as UserProfile;
         if (u.first_name && assignment.isActive) {
           title += "\n" + u.first_name + " " + u.last_name;
-          // TODO Count only logs with "attended"
-          if (m.shifts_logs_count <= 1) {
+          if (m.shifts_logs_count < 1) {
             title += "*";
           }
         }

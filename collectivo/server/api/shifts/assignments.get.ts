@@ -1,6 +1,5 @@
 import { RRule, RRuleSet } from "rrule";
 import { readItems } from "@directus/sdk";
-import { getShiftRrule } from "~/server/utils/shifts";
 
 export default defineEventHandler(async (event) => {
   return getUserAssignments(event.context.auth.mship);

@@ -35,6 +35,7 @@ export async function getShiftAssignments(
   from: Date,
   to: Date,
 ) {
+  console.log("getting assignments");
   if (shiftIds.length === 0) {
     return [];
   }
@@ -57,11 +58,11 @@ export async function getShiftAssignments(
         "shifts_shift",
         "shifts_is_regular",
         "shifts_is_coordination",
-        "is_first_shift",
         {
           shifts_membership: [
             "id",
             "shifts_counter",
+            "count(shifts_logs)",
             {
               memberships_user: ["first_name", "last_name", "hide_name"],
             },

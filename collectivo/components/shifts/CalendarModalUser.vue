@@ -55,7 +55,11 @@ async function postAssignment() {
   }
 }
 
-async function fetchOccurrences(from: DateTime, to: DateTime, shiftID: number) {
+async function fetchOccurrences(
+  from: DateTime,
+  to: DateTime,
+  shiftID: number,
+): Promise<{ occurrences: ShiftOccurrence[] }> {
   return await $fetch("/api/shifts/occurrences", {
     query: {
       from: from.toISODate(),
@@ -70,11 +74,9 @@ async function postAssignmentInner() {
 
   const shiftStartString = start.toISO()!;
 
-  const isFirstShift = await checkLogsIfFirstShift(user.value.membership!.id);
-
   // Check if shift is already full (parallel signup)
   const res = await fetchOccurrences(start, end, shift.id!);
-  const occurrences = res.occurrences as ShiftOccurrence[];
+  const occurrences = res.occurrences;
 
   if (occurrences.length != 1) {
     throw new Error("No or multiple occurrences found");
@@ -98,7 +100,6 @@ async function postAssignmentInner() {
     shifts_from: shiftStartString,
     shifts_is_regular: false,
     shifts_is_coordination: false,
-    is_first_shift: isFirstShift,
   };
 
   // One-time shifts have same start and end date

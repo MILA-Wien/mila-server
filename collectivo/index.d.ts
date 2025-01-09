@@ -50,6 +50,7 @@ declare global {
     memberships_shares: number;
     shifts_user_type: ShiftsUserType;
     shifts_counter: number;
+    shifts_logs?: ShiftsLog[];
     shifts_can_be_coordinator: boolean;
     shifts_categories_allowed: { shifts_category_id: ShiftsCategory }[];
     coshoppers?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
@@ -147,7 +148,6 @@ declare global {
     shifts_membership: MembershipsMembership | number;
     shifts_is_coordination: boolean;
     send_reminders: boolean;
-    is_first_shift: boolean;
   }
 
   interface ShiftsAssignmentGet extends ShiftsAssignment {
@@ -193,6 +193,17 @@ declare global {
   interface ShiftsCategory {
     id: number;
     name: string;
+  }
+
+  interface ShiftOccurrenceFrontend {
+    shift: ShiftsShift;
+    start: string;
+    end: string;
+    shiftRule: RRuleSet;
+    n_assigned: number;
+    assignments: AssignmentOccurrence[];
+    selfAssigned?: boolean;
+    needsCoordinator?: boolean;
   }
 
   interface ShiftOccurrence {
