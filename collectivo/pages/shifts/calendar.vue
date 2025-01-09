@@ -4,8 +4,8 @@ definePageMeta({
 });
 
 const { t } = useI18n();
-setCollectivoTitle(t("Sign up for a one-time shift"), {
-  backLink: "dashboard",
+setCollectivoTitle(t("Shift calendar"), {
+  backLink: "/shifts",
 });
 
 definePageMeta({
@@ -14,10 +14,11 @@ definePageMeta({
 </script>
 
 <template>
-  <ShiftsViewer />
+  <ShiftsViewer :filter="'unfilled'" />
 </template>
 
 <i18n lang="yaml">
 de:
+  "Shift calendar": "Schichtkalender"
   "Sign up for a one-time shift": "Einmalige Schicht eintragen"
 </i18n>

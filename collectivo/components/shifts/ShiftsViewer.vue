@@ -4,7 +4,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  filters: {
+  filter: {
     type: String,
     default: "all",
   },
@@ -24,7 +24,7 @@ const filterOptions = [
   { label: "Open shifts", value: "unfilled" },
 ];
 const selectedFilter = ref(
-  filterOptions.find((filter) => filter.value === props.filters) ||
+  filterOptions.find((filter) => filter.value === props.filter) ||
     filterOptions[0],
 );
 

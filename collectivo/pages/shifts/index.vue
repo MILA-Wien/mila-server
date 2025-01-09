@@ -102,9 +102,9 @@ if (isActive) loadData();
 
     <!-- Action Buttons -->
     <div v-if="isActive" class="flex flex-wrap mb-16 gap-4">
-      <NuxtLink to="/shifts/signup-jumper"
+      <NuxtLink to="/shifts/calendar"
         ><UButton icon="i-heroicons-plus-circle">{{
-          t("Sign up for a shift")
+          t("Shift calendar")
         }}</UButton>
       </NuxtLink>
 
@@ -188,6 +188,7 @@ if (isActive) loadData();
 
 <i18n lang="yaml">
 de:
+  "Shift calendar": "Schichtkalender"
   "My shifts": "Meine Schichten"
   "My holidays": "Meine Urlaube"
   "My activities": "Meine Aktivitäten"

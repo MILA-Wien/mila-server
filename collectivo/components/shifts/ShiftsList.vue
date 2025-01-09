@@ -52,14 +52,8 @@ props.events.publicHolidays.forEach((holiday) => {
       </h2>
 
       <div class="flex flex-col gap-2">
-        <div
-          v-for="(occurrence, index) in group.occurrences"
-          :key="index"
-          class="bg-green-100 p-3"
-        >
-          <div>{{ occurrence.shift.shifts_name }}</div>
-          <div>{{ occurrence.start }}</div>
-          <div>{{ occurrence.end }}</div>
+        <div v-for="(occurrence, index) in group.occurrences" :key="index">
+          <ShiftsListTile :occurrence="occurrence" />
         </div>
       </div>
     </div>
