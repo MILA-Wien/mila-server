@@ -193,24 +193,26 @@ loadEvents();
 </script>
 
 <template>
-  <div class="flex flex-wrap items-center gap-4" v-if="categoriesLoaded">
+  <div v-if="categoriesLoaded" class="flex flex-wrap items-center gap-4">
     <UFormGroup :label="t(selectedView.label)">
       <div class="flex flex-row items-center h-[50px] bg-blue-50">
         <UButton
           size="sm"
           variant="ghost"
           color="gray"
+          style="background-color: transparent !important"
           @click="changeDate(false)"
         >
           <UIcon name="i-heroicons-chevron-left-16-solid" class="text-2xl" />
         </UButton>
-        <h2 class="p-0 m-0">
+        <span class="p-0 m-0">
           {{ getDateString() }}
-        </h2>
+        </span>
         <UButton
           size="sm"
           variant="ghost"
           color="gray"
+          style="background-color: transparent !important"
           @click="changeDate(true)"
         >
           <UIcon name="i-heroicons-chevron-right-16-solid" class="text-2xl" />
