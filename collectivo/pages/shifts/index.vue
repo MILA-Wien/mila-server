@@ -6,7 +6,7 @@ definePageMeta({
 });
 
 const { t } = useI18n();
-setCollectivoTitle(t("Shifts"));
+setPageTitle(t("Shifts"));
 
 const mship = useCurrentUser().value.membership!;
 const isActive = mship.shifts_user_type != "inactive";

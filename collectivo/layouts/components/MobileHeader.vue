@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MobileProfileMenu from "./MobileProfileMenu.vue";
 
-const pageTitle = useCollectivoTitle();
+const pageTitle = usePageTitle();
 const { t } = useI18n();
 </script>
 

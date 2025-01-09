@@ -244,7 +244,7 @@ declare global {
   }
 
   // Layout
-  interface CollectivoMenus {
+  interface NavigationMenus {
     main: CollectivoMenuItem[];
     main_public: CollectivoMenuItem[];
     profile: CollectivoMenuItem[];

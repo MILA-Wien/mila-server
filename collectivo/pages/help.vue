@@ -7,7 +7,7 @@ const appConfig = useAppConfig();
 const config = useRuntimeConfig();
 
 const { t } = useI18n();
-setCollectivoTitle(t("You have questions?"));
+setPageTitle(t("You have questions?"));
 </script>
 
 <template>

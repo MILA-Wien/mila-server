@@ -3,7 +3,7 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-setCollectivoTitle("Dashboard");
+setPageTitle("Dashboard");
 
 const tiles = useDashboardTiles();
 

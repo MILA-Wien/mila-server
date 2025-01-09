@@ -4,7 +4,7 @@ definePageMeta({
 });
 
 const { t } = useI18n();
-setCollectivoTitle(t("Shifts calendar (admin)"));
+setPageTitle(t("Shifts calendar (admin)"));
 
 definePageMeta({
   middleware: ["auth"],
