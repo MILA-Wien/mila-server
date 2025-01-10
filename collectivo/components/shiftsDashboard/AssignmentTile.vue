@@ -51,7 +51,9 @@ async function requestSignOut() {
 <template>
   <div v-if="nextOccurrence">
     <CollectivoCard :color="shiftAssignment.isRegular ? 'primary' : 'green'">
-      <h4>{{ getTimeString(shift, nextOccurrence, locale, t) }}</h4>
+      <h4>
+        {{ getDateTimeWithTimeSpanString(shift, nextOccurrence, locale, t) }}
+      </h4>
       <div class="flex flex-row justify-between items-start">
         <div class="flex-1">
           <!-- Repetition info -->
@@ -113,7 +115,7 @@ async function requestSignOut() {
 
         <p>{{ t("Sign out from the following shift") }}:</p>
         <p>
-          {{ getTimeString(nextOccurrence) }}
+          {{ getDateTimeWithTimeSpanString(shift, nextOccurrence, locale, t) }}
         </p>
         <div class="flex flex-wrap gap-2 mt-4 justify-end">
           <UButton color="gray" @click="signOutModalIsOpen = false">

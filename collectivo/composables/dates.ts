@@ -23,7 +23,7 @@ export function getFutureDate(days: number) {
   return new Date(currentDate.setDate(currentDate.getDate() + days));
 }
 
-export function getTimeString(
+export function getDateTimeWithTimeSpanString(
   shift: ShiftsShift,
   occurence: string,
   locale: string,
@@ -39,4 +39,18 @@ export function getTimeString(
   }
 
   return `${weekday} ${t("from")} ${startTime} ${t("to")} ${endTime}`;
+}
+
+export function getDateSpanString(
+  from: string,
+  to: string,
+  locale: string,
+  t: any,
+) {
+  const fromDate = DateTime.fromISO(from, { locale: locale });
+  const toDate = DateTime.fromISO(to, { locale: locale });
+  const fromWeekDay = fromDate.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
+  const toWeekDay = toDate.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
+
+  return `${fromWeekDay} ${t("to")} ${toWeekDay}`;
 }

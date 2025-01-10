@@ -5,7 +5,7 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 setPageTitle(t("Shifts Overview"));
 
 const mship = useCurrentUser().value.membership!;
@@ -161,10 +161,16 @@ if (isActive) loadData();
             :key="absence.id"
             :color="'blue'"
           >
-            <div>
-              {{ t("Timespan") }}: {{ absence.shifts_from }} {{ t("to") }}
-              {{ absence.shifts_to }}
-            </div>
+            <h4>
+              {{
+                getDateSpanString(
+                  absence.shifts_from,
+                  absence.shifts_to,
+                  locale,
+                  t,
+                )
+              }}
+            </h4>
             <div>{{ t("Status") }}: {{ t(absence.shifts_status) }}</div>
             <div v-if="!absence.shifts_is_for_all_assignments">
               {{ t("Info") }}:
