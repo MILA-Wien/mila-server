@@ -3,6 +3,15 @@ import type { Config } from "tailwindcss";
 // See https://uicolors.app/
 
 export default <Partial<Config>>{
+  safelist: [
+    {
+      pattern: /border-(red|blue|green|orange|pink|purple|primary)-500/,
+      variants: ["hover", "focus"], // Optional: include hover, focus variants if needed
+    },
+    {
+      pattern: /bg-(red|blue|green|orange|pink|purple|primary)-50/,
+    },
+  ],
   theme: {
     extend: {
       colors: {
@@ -21,11 +30,11 @@ export default <Partial<Config>>{
           "200": "#a4ebde",
           "300": "#6edaca",
           "400": "#40c1b3",
-          "500": "#26a195",
-          "600": "#1d847c",
-          "700": "#1b6a65",
-          "800": "#1a5552",
-          "900": "#1a4745",
+          "500": "#00867a", // Elf Green 700 - CI
+          "600": "#1a5552",
+          "700": "#1a4745",
+          "800": "#092a29",
+          "900": "#092a29",
           "950": "#092a29",
         },
 
@@ -36,12 +45,12 @@ export default <Partial<Config>>{
           "200": "#cfcff6",
           "300": "#b4b2ef",
           "400": "#9c93e6",
-          "500": "#6b4eb4",
-          "600": "#574291",
-          "700": "#4d3e7b",
-          "800": "#4d3e7b",
-          "900": "#4d3e7b",
-          "950": "#2b2244",
+          "500": "#3b2776",
+          "600": "#281a4c",
+          "700": "#281a4c",
+          "800": "#281a4c",
+          "900": "#281a4c",
+          "950": "#281a4c",
         },
 
         blue: {

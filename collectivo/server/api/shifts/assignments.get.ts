@@ -60,7 +60,7 @@ export const getUserAssignments = async (mship: number) => {
     if (absence.shifts_is_holiday) {
       holidays.push(absence);
       if (
-        new Date(absence.shifts_from) < new Date(nowStr) &&
+        new Date(absence.shifts_from) <= new Date(nowStr) &&
         absence.shifts_status === "accepted"
       ) {
         holidaysCurrent.push(absence);

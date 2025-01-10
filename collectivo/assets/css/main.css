@@ -41,11 +41,11 @@ h3 {
 }
 
 h4 {
-  @apply font-Avory text-xl;
+  @apply font-OpenSans font-extrabold text-lg;
 }
 
 h5 {
-  @apply font-Avory text-lg;
+  @apply font-OpenSans font-extrabold;
 }
 
 p {

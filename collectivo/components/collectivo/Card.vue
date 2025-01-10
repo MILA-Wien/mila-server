@@ -10,11 +10,9 @@ const _ = defineProps({
   },
 });
 </script>
-<!-- TODO: Implement colors again -->
-<!-- bg-${color ?? 'primary'}-50 -->
 <template>
   <div
-    class="px-6 py-4 h-fit w-full border-l-[5px] border-milaGreen relative overflow-hidden inline-block"
+    :class="`px-5 py-4 h-fit w-full border-l-[5px] border-${color}-500 relative overflow-hidden inline-block bg-${color}-50`"
   >
     <h3 v-if="title" class="font-Avory">
       {{ title }}

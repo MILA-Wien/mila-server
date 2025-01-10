@@ -34,12 +34,10 @@ const props = defineProps({
   },
 });
 
-console.log("status2", props.status);
-
 const { locale, t } = useI18n();
 const colors = ["#00867a", "#ce6a28", "#942020"];
 const emit = defineEmits(["openOccurrence"]);
-console.log("status", props.status);
+
 // Set up full calendar
 // Dates are used without time, time always being set to UTC 00:00
 const calendarRef = ref<{ getApi: () => CalendarApi } | null>(null);
@@ -118,7 +116,6 @@ async function prepareEvents() {
 
     // Apply filters
     if (!props.admin && occurrence.selfAssigned) {
-      // Do not add occurrences that the user themselves is already assigned to
       continue;
     }
 

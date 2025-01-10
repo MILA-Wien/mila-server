@@ -50,26 +50,25 @@ async function requestSignOut() {
 
 <template>
   <div v-if="nextOccurrence">
-    <CollectivoCard
-      :title="getTimeString(shift, nextOccurrence, locale, t)"
-      :color="shiftAssignment.isRegular ? 'primary' : 'green'"
-    >
-      <div>
-        <!-- Repetition info -->
-        <p v-if="shift.shifts_repeats_every && shiftAssignment.isRegular">
-          {{ t("Shift repeats every") }} {{ shift.shifts_repeats_every }}
-          {{ t("days") }}
+    <CollectivoCard :color="shiftAssignment.isRegular ? 'primary' : 'green'">
+      <h4>{{ getTimeString(shift, nextOccurrence, locale, t) }}</h4>
+      <div class="flex flex-row justify-between items-start">
+        <div class="flex-1">
+          <!-- Repetition info -->
+          <p v-if="shift.shifts_repeats_every && shiftAssignment.isRegular">
+            {{ t("Shift repeats every") }} {{ shift.shifts_repeats_every }}
+            {{ t("days") }}
 
-          <span v-if="assignment.shifts_to">
-            {{ t("until") }} {{ getEndDate(assignment.shifts_to) }}
-          </span>
-        </p>
-        <p v-else>
-          {{ t("One-time shift") }}
-        </p>
+            <span v-if="assignment.shifts_to">
+              {{ t("until") }} {{ getEndDate(assignment.shifts_to) }}
+            </span>
+          </p>
+          <p v-else>
+            {{ t("One-time shift") }}
+          </p>
 
-        <!-- Absences -->
-        <p v-if="absences.length > 0" class="mt-2">
+          <!-- Absences -->
+          <!-- <p v-if="absences.length > 0" class="mt-2">
           {{ t("Absences") }}:
 
           <span
@@ -81,24 +80,25 @@ async function requestSignOut() {
             }}
             &nbsp;
           </span>
-        </p>
+        </p> -->
 
-        <!-- Shift name -->
-        <p class="mt-2">{{ t("Shift name") }}: {{ shift.shifts_name }}</p>
+          <!-- Shift name -->
+          <p class="">{{ t("Shift name") }}: {{ shift.shifts_name }}</p>
 
-        <!-- Shift infos -->
-        <!-- eslint-disable vue/no-v-html -->
-        <p
-          v-if="shift.shifts_description"
-          v-html="parse(shift.shifts_description)"
-        />
-        <!-- eslint-enable vue/no-v-html -->
-
+          <!-- Shift infos -->
+          <!-- eslint-disable vue/no-v-html -->
+          <p
+            v-if="shift.shifts_description"
+            v-html="parse(shift.shifts_description)"
+          />
+          <!-- eslint-enable vue/no-v-html -->
+        </div>
         <!-- Space for buttons -->
         <div class="flex flex-wrap gap-3 pt-4">
           <UButton
             v-if="!assignment.shifts_is_regular"
             size="sm"
+            color="green"
             @click="signOutModalIsOpen = true"
             >{{ t("Sign out") }}
           </UButton>
