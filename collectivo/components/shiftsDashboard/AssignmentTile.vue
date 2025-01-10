@@ -15,8 +15,11 @@ const props = defineProps({
 
 // This is the next occurence of the assignment, not the shift itself!
 const nextOccurrence = props.shiftAssignment.nextOccurrence as String;
+const nextOccurrenceAbsent = props.shiftAssignment
+  .nextOccurrenceAbsent as Boolean;
 const assignment = props.shiftAssignment.assignment as ShiftsAssignment;
 const absences = props.shiftAssignment.absences as ShiftsAbsence[];
+const coworkers = props.shiftAssignment.coworkers as String[];
 const shift = assignment.shifts_shift as ShiftsShift;
 const user = useCurrentUser();
 const emit = defineEmits(["reload"]);
@@ -46,48 +49,55 @@ async function requestSignOut() {
   emit("reload");
   signOutModalIsOpen.value = false;
 }
+
+function getColor() {
+  if (nextOccurrenceAbsent) {
+    return "gray";
+  } else if (props.shiftAssignment.isRegular) {
+    return "blue";
+  } else {
+    return "green";
+  }
+}
 </script>
 
 <template>
   <div v-if="nextOccurrence">
-    <CollectivoCard :color="shiftAssignment.isRegular ? 'primary' : 'green'">
-      <h4>
-        {{ getDateTimeWithTimeSpanString(shift, nextOccurrence, locale, t) }}
-      </h4>
+    <CollectivoCard :color="getColor()">
       <div class="flex flex-row justify-between items-start">
         <div class="flex-1">
+          <h4>
+            {{
+              getDateTimeWithTimeSpanString(shift, nextOccurrence, locale, t)
+            }}
+          </h4>
           <!-- Repetition info -->
-          <p v-if="shift.shifts_repeats_every && shiftAssignment.isRegular">
-            {{ t("Shift repeats every") }} {{ shift.shifts_repeats_every }}
-            {{ t("days") }}
-
-            <span v-if="assignment.shifts_to">
-              {{ t("until") }} {{ getEndDate(assignment.shifts_to) }}
-            </span>
-          </p>
-          <p v-else>
+          <p v-if="!(shift.shifts_repeats_every && shiftAssignment.isRegular)">
             {{ t("One-time shift") }}
           </p>
+          <template v-else>
+            <p>
+              {{ t("Shift repeats every") }} {{ shift.shifts_repeats_every }}
+              {{ t("days") }}
 
-          <!-- Absences -->
-          <!-- <p v-if="absences.length > 0" class="mt-2">
-          {{ t("Absences") }}:
+              <span v-if="assignment.shifts_to">
+                {{ t("until") }} {{ getEndDate(assignment.shifts_to) }}
+              </span>
+            </p>
+          </template>
 
-          <span
-            v-for="absenceDate in shiftAssignment.absencesRule.all()"
-            :key="absenceDate"
-          >
-            {{
-              DateTime.fromJSDate(absenceDate).toLocaleString(DateTime.DATE_MED)
-            }}
-            &nbsp;
-          </span>
-        </p> -->
+          <!-- Shift coworkers -->
+          <p>
+            {{ t("Coworkers") }}:
+            <span v-for="(item, index) in coworkers" :key="index">
+              {{ item === "Anonymous" ? t("[name hidden]") : item }}
 
-          <!-- Shift name -->
-          <p class="">{{ t("Shift name") }}: {{ shift.shifts_name }}</p>
+              <span v-if="index < coworkers.length - 1">,</span>
+            </span>
+          </p>
 
           <!-- Shift infos -->
+          <h4 v-if="shift.shifts_name">{{ shift.shifts_name }}</h4>
           <!-- eslint-disable vue/no-v-html -->
           <p
             v-if="shift.shifts_description"
@@ -96,7 +106,7 @@ async function requestSignOut() {
           <!-- eslint-enable vue/no-v-html -->
         </div>
         <!-- Space for buttons -->
-        <div class="flex flex-wrap gap-3 pt-4">
+        <div class="flex flex-wrap gap-3">
           <UButton
             v-if="!assignment.shifts_is_regular"
             size="sm"
@@ -144,4 +154,6 @@ de:
   "Sign out": "Abmelden"
   "Shift Sign-Out": "Schicht Abmeldung"
   "Sign out from the following shift": "Von folgender Schicht abmelden"
+  "Coworkers": "Kolleg*innen"
+  "[name hidden]": "[Name verborgen]"
 </i18n>
