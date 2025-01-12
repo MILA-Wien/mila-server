@@ -413,7 +413,7 @@ function checkIfMshipInAssignments(mship: number) {
             v-for="(assignment, ai) of occ.assignments"
             :key="assignment.assignment.id"
           >
-            <ShiftsAdminModalBox
+            <ShiftsViewerModalAdminBox
               :id="assignment.assignment.id!"
               :label="t('Assignment')"
               :class="getAssignmentColor(assignment)"
@@ -467,7 +467,7 @@ function checkIfMshipInAssignments(mship: number) {
                 {{ t("Absent") }}: {{ absence.shifts_from }} {{ t("to") }}
                 {{ absence.shifts_to }}
               </div>
-            </ShiftsAdminModalBox>
+            </ShiftsViewerModalAdminBox>
           </template>
         </div>
       </div>
@@ -476,7 +476,7 @@ function checkIfMshipInAssignments(mship: number) {
       <div v-if="isPast">
         <h2 class="mb-2 mt-6">{{ t("Logs") }}</h2>
         <template v-for="log of logs" :key="log.id">
-          <ShiftsAdminModalBox
+          <ShiftsViewerModalAdminBox
             :id="log.id!"
             label="Log"
             collection="shifts_logs"
@@ -486,11 +486,11 @@ function checkIfMshipInAssignments(mship: number) {
             }}</template>
             <p>{{ t(log.shifts_type) }} ({{ log.shifts_score }})</p>
             <p v-if="log.shifts_note">Notes: {{ log.shifts_note }}</p>
-          </ShiftsAdminModalBox>
+          </ShiftsViewerModalAdminBox>
         </template>
-      </div>
-      <div class="mt-3">
-        <UButton @click="openLogModal">{{ t("Create log") }}</UButton>
+        <div class="mt-3">
+          <UButton @click="openLogModal">{{ t("Create log") }}</UButton>
+        </div>
       </div>
     </div>
 
