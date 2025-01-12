@@ -26,7 +26,7 @@ async function getLogs() {
     readItems("shifts_logs", {
       filter: { shifts_membership: mship.id },
       sort: ["-shifts_date"],
-      limit: 10,
+      limit: 5,
     }),
   );
 }
@@ -184,12 +184,14 @@ if (isActive) loadData();
 
     <!-- LOGS -->
     <div v-if="logs.length" class="mb-12">
-      <h2>{{ t("My activities") }}</h2>
+      <h2>{{ t("Past shifts") }}</h2>
       <div class="my-4">
         <div class="flex flex-col gap-1">
           <div v-for="log in logs" :key="log.id">
-            {{ log.shifts_date }}: {{ t("log:" + log.shifts_type)
-            }}{{ displayShiftScore(log.shifts_score) }}. {{ log.shifts_note }}
+            <CollectivoCard :color="'gray'">
+              {{ log.shifts_date }}: {{ t("log:" + log.shifts_type) }}.
+              {{ log.shifts_note }}
+            </CollectivoCard>
           </div>
         </div>
       </div>
@@ -209,7 +211,8 @@ de:
   "Shift calendar": "Schichtkalender"
   "My shifts": "Meine Schichten"
   "My holidays": "Meine Urlaube"
-  "My activities": "Meine Aktivitäten"
+  "My recent activities": "Meine letzten Aktivitäten"
+  "Past shifts": "Vergangene Schichten"
   "My assignments": "Meine Anmeldungen"
   "Next shift required in": "Nächste Schicht erforderlich in"
   "days": "Tagen"
