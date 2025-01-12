@@ -328,7 +328,7 @@ loadEvents();
     </UFormGroup>
   </div>
   <div v-if="render && events != null" class="pt-10">
-    <ShiftsList
+    <ShiftsViewerShiftsList
       v-if="selectedView.value === 'week' || selectedView.value === 'day'"
       :events="events"
       :admin="admin"
@@ -336,7 +336,7 @@ loadEvents();
       :category="selectedCategory.id"
       @open-occurrence="openModal"
     />
-    <ShiftsCalendar
+    <ShiftsViewerShiftsCalendar
       v-else-if="selectedView.value === 'month' && showCalendar"
       :admin="admin"
       :events="events"
@@ -352,7 +352,7 @@ loadEvents();
   </div>
 
   <template v-if="props.admin">
-    <ShiftsCalendarModalAdmin
+    <ShiftsViewerModalAdmin
       v-if="modalIsOpen && modalOccurrence"
       v-model:is-open="modalIsOpen"
       :shift-occurence="modalOccurrence"
@@ -360,7 +360,7 @@ loadEvents();
     />
   </template>
   <template v-else>
-    <ShiftsCalendarModalUser
+    <ShiftsViewerModalUser
       v-if="modalIsOpen && modalOccurrence"
       v-model:is-open="modalIsOpen"
       :shift-occurence="modalOccurrence"

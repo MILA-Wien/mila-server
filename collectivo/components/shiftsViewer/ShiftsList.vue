@@ -79,7 +79,6 @@ props.events.occurrences.forEach((occurrence) => {
   groups[dateString].occurrences.push(occurrence);
 });
 
-// TODO This is correct, have to fix in index.d.ts
 props.events.publicHolidays.forEach((holiday) => {
   const date = new Date(holiday.date);
   const dateString = date.toLocaleDateString(locale.value);
@@ -107,7 +106,7 @@ function emitOcc(occ: ShiftOccurrenceFrontend) {
 
           <div class="flex flex-col gap-2">
             <div v-for="(occurrence, index) in group.occurrences" :key="index">
-              <ShiftsListTile
+              <ShiftsViewerShiftsListTile
                 :occurrence="occurrence"
                 :admin="admin"
                 @open-occurrence="emitOcc"

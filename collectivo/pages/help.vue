@@ -24,7 +24,7 @@ setPageTitle(t("You have questions?"));
           href="https://handbuch.mila.wien/books/mitglieder-handbuch"
           target="_blank"
         >
-          <UButton>{{ t("Open handbook") }}</UButton>
+          <UButton color="green">{{ t("Open handbook") }}</UButton>
         </a>
         <!-- <a href="https://handbuch.mila.wien/books/it-handbuch" target="_blank">
         <UButton>{{ t("IT Handbook") }}</UButton>
@@ -52,10 +52,10 @@ setPageTitle(t("You have questions?"));
       </p>
       <div class="flex flex-wrap gap-4">
         <a :href="`mailto:${config.public.contactEmail}`">
-          <UButton>{{ t("Write an email") }}</UButton>
+          <UButton color="green">{{ t("Write an email") }}</UButton>
         </a>
         <a :href="appConfig.mila.supportNumberLink">
-          <UButton>{{ t("Call us") }}</UButton>
+          <UButton color="green">{{ t("Call us") }}</UButton>
         </a>
       </div>
     </CollectivoCard>
