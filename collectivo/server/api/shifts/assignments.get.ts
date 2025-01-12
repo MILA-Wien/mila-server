@@ -218,7 +218,9 @@ export const getAssignmentRRule = (
   });
 
   // Exclude public holidays
-  assignmentRule.exrule(publicHolidayDates as RRule);
+  if (shift.exclude_public_holidays) {
+    assignmentRule.exrule(publicHolidayDates as RRule);
+  }
 
   return [assignmentRule, absencesRule];
 };
