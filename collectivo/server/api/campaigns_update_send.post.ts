@@ -67,7 +67,7 @@ async function handleCampaignUpdate(event: any) {
 async function executeCampaign(campaignKey: number): Promise<string> {
   try {
     const campaignData = await readCampaignData(campaignKey);
-
+    console.log("Executing campaign " + campaignKey);
     if (campaignData.templateMethod !== "email") {
       throw createError({
         statusCode: 400,
@@ -144,7 +144,7 @@ async function executeCampaign(campaignKey: number): Promise<string> {
     } else {
       campaignStatus = "sent";
     }
-
+    console.log("Campaign " + campaignKey + " executed successfully?");
     await updateCampaignStatus(campaignKey, campaignStatus);
 
     return campaignStatus;
@@ -175,7 +175,7 @@ async function updateMessageStatus(
 
   directus.request(
     updateItem("messages_messages", handledMessage.recordId, {
-      messages_message_status: sendMailOutcome == "success",
+      messages_message_status: sendMailOutcome == "success" ? "sent" : "failed",
       messages_error_message:
         sendMailOutcome !== "success" ? sendMailOutcome : "",
     }),
