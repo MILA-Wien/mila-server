@@ -1772,18 +1772,6 @@
   },
   {
     "collection": "messages_messages",
-    "action": "delete",
-    "permissions": null,
-    "validation": null,
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
-    "_syncId": "12f16c93-4c59-48e9-825d-d53db29a4d7d"
-  },
-  {
-    "collection": "messages_messages",
     "action": "read",
     "permissions": null,
     "validation": null,

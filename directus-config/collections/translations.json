@@ -133,6 +133,12 @@
   },
   {
     "language": "de-DE",
+    "key": "sent",
+    "value": "Gesendet",
+    "_syncId": "aba83a72-63f7-4cf4-86ba-62c7195607a9"
+  },
+  {
+    "language": "de-DE",
     "key": "request-withdrawn",
     "value": "Anfrage zurückgezogen",
     "_syncId": "b189cd2f-6b4c-4b23-84f6-394dfd16476b"

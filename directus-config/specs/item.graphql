@@ -59,10 +59,6 @@ type Query {
   messages_designs_by_id(id: ID!, version: String): messages_designs
   messages_designs_aggregated(groupBy: [String], filter: messages_designs_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [messages_designs_aggregated!]!
   messages_designs_by_version(version: String!, id: ID!): version_messages_designs
-  messages_messages(filter: messages_messages_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_messages!]!
-  messages_messages_by_id(id: ID!, version: String): messages_messages
-  messages_messages_aggregated(groupBy: [String], filter: messages_messages_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [messages_messages_aggregated!]!
-  messages_messages_by_version(version: String!, id: ID!): version_messages_messages
   milaccess_log(filter: milaccess_log_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [milaccess_log!]!
   milaccess_log_by_id(id: ID!, version: String): milaccess_log
   milaccess_log_aggregated(groupBy: [String], filter: milaccess_log_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [milaccess_log_aggregated!]!
@@ -91,20 +87,24 @@ type Query {
   shifts_holidays_public_by_id(id: ID!, version: String): shifts_holidays_public
   shifts_holidays_public_aggregated(groupBy: [String], filter: shifts_holidays_public_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_holidays_public_aggregated!]!
   shifts_holidays_public_by_version(version: String!, id: ID!): version_shifts_holidays_public
-  memberships(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships!]!
-  memberships_by_id(id: ID!, version: String): memberships
-  memberships_aggregated(groupBy: [String], filter: memberships_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_aggregated!]!
-  memberships_by_version(version: String!, id: ID!): version_memberships
   memberships_shifts_categories(filter: memberships_shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_shifts_categories!]!
   memberships_shifts_categories_by_id(id: ID!, version: String): memberships_shifts_categories
   memberships_shifts_categories_aggregated(groupBy: [String], filter: memberships_shifts_categories_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_shifts_categories_aggregated!]!
   memberships_shifts_categories_by_version(version: String!, id: ID!): version_memberships_shifts_categories
+  memberships(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships!]!
+  memberships_by_id(id: ID!, version: String): memberships
+  memberships_aggregated(groupBy: [String], filter: memberships_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_aggregated!]!
+  memberships_by_version(version: String!, id: ID!): version_memberships
+  settings_hidden(version: String): settings_hidden
+  settings_hidden_by_version(version: String!): version_settings_hidden
   shifts_assignments(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_assignments!]!
   shifts_assignments_by_id(id: ID!, version: String): shifts_assignments
   shifts_assignments_aggregated(groupBy: [String], filter: shifts_assignments_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_assignments_aggregated!]!
   shifts_assignments_by_version(version: String!, id: ID!): version_shifts_assignments
-  settings_hidden(version: String): settings_hidden
-  settings_hidden_by_version(version: String!): version_settings_hidden
+  messages_messages(filter: messages_messages_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_messages!]!
+  messages_messages_by_id(id: ID!, version: String): messages_messages
+  messages_messages_aggregated(groupBy: [String], filter: messages_messages_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [messages_messages_aggregated!]!
+  messages_messages_by_version(version: String!, id: ID!): version_messages_messages
 }
 
 type Mutation {
@@ -138,8 +138,6 @@ type Mutation {
   create_messages_campaigns_directus_users_item(data: create_messages_campaigns_directus_users_input!): messages_campaigns_directus_users
   create_messages_designs_items(filter: messages_designs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_messages_designs_input!]): [messages_designs!]!
   create_messages_designs_item(data: create_messages_designs_input!): messages_designs
-  create_messages_messages_items(filter: messages_messages_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_messages_messages_input!]): [messages_messages!]!
-  create_messages_messages_item(data: create_messages_messages_input!): messages_messages
   create_milaccess_log_items(filter: milaccess_log_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_milaccess_log_input!]): [milaccess_log!]!
   create_milaccess_log_item(data: create_milaccess_log_input!): milaccess_log
   create_mila_automations_items(filter: mila_automations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_mila_automations_input!]): [mila_automations!]!
@@ -154,12 +152,14 @@ type Mutation {
   create_shifts_logs_item(data: create_shifts_logs_input!): shifts_logs
   create_shifts_holidays_public_items(filter: shifts_holidays_public_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_holidays_public_input!]): [shifts_holidays_public!]!
   create_shifts_holidays_public_item(data: create_shifts_holidays_public_input!): shifts_holidays_public
-  create_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_input!]): [memberships!]!
-  create_memberships_item(data: create_memberships_input!): memberships
   create_memberships_shifts_categories_items(filter: memberships_shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_shifts_categories_input!]): [memberships_shifts_categories!]!
   create_memberships_shifts_categories_item(data: create_memberships_shifts_categories_input!): memberships_shifts_categories
+  create_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_input!]): [memberships!]!
+  create_memberships_item(data: create_memberships_input!): memberships
   create_shifts_assignments_items(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_assignments_input!]): [shifts_assignments!]!
   create_shifts_assignments_item(data: create_shifts_assignments_input!): shifts_assignments
+  create_messages_messages_items(filter: messages_messages_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_messages_messages_input!]): [messages_messages!]!
+  create_messages_messages_item(data: create_messages_messages_input!): messages_messages
   update_directus_sync_id_map_items(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_sync_id_map_input!): [directus_sync_id_map!]!
   update_directus_sync_id_map_batch(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_sync_id_map_input!]): [directus_sync_id_map!]!
   update_directus_sync_id_map_item(id: ID!, data: update_directus_sync_id_map_input!): directus_sync_id_map
@@ -205,9 +205,6 @@ type Mutation {
   update_messages_designs_items(filter: messages_designs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_messages_designs_input!): [messages_designs!]!
   update_messages_designs_batch(filter: messages_designs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_messages_designs_input!]): [messages_designs!]!
   update_messages_designs_item(id: ID!, data: update_messages_designs_input!): messages_designs
-  update_messages_messages_items(filter: messages_messages_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_messages_messages_input!): [messages_messages!]!
-  update_messages_messages_batch(filter: messages_messages_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_messages_messages_input!]): [messages_messages!]!
-  update_messages_messages_item(id: ID!, data: update_messages_messages_input!): messages_messages
   update_milaccess_log_items(filter: milaccess_log_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_milaccess_log_input!): [milaccess_log!]!
   update_milaccess_log_batch(filter: milaccess_log_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_milaccess_log_input!]): [milaccess_log!]!
   update_milaccess_log_item(id: ID!, data: update_milaccess_log_input!): milaccess_log
@@ -229,16 +226,19 @@ type Mutation {
   update_shifts_holidays_public_items(filter: shifts_holidays_public_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_holidays_public_input!): [shifts_holidays_public!]!
   update_shifts_holidays_public_batch(filter: shifts_holidays_public_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_holidays_public_input!]): [shifts_holidays_public!]!
   update_shifts_holidays_public_item(id: ID!, data: update_shifts_holidays_public_input!): shifts_holidays_public
-  update_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_input!): [memberships!]!
-  update_memberships_batch(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_input!]): [memberships!]!
-  update_memberships_item(id: ID!, data: update_memberships_input!): memberships
   update_memberships_shifts_categories_items(filter: memberships_shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_shifts_categories_input!): [memberships_shifts_categories!]!
   update_memberships_shifts_categories_batch(filter: memberships_shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_shifts_categories_input!]): [memberships_shifts_categories!]!
   update_memberships_shifts_categories_item(id: ID!, data: update_memberships_shifts_categories_input!): memberships_shifts_categories
+  update_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_input!): [memberships!]!
+  update_memberships_batch(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_input!]): [memberships!]!
+  update_memberships_item(id: ID!, data: update_memberships_input!): memberships
+  update_settings_hidden(data: update_settings_hidden_input!): settings_hidden
   update_shifts_assignments_items(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_assignments_input!): [shifts_assignments!]!
   update_shifts_assignments_batch(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_assignments_input!]): [shifts_assignments!]!
   update_shifts_assignments_item(id: ID!, data: update_shifts_assignments_input!): shifts_assignments
-  update_settings_hidden(data: update_settings_hidden_input!): settings_hidden
+  update_messages_messages_items(filter: messages_messages_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_messages_messages_input!): [messages_messages!]!
+  update_messages_messages_batch(filter: messages_messages_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_messages_messages_input!]): [messages_messages!]!
+  update_messages_messages_item(id: ID!, data: update_messages_messages_input!): messages_messages
   delete_directus_sync_id_map_items(ids: [ID]!): delete_many
   delete_directus_sync_id_map_item(id: ID!): delete_one
   delete_collectivo_tiles_items(ids: [ID]!): delete_many
@@ -269,8 +269,6 @@ type Mutation {
   delete_messages_campaigns_directus_users_item(id: ID!): delete_one
   delete_messages_designs_items(ids: [ID]!): delete_many
   delete_messages_designs_item(id: ID!): delete_one
-  delete_messages_messages_items(ids: [ID]!): delete_many
-  delete_messages_messages_item(id: ID!): delete_one
   delete_milaccess_log_items(ids: [ID]!): delete_many
   delete_milaccess_log_item(id: ID!): delete_one
   delete_mila_automations_items(ids: [ID]!): delete_many
@@ -285,12 +283,14 @@ type Mutation {
   delete_shifts_logs_item(id: ID!): delete_one
   delete_shifts_holidays_public_items(ids: [ID]!): delete_many
   delete_shifts_holidays_public_item(id: ID!): delete_one
-  delete_memberships_items(ids: [ID]!): delete_many
-  delete_memberships_item(id: ID!): delete_one
   delete_memberships_shifts_categories_items(ids: [ID]!): delete_many
   delete_memberships_shifts_categories_item(id: ID!): delete_one
+  delete_memberships_items(ids: [ID]!): delete_many
+  delete_memberships_item(id: ID!): delete_one
   delete_shifts_assignments_items(ids: [ID]!): delete_many
   delete_shifts_assignments_item(id: ID!): delete_one
+  delete_messages_messages_items(ids: [ID]!): delete_many
+  delete_messages_messages_item(id: ID!): delete_one
 }
 
 type Subscription {
@@ -328,7 +328,6 @@ type Subscription {
   messages_campaigns_mutated(event: EventEnum): messages_campaigns_mutated
   messages_campaigns_directus_users_mutated(event: EventEnum): messages_campaigns_directus_users_mutated
   messages_designs_mutated(event: EventEnum): messages_designs_mutated
-  messages_messages_mutated(event: EventEnum): messages_messages_mutated
   milaccess_log_mutated(event: EventEnum): milaccess_log_mutated
   mila_automations_mutated(event: EventEnum): mila_automations_mutated
   payments_invoices_out_mutated(event: EventEnum): payments_invoices_out_mutated
@@ -336,11 +335,12 @@ type Subscription {
   shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
   shifts_holidays_public_mutated(event: EventEnum): shifts_holidays_public_mutated
-  memberships_mutated(event: EventEnum): memberships_mutated
   memberships_shifts_categories_mutated(event: EventEnum): memberships_shifts_categories_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
-  shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
+  memberships_mutated(event: EventEnum): memberships_mutated
   settings_hidden_mutated(event: EventEnum): settings_hidden_mutated
+  shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
+  messages_messages_mutated(event: EventEnum): messages_messages_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -1269,6 +1269,8 @@ type memberships {
   user_created: String
   user_updated: String
   shifts_can_be_coordinator: Boolean
+  memberships_date_type_changed: Date
+  memberships_date_type_changed_func: date_functions
   coshoppers(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers]
   coshoppers_func: count_functions
   kids(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers_1]
@@ -1279,6 +1281,8 @@ type memberships {
   shifts_categories_allowed_func: count_functions
   shifts_assignments(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_assignments]
   shifts_assignments_func: count_functions
+  shifts_logs(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_logs]
+  shifts_logs_func: count_functions
 }
 
 type memberships_aggregated {
@@ -1329,6 +1333,7 @@ type memberships_aggregated_count {
   user_created: Int
   user_updated: Int
   shifts_can_be_coordinator: Int
+  memberships_date_type_changed: Int
   coshoppers: Int
   kids: Int
 
@@ -1340,6 +1345,7 @@ type memberships_aggregated_count {
   """
   shifts_categories_allowed: Int
   shifts_assignments: Int
+  shifts_logs: Int
 }
 
 type memberships_aggregated_fields {
@@ -1535,6 +1541,8 @@ type messages_campaigns {
   user_updated: String
   messages_recipients(filter: messages_campaigns_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_campaigns_directus_users]
   messages_recipients_func: count_functions
+  messages_messages(filter: messages_messages_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_messages]
+  messages_messages_func: count_functions
 }
 
 type messages_campaigns_aggregated {
@@ -1560,6 +1568,7 @@ type messages_campaigns_aggregated_count {
   user_created: Int
   user_updated: Int
   messages_recipients: Int
+  messages_messages: Int
 }
 
 type messages_campaigns_aggregated_fields {
@@ -1667,9 +1676,9 @@ type messages_messages {
   messages_campaign(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_campaigns
   messages_message_status: String
   messages_recipient(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
-  messages_template(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_templates
   user_created: String
   user_updated: String
+  messages_error_message: String
 }
 
 type messages_messages_aggregated {
@@ -1692,15 +1701,14 @@ type messages_messages_aggregated_count {
   messages_campaign: Int
   messages_message_status: Int
   messages_recipient: Int
-  messages_template: Int
   user_created: Int
   user_updated: Int
+  messages_error_message: Int
 }
 
 type messages_messages_aggregated_fields {
   id: Float
   messages_campaign: Float
-  messages_template: Float
 }
 
 type messages_messages_mutated {
@@ -1986,6 +1994,7 @@ type settings_hidden {
   id: ID!
   last_cronjob: Date
   last_cronjob_func: datetime_functions
+  shift_point_system: Boolean
 }
 
 type settings_hidden_mutated {
@@ -2100,6 +2109,7 @@ type shifts_assignments {
 
   """Erinnerungs-E-Mails vor Schichtantritt aktivieren"""
   send_reminders: Boolean
+  is_first_shift: Boolean
   shifts_absences(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_absences]
   shifts_absences_func: count_functions
 }
@@ -2136,6 +2146,7 @@ type shifts_assignments_aggregated_count {
 
   """Erinnerungs-E-Mails vor Schichtantritt aktivieren"""
   send_reminders: Int
+  is_first_shift: Int
 
   """Abwesenheit gilt nur für diese Schicht"""
   shifts_absences: Int
@@ -2241,6 +2252,8 @@ type shifts_logs {
   shifts_date: Date
   shifts_date_func: date_functions
   shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+
+  """Achtung, diese Notiz ist auch für das Mitglied sichtbar!"""
   shifts_note: String
   shifts_score: Int
   shifts_shift(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_shifts
@@ -2270,6 +2283,8 @@ type shifts_logs_aggregated_count {
   id: Int
   shifts_date: Int
   shifts_membership: Int
+
+  """Achtung, diese Notiz ist auch für das Mitglied sichtbar!"""
   shifts_note: Int
   shifts_score: Int
   shifts_shift: Int
@@ -2507,11 +2522,13 @@ type version_memberships {
   user_created: String
   user_updated: String
   shifts_can_be_coordinator: Boolean
+  memberships_date_type_changed: Date
   coshoppers: JSON
   kids: JSON
   memberships_invoices: JSON
   shifts_categories_allowed: JSON
   shifts_assignments: JSON
+  shifts_logs: JSON
 }
 
 """"""
@@ -2560,6 +2577,7 @@ type version_messages_campaigns {
   user_created: String
   user_updated: String
   messages_recipients: JSON
+  messages_messages: JSON
 }
 
 """"""
@@ -2590,9 +2608,9 @@ type version_messages_messages {
   messages_campaign: JSON
   messages_message_status: String
   messages_recipient: JSON
-  messages_template: JSON
   user_created: String
   user_updated: String
+  messages_error_message: String
 }
 
 """"""
@@ -2672,6 +2690,7 @@ type version_payments_invoices_out {
 type version_settings_hidden {
   id: ID
   last_cronjob: Date
+  shift_point_system: Boolean
 }
 
 """"""
@@ -2718,6 +2737,7 @@ type version_shifts_assignments {
 
   """Erinnerungs-E-Mails vor Schichtantritt aktivieren"""
   send_reminders: Boolean
+  is_first_shift: Boolean
   shifts_absences: JSON
 }
 
@@ -2745,6 +2765,8 @@ type version_shifts_logs {
   id: ID
   shifts_date: Date
   shifts_membership: JSON
+
+  """Achtung, diese Notiz ist auch für das Mitglied sichtbar!"""
   shifts_note: String
   shifts_score: Int
   shifts_shift: JSON
@@ -3127,11 +3149,13 @@ input create_memberships_input {
   user_created: String
   user_updated: String
   shifts_can_be_coordinator: Boolean
+  memberships_date_type_changed: Date
   coshoppers: [create_memberships_memberships_coshoppers_input]
   kids: [create_memberships_memberships_coshoppers_1_input]
   memberships_invoices: [create_payments_invoices_out_input]
   shifts_categories_allowed: [create_memberships_shifts_categories_input]
   shifts_assignments: [create_shifts_assignments_input]
+  shifts_logs: [create_shifts_logs_input]
 }
 
 input create_memberships_memberships_coshoppers_1_input {
@@ -3168,6 +3192,7 @@ input create_messages_campaigns_input {
   user_created: String
   user_updated: String
   messages_recipients: [create_messages_campaigns_directus_users_input]
+  messages_messages: [create_messages_messages_input]
 }
 
 input create_messages_designs_input {
@@ -3189,9 +3214,9 @@ input create_messages_messages_input {
   messages_campaign: create_messages_campaigns_input
   messages_message_status: String
   messages_recipient: create_directus_users_input
-  messages_template: create_messages_templates_input
   user_created: String
   user_updated: String
+  messages_error_message: String
 }
 
 input create_messages_templates_input {
@@ -3304,6 +3329,7 @@ input create_shifts_assignments_input {
 
   """Erinnerungs-E-Mails vor Schichtantritt aktivieren"""
   send_reminders: Boolean
+  is_first_shift: Boolean
   shifts_absences: [create_shifts_absences_input]
 }
 
@@ -3328,6 +3354,8 @@ input create_shifts_logs_input {
   id: ID
   shifts_date: Date
   shifts_membership: create_memberships_input
+
+  """Achtung, diese Notiz ist auch für das Mitglied sichtbar!"""
   shifts_note: String
   shifts_score: Int
   shifts_shift: create_shifts_shifts_input
@@ -3784,6 +3812,8 @@ input memberships_filter {
   user_created: string_filter_operators
   user_updated: string_filter_operators
   shifts_can_be_coordinator: boolean_filter_operators
+  memberships_date_type_changed: date_filter_operators
+  memberships_date_type_changed_func: date_function_filter_operators
   coshoppers: memberships_memberships_coshoppers_filter
   coshoppers_func: count_function_filter_operators
   kids: memberships_memberships_coshoppers_1_filter
@@ -3794,6 +3824,8 @@ input memberships_filter {
   shifts_categories_allowed_func: count_function_filter_operators
   shifts_assignments: shifts_assignments_filter
   shifts_assignments_func: count_function_filter_operators
+  shifts_logs: shifts_logs_filter
+  shifts_logs_func: count_function_filter_operators
   _and: [memberships_filter]
   _or: [memberships_filter]
 }
@@ -3844,6 +3876,8 @@ input messages_campaigns_filter {
   user_updated: string_filter_operators
   messages_recipients: messages_campaigns_directus_users_filter
   messages_recipients_func: count_function_filter_operators
+  messages_messages: messages_messages_filter
+  messages_messages_func: count_function_filter_operators
   _and: [messages_campaigns_filter]
   _or: [messages_campaigns_filter]
 }
@@ -3871,9 +3905,9 @@ input messages_messages_filter {
   messages_campaign: messages_campaigns_filter
   messages_message_status: string_filter_operators
   messages_recipient: directus_users_filter
-  messages_template: messages_templates_filter
   user_created: string_filter_operators
   user_updated: string_filter_operators
+  messages_error_message: string_filter_operators
   _and: [messages_messages_filter]
   _or: [messages_messages_filter]
 }
@@ -4013,6 +4047,7 @@ input shifts_assignments_filter {
   user_created: string_filter_operators
   user_updated: string_filter_operators
   send_reminders: boolean_filter_operators
+  is_first_shift: boolean_filter_operators
   shifts_absences: shifts_absences_filter
   shifts_absences_func: count_function_filter_operators
   _and: [shifts_assignments_filter]
@@ -4367,11 +4402,13 @@ input update_memberships_input {
   user_created: String
   user_updated: String
   shifts_can_be_coordinator: Boolean
+  memberships_date_type_changed: Date
   coshoppers: [update_memberships_memberships_coshoppers_input]
   kids: [update_memberships_memberships_coshoppers_1_input]
   memberships_invoices: [update_payments_invoices_out_input]
   shifts_categories_allowed: [update_memberships_shifts_categories_input]
   shifts_assignments: [update_shifts_assignments_input]
+  shifts_logs: [update_shifts_logs_input]
 }
 
 input update_memberships_memberships_coshoppers_1_input {
@@ -4408,6 +4445,7 @@ input update_messages_campaigns_input {
   user_created: String
   user_updated: String
   messages_recipients: [update_messages_campaigns_directus_users_input]
+  messages_messages: [update_messages_messages_input]
 }
 
 input update_messages_designs_input {
@@ -4429,9 +4467,9 @@ input update_messages_messages_input {
   messages_campaign: update_messages_campaigns_input
   messages_message_status: String
   messages_recipient: update_directus_users_input
-  messages_template: update_messages_templates_input
   user_created: String
   user_updated: String
+  messages_error_message: String
 }
 
 input update_messages_templates_input {
@@ -4505,6 +4543,7 @@ input update_payments_invoices_out_input {
 input update_settings_hidden_input {
   id: ID
   last_cronjob: Date
+  shift_point_system: Boolean
 }
 
 input update_shifts_absences_input {
@@ -4549,6 +4588,7 @@ input update_shifts_assignments_input {
 
   """Erinnerungs-E-Mails vor Schichtantritt aktivieren"""
   send_reminders: Boolean
+  is_first_shift: Boolean
   shifts_absences: [update_shifts_absences_input]
 }
 
@@ -4573,6 +4613,8 @@ input update_shifts_logs_input {
   id: ID
   shifts_date: Date
   shifts_membership: update_memberships_input
+
+  """Achtung, diese Notiz ist auch für das Mitglied sichtbar!"""
   shifts_note: String
   shifts_score: Int
   shifts_shift: update_shifts_shifts_input

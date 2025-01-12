@@ -25,7 +25,7 @@
     },
     "readonly": false,
     "required": false,
-    "sort": 12,
+    "sort": 8,
     "special": [
       "m2m"
     ],

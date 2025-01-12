@@ -36,25 +36,7 @@
         {
           "text": "Anderes",
           "value": "other",
-          "color": "#2ECDA7"
-        },
-        {
-          "text": "4W Zyklus ",
-          "value": "cycle",
-          "color": "#3399FF",
-          "icon": "cycle"
-        },
-        {
-          "text": "4W Zyklus aktiviert",
-          "value": "cycle_activated",
-          "color": "#3399FF",
-          "icon": "autoplay"
-        },
-        {
-          "text": "4W Zyklus deaktiviert",
-          "value": "cycle_deactivated",
-          "color": "#3399FF",
-          "icon": "autostop"
+          "color": "#A2B5CD"
         }
       ]
     },

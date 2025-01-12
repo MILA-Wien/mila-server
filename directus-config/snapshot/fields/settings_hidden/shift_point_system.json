@@ -1,36 +1,34 @@
 {
-  "collection": "shifts_assignments",
-  "field": "user_created",
-  "type": "uuid",
+  "collection": "settings_hidden",
+  "field": "shift_point_system",
+  "type": "boolean",
   "meta": {
-    "collection": "shifts_assignments",
+    "collection": "settings_hidden",
     "conditions": null,
-    "display": "user",
+    "display": null,
     "display_options": null,
-    "field": "user_created",
+    "field": "shift_point_system",
     "group": null,
-    "hidden": true,
-    "interface": "select-dropdown-m2o",
+    "hidden": false,
+    "interface": "boolean",
     "note": null,
-    "options": {
-      "template": "{{avatar.$thumbnail}} {{first_name}} {{last_name}}"
-    },
-    "readonly": true,
+    "options": null,
+    "readonly": false,
     "required": false,
-    "sort": 11,
+    "sort": 4,
     "special": [
-      "user-created"
+      "cast-boolean"
     ],
     "translations": null,
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "user_created",
-    "table": "shifts_assignments",
-    "data_type": "uuid",
-    "default_value": null,
+    "name": "shift_point_system",
+    "table": "settings_hidden",
+    "data_type": "boolean",
+    "default_value": false,
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,

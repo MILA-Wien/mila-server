@@ -10,7 +10,7 @@
     "color": null,
     "display_template": null,
     "group": "messages",
-    "hidden": false,
+    "hidden": true,
     "icon": "conveyor_belt",
     "item_duplication_fields": null,
     "note": null,
