@@ -394,5 +394,5 @@ de:
   Filters: Filter
   Signup: Anmeldung
   "All shifts": "Alle Schichten"
-  "Open shifts": "Offene Schichten"
+  "Open shifts": "Freie Schichten"
 </i18n>

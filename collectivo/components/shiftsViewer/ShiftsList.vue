@@ -23,7 +23,7 @@ const props = defineProps({
 const emit = defineEmits(["openOccurrence"]);
 const allCats = props.category === -1;
 const unfilled = props.status === "unfilled";
-
+const isEmpty = ref(true);
 const { locale, t } = useI18n();
 
 interface Events {
@@ -55,7 +55,6 @@ props.events.occurrences.forEach((occurrence) => {
   }
 
   if (unfilled) {
-    console.log("doing unfilled stuff");
     if (isPast) {
       return;
     }
@@ -77,6 +76,7 @@ props.events.occurrences.forEach((occurrence) => {
   }
 
   groups[dateString].occurrences.push(occurrence);
+  isEmpty.value = false;
 });
 
 props.events.publicHolidays.forEach((holiday) => {
@@ -94,6 +94,11 @@ function emitOcc(occ: ShiftOccurrenceFrontend) {
 
 <template>
   <div class="flex flex-col gap-5">
+    <template v-if="isEmpty">
+      <div class="bg-gray-100 p-5">
+        <p>{{ t("No shifts found within the selected timespan.") }}</p>
+      </div>
+    </template>
     <template v-for="group in groups" :key="group.dateString">
       <template v-if="group.occurrences.length > 0">
         <div>
@@ -125,4 +130,5 @@ function emitOcc(occ: ShiftOccurrenceFrontend) {
 de:
   Month: Monat
   Public holiday: Feiertag
+  No shifts found within the selected timespan.: Es wurden keine Schichten innerhalb des ausgewählten Zeitraums gefunden.
 </i18n>
