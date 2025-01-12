@@ -25,7 +25,6 @@ async function handleCampaignUpdate(event: any) {
   // Protect route with API Token
   verifyCollectivoApiToken(event);
   const body = await readBody(event);
-  console.log("Received request", body);
 
   // Ignore requests where there were no changes to the campaign status or the new status is not "pending"
   if (
