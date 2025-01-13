@@ -7,11 +7,11 @@ export default defineNuxtPlugin({
   async setup() {
     let directus;
     const runtimeConfig = useRuntimeConfig();
-    const user = useCollectivoUser();
+    const user = useCurrentUser();
 
     // Create directus REST client or redirect to offline error page
     try {
-      directus = createDirectus<CollectivoSchema>(
+      directus = createDirectus<DbSchema>(
         runtimeConfig.public.directusUrl as string,
       )
         .with(authentication("session", { credentials: "include" }))

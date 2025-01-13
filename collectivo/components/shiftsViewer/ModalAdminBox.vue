@@ -16,10 +16,10 @@ defineProps({
 </script>
 
 <template>
-  <div class="flex flex-col w-full p-3">
-    <div class="flex flex-row mb-2">
+  <div class="flex flex-col w-full p-2 mb-2 bg-gray-100">
+    <div class="flex flex-row">
       <div class="grow">
-        <h5><slot name="header" /></h5>
+        <p class="font-bold"><slot name="header" /></p>
       </div>
       <div>
         <a

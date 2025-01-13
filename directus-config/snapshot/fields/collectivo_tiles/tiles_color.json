@@ -15,10 +15,6 @@
     "options": {
       "choices": [
         {
-          "text": "$t:primary",
-          "value": "primary"
-        },
-        {
           "text": "$t:green",
           "value": "green"
         },
@@ -37,6 +33,10 @@
         {
           "text": "$t:red",
           "value": "red"
+        },
+        {
+          "text": "purple",
+          "value": "purple"
         }
       ]
     },
@@ -62,7 +62,7 @@
     "name": "tiles_color",
     "table": "collectivo_tiles",
     "data_type": "character varying",
-    "default_value": "primary",
+    "default_value": "green",
     "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,

@@ -11,6 +11,7 @@ export default defineAppConfig({
     primary: "purple",
     gray: "cool",
     button: {
+      base: "focus:outline-none focus-visible:outline-0 disabled:cursor-default disabled:opacity-75 aria-disabled:cursor-default aria-disabled:opacity-75 flex-shrink-0",
       font: "font-semibold tracking-wider",
       rounded: "rounded-sm",
       size: {
@@ -167,7 +168,7 @@ export default defineAppConfig({
         md: "py-4 px-[18px] pe-9",
         numberInput: "py-4 px-[18px] pe-[56px]",
       },
-      rounded: "rounded-lg",
+      rounded: "rounded-none",
       icon: {
         color: "text-gray-500",
         trailing: {
@@ -197,10 +198,10 @@ export default defineAppConfig({
     },
     select: {
       base: "h-[50px] disabled:cursor-default disabled:opacity-50",
-      rounded: "rounded-lg",
+      rounded: "rounded-none",
       variant: {
         solid:
-          "shadow-sm bg-blue-50 focus:bg-primary-50 text-gray-900 ring-0 focus:ring-0",
+          "bg-blue-50 focus:bg-primary-50 text-gray-900 ring-0 focus:ring-0",
       },
       padding: {
         md: "py-4 px-[18px] pe-9",
@@ -210,6 +211,13 @@ export default defineAppConfig({
           wrapper: "end-[5px] text-gray-500",
         },
       },
+      color: {
+        variant: {
+          outline:
+            "shadow-none bg-transparent text-gray-900 dark:text-white ring-1 ring-inset ring-{color}-500 dark:ring-{color}-400 focus:ring-2 focus:ring-{color}-500 dark:focus:ring-{color}-400",
+          none: "bg-transparent focus:ring-0 focus:shadow-none",
+        },
+      },
       default: {
         size: "md",
         color: "blue",
@@ -217,9 +225,12 @@ export default defineAppConfig({
       },
     },
     selectMenu: {
-      ring: "ring-0",
+      ring: "ring-0 ring-inset",
       shadow: "shadow-lg",
-      rounded: "rounded-lg",
+      rounded: "rounded-none",
+      option: {
+        rounded: "rounded-none",
+      },
       // TODO: Add light border "border-1 border-[#edf0f7]",
     },
     checkbox: {

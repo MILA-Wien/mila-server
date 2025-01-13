@@ -262,6 +262,20 @@
   },
   {
     "name": "Skript ausführen",
+    "key": "exec_1lss7",
+    "type": "exec",
+    "position_x": 6,
+    "position_y": 21,
+    "options": {
+      "code": "module.exports = async function(data) {\n\treturn {\n    \tupdated_points: Number(data.$last.shifts_counter) + Number(data.$trigger.shifts_score_new) - Number(data.$trigger.shifts_score_old)\n    };\n}"
+    },
+    "resolve": "3882cc7c-d9cb-4d6c-8ce5-2f431773d3c4",
+    "reject": null,
+    "flow": "55cc41e8-4d68-4895-b42e-e5af00a316f4",
+    "_syncId": "db46fab3-308e-4440-8544-57fdbfdf3d25"
+  },
+  {
+    "name": "Skript ausführen",
     "key": "exec_1p2yn",
     "type": "exec",
     "position_x": 37,
@@ -273,6 +287,20 @@
     "reject": null,
     "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
     "_syncId": "c5485f09-f7da-4912-a005-c505ea996de6"
+  },
+  {
+    "name": "Skript ausführen",
+    "key": "exec_7pchc",
+    "type": "exec",
+    "position_x": 21,
+    "position_y": 2,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t// Do something...\n    if (!(\"shifts_score\" in data.$trigger.payload)) {\n\t\tthrow new Error(\"No score\")\n    }\n    \n\treturn {};\n}"
+    },
+    "resolve": "ea0b4b8f-ad8e-40be-8bc8-d0b62c9f3c63",
+    "reject": "bae6bd2e-a01d-430a-9982-98ba944cb7be",
+    "flow": "c36a2159-395e-4eec-acb7-86cbd1d81d5c",
+    "_syncId": "7750689a-c74f-4538-8375-652eff307512"
   },
   {
     "name": "Skript ausführen",
@@ -304,17 +332,59 @@
   },
   {
     "name": "Skript ausführen",
-    "key": "exec_je9ti",
+    "key": "exec_bweoq",
     "type": "exec",
-    "position_x": 3,
-    "position_y": 17,
+    "position_x": 5,
+    "position_y": 41,
     "options": {
-      "code": "module.exports = async function(data) {\n\t// Do something...\n    if (!data[\"$trigger\"].payload.shifts_status || \n        data[\"$trigger\"].payload.shifts_status == \"requested\") {\n    \n\treturn {};\n    }\n    // actually we want notification for all\n    //throw new Error(\"Skip because not requested\")\n    return {};\n}"
+      "code": "module.exports = async function(data) {\n\treturn {\n    \ttest: 1\n    };\n}"
     },
-    "resolve": "d3b67397-8a80-4eb4-b0e3-1efb24a935b7",
+    "resolve": null,
     "reject": null,
-    "flow": "610aa314-bd89-461e-b8a0-10d0ad75f2d4",
-    "_syncId": "af82e607-1ee7-4289-8752-49531f48ab86"
+    "flow": "c36a2159-395e-4eec-acb7-86cbd1d81d5c",
+    "_syncId": "bae6bd2e-a01d-430a-9982-98ba944cb7be"
+  },
+  {
+    "name": "Skript ausführen",
+    "key": "exec_cbkqh",
+    "type": "exec",
+    "position_x": 4,
+    "position_y": 21,
+    "options": {
+      "code": "module.exports = async function(data) {\n\treturn {\n    \tupdated_points: data.$last.shifts_counter + Number(data.$trigger.payload.shifts_score || 0)\n    };\n}"
+    },
+    "resolve": "34c335fa-db33-4388-a1ea-f926b5e51625",
+    "reject": null,
+    "flow": "1cea747f-3aeb-43c2-a4b8-63d269d7774a",
+    "_syncId": "c99ec15f-ad5b-4393-8c39-7481c5241bc5"
+  },
+  {
+    "name": "Skript ausführen",
+    "key": "exec_ibic5",
+    "type": "exec",
+    "position_x": 36,
+    "position_y": 25,
+    "options": {
+      "code": "module.exports = async function(data) {\n\tconst payload = []\n    for (i in data[\"readLogs\"]) {\n        payload.push({\n        \tshifts_membership: data[\"readLogs\"][i].shifts_membership,\n            shifts_score_old: data[\"readLogs\"][i].shifts_score,\n            shifts_score_new: data.$trigger.payload.shifts_score\n        })\n    }\n\treturn {\n    \tpayload\n    };\n}"
+    },
+    "resolve": "b6fadce2-0240-4c30-9a3d-dfa6b1c453da",
+    "reject": null,
+    "flow": "c36a2159-395e-4eec-acb7-86cbd1d81d5c",
+    "_syncId": "b111277e-189e-4715-a75a-4b66c5f0d8bd"
+  },
+  {
+    "name": "Skript ausführen",
+    "key": "exec_r7dzx",
+    "type": "exec",
+    "position_x": 5,
+    "position_y": 20,
+    "options": {
+      "code": "module.exports = async function(data) {\n\treturn {\n    \tupdated_points: Number(data.$last.shifts_counter) - Number(data.$trigger.shifts_score)\n    };\n}"
+    },
+    "resolve": "ac97085b-079f-43cd-bc12-4642854c3e40",
+    "reject": null,
+    "flow": "6179bf54-3ad8-4def-834d-b0cccf33c0dc",
+    "_syncId": "1b133eb5-56e2-4bf3-913a-01df595a6bc6"
   },
   {
     "name": "Skript ausführen",
@@ -346,6 +416,42 @@
   },
   {
     "name": "Daten lesen",
+    "key": "item_read_clzzt",
+    "type": "item-read",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "permissions": "$full",
+      "collection": "memberships",
+      "key": [
+        "{{ $trigger.payload.shifts_membership }}"
+      ]
+    },
+    "resolve": "c99ec15f-ad5b-4393-8c39-7481c5241bc5",
+    "reject": null,
+    "flow": "1cea747f-3aeb-43c2-a4b8-63d269d7774a",
+    "_syncId": "6bd0005f-43d3-495e-a242-d39bd20b604e"
+  },
+  {
+    "name": "Daten lesen",
+    "key": "item_read_ffdos",
+    "type": "item-read",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "permissions": "$full",
+      "collection": "memberships",
+      "key": [
+        "{{ $trigger.shifts_membership }}"
+      ]
+    },
+    "resolve": "db46fab3-308e-4440-8544-57fdbfdf3d25",
+    "reject": null,
+    "flow": "55cc41e8-4d68-4895-b42e-e5af00a316f4",
+    "_syncId": "3986d585-25ed-4e0b-a78f-0bb88798d3d9"
+  },
+  {
+    "name": "Daten lesen",
     "key": "item_read_oy9vp",
     "type": "item-read",
     "position_x": 19,
@@ -367,6 +473,45 @@
     "reject": null,
     "flow": "e67933a7-f0df-41e2-b905-d49a8f2482db",
     "_syncId": "b032fcb2-5cc5-40ad-ae75-62b7870377a6"
+  },
+  {
+    "name": "Daten lesen",
+    "key": "item_read_pfh3c",
+    "type": "item-read",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "permissions": "$full",
+      "collection": "shifts_logs",
+      "query": {
+        "filter": {
+          "id": {
+            "_in": "{{$trigger.payload}}"
+          }
+        }
+      }
+    },
+    "resolve": "45d99975-c1ae-49e0-b5d3-d96733769b73",
+    "reject": null,
+    "flow": "ad8b2f6a-a0ec-4325-ad14-4b678b9acd83",
+    "_syncId": "bec48064-fe97-4a23-9a03-246c8af492e7"
+  },
+  {
+    "name": "Daten lesen",
+    "key": "item_read_plzrz",
+    "type": "item-read",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "collection": "memberships",
+      "key": [
+        "{{ $trigger.shifts_membership }}"
+      ]
+    },
+    "resolve": "1b133eb5-56e2-4bf3-913a-01df595a6bc6",
+    "reject": null,
+    "flow": "6179bf54-3ad8-4def-834d-b0cccf33c0dc",
+    "_syncId": "7c31049c-0d2e-4d2a-82b6-5f541e8954d6"
   },
   {
     "name": "Daten lesen",
@@ -416,25 +561,24 @@
   },
   {
     "name": "Daten aktualisieren",
-    "key": "item_update_2qyun",
+    "key": "item_update_jta0y",
     "type": "item-update",
-    "position_x": 19,
-    "position_y": 1,
+    "position_x": 24,
+    "position_y": 21,
     "options": {
-      "collection": "messages_campaigns",
       "permissions": "$full",
-      "emitEvents": true,
-      "key": [
-        "{{ $trigger.campaign_id }}"
-      ],
+      "collection": "memberships",
       "payload": {
-        "messages_campaign_status": "pending"
-      }
+        "shifts_counter": "{{ $last.updated_points }}"
+      },
+      "key": [
+        "{{ $trigger.shifts_membership }}"
+      ]
     },
     "resolve": null,
     "reject": null,
-    "flow": "f9895e5e-bb34-4e97-96af-5c8138c764df",
-    "_syncId": "baf4f756-398d-4f58-a3ac-7862e9f975bc"
+    "flow": "55cc41e8-4d68-4895-b42e-e5af00a316f4",
+    "_syncId": "3882cc7c-d9cb-4d6c-8ce5-2f431773d3c4"
   },
   {
     "name": "Daten aktualisieren",
@@ -455,6 +599,47 @@
     "reject": null,
     "flow": "e67933a7-f0df-41e2-b905-d49a8f2482db",
     "_syncId": "f3c9decb-96dd-41be-8e8d-13b9e0036999"
+  },
+  {
+    "name": "Daten aktualisieren",
+    "key": "item_update_u6ufd",
+    "type": "item-update",
+    "position_x": 22,
+    "position_y": 20,
+    "options": {
+      "collection": "memberships",
+      "key": [
+        "{{ $trigger.shifts_membership }}"
+      ],
+      "payload": {
+        "shifts_counter": "{{ $last.updated_points }}"
+      }
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "6179bf54-3ad8-4def-834d-b0cccf33c0dc",
+    "_syncId": "ac97085b-079f-43cd-bc12-4642854c3e40"
+  },
+  {
+    "name": "Daten aktualisieren",
+    "key": "item_update_v6mlv",
+    "type": "item-update",
+    "position_x": 21,
+    "position_y": 21,
+    "options": {
+      "collection": "memberships",
+      "permissions": "$full",
+      "key": [
+        "{{ $trigger.payload.shifts_membership }}"
+      ],
+      "payload": {
+        "shifts_counter": "{{ $last.updated_points }}"
+      }
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "1cea747f-3aeb-43c2-a4b8-63d269d7774a",
+    "_syncId": "34c335fa-db33-4388-a1ea-f926b5e51625"
   },
   {
     "name": "postToNuxtAPI",
@@ -744,6 +929,28 @@
     "_syncId": "5cdb0368-47f9-4f1c-b09a-6e386191c418"
   },
   {
+    "name": "Daten lesen",
+    "key": "readLogs",
+    "type": "item-read",
+    "position_x": 18,
+    "position_y": 25,
+    "options": {
+      "permissions": "$full",
+      "collection": "shifts_logs",
+      "query": {
+        "filter": {
+          "id": {
+            "_in": "{{$trigger.keys}}"
+          }
+        }
+      }
+    },
+    "resolve": "b111277e-189e-4715-a75a-4b66c5f0d8bd",
+    "reject": null,
+    "flow": "c36a2159-395e-4eec-acb7-86cbd1d81d5c",
+    "_syncId": "ea0b4b8f-ad8e-40be-8bc8-d0b62c9f3c63"
+  },
+  {
     "name": "readMembership",
     "key": "readMembership",
     "type": "item-read",
@@ -834,6 +1041,20 @@
     "_syncId": "0b6ace39-5a6e-4794-9f17-aa245b14a4fe"
   },
   {
+    "name": "Skript ausführen",
+    "key": "renderBody",
+    "type": "exec",
+    "position_x": 3,
+    "position_y": 17,
+    "options": {
+      "code": "module.exports = async function(data) {\n    const body = {\n        \"subject\": \"Neue Schicht-Abwesenheit\",\n        \"body\": `Eine neue Schicht-Abwesenheit wurde erstellt: \n        <a href=\\\"{{$env.PUBLIC_URL}}/admin/content/shifts_absences/{{$trigger.key}}\\\">{{$env.PUBLIC_URL}}/admin/content/shifts_absences/{{$trigger.key}}</a>  \n        Details: {{$trigger.payload}}`\n    }\n\tconsole.log(body)\n    return { body };\n}"
+    },
+    "resolve": "d3b67397-8a80-4eb4-b0e3-1efb24a935b7",
+    "reject": null,
+    "flow": "610aa314-bd89-461e-b8a0-10d0ad75f2d4",
+    "_syncId": "af82e607-1ee7-4289-8752-49531f48ab86"
+  },
+  {
     "name": "Webhook / Anfrage URL",
     "key": "request_6ayym",
     "type": "request",
@@ -841,7 +1062,7 @@
     "position_y": 38,
     "options": {
       "method": "POST",
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_create",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns/campaign",
       "headers": [
         {
           "header": "Authorization",
@@ -851,6 +1072,28 @@
       "body": "{\n\t    \"user_ids\": [\"{{read_user.memberships_user.id}}\"],    \n    \"automation_name\": {{get_automations.automations1}}\n}"
     },
     "resolve": "69782931-b5b3-469c-abc5-20b329da87a7",
+    "reject": null,
+    "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
+    "_syncId": "68785ced-3a6b-4ea9-a156-0e6a9f57551e"
+  },
+  {
+    "name": "Webhook / Anfrage URL",
+    "key": "request_6ayym",
+    "type": "request",
+    "position_x": 5,
+    "position_y": 38,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns/campaign",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{\n\t    \"user_ids\": [\"{{read_user.memberships_user.id}}\"],    \n    \"automation_name\": {{get_automations.automations1}}\n}"
+    },
+    "resolve": null,
     "reject": null,
     "flow": "9231dda9-725b-4104-a466-6d8bc1589c22",
     "_syncId": "68785ced-3a6b-4ea9-a156-0e6a9f57550e"
@@ -863,7 +1106,7 @@
     "position_y": 38,
     "options": {
       "method": "POST",
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_create",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns/campaign",
       "headers": [
         {
           "header": "Authorization",
@@ -950,7 +1193,7 @@
     "position_x": 4,
     "position_y": 36,
     "options": {
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_create",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns/campaign",
       "headers": [
         {
           "header": "Authorization",
@@ -972,7 +1215,7 @@
     "position_x": 22,
     "position_y": 36,
     "options": {
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_create",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns/campaign",
       "headers": [
         {
           "header": "Authorization",
@@ -995,7 +1238,7 @@
     "position_y": 41,
     "options": {
       "method": "POST",
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_create",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns/campaign",
       "headers": [
         {
           "header": "Authorization",
@@ -1037,7 +1280,7 @@
     "position_x": 40,
     "position_y": 19,
     "options": {
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_create",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns/campaign",
       "method": "POST",
       "headers": [
         {
@@ -1067,7 +1310,7 @@
           "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
         }
       ],
-      "body": "{\n    \"subject\": \"Neue Schicht-Abwesenheit\",\n    \"body\": `Eine neue Schicht-Abwesenheit wurde erstellt: \n<a href=\"{{$env.PUBLIC_URL}}/admin/content/shifts_absences/{{$trigger.key}}\">{{$env.PUBLIC_URL}}/admin/content/shifts_absences/{{$trigger.key}}</a>  \n\nDetails: {{$trigger.payload}}\"`\n}"
+      "body": "{{ $last.body }}"
     },
     "resolve": null,
     "reject": null,
@@ -1104,7 +1347,7 @@
     "position_y": 73,
     "options": {
       "method": "POST",
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns_create",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns/campaign",
       "headers": [
         {
           "header": "Authorization",
@@ -1225,6 +1468,38 @@
     "reject": null,
     "flow": "3bfde787-1881-4718-b02f-743d5f1f2a74",
     "_syncId": "bc86b485-dfae-4f74-ac08-47464f98ac03"
+  },
+  {
+    "name": "Flow auslösen",
+    "key": "trigger_oo8by",
+    "type": "trigger",
+    "position_x": 37,
+    "position_y": 1,
+    "options": {
+      "iterationMode": "serial",
+      "payload": "{{ $last }}",
+      "flow": "6179bf54-3ad8-4def-834d-b0cccf33c0dc"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "ad8b2f6a-a0ec-4325-ad14-4b678b9acd83",
+    "_syncId": "45d99975-c1ae-49e0-b5d3-d96733769b73"
+  },
+  {
+    "name": "Flow auslösen",
+    "key": "trigger_wahet",
+    "type": "trigger",
+    "position_x": 33,
+    "position_y": 46,
+    "options": {
+      "flow": "55cc41e8-4d68-4895-b42e-e5af00a316f4",
+      "iterationMode": "serial",
+      "payload": "{{ $last.payload }}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "c36a2159-395e-4eec-acb7-86cbd1d81d5c",
+    "_syncId": "b6fadce2-0240-4c30-9a3d-dfa6b1c453da"
   },
   {
     "name": "updateMembership",

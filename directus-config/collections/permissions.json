@@ -1772,18 +1772,6 @@
   },
   {
     "collection": "messages_messages",
-    "action": "delete",
-    "permissions": null,
-    "validation": null,
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
-    "_syncId": "12f16c93-4c59-48e9-825d-d53db29a4d7d"
-  },
-  {
-    "collection": "messages_messages",
     "action": "read",
     "permissions": null,
     "validation": null,
@@ -2501,11 +2489,7 @@
       "memberships_city",
       "memberships_country",
       "password",
-      "first_name",
-      "last_name",
-      "email",
-      "password",
-      "title"
+      "hide_name"
     ],
     "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
     "_syncId": "56f5edab-082f-4feb-8b00-c038cd9bf32b"
@@ -2617,6 +2601,18 @@
     ],
     "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
     "_syncId": "1414e20a-39a0-4b70-9dce-108135a7c406"
+  },
+  {
+    "collection": "settings_hidden",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
+    "_syncId": "031ed372-1dab-457f-b096-0596a3014b4d"
   },
   {
     "collection": "shifts_absences",

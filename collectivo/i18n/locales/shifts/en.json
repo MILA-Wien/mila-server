@@ -6,6 +6,7 @@
   "t:exempt": "Exempt",
   "t:inactive": "Inactive",
 
+  "log:attended_draft": "Schicht done",
   "log:attended": "Shift done",
   "log:missed": "Shift missed",
   "log:cancelled": "Shift cancelled",

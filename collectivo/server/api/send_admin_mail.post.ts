@@ -2,7 +2,7 @@ export default defineEventHandler(async (event) => {
   try {
     return await sendAdminMail(event);
   } catch (error) {
-    console.log("Error in campaigns_create.post.ts");
+    console.log("Error in send_admin_mail.post.ts");
     throw error;
   }
 });
@@ -11,8 +11,6 @@ async function sendAdminMail(event: any) {
   // Protect route with API Token
   verifyCollectivoApiToken(event);
   const body = await readBody(event);
-  console.log("Received request in send_admin_mail.post.ts");
-
   const config = useRuntimeConfig();
 
   if (!body.subject || !body.body) {

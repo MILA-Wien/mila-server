@@ -1,13 +1,8 @@
 <script setup lang="ts">
 import { parse } from "marked";
-import {
-  createItem,
-  deleteItem,
-  readItem,
-  readItems,
-  updateItem,
-} from "@directus/sdk";
+import { createItem, deleteItem, updateItem } from "@directus/sdk";
 import sanitizeHtml from "sanitize-html";
+import type { ShiftLogsAdmin } from "~/composables";
 
 function getTime(date: Date) {
   return `${String(date.getUTCHours()).padStart(2, "0")}:${String(date.getUTCMinutes()).padStart(2, "0")}`;
@@ -29,11 +24,22 @@ const shift = occ.shift;
 const start = new Date(occ.start);
 const end = new Date(occ.end);
 const startDateString = start.toISOString().split("T")[0];
+
 const repeats = shift.shifts_repeats_every ?? 0;
 const isWeeks = repeats % 7 === 0;
 const frequency = isWeeks ? repeats / 7 : repeats;
 const now = new Date();
-const isPast = start.getTime() < now.getTime();
+const tomorrow = new Date(
+  Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate() + 1,
+    0,
+    0,
+    0,
+  ),
+);
+const isPast = start.getTime() < tomorrow.getTime();
 const runtimeConfig = useRuntimeConfig();
 
 const categories = useShiftsCategories();
@@ -44,122 +50,17 @@ const mainModalIsOpen = defineModel("isOpen", {
 });
 
 // SHIFT LOGS
+const logs = ref<ShiftLogsAdmin[]>([]);
+const logsLoaded = ref(false);
 
-const logs = ref<ShiftsLog[]>([]);
-const logEntryOptions = ["attended", "missed", "cancelled", "other"];
-const createLogModalIsOpen = ref(false);
-const logEntryType = ref<string | null>(null);
-const logEntryScore = ref(0);
-const logEntryNote = ref<string | null>(null);
+getShiftLogsAdmin(startDateString, shift.id).then((logs_: ShiftLogsAdmin[]) => {
+  logs.value = logs_;
+  logsLoaded.value = true;
+});
 
-async function getLogs() {
-  logs.value = (await directus.request(
-    readItems("shifts_logs", {
-      filter: {
-        shifts_shift: { _eq: shift.id },
-        shifts_date: { _eq: startDateString },
-      },
-      fields: [
-        "id",
-        "shifts_type",
-        "shifts_note",
-        "shifts_score",
-        {
-          shifts_membership: [
-            "id",
-
-            { memberships_user: ["first_name", "last_name", "email"] },
-          ],
-        },
-      ],
-    }),
-  )) as ShiftsLog[];
-
-  for (const log of logs.value) {
-    // Check if there is an assignment with that log
-    for (const assignment of occ.assignments) {
-      if (
-        (assignment.assignment.shifts_membership as MembershipsMembership)
-          .id === (log.shifts_membership as MembershipsMembership).id
-      ) {
-        assignment.logged = true;
-      }
-    }
-  }
-}
-
-getLogs();
-
-async function createLog(
-  type: string,
-  mshipID: number,
-  assignment?: AssignmentOccurrence,
-  score?: number,
-  note?: string,
-  shift_?: number,
-) {
-  if (!score) {
-    score = type === "attended" ? 1 : type === "missed" ? -1 : 0;
-  }
-
-  const log = (await directus.request(
-    createItem(
-      "shifts_logs",
-      {
-        shifts_membership: mshipID,
-        shifts_type: type,
-        shifts_date: startDateString,
-        shifts_score: score,
-        shifts_note: note,
-        shifts_shift: shift_ ?? Number(shift.id),
-      },
-      {
-        fields: [
-          "id",
-          "shifts_type",
-          "shifts_note",
-          "shifts_score",
-          {
-            shifts_membership: [
-              "id",
-              { memberships_user: ["first_name", "last_name", "email"] },
-            ],
-          },
-        ],
-      },
-    ),
-  )) as ShiftsLog;
-
-  logs.value.push(log);
-  if (assignment) {
-    assignment.logged = true;
-  }
-
-  return log;
-}
-
-function startLogCreationFlow() {
-  logEntryType.value = "other";
-  logEntryScore.value = 0;
-  logEntryNote.value = null;
-  createLogModalIsOpen.value = true;
-}
-
-async function createCustomLog() {
-  const log = await createLog(
-    logEntryType.value!,
-    mshipID.value!,
-    undefined,
-    logEntryScore.value,
-    logEntryNote.value ?? undefined,
-  );
-  createLogModalIsOpen.value = false;
-  return log;
-}
-
-// MEMBERSHIP DATA FLOW
-type mship = Awaited<ReturnType<typeof fetchMship>>;
-const mshipData = ref<mship | null>(null);
+// MEMBERSHIP DATA
+type SelectedMembership = Awaited<ReturnType<typeof getMembership>>;
+const mshipData = ref<SelectedMembership | null>(null);
 const mshipError = ref<boolean>(false);
 const mshipID = ref<number | undefined>(undefined);
 
@@ -168,30 +69,13 @@ watch(mshipID, () => {
   mshipError.value = false;
 });
 
-async function fetchMship(id: number) {
-  return await directus.request(
-    readItem("memberships", id, {
-      fields: [
-        "id",
-        { memberships_user: ["first_name", "last_name"] },
-        "memberships_type",
-        "memberships_status",
-        "shifts_categories_allowed",
-        "shifts_user_type",
-        "shifts_can_be_coordinator",
-      ],
-    }),
-  );
-}
-
 async function loadMembership() {
-  mshipID.value;
   if (!mshipID.value) {
     mshipError.value = true;
     return;
   }
   try {
-    mshipData.value = await fetchMship(mshipID.value);
+    mshipData.value = await getMembership(mshipID.value);
   } catch (e) {
     console.error(e);
     mshipData.value = null;
@@ -199,13 +83,7 @@ async function loadMembership() {
   }
 }
 
-function displayMembership(mship: MembershipsMembership) {
-  const user = mship.memberships_user;
-  return `M${mship.id} ${user.first_name} ${user.last_name}`;
-}
-
-// REMOVE ASSIGNMENT FLOW
-
+// REMOVE ASSIGNMENT
 const removeAssignmentModalIsOpen = ref(false);
 const removeAssignmentObject = ref<AssignmentOccurrence | null>(null);
 const removeAssignmentIndex = ref<number | null>(null);
@@ -280,7 +158,6 @@ async function removeAssignment(onetime: boolean) {
 }
 
 // CREATE ASSIGNMENT FLOW
-
 const createAssignmentModalIsOpen = ref(false);
 const createAssignmentCoordinator = ref(false);
 
@@ -291,13 +168,13 @@ function startCreateAssignmentFlow() {
 }
 
 async function fetchOccurrences(date: string, shiftID: number) {
-  return await $fetch("/api/shifts/occurrences", {
+  return (await $fetch("/api/shifts/occurrences", {
     query: {
       from: date,
       to: date,
       shiftID: shiftID,
     },
-  });
+  })) as { occurrences: ShiftOccurrence[] };
 }
 
 async function createAssignment(onetime: boolean) {
@@ -308,7 +185,7 @@ async function createAssignment(onetime: boolean) {
 
   // Check if shift is already full (parallel signup)
   const ress = await fetchOccurrences(startDateString, shift.id!);
-  const occurrences = ress.occurrences as ShiftOccurrence[];
+  const occurrences = ress.occurrences;
 
   if (occurrences.length != 1) {
     throw new Error("No or multiple occurrences found");
@@ -403,7 +280,7 @@ function checkIfMshipInAssignments(mship: number) {
     <div class="m-10">
       <div class="flex items-center justify-between">
         <h2>
-          {{ shift.shifts_name }} <span v-if="isPast">( {{ t("past") }} )</span>
+          {{ shift.shifts_name }} <span v-if="isPast">({{ t("past") }})</span>
         </h2>
         <a
           :href="`${runtimeConfig.public.directusUrl}/admin/content/shifts_shift/${shift.id}`"
@@ -495,7 +372,7 @@ function checkIfMshipInAssignments(mship: number) {
             v-for="(assignment, ai) of occ.assignments"
             :key="assignment.assignment.id"
           >
-            <ShiftsAdminModalBox
+            <ShiftsViewerModalAdminBox
               :id="assignment.assignment.id!"
               :label="t('Assignment')"
               :class="getAssignmentColor(assignment)"
@@ -505,12 +382,7 @@ function checkIfMshipInAssignments(mship: number) {
                 <span v-if="assignment.assignment.shifts_is_coordination">
                   {{ t("Shift coordination") }}:
                 </span>
-                {{
-                  displayMembership(
-                    assignment.assignment
-                      .shifts_membership as MembershipsMembership,
-                  )
-                }}
+                {{ displayMembership(assignment.assignment.shifts_membership) }}
               </template>
 
               <template #bottom-right>
@@ -554,86 +426,14 @@ function checkIfMshipInAssignments(mship: number) {
                 {{ t("Absent") }}: {{ absence.shifts_from }} {{ t("to") }}
                 {{ absence.shifts_to }}
               </div>
-            </ShiftsAdminModalBox>
+            </ShiftsViewerModalAdminBox>
           </template>
         </div>
       </div>
 
       <!-- Logs -->
-      <div v-if="isPast">
-        <h2 class="mb-2 mt-6">{{ t("Assignments") }}</h2>
-        <div class="flex flex-col gap-2">
-          <template
-            v-for="assignment of occ.assignments"
-            :key="assignment.assignment.id"
-          >
-            <ShiftsAdminModalBox
-              :id="assignment.assignment.id!"
-              :label="t('Assignment')"
-              collection="shifts_assignments"
-            >
-              <template #header>
-                <span v-if="assignment.assignment.shifts_is_coordination">
-                  {{ t("Shift coordination") }}
-                </span>
-                {{
-                  displayMembership(
-                    assignment.assignment
-                      .shifts_membership as MembershipsMembership,
-                  )
-                }}
-              </template>
-
-              <div v-if="!assignment.logged">
-                <div>{{ t("Create log") }}:</div>
-                <div class="flex flex-wrap gap-3 mt-3">
-                  <UButton
-                    v-for="logType of [
-                      ['Attended', 'attended', '+1'],
-                      ['Cancelled', 'cancelled', '0'],
-                      ['Missed', 'missed', '-1'],
-                    ]"
-                    :key="logType"
-                    @click="
-                      createLog(
-                        logType[1] as string,
-                        (
-                          assignment.assignment
-                            .shifts_membership as MembershipsMembership
-                        ).id,
-                        assignment,
-                      )
-                    "
-                    >{{ t(logType[0]) }} ({{ logType[2] }})</UButton
-                  >
-                </div>
-              </div>
-              <div v-else>
-                <div>{{ t("Log entry exists") }}</div>
-              </div>
-            </ShiftsAdminModalBox>
-          </template>
-
-          <h2 class="mb-2 mt-6">{{ t("Logs") }}</h2>
-          <template v-for="log of logs" :key="log.id">
-            <ShiftsAdminModalBox
-              :id="log.id!"
-              label="Log"
-              collection="shifts_logs"
-            >
-              <template #header>{{
-                displayMembership(
-                  log.shifts_membership as MembershipsMembership,
-                )
-              }}</template>
-              <p>{{ t(log.shifts_type) }} ({{ log.shifts_score }})</p>
-              <p v-if="log.shifts_note">Notes: {{ log.shifts_note }}</p>
-            </ShiftsAdminModalBox>
-          </template>
-        </div>
-        <div class="mt-3">
-          <UButton @click="startLogCreationFlow">{{ t("Create log") }}</UButton>
-        </div>
+      <div v-if="isPast && logsLoaded">
+        <ShiftsViewerModalAdminLogs :logs="logs" :occurence="occ" />
       </div>
     </div>
 
@@ -721,8 +521,7 @@ function checkIfMshipInAssignments(mship: number) {
           <p>
             {{
               displayMembership(
-                removeAssignmentObject.assignment
-                  .shifts_membership as MembershipsMembership,
+                removeAssignmentObject.assignment.shifts_membership,
               )
             }}
           </p>
@@ -749,49 +548,6 @@ function checkIfMshipInAssignments(mship: number) {
             {{ t("Remove for ") }} {{ startDateString }}
             {{ t("and all future dates") }}
           </UButton>
-        </div>
-      </div>
-    </UModal>
-
-    <UModal v-model="createLogModalIsOpen" :transition="false">
-      <div class="p-10 flex flex-col gap-4">
-        <h2>{{ t("Create log entry") }}</h2>
-        <UFormGroup :label="t('Membership number')" name="membershipID">
-          <UInput v-model="mshipID" />
-        </UFormGroup>
-        <UButton @click="loadMembership">{{ t("Load membership") }}</UButton>
-
-        <div v-if="mshipData">
-          <p class="font-bold">
-            {{ mshipData.memberships_user.first_name }}
-            {{ mshipData.memberships_user.last_name }}
-          </p>
-          <p>Membership type: {{ mshipData.memberships_type }}</p>
-
-          <p>Membership status: {{ mshipData.memberships_status }}</p>
-
-          <p>Shift type: {{ mshipData.shifts_user_type }}</p>
-
-          <UFormGroup :label="t('Type')" name="logEntryType">
-            <USelect v-model="logEntryType" :options="logEntryOptions" />
-          </UFormGroup>
-
-          <UFormGroup :label="t('Score')" name="logEntryScore">
-            <UInput v-model="logEntryScore" />
-          </UFormGroup>
-
-          <UFormGroup :label="t('Note')" name="logEntryNote">
-            <UInput v-model="logEntryNote" />
-          </UFormGroup>
-
-          <div class="flex flex-wrap gap-2 mt-3">
-            <UButton @click="createCustomLog()">{{
-              t("Create log entry")
-            }}</UButton>
-          </div>
-        </div>
-        <div v-if="mshipError">
-          {{ t("Member") }} {{ mshipID }} {{ t("not found") }}
         </div>
       </div>
     </UModal>

@@ -51,7 +51,7 @@ const europeanIBAN = [
   "SK",
 ];
 
-const user = useCollectivoUser();
+const user = useCurrentUser();
 const toast = useToast();
 const { t } = useI18n();
 const debug = useRuntimeConfig().public.debug;
@@ -514,10 +514,7 @@ async function fillOutAll() {
       </UButton>
     </div>
   </UForm>
-  <div
-    v-if="debug"
-    class="mx-2 my-10 p-6 rounded-lg bg-slate-100 flex flex-col gap-2"
-  >
+  <div v-if="debug" class="mx-2 my-10 p-6 bg-slate-100 flex flex-col gap-2">
     <div>
       <h3>Debug Tools</h3>
       <p>You are seeing this because NUXT_PUBLIC_DEBUG=True</p>
@@ -533,10 +530,6 @@ async function fillOutAll() {
 </template>
 
 <style lang="scss" scoped>
-.cv-form {
-  @apply max-w-2xl;
-}
-
 :deep(.md-small > p) {
   @apply text-sm;
 }
@@ -545,7 +538,7 @@ async function fillOutAll() {
   @apply font-bold;
 }
 .form-box {
-  @apply bg-blue-50 shadow-sm rounded-lg  px-4 py-3 flex flex-row gap-2;
+  @apply bg-blue-50 shadow-sm  px-4 py-3 flex flex-row gap-2;
 }
 
 .form-field {

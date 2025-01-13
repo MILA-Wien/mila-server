@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const user = useCollectivoUser();
+const user = useCurrentUser();
 const { setLocale, t } = useI18n();
 
 interface MenuItem {

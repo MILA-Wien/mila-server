@@ -4,7 +4,7 @@ definePageMeta({
 });
 
 const { t } = useI18n();
-setCollectivoTitle(t("Shifts administration"));
+setPageTitle(t("Shifts calendar (admin)"));
 
 definePageMeta({
   middleware: ["auth"],
@@ -12,10 +12,10 @@ definePageMeta({
 </script>
 
 <template>
-  <ShiftsCalendar mode="admin" />
+  <ShiftsViewer :admin="true" />
 </template>
 
 <i18n lang="yaml">
 de:
-  "Shifts administration": "Schichtverwaltung"
+  "Shifts calendar (admin)": "Schichtkalender (Admin)"
 </i18n>

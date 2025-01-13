@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { DateTime } from "luxon";
 import { parse } from "marked";
-import { createItem } from "@directus/sdk";
+import { createItem, readItem, readItems } from "@directus/sdk";
 const { locale } = useI18n();
 
 const props = defineProps({
@@ -19,7 +19,7 @@ const emit = defineEmits(["reload"]);
 const isOpen = defineModel("isOpen", { required: true, type: Boolean });
 const { t } = useI18n();
 const directus = useDirectus();
-const user = useCollectivoUser();
+const user = useCurrentUser();
 const shift = props.shiftOccurence.shift;
 const start = DateTime.fromISO(props.shiftOccurence.start, {
   locale: locale.value,
@@ -55,7 +55,11 @@ async function postAssignment() {
   }
 }
 
-async function fetchOccurrences(from: DateTime, to: DateTime, shiftID: number) {
+async function fetchOccurrences(
+  from: DateTime,
+  to: DateTime,
+  shiftID: number,
+): Promise<{ occurrences: ShiftOccurrence[] }> {
   return await $fetch("/api/shifts/occurrences", {
     query: {
       from: from.toISODate(),
@@ -72,7 +76,7 @@ async function postAssignmentInner() {
 
   // Check if shift is already full (parallel signup)
   const res = await fetchOccurrences(start, end, shift.id!);
-  const occurrences = res.occurrences as ShiftOccurrence[];
+  const occurrences = res.occurrences;
 
   if (occurrences.length != 1) {
     throw new Error("No or multiple occurrences found");

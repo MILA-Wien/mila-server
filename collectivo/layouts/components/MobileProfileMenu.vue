@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { setLocale, t } = useI18n();
-const user = useCollectivoUser();
+const user = useCurrentUser();
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 

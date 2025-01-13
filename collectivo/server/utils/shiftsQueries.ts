@@ -9,7 +9,7 @@ export async function getShiftShifts(
   to: Date,
   shiftID?: number,
 ): Promise<ShiftsShift[]> {
-  const filter: QueryFilter<CollectivoSchema, ShiftsShift> = {
+  const filter: QueryFilter<DbSchema, ShiftsShift> = {
     shifts_to: {
       _or: [{ _gte: from.toISOString() }, { _null: true }],
     },
@@ -34,7 +34,7 @@ export async function getShiftAssignments(
   shiftIds: number[],
   from: Date,
   to: Date,
-): Promise<ShiftsAssignment[]> {
+) {
   if (shiftIds.length === 0) {
     return [];
   }
@@ -60,7 +60,8 @@ export async function getShiftAssignments(
         {
           shifts_membership: [
             "id",
-            "count(shifts_assignments)",
+            "shifts_counter",
+            "count(shifts_logs)",
             {
               memberships_user: ["first_name", "last_name", "hide_name"],
             },

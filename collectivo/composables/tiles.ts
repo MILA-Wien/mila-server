@@ -1,13 +1,13 @@
 import { readItems } from "@directus/sdk";
 
-export const useCollectivoTiles = () =>
-  useState<CollectivoTileStore>(
+export const useDashboardTiles = () =>
+  useState<DashboardTileStore>(
     "collectivo_tiles",
-    () => new CollectivoTileStore(),
+    () => new DashboardTileStore(),
   );
 
-class CollectivoTileStore {
-  data: CollectivoTile[] | null;
+class DashboardTileStore {
+  data: DashboardTile[] | null;
   loading: boolean;
   error: unknown;
 
@@ -41,8 +41,8 @@ class CollectivoTileStore {
   }
 }
 
-function filterTiles(tiles: CollectivoTile[]) {
-  const user = useCollectivoUser();
+function filterTiles(tiles: DashboardTile[]) {
+  const user = useCurrentUser();
   return tiles.filter((tile) => {
     let display = true;
 

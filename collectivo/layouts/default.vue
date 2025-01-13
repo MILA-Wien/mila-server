@@ -3,11 +3,7 @@ import Sidebar from "./components/Sidebar.vue";
 import MobileHeader from "./components/MobileHeader.vue";
 import MobileMenu from "./components/MobileMenu.vue";
 import ProfileMenu2 from "./components/ProfileMenu2.vue";
-
-const { t } = useI18n();
-
-const pageTitle = useCollectivoTitle();
-const backLink = useCollectivoBackLink();
+import Header from "./components/Header.vue";
 </script>
 
 <template>
@@ -18,27 +14,13 @@ const backLink = useCollectivoBackLink();
       <div class="hidden md:flex w-full justify-end px-8 pt-8 pb-4 right-0">
         <ProfileMenu2 />
       </div>
-      <div class="px-6 py-3 md:px-12 md:pb-20 lg:px-20">
-        <div class="hidden md:flex justify-between items-start mb-7 lg:mb-11">
-          <div class="">
-            <h1
-              class="flex flex-wrap text-4xl lg:text-5xl align-middle items-center gap-3 mt-0"
-            >
-              <NuxtLink
-                v-if="backLink"
-                :to="backLink"
-                class="flex items-center"
-              >
-                <UIcon name="i-heroicons-arrow-left-circle-16-solid" />
-              </NuxtLink>
+      <div class="flex flex-row justify-center">
+        <div class="px-6 py-3 md:px-12 md:pb-20 lg:px-20 w-full max-w-7xl">
+          <Header />
 
-              {{ t(pageTitle) }}
-            </h1>
-          </div>
+          <!-- Main content -->
+          <slot />
         </div>
-
-        <!-- Main content -->
-        <slot />
       </div>
     </div>
     <MobileMenu />

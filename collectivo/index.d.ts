@@ -1,30 +1,9 @@
-declare module "h3" {
-  interface EventHandlerRequest {
-    context: {
-      auth?: ServerUserInfo;
-    };
-  }
-}
-
 declare global {
-  interface ServerUserInfo {
-    user: string;
-    email: string;
-    mship: number | null;
-    studioAdmin: boolean;
-    shiftAdmin: boolean;
-  }
-
-  interface SettingsHidden {
-    last_cronjob: string;
-  }
-
-  interface CollectivoSchema {
-    collectivo_extensions: CollectivoExtension[];
-    collectivo_tiles: CollectivoTile[];
-    collectivo_tags: CollectivoTag[];
-    directus_users: CollectivoUser[];
+  interface DbSchema {
+    directus_users: UserProfile[];
+    collectivo_tags: UserTag[];
     memberships: MembershipsMembership[];
+    collectivo_tiles: DashboardTile[];
     memberships_coshoppers: MembershipsCoshopper[];
     shifts_assignments: ShiftsAssignment[];
     shifts_absences: ShiftsAbsence[];
@@ -43,7 +22,7 @@ declare global {
     coshopper: MembershipsCoshopper | number;
   }
 
-  interface CollectivoUser {
+  interface UserProfile {
     id: string;
     first_name: string;
     last_name: string;
@@ -54,19 +33,26 @@ declare global {
     [key: string]: string | undefined;
   }
 
+  interface UserTag {
+    id: number;
+    tags_name: string;
+    tags_users: UserProfile[] | number[];
+  }
+
   export type ShiftsUserType = "jumper" | "regular" | "exempt" | "inactive";
 
   interface MembershipsMembership {
     id: number;
     name: string;
-    memberships_user: DirectusUser | number;
+    memberships_user: UserProfile | number;
     memberships_status: string;
     memberships_type: string;
     memberships_shares: number;
     shifts_user_type: ShiftsUserType;
     shifts_counter: number;
+    shifts_logs?: ShiftsLog[];
     shifts_can_be_coordinator: boolean;
-    shifts_categories_allowed: { shifts_category_id: ShiftsCategory }[];
+    shifts_categories_allowed: { shifts_categories_id: number }[];
     coshoppers?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
     kids?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
   }
@@ -78,18 +64,12 @@ declare global {
     membership_card_id: string;
   }
 
-  interface CollectivoTag {
-    id: number;
-    tags_name: string;
-    tags_users: CollectivoUser[] | number[];
-  }
-
-  interface CollectivoTile {
+  interface DashboardTile {
     id: number;
     sort: number;
     tiles_name: string;
     tiles_content: string;
-    tiles_buttons: CollectivoTileButton[];
+    tiles_buttons: DashboardTileButton[];
     tiles_color: string;
     tiles_component: string;
     tiles_tag_required: number | null;
@@ -102,11 +82,16 @@ declare global {
       | "hide";
   }
 
-  interface CollectivoTileButton {
+  interface DashboardTileButton {
     id: number;
     tiles_label: string;
     tiles_path: string;
     tiles_is_external: boolean;
+  }
+
+  interface SettingsHidden {
+    last_cronjob: string;
+    shift_point_system: boolean;
   }
 
   // Shifts
@@ -210,6 +195,22 @@ declare global {
     name: string;
   }
 
+  interface ShiftOccurrenceApiResponse {
+    occurrences: ShiftOccurrenceFrontend[];
+    publicHolidays: ShiftsPublicHoliday[];
+  }
+
+  interface ShiftOccurrenceFrontend {
+    shift: ShiftsShift;
+    start: string;
+    end: string;
+    shiftRule: RRuleSet;
+    n_assigned: number;
+    assignments: AssignmentOccurrence[];
+    selfAssigned?: boolean;
+    needsCoordinator?: boolean;
+  }
+
   interface ShiftOccurrence {
     shift: ShiftsShift;
     start: Date;
@@ -244,7 +245,7 @@ declare global {
   }
 
   // Layout
-  interface CollectivoMenus {
+  interface NavigationMenus {
     main: CollectivoMenuItem[];
     main_public: CollectivoMenuItem[];
     profile: CollectivoMenuItem[];
@@ -364,11 +365,29 @@ declare global {
     value?: string | number | RegExp;
     message?: string;
   };
+
+  // Server middleware
+  interface ServerUserInfo {
+    user: string;
+    email: string;
+    mship: number | null;
+    studioAdmin: boolean;
+    shiftAdmin: boolean;
+  }
 }
 
 // Types for input of app.config.ts
 declare module "nuxt/schema" {
   interface AppConfigInput {}
+}
+
+// Server middleware
+declare module "h3" {
+  interface EventHandlerRequest {
+    context: {
+      auth?: ServerUserInfo;
+    };
+  }
 }
 
 export {};

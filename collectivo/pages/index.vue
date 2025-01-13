@@ -3,18 +3,15 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-setCollectivoTitle("Dashboard");
+setPageTitle("Dashboard");
 
-const tiles = useCollectivoTiles();
+const tiles = useDashboardTiles();
 
 tiles.value.load();
 </script>
 
 <template>
-  <div
-    v-if="tiles.data"
-    class="gap-5 columns-1 md:columns-2 xl:columns-3 2xl:columns-4"
-  >
+  <div v-if="tiles.data" class="gap-5 columns-1 md:columns-2 xl:columns-3">
     <CollectivoCard
       v-for="tile in tiles.data"
       :key="tile.id"

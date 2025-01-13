@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import ProfileMenu2 from "./components/ProfileMenu2.vue";
 
-const pageTitle = useCollectivoTitle();
+const pageTitle = usePageTitle();
 const appConfig = useAppConfig();
 const { setLocale, t, locale } = useI18n();
-const user = useCollectivoUser();
+const user = useCurrentUser();
 const userMenu = [
   [
     {

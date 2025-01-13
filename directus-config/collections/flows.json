@@ -80,6 +80,26 @@
     "_syncId": "1b86184f-c905-4bd2-afb8-1b1546c82471"
   },
   {
+    "name": "Log Create -> Score",
+    "icon": "readiness_score",
+    "color": "#3399FF",
+    "description": null,
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "filter",
+      "scope": [
+        "items.create"
+      ],
+      "collections": [
+        "shifts_logs"
+      ]
+    },
+    "operation": "6bd0005f-43d3-495e-a242-d39bd20b604e",
+    "_syncId": "1cea747f-3aeb-43c2-a4b8-63d269d7774a"
+  },
+  {
     "name": "Kampagne Sende-Mechanismus",
     "icon": "send",
     "color": "#FFA439",
@@ -201,6 +221,18 @@
     "_syncId": "493c1260-3bb9-47e7-940d-115b8b0f1ccc"
   },
   {
+    "name": "Log Update -> Score Inner",
+    "icon": "readiness_score",
+    "color": "#3399FF",
+    "description": null,
+    "status": "active",
+    "trigger": "operation",
+    "accountability": "all",
+    "options": {},
+    "operation": "3986d585-25ed-4e0b-a78f-0bb88798d3d9",
+    "_syncId": "55cc41e8-4d68-4895-b42e-e5af00a316f4"
+  },
+  {
     "name": "User Sync Keycloak",
     "icon": "sync",
     "color": "#6644FF",
@@ -263,6 +295,18 @@
     "_syncId": "610aa314-bd89-461e-b8a0-10d0ad75f2d4"
   },
   {
+    "name": "Log Delete -> Score Inner",
+    "icon": "readiness_score",
+    "color": "#3399FF",
+    "description": null,
+    "status": "active",
+    "trigger": "operation",
+    "accountability": "all",
+    "options": {},
+    "operation": "7c31049c-0d2e-4d2a-82b6-5f541e8954d6",
+    "_syncId": "6179bf54-3ad8-4def-834d-b0cccf33c0dc"
+  },
+  {
     "name": "Kampagne senden",
     "icon": "send",
     "color": "#FFA439",
@@ -285,14 +329,14 @@
     "name": "Run Cronjobs",
     "icon": "nest_clock_farsight_analog",
     "color": null,
-    "description": "Every 30 minutes",
+    "description": "Runs at the start of each day",
     "status": "active",
     "trigger": "schedule",
     "accountability": "all",
     "options": {
       "type": "action",
       "interval": "0 3 * * *",
-      "cron": "*/30 * * * *"
+      "cron": "0 0 1 * * * "
     },
     "operation": "9e5efeae-a13a-4841-9653-b4efb31192c8",
     "_syncId": "8fbda46c-8ed1-4578-a38a-5ddbd11ee4da"
@@ -383,6 +427,46 @@
     "_syncId": "9ee2e72d-ca7e-4c4b-ab18-97abfd062ddf"
   },
   {
+    "name": "Log Delete -> Score",
+    "icon": "readiness_score",
+    "color": "#3399FF",
+    "description": null,
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "filter",
+      "scope": [
+        "items.delete"
+      ],
+      "collections": [
+        "shifts_logs"
+      ]
+    },
+    "operation": "bec48064-fe97-4a23-9a03-246c8af492e7",
+    "_syncId": "ad8b2f6a-a0ec-4325-ad14-4b678b9acd83"
+  },
+  {
+    "name": "Log Update -> Score",
+    "icon": "readiness_score",
+    "color": "#3399FF",
+    "description": null,
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "filter",
+      "scope": [
+        "items.update"
+      ],
+      "collections": [
+        "shifts_logs"
+      ]
+    },
+    "operation": "7750689a-c74f-4538-8375-652eff307512",
+    "_syncId": "c36a2159-395e-4eec-acb7-86cbd1d81d5c"
+  },
+  {
     "name": "Groups Update Sync Keycloak",
     "icon": "sync",
     "color": "#6644FF",
@@ -431,19 +515,5 @@
     },
     "operation": "0c32433c-4785-46f0-9e73-ec8747a61aa2",
     "_syncId": "f714c75a-e78a-4c80-9b4d-4b39943d6444"
-  },
-  {
-    "name": "Kampagne Senden 2",
-    "icon": "bolt",
-    "color": "#FFC23B",
-    "description": "Folgeflow für Kampagne senden",
-    "status": "inactive",
-    "trigger": "operation",
-    "accountability": "all",
-    "options": {
-      "return": "$last"
-    },
-    "operation": "baf4f756-398d-4f58-a3ac-7862e9f975bc",
-    "_syncId": "f9895e5e-bb34-4e97-96af-5c8138c764df"
   }
 ]

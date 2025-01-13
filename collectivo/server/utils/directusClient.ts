@@ -1,7 +1,7 @@
 import { createDirectus, staticToken, rest } from "@directus/sdk";
 
 const config = useRuntimeConfig();
-const directus = createDirectus<CollectivoSchema>(config.public.directusUrl)
+const directus = createDirectus<DbSchema>(config.public.directusUrl)
   .with(staticToken(config.directusAdminToken))
   .with(rest());
 

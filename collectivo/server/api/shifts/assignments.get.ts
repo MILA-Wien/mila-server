@@ -1,6 +1,5 @@
 import { RRule, RRuleSet } from "rrule";
 import { readItems } from "@directus/sdk";
-import { getShiftRrule } from "~/server/utils/shifts";
 
 export default defineEventHandler(async (event) => {
   return getUserAssignments(event.context.auth.mship);
@@ -61,7 +60,7 @@ export const getUserAssignments = async (mship: number) => {
     if (absence.shifts_is_holiday) {
       holidays.push(absence);
       if (
-        new Date(absence.shifts_from) < new Date(nowStr) &&
+        new Date(absence.shifts_from) <= new Date(nowStr) &&
         absence.shifts_status === "accepted"
       ) {
         holidaysCurrent.push(absence);
@@ -92,8 +91,8 @@ export const getUserAssignments = async (mship: number) => {
     );
   });
 
-  const assignmentRules: ShiftsAssignmentRules[] = assignments.map(
-    (assignment) => {
+  const assignmentRules: ShiftsAssignmentRules[] = await Promise.all(
+    assignments.map(async (assignment) => {
       const filteredAbsences = absences.filter(
         (absence) =>
           (absence.shifts_assignment == assignment.id ||
@@ -111,20 +110,46 @@ export const getUserAssignments = async (mship: number) => {
       const absencesRule = rules[1];
       const nextOccurence = assignmentRule.after(now, true);
       let secondNextOccurence = null;
-
+      let nextOccurrenceAbsent = null;
+      const names = [];
       if (nextOccurence) {
         secondNextOccurence = assignmentRule.after(nextOccurence);
+
+        // Get other assignments for this occurrence
+        const otherAssignments = await getShiftAssignments(
+          assignment.shifts_shift.id,
+          nextOccurence,
+          nextOccurence,
+        );
+
+        for (const a of otherAssignments) {
+          const mship1 = a.shifts_membership;
+          const user = mship1.memberships_user;
+          if (mship1.id == mship) continue;
+          names.push(
+            !user.hide_name
+              ? `${user.first_name} ${user.last_name}`
+              : "Anonymous",
+          );
+        }
+
+        // Solve absences here
+        if (absencesRule) {
+          nextOccurrenceAbsent =
+            absencesRule.after(nextOccurence, true) != null;
+        }
       }
 
       return {
         assignment: assignment,
+        coworkers: names,
         absences: filteredAbsences,
         assignmentRule: assignmentRule,
-        absencesRule: absencesRule,
+        nextOccurrenceAbsent: nextOccurrenceAbsent,
         nextOccurrence: nextOccurence,
         isRegular: secondNextOccurence != null,
       };
-    },
+    }),
   );
 
   assignmentRules.sort((a, b) => {
@@ -135,6 +160,11 @@ export const getUserAssignments = async (mship: number) => {
     if (!nextB) return -1;
     if (nextA == nextB) return 0;
     return nextA > nextB ? 1 : -1;
+  });
+
+  assignmentRules.forEach((rule) => {
+    delete rule.assignmentRule;
+    delete rule.absences;
   });
 
   return {
@@ -188,7 +218,9 @@ export const getAssignmentRRule = (
   });
 
   // Exclude public holidays
-  assignmentRule.exrule(publicHolidayDates as RRule);
+  if (shift.exclude_public_holidays) {
+    assignmentRule.exrule(publicHolidayDates as RRule);
+  }
 
   return [assignmentRule, absencesRule];
 };

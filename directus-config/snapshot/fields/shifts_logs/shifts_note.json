@@ -11,7 +11,7 @@
     "group": null,
     "hidden": false,
     "interface": "input",
-    "note": null,
+    "note": "Achtung, diese Notiz ist auch für das Mitglied sichtbar!",
     "options": null,
     "readonly": false,
     "required": false,

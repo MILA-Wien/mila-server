@@ -268,7 +268,6 @@ type Subscription {
   messages_campaigns_mutated(event: EventEnum): messages_campaigns_mutated
   messages_campaigns_directus_users_mutated(event: EventEnum): messages_campaigns_directus_users_mutated
   messages_designs_mutated(event: EventEnum): messages_designs_mutated
-  messages_messages_mutated(event: EventEnum): messages_messages_mutated
   milaccess_log_mutated(event: EventEnum): milaccess_log_mutated
   mila_automations_mutated(event: EventEnum): mila_automations_mutated
   payments_invoices_out_mutated(event: EventEnum): payments_invoices_out_mutated
@@ -276,11 +275,12 @@ type Subscription {
   shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
   shifts_holidays_public_mutated(event: EventEnum): shifts_holidays_public_mutated
-  memberships_mutated(event: EventEnum): memberships_mutated
   memberships_shifts_categories_mutated(event: EventEnum): memberships_shifts_categories_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
-  shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
+  memberships_mutated(event: EventEnum): memberships_mutated
   settings_hidden_mutated(event: EventEnum): settings_hidden_mutated
+  shifts_assignments_mutated(event: EventEnum): shifts_assignments_mutated
+  messages_messages_mutated(event: EventEnum): messages_messages_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -1788,6 +1788,8 @@ type memberships {
   user_created: String
   user_updated: String
   shifts_can_be_coordinator: Boolean
+  memberships_date_type_changed: Date
+  memberships_date_type_changed_func: date_functions
   coshoppers(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers]
   coshoppers_func: count_functions
   kids(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers_1]
@@ -1798,6 +1800,8 @@ type memberships {
   shifts_categories_allowed_func: count_functions
   shifts_assignments(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_assignments]
   shifts_assignments_func: count_functions
+  shifts_logs(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_logs]
+  shifts_logs_func: count_functions
 }
 
 type memberships_coshoppers {
@@ -1877,6 +1881,8 @@ type messages_campaigns {
   user_updated: String
   messages_recipients(filter: messages_campaigns_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_campaigns_directus_users]
   messages_recipients_func: count_functions
+  messages_messages(filter: messages_messages_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_messages]
+  messages_messages_func: count_functions
 }
 
 type messages_campaigns_directus_users {
@@ -1926,9 +1932,9 @@ type messages_messages {
   messages_campaign(filter: messages_campaigns_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_campaigns
   messages_message_status: String
   messages_recipient(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
-  messages_template(filter: messages_templates_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_templates
   user_created: String
   user_updated: String
+  messages_error_message: String
 }
 
 type messages_messages_mutated {
@@ -2100,6 +2106,7 @@ type settings_hidden {
   id: ID!
   last_cronjob: Date
   last_cronjob_func: datetime_functions
+  shift_point_system: Boolean
 }
 
 type settings_hidden_mutated {
@@ -2164,6 +2171,7 @@ type shifts_assignments {
 
   """Erinnerungs-E-Mails vor Schichtantritt aktivieren"""
   send_reminders: Boolean
+  is_first_shift: Boolean
   shifts_absences(filter: shifts_absences_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_absences]
   shifts_absences_func: count_functions
 }
@@ -2213,6 +2221,8 @@ type shifts_logs {
   shifts_date: Date
   shifts_date_func: date_functions
   shifts_membership(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+
+  """Achtung, diese Notiz ist auch für das Mitglied sichtbar!"""
   shifts_note: String
   shifts_score: Int
   shifts_shift(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_shifts
@@ -2763,11 +2773,13 @@ input create_memberships_input {
   user_created: String
   user_updated: String
   shifts_can_be_coordinator: Boolean
+  memberships_date_type_changed: Date
   coshoppers: [create_memberships_memberships_coshoppers_input]
   kids: [create_memberships_memberships_coshoppers_1_input]
   memberships_invoices: [create_payments_invoices_out_input]
   shifts_categories_allowed: [create_memberships_shifts_categories_input]
   shifts_assignments: [create_shifts_assignments_input]
+  shifts_logs: [create_shifts_logs_input]
 }
 
 input create_memberships_memberships_coshoppers_1_input {
@@ -2804,6 +2816,7 @@ input create_messages_campaigns_input {
   user_created: String
   user_updated: String
   messages_recipients: [create_messages_campaigns_directus_users_input]
+  messages_messages: [create_messages_messages_input]
 }
 
 input create_messages_designs_input {
@@ -2816,6 +2829,18 @@ input create_messages_designs_input {
   messages_design_name: String!
   user_created: create_directus_users_input
   user_updated: create_directus_users_input
+}
+
+input create_messages_messages_input {
+  date_created: Date
+  date_updated: Date
+  id: ID
+  messages_campaign: create_messages_campaigns_input
+  messages_message_status: String
+  messages_recipient: create_directus_users_input
+  user_created: String
+  user_updated: String
+  messages_error_message: String
 }
 
 input create_messages_templates_input {
@@ -2909,12 +2934,31 @@ input create_shifts_assignments_input {
 
   """Erinnerungs-E-Mails vor Schichtantritt aktivieren"""
   send_reminders: Boolean
+  is_first_shift: Boolean
   shifts_absences: [create_shifts_absences_input]
 }
 
 input create_shifts_categories_input {
   id: ID
   name: String
+}
+
+input create_shifts_logs_input {
+  date_created: Date
+  date_updated: Date
+  id: ID
+  shifts_date: Date
+  shifts_membership: create_memberships_input
+
+  """Achtung, diese Notiz ist auch für das Mitglied sichtbar!"""
+  shifts_note: String
+  shifts_score: Int
+  shifts_shift: create_shifts_shifts_input
+
+  """Was genau soll dokumentiert werden?"""
+  shifts_type: String!
+  user_created: String
+  user_updated: String
 }
 
 input create_shifts_shifts_input {
@@ -3524,6 +3568,8 @@ input memberships_filter {
   user_created: string_filter_operators
   user_updated: string_filter_operators
   shifts_can_be_coordinator: boolean_filter_operators
+  memberships_date_type_changed: date_filter_operators
+  memberships_date_type_changed_func: date_function_filter_operators
   coshoppers: memberships_memberships_coshoppers_filter
   coshoppers_func: count_function_filter_operators
   kids: memberships_memberships_coshoppers_1_filter
@@ -3534,6 +3580,8 @@ input memberships_filter {
   shifts_categories_allowed_func: count_function_filter_operators
   shifts_assignments: shifts_assignments_filter
   shifts_assignments_func: count_function_filter_operators
+  shifts_logs: shifts_logs_filter
+  shifts_logs_func: count_function_filter_operators
   _and: [memberships_filter]
   _or: [memberships_filter]
 }
@@ -3584,6 +3632,8 @@ input messages_campaigns_filter {
   user_updated: string_filter_operators
   messages_recipients: messages_campaigns_directus_users_filter
   messages_recipients_func: count_function_filter_operators
+  messages_messages: messages_messages_filter
+  messages_messages_func: count_function_filter_operators
   _and: [messages_campaigns_filter]
   _or: [messages_campaigns_filter]
 }
@@ -3600,6 +3650,22 @@ input messages_designs_filter {
   user_updated: directus_users_filter
   _and: [messages_designs_filter]
   _or: [messages_designs_filter]
+}
+
+input messages_messages_filter {
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  date_updated: date_filter_operators
+  date_updated_func: datetime_function_filter_operators
+  id: number_filter_operators
+  messages_campaign: messages_campaigns_filter
+  messages_message_status: string_filter_operators
+  messages_recipient: directus_users_filter
+  user_created: string_filter_operators
+  user_updated: string_filter_operators
+  messages_error_message: string_filter_operators
+  _and: [messages_messages_filter]
+  _or: [messages_messages_filter]
 }
 
 input messages_templates_filter {
@@ -3711,6 +3777,7 @@ input shifts_assignments_filter {
   user_created: string_filter_operators
   user_updated: string_filter_operators
   send_reminders: boolean_filter_operators
+  is_first_shift: boolean_filter_operators
   shifts_absences: shifts_absences_filter
   shifts_absences_func: count_function_filter_operators
   _and: [shifts_assignments_filter]
@@ -3722,6 +3789,25 @@ input shifts_categories_filter {
   name: string_filter_operators
   _and: [shifts_categories_filter]
   _or: [shifts_categories_filter]
+}
+
+input shifts_logs_filter {
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  date_updated: date_filter_operators
+  date_updated_func: datetime_function_filter_operators
+  id: number_filter_operators
+  shifts_date: date_filter_operators
+  shifts_date_func: date_function_filter_operators
+  shifts_membership: memberships_filter
+  shifts_note: string_filter_operators
+  shifts_score: number_filter_operators
+  shifts_shift: shifts_shifts_filter
+  shifts_type: string_filter_operators
+  user_created: string_filter_operators
+  user_updated: string_filter_operators
+  _and: [shifts_logs_filter]
+  _or: [shifts_logs_filter]
 }
 
 input shifts_shifts_filter {
@@ -4212,11 +4298,13 @@ input update_memberships_input {
   user_created: String
   user_updated: String
   shifts_can_be_coordinator: Boolean
+  memberships_date_type_changed: Date
   coshoppers: [update_memberships_memberships_coshoppers_input]
   kids: [update_memberships_memberships_coshoppers_1_input]
   memberships_invoices: [update_payments_invoices_out_input]
   shifts_categories_allowed: [update_memberships_shifts_categories_input]
   shifts_assignments: [update_shifts_assignments_input]
+  shifts_logs: [update_shifts_logs_input]
 }
 
 input update_memberships_memberships_coshoppers_1_input {
@@ -4253,6 +4341,7 @@ input update_messages_campaigns_input {
   user_created: String
   user_updated: String
   messages_recipients: [update_messages_campaigns_directus_users_input]
+  messages_messages: [update_messages_messages_input]
 }
 
 input update_messages_designs_input {
@@ -4265,6 +4354,18 @@ input update_messages_designs_input {
   messages_design_name: String
   user_created: update_directus_users_input
   user_updated: update_directus_users_input
+}
+
+input update_messages_messages_input {
+  date_created: Date
+  date_updated: Date
+  id: ID
+  messages_campaign: update_messages_campaigns_input
+  messages_message_status: String
+  messages_recipient: update_directus_users_input
+  user_created: String
+  user_updated: String
+  messages_error_message: String
 }
 
 input update_messages_templates_input {
@@ -4358,12 +4459,31 @@ input update_shifts_assignments_input {
 
   """Erinnerungs-E-Mails vor Schichtantritt aktivieren"""
   send_reminders: Boolean
+  is_first_shift: Boolean
   shifts_absences: [update_shifts_absences_input]
 }
 
 input update_shifts_categories_input {
   id: ID
   name: String
+}
+
+input update_shifts_logs_input {
+  date_created: Date
+  date_updated: Date
+  id: ID
+  shifts_date: Date
+  shifts_membership: update_memberships_input
+
+  """Achtung, diese Notiz ist auch für das Mitglied sichtbar!"""
+  shifts_note: String
+  shifts_score: Int
+  shifts_shift: update_shifts_shifts_input
+
+  """Was genau soll dokumentiert werden?"""
+  shifts_type: String
+  user_created: String
+  user_updated: String
 }
 
 input update_shifts_shifts_input {

@@ -25,9 +25,10 @@ async function useKeycloak() {
 // Update keycloak user
 export default defineEventHandler(async (event) => {
   try {
+    console.log("Running user_sync_keycloak");
     return await syncKeycloakUser(event);
   } catch (e) {
-    console.error("Error in auth.patch.ts", e);
+    console.error("Error in user_sync_keycloak.post.ts", e);
     throw e;
   }
 });
@@ -40,7 +41,7 @@ async function syncKeycloakUser(event: H3Event) {
   const isCreate = body.event === "users.create";
   const isDelete = body.event === "users.delete";
 
-  let user: Partial<CollectivoUser> = {};
+  let user: Partial<UserProfile> = {};
 
   // Get user key(s) (they are in different locations for create/update/delete)
   body.keys = body.keys || [body.key];

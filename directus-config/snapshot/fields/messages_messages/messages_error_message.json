@@ -1,23 +1,21 @@
 {
   "collection": "messages_messages",
-  "field": "messages_template",
-  "type": "integer",
+  "field": "messages_error_message",
+  "type": "string",
   "meta": {
     "collection": "messages_messages",
     "conditions": null,
-    "display": "related-values",
-    "display_options": {
-      "template": "{{messages_name}} ({{messages_method}})"
-    },
-    "field": "messages_template",
+    "display": null,
+    "display_options": null,
+    "field": "messages_error_message",
     "group": null,
     "hidden": false,
-    "interface": "select-dropdown-m2o",
+    "interface": "input",
     "note": null,
     "options": null,
     "readonly": false,
-    "required": true,
-    "sort": 12,
+    "required": false,
+    "sort": 14,
     "special": null,
     "translations": null,
     "validation": null,
@@ -25,20 +23,20 @@
     "width": "full"
   },
   "schema": {
-    "name": "messages_template",
+    "name": "messages_error_message",
     "table": "messages_messages",
-    "data_type": "integer",
+    "data_type": "character varying",
     "default_value": null,
-    "max_length": null,
-    "numeric_precision": 32,
-    "numeric_scale": 0,
+    "max_length": 255,
+    "numeric_precision": null,
+    "numeric_scale": null,
     "is_nullable": true,
     "is_unique": false,
     "is_primary_key": false,
     "is_generated": false,
     "generation_expression": null,
     "has_auto_increment": false,
-    "foreign_key_table": "messages_templates",
-    "foreign_key_column": "id"
+    "foreign_key_table": null,
+    "foreign_key_column": null
   }
 }

@@ -1,14 +1,5 @@
 import type { RRule } from "rrule";
 
-import {
-  getShiftAbsences,
-  getShiftAssignments,
-  getShiftPublicHolidays,
-  getShiftShifts,
-  getShiftRrule,
-  getAssignmentRrules,
-} from "~/server/utils/shifts";
-
 export const getShiftOccurrences = async (
   from: Date,
   to: Date,
@@ -63,16 +54,6 @@ export const getShiftOccurrences = async (
 };
 
 // Get all occurrences for a shift in a given timeframe
-// Possible feature: Jumpers only see the next free instance of each shift
-// let dates: Date[] = [];
-// if (isJumper) {
-//   const nextDate = shiftRule.after(new Date(), true);
-//   if (nextDate) {
-//     dates.push(nextDate);
-//   }
-// } else {
-//   dates = shiftRule.between(from, to, true);
-// }
 async function getSingleShiftOccurrences(
   shift: ShiftsShift,
   assignments: ShiftsAssignment[],
@@ -96,7 +77,6 @@ async function getSingleShiftOccurrences(
 
   const dates = shiftRule.between(from, to, true);
   const shiftOccurrences: ShiftOccurrence[] = [];
-
   for (const date of dates) {
     shiftOccurrences.push(
       createShiftOccurrence(shift, date, shiftRule, assignmentRrules, mship),

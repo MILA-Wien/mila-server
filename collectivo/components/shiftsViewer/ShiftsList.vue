@@ -1,0 +1,134 @@
+<script setup lang="ts">
+import type { PropType } from "vue";
+
+const props = defineProps({
+  admin: {
+    type: Boolean,
+    default: false,
+  },
+  events: {
+    type: Object as PropType<ShiftOccurrenceApiResponse>,
+    required: true,
+  },
+  status: {
+    type: String,
+    default: "all",
+  },
+  category: {
+    type: Number,
+    default: -1,
+  },
+});
+
+const emit = defineEmits(["openOccurrence"]);
+const allCats = props.category === -1;
+const unfilled = props.status === "unfilled";
+const isEmpty = ref(true);
+const { locale, t } = useI18n();
+
+interface Events {
+  [key: string]: {
+    date: Date;
+    dateString: string;
+    isPublicHoliday: boolean;
+    occurrences: ShiftOccurrenceFrontend[];
+  };
+}
+const groups: Events = {};
+props.events.occurrences.forEach((occurrence) => {
+  const date = new Date(occurrence.start);
+  const start = new Date(occurrence.start);
+  const isPast = start < new Date();
+  const dateString = date.toLocaleDateString(locale.value);
+  if (!groups[dateString]) {
+    groups[dateString] = {
+      date: date,
+      dateString: dateString,
+      isPublicHoliday: false,
+      occurrences: [],
+    };
+  }
+
+  // Apply filters
+  if (!props.admin && occurrence.selfAssigned) {
+    return;
+  }
+
+  if (unfilled) {
+    if (isPast) {
+      return;
+    }
+    if (occurrence.n_assigned >= occurrence.shift.shifts_slots) {
+      return;
+    }
+  }
+
+  if (props.category == 0 && occurrence.shift.shifts_category_2 != null) {
+    return;
+  }
+
+  if (
+    !allCats &&
+    props.category != 0 &&
+    occurrence.shift.shifts_category_2 !== props.category
+  ) {
+    return;
+  }
+
+  groups[dateString].occurrences.push(occurrence);
+  isEmpty.value = false;
+});
+
+props.events.publicHolidays.forEach((holiday) => {
+  const date = new Date(holiday.date);
+  const dateString = date.toLocaleDateString(locale.value);
+  if (groups[dateString]) {
+    groups[dateString].isPublicHoliday = true;
+  }
+});
+
+function emitOcc(occ: ShiftOccurrenceFrontend) {
+  emit("openOccurrence", occ);
+}
+</script>
+
+<template>
+  <div class="flex flex-col gap-5">
+    <template v-if="isEmpty">
+      <div class="bg-gray-100 p-5">
+        <p>{{ t("No shifts found within the selected timespan.") }}</p>
+      </div>
+    </template>
+    <template v-for="group in groups" :key="group.dateString">
+      <template v-if="group.occurrences.length > 0">
+        <div>
+          <h2>
+            {{ group.dateString }}
+            <span v-if="group.isPublicHoliday"
+              >({{ t("Public holiday") }})</span
+            >
+          </h2>
+
+          <div class="flex flex-col gap-2">
+            <div v-for="(occurrence, index) in group.occurrences" :key="index">
+              <ShiftsViewerShiftsListTile
+                :occurrence="occurrence"
+                :admin="admin"
+                @open-occurrence="emitOcc"
+              />
+            </div>
+          </div>
+        </div>
+      </template>
+    </template>
+  </div>
+</template>
+
+<style lang="scss" scoped></style>
+
+<i18n lang="yaml">
+de:
+  Month: Monat
+  Public holiday: Feiertag
+  No shifts found within the selected timespan.: Es wurden keine Schichten innerhalb des ausgewählten Zeitraums gefunden.
+</i18n>

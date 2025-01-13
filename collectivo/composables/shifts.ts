@@ -22,7 +22,7 @@ export const getShiftOccurrences = async (
   const isAll = shiftType === "all";
 
   // Get shifts within timeframe
-  const filter: QueryFilter<CollectivoSchema, ShiftsShift> = {
+  const filter: QueryFilter<DbSchema, ShiftsShift> = {
     shifts_to: {
       _or: [{ _gte: from.toISO() }, { _null: true }],
     },
@@ -227,7 +227,7 @@ const getSingleShiftOccurence = (
   shiftRule: RRule,
   assignmentRrules: AssignmentRrule[],
 ): ShiftOccurrence => {
-  const mship = useCollectivoUser().value.membership;
+  const mship = useCurrentUser().value.membership;
   const assignments: AssignmentOccurrence[] = [];
   let n_assigned = 0;
   let selfAssigned = false;

@@ -3,10 +3,10 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-setCollectivoTitle("Profile");
+setPageTitle("Profile");
 const toast = useToast();
 const { t } = useI18n();
-const user = useCollectivoUser();
+const user = useCurrentUser();
 
 const is_legal_profile = [
   {
@@ -260,7 +260,7 @@ const profileInputs: Ref<CollectivoFormField[]> = ref([
 ]);
 
 // Submit form data
-async function saveProfile(data: CollectivoUser) {
+async function saveProfile(data: UserProfile) {
   try {
     await user.value.save(data);
 
@@ -283,35 +283,8 @@ async function saveProfile(data: CollectivoUser) {
 </script>
 
 <template>
-  <div id="mila-profile">
-    <CollectivoCard class="mb-8">
-      <div class="flex flex-col gap-2">
-        <h2>Mitgliedschaft</h2>
-        <div v-if="user.isMember && user.membership">
-          <p>
-            Du bist Mitglied
-            <span v-if="user.membership.memberships_date_approved"
-              >seit {{ user.membership.memberships_date_approved }}</span
-            >
-          </p>
-          <p>
-            Deine Mitgliedsnummer ist
-            {{ user.membership.id }}
-          </p>
-          <p>
-            Deine Mitgliedsart ist
-            {{ user.membership.memberships_type }}
-          </p>
-        </div>
-        <div v-else-if="user.membership?.memberships_status === 'applied'">
-          <p>Dein Beitrittsantrag wird gerade bearbeitet.</p>
-        </div>
-        <div v-else>
-          <p>Du bist noch kein Mitglied.</p>
-          <UButton to="/register">Jetzt Mitglied werden</UButton>
-        </div>
-      </div>
-    </CollectivoCard>
+  <div id="mila-profile" class="flex flex-col gap-8">
+    <MembershipsMembershipTile />
 
     <CollectivoFormBuilder
       v-if="user.user"

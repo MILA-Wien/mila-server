@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { t } = useI18n();
-const user = useCollectivoUser();
-setCollectivoTitle("Beitrittserklärung - imGrätzl");
+const user = useCurrentUser();
+setPageTitle("Beitrittserklärung - imGrätzl");
 const showForm = ref(false);
 const alreadyMemberError = ref(false);
 const data: any = ref({});

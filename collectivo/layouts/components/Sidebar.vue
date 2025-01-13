@@ -2,8 +2,8 @@
 import LanguageMenu from "./LanguageMenu.vue";
 import MenuItem from "./MenuItem.vue";
 
-const menus = useCollectivoMenus();
-const user = useCollectivoUser();
+const menus = useNavigationMenus();
+const user = useCurrentUser();
 const { t } = useI18n();
 const mainMenuItems = menus.value.main;
 

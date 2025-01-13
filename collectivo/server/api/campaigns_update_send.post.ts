@@ -25,7 +25,6 @@ async function handleCampaignUpdate(event: any) {
   // Protect route with API Token
   verifyCollectivoApiToken(event);
   const body = await readBody(event);
-  console.log("Received request", body);
 
   // Ignore requests where there were no changes to the campaign status or the new status is not "pending"
   if (
@@ -144,7 +143,6 @@ async function executeCampaign(campaignKey: number): Promise<string> {
     } else {
       campaignStatus = "sent";
     }
-
     await updateCampaignStatus(campaignKey, campaignStatus);
 
     return campaignStatus;
@@ -175,7 +173,7 @@ async function updateMessageStatus(
 
   directus.request(
     updateItem("messages_messages", handledMessage.recordId, {
-      messages_message_status: sendMailOutcome == "success",
+      messages_message_status: sendMailOutcome == "success" ? "sent" : "failed",
       messages_error_message:
         sendMailOutcome !== "success" ? sendMailOutcome : "",
     }),
