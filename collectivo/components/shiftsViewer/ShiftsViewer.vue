@@ -43,7 +43,7 @@ const viewOptions = [
   { label: "Week", value: "week" },
   { label: "Month", value: "month" },
 ];
-const selectedView = ref(viewOptions[1]);
+const selectedView = ref(viewOptions[2]);
 
 const filterOptions = [
   { label: "All shifts", value: "all" },

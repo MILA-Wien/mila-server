@@ -25,10 +25,11 @@ if (shift.shifts_from_time && shift.shifts_to_time) {
   shiftTitle =
     shift.shifts_from_time.slice(0, 5) +
     " - " +
-    shift.shifts_to_time.slice(0, 5) +
-    " - ";
+    shift.shifts_to_time.slice(0, 5);
+} else {
+  shiftTitle = t("All day");
 }
-shiftTitle += shift.shifts_name;
+// shiftTitle += shift.shifts_name;
 </script>
 
 <template>
@@ -38,7 +39,9 @@ shiftTitle += shift.shifts_name;
     <div class="w-2/3">
       <div class="font-bold">{{ shiftTitle }}</div>
 
-      <div>{{ t("Category") }}: {{ shift.shifts_category_2 }}</div>
+      <div v-if="shift.shifts_category_2">
+        {{ t("Category") }}: {{ shift.shifts_category_2 }}
+      </div>
 
       <!-- Assignments -->
       <span
@@ -104,4 +107,5 @@ de:
   Logs: Logs
   Assignments: Anmeldungen
   Sign up: Anmelden
+  All day: Ganztägig
 </i18n>

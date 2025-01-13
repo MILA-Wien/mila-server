@@ -114,7 +114,7 @@ if (isActive) loadData();
     >
       <NuxtLink to="/shifts/calendar" class="flex-1">
         <UButton block icon="i-heroicons-calendar-days-16-solid">{{
-          t("Shift calendar")
+          t("Register shift")
         }}</UButton>
       </NuxtLink>
 
@@ -220,4 +220,5 @@ de:
   "to": "bis"
   "My status": "Mein Status"
   "Shifts Overview": "Schichten Übersicht"
+  "Register shift": "Schicht anmelden"
 </i18n>

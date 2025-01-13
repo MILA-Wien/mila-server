@@ -115,7 +115,14 @@ function emitOcc(occ: ShiftOccurrenceFrontend) {
       <template v-if="group.occurrences.length > 0">
         <div>
           <h2>
-            {{ group.dateString }}
+            {{ group.date.toLocaleDateString(locale, { weekday: "long" }) }},
+            {{
+              group.date.toLocaleDateString(locale, {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              })
+            }}
             <span v-if="group.isPublicHoliday"
               >({{ t("Public holiday") }})</span
             >
