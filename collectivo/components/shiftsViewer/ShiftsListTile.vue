@@ -15,6 +15,10 @@ const props = defineProps({
   },
 });
 const occ = props.occurrence;
+const allcats = useShiftsCategories().data.value;
+const catName = allcats.find(
+  (cat) => cat.id === occ.shift.shifts_category_2,
+)?.name;
 const shift = occ.shift;
 const isPast = new Date() > new Date(occ.start.split("T")[0]);
 const isOpen =
@@ -29,7 +33,7 @@ if (shift.shifts_from_time && shift.shifts_to_time) {
 } else {
   shiftTitle = t("All day");
 }
-// shiftTitle += shift.shifts_name;
+shiftTitle += " (" + shift.shifts_name + ")";
 </script>
 
 <template>
@@ -40,7 +44,7 @@ if (shift.shifts_from_time && shift.shifts_to_time) {
       <div class="font-bold">{{ shiftTitle }}</div>
 
       <div v-if="shift.shifts_category_2">
-        {{ t("Category") }}: {{ shift.shifts_category_2 }}
+        {{ t("Category") }}: {{ catName }}
       </div>
 
       <!-- Assignments -->
