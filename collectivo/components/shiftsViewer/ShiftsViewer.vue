@@ -67,11 +67,15 @@ const categories = ref<ShiftsCategory[]>([
   },
 ]);
 const selectedCategory = ref(categories.value[0]);
+const allowedCategoryIds = ref<number[]>([]);
 const user = useCurrentUser();
 
 async function loadCategories() {
   if (props.admin) {
-    categories.value.push(...(await useShiftsCategories().loadPromise));
+    const allcats = await useShiftsCategories().loadPromise;
+    allowedCategoryIds.value = allcats.map((cat) => cat.id);
+
+    categories.value.push(...allcats);
     categoriesLoaded.value = true;
     return;
   }
@@ -79,7 +83,10 @@ async function loadCategories() {
   const cats = await useShiftsCategories().loadPromise;
   for (const ca of user.value.membership?.shifts_categories_allowed || []) {
     const cat = cats.find((c) => c.id === ca.shifts_categories_id);
-    if (cat) categories.value.push(cat);
+    if (cat) {
+      allowedCategoryIds.value.push(cat.id);
+      categories.value.push(cat);
+    }
   }
   categoriesLoaded.value = true;
 }
@@ -334,6 +341,7 @@ loadEvents();
       :admin="admin"
       :status="selectedFilter.value"
       :category="selectedCategory.id"
+      :allowed-categories="allowedCategoryIds"
       @open-occurrence="openModal"
     />
     <ShiftsViewerShiftsCalendar
@@ -344,6 +352,7 @@ loadEvents();
       :to-date="endDate"
       :status="selectedFilter.value"
       :category="selectedCategory.id"
+      :allowed-categories="allowedCategoryIds"
       @open-occurrence="openModal"
     />
   </div>

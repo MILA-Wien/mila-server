@@ -32,6 +32,10 @@ const props = defineProps({
     type: Date,
     required: true,
   },
+  allowedCategories: {
+    type: Array as PropType<number[]>,
+    default: () => [],
+  },
 });
 
 const { locale, t } = useI18n();
@@ -81,7 +85,7 @@ async function prepareEvents() {
   const events = [];
   const allCats = props.category === -1;
   const unfilled = props.status === "unfilled";
-  console.log("unfilled", unfilled);
+
   // Add public holidays
   for (const holiday of props.events.publicHolidays) {
     events.push({
@@ -120,7 +124,6 @@ async function prepareEvents() {
     }
 
     if (unfilled) {
-      console.log("doing unfilled stuff");
       if (isPast) {
         continue;
       }
@@ -137,6 +140,14 @@ async function prepareEvents() {
       !allCats &&
       props.category != 0 &&
       occurrence.shift.shifts_category_2 !== props.category
+    ) {
+      continue;
+    }
+
+    if (
+      allCats &&
+      !(occurrence.shift.shifts_category_2 === null) &&
+      !props.allowedCategories.includes(occurrence.shift.shifts_category_2)
     ) {
       continue;
     }
