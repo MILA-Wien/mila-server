@@ -18,6 +18,10 @@ const props = defineProps({
     type: Number,
     default: -1,
   },
+  allowedCategories: {
+    type: Array as PropType<number[]>,
+    default: () => [],
+  },
 });
 
 const emit = defineEmits(["openOccurrence"]);
@@ -71,6 +75,14 @@ props.events.occurrences.forEach((occurrence) => {
     !allCats &&
     props.category != 0 &&
     occurrence.shift.shifts_category_2 !== props.category
+  ) {
+    return;
+  }
+
+  if (
+    allCats &&
+    !(occurrence.shift.shifts_category_2 === null) &&
+    !props.allowedCategories.includes(occurrence.shift.shifts_category_2)
   ) {
     return;
   }

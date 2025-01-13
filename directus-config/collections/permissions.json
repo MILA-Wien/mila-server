@@ -2012,6 +2012,18 @@
     "_syncId": "07f0ba6a-4814-448c-9f25-73d3f34670be"
   },
   {
+    "collection": "settings_hidden",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
+    "_syncId": "47bb1ee9-3bb1-4029-a46d-4dc7091e48de"
+  },
+  {
     "collection": "shifts_absences",
     "action": "create",
     "permissions": {},
