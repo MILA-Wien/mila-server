@@ -1,4 +1,4 @@
-import { createItem, readItems } from "@directus/sdk";
+import { createItem, deleteItem, readItems, updateItem } from "@directus/sdk";
 
 export type ShiftLogsAdmin = Awaited<ReturnType<typeof createShiftLog>>;
 
@@ -27,6 +27,25 @@ export async function getShiftLogsAdmin(
       ],
     }),
   );
+}
+
+export async function updateShiftLogsAdmin(
+  logID: number,
+  type: "attended" | "missed",
+) {
+  const directus = useDirectus();
+  const payload: Partial<ShiftLogsAdmin> = {
+    shifts_type: type,
+  };
+  if (type === "missed") {
+    payload["shifts_score"] = 0;
+  }
+  return await directus.request(updateItem("shifts_logs", logID, payload));
+}
+
+export async function deleteShiftLogsAdmin(logID: number) {
+  const directus = useDirectus();
+  return await directus.request(deleteItem("shifts_logs", logID));
 }
 
 export async function createShiftLog(

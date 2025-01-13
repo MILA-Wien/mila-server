@@ -66,7 +66,7 @@ async function handleCampaignUpdate(event: any) {
 async function executeCampaign(campaignKey: number): Promise<string> {
   try {
     const campaignData = await readCampaignData(campaignKey);
-    console.log("Executing campaign " + campaignKey);
+
     if (campaignData.templateMethod !== "email") {
       throw createError({
         statusCode: 400,
@@ -143,7 +143,6 @@ async function executeCampaign(campaignKey: number): Promise<string> {
     } else {
       campaignStatus = "sent";
     }
-    console.log("Campaign " + campaignKey + " executed successfully?");
     await updateCampaignStatus(campaignKey, campaignStatus);
 
     return campaignStatus;

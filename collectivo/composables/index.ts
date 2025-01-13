@@ -4,5 +4,7 @@ export {
   createShiftLog,
   getShiftLogsAdmin,
   checkLogsIfFirstShift,
+  updateShiftLogsAdmin,
+  deleteShiftLogsAdmin,
   type ShiftLogsAdmin,
 } from "./shifts/logs";

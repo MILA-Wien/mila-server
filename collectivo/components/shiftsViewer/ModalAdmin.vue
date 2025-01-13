@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { parse } from "marked";
-import { createItem, deleteItem, readItem, updateItem } from "@directus/sdk";
+import { createItem, deleteItem, updateItem } from "@directus/sdk";
 import sanitizeHtml from "sanitize-html";
 import type { ShiftLogsAdmin } from "~/composables";
 
@@ -24,11 +24,22 @@ const shift = occ.shift;
 const start = new Date(occ.start);
 const end = new Date(occ.end);
 const startDateString = start.toISOString().split("T")[0];
+
 const repeats = shift.shifts_repeats_every ?? 0;
 const isWeeks = repeats % 7 === 0;
 const frequency = isWeeks ? repeats / 7 : repeats;
 const now = new Date();
-const isPast = start.getTime() < now.getTime();
+const tomorrow = new Date(
+  Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate() + 1,
+    0,
+    0,
+    0,
+  ),
+);
+const isPast = start.getTime() < tomorrow.getTime();
 const runtimeConfig = useRuntimeConfig();
 
 const categories = useShiftsCategories();
@@ -40,38 +51,15 @@ const mainModalIsOpen = defineModel("isOpen", {
 
 // SHIFT LOGS
 const logs = ref<ShiftLogsAdmin[]>([]);
-const logEntryOptions = ["attended", "missed", "cancelled", "other"];
-const logModalIsOpen = ref(false);
-const logEntryType = ref<string | null>(null);
-const logEntryScore = ref(0);
-const logEntryNote = ref<string | null>(null);
+const logsLoaded = ref(false);
 
-getShiftLogsAdmin(startDateString, shift.id).then(
-  (logs_: ShiftLogsAdmin[]) => (logs.value = logs_),
-);
-
-function openLogModal() {
-  logEntryType.value = "other";
-  logEntryScore.value = 0;
-  logEntryNote.value = null;
-  logModalIsOpen.value = true;
-}
-
-async function createCustomLog() {
-  const log = await createShiftLog(
-    logEntryType.value!,
-    mshipID.value!,
-    startDateString,
-    shift.id,
-    logEntryScore.value,
-    logEntryNote.value ?? undefined,
-  );
-  logs.value.push(log);
-  logModalIsOpen.value = false;
-}
+getShiftLogsAdmin(startDateString, shift.id).then((logs_: ShiftLogsAdmin[]) => {
+  logs.value = logs_;
+  logsLoaded.value = true;
+});
 
 // MEMBERSHIP DATA
-type SelectedMembership = Awaited<ReturnType<typeof fetchMship>>;
+type SelectedMembership = Awaited<ReturnType<typeof getMembership>>;
 const mshipData = ref<SelectedMembership | null>(null);
 const mshipError = ref<boolean>(false);
 const mshipID = ref<number | undefined>(undefined);
@@ -81,47 +69,18 @@ watch(mshipID, () => {
   mshipError.value = false;
 });
 
-async function fetchMship(id: number) {
-  return await directus.request(
-    readItem("memberships", id, {
-      fields: [
-        "id",
-        { memberships_user: ["first_name", "last_name"] },
-        "memberships_type",
-        "memberships_status",
-        "shifts_categories_allowed",
-        "shifts_user_type",
-        "shifts_can_be_coordinator",
-      ],
-    }),
-  );
-}
-
 async function loadMembership() {
   if (!mshipID.value) {
     mshipError.value = true;
     return;
   }
   try {
-    mshipData.value = await fetchMship(mshipID.value);
+    mshipData.value = await getMembership(mshipID.value);
   } catch (e) {
     console.error(e);
     mshipData.value = null;
     mshipError.value = true;
   }
-}
-
-type RequiredFields = {
-  id: number;
-  memberships_user: {
-    first_name: string;
-    last_name: string;
-  };
-};
-
-function displayMembership<T extends RequiredFields>(mship: T) {
-  const user = mship.memberships_user;
-  return `#${mship.id} ${user.first_name} ${user.last_name}`;
 }
 
 // REMOVE ASSIGNMENT
@@ -473,24 +432,8 @@ function checkIfMshipInAssignments(mship: number) {
       </div>
 
       <!-- Logs -->
-      <div v-if="isPast">
-        <h2 class="mb-2 mt-6">{{ t("Logs") }}</h2>
-        <template v-for="log of logs" :key="log.id">
-          <ShiftsViewerModalAdminBox
-            :id="log.id!"
-            label="Log"
-            collection="shifts_logs"
-          >
-            <template #header>{{
-              displayMembership(log.shifts_membership)
-            }}</template>
-            <p>{{ t(log.shifts_type) }} ({{ log.shifts_score }})</p>
-            <p v-if="log.shifts_note">Notes: {{ log.shifts_note }}</p>
-          </ShiftsViewerModalAdminBox>
-        </template>
-        <div class="mt-3">
-          <UButton @click="openLogModal">{{ t("Create log") }}</UButton>
-        </div>
+      <div v-if="isPast && logsLoaded">
+        <ShiftsViewerModalAdminLogs :logs="logs" :occurence="occ" />
       </div>
     </div>
 
@@ -605,49 +548,6 @@ function checkIfMshipInAssignments(mship: number) {
             {{ t("Remove for ") }} {{ startDateString }}
             {{ t("and all future dates") }}
           </UButton>
-        </div>
-      </div>
-    </UModal>
-
-    <UModal v-model="logModalIsOpen" :transition="false">
-      <div class="p-10 flex flex-col gap-4">
-        <h2>{{ t("Create log entry") }}</h2>
-        <UFormGroup :label="t('Membership number')" name="membershipID">
-          <UInput v-model="mshipID" />
-        </UFormGroup>
-        <UButton @click="loadMembership">{{ t("Load membership") }}</UButton>
-
-        <div v-if="mshipData">
-          <p class="font-bold">
-            {{ mshipData.memberships_user.first_name }}
-            {{ mshipData.memberships_user.last_name }}
-          </p>
-          <p>Membership type: {{ mshipData.memberships_type }}</p>
-
-          <p>Membership status: {{ mshipData.memberships_status }}</p>
-
-          <p>Shift type: {{ mshipData.shifts_user_type }}</p>
-
-          <UFormGroup :label="t('Type')" name="logEntryType">
-            <USelect v-model="logEntryType" :options="logEntryOptions" />
-          </UFormGroup>
-
-          <UFormGroup :label="t('Score')" name="logEntryScore">
-            <UInput v-model="logEntryScore" />
-          </UFormGroup>
-
-          <UFormGroup :label="t('Note')" name="logEntryNote">
-            <UInput v-model="logEntryNote" />
-          </UFormGroup>
-
-          <div class="flex flex-wrap gap-2 mt-3">
-            <UButton @click="createCustomLog()">{{
-              t("Create log entry")
-            }}</UButton>
-          </div>
-        </div>
-        <div v-if="mshipError">
-          {{ t("Member") }} {{ mshipID }} {{ t("not found") }}
         </div>
       </div>
     </UModal>
