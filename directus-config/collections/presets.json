@@ -87,5 +87,61 @@
     "icon": "lens_blur",
     "color": "#6644FF",
     "_syncId": "e4214269-8668-4644-a19a-cecbc62baca4"
+  },
+  {
+    "bookmark": "Register",
+    "role": null,
+    "collection": "memberships",
+    "search": null,
+    "layout": "tabular",
+    "layout_query": {
+      "tabular": {
+        "page": 1,
+        "fields": [
+          "id",
+          "memberships_type",
+          "memberships_user.first_name",
+          "memberships_user.last_name",
+          "memberships_user.memberships_occupation",
+          "memberships_user.memberships_birthday",
+          "memberships_user.memberships_organization_name",
+          "memberships_user.memberships_organization_id",
+          "memberships_user.memberships_organization_type",
+          "memberships_user.email",
+          "memberships_user.memberships_phone",
+          "memberships_user.memberships_street",
+          "memberships_user.memberships_streetnumber",
+          "memberships_user.memberships_postcode",
+          "memberships_user.memberships_city",
+          "memberships_user.memberships_country",
+          "memberships_date_approved",
+          "memberships_date_ended",
+          "memberships_shares",
+          "memberships_invoices.payments_entries.payments_quantity",
+          "memberships_invoices.payments_date_issued"
+        ]
+      }
+    },
+    "layout_options": {
+      "tabular": {
+        "widths": {
+          "id": 127,
+          "memberships_invoices.payments_date_issued": 243
+        }
+      }
+    },
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "memberships_date_approved": {
+            "_nnull": true
+          }
+        }
+      ]
+    },
+    "icon": "app_registration",
+    "color": "#FF8080",
+    "_syncId": "eb7d0eee-a0ed-4601-b24b-5f6c4a9f7f0f"
   }
 ]

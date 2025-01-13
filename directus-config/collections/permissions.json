@@ -467,7 +467,8 @@
       "theme_dark",
       "theme_light_overrides",
       "theme_dark_overrides",
-      "tfa_secret"
+      "tfa_secret",
+      "hide_name"
     ],
     "policy": "0288ddc8-4ca7-4d85-ab2f-1e8301a2dba1",
     "_syncId": "9eb0bb5a-800b-4e8c-a23e-cb2455fa7b09"
@@ -543,6 +544,18 @@
     ],
     "policy": "0288ddc8-4ca7-4d85-ab2f-1e8301a2dba1",
     "_syncId": "5b0bd922-7b8a-48b2-8bf3-4bc59494cc24"
+  },
+  {
+    "collection": "settings_hidden",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "0288ddc8-4ca7-4d85-ab2f-1e8301a2dba1",
+    "_syncId": "741fc6a5-f47a-4848-b556-2455e7f2ccbc"
   },
   {
     "collection": "shifts_absences",

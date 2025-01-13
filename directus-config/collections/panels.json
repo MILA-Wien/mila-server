@@ -182,6 +182,40 @@
     "_syncId": "0973480e-f23b-4abf-acde-e6960cfab269"
   },
   {
+    "dashboard": "8c98bc24-fcd4-4f7f-ba3d-654372c28b81",
+    "name": "Anteile 2024",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 28,
+    "width": 27,
+    "height": 11,
+    "options": {
+      "collection": "memberships",
+      "function": "sum",
+      "field": "memberships_shares",
+      "filter": {
+        "_and": [
+          {
+            "memberships_invoices": {
+              "payments_date_issued": {
+                "_between": [
+                  "2024-02-01",
+                  "2025-01-31"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "sortField": null
+    },
+    "_syncId": "0adb13da-cadd-45d7-aaf4-bd00835d1f6b"
+  },
+  {
     "dashboard": "54976105-ca62-4135-9d4d-1c5c12ed7e34",
     "name": "Aussteigende MG",
     "icon": "switch_account",
@@ -321,6 +355,37 @@
       "horizontal": true
     },
     "_syncId": "290ce816-3686-4781-916b-ab9aef6c3901"
+  },
+  {
+    "dashboard": "8c98bc24-fcd4-4f7f-ba3d-654372c28b81",
+    "name": "Anteile 2023",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 1,
+    "width": 27,
+    "height": 11,
+    "options": {
+      "collection": "memberships",
+      "function": "sum",
+      "field": "memberships_shares",
+      "filter": {
+        "_and": [
+          {
+            "memberships_date_applied": {
+              "_between": [
+                "2023-01-31",
+                "2024-02-01"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "_syncId": "2a44d142-a083-4a86-8c0e-2b10e4fb3922"
   },
   {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
@@ -765,6 +830,39 @@
     "_syncId": "6db6c976-d5a2-4f26-a3bb-6b1fadb91811"
   },
   {
+    "dashboard": "8c98bc24-fcd4-4f7f-ba3d-654372c28b81",
+    "name": "Februar 2023",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 13,
+    "width": 27,
+    "height": 11,
+    "options": {
+      "collection": "memberships",
+      "function": "sum",
+      "field": "memberships_shares",
+      "filter": {
+        "_and": [
+          {
+            "memberships_invoices": {
+              "payments_date_issued": {
+                "_between": [
+                  "2023-01-31",
+                  "2023-06-01"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "_syncId": "7215fd8e-cd79-4657-b6ac-b733f75d1653"
+  },
+  {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
     "name": "Anzahl Anteile",
     "icon": null,
@@ -1133,6 +1231,31 @@
     "_syncId": "98473e70-4876-4a76-a8bb-240ec4cf5ad3"
   },
   {
+    "dashboard": "8c98bc24-fcd4-4f7f-ba3d-654372c28b81",
+    "name": null,
+    "icon": null,
+    "color": null,
+    "show_header": false,
+    "note": null,
+    "type": "time-series",
+    "position_x": 34,
+    "position_y": 53,
+    "width": 62,
+    "height": 24,
+    "options": {
+      "collection": "memberships",
+      "yAxis": "memberships_shares",
+      "function": "sum",
+      "xAxis": "memberships_invoices",
+      "grouping": "memberships_invoices",
+      "precision": "month",
+      "valueField": "memberships_shares",
+      "dateField": "memberships_date_applied",
+      "range": "auto"
+    },
+    "_syncId": "9884edda-7634-40a9-ad7a-6abe4fabdbdb"
+  },
+  {
     "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
     "name": "Aufgenommene Mitglieder",
     "icon": null,
@@ -1255,6 +1378,39 @@
       ]
     },
     "_syncId": "9f8caaeb-dff3-4a39-940a-a053c4fa3b33"
+  },
+  {
+    "dashboard": "8c98bc24-fcd4-4f7f-ba3d-654372c28b81",
+    "name": "Februar 2023",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 41,
+    "width": 27,
+    "height": 11,
+    "options": {
+      "collection": "memberships",
+      "function": "sum",
+      "field": "memberships_shares",
+      "filter": {
+        "_and": [
+          {
+            "memberships_invoices": {
+              "payments_date_issued": {
+                "_between": [
+                  "2023-01-31",
+                  "2023-06-01"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "_syncId": "a12bfb4e-5d4f-48fe-bf17-6f293a4cbebb"
   },
   {
     "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
@@ -1923,6 +2079,26 @@
       "conditionalFormatting": null
     },
     "_syncId": "e5e7da7e-9b56-4a19-acca-d94e96418d2d"
+  },
+  {
+    "dashboard": "8c98bc24-fcd4-4f7f-ba3d-654372c28b81",
+    "name": "Anteile 2024",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 2,
+    "position_y": 55,
+    "width": 27,
+    "height": 11,
+    "options": {
+      "collection": "memberships",
+      "function": "sum",
+      "field": "memberships_shares",
+      "filter": null
+    },
+    "_syncId": "e5faac81-e6a7-40e6-9b2c-733507c2278d"
   },
   {
     "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
