@@ -515,19 +515,5 @@
     },
     "operation": "0c32433c-4785-46f0-9e73-ec8747a61aa2",
     "_syncId": "f714c75a-e78a-4c80-9b4d-4b39943d6444"
-  },
-  {
-    "name": "Kampagne Senden 2",
-    "icon": "bolt",
-    "color": "#FFC23B",
-    "description": "Folgeflow für Kampagne senden",
-    "status": "inactive",
-    "trigger": "operation",
-    "accountability": "all",
-    "options": {
-      "return": "$last"
-    },
-    "operation": "baf4f756-398d-4f58-a3ac-7862e9f975bc",
-    "_syncId": "f9895e5e-bb34-4e97-96af-5c8138c764df"
   }
 ]

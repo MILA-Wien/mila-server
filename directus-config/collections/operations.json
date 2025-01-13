@@ -267,7 +267,7 @@
     "position_x": 6,
     "position_y": 21,
     "options": {
-      "code": "module.exports = async function(data) {\n\treturn {\n    \tupdated_points: data.$last.shifts_counter + data.$trigger.shifts_score_new - data.$trigger.shifts_score_old\n    };\n}"
+      "code": "module.exports = async function(data) {\n\treturn {\n    \tupdated_points: Number(data.$last.shifts_counter) + Number(data.$trigger.shifts_score_new) - Number(data.$trigger.shifts_score_old)\n    };\n}"
     },
     "resolve": "3882cc7c-d9cb-4d6c-8ce5-2f431773d3c4",
     "reject": null,
@@ -351,7 +351,7 @@
     "position_x": 4,
     "position_y": 21,
     "options": {
-      "code": "module.exports = async function(data) {\n\treturn {\n    \tupdated_points: data.$last.shifts_counter + (data.$trigger.payload.shifts_score || 0)\n    };\n}"
+      "code": "module.exports = async function(data) {\n\treturn {\n    \tupdated_points: data.$last.shifts_counter + Number(data.$trigger.payload.shifts_score || 0)\n    };\n}"
     },
     "resolve": "34c335fa-db33-4388-a1ea-f926b5e51625",
     "reject": null,
@@ -379,7 +379,7 @@
     "position_x": 5,
     "position_y": 20,
     "options": {
-      "code": "module.exports = async function(data) {\n\treturn {\n    \tupdated_points: data.$last.shifts_counter - data.$trigger.shifts_score\n    };\n}"
+      "code": "module.exports = async function(data) {\n\treturn {\n    \tupdated_points: Number(data.$last.shifts_counter) - Number(data.$trigger.shifts_score)\n    };\n}"
     },
     "resolve": "ac97085b-079f-43cd-bc12-4642854c3e40",
     "reject": null,
@@ -558,28 +558,6 @@
     "reject": null,
     "flow": "939f6a73-ceb3-4974-b4b2-65649be03c84",
     "_syncId": "0b6f13b8-c0ce-4b3a-830f-c68221337073"
-  },
-  {
-    "name": "Daten aktualisieren",
-    "key": "item_update_2qyun",
-    "type": "item-update",
-    "position_x": 19,
-    "position_y": 1,
-    "options": {
-      "collection": "messages_campaigns",
-      "permissions": "$full",
-      "emitEvents": true,
-      "key": [
-        "{{ $trigger.campaign_id }}"
-      ],
-      "payload": {
-        "messages_campaign_status": "pending"
-      }
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "f9895e5e-bb34-4e97-96af-5c8138c764df",
-    "_syncId": "baf4f756-398d-4f58-a3ac-7862e9f975bc"
   },
   {
     "name": "Daten aktualisieren",

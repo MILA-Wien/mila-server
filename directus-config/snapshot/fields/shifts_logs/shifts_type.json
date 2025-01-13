@@ -15,28 +15,24 @@
     "options": {
       "choices": [
         {
-          "text": "Schicht absolviert (unbestätigt)",
-          "value": "attended_draft"
+          "text": "Entwurf",
+          "value": "attended_draft",
+          "color": "#A2B5CD"
         },
         {
-          "text": "Schicht absolviert (bestätigt)",
+          "text": "Schicht absolviert",
           "value": "attended",
           "color": "#2ECDA7"
         },
         {
-          "text": "Schicht abgesagt (keine Strafschicht)",
-          "value": "cancelled",
-          "color": "#FFA439"
-        },
-        {
-          "text": "Schicht verpasst (Strafschicht)",
+          "text": "Schicht verpasst",
           "value": "missed",
           "color": "#E35169"
         },
         {
           "text": "Anderes",
           "value": "other",
-          "color": "#A2B5CD"
+          "color": "#3399FF"
         }
       ]
     },
