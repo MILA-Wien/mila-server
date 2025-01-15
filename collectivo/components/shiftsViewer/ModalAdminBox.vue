@@ -13,6 +13,8 @@ defineProps({
     required: true,
   },
 });
+
+const runtimeConfig = useRuntimeConfig();
 </script>
 
 <template>
@@ -23,7 +25,7 @@ defineProps({
       </div>
       <div>
         <a
-          :href="`http://localhost:8055/admin/content/${collection}/${id}`"
+          :href="`${runtimeConfig.public.directusUrl}/admin/content/${collection}/${id}`"
           target="blank"
           class="flex flex-row items-center align-middle text-xs gap-1"
         >
