@@ -19,10 +19,10 @@ const props = defineProps({
 const { t } = useI18n();
 const directus = useDirectus();
 
-const occ = props.shiftOccurence;
-const shift = occ.shift;
-const start = new Date(occ.start);
-const end = new Date(occ.end);
+const occ = toRef(props.shiftOccurence);
+const shift = occ.value.shift;
+const start = new Date(occ.value.start);
+const end = new Date(occ.value.end);
 const startDateString = start.toISOString().split("T")[0];
 
 const repeats = shift.shifts_repeats_every ?? 0;
@@ -147,13 +147,12 @@ async function removeAssignment(onetime: boolean) {
     );
   }
 
-  // Remove assignment from slot
   removeAssignmentObject.value.removed = true;
   removeAssignmentModalIsOpen.value = false;
   if (removeAssignmentObject.value.assignment.shifts_is_coordination) {
-    occ.needsCoordinator = true;
+    occ.value.needsCoordinator = true;
   }
-  occ.n_assigned--;
+  occ.value.n_assigned--;
   emit("data-has-changed");
 }
 
@@ -190,8 +189,8 @@ async function createAssignment(onetime: boolean) {
   if (occurrences.length != 1) {
     throw new Error("No or multiple occurrences found");
   }
-  const occ = occurrences[0];
-  if (occ.n_assigned >= occ.shift.shifts_slots) {
+  const occl = occurrences[0];
+  if (occl.n_assigned >= occl.shift.shifts_slots) {
     const m = "Somebody else has just signed up for this shift";
     showToast({
       type: "info",
@@ -229,7 +228,7 @@ async function createAssignment(onetime: boolean) {
     }),
   )) as ShiftsAssignment;
 
-  occ.assignments.push({
+  occ.value.assignments.push({
     assignment: res,
     isActive: true,
     isOneTime: onetime,
@@ -238,10 +237,10 @@ async function createAssignment(onetime: boolean) {
 
   createAssignmentModalIsOpen.value = false;
   if (createAssignmentCoordinator.value) {
-    occ.needsCoordinator = false;
+    occ.value.needsCoordinator = false;
   }
 
-  occ.n_assigned++;
+  occ.value.n_assigned++;
   emit("data-has-changed");
 }
 
@@ -262,7 +261,7 @@ function getAssignmentColor(assignment: AssignmentOccurrence) {
 }
 
 function checkIfMshipInAssignments(mship: number) {
-  for (const assignment of occ.assignments) {
+  for (const assignment of occ.value.assignments) {
     if (
       (assignment.assignment.shifts_membership as MembershipsMembership).id ===
         mship &&
@@ -340,7 +339,7 @@ function checkIfMshipInAssignments(mship: number) {
       />
       <!-- eslint-enable -->
 
-      <!-- Shift slots -->
+      <!-- Shift assignments -->
       <div v-if="!isPast">
         <div class="flex flex-row items-end mb-5">
           <div class="grow">

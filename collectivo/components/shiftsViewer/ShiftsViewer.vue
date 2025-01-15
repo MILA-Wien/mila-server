@@ -252,7 +252,7 @@ watch(locale, () => {
 });
 
 loadCategories();
-setWeekDates();
+setMonthDates();
 loadEvents();
 </script>
 

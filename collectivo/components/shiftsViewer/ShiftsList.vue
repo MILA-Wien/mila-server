@@ -54,11 +54,11 @@ props.events.occurrences.forEach((occurrence) => {
   }
 
   // Apply filters
-  if (!props.admin && occurrence.selfAssigned) {
-    return;
-  }
-
   if (unfilled) {
+    if (!props.admin && occurrence.selfAssigned) {
+      return;
+    }
+
     if (isPast) {
       return;
     }

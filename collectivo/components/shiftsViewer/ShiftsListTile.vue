@@ -53,16 +53,15 @@ shiftTitle += " (" + shift.shifts_name + ")";
       </span>
       <span v-if="occ.n_assigned > 0">: </span>
       <span
-        v-for="assignment in occ.assignments"
+        v-for="(assignment, index) in occ.assignments"
         :key="assignment.assignment.id"
       >
         <span v-if="assignment.isActive">
           {{
             assignment.assignment.shifts_membership.memberships_user.first_name
           }}
-          {{
-            assignment.assignment.shifts_membership.memberships_user.last_name
-          }}
+          {{ assignment.assignment.shifts_membership.memberships_user.last_name
+          }}<span v-if="index < occ.n_assigned - 1">, </span>
         </span>
       </span>
     </div>

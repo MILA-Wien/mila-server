@@ -119,11 +119,10 @@ async function prepareEvents() {
     }
 
     // Apply filters
-    if (!props.admin && occurrence.selfAssigned) {
-      continue;
-    }
-
     if (unfilled) {
+      if (!props.admin && occurrence.selfAssigned) {
+        continue;
+      }
       if (isPast) {
         continue;
       }
