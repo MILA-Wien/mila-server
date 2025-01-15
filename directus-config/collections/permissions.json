@@ -606,6 +606,18 @@
     "_syncId": "867e8711-5dfb-4bc5-8cba-8af0e6fc80f6"
   },
   {
+    "collection": "shifts_categories",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "0288ddc8-4ca7-4d85-ab2f-1e8301a2dba1",
+    "_syncId": "e4a9bf7f-7f08-4a51-946f-5b164622db9b"
+  },
+  {
     "collection": "shifts_logs",
     "action": "read",
     "permissions": {},
