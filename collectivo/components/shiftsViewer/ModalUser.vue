@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { DateTime } from "luxon";
 import { parse } from "marked";
-import { createItem, readItem, readItems } from "@directus/sdk";
+import { createItem } from "@directus/sdk";
 const { locale } = useI18n();
 
 const props = defineProps({
@@ -25,6 +25,7 @@ const start = DateTime.fromISO(props.shiftOccurence.start, {
   locale: locale.value,
   zone: "utc",
 });
+
 const end = DateTime.fromISO(props.shiftOccurence.end, {
   locale: locale.value,
   zone: "utc",
@@ -33,6 +34,24 @@ const submitLoading = ref(false);
 const repeats = shift.shifts_repeats_every ?? 0;
 const isWeeks = repeats % 7 === 0;
 const frequency = isWeeks ? repeats / 7 : repeats;
+const isPast = new Date(props.shiftOccurence.start) < new Date();
+
+function checkAssignmentPossible() {
+  if (props.shiftOccurence.selfAssigned) {
+    return false;
+  }
+  if (isPast) {
+    return false;
+  }
+  if (
+    props.shiftOccurence.n_assigned >= props.shiftOccurence.shift.shifts_slots
+  ) {
+    return false;
+  }
+  return true;
+}
+
+const assignmentPossible = checkAssignmentPossible();
 
 async function postAssignment() {
   console.log("postAssignment");
@@ -160,15 +179,27 @@ async function postAssignmentInner() {
       />
       <!-- eslint-enable -->
 
-      <UButton
-        class="w-full"
-        size="lg"
-        icon="i-heroicons-pencil-square"
-        :loading="submitLoading"
-        @click="postAssignment()"
-      >
-        {{ t("Sign up") }}
-      </UButton>
+      <div v-if="assignmentPossible">
+        <UButton
+          class="w-full"
+          size="lg"
+          icon="i-heroicons-pencil-square"
+          :loading="submitLoading"
+          @click="postAssignment()"
+        >
+          {{ t("Sign up") }}
+        </UButton>
+      </div>
+      <div v-else-if="shiftOccurence.selfAssigned">
+        <UButton class="w-full" size="lg" color="gray" disabled>
+          {{ t("Already signed up") }}
+        </UButton>
+      </div>
+      <div v-else>
+        <UButton class="w-full" size="lg" color="gray" disabled>
+          {{ t("Assignment not possible") }}
+        </UButton>
+      </div>
     </div>
   </UModal>
 </template>
@@ -195,4 +226,6 @@ de:
   Regular shift: "Regelmäßige Schicht"
   One-time shift: "Einmalige Schicht"
   Location: "Ort"
+  Assignment not possible: "Anmeldung nicht möglich"
+  Already signed up: "Bereits angemeldet"
 </i18n>
