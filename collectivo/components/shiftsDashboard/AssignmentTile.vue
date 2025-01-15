@@ -70,6 +70,7 @@ function getColor() {
             {{
               getDateTimeWithTimeSpanString(shift, nextOccurrence, locale, t)
             }}
+            <span v-if="shift.shifts_name"> ({{ shift.shifts_name }})</span>
           </h4>
           <!-- Repetition info -->
           <p v-if="!(shift.shifts_repeats_every && shiftAssignment.isRegular)">
@@ -87,17 +88,15 @@ function getColor() {
           </template>
 
           <!-- Shift coworkers -->
-          <p>
+          <p v-if="coworkers.length > 0">
             {{ t("Coworkers") }}:
             <span v-for="(item, index) in coworkers" :key="index">
-              {{ item === "Anonymous" ? t("[name hidden]") : item }}
-
-              <span v-if="index < coworkers.length - 1">,</span>
+              {{ item === "Anonymous" ? t("[name hidden]") : item
+              }}<span v-if="index < coworkers.length - 1">, </span>
             </span>
           </p>
 
           <!-- Shift infos -->
-          <h4 v-if="shift.shifts_name">{{ shift.shifts_name }}</h4>
           <!-- eslint-disable vue/no-v-html -->
           <p
             v-if="shift.shifts_description"
