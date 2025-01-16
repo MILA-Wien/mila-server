@@ -14,9 +14,10 @@ Anwendungen des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/), inklusiv
 
 - Install Docker and PNPM
 - Clone this repository
+- Add the following to your etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak`
 - Create .env file with `cp .env.example .env`
 - Create a network `docker network create proxiable`
-- Run `docker compose up -d keycloak keycloak-db`
+- Run `docker compose up -d keycloak-dev keycloak-db`
 - When keycloak is running, run `docker compose up -d`
 - Run `docker compose exec -u root directus chown -R node:node /directus/extensions /directus/uploads`
 - Log in at http://localhost:8055 with `api@example.com` and `d1r3ctu5`
