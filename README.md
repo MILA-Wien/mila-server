@@ -18,14 +18,15 @@ Anwendungen des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/), inklusiv
 - Create .env file with `cp .env.example .env`
 - Create a network `docker network create proxiable`
 - Run `docker compose up -d keycloak-dev keycloak-db`
+- Check that keycloak is running via http://keycloak:8080
 - When keycloak is running, run `docker compose up -d`
 - Run `docker compose exec -u root directus chown -R node:node /directus/extensions /directus/uploads`
 - Log in at http://localhost:8055 with `api@example.com` and `d1r3ctu5`
-- Install the [directus-sync](https://www.npmjs.com/package/directus-extension-sync) extension
+- Check under 'settings - extensions' if the [directus-sync](https://www.npmjs.com/package/directus-extension-sync) extension is installed correctly
 - Apply schema with `npx directus-sync push`
 - Install packages with `pnpm i`
 - Start dev server with `pnpm dev`
-- Create example data with `pnpm seed` (run in a separate terminal while `pnpm dev` is running, sometimes it needs to be run twice)
+- In a second terminal, make an API call to create example data with `pnpm seed`
 - Go to http://localhost:3000 and http://localhost:8055
 
 ## Production setup

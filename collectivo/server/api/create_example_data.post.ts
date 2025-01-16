@@ -40,15 +40,15 @@ async function create_examples() {
   await create_tags();
   await create_tiles();
   await create_emails();
-  await create_shifts();
+  // await create_shifts();
   console.log("Seed successful");
 }
 
 async function create_users() {
   const directus = await useDirectusAdmin();
-  const userRole = await getRole("collectivo_user");
-  const editorRole = await getRole("collectivo_editor");
-  const adminRole = await getRole("collectivo_admin");
+  const userRole = await getRole("NutzerInnen");
+  const editorRole = await getRole("Mitgliederverwaltung");
+  const adminRole = await getRole("Administrator");
 
   // Create some users
   console.info("Creating users");
