@@ -3,6 +3,7 @@ import {
   readItems,
   readSingleton,
   updateItem,
+  updateSingleton,
 } from "@directus/sdk";
 import { getShiftOccurrences } from "~/server/utils/shiftsOccurrences";
 import { sendShiftReminders } from "../utils/shiftsReminder";
@@ -48,11 +49,11 @@ async function runCronjobs() {
   }
 
   // Update last cronjob timestamp
-  // await directus.request(
-  //   updateSingleton("settings_hidden", {
-  //     last_cronjob: new Date().toISOString(),
-  //   }),
-  // );
+  await directus.request(
+    updateSingleton("settings_hidden", {
+      last_cronjob: new Date().toISOString(),
+    }),
+  );
 }
 
 async function getActiveHolidays(date: Date): Promise<number[]> {
