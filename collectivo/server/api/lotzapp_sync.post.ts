@@ -33,12 +33,7 @@ interface CollectivoInvoice {
 export default defineEventHandler(async (event) => {
   // Protect route with API Token
   verifyCollectivoApiToken(event);
-
-  try {
-    await useDirectusAdmin();
-  } catch (e) {
-    console.error("Failed to connect to Directus", e);
-  }
+  await useDirectusAdmin();
 
   const body = await readBody(event);
   console.log("Syncing lotzapp data: " + body.length + " items");
@@ -150,13 +145,19 @@ async function createOrUpdateLotzappUser(user: UserProfile) {
   }
 
   // ID exists, update
-  await $fetch(endpointWithID, {
-    method: "PUT",
-    headers: {
-      Authorization: lotzapp_auth,
-    },
-    body: JSON.stringify(data),
-  });
+  try {
+    await $fetch(endpointWithID, {
+      method: "PUT",
+      headers: {
+        Authorization: lotzapp_auth,
+      },
+      body: JSON.stringify(data),
+    });
+  } catch (e) {
+    console.log("Error updating Lotzapp address: " + e);
+    console.log("Payload: " + JSON.stringify(data));
+    throw e;
+  }
 
   console.log("Lotzapp address updated for id " + user.lotzapp_id);
   return user.lotzapp_id;
