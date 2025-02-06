@@ -1,7 +1,7 @@
 [
   {
     "name": "Rechnungen Outer",
-    "icon": "bolt",
+    "icon": "receipt",
     "color": null,
     "description": null,
     "status": "active",
@@ -380,22 +380,8 @@
     "_syncId": "939f6a73-ceb3-4974-b4b2-65649be03c84"
   },
   {
-    "name": "Mail Schichterinnerung",
-    "icon": "outgoing_mail",
-    "color": "#E35169",
-    "description": "Immer 48h vor Schichtbeginn",
-    "status": "active",
-    "trigger": "schedule",
-    "accountability": "all",
-    "options": {
-      "cron": "0 0 9 * * * "
-    },
-    "operation": "01f9ffa9-a030-4608-b5c5-26d51c24c1eb",
-    "_syncId": "9cab27b6-fd7e-4125-b542-fc0399fb881b"
-  },
-  {
     "name": "Kampagne erstellen",
-    "icon": "conveyor_belt",
+    "icon": "send",
     "color": "#FFC23B",
     "description": "Manueller Button um eine Kampagne an ausgewählte MGer zu versenden",
     "status": "active",
@@ -467,7 +453,7 @@
     "_syncId": "c36a2159-395e-4eec-acb7-86cbd1d81d5c"
   },
   {
-    "name": "Groups Update Sync Keycloak",
+    "name": "User Sync Keycloak Groups",
     "icon": "sync",
     "color": "#6644FF",
     "description": "Gruppen mit Keycloak synchronisieren",

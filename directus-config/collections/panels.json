@@ -7,7 +7,7 @@
     "show_header": true,
     "note": "Status: Angenommen oder im Austritt/Ausschluss",
     "type": "metric",
-    "position_x": 15,
+    "position_x": 22,
     "position_y": 8,
     "width": 27,
     "height": 8,
@@ -224,9 +224,9 @@
     "note": null,
     "type": "metric",
     "position_x": 1,
-    "position_y": 8,
-    "width": 16,
-    "height": 6,
+    "position_y": 23,
+    "width": 20,
+    "height": 8,
     "options": {
       "collection": "memberships",
       "field": "id",
@@ -267,8 +267,8 @@
     "show_header": true,
     "note": "Status: Angenommen oder im Austritt/Ausschluss",
     "type": "metric",
-    "position_x": 1,
-    "position_y": 24,
+    "position_x": 22,
+    "position_y": 17,
     "width": 20,
     "height": 6,
     "options": {
@@ -473,9 +473,9 @@
     "note": "Status: Angenommen oder im Austritt/Ausschluss",
     "type": "metric",
     "position_x": 1,
-    "position_y": 1,
-    "width": 16,
-    "height": 6,
+    "position_y": 13,
+    "width": 20,
+    "height": 8,
     "options": {
       "collection": "memberships",
       "field": "id",
@@ -551,7 +551,7 @@
     "show_header": true,
     "note": "Status: Angenommen oder im Austritt/Ausschluss",
     "type": "metric",
-    "position_x": 1,
+    "position_x": 22,
     "position_y": 31,
     "width": 20,
     "height": 6,
@@ -709,8 +709,8 @@
     "show_header": true,
     "note": "Status: Angenommen oder im Austritt/Ausschluss",
     "type": "metric",
-    "position_x": 1,
-    "position_y": 26,
+    "position_x": 2,
+    "position_y": 46,
     "width": 20,
     "height": 8,
     "options": {
@@ -788,9 +788,9 @@
     "show_header": true,
     "note": "Status: Angenommen oder im Austritt/Ausschluss",
     "type": "metric",
-    "position_x": 18,
+    "position_x": 25,
     "position_y": 1,
-    "width": 18,
+    "width": 20,
     "height": 10,
     "options": {
       "collection": "memberships",
@@ -1191,6 +1191,43 @@
     "_syncId": "8a9ff1ad-61ac-4b22-b5ee-fea6d47aeeab"
   },
   {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": null,
+    "icon": null,
+    "color": null,
+    "show_header": false,
+    "note": null,
+    "type": "bar-chart",
+    "position_x": 2,
+    "position_y": 56,
+    "width": 53,
+    "height": 39,
+    "options": {
+      "collection": "directus_users",
+      "horizontal": true,
+      "xAxis": "memberships_postcode",
+      "function": "count",
+      "yAxis": "memberships_postcode",
+      "filter": {
+        "_and": [
+          {
+            "memberships": {
+              "memberships_date_approved": {
+                "_lte": "{{stichtag}}"
+              }
+            }
+          },
+          {
+            "memberships_postcode": {
+              "_starts_with": "1"
+            }
+          }
+        ]
+      }
+    },
+    "_syncId": "96060031-18dc-4a19-93be-d789ef60824a"
+  },
+  {
     "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
     "name": "Beworbene Mitglieder: Vorstand NEIN",
     "icon": null,
@@ -1291,8 +1328,8 @@
     "show_header": true,
     "note": "Status: Angenommen oder im Austritt/Ausschluss",
     "type": "metric",
-    "position_x": 1,
-    "position_y": 26,
+    "position_x": 25,
+    "position_y": 23,
     "width": 20,
     "height": 8,
     "options": {
@@ -1511,8 +1548,8 @@
     "show_header": true,
     "note": "Status: Angenommen oder im Austritt/Ausschluss",
     "type": "metric",
-    "position_x": 1,
-    "position_y": 38,
+    "position_x": 22,
+    "position_y": 24,
     "width": 20,
     "height": 6,
     "options": {
@@ -1765,6 +1802,50 @@
     "_syncId": "be411b3a-2835-43e1-8561-ef285625ddbc"
   },
   {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": "Mitglieder zu Stichtag (inkl. Beworben)",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 22,
+    "position_y": 1,
+    "width": 21,
+    "height": 6,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_applied": {
+              "_lte": "{{stichtag}}"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "c0aa5707-9709-4363-bdec-2aa2a15c58e4"
+  },
+  {
     "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
     "name": "Crowdfunding Mitglieder",
     "icon": null,
@@ -1919,8 +2000,8 @@
     "show_header": true,
     "note": "Status: Angenommen oder im Austritt/Ausschluss",
     "type": "metric",
-    "position_x": 1,
-    "position_y": 17,
+    "position_x": 25,
+    "position_y": 13,
     "width": 20,
     "height": 8,
     "options": {
@@ -2032,8 +2113,8 @@
     "show_header": true,
     "note": "Status: Angenommen oder im Austritt/Ausschluss",
     "type": "metric",
-    "position_x": 1,
-    "position_y": 45,
+    "position_x": 22,
+    "position_y": 38,
     "width": 20,
     "height": 6,
     "options": {
@@ -2108,8 +2189,8 @@
     "show_header": true,
     "note": "Status: Angenommen oder im Austritt/Ausschluss",
     "type": "metric",
-    "position_x": 22,
-    "position_y": 24,
+    "position_x": 23,
+    "position_y": 46,
     "width": 20,
     "height": 6,
     "options": {
