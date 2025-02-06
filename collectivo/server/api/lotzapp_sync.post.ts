@@ -146,6 +146,7 @@ async function createOrUpdateLotzappUser(user: UserProfile) {
 
   // ID exists, update
   try {
+    delete data.kunde;
     await $fetch(endpointWithID, {
       method: "PUT",
       headers: {
