@@ -21,9 +21,9 @@
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Designs",
+        "plural": "Designs",
         "singular": "Design",
-        "plural": "Designs"
+        "translation": "Designs"
       }
     ],
     "unarchive_value": null,

@@ -21,15 +21,15 @@
     "translations": [
       {
         "language": "en-US",
-        "translation": "Invoices Out",
+        "plural": "Invoices Out",
         "singular": "Invoice Out",
-        "plural": "Invoices Out"
+        "translation": "Invoices Out"
       },
       {
         "language": "de-DE",
-        "translation": "Ausgangsrechnungen",
+        "plural": "Ausgangsrechnungen",
         "singular": "Ausgangsrechnung",
-        "plural": "Ausgangsrechnungen"
+        "translation": "Ausgangsrechnungen"
       }
     ],
     "unarchive_value": null,

@@ -528,7 +528,7 @@
     "validation": null,
     "presets": null,
     "fields": [
-      "memberships_date_approved"
+      "membership_approved_by_board"
     ],
     "policy": "0288ddc8-4ca7-4d85-ab2f-1e8301a2dba1",
     "_syncId": "2c07ee79-fc14-4d0c-ab5f-afd788298c31"
@@ -2806,5 +2806,41 @@
     ],
     "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
     "_syncId": "a875138f-3fea-431d-a30a-01c3151750a3"
+  },
+  {
+    "collection": "directus_activity",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "9d7d208e-3a5b-4ab7-9ff7-6de1903fbde5",
+    "_syncId": "de1c73f7-2e46-4548-8239-669c5e7ee472"
+  },
+  {
+    "collection": "directus_revisions",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "9d7d208e-3a5b-4ab7-9ff7-6de1903fbde5",
+    "_syncId": "826f6c06-0322-4a7b-92d0-5737cc82bc48"
+  },
+  {
+    "collection": "memberships",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "9d7d208e-3a5b-4ab7-9ff7-6de1903fbde5",
+    "_syncId": "1faa7417-7ebd-4819-b1dd-672410e1e941"
   }
 ]

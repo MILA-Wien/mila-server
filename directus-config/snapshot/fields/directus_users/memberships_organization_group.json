@@ -6,6 +6,7 @@
     "collection": "directus_users",
     "conditions": [
       {
+        "hidden": true,
         "name": "Hide if not organization",
         "rule": {
           "_and": [
@@ -15,8 +16,7 @@
               }
             }
           ]
-        },
-        "hidden": true
+        }
       }
     ],
     "display": null,

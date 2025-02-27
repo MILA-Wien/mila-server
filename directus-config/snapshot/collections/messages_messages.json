@@ -21,15 +21,15 @@
     "translations": [
       {
         "language": "en-US",
-        "translation": "Messages",
+        "plural": "Messages",
         "singular": "Message",
-        "plural": "Messages"
+        "translation": "Messages"
       },
       {
         "language": "de-DE",
-        "translation": "Aufzeichnungen",
+        "plural": "Aufzeichnungen",
         "singular": "Aufzeichnung",
-        "plural": "Aufzeichnungen"
+        "translation": "Aufzeichnungen"
       }
     ],
     "unarchive_value": null,

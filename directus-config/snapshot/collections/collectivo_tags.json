@@ -21,15 +21,15 @@
     "translations": [
       {
         "language": "en-US",
-        "translation": "Tags",
+        "plural": "Tags",
         "singular": "Tag",
-        "plural": "Tags"
+        "translation": "Tags"
       },
       {
         "language": "de-DE",
-        "translation": "Tags",
+        "plural": "Tags",
         "singular": "Tag",
-        "plural": "Tags"
+        "translation": "Tags"
       }
     ],
     "unarchive_value": null,

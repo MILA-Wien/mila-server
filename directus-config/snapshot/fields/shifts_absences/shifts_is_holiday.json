@@ -6,7 +6,13 @@
     "collection": "shifts_absences",
     "conditions": [
       {
+        "hidden": true,
         "name": "Hide if not for all assignments",
+        "options": {
+          "iconOff": "check_box_outline_blank",
+          "iconOn": "check_box",
+          "label": "Aktiviert"
+        },
         "rule": {
           "_and": [
             {
@@ -15,12 +21,6 @@
               }
             }
           ]
-        },
-        "hidden": true,
-        "options": {
-          "iconOn": "check_box",
-          "iconOff": "check_box_outline_blank",
-          "label": "Aktiviert"
         }
       }
     ],
@@ -58,6 +58,7 @@
     "numeric_scale": null,
     "is_nullable": false,
     "is_unique": false,
+    "is_indexed": false,
     "is_primary_key": false,
     "is_generated": false,
     "generation_expression": null,

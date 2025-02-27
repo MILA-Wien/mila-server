@@ -21,9 +21,9 @@
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Abwesenheiten",
+        "plural": "Abwesenheiten",
         "singular": "Abwesenheit",
-        "plural": "Abwesenheiten"
+        "translation": "Abwesenheiten"
       }
     ],
     "unarchive_value": null,

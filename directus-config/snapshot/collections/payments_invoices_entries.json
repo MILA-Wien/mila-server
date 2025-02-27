@@ -21,15 +21,15 @@
     "translations": [
       {
         "language": "en-US",
-        "translation": "Entries",
+        "plural": "Entries",
         "singular": "Entry",
-        "plural": "Entries"
+        "translation": "Entries"
       },
       {
         "language": "de-DE",
-        "translation": "Posten",
+        "plural": "Posten",
         "singular": "Posten",
-        "plural": "Posten"
+        "translation": "Posten"
       }
     ],
     "unarchive_value": null,

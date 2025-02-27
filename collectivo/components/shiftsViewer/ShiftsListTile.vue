@@ -58,7 +58,11 @@ shiftTitle += " (" + shift.shifts_name + ")";
       >
         <span v-if="assignment.isActive">
           {{
-            assignment.assignment.shifts_membership.memberships_user.first_name
+            assignment.assignment.shifts_membership.memberships_user
+              .first_name === ""
+              ? "[Name verborgen]"
+              : assignment.assignment.shifts_membership.memberships_user
+                  .first_name
           }}
           {{ assignment.assignment.shifts_membership.memberships_user.last_name
           }}<span v-if="index < occ.n_assigned - 1">, </span>

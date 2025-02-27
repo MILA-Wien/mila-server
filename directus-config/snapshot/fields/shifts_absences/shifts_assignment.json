@@ -6,7 +6,13 @@
     "collection": "shifts_absences",
     "conditions": [
       {
+        "hidden": true,
         "name": "Hide if for all assignments",
+        "options": {
+          "enableCreate": false,
+          "enableSelect": true
+        },
+        "required": false,
         "rule": {
           "_and": [
             {
@@ -15,13 +21,7 @@
               }
             }
           ]
-        },
-        "hidden": true,
-        "options": {
-          "enableCreate": false,
-          "enableSelect": true
-        },
-        "required": false
+        }
       }
     ],
     "display": null,
@@ -60,6 +60,7 @@
     "numeric_scale": 0,
     "is_nullable": true,
     "is_unique": false,
+    "is_indexed": false,
     "is_primary_key": false,
     "is_generated": false,
     "generation_expression": null,

@@ -9,27 +9,27 @@
     "display_options": {
       "choices": [
         {
-          "text": "Regulär",
-          "value": "regular",
-          "color": "#2ECDA7",
           "background": null,
-          "icon": null
-        },
-        {
-          "text": "Springer*in",
-          "value": "jumper",
+          "color": "#2ECDA7",
           "icon": null,
-          "color": "#2ECDA7"
+          "text": "Regulär",
+          "value": "regular"
         },
         {
+          "color": "#2ECDA7",
+          "icon": null,
+          "text": "Springer*in",
+          "value": "jumper"
+        },
+        {
+          "color": "#3399FF",
           "text": "Befreit",
-          "value": "exempt",
-          "color": "#3399FF"
+          "value": "exempt"
         },
         {
+          "color": "#FFA439",
           "text": "Inaktiv",
-          "value": "inactive",
-          "color": "#FFA439"
+          "value": "inactive"
         }
       ],
       "format": false
@@ -42,28 +42,28 @@
     "options": {
       "choices": [
         {
-          "text": "Festschicht",
-          "value": "regular",
+          "color": "#2ECDA7",
           "icon": "transfer_within_a_station",
-          "color": "#2ECDA7"
+          "text": "Festschicht",
+          "value": "regular"
         },
         {
-          "text": "Springer*in",
-          "value": "jumper",
+          "color": "#2ECDA7",
           "icon": "sprint",
-          "color": "#2ECDA7"
+          "text": "Springer*in",
+          "value": "jumper"
         },
         {
-          "text": "Befreit",
-          "value": "exempt",
+          "color": "#3399FF",
           "icon": "self_improvement",
-          "color": "#3399FF"
+          "text": "Befreit",
+          "value": "exempt"
         },
         {
-          "text": "Inaktiv",
-          "value": "inactive",
+          "color": "#FFA439",
           "icon": "cancel",
-          "color": "#FFA439"
+          "text": "Inaktiv",
+          "value": "inactive"
         }
       ]
     },
@@ -91,6 +91,7 @@
     "numeric_scale": null,
     "is_nullable": true,
     "is_unique": false,
+    "is_indexed": false,
     "is_primary_key": false,
     "is_generated": false,
     "generation_expression": null,

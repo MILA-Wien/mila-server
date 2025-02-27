@@ -260,6 +260,38 @@
     "_syncId": "0afbf417-f1fe-4d01-b3f7-8e9ff124ac4a"
   },
   {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": null,
+    "icon": null,
+    "color": null,
+    "show_header": false,
+    "note": null,
+    "type": "metric",
+    "position_x": 3,
+    "position_y": 86,
+    "width": 33,
+    "height": 11,
+    "options": {
+      "collection": "memberships",
+      "field": "memberships_shares",
+      "function": "sum",
+      "sortField": "id",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_in": [
+                "approved",
+                "in-cancellation"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "_syncId": "0ee40e0d-7806-45ed-b092-0e96511fdc75"
+  },
+  {
     "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
     "name": "Davon AKTIV UND SOZIAL",
     "icon": "switch_account",
@@ -749,6 +781,34 @@
       "conditionalFormatting": null
     },
     "_syncId": "41293c64-9db2-4ffe-9230-0a8dd9afd341"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": null,
+    "icon": null,
+    "color": null,
+    "show_header": false,
+    "note": null,
+    "type": "metric",
+    "position_x": 40,
+    "position_y": 3,
+    "width": 35,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "memberships_shares",
+      "function": "sum",
+      "filter": {
+        "_and": [
+          {
+            "memberships_date_applied": {
+              "_lt": "2025-02-01"
+            }
+          }
+        ]
+      }
+    },
+    "_syncId": "6507a393-fa8d-4b26-a9b9-941817b19413"
   },
   {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
@@ -2040,6 +2100,38 @@
       "conditionalFormatting": null
     },
     "_syncId": "ca30ea57-cc44-498d-a271-834bb7fb76fb"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": null,
+    "icon": null,
+    "color": null,
+    "show_header": false,
+    "note": null,
+    "type": "metric",
+    "position_x": 38,
+    "position_y": 86,
+    "width": 33,
+    "height": 11,
+    "options": {
+      "collection": "memberships",
+      "field": "memberships_shares",
+      "function": "sum",
+      "sortField": "id",
+      "filter": {
+        "_and": [
+          {
+            "memberships_date_applied": {
+              "_between": [
+                "2024-02-01",
+                "2025-01-31"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "_syncId": "ce657a4f-06ee-4948-aeb9-910437fec5c9"
   },
   {
     "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",

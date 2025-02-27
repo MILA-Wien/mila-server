@@ -21,9 +21,9 @@
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Kategorien",
+        "plural": "Kategorien",
         "singular": "Kategorien",
-        "plural": "Kategorien"
+        "translation": "Kategorien"
       }
     ],
     "unarchive_value": null,

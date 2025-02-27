@@ -21,15 +21,15 @@
     "translations": [
       {
         "language": "en-US",
-        "translation": "Shifts",
+        "plural": "Shifts",
         "singular": "Shift",
-        "plural": "Shifts"
+        "translation": "Shifts"
       },
       {
         "language": "de-DE",
-        "translation": "Schichtensystem",
+        "plural": "Schichten",
         "singular": "Schicht",
-        "plural": "Schichten"
+        "translation": "Schichtensystem"
       }
     ],
     "unarchive_value": null,
