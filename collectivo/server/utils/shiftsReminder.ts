@@ -1,11 +1,10 @@
 /*
- * This endpoint handles sending reminders for shift assignments.
+ * This function handles sending reminders for shift assignments.
  * It is called by a directus cron job.
  * It sends reminders to users for shifts that lie 2 days in the future.
  * Requires an active automation with the name "shifts_reminder".
- * Request requires collectivo api token.
  */
-import { createItem, readItems } from "@directus/sdk";
+import { createItem, readItems, updateItems } from "@directus/sdk";
 import { RRule, RRuleSet } from "rrule";
 
 export async function sendShiftReminders(date: Date) {
@@ -18,10 +17,8 @@ async function getAssignments(date: Date) {
   const directus = useDirectusAdmin();
   const targetDate = new Date(date);
   targetDate.setDate(targetDate.getDate() + 2);
-  console.log("Sending shift reminders for", targetDate.toISOString());
   const shifts: ShiftsShift[] = await getShiftShifts(targetDate, targetDate);
   const shiftIds = shifts.map((shift) => shift.id);
-  console.log("Found", shifts.length, "shifts");
 
   // Get assignments two days ahead
   const assignments = await getShiftAssignments(
@@ -32,29 +29,13 @@ async function getAssignments(date: Date) {
 
   const assignmentIds = assignments.map((assignment) => assignment.id);
 
-  console.log("Found", assignments.length, "assignments");
-
   const absences = [];
   if (assignmentIds.length) {
-    const absences_ = (await directus.request(
-      readItems("shifts_absences", {
-        filter: {
-          shifts_status: {
-            _eq: "accepted",
-          },
-          _or: [
-            { shifts_to: { _gte: targetDate } },
-            { shifts_from: { _lte: targetDate } },
-          ],
-        },
-        fields: [
-          "shifts_membership",
-          "shifts_from",
-          "shifts_to",
-          "shifts_assignment",
-        ],
-      }),
-    )) as ShiftsAbsence[];
+    const absences_ = await getShiftAbsences(
+      assignmentIds,
+      targetDate,
+      targetDate,
+    );
     absences.push(...absences_);
   }
 
@@ -79,20 +60,14 @@ async function getAssignments(date: Date) {
     const filteredAssignments = assignments.filter(
       (assignment) => assignment.shifts_shift === shift.id,
     );
-    // console.log(
-    //   "Shift",
-    //   shift.id,
-    //   "has",
-    //   filteredAssignments.length,
-    //   "assignments",
-    // );
+
     const rules = getAssignmentRrules(
       shift,
       shiftRule,
       filteredAssignments,
       absences,
     );
-    // console.log("Shift", shift.id, "has", rules.length, "assignment rules");
+
     assignmentRules.push(...rules);
   }
 
@@ -100,13 +75,7 @@ async function getAssignments(date: Date) {
 
   for (const rule of assignmentRules) {
     const occs = rule.rruleWithAbsences.between(targetDate, targetDate, true);
-    // console.log(
-    //   "Shift",
-    //   rule.assignment.shifts_shift,
-    //   "has",
-    //   occs.length,
-    //   "occurrences",
-    // );
+
     for (const occ of occs) {
       occurrences.push({
         assignment: rule,
@@ -146,7 +115,7 @@ async function getAutomation(name: string) {
 async function sendRemindersInner(occurrences: any[], automation: any) {
   const directus = await useDirectusAdmin();
   const payloads: any[] = [];
-  console.log("Found", occurrences.length, "occurrences");
+
   for (const occ of occurrences) {
     const assignment = occ.assignment.assignment;
 
@@ -183,7 +152,7 @@ async function sendRemindersInner(occurrences: any[], automation: any) {
   }
 
   const campaign_ids = [];
-  console.log("Sending", payloads.length, "reminders");
+
   for (const payload of payloads) {
     const campaign = await directus.request(
       createItem("messages_campaigns", payload, { fields: ["id"] }),
@@ -197,11 +166,11 @@ async function sendRemindersInner(occurrences: any[], automation: any) {
     return;
   }
 
-  // await directus.request(
-  //   updateItems("messages_campaigns", campaign_ids, {
-  //     messages_campaign_status: "pending",
-  //   }),
-  // );
+  await directus.request(
+    updateItems("messages_campaigns", campaign_ids, {
+      messages_campaign_status: "pending",
+    }),
+  );
 }
 
 // Create a RRule object for a shift

@@ -16,6 +16,7 @@ export async function getShiftShifts(
         shifts_from: { _eq: from.toISOString() },
       },
       {
+        shifts_is_regular: { _eq: true },
         shifts_to: {
           _or: [{ _gte: from.toISOString() }, { _null: true }],
         },
@@ -57,6 +58,7 @@ export async function getShiftAssignments(
             shifts_from: { _eq: from.toISOString() },
           },
           {
+            shifts_is_regular: { _eq: true },
             shifts_to: {
               _or: [{ _gte: from.toISOString() }, { _null: true }],
             },
