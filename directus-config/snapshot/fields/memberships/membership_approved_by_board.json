@@ -1,36 +1,39 @@
 {
   "collection": "memberships",
-  "field": "user_updated",
-  "type": "uuid",
+  "field": "membership_approved_by_board",
+  "type": "boolean",
   "meta": {
     "collection": "memberships",
     "conditions": null,
-    "display": "user",
+    "display": null,
     "display_options": null,
-    "field": "user_updated",
-    "group": null,
-    "hidden": true,
-    "interface": "select-dropdown-m2o",
+    "field": "membership_approved_by_board",
+    "group": "membership_group",
+    "hidden": false,
+    "interface": "boolean",
     "note": null,
-    "options": {
-      "template": "{{avatar.$thumbnail}} {{first_name}} {{last_name}}"
-    },
-    "readonly": true,
+    "options": null,
+    "readonly": false,
     "required": false,
-    "sort": 8,
+    "sort": 11,
     "special": [
-      "user-updated"
+      "cast-boolean"
     ],
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Vom Vorstand aufgenommen?"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "half"
   },
   "schema": {
-    "name": "user_updated",
+    "name": "membership_approved_by_board",
     "table": "memberships",
-    "data_type": "uuid",
-    "default_value": null,
+    "data_type": "boolean",
+    "default_value": false,
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,

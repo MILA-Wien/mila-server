@@ -32,7 +32,7 @@
     "_syncId": "_sync_default_public_policy"
   },
   {
-    "name": "Vorstand",
+    "name": "Vorstand Admin Rechte",
     "icon": "supervised_user_circle",
     "description": null,
     "ip_access": null,
@@ -75,8 +75,28 @@
       {
         "role": "e600443a-e943-4061-b7c5-30482fca92ad",
         "sort": 1
+      },
+      {
+        "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+        "sort": 2
       }
     ],
     "_syncId": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0"
+  },
+  {
+    "name": "Lesezugriff API",
+    "icon": "badge",
+    "description": null,
+    "ip_access": null,
+    "enforce_tfa": false,
+    "admin_access": false,
+    "app_access": true,
+    "roles": [
+      {
+        "role": null,
+        "sort": 1
+      }
+    ],
+    "_syncId": "9d7d208e-3a5b-4ab7-9ff7-6de1903fbde5"
   }
 ]
