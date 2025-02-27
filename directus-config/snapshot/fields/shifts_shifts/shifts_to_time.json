@@ -6,7 +6,10 @@
     "collection": "shifts_shifts",
     "conditions": [
       {
+        "hidden": true,
         "name": "hide if all day",
+        "options": {},
+        "required": false,
         "rule": {
           "_and": [
             {
@@ -15,10 +18,7 @@
               }
             }
           ]
-        },
-        "hidden": true,
-        "options": {},
-        "required": false
+        }
       }
     ],
     "display": null,
@@ -53,6 +53,7 @@
     "numeric_scale": null,
     "is_nullable": true,
     "is_unique": false,
+    "is_indexed": false,
     "is_primary_key": false,
     "is_generated": false,
     "generation_expression": null,

@@ -21,9 +21,9 @@
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Logbuch",
+        "plural": "Schichtlogs",
         "singular": "Schichtlog",
-        "plural": "Schichtlogs"
+        "translation": "Logbuch"
       }
     ],
     "unarchive_value": null,

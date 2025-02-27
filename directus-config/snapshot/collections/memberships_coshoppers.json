@@ -21,9 +21,9 @@
     "translations": [
       {
         "language": "en-US",
-        "translation": "Miteinkäufer*innen",
+        "plural": "Miteinkäufer*innen",
         "singular": "Miteinkäufer*in",
-        "plural": "Miteinkäufer*innen"
+        "translation": "Miteinkäufer*innen"
       }
     ],
     "unarchive_value": null,

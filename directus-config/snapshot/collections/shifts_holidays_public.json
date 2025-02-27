@@ -21,9 +21,9 @@
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Feiertage",
+        "plural": "Feiertage",
         "singular": "Feiertag",
-        "plural": "Feiertage"
+        "translation": "Feiertage"
       }
     ],
     "unarchive_value": null,

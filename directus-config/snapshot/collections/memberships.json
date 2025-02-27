@@ -21,15 +21,15 @@
     "translations": [
       {
         "language": "en-US",
-        "translation": "Memberships",
+        "plural": "Memberships",
         "singular": "Membership",
-        "plural": "Memberships"
+        "translation": "Memberships"
       },
       {
         "language": "de-DE",
-        "translation": "Mitgliedschaften",
+        "plural": "Mitgliedschaften",
         "singular": "Mitgliedschaft",
-        "plural": "Mitgliedschaften"
+        "translation": "Mitgliedschaften"
       }
     ],
     "unarchive_value": null,

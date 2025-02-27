@@ -309,11 +309,11 @@ type Subscription {
   directus_operations_mutated(event: EventEnum): directus_operations_mutated
   directus_dashboards_mutated(event: EventEnum): directus_dashboards_mutated
   directus_translations_mutated(event: EventEnum): directus_translations_mutated
-  directus_versions_mutated(event: EventEnum): directus_versions_mutated
   directus_webhooks_mutated(event: EventEnum): directus_webhooks_mutated
   directus_policies_mutated(event: EventEnum): directus_policies_mutated
   directus_access_mutated(event: EventEnum): directus_access_mutated
   directus_sync_id_map_mutated(event: EventEnum): directus_sync_id_map_mutated
+  directus_versions_mutated(event: EventEnum): directus_versions_mutated
   settings_hidden_mutated(event: EventEnum): settings_hidden_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
   collectivo_tags_mutated(event: EventEnum): collectivo_tags_mutated
@@ -341,6 +341,7 @@ type Subscription {
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_holidays_public_mutated(event: EventEnum): shifts_holidays_public_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
+  directus_comments_mutated(event: EventEnum): directus_comments_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -645,7 +646,6 @@ type directus_activity {
   user_agent: String
   collection: String!
   item: String!
-  comment: String
   origin: String
   revisions(filter: directus_revisions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_revisions]
   revisions_func: count_functions
@@ -655,6 +655,25 @@ type directus_activity_mutated {
   key: ID!
   event: EventEnum
   data: directus_activity
+}
+
+type directus_comments {
+  id: ID!
+  collection: String!
+  item: String!
+  comment: String!
+  date_created: Date
+  date_created_func: datetime_functions
+  date_updated: Date
+  date_updated_func: datetime_functions
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+}
+
+type directus_comments_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_comments
 }
 
 type directus_dashboards {
@@ -1164,6 +1183,8 @@ type directus_versions {
   date_updated_func: datetime_functions
   user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  delta: JSON
+  delta_func: count_functions
 }
 
 type directus_versions_mutated {
@@ -3443,7 +3464,6 @@ input directus_activity_filter {
   user_agent: string_filter_operators
   collection: string_filter_operators
   item: string_filter_operators
-  comment: string_filter_operators
   origin: string_filter_operators
   revisions: directus_revisions_filter
   revisions_func: count_function_filter_operators
@@ -3737,6 +3757,8 @@ input directus_versions_filter {
   date_updated_func: datetime_function_filter_operators
   user_created: directus_users_filter
   user_updated: directus_users_filter
+  delta: string_filter_operators
+  delta_func: count_function_filter_operators
   _and: [directus_versions_filter]
   _or: [directus_versions_filter]
 }

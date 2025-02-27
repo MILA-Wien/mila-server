@@ -9,22 +9,22 @@
     "display_options": {
       "choices": [
         {
+          "background": "var(--primary)",
+          "foreground": "#FFFFFF",
           "text": "$t:published",
-          "value": "published",
-          "foreground": "#FFFFFF",
-          "background": "var(--primary)"
+          "value": "published"
         },
         {
-          "text": "$t:draft",
-          "value": "draft",
+          "background": "#D3DAE4",
           "foreground": "#18222F",
-          "background": "#D3DAE4"
+          "text": "$t:draft",
+          "value": "draft"
         },
         {
-          "text": "$t:archived",
-          "value": "archived",
+          "background": "var(--warning)",
           "foreground": "#FFFFFF",
-          "background": "var(--warning)"
+          "text": "$t:archived",
+          "value": "archived"
         }
       ]
     },
@@ -77,6 +77,7 @@
     "numeric_scale": null,
     "is_nullable": false,
     "is_unique": false,
+    "is_indexed": false,
     "is_primary_key": false,
     "is_generated": false,
     "generation_expression": null,

@@ -9,14 +9,14 @@
     "display_options": {
       "choices": [
         {
+          "color": "#2ECDA7",
           "text": "Aktiv",
-          "value": "Aktiv",
-          "color": "#2ECDA7"
+          "value": "Aktiv"
         },
         {
+          "color": "#FFA439",
           "text": "Investierend",
-          "value": "Investierend",
-          "color": "#FFA439"
+          "value": "Investierend"
         }
       ]
     },
@@ -28,16 +28,16 @@
     "options": {
       "choices": [
         {
-          "text": "Aktiv",
-          "value": "Aktiv",
+          "color": "#2ECDA7",
           "icon": "shopping_cart",
-          "color": "#2ECDA7"
+          "text": "Aktiv",
+          "value": "Aktiv"
         },
         {
-          "text": "Investierend",
-          "value": "Investierend",
+          "color": "#FFA439",
           "icon": "payments",
-          "color": "#FFA439"
+          "text": "Investierend",
+          "value": "Investierend"
         }
       ]
     },
@@ -65,6 +65,7 @@
     "numeric_scale": null,
     "is_nullable": true,
     "is_unique": false,
+    "is_indexed": false,
     "is_primary_key": false,
     "is_generated": false,
     "generation_expression": null,

@@ -3,7 +3,7 @@
   "info": {
     "title": "Dynamic API Specification",
     "description": "This is a dynamically generated API specification for all endpoints existing on the current project.",
-    "version": "11.1.0"
+    "version": "11.5.0"
   },
   "servers": [
     {
@@ -1895,72 +1895,6 @@
         ]
       }
     },
-    "/activity/comment": {
-      "post": {
-        "summary": "Create a Comment",
-        "description": "Creates a new comment.",
-        "operationId": "createComment",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Meta"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "collection",
-                  "item",
-                  "comment"
-                ],
-                "properties": {
-                  "collection": {
-                    "type": "string",
-                    "example": "projects"
-                  },
-                  "item": {
-                    "type": "integer",
-                    "example": 1
-                  },
-                  "comment": {
-                    "type": "string",
-                    "example": "A new comment"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Activity"
-                    }
-                  }
-                }
-              }
-            },
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "tags": [
-          "Activity"
-        ]
-      }
-    },
     "/activity/{id}": {
       "get": {
         "summary": "Retrieve an Activity Action",
@@ -1992,86 +1926,6 @@
                 }
               }
             }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "tags": [
-          "Activity"
-        ]
-      }
-    },
-    "/activity/comment/{id}": {
-      "patch": {
-        "summary": "Update a Comment",
-        "description": "Update the content of an existing comment.",
-        "operationId": "updateComment",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Id"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "comment": {
-                    "type": "string",
-                    "example": "My updated comment"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Activity"
-                    }
-                  }
-                }
-              }
-            },
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "tags": [
-          "Activity"
-        ]
-      },
-      "delete": {
-        "summary": "Delete a Comment",
-        "description": "Delete an existing comment. Deleted comments can not be retrieved.",
-        "operationId": "deleteComment",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Id"
-          }
-        ],
-        "responses": {
-          "203": {
-            "description": "Deleted successfully"
           },
           "401": {
             "$ref": "#/components/responses/UnauthorizedError"
@@ -5680,474 +5534,6 @@
         ]
       }
     },
-    "/versions": {
-      "get": {
-        "summary": "List Content Versions",
-        "description": "Get all Content Versions.",
-        "operationId": "getContentVersions",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          },
-          {
-            "$ref": "#/components/parameters/Filter"
-          },
-          {
-            "$ref": "#/components/parameters/Search"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Versions"
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/x-metadata"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "tags": [
-          "Versions"
-        ]
-      },
-      "post": {
-        "summary": "Create Multiple Content Versions",
-        "description": "Create multiple new Content Versions.",
-        "operationId": "createContentVersion",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/Versions"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Versions"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "tags": [
-          "Versions"
-        ]
-      },
-      "patch": {
-        "summary": "Update Multiple Content Versions",
-        "description": "Update multiple Content Versions at the same time.",
-        "operationId": "updateContentVersions",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          },
-          {
-            "$ref": "#/components/parameters/Filter"
-          },
-          {
-            "$ref": "#/components/parameters/Search"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "data": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/components/schemas/Versions"
-                      }
-                    ]
-                  },
-                  "keys": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Versions"
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/x-metadata"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        },
-        "tags": [
-          "Versions"
-        ]
-      },
-      "delete": {
-        "summary": "Delete Multiple Content Versions",
-        "description": "Delete multiple existing Content Versions.",
-        "operationId": "deleteContentVersions",
-        "responses": {
-          "200": {
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        },
-        "tags": [
-          "Versions"
-        ]
-      }
-    },
-    "/versions/{id}": {
-      "get": {
-        "summary": "Retrieve a Content Version",
-        "description": "Retrieve a single Content Version by unique identifier.",
-        "operationId": "getContentVersion",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/UUId"
-          },
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Versions"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "tags": [
-          "Versions"
-        ]
-      },
-      "patch": {
-        "summary": "Update a Content Version",
-        "description": "Update an existing Content Version.",
-        "operationId": "updateContentVersion",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/UUId"
-          },
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/Versions"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Versions"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "tags": [
-          "Versions"
-        ]
-      },
-      "delete": {
-        "summary": "Delete a Content Version",
-        "description": "Delete an existing Content Version.",
-        "operationId": "deleteContentVersion",
-        "responses": {
-          "200": {
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "tags": [
-          "Versions"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/UUId"
-          }
-        ]
-      }
-    },
-    "/versions/{id}/save": {
-      "post": {
-        "summary": "Save to a Content Version",
-        "description": "Save item changes to an existing Content Version.",
-        "operationId": "saveContentVersion",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/UUId"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {}
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "tags": [
-          "Versions"
-        ]
-      }
-    },
-    "/versions/{id}/compare": {
-      "get": {
-        "summary": "Compare a Content Version",
-        "description": "Compare an existing Content Version with the main version of the item.",
-        "operationId": "compareContentVersion",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/UUId"
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "data": {
-                      "type": "object"
-                    }
-                  },
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "tags": [
-          "Versions"
-        ]
-      }
-    },
-    "/versions/{id}/promote": {
-      "post": {
-        "summary": "Promote a Content Version",
-        "description": "Pass the current hash of the main version of the item (obtained from the `compare` endpoint) along with an optional array of field names of which the values are to be promoted (by default, all fields are selected).",
-        "operationId": "promoteContentVersion",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/UUId"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "mainHash": {
-                    "description": "Hash of the main version of the item to be promoted.",
-                    "type": "string"
-                  },
-                  "fields": {
-                    "description": "Optional array of field names of which the values are to be promoted.",
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {}
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "tags": [
-          "Versions"
-        ]
-      }
-    },
     "/extensions": {
       "get": {
         "summary": "List Extensions",
@@ -7095,6 +6481,474 @@
               ]
             }
           }
+        ]
+      }
+    },
+    "/versions": {
+      "get": {
+        "summary": "List Content Versions",
+        "description": "Get all Content Versions.",
+        "operationId": "getContentVersions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Versions"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/x-metadata"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "tags": [
+          "Versions"
+        ]
+      },
+      "post": {
+        "summary": "Create Multiple Content Versions",
+        "description": "Create multiple new Content Versions.",
+        "operationId": "createContentVersion",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/Versions"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Versions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "tags": [
+          "Versions"
+        ]
+      },
+      "patch": {
+        "summary": "Update Multiple Content Versions",
+        "description": "Update multiple Content Versions at the same time.",
+        "operationId": "updateContentVersions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/Versions"
+                      }
+                    ]
+                  },
+                  "keys": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Versions"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/x-metadata"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "tags": [
+          "Versions"
+        ]
+      },
+      "delete": {
+        "summary": "Delete Multiple Content Versions",
+        "description": "Delete multiple existing Content Versions.",
+        "operationId": "deleteContentVersions",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "tags": [
+          "Versions"
+        ]
+      }
+    },
+    "/versions/{id}": {
+      "get": {
+        "summary": "Retrieve a Content Version",
+        "description": "Retrieve a single Content Version by unique identifier.",
+        "operationId": "getContentVersion",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UUId"
+          },
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Versions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "tags": [
+          "Versions"
+        ]
+      },
+      "patch": {
+        "summary": "Update a Content Version",
+        "description": "Update an existing Content Version.",
+        "operationId": "updateContentVersion",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UUId"
+          },
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/Versions"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Versions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "tags": [
+          "Versions"
+        ]
+      },
+      "delete": {
+        "summary": "Delete a Content Version",
+        "description": "Delete an existing Content Version.",
+        "operationId": "deleteContentVersion",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "tags": [
+          "Versions"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UUId"
+          }
+        ]
+      }
+    },
+    "/versions/{id}/save": {
+      "post": {
+        "summary": "Save to a Content Version",
+        "description": "Save item changes to an existing Content Version.",
+        "operationId": "saveContentVersion",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UUId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "tags": [
+          "Versions"
+        ]
+      }
+    },
+    "/versions/{id}/compare": {
+      "get": {
+        "summary": "Compare a Content Version",
+        "description": "Compare an existing Content Version with the main version of the item.",
+        "operationId": "compareContentVersion",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UUId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "tags": [
+          "Versions"
+        ]
+      }
+    },
+    "/versions/{id}/promote": {
+      "post": {
+        "summary": "Promote a Content Version",
+        "description": "Pass the current hash of the main version of the item (obtained from the `compare` endpoint) along with an optional array of field names of which the values are to be promoted (by default, all fields are selected).",
+        "operationId": "promoteContentVersion",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UUId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "mainHash": {
+                    "description": "Hash of the main version of the item to be promoted.",
+                    "type": "string"
+                  },
+                  "fields": {
+                    "description": "Optional array of field names of which the values are to be promoted.",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "tags": [
+          "Versions"
         ]
       }
     },
@@ -17732,6 +17586,379 @@
           }
         ]
       }
+    },
+    "/comments": {
+      "get": {
+        "tags": [
+          "Comments"
+        ],
+        "operationId": "getComments",
+        "summary": "List Comments",
+        "description": "List the comments.",
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Comments"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/x-metadata"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Comments"
+        ],
+        "operationId": "createComment",
+        "summary": "Create a Comment",
+        "description": "Create a new comment.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "collection",
+                  "item",
+                  "comment"
+                ],
+                "properties": {
+                  "collection": {
+                    "type": "string",
+                    "description": "Which collection this collection comment is for.",
+                    "example": "projects"
+                  },
+                  "item": {
+                    "type": "string",
+                    "example": "81dfa7e0-56d2-471f-b96a-1cf8a62bdf28"
+                  },
+                  "comment": {
+                    "type": "string",
+                    "example": "A new comment"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Comments"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Multiple Comments",
+        "description": "Update multiple comments at the same time.",
+        "tags": [
+          "Comments"
+        ],
+        "operationId": "updateComments",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "keys": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "data": {
+                    "type": "object",
+                    "required": [
+                      "collection"
+                    ],
+                    "properties": {
+                      "collection": {
+                        "type": "string",
+                        "description": "Which collection this collection comment is for.",
+                        "example": "projects"
+                      },
+                      "item": {
+                        "type": "string",
+                        "example": "81dfa7e0-56d2-471f-b96a-1cf8a62bdf28"
+                      },
+                      "comment": {
+                        "type": "string",
+                        "example": "A new comment"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Comments"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/x-metadata"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Multiple Comments",
+        "description": "Delete multiple existing comments.",
+        "tags": [
+          "Comments"
+        ],
+        "operationId": "deleteComments",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/comments/{id}": {
+      "get": {
+        "tags": [
+          "Comments"
+        ],
+        "operationId": "getComment",
+        "summary": "Retrieve a Comment",
+        "description": "Retrieve a single comment by unique identifier.",
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Comments"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Comments"
+        ],
+        "operationId": "updateComment",
+        "summary": "Update a Comment",
+        "description": "Update an existing comment.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "collection"
+                ],
+                "properties": {
+                  "collection": {
+                    "type": "string",
+                    "description": "Which collection this comment is for.",
+                    "example": "projects"
+                  },
+                  "item": {
+                    "type": "string",
+                    "example": "81dfa7e0-56d2-471f-b96a-1cf8a62bdf28"
+                  },
+                  "comment": {
+                    "type": "string",
+                    "example": "An updated comment"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Comments"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Comments"
+        ],
+        "operationId": "deleteComment",
+        "summary": "Delete a Comment",
+        "description": "Delete an existing comment.",
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
     }
   },
   "tags": [
@@ -17833,11 +18060,6 @@
       "x-collection": "directus_collections"
     },
     {
-      "name": "Versions",
-      "description": "Enables users to create unpublished copies of an item, modify them independently from the main version, and promote them to become the new main version when ready.",
-      "x-collection": "directus_versions"
-    },
-    {
       "name": "Extensions",
       "description": "Directus can easily be extended through the addition of several types of extensions, including layouts, interfaces, and modules.",
       "x-collection": "directus_extensions"
@@ -17850,6 +18072,11 @@
     {
       "name": "ItemsDirectusSyncIDMap",
       "x-collection": "directus_sync_id_map"
+    },
+    {
+      "name": "Versions",
+      "description": "Enables users to create unpublished copies of an item, modify them independently from the main version, and promote them to become the new main version when ready.",
+      "x-collection": "directus_versions"
     },
     {
       "name": "ItemsSettingsHidden",
@@ -17959,6 +18186,11 @@
     {
       "name": "ItemsShiftsLogs",
       "x-collection": "shifts_logs"
+    },
+    {
+      "name": "Comments",
+      "description": "Comments can be added to items.",
+      "x-collection": "directus_comments"
     }
   ],
   "components": {
@@ -18877,12 +19109,6 @@
             "example": "328",
             "type": "string"
           },
-          "comment": {
-            "description": "User comment. This will store the comments that show up in the right sidebar of the item edit page in the admin app.",
-            "example": null,
-            "type": "string",
-            "nullable": true
-          },
           "origin": {
             "description": "Origin of the request when the action took place.",
             "example": "https://directus.io",
@@ -19758,86 +19984,6 @@
         },
         "x-collection": "directus_collections"
       },
-      "Versions": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "description": "Primary key of the Content Version.",
-            "example": "63716273-0f29-4648-8a2a-2af2948f6f78",
-            "type": "string"
-          },
-          "key": {
-            "description": "Key of the Content Version, used as the value for the \"version\" query parameter.",
-            "example": "draft",
-            "type": "string"
-          },
-          "name": {
-            "description": "Descriptive name of the Content Version.",
-            "example": "My Draft",
-            "type": "string"
-          },
-          "collection": {
-            "description": "Name of the collection the Content Version is created on.",
-            "example": "articles",
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/components/schemas/Collections"
-              }
-            ]
-          },
-          "item": {
-            "description": "The item the Content Version is created on.",
-            "example": "168",
-            "type": "string"
-          },
-          "hash": {
-            "nullable": true,
-            "type": "string"
-          },
-          "date_created": {
-            "description": "When the Content Version was created.",
-            "type": "string",
-            "example": "2022-05-11T13:14:52Z",
-            "format": "date-time",
-            "nullable": true
-          },
-          "date_updated": {
-            "description": "When the Content Version was updated.",
-            "type": "string",
-            "example": "2022-05-11T13:14:53Z",
-            "format": "date-time",
-            "nullable": true
-          },
-          "user_created": {
-            "description": "User that created the Content Version.",
-            "example": "63716273-0f29-4648-8a2a-2af2948f6f78",
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/components/schemas/Users"
-              }
-            ]
-          },
-          "user_updated": {
-            "description": "User that updated the Content Version.",
-            "example": "63716273-0f29-4648-8a2a-2af2948f6f78",
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/components/schemas/Users"
-              }
-            ]
-          }
-        },
-        "x-collection": "directus_versions"
-      },
       "Extensions": {
         "type": "object",
         "properties": {
@@ -19964,7 +20110,99 @@
             "format": "timestamp"
           }
         },
-        "x-collection": "directus_sync_id_map"
+        "x-collection": "directus_sync_id_map",
+        "required": [
+          "table",
+          "sync_id",
+          "local_id"
+        ]
+      },
+      "Versions": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Primary key of the Content Version.",
+            "example": "63716273-0f29-4648-8a2a-2af2948f6f78",
+            "type": "string"
+          },
+          "key": {
+            "description": "Key of the Content Version, used as the value for the \"version\" query parameter.",
+            "example": "draft",
+            "type": "string"
+          },
+          "name": {
+            "description": "Descriptive name of the Content Version.",
+            "example": "My Draft",
+            "type": "string"
+          },
+          "collection": {
+            "description": "Name of the collection the Content Version is created on.",
+            "example": "articles",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/components/schemas/Collections"
+              }
+            ]
+          },
+          "item": {
+            "description": "The item the Content Version is created on.",
+            "example": "168",
+            "type": "string"
+          },
+          "hash": {
+            "nullable": true,
+            "type": "string"
+          },
+          "date_created": {
+            "description": "When the Content Version was created.",
+            "type": "string",
+            "example": "2022-05-11T13:14:52Z",
+            "format": "date-time",
+            "nullable": true
+          },
+          "date_updated": {
+            "description": "When the Content Version was last updated.",
+            "type": "string",
+            "example": "2022-05-11T13:14:53Z",
+            "format": "date-time",
+            "nullable": true
+          },
+          "user_created": {
+            "description": "User that created the Content Version.",
+            "example": "63716273-0f29-4648-8a2a-2af2948f6f78",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/components/schemas/Users"
+              }
+            ]
+          },
+          "user_updated": {
+            "description": "User that last updated the Content Version.",
+            "example": "63716273-0f29-4648-8a2a-2af2948f6f78",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/components/schemas/Users"
+              }
+            ]
+          },
+          "delta": {
+            "description": "The current changes compared to the main version of the item.",
+            "example": {
+              "my_field": "Updated Value"
+            },
+            "type": "object"
+          }
+        },
+        "x-collection": "directus_versions"
       },
       "ItemsSettingsHidden": {
         "type": "object",
@@ -20039,7 +20277,10 @@
             }
           }
         },
-        "x-collection": "collectivo_tags"
+        "x-collection": "collectivo_tags",
+        "required": [
+          "tags_name"
+        ]
       },
       "ItemsCollectivoTagsDirectusUsers": {
         "type": "object",
@@ -20148,7 +20389,10 @@
             }
           }
         },
-        "x-collection": "collectivo_tiles"
+        "x-collection": "collectivo_tiles",
+        "required": [
+          "tiles_name"
+        ]
       },
       "ItemsCollectivoTilesButtons": {
         "type": "object",
@@ -20502,7 +20746,11 @@
             ]
           }
         },
-        "x-collection": "memberships_coshoppers"
+        "x-collection": "memberships_coshoppers",
+        "required": [
+          "first_name",
+          "last_name"
+        ]
       },
       "ItemsMembershipsMembershipsCoshoppers": {
         "type": "object",
@@ -20671,7 +20919,10 @@
             "format": "uuid"
           }
         },
-        "x-collection": "messages_templates"
+        "x-collection": "messages_templates",
+        "required": [
+          "messages_name"
+        ]
       },
       "ItemsMessagesCampaigns": {
         "type": "object",
@@ -20833,7 +21084,11 @@
             ]
           }
         },
-        "x-collection": "messages_designs"
+        "x-collection": "messages_designs",
+        "required": [
+          "messages_design_html",
+          "messages_design_name"
+        ]
       },
       "ItemsMessagesMessages": {
         "type": "object",
@@ -20998,7 +21253,10 @@
             ]
           }
         },
-        "x-collection": "mila_automations"
+        "x-collection": "mila_automations",
+        "required": [
+          "mila_key"
+        ]
       },
       "ItemsPaymentsInvoicesOut": {
         "type": "object",
@@ -21233,7 +21491,11 @@
             }
           }
         },
-        "x-collection": "shifts_assignments"
+        "x-collection": "shifts_assignments",
+        "required": [
+          "shifts_from",
+          "shifts_membership"
+        ]
       },
       "ItemsShiftsAbsences": {
         "type": "object",
@@ -21307,7 +21569,12 @@
             "format": "uuid"
           }
         },
-        "x-collection": "shifts_absences"
+        "x-collection": "shifts_absences",
+        "required": [
+          "shifts_from",
+          "shifts_membership",
+          "shifts_to"
+        ]
       },
       "ItemsShiftsShifts": {
         "type": "object",
@@ -21415,7 +21682,10 @@
             "format": "uuid"
           }
         },
-        "x-collection": "shifts_shifts"
+        "x-collection": "shifts_shifts",
+        "required": [
+          "shifts_name"
+        ]
       },
       "ItemsShiftsHolidaysPublic": {
         "type": "object",
@@ -21539,7 +21809,82 @@
             "format": "uuid"
           }
         },
-        "x-collection": "shifts_logs"
+        "x-collection": "shifts_logs",
+        "required": [
+          "shifts_membership",
+          "shifts_type"
+        ]
+      },
+      "Comments": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Unique identifier for this single collection preset.",
+            "example": "81dfa7e0-56d2-471f-b96a-1cf8a62bdf28",
+            "type": "string"
+          },
+          "collection": {
+            "description": "The collection of the item the Comment is created for.",
+            "example": "articles",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/components/schemas/Collections"
+              }
+            ]
+          },
+          "item": {
+            "description": "The item the Comment is created for.",
+            "example": "123",
+            "type": "string"
+          },
+          "comment": {
+            "description": "User comment. This will store the comments that show up in the right sidebar of the item edit page in the admin app.",
+            "example": "This is a comment",
+            "type": "string"
+          },
+          "date_created": {
+            "description": "When the Comment was created.",
+            "type": "string",
+            "example": "2024-01-23T12:34:56Z",
+            "format": "date-time",
+            "nullable": true
+          },
+          "date_updated": {
+            "description": "When the Comment was updated.",
+            "type": "string",
+            "example": "2024-01-23T12:34:56Z",
+            "format": "date-time",
+            "nullable": true
+          },
+          "user_created": {
+            "description": "User that created the Comment.",
+            "example": "81dfa7e0-56d2-471f-b96a-1cf8a62bdf28",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/components/schemas/Users"
+              }
+            ]
+          },
+          "user_updated": {
+            "description": "User that updated the Comment.",
+            "example": "81dfa7e0-56d2-471f-b96a-1cf8a62bdf28",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/components/schemas/Users"
+              }
+            ]
+          }
+        },
+        "x-collection": "directus_comments"
       }
     },
     "parameters": {

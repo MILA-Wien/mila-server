@@ -21,9 +21,9 @@
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Schichten",
+        "plural": "Schichten",
         "singular": "Schicht",
-        "plural": "Schichten"
+        "translation": "Schichten"
       }
     ],
     "unarchive_value": null,
