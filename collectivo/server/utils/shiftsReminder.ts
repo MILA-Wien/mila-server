@@ -9,6 +9,7 @@ import { createItem, readItems, updateItems } from "@directus/sdk";
 import { RRule, RRuleSet } from "rrule";
 
 export async function sendShiftReminders(date: Date) {
+  console.log("Sending shift reminders for (+2)", date.toISOString());
   const automation = await getAutomation("shifts_reminder");
   const assignments = await getAssignments(date);
   await sendRemindersInner(assignments, automation);
@@ -161,7 +162,7 @@ async function getAutomation(name: string) {
 async function sendRemindersInner(occurrences: any[], automation: any) {
   const directus = await useDirectusAdmin();
   const payloads: any[] = [];
-
+  console.log("Found", occurrences.length, "occurrences");
   for (const occ of occurrences) {
     const assignment = occ.assignment.assignment;
 
@@ -198,7 +199,7 @@ async function sendRemindersInner(occurrences: any[], automation: any) {
   }
 
   const campaign_ids = [];
-
+  console.log("Sending", payloads.length, "reminders");
   for (const payload of payloads) {
     const campaign = await directus.request(
       createItem("messages_campaigns", payload, { fields: ["id"] }),
@@ -212,11 +213,11 @@ async function sendRemindersInner(occurrences: any[], automation: any) {
     return;
   }
 
-  await directus.request(
-    updateItems("messages_campaigns", campaign_ids, {
-      messages_campaign_status: "pending",
-    }),
-  );
+  // await directus.request(
+  //   updateItems("messages_campaigns", campaign_ids, {
+  //     messages_campaign_status: "pending",
+  //   }),
+  // );
 }
 
 // Create a RRule object for a shift

@@ -282,7 +282,7 @@ function checkIfMshipInAssignments(mship: number) {
           {{ shift.shifts_name }} <span v-if="isPast">({{ t("past") }})</span>
         </h2>
         <a
-          :href="`${runtimeConfig.public.directusUrl}/admin/content/shifts_shift/${shift.id}`"
+          :href="`${runtimeConfig.public.directusUrl}/admin/content/shifts_shifts/${shift.id}`"
           target="blank"
           class="flex flex-row items-center align-middle text-xs gap-1"
         >
