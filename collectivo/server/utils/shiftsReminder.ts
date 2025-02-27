@@ -5,11 +5,10 @@
  * Requires an active automation with the name "shifts_reminder".
  * Request requires collectivo api token.
  */
-import { createItem, readItems, updateItems } from "@directus/sdk";
+import { createItem, readItems } from "@directus/sdk";
 import { RRule, RRuleSet } from "rrule";
 
 export async function sendShiftReminders(date: Date) {
-  console.log("Sending shift reminders for (+2)", date.toISOString());
   const automation = await getAutomation("shifts_reminder");
   const assignments = await getAssignments(date);
   await sendRemindersInner(assignments, automation);
@@ -19,6 +18,7 @@ async function getAssignments(date: Date) {
   const directus = useDirectusAdmin();
   const targetDate = new Date(date);
   targetDate.setDate(targetDate.getDate() + 2);
+  console.log("Sending shift reminders for", targetDate.toISOString());
   const shifts: ShiftsShift[] = (await directus.request(
     readItems("shifts_shifts", {
       filter: {
@@ -31,6 +31,8 @@ async function getAssignments(date: Date) {
       fields: ["*"],
     }),
   )) as ShiftsShift[];
+
+  console.log("Found", shifts.length, "shifts");
 
   // Get assignments two days ahead
   const assignments = (await directus.request(
@@ -62,6 +64,8 @@ async function getAssignments(date: Date) {
   )) as ShiftsAssignment[];
 
   const assignmentIds = assignments.map((assignment) => assignment.id);
+
+  console.log("Found", assignments.length, "assignments");
 
   const absences = [];
   if (assignmentIds.length) {
@@ -108,14 +112,20 @@ async function getAssignments(date: Date) {
     const filteredAssignments = assignments.filter(
       (assignment) => assignment.shifts_shift === shift.id,
     );
-
+    console.log(
+      "Shift",
+      shift.id,
+      "has",
+      filteredAssignments.length,
+      "assignments",
+    );
     const rules = getAssignmentRrules(
       shift,
       shiftRule,
       filteredAssignments,
       absences,
     );
-
+    console.log("Shift", shift.id, "has", rules.length, "assignment rules");
     assignmentRules.push(...rules);
   }
 
@@ -123,6 +133,13 @@ async function getAssignments(date: Date) {
 
   for (const rule of assignmentRules) {
     const occs = rule.rruleWithAbsences.between(targetDate, targetDate, true);
+    console.log(
+      "Shift",
+      rule.assignment.shifts_shift,
+      "has",
+      occs.length,
+      "occurrences",
+    );
     for (const occ of occs) {
       occurrences.push({
         assignment: rule,
