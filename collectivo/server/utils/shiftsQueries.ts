@@ -13,7 +13,7 @@ export async function getShiftShifts(
     _or: [
       {
         shifts_is_regular: { _eq: false },
-        shifts_from: { _eq: from.toISOString() },
+        shifts_from: { _gte: from.toISOString(), _lte: to.toISOString() },
       },
       {
         shifts_is_regular: { _eq: true },
@@ -48,6 +48,7 @@ export async function getShiftAssignments(
   if (shiftIds.length === 0) {
     return [];
   }
+
   return await directus.request(
     readItems("shifts_assignments", {
       limit: -1,
@@ -55,7 +56,7 @@ export async function getShiftAssignments(
         _or: [
           {
             shifts_is_regular: { _eq: false },
-            shifts_from: { _eq: from.toISOString() },
+            shifts_from: { _gte: from.toISOString(), _lte: to.toISOString() },
           },
           {
             shifts_is_regular: { _eq: true },
