@@ -105,9 +105,6 @@ export async function getShiftAbsences(
     readItems("shifts_absences", {
       limit: -1,
       filter: {
-        shifts_status: {
-          _eq: "accepted",
-        },
         _or: [
           { shifts_to: { _gte: from.toISOString() } },
           { shifts_from: { _lte: to.toISOString() } },

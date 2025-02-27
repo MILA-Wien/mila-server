@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { createItem } from "@directus/sdk";
 
+const MIN_DAYS_BEFORE_HOLIDAY = 2;
 const isOpen = defineModel<boolean>();
 const absenceFromDate = ref<Date | undefined>(undefined);
 const absenceToDate = ref<Date | undefined>(undefined);
@@ -31,11 +32,16 @@ async function postAbsenceInner() {
     return;
   }
 
-  if (absenceFromDate.value < new Date()) {
+  const minStartDate = new Date();
+  minStartDate.setDate(minStartDate.getDate() + MIN_DAYS_BEFORE_HOLIDAY);
+
+  if (absenceFromDate.value < minStartDate) {
     showToast({
       type: "error",
       title: "Error",
-      description: t("Absence must start in the future."),
+      description: t(
+        `Absence must start at least ${MIN_DAYS_BEFORE_HOLIDAY} days from today.`,
+      ),
     });
     return;
   }
@@ -73,15 +79,22 @@ function closeModal() {
 
 <template>
   <UModal v-model="isOpen">
-    <div v-if="success === true" class="p-10 flex flex-col gap-3">
-      <h2>{{ t("Holiday request submitted") }}</h2>
-      <p>{{ t("We will inform you when your request is accepted.") }}</p>
+    <div v-if="success === true" class="p-10 flex flex-col">
+      <h2>{{ t("Request holiday") }}</h2>
+      <div class="flex flex-wrap items-center gap-3 pb-3">
+        <UIcon
+          name="i-heroicons-check-circle-16-solid"
+          class="text-green-500 w-16 h-16"
+        />
+        <p>{{ t("Holiday submitted successfully.") }}</p>
+      </div>
       <UButton class="w-full" @click="closeModal">
         {{ t("Close") }}
       </UButton>
     </div>
     <div v-else-if="success === false" class="p-10 flex flex-col gap-3">
-      <h2>{{ t("Something went wrong") }}</h2>
+      <h2 class="mb-5">{{ t("Request holiday") }}</h2>
+      <p>{{ t("Something went wrong") }}</p>
       <p>{{ t("Please try again later or contact us.") }}</p>
       <UButton class="w-full" @click="closeModal">
         {{ t("Close") }}
@@ -118,3 +131,8 @@ function closeModal() {
     </div>
   </UModal>
 </template>
+
+<i18n lang="yaml">
+de:
+  "Holiday submitted successfully.": "Urlaub erfolgreich eingereicht."
+</i18n>

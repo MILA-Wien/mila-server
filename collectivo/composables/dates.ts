@@ -1,5 +1,9 @@
 import { DateTime } from "luxon";
 
+export function dateWithinTimeSpan(date: string, span: number) {
+  return DateTime.fromISO(date) >= DateTime.now().plus({ days: span });
+}
+
 // Always start of the day, in UTC
 export function getCurrentDate() {
   const now = new Date();

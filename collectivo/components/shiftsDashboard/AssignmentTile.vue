@@ -3,9 +3,12 @@ import { createItem } from "@directus/sdk";
 import { DateTime } from "luxon";
 import { parse } from "marked";
 
+const MAX_DAYS_TO_SIGN_OUT_BEFORE = 2;
+
 const { t, locale } = useI18n();
 const directus = useDirectus();
 const signOutModalIsOpen = ref(false);
+
 const props = defineProps({
   shiftAssignment: {
     type: Object as PropType<ShiftsAssignmentRules>,
@@ -14,12 +17,11 @@ const props = defineProps({
 });
 
 // This is the next occurence of the assignment, not the shift itself!
-const nextOccurrence = props.shiftAssignment.nextOccurrence as String;
-const nextOccurrenceAbsent = props.shiftAssignment
-  .nextOccurrenceAbsent as Boolean;
-const assignment = props.shiftAssignment.assignment as ShiftsAssignment;
-const absences = props.shiftAssignment.absences as ShiftsAbsence[];
-const coworkers = props.shiftAssignment.coworkers as String[];
+const ass = props.shiftAssignment;
+const nextOccurrence = ass.nextOccurrence as String;
+const nextOccurrenceAbsent = ass.nextOccurrenceAbsent as Boolean;
+const assignment = ass.assignment as ShiftsAssignment;
+const coworkers = ass.coworkers as String[];
 const shift = assignment.shifts_shift as ShiftsShift;
 const user = useCurrentUser();
 const emit = defineEmits(["reload"]);
@@ -64,8 +66,8 @@ function getColor() {
 <template>
   <div v-if="nextOccurrence">
     <CollectivoCard :color="getColor()">
-      <div class="flex flex-row justify-between items-start">
-        <div class="flex-1">
+      <div class="flex flex-wrap justify-between items-start">
+        <div class="flex-1 min-w-60">
           <h4>
             {{
               getDateTimeWithTimeSpanString(shift, nextOccurrence, locale, t)
@@ -119,7 +121,10 @@ function getColor() {
 
     <!-- Signout Modal -->
     <UModal v-model="signOutModalIsOpen">
-      <div class="p-8 flex flex-col gap-2">
+      <div
+        class="p-8 flex flex-col gap-2"
+        v-if="dateWithinTimeSpan(nextOccurrence, MAX_DAYS_TO_SIGN_OUT_BEFORE)"
+      >
         <h2>{{ t("Shift Sign-Out") }}</h2>
 
         <p>{{ t("Sign out from the following shift") }}:</p>
@@ -134,6 +139,15 @@ function getColor() {
             t("Sign out")
           }}</UButton>
         </div>
+      </div>
+      <div v-else class="p-8 flex flex-col gap-2">
+        <h2>{{ t("Shift Sign-Out") }}</h2>
+        <p>
+          {{
+            t("Sign-out is not possible anymore. Please contact the office.")
+          }}
+        </p>
+        <UButton size="sm" to="help">{{ t("Contact") }}</UButton>
       </div>
     </UModal>
   </div>
@@ -155,4 +169,6 @@ de:
   "Sign out from the following shift": "Von folgender Schicht abmelden"
   "Registered": "Angemeldet"
   "[name hidden]": "[Name verborgen]"
+  "Contact": "Kontakt"
+  "Sign-out is not possible anymore. Please contact the office.": "Abmeldung ist nicht mehr möglich. Bitte kontaktiere das Mitgliederbüro."
 </i18n>

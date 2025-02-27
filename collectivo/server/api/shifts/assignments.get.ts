@@ -59,10 +59,7 @@ export const getUserAssignments = async (mship: number) => {
   for (const absence of absences) {
     if (absence.shifts_is_holiday) {
       holidays.push(absence);
-      if (
-        new Date(absence.shifts_from) <= new Date(nowStr) &&
-        absence.shifts_status === "accepted"
-      ) {
+      if (new Date(absence.shifts_from) <= new Date(nowStr)) {
         holidaysCurrent.push(absence);
       }
     }
@@ -95,9 +92,8 @@ export const getUserAssignments = async (mship: number) => {
     assignments.map(async (assignment) => {
       const filteredAbsences = absences.filter(
         (absence) =>
-          (absence.shifts_assignment == assignment.id ||
-            absence.shifts_assignment == null) &&
-          absence.shifts_status == "accepted",
+          absence.shifts_assignment == assignment.id ||
+          absence.shifts_assignment == null,
       );
 
       const rules = getAssignmentRRule(
@@ -127,6 +123,7 @@ export const getUserAssignments = async (mship: number) => {
           const asss = occs.occurrences[0].assignments;
           for (const a of asss) {
             const u = a.assignment.shifts_membership.memberships_user;
+
             if (a.isSelf) continue;
             names.push(u.first_name + " " + u.last_name);
           }

@@ -123,7 +123,7 @@ if (isActive) loadData();
         block
         icon="i-heroicons-pause-circle"
         @click="absencePostModalOpen = true"
-        >{{ t("Request vacation") }}</UButton
+        >{{ t("Submit holiday") }}</UButton
       >
       <NuxtLink to="/help" class="flex-1">
         <UButton
@@ -154,7 +154,6 @@ if (isActive) loadData();
     <div v-if="holidaysAll.length" class="mb-12">
       <h2>{{ t("My holidays") }}</h2>
       <div>
-        <!-- <p>{{ t("t:holiday") }}</p> -->
         <div class="flex flex-col gap-4 my-4">
           <CollectivoCard
             v-for="absence in holidaysAll"
@@ -171,7 +170,6 @@ if (isActive) loadData();
                 )
               }}
             </h4>
-            <div>{{ t("Status") }}: {{ t(absence.shifts_status) }}</div>
             <div v-if="!absence.shifts_is_for_all_assignments">
               {{ t("Info") }}:
               {{ t("This absence affects only the shift") }}
@@ -221,4 +219,5 @@ de:
   "My status": "Mein Status"
   "Shifts Overview": "Schichten Übersicht"
   "Register shift": "Schicht anmelden"
+  "Submit holiday": "Urlaub einreichen"
 </i18n>
