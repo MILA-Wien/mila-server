@@ -54,7 +54,6 @@ services:
       - default
     volumes:
       - ./directus/uploads:/directus/uploads
-      - ./directus/extensions:/directus/extensions
     restart: unless-stopped
     environment:
       PUBLIC_URL: ${DIRECTUS_URL}
