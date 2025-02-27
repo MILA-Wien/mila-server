@@ -115,23 +115,39 @@ export const getUserAssignments = async (mship: number) => {
       if (nextOccurence) {
         secondNextOccurence = assignmentRule.after(nextOccurence);
 
-        // Get other assignments for this occurrence
-        const otherAssignments = await getShiftAssignments(
+        const occs = await getShiftOccurrences(
+          nextOccurence,
+          nextOccurence,
+          false,
           assignment.shifts_shift.id,
-          nextOccurence,
-          nextOccurence,
+          mship,
         );
 
-        for (const a of otherAssignments) {
-          const mship1 = a.shifts_membership;
-          const user = mship1.memberships_user;
-          if (mship1.id == mship) continue;
-          names.push(
-            !user.hide_name
-              ? `${user.first_name} ${user.last_name}`
-              : "Anonymous",
-          );
+        if (occs.occurrences.length > 0) {
+          const asss = occs.occurrences[0].assignments;
+          for (const a of asss) {
+            const u = a.assignment.shifts_membership.memberships_user;
+            if (a.isSelf) continue;
+            names.push(u.first_name + " " + u.last_name);
+          }
         }
+        // Get other assignments for this occurrence
+        // const otherAssignments = await getShiftAssignments(
+        //   assignment.shifts_shift.id,
+        //   nextOccurence,
+        //   nextOccurence,
+        // );
+
+        // for (const a of otherAssignments) {
+        //   const mship1 = a.shifts_membership;
+        //   const user = mship1.memberships_user;
+        //   if (mship1.id == mship) continue;
+        //   names.push(
+        //     !user.hide_name
+        //       ? `${user.first_name} ${user.last_name}`
+        //       : "Anonymous",
+        //   );
+        // }
 
         // Solve absences here
         if (absencesRule) {

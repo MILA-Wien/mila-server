@@ -240,8 +240,7 @@ declare global {
     absences: ShiftsAbsence[];
     isOneTime?: boolean;
     isActive?: boolean;
-    logged?: boolean;
-    removed?: boolean;
+    isSelf?: boolean;
   }
 
   // Layout

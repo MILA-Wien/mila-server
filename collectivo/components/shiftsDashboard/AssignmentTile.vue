@@ -89,9 +89,9 @@ function getColor() {
 
           <!-- Shift coworkers -->
           <p v-if="coworkers.length > 0">
-            {{ t("Coworkers") }}:
+            {{ t("Registered") }}:
             <span v-for="(item, index) in coworkers" :key="index">
-              {{ item === "Anonymous" ? t("[name hidden]") : item
+              {{ item === " " ? t("[name hidden]") : item
               }}<span v-if="index < coworkers.length - 1">, </span>
             </span>
           </p>
@@ -153,6 +153,6 @@ de:
   "Sign out": "Abmelden"
   "Shift Sign-Out": "Schicht Abmeldung"
   "Sign out from the following shift": "Von folgender Schicht abmelden"
-  "Coworkers": "Kolleg*innen"
+  "Registered": "Angemeldet"
   "[name hidden]": "[Name verborgen]"
 </i18n>
