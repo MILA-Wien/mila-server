@@ -21,15 +21,15 @@
     "translations": [
       {
         "language": "en-US",
-        "translation": "Tile Buttons",
+        "plural": "Tile Buttons",
         "singular": "Tile Button",
-        "plural": "Tile Buttons"
+        "translation": "Tile Buttons"
       },
       {
         "language": "de-DE",
-        "translation": "Kachel Buttons",
+        "plural": "Kachel Buttons",
         "singular": "Kachel Button",
-        "plural": "Kachel Buttons"
+        "translation": "Kachel Buttons"
       }
     ],
     "unarchive_value": null,

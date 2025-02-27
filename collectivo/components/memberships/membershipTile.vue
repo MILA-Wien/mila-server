@@ -23,6 +23,10 @@ const user = useCurrentUser();
         Deine Mitgliedsart ist:
         <span class="font-bold">{{ user.membership.memberships_type }}</span>
       </p>
+      <p>
+        Genossenschafts-Anteile:
+        <span class="font-bold">{{ user.membership.memberships_shares }}</span>
+      </p>
     </div>
     <div v-else-if="user.membership?.memberships_status === 'applied'">
       <p>Dein Beitrittsantrag wird gerade bearbeitet.</p>

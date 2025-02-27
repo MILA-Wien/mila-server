@@ -21,9 +21,9 @@
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Automatisierungen",
+        "plural": "Automatisierungen",
         "singular": "Automatisierung",
-        "plural": "Automatisierungen"
+        "translation": "Automatisierungen"
       }
     ],
     "unarchive_value": null,

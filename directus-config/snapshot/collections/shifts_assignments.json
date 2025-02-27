@@ -21,9 +21,9 @@
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Anmeldungen",
+        "plural": "Anmeldungen",
         "singular": "Anmeldung",
-        "plural": "Anmeldungen"
+        "translation": "Anmeldungen"
       }
     ],
     "unarchive_value": null,

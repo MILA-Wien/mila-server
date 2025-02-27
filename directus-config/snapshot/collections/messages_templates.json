@@ -21,15 +21,15 @@
     "translations": [
       {
         "language": "en-US",
-        "translation": "Templates",
+        "plural": "Templates",
         "singular": "Template",
-        "plural": "Templates"
+        "translation": "Templates"
       },
       {
         "language": "de-DE",
-        "translation": "Vorlagen",
+        "plural": "Vorlagen",
         "singular": "Vorlage",
-        "plural": "Vorlagen"
+        "translation": "Vorlagen"
       }
     ],
     "unarchive_value": null,

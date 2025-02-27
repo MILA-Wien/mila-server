@@ -23,20 +23,6 @@
     "name": "Skript ausführen",
     "key": "automation_name",
     "type": "exec",
-    "position_x": 19,
-    "position_y": 1,
-    "options": {
-      "code": "module.exports = async function(data) {\n    if (data[\"$trigger\"].payload.shifts_status==\"accepted\") {\n        return {\"automation_name\":\"shifts_absence_accepted\"};\n    }\n    if (data[\"$trigger\"].payload.shifts_status==\"denied\") {\n        return {\"automation_name\":\"shifts_absence_denied\"};\n    }\n\t\n    throw new Error(\"Only for status changes\")\n}"
-    },
-    "resolve": "d77f14d0-af63-48d8-9a6e-04978f3bcdd3",
-    "reject": null,
-    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
-    "_syncId": "cb8ea7e4-d20a-4466-af9c-d5e59bae36a6"
-  },
-  {
-    "name": "Skript ausführen",
-    "key": "automation_name",
-    "type": "exec",
     "position_x": 8,
     "position_y": 54,
     "options": {
@@ -46,6 +32,20 @@
     "reject": null,
     "flow": "4132f37d-df4d-4d17-ae4f-f048b8a74af5",
     "_syncId": "b72ff107-a5c3-452a-bd54-9179161c97b6"
+  },
+  {
+    "name": "Skript ausführen",
+    "key": "automation_name",
+    "type": "exec",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "code": "module.exports = async function(data) {\n    if (data[\"$trigger\"].payload.shifts_status==\"accepted\") {\n        return {\"automation_name\":\"shifts_absence_accepted\"};\n    }\n    if (data[\"$trigger\"].payload.shifts_status==\"denied\") {\n        return {\"automation_name\":\"shifts_absence_denied\"};\n    }\n\t\n    throw new Error(\"Only for status changes\")\n}"
+    },
+    "resolve": "d77f14d0-af63-48d8-9a6e-04978f3bcdd3",
+    "reject": null,
+    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
+    "_syncId": "cb8ea7e4-d20a-4466-af9c-d5e59bae36a6"
   },
   {
     "name": "calcShares",
@@ -1461,20 +1461,6 @@
     "name": "User ids",
     "key": "user_ids",
     "type": "exec",
-    "position_x": 22,
-    "position_y": 19,
-    "options": {
-      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_invoices\"]) {\n    \tid = data[\"read_invoices\"][i].payments_recipient_user\n        if (id) {\n            user_ids.push(id)\n        }\n    }\n    \n\treturn { user_ids };\n}"
-    },
-    "resolve": "91166d55-508c-40f2-ac22-405e25ec647b",
-    "reject": null,
-    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
-    "_syncId": "4bb7b88f-e8cc-4b46-b7ed-a075b3cd334b"
-  },
-  {
-    "name": "User ids",
-    "key": "user_ids",
-    "type": "exec",
     "position_x": 21,
     "position_y": 18,
     "options": {
@@ -1498,5 +1484,19 @@
     "reject": null,
     "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
     "_syncId": "204eeadb-0643-4626-8f35-a4fea89e5d65"
+  },
+  {
+    "name": "User ids",
+    "key": "user_ids",
+    "type": "exec",
+    "position_x": 22,
+    "position_y": 19,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_invoices\"]) {\n    \tid = data[\"read_invoices\"][i].payments_recipient_user\n        if (id) {\n            user_ids.push(id)\n        }\n    }\n    \n\treturn { user_ids };\n}"
+    },
+    "resolve": "91166d55-508c-40f2-ac22-405e25ec647b",
+    "reject": null,
+    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
+    "_syncId": "4bb7b88f-e8cc-4b46-b7ed-a075b3cd334b"
   }
 ]

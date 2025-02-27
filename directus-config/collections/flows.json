@@ -64,7 +64,7 @@
     "icon": "outgoing_mail",
     "color": "#E35169",
     "description": null,
-    "status": "active",
+    "status": "inactive",
     "trigger": "event",
     "accountability": "all",
     "options": {

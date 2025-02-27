@@ -158,7 +158,6 @@ declare global {
 
   interface ShiftsAbsence {
     id?: number;
-    shifts_status: string;
     shifts_from: string;
     shifts_to: string;
     shifts_assignment?: number | ShiftsAssignment;
@@ -240,8 +239,7 @@ declare global {
     absences: ShiftsAbsence[];
     isOneTime?: boolean;
     isActive?: boolean;
-    logged?: boolean;
-    removed?: boolean;
+    isSelf?: boolean;
   }
 
   // Layout

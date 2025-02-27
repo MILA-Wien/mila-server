@@ -21,15 +21,15 @@
     "translations": [
       {
         "language": "en-US",
-        "translation": "Campaigns",
+        "plural": "Campaigns",
         "singular": "Campaign",
-        "plural": "Campaigns"
+        "translation": "Campaigns"
       },
       {
         "language": "de-DE",
-        "translation": "Kampagnen",
+        "plural": "Kampagnen",
         "singular": "Kampagne",
-        "plural": "Kampagnen"
+        "translation": "Kampagnen"
       }
     ],
     "unarchive_value": null,

@@ -10,10 +10,20 @@ export async function getShiftShifts(
   shiftID?: number,
 ): Promise<ShiftsShift[]> {
   const filter: QueryFilter<DbSchema, ShiftsShift> = {
-    shifts_to: {
-      _or: [{ _gte: from.toISOString() }, { _null: true }],
-    },
-    shifts_from: { _lte: to.toISOString() },
+    _or: [
+      {
+        shifts_is_regular: { _eq: false },
+        shifts_from: { _gte: from.toISOString(), _lte: to.toISOString() },
+      },
+      {
+        shifts_is_regular: { _eq: true },
+        shifts_to: {
+          _or: [{ _gte: from.toISOString() }, { _null: true }],
+        },
+        shifts_from: { _lte: to.toISOString() },
+      },
+    ],
+
     shifts_status: { _eq: "published" },
   };
   if (shiftID) {
@@ -38,14 +48,24 @@ export async function getShiftAssignments(
   if (shiftIds.length === 0) {
     return [];
   }
+
   return await directus.request(
     readItems("shifts_assignments", {
       limit: -1,
       filter: {
-        shifts_to: {
-          _or: [{ _gte: from.toISOString() }, { _null: true }],
-        },
-        shifts_from: { _lte: to.toISOString() },
+        _or: [
+          {
+            shifts_is_regular: { _eq: false },
+            shifts_from: { _gte: from.toISOString(), _lte: to.toISOString() },
+          },
+          {
+            shifts_is_regular: { _eq: true },
+            shifts_to: {
+              _or: [{ _gte: from.toISOString() }, { _null: true }],
+            },
+            shifts_from: { _lte: to.toISOString() },
+          },
+        ],
         shifts_shift: {
           _in: shiftIds,
         },
@@ -57,6 +77,7 @@ export async function getShiftAssignments(
         "shifts_shift",
         "shifts_is_regular",
         "shifts_is_coordination",
+        "send_reminders",
         {
           shifts_membership: [
             "id",
@@ -84,9 +105,6 @@ export async function getShiftAbsences(
     readItems("shifts_absences", {
       limit: -1,
       filter: {
-        shifts_status: {
-          _eq: "accepted",
-        },
         _or: [
           { shifts_to: { _gte: from.toISOString() } },
           { shifts_from: { _lte: to.toISOString() } },
@@ -210,6 +228,7 @@ export const getAssignmentRrules = (
     }
 
     assignmentRules.push({
+      shift: shift,
       assignment: assignment,
       absences: absenceRrules,
       rrule: assRrule,

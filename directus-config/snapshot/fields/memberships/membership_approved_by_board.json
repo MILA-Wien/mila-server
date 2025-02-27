@@ -1,30 +1,28 @@
 {
-  "collection": "directus_users",
-  "field": "payments_account_owner",
-  "type": "string",
+  "collection": "memberships",
+  "field": "membership_approved_by_board",
+  "type": "boolean",
   "meta": {
-    "collection": "directus_users",
+    "collection": "memberships",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "payments_account_owner",
-    "group": "payments_profile_group",
+    "field": "membership_approved_by_board",
+    "group": "membership_group",
     "hidden": false,
-    "interface": "input",
+    "interface": "boolean",
     "note": null,
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 3,
-    "special": null,
+    "sort": 11,
+    "special": [
+      "cast-boolean"
+    ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Konto Inhaber*in"
-      },
-      {
-        "language": "en-US",
-        "translation": "Account Owner"
+        "translation": "Vom Vorstand aufgenommen?"
       }
     ],
     "validation": null,
@@ -32,11 +30,11 @@
     "width": "half"
   },
   "schema": {
-    "name": "payments_account_owner",
-    "table": "directus_users",
-    "data_type": "character varying",
-    "default_value": null,
-    "max_length": 255,
+    "name": "membership_approved_by_board",
+    "table": "memberships",
+    "data_type": "boolean",
+    "default_value": false,
+    "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
     "is_nullable": true,

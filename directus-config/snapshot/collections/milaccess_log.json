@@ -21,9 +21,9 @@
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Logs Empfang",
+        "plural": "Logs Empfang",
         "singular": "Log Empfang",
-        "plural": "Logs Empfang"
+        "translation": "Logs Empfang"
       }
     ],
     "unarchive_value": null,

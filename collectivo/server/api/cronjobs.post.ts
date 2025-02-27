@@ -42,7 +42,12 @@ async function runCronjobs() {
   for (const date of dates_since_last_cronjob) {
     const holidays = await getActiveHolidays(date);
     await create_shift_logs(date, date, holidays, settings);
-    await sendShiftReminders(date);
+    try {
+      await sendShiftReminders(date);
+    } catch (e) {
+      console.error("Error in sendShiftReminders", e);
+    }
+
     if (settings.shift_point_system) {
       await decrement_shifts_counter(holidays);
     }

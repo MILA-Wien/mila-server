@@ -9,22 +9,22 @@
     "display_options": {
       "choices": [
         {
+          "background": "#CC6600",
+          "foreground": "#FFFFFF",
           "text": "$t:pending",
-          "value": "pending",
-          "foreground": "#FFFFFF",
-          "background": "#CC6600"
+          "value": "pending"
         },
         {
+          "background": "#800000",
+          "foreground": "#FFFFFF",
           "text": "$t:failed",
-          "value": "failed",
-          "foreground": "#FFFFFF",
-          "background": "#800000"
+          "value": "failed"
         },
         {
-          "text": "$t:sent",
-          "value": "sent",
+          "background": "#008000",
           "foreground": "#FFFFFF",
-          "background": "#008000"
+          "text": "$t:sent",
+          "value": "sent"
         }
       ]
     },
@@ -77,6 +77,7 @@
     "numeric_scale": null,
     "is_nullable": false,
     "is_unique": false,
+    "is_indexed": false,
     "is_primary_key": false,
     "is_generated": false,
     "generation_expression": null,

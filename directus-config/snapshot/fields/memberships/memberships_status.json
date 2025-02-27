@@ -9,34 +9,34 @@
     "display_options": {
       "choices": [
         {
+          "background": "#2CB3A5",
+          "foreground": "#FFFFFF",
           "text": "$t:approved",
-          "value": "approved",
-          "foreground": "#FFFFFF",
-          "background": "#2CB3A5"
+          "value": "approved"
         },
         {
+          "background": "#aa4abc",
+          "foreground": "#FFFFFF",
           "text": "$t:applied",
-          "value": "applied",
-          "foreground": "#FFFFFF",
-          "background": "#aa4abc"
+          "value": "applied"
         },
         {
+          "background": "#d94c4c",
+          "foreground": "#FFFFFF",
           "text": "$t:in-cancellation",
-          "value": "in-cancellation",
-          "foreground": "#FFFFFF",
-          "background": "#d94c4c"
+          "value": "in-cancellation"
         },
         {
+          "background": "#d94c4c",
+          "foreground": "#FFFFFF",
           "text": "$t:in-exclusion",
-          "value": "in-exclusion",
-          "foreground": "#FFFFFF",
-          "background": "#d94c4c"
+          "value": "in-exclusion"
         },
         {
-          "text": "$t:ended",
-          "value": "ended",
+          "background": "#d94c4c",
           "foreground": "#FFFFFF",
-          "background": "#d94c4c"
+          "text": "$t:ended",
+          "value": "ended"
         }
       ]
     },
@@ -93,6 +93,7 @@
     "numeric_scale": null,
     "is_nullable": false,
     "is_unique": false,
+    "is_indexed": false,
     "is_primary_key": false,
     "is_generated": false,
     "generation_expression": null,

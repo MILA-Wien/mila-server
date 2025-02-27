@@ -15,24 +15,24 @@
     "options": {
       "choices": [
         {
+          "color": "#A2B5CD",
           "text": "Entwurf",
-          "value": "attended_draft",
-          "color": "#A2B5CD"
+          "value": "attended_draft"
         },
         {
+          "color": "#2ECDA7",
           "text": "Schicht absolviert",
-          "value": "attended",
-          "color": "#2ECDA7"
+          "value": "attended"
         },
         {
+          "color": "#E35169",
           "text": "Schicht verpasst",
-          "value": "missed",
-          "color": "#E35169"
+          "value": "missed"
         },
         {
+          "color": "#3399FF",
           "text": "Anderes",
-          "value": "other",
-          "color": "#3399FF"
+          "value": "other"
         }
       ]
     },
@@ -60,6 +60,7 @@
     "numeric_scale": null,
     "is_nullable": false,
     "is_unique": false,
+    "is_indexed": false,
     "is_primary_key": false,
     "is_generated": false,
     "generation_expression": null,

@@ -5,7 +5,7 @@ export const getShiftOccurrences = async (
   to: Date,
   admin: boolean = false,
   shiftID?: number,
-  mship?: number,
+  mship?: number, // This is only used for self-assigned
 ) => {
   // Get shifts within timeframe
   const shifts = await getShiftShifts(from, to, shiftID);
@@ -107,6 +107,7 @@ const createShiftOccurrence = (
       const occ: AssignmentOccurrence = {
         assignment: ass.assignment,
         isOneTime: !ass.assignment.shifts_is_regular,
+        isSelf: false,
         absences: [],
       };
 
@@ -130,6 +131,7 @@ const createShiftOccurrence = (
           occ.assignment.shifts_membership == mship
         ) {
           selfAssigned = true;
+          occ.isSelf = true;
         }
       }
       assignments.push(occ);
