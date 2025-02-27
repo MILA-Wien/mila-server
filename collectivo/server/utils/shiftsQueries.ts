@@ -10,10 +10,19 @@ export async function getShiftShifts(
   shiftID?: number,
 ): Promise<ShiftsShift[]> {
   const filter: QueryFilter<DbSchema, ShiftsShift> = {
-    shifts_to: {
-      _or: [{ _gte: from.toISOString() }, { _null: true }],
-    },
-    shifts_from: { _lte: to.toISOString() },
+    _or: [
+      {
+        shifts_is_regular: { _eq: false },
+        shifts_from: { _eq: from.toISOString() },
+      },
+      {
+        shifts_to: {
+          _or: [{ _gte: from.toISOString() }, { _null: true }],
+        },
+        shifts_from: { _lte: to.toISOString() },
+      },
+    ],
+
     shifts_status: { _eq: "published" },
   };
   if (shiftID) {
@@ -42,10 +51,18 @@ export async function getShiftAssignments(
     readItems("shifts_assignments", {
       limit: -1,
       filter: {
-        shifts_to: {
-          _or: [{ _gte: from.toISOString() }, { _null: true }],
-        },
-        shifts_from: { _lte: to.toISOString() },
+        _or: [
+          {
+            shifts_is_regular: { _eq: false },
+            shifts_from: { _eq: from.toISOString() },
+          },
+          {
+            shifts_to: {
+              _or: [{ _gte: from.toISOString() }, { _null: true }],
+            },
+            shifts_from: { _lte: to.toISOString() },
+          },
+        ],
         shifts_shift: {
           _in: shiftIds,
         },
@@ -57,6 +74,7 @@ export async function getShiftAssignments(
         "shifts_shift",
         "shifts_is_regular",
         "shifts_is_coordination",
+        "send_reminders",
         {
           shifts_membership: [
             "id",

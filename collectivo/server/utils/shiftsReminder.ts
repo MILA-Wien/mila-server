@@ -19,49 +19,16 @@ async function getAssignments(date: Date) {
   const targetDate = new Date(date);
   targetDate.setDate(targetDate.getDate() + 2);
   console.log("Sending shift reminders for", targetDate.toISOString());
-  const shifts: ShiftsShift[] = (await directus.request(
-    readItems("shifts_shifts", {
-      filter: {
-        shifts_to: {
-          _or: [{ _gte: targetDate }, { _null: true }],
-        },
-        shifts_from: { _lte: targetDate },
-        shifts_status: { _eq: "published" },
-      },
-      fields: ["*"],
-    }),
-  )) as ShiftsShift[];
-
+  const shifts: ShiftsShift[] = await getShiftShifts(targetDate, targetDate);
+  const shiftIds = shifts.map((shift) => shift.id);
   console.log("Found", shifts.length, "shifts");
 
   // Get assignments two days ahead
-  const assignments = (await directus.request(
-    readItems("shifts_assignments", {
-      filter: {
-        shifts_to: {
-          _or: [{ _gte: targetDate }, { _null: true }],
-        },
-        shifts_from: { _lte: targetDate },
-      },
-      fields: [
-        "id",
-        "shifts_from",
-        "shifts_to",
-        "shifts_shift",
-        "shifts_is_regular",
-        "shifts_is_coordination",
-        "send_reminders",
-        {
-          shifts_membership: [
-            "id",
-            {
-              memberships_user: ["id", "first_name", "last_name", "email"],
-            },
-          ],
-        },
-      ],
-    }),
-  )) as ShiftsAssignment[];
+  const assignments = await getShiftAssignments(
+    shiftIds,
+    targetDate,
+    targetDate,
+  );
 
   const assignmentIds = assignments.map((assignment) => assignment.id);
 
@@ -112,20 +79,20 @@ async function getAssignments(date: Date) {
     const filteredAssignments = assignments.filter(
       (assignment) => assignment.shifts_shift === shift.id,
     );
-    console.log(
-      "Shift",
-      shift.id,
-      "has",
-      filteredAssignments.length,
-      "assignments",
-    );
+    // console.log(
+    //   "Shift",
+    //   shift.id,
+    //   "has",
+    //   filteredAssignments.length,
+    //   "assignments",
+    // );
     const rules = getAssignmentRrules(
       shift,
       shiftRule,
       filteredAssignments,
       absences,
     );
-    console.log("Shift", shift.id, "has", rules.length, "assignment rules");
+    // console.log("Shift", shift.id, "has", rules.length, "assignment rules");
     assignmentRules.push(...rules);
   }
 
@@ -133,13 +100,13 @@ async function getAssignments(date: Date) {
 
   for (const rule of assignmentRules) {
     const occs = rule.rruleWithAbsences.between(targetDate, targetDate, true);
-    console.log(
-      "Shift",
-      rule.assignment.shifts_shift,
-      "has",
-      occs.length,
-      "occurrences",
-    );
+    // console.log(
+    //   "Shift",
+    //   rule.assignment.shifts_shift,
+    //   "has",
+    //   occs.length,
+    //   "occurrences",
+    // );
     for (const occ of occs) {
       occurrences.push({
         assignment: rule,
