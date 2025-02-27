@@ -2,10 +2,10 @@
 definePageMeta({
   middleware: ["auth"],
 });
-
-setPageTitle("Profile");
-const toast = useToast();
 const { t } = useI18n();
+setPageTitle(t("Profile"));
+const toast = useToast();
+
 const user = useCurrentUser();
 
 const is_legal_profile = [
