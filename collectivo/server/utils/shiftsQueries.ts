@@ -230,6 +230,7 @@ export const getAssignmentRrules = (
     }
 
     assignmentRules.push({
+      shift: shift,
       assignment: assignment,
       absences: absenceRrules,
       rrule: assRrule,

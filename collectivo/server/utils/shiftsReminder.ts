@@ -5,7 +5,6 @@
  * Requires an active automation with the name "shifts_reminder".
  */
 import { createItem, readItems, updateItems } from "@directus/sdk";
-import { RRule, RRuleSet } from "rrule";
 
 export async function sendShiftReminders(date: Date) {
   const automation = await getAutomation("shifts_reminder");
@@ -152,6 +151,7 @@ async function sendRemindersInner(occurrences: any[], automation: any) {
   }
 
   const campaign_ids = [];
+  console.log("Sending reminders", payloads.length);
 
   for (const payload of payloads) {
     const campaign = await directus.request(
@@ -172,104 +172,3 @@ async function sendRemindersInner(occurrences: any[], automation: any) {
     }),
   );
 }
-
-// Create a RRule object for a shift
-// Shifts without end date run forever
-// Shifts without repetition run once
-// Dates are with T=00:00:00 UTC
-const getShiftRrule = (
-  shift: ShiftsShift,
-  publicHolidays?: ShiftsPublicHoliday[],
-): RRule => {
-  const rruleSet = new RRuleSet();
-
-  const mainShiftRule = new RRule({
-    freq: RRule.DAILY,
-    interval: shift.shifts_repeats_every,
-    count: shift.shifts_is_regular ? null : 1,
-    dtstart: new Date(shift.shifts_from),
-    until: shift.shifts_is_regular
-      ? shift.shifts_to
-        ? new Date(shift.shifts_to)
-        : null
-      : new Date(shift.shifts_from),
-  });
-
-  rruleSet.rrule(mainShiftRule);
-
-  // Exclude public holidays
-  if (shift.exclude_public_holidays) {
-    for (const holiday of publicHolidays ?? []) {
-      const holidayRule = new RRule({
-        freq: RRule.DAILY,
-        interval: 1,
-        dtstart: new Date(holiday.date),
-        until: new Date(holiday.date),
-      });
-      rruleSet.exrule(holidayRule);
-    }
-  }
-  return rruleSet;
-};
-
-// SlotRrule is a RRuleSet that shows only free occurences
-// Occurences with existing assignments are excluded
-const getAssignmentRrules = (
-  shift: ShiftsShift,
-  shiftRule: RRule,
-  assignments: ShiftsAssignment[],
-  absences: ShiftsAbsence[],
-): AssignmentRrule[] => {
-  const assignmentRules: AssignmentRrule[] = [];
-
-  for (const assignment of assignments) {
-    const assRrule = new RRuleSet();
-    const assRruleWithAbs = new RRuleSet();
-
-    const mainRule = new RRule({
-      freq: RRule.DAILY,
-      interval: shift.shifts_repeats_every,
-      dtstart: shiftRule.after(new Date(assignment.shifts_from), true),
-      until: assignment.shifts_is_regular
-        ? assignment.shifts_to
-          ? shiftRule.before(new Date(assignment.shifts_to), true)
-          : null
-        : shiftRule.before(new Date(assignment.shifts_from), true),
-    });
-
-    assRrule.rrule(mainRule);
-    assRruleWithAbs.rrule(mainRule);
-
-    // Case 1: Absence for this assignment
-    // Case 2: Absence for the same membership and all assignments
-    const filteredAbsences = absences.filter(
-      (absence) =>
-        absence.shifts_assignment == assignment.id ||
-        (absence.shifts_assignment == null &&
-          absence.shifts_membership ==
-            (assignment.shifts_membership as MembershipsMembership).id),
-    );
-
-    for (const absence of filteredAbsences) {
-      const absenceRule = new RRule({
-        freq: RRule.DAILY,
-        interval: shift.shifts_repeats_every,
-        dtstart: shiftRule.after(new Date(absence.shifts_from), true),
-        until: shiftRule.before(new Date(absence.shifts_to), true),
-      });
-      absence._rrule = absenceRule;
-      absence.shifts_assignment = assignment;
-      assRruleWithAbs.exrule(absenceRule);
-    }
-
-    assignmentRules.push({
-      shift: shift,
-      assignment: assignment,
-      absences: filteredAbsences,
-      rrule: assRrule,
-      rruleWithAbsences: assRruleWithAbs,
-    });
-  }
-
-  return assignmentRules;
-};
