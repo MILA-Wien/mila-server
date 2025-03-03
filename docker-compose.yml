@@ -41,7 +41,9 @@ services:
       NUXT_LOTZAPP_PASSWORD: ${LOTZAPP_PASSWORD}
 
   directus:
-    image: directus/directus:11.5.0
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: ${DIRECTUS_CONTAINER_NAME}
     depends_on:
       - directus-db
@@ -54,6 +56,8 @@ services:
       - default
     volumes:
       - ./directus/uploads:/directus/uploads
+      - ./directus-config:/directus/directus-config
+    entrypoint: ["/entrypoint.sh"]
     restart: unless-stopped
     environment:
       PUBLIC_URL: ${DIRECTUS_URL}

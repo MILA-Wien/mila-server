@@ -16,14 +16,12 @@ Anwendungen des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/), inklusiv
 - Clone this repository
 - Add the following to your etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak`
 - Create .env file with `cp .env.example .env`
+- For applying the schema automatically remove the file `./directus/uploads/first-run.lock` when it exists. It will be created on the first run. To re-run the schema sync remove the file and restart the container
 - Create a network `docker network create proxiable`
 - Run `docker compose up -d keycloak-dev keycloak-db`
 - Check that keycloak is running via http://keycloak:8080
 - When keycloak is running, run `docker compose up -d`
 - Run `docker compose exec -u root directus chown -R node:node /directus/extensions /directus/uploads`
-- Log in at http://localhost:8055 with `api@example.com` and `d1r3ctu5`
-- Check under 'settings - extensions' if the [directus-sync](https://www.npmjs.com/package/directus-extension-sync) extension is installed correctly
-- Apply schema with `npx directus-sync push`
 - Install packages with `pnpm i`
 - Start dev server with `pnpm dev`
 - In a second terminal, make an API call to create example data with `pnpm seed`
