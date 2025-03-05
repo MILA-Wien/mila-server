@@ -44,13 +44,75 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    profiles: [production]
     container_name: ${DIRECTUS_CONTAINER_NAME}
     depends_on:
       - directus-db
+      - keycloak
     expose:
       - 8055
     ports:
-      - 8055:8055
+      - 9055:8055
+    networks:
+      - proxiable
+      - default
+    volumes:
+      - ./directus/uploads:/directus/uploads
+      - ./directus-config:/directus/directus-config
+    entrypoint: ["/entrypoint.sh"]
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: ${DIRECTUS_URL}
+      KEY: ${DIRECTUS_KEY}
+      SECRET: ${DIRECTUS_SECRET}
+
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+      ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
+
+      DB_CLIENT: "pg"
+      DB_HOST: "directus-db"
+      DB_PORT: "5432"
+      DB_DATABASE: "directus"
+      DB_USER: "directus"
+      DB_PASSWORD: ${DIRECTUS_DB_PASSWORD}
+
+      AUTH_PROVIDERS: "keycloak"
+      AUTH_KEYCLOAK_DRIVER: "openid"
+      AUTH_KEYCLOAK_CLIENT_ID: ${KEYCLOAK_DIRECTUS_CLIENT}
+      AUTH_KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_DIRECTUS_SECRET}
+      AUTH_KEYCLOAK_ISSUER_URL: "${KEYCLOAK_URL}/realms/collectivo/.well-known/openid-configuration"
+      AUTH_KEYCLOAK_IDENTIFIER_KEY: "email"
+      AUTH_KEYCLOAK_ALLOW_PUBLIC_REGISTRATION: "true"
+      AUTH_KEYCLOAK_REDIRECT_ALLOW_LIST: ${COLLECTIVO_URL}
+
+      SESSION_COOKIE_DOMAIN: "${DIRECTUS_SESSION_COOKIE_DOMAIN}"
+      SESSION_COOKIE_SECURE: "true"
+      SESSION_COOKIE_SAME_SITE: "lax"
+
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "true"
+
+      WEBSOCKETS_ENABLED: true
+
+      COLLECTIVO_API_URL: ${COLLECTIVO_API_URL}
+      COLLECTIVO_API_TOKEN: ${COLLECTIVO_API_TOKEN}
+      FLOWS_ENV_ALLOW_LIST: "PUBLIC_URL,COLLECTIVO_API_URL,COLLECTIVO_API_TOKEN"
+
+      MARKETPLACE_TRUST: all
+  directus-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${DIRECTUS_CONTAINER_NAME}-dev
+    profiles: [dev]
+    depends_on:
+      - directus-db
+      - keycloak-dev
+    expose:
+      - 8055
+    ports:
+      - 9055:8055
     networks:
       - proxiable
       - default
@@ -171,7 +233,7 @@ services:
 
   keycloak-dev:
     build: ./keycloak
-    container_name: keycloak
+    container_name: keycloak-dev
     profiles: [dev]
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}

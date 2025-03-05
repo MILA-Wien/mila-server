@@ -26,6 +26,7 @@ Anwendungen des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/), inklusiv
 - Start dev server with `pnpm dev`
 - In a second terminal, make an API call to create example data with `pnpm seed`
 - Go to http://localhost:3000 and http://localhost:8055
+- Login credentials for directus are `api@example.com` and `d1r3ctu5`
 
 ## Production setup
 
