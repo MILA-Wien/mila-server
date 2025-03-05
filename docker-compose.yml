@@ -12,6 +12,9 @@ services:
     volumes:
       - ./collectivo:/app
     restart: unless-stopped
+    depends_on:
+      - directus
+      - keycloak
     networks:
       - default
       - proxiable
@@ -47,8 +50,10 @@ services:
     profiles: [production]
     container_name: ${DIRECTUS_CONTAINER_NAME}
     depends_on:
-      - directus-db
-      - keycloak
+      directus-db:
+        condition: service_started
+      keycloak:
+        condition: service_healthy
     expose:
       - 8055
     ports:
@@ -107,8 +112,10 @@ services:
     container_name: ${DIRECTUS_CONTAINER_NAME}-dev
     profiles: [dev]
     depends_on:
-      - directus-db
-      - keycloak-dev
+      directus-db:
+        condition: service_started
+      keycloak-dev:
+        condition: service_healthy
     expose:
       - 8055
     ports:
