@@ -52,7 +52,7 @@ services:
     expose:
       - 8055
     ports:
-      - 9055:8055
+      - 8055:8055
     networks:
       - proxiable
       - default
