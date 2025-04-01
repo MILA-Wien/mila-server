@@ -534,7 +534,7 @@ const form: Ref<CollectivoForm> = ref({
     },
     {
       label: "What convinced you to join MILA?",
-      key: "directus_users__mila_survey_motive",
+      key: "directus_users__mila_survey_motivation",
       width: "md",
       type: "textarea",
       order: 820,
