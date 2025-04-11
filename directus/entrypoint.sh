@@ -1,7 +1,13 @@
 #!/bin/sh
 set -e  # Exit on errors
 
-LOCK_FILE="/directus/uploads/first-run.lock"
+LOCK_FILE="/directus/uploads/sync.lock"
+
+# Wait for Keycloak to become healthy
+until wget -q --spider "${AUTH_KEYCLOAK_ISSUER_URL}"; do
+    echo "Waiting for Keycloak to be ready at ${AUTH_KEYCLOAK_ISSUER_URL}..."
+    sleep 10
+done
 
 # Start Directus in the background
 cd /directus
@@ -15,12 +21,12 @@ done
 
 # Run the sync process only on first run
 if [ ! -f "$LOCK_FILE" ]; then
-    echo "First run detected, syncing collections and fields"
-    echo "Admin Email: $ADMIN_EMAIL"
-    echo "Admin Password: $ADMIN_PASSWORD"
+    echo "No sync lock detected, syncing collections and fields"
     npx directus-sync push -u "http://localhost:8055" -e "$ADMIN_EMAIL" -p "$ADMIN_PASSWORD"
     touch "$LOCK_FILE"
 fi
+
+echo "Directus is running and synced."
 
 # Keep the container running
 wait
