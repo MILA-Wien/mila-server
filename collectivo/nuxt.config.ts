@@ -15,8 +15,8 @@ export default defineNuxtConfig({
     apiToken: process.env.COLLECTIVO_API_TOKEN || "badToken",
     checkinToken: process.env.COLLECTIVO_CHECKIN_TOKEN || "badCheckinToken",
 
-    directusAdminEmail: process.env.DIRECTUS_ADMIN_EMAIL || "api@example.com",
-    directusAdminPassword: process.env.DIRECTUS_ADMIN_PASSWORD || "d1r3ctu5",
+    directusAdminEmail: process.env.DIRECTUS_ADMIN_EMAIL || "admin@example.com",
+    directusAdminPassword: process.env.DIRECTUS_ADMIN_PASSWORD || "admin",
     directusAdminToken: process.env.DIRECTUS_ADMIN_TOKEN || "badToken123",
 
     keycloakAdminClient: process.env.KEYCLOAK_ADMIN_CLIENT || "admin-cli",

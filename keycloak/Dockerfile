@@ -17,13 +17,9 @@ ENV KC_DB=postgres
 WORKDIR /opt/keycloak
 
 # Install start script
-USER root
-COPY ./scripts/kcWithAutoImport.sh /opt/keycloak/bin/kcWithAutoImport.sh
-RUN chmod +x /opt/keycloak/bin/kcWithAutoImport.sh && chown 1000:root /opt/keycloak/bin/kcWithAutoImport.sh
-
 USER 1000
 
 RUN /opt/keycloak/bin/kc.sh build --db=postgres
 RUN /opt/keycloak/bin/kc.sh show-config
 
-ENTRYPOINT [ "/opt/keycloak/bin/kcWithAutoImport.sh" ]
+ENTRYPOINT [ "/opt/keycloak/bin/kc.sh" ]

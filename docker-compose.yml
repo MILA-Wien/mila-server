@@ -12,6 +12,9 @@ services:
     volumes:
       - ./collectivo:/app
     restart: unless-stopped
+    depends_on:
+      - directus
+      - keycloak
     networks:
       - default
       - proxiable
@@ -41,10 +44,15 @@ services:
       NUXT_LOTZAPP_PASSWORD: ${LOTZAPP_PASSWORD}
 
   directus:
-    image: directus/directus:11.5.0
+    build:
+      context: /directus
+      dockerfile: Dockerfile
     container_name: ${DIRECTUS_CONTAINER_NAME}
     depends_on:
-      - directus-db
+      directus-db:
+        condition: service_started
+      keycloak:
+        condition: service_healthy
     expose:
       - 8055
     ports:
@@ -54,6 +62,8 @@ services:
       - default
     volumes:
       - ./directus/uploads:/directus/uploads
+      - ./directus-config:/directus/directus-config
+    entrypoint: ["/entrypoint.sh"]
     restart: unless-stopped
     environment:
       PUBLIC_URL: ${DIRECTUS_URL}
@@ -114,37 +124,11 @@ services:
     networks:
       - default
 
-  directus-db-backups:
-    image: prodrigestivill/postgres-backup-local
-    restart: unless-stopped
-    profiles: [production]
-    volumes:
-      - ./directus-db-backups:/backups
-    links:
-      - directus-db
-    depends_on:
-      directus-db:
-        condition: service_healthy
-    environment:
-      POSTGRES_HOST: directus-db
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: directus
-      POSTGRES_USER: directus
-      POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
-      POSTGRES_EXTRA_OPTS: --clean -Z1
-      SCHEDULE: "@daily"
-      BACKUP_KEEP_DAYS: 7
-      BACKUP_KEEP_WEEKS: 4
-      BACKUP_KEEP_MONTHS: 6
-      HEALTHCHECK_PORT: 8080
-    networks:
-      - default
-
   keycloak:
     build: ./keycloak
     container_name: keycloak
-    profiles: [production]
     environment:
+      COMPOSE_PROFILES: ${COMPOSE_PROFILES}
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KEYCLOAK_FRONTEND_URL: ${KEYCLOAK_URL}
@@ -155,44 +139,18 @@ services:
       KC_DB_URL_HOST: "keycloak-db"
       KC_DB_URL_PORT: 5432
       KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
-    volumes:
-      - ./keycloak/themes/collectivo:/opt/keycloak/themes/collectivo
-      - ./keycloak/imported/:/opt/keycloak/imported/
-    restart: unless-stopped
-    depends_on:
-      - keycloak-db
-    networks:
-      - default
-      - proxiable
-
-  keycloak-dev:
-    build: ./keycloak
-    container_name: keycloak
-    profiles: [dev]
-    environment:
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-      KEYCLOAK_FRONTEND_URL: ${KEYCLOAK_URL}
-      KEYCLOAK_IMPORT: /tmp/collectivo-realm.json
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
-      KC_DB_SCHEMA: public
-      KC_DB_URL_DATABASE: "keycloak"
-      KC_DB_URL_HOST: "keycloak-db"
-      KC_DB_URL_PORT: 5432
-      KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
-    command: start-dev --import-realm --health-enabled true
-    entrypoint: /opt/keycloak/bin/kc.sh
+    command: ${KEYCLOAK_COMMAND}
+    ports:
+      - 8080:8080
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
       interval: 5s
       timeout: 5s
       retries: 20
-    ports:
-      - "8080:8080"
     volumes:
       - ./keycloak/themes/collectivo:/opt/keycloak/themes/collectivo
       - ./keycloak/import:/opt/keycloak/data/import:ro
+      - ./keycloak/export:/tmp/export
     restart: unless-stopped
     depends_on:
       - keycloak-db
@@ -216,32 +174,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - default
-
-  keycloak-db-backups:
-    image: prodrigestivill/postgres-backup-local
-    profiles: [production]
-    volumes:
-      - ./keycloak-db-backups:/backups
-    restart: unless-stopped
-    links:
-      - keycloak-db
-    depends_on:
-      keycloak-db:
-        condition: service_healthy
-    environment:
-      POSTGRES_HOST: keycloak-db
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
-      POSTGRES_EXTRA_OPTS: --clean -Z1
-      SCHEDULE: "@daily"
-      BACKUP_KEEP_DAYS: 7
-      BACKUP_KEEP_WEEKS: 4
-      BACKUP_KEEP_MONTHS: 6
-      HEALTHCHECK_PORT: 8080
     networks:
       - default
 
@@ -310,6 +242,58 @@ services:
     logging:
       options:
         max-size: 50m
+    networks:
+      - default
+
+  directus-db-backups:
+    image: prodrigestivill/postgres-backup-local
+    restart: unless-stopped
+    profiles: [production]
+    volumes:
+      - ./directus-db-backups:/backups
+    links:
+      - directus-db
+    depends_on:
+      directus-db:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: directus-db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: directus
+      POSTGRES_USER: directus
+      POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
+      POSTGRES_EXTRA_OPTS: --clean -Z1
+      SCHEDULE: "@daily"
+      BACKUP_KEEP_DAYS: 7
+      BACKUP_KEEP_WEEKS: 4
+      BACKUP_KEEP_MONTHS: 6
+      HEALTHCHECK_PORT: 8080
+    networks:
+      - default
+
+  keycloak-db-backups:
+    image: prodrigestivill/postgres-backup-local
+    profiles: [production]
+    volumes:
+      - ./keycloak-db-backups:/backups
+    restart: unless-stopped
+    links:
+      - keycloak-db
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: keycloak-db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      POSTGRES_EXTRA_OPTS: --clean -Z1
+      SCHEDULE: "@daily"
+      BACKUP_KEEP_DAYS: 7
+      BACKUP_KEEP_WEEKS: 4
+      BACKUP_KEEP_MONTHS: 6
+      HEALTHCHECK_PORT: 8080
     networks:
       - default
 

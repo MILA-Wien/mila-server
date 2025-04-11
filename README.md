@@ -17,22 +17,30 @@ Anwendungen des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/), inklusiv
 - Add the following to your etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak`
 - Create .env file with `cp .env.example .env`
 - Create a network `docker network create proxiable`
-- Run `docker compose up -d keycloak-dev keycloak-db`
-- Check that keycloak is running via http://keycloak:8080
-- When keycloak is running, run `docker compose up -d`
+- Run `docker compose up -d`
 - Run `docker compose exec -u root directus chown -R node:node /directus/extensions /directus/uploads`
-- Log in at http://localhost:8055 with `api@example.com` and `d1r3ctu5`
-- Check under 'settings - extensions' if the [directus-sync](https://www.npmjs.com/package/directus-extension-sync) extension is installed correctly
-- Apply schema with `npx directus-sync push`
 - Install packages with `pnpm i`
 - Start dev server with `pnpm dev`
 - In a second terminal, make an API call to create example data with `pnpm seed`
-- Go to http://localhost:3000 and http://localhost:8055
+
+The following services will then be available:
+
+- Frontend http://localhost:3000
+- Directus http://localhost:8055
+- Keycloak http://localhost:8080
+
+Login credentials for all three services are:
+
+- Username `admin@example.com`
+- Password `admin`
 
 ## Production setup
 
 - Install Docker and PNPM
-- Set .env vars (including `COMPOSE_PROFILES="production"`)
+- Set .env vars
+  - Generate secure secrets, keys, and passwords
+  - Set `COMPOSE_PROFILES="production"`
+  - Set `KEYCLOAK_COMMAND="start"`
 - [Set up a reverse proxy](https://www.linode.com/docs/guides/using-nginx-proxy-manager/) with a docker network called `proxiable`
 - Set the following [custom Nginx configuration](https://stackoverflow.com/questions/56126864) for Keycloak
   ```
@@ -61,17 +69,22 @@ Update packages
 - `cd collectivo`
 - `pnpm up --latest`
 
-## Change database schemas
+## Database schemas
 
-Collectivo uses [directus-sync](https://github.com/tractr/directus-sync) for changes in the database schema.
+Collectivo uses [directus-sync](https://github.com/tractr/directus-sync) to apply the database schema.
+The container will automatically apply the schema on first startup and then create a file `./directus/uploads/sync.lock`.
+To apply changes in the database schema, remove this file and restart the container or follow the last steps below.
+
+Changing the database schema
 
 - Make changes to the database schema on your local system
 - Run `npx directus-sync pull` to update the database schema in the repository
 - Make a database backup of the production system (see below)
-- Run `npx directus-sync push -u "https://studio.mila.wien" -e "<EMAIL>" -p "<PASSWORD>"` to apply the new database schema to the production system
+- Remove `./directus/uploads/sync.lock` and restart the container or run `npx directus-sync push -u "http://localhost:8055" -e "<EMAIL>" -p "<PASSWORD>"` to apply the new database schema to the production system
 
 Troubleshooting
 
+- Changing the directus version also changes the schema. Pull the schema after changing the version and starting the container.
 - Changing flows often creates errors on push, this can be solved by deleting the changed flows manually before pushing.
 
 ## Database backups
