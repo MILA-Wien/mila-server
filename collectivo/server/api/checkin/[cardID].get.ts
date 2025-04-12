@@ -31,6 +31,17 @@ import { createItem, readItems } from "@directus/sdk";
 
 export default defineEventHandler(async (event) => {
   verifyCollectivoApiToken(event, "checkinToken");
+  try {
+    return await getMembershipData(event);
+  } catch (error) {
+    console.error("Error in getMembershipData:", error);
+    return {
+      error: "An error occurred while processing the request.",
+    };
+  }
+});
+
+async function getMembershipData(event) {
   const cardID = getRouterParam(event, "cardID");
   const now = getCurrentDate();
   const nowStr = now.toISOString();
@@ -129,9 +140,6 @@ export default defineEventHandler(async (event) => {
   const absences = await directus.request(
     readItems("shifts_absences", {
       filter: {
-        shifts_status: {
-          _eq: "accepted",
-        },
         shifts_membership: { id: { _eq: mship.id } },
         shifts_is_holiday: { _eq: true },
         shifts_to: { _gte: nowStr },
@@ -193,4 +201,4 @@ export default defineEventHandler(async (event) => {
   };
 
   return returnObject;
-});
+}
