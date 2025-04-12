@@ -51,6 +51,9 @@ export default defineNuxtConfig({
     optimizeDeps: {
       include: ["yup"],
     },
+    server: {
+      allowedHosts: ['host.docker.internal'],
+    },
   },
 
   colorMode: {
