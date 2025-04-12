@@ -319,7 +319,7 @@ async function cleanShiftsData() {
 }
 
 const SHIFT_TIMES_OF_DAY = [8, 11, 14, 17];
-const SHIFT_CYCLE_START = DateTime.local(2025, 4, 7);
+const SHIFT_CYCLE_START = DateTime.now().minus({ weeks: 4 }).startOf("day");
 const SHIFT_CYCLE_DURATION_WEEKS = 4;
 
 async function createShifts() {
