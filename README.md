@@ -29,10 +29,21 @@ The following services will then be available:
 - Directus http://localhost:8055
 - Keycloak http://localhost:8080
 
-Login credentials for all three services are:
+Login credentials for directus admin (without keycloak):
 
-- Username `admin@example.com`
+- Username `directus-admin@example.com`
 - Password `admin`
+
+Login credentials for keycloak admin UI:
+
+- Username `keycloak-admin@example.com`
+- Password `admin`
+
+Test keycloak users for frontend and directus:
+
+- `admin@example.com` / `admin`
+- `editor@example.com` / `editor`
+- `user@example.com` / `user`
 
 ## Production setup
 
