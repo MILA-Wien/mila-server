@@ -12,7 +12,7 @@ Anwendungen des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/), inklusiv
 
 ## Local setup
 
-- Install Docker and PNPM
+- Install Docker and PNPM, start Docker
 - Clone this repository
 - Add the following to your etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak`
 - Create .env file with `cp .env.example .env`
