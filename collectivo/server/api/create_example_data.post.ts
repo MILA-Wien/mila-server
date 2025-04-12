@@ -318,8 +318,8 @@ async function cleanShiftsData() {
   }
 }
 
-const SHIFT_TIMES_OF_DAY = [10, 13, 16, 19];
-const SHIFT_CYCLE_START = DateTime.local(2024, 1, 1);
+const SHIFT_TIMES_OF_DAY = [8, 11, 14, 17];
+const SHIFT_CYCLE_START = DateTime.local(2025, 4, 7);
 const SHIFT_CYCLE_DURATION_WEEKS = 4;
 
 async function createShifts() {
@@ -345,9 +345,10 @@ async function createShifts() {
           shifts_from: day.set({ hour: time_of_day }).toString(),
           shifts_from_time: String(time_of_day) + ":00",
           shifts_to_time: String(time_of_day + 3) + ":00",
+	  shifts_is_regular: true,
           shifts_repeats_every: nb_weeks * 7,
           shifts_status: "published",
-          shifts_location: "Shop",
+	  shifts_allow_self_assignment: true,
         });
       }
     }
