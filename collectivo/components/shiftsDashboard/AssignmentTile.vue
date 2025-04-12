@@ -167,17 +167,17 @@ END:VCALENDAR`;
         <!-- Space for buttons -->
         <div class="flex flex-wrap gap-3">
           <UButton
+            size="sm"
+            color="yellow"
+            @click="downloadICS()"
+            >{{ t("Calendar download") }}
+          </UButton>
+          <UButton
             v-if="!assignment.shifts_is_regular"
             size="sm"
             color="green"
             @click="signOutModalIsOpen = true"
             >{{ t("Sign out") }}
-          </UButton>
-          <UButton
-            size="sm"
-            color="yellow"
-            @click="downloadICS()"
-            >{{ t("Calendar download") }}
           </UButton>
         </div>
       </div>
@@ -220,6 +220,7 @@ END:VCALENDAR`;
 <i18n lang="yaml">
 en:
   "ics_preamble": "Warning: This calendar entry will not be automatically updated if your shift schedule changes. You can view your current shift schedule online in the member area. Please remember to delete old calendar entries and create a new one if your shift schedule changes."
+  "Calendar download": "Calendar export"
 de:
   "until": "bis"
   "Shift repeats every": "Schicht wiederholt sich alle"
@@ -237,7 +238,7 @@ de:
   "[name hidden]": "[Name verborgen]"
   "Contact": "Kontakt"
   "Sign-out is not possible anymore. Please contact the office.": "Abmeldung ist nicht mehr möglich. Bitte kontaktiere das Mitgliederbüro."
-  "Calendar download": "Kalender-Download"
+  "Calendar download": "Kalender-Export"
   "Shift": "Schicht"
   "ics_preamble": "Achtung: Dieser Kalendereintrag wird nicht automatisch aktualisiert, falls sich deine Schichteinteilung ändert. Deine aktuelle Schichteinteilung siehst du online im Mitgliederbereich. Denke bei Änderungen der Schichteinteilung bitte daran, alte Kalendereinträge zu löschen und dir einen neuen Kalendereintrag zu erstellen."
 </i18n>
