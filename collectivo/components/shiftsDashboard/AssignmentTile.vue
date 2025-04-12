@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { createItem } from "@directus/sdk";
-import { DateTime } from "luxon";
+import { DateTime, Duration } from "luxon";
 import { parse } from "marked";
 
 const MAX_DAYS_TO_SIGN_OUT_BEFORE = 2;
@@ -18,11 +18,13 @@ const props = defineProps({
 
 // This is the next occurence of the assignment, not the shift itself!
 const ass = props.shiftAssignment;
-const nextOccurrence = ass.nextOccurrence as String;
+const nextOccurrence = ass.nextOccurrence as String; // just represents the day, not the time
 const nextOccurrenceAbsent = ass.nextOccurrenceAbsent as Boolean;
 const assignment = ass.assignment as ShiftsAssignment;
 const coworkers = ass.coworkers as String[];
 const shift = assignment.shifts_shift as ShiftsShift;
+const nextOccurrenceStart = DateTime.fromISO(nextOccurrence, locale).plus(Duration.fromISOTime(shift.shifts_from_time)); // DateTime object representing the occurrence's start, including time of day
+const nextOccurrenceEnd = DateTime.fromISO(nextOccurrence, locale).plus( Duration.fromISOTime(shift.shifts_to_time)); // DateTime object representing the occurrence's end, including time of day
 const user = useCurrentUser();
 const emit = defineEmits(["reload"]);
 
@@ -63,12 +65,15 @@ function getColor() {
 }
 
 function downloadICS() {
+  // downloads the next occurrence as a ICS calendar entry file
   const event = {
-    title: "Meeting with Alice",
-    description: "Discuss project updates",
-    location: "Zoom",
-    start: new Date("2025-04-15T09:00:00Z"),
-    end: new Date("2025-04-15T10:00:00Z"),
+    title: "MILA " + t("shift"),
+    description: t("ics_preamble") + "\\n*****\\n\\n" + t("shift") + " " + shift.shifts_name,
+    location: "MILA",
+    start: nextOccurrenceStart.toJSDate(),
+    end: nextOccurrenceEnd.toJSDate(),
+    uid: assignment.id,
+    timestamp: new Date(),
   };
 
   const formatDate = (date) => {
@@ -77,13 +82,15 @@ function downloadICS() {
 
   const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//My App//EN
+PRODID:-//MILA//Collectivo//EN
 BEGIN:VEVENT
 SUMMARY:${event.title}
 DESCRIPTION:${event.description}
 LOCATION:${event.location}
 DTSTART:${formatDate(event.start)}
 DTEND:${formatDate(event.end)}
+UID:${event.uid}
+DTSTAMP:${formatDate(event.timestamp)}
 END:VEVENT
 END:VCALENDAR`;
 
@@ -157,7 +164,7 @@ END:VCALENDAR`;
             size="sm"
             color="yellow"
             @click="downloadICS()"
-            >{{ t("Download .ics") }}
+            >{{ t("Calendar download") }}
           </UButton>
         </div>
       </div>
@@ -198,6 +205,8 @@ END:VCALENDAR`;
 </template>
 
 <i18n lang="yaml">
+en:
+  "ics_preamble": "Warning: This calendar entry will not be automatically updated if your shift schedule changes. You can view your current shift schedule online in the member area. Please remember to delete old calendar entries and create a new one if your shift schedule changes."
 de:
   "until": "bis"
   "Shift repeats every": "Schicht wiederholt sich alle"
@@ -215,4 +224,7 @@ de:
   "[name hidden]": "[Name verborgen]"
   "Contact": "Kontakt"
   "Sign-out is not possible anymore. Please contact the office.": "Abmeldung ist nicht mehr möglich. Bitte kontaktiere das Mitgliederbüro."
+  "Calendar download": "Kalender-Download"
+  "shift": "Schicht"
+  "ics_preamble": "Achtung: Dieser Kalendereintrag wird nicht automatisch aktualisiert, falls sich deine Schichteinteilung ändert. Deine aktuelle Schichteinteilung siehst du online im Mitgliederbereich. Denke bei Änderungen der Schichteinteilung bitte daran, alte Kalendereinträge zu löschen und dir einen neuen Kalendereintrag zu erstellen."
 </i18n>
