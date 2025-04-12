@@ -45,7 +45,7 @@ services:
 
   directus:
     build:
-      context: /directus
+      context: ./directus
       dockerfile: Dockerfile
     container_name: ${DIRECTUS_CONTAINER_NAME}
     extra_hosts:
