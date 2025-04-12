@@ -50,6 +50,7 @@
     "prettier": "3.3.3",
     "sass": "^1.80.7",
     "vitest": "^2.1.5",
+    "unhead": "1.11.18",
     "vue": "latest"
   }
 }
