@@ -61,6 +61,44 @@ function getColor() {
     return "green";
   }
 }
+
+function downloadICS() {
+  const event = {
+    title: "Meeting with Alice",
+    description: "Discuss project updates",
+    location: "Zoom",
+    start: new Date("2025-04-15T09:00:00Z"),
+    end: new Date("2025-04-15T10:00:00Z"),
+  };
+
+  const formatDate = (date) => {
+    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  };
+
+  const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//My App//EN
+BEGIN:VEVENT
+SUMMARY:${event.title}
+DESCRIPTION:${event.description}
+LOCATION:${event.location}
+DTSTART:${formatDate(event.start)}
+DTEND:${formatDate(event.end)}
+END:VEVENT
+END:VCALENDAR`;
+
+  const blob = new Blob([icsContent], { type: 'text/calendar' });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'event.ics';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
 </script>
 
 <template>
@@ -114,6 +152,12 @@ function getColor() {
             color="green"
             @click="signOutModalIsOpen = true"
             >{{ t("Sign out") }}
+          </UButton>
+          <UButton
+            size="sm"
+            color="yellow"
+            @click="downloadICS()"
+            >{{ t("Download .ics") }}
           </UButton>
         </div>
       </div>
