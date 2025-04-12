@@ -14,7 +14,9 @@
     "format": "prettier --cache --check .",
     "format:fix": "prettier --cache --check . --write",
     "lint": "eslint --cache .",
-    "lint:fix": "eslint --cache . --fix"
+    "lint:fix": "eslint --cache . --fix",
+    "e2e:dev": "npx cypress open",
+    "e2e:test": "npx cypress run"
   },
   "dependencies": {
     "@directus/sdk": "^18.0.0",
@@ -51,6 +53,7 @@
     "sass": "^1.80.7",
     "vitest": "^2.1.5",
     "unhead": "1.11.18",
-    "vue": "latest"
+    "vue": "latest",
+    "cypress": "^14.1.0"
   }
 }
