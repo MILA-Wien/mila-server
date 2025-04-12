@@ -48,6 +48,8 @@ services:
       context: /directus
       dockerfile: Dockerfile
     container_name: ${DIRECTUS_CONTAINER_NAME}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       directus-db:
         condition: service_started
