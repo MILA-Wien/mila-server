@@ -15,7 +15,8 @@ export default defineNuxtConfig({
     apiToken: process.env.COLLECTIVO_API_TOKEN || "badToken",
     checkinToken: process.env.COLLECTIVO_CHECKIN_TOKEN || "badCheckinToken",
 
-    directusAdminEmail: process.env.DIRECTUS_ADMIN_EMAIL || "admin@example.com",
+    directusAdminEmail:
+      process.env.DIRECTUS_ADMIN_EMAIL || "directus-admin@example.com",
     directusAdminPassword: process.env.DIRECTUS_ADMIN_PASSWORD || "admin",
     directusAdminToken: process.env.DIRECTUS_ADMIN_TOKEN || "badToken123",
 
@@ -52,7 +53,7 @@ export default defineNuxtConfig({
       include: ["yup"],
     },
     server: {
-      allowedHosts: ['host.docker.internal'],
+      allowedHosts: ["host.docker.internal"],
     },
   },
 
