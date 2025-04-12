@@ -65,20 +65,33 @@ function getColor() {
 }
 
 function downloadICS() {
-  // downloads the next occurrence as a ICS calendar entry file
+  // downloads the next occurrence as a ICS calendar entry file, and if it is a regular shift assignment, as a recurring event.
   const event = {
-    title: "MILA " + t("shift"),
-    description: t("ics_preamble") + "\\n*****\\n\\n" + t("shift") + " " + shift.shifts_name,
+    title: "MILA " + t("Shift"),
+    description: t("ics_preamble") + "\\n*****\\n\\n" + t("Shift") + " " + shift.shifts_name + " (" + (ass.isRegular ? (t("Shift repeats every") + " " + shift.shifts_repeats_every + " " + t("days")) : t("One-time shift"))  + ")",
     location: "MILA",
     start: nextOccurrenceStart.toJSDate(),
     end: nextOccurrenceEnd.toJSDate(),
     uid: assignment.id,
     timestamp: new Date(),
+    regular: ass.isRegular,
+    regularity: shift.shifts_repeats_every,
+    regularity_until: shift.shifts_to,
   };
 
   const formatDate = (date) => {
     return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
   };
+
+  let rrule_line = "";
+  if(event.regular) {
+    rrule_line = `RRULE:FREQ=DAILY;INTERVAL=${event.regularity}`
+    if(event.regularity_until) {
+      rrule_line += `;UNTIL=${formatDate(DateTime.fromISO(event.regularity_until, locale).toJSDate())}`
+    }
+    rrule_line += `
+`
+  }
 
   const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
@@ -91,7 +104,7 @@ DTSTART:${formatDate(event.start)}
 DTEND:${formatDate(event.end)}
 UID:${event.uid}
 DTSTAMP:${formatDate(event.timestamp)}
-END:VEVENT
+` + rrule_line + `END:VEVENT
 END:VCALENDAR`;
 
   const blob = new Blob([icsContent], { type: 'text/calendar' });
@@ -225,6 +238,6 @@ de:
   "Contact": "Kontakt"
   "Sign-out is not possible anymore. Please contact the office.": "Abmeldung ist nicht mehr möglich. Bitte kontaktiere das Mitgliederbüro."
   "Calendar download": "Kalender-Download"
-  "shift": "Schicht"
+  "Shift": "Schicht"
   "ics_preamble": "Achtung: Dieser Kalendereintrag wird nicht automatisch aktualisiert, falls sich deine Schichteinteilung ändert. Deine aktuelle Schichteinteilung siehst du online im Mitgliederbereich. Denke bei Änderungen der Schichteinteilung bitte daran, alte Kalendereinträge zu löschen und dir einen neuen Kalendereintrag zu erstellen."
 </i18n>
