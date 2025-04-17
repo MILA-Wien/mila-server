@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { createItem } from "@directus/sdk";
-import { DateTime } from "luxon";
+import { DateTime, Duration } from "luxon";
 import { parse } from "marked";
 
 const MAX_DAYS_TO_SIGN_OUT_BEFORE = 2;
@@ -18,11 +18,13 @@ const props = defineProps({
 
 // This is the next occurence of the assignment, not the shift itself!
 const ass = props.shiftAssignment;
-const nextOccurrence = ass.nextOccurrence as String;
+const nextOccurrence = ass.nextOccurrence as String; // just represents the day, not the time
 const nextOccurrenceAbsent = ass.nextOccurrenceAbsent as Boolean;
 const assignment = ass.assignment as ShiftsAssignment;
 const coworkers = ass.coworkers as String[];
 const shift = assignment.shifts_shift as ShiftsShift;
+const nextOccurrenceStart = DateTime.fromISO(nextOccurrence, locale).plus(Duration.fromISOTime(shift.shifts_from_time)); // DateTime object representing the occurrence's start, including time of day
+const nextOccurrenceEnd = DateTime.fromISO(nextOccurrence, locale).plus( Duration.fromISOTime(shift.shifts_to_time)); // DateTime object representing the occurrence's end, including time of day
 const user = useCurrentUser();
 const emit = defineEmits(["reload"]);
 
@@ -61,6 +63,62 @@ function getColor() {
     return "green";
   }
 }
+
+function downloadICS() {
+  // downloads the next occurrence as a ICS calendar entry file, and if it is a regular shift assignment, as a recurring event.
+  const event = {
+    title: "MILA " + t("Shift"),
+    description: t("ics_preamble") + "\\n*****\\n\\n" + t("Shift") + " " + shift.shifts_name + " (" + (ass.isRegular ? (t("Shift repeats every") + " " + shift.shifts_repeats_every + " " + t("days")) : t("One-time shift"))  + ")",
+    location: "MILA",
+    start: nextOccurrenceStart.toJSDate(),
+    end: nextOccurrenceEnd.toJSDate(),
+    uid: assignment.id,
+    timestamp: new Date(),
+    regular: ass.isRegular,
+    regularity: shift.shifts_repeats_every,
+    regularity_until: shift.shifts_to,
+  };
+
+  const formatDate = (date) => {
+    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  };
+
+  let rrule_line = "";
+  if(event.regular) {
+    rrule_line = `RRULE:FREQ=DAILY;INTERVAL=${event.regularity}`
+    if(event.regularity_until) {
+      rrule_line += `;UNTIL=${formatDate(DateTime.fromISO(event.regularity_until, locale).toJSDate())}`
+    }
+    rrule_line += `
+`
+  }
+
+  const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//MILA//Collectivo//EN
+BEGIN:VEVENT
+SUMMARY:${event.title}
+DESCRIPTION:${event.description}
+LOCATION:${event.location}
+DTSTART:${formatDate(event.start)}
+DTEND:${formatDate(event.end)}
+UID:${event.uid}
+DTSTAMP:${formatDate(event.timestamp)}
+` + rrule_line + `END:VEVENT
+END:VCALENDAR`;
+
+  const blob = new Blob([icsContent], { type: 'text/calendar' });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'event.ics';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
 </script>
 
 <template>
@@ -109,6 +167,12 @@ function getColor() {
         <!-- Space for buttons -->
         <div class="flex flex-wrap gap-3">
           <UButton
+            size="sm"
+            color="yellow"
+            @click="downloadICS()"
+            >{{ t("Calendar download") }}
+          </UButton>
+          <UButton
             v-if="!assignment.shifts_is_regular"
             size="sm"
             color="green"
@@ -154,6 +218,9 @@ function getColor() {
 </template>
 
 <i18n lang="yaml">
+en:
+  "ics_preamble": "Warning: This calendar entry will not be automatically updated if your shift schedule changes. You can view your current shift schedule online in the member area. Please remember to delete old calendar entries and create a new one if your shift schedule changes."
+  "Calendar download": "Calendar export"
 de:
   "until": "bis"
   "Shift repeats every": "Schicht wiederholt sich alle"
@@ -171,4 +238,7 @@ de:
   "[name hidden]": "[Name verborgen]"
   "Contact": "Kontakt"
   "Sign-out is not possible anymore. Please contact the office.": "Abmeldung ist nicht mehr möglich. Bitte kontaktiere das Mitgliederbüro."
+  "Calendar download": "Kalender-Export"
+  "Shift": "Schicht"
+  "ics_preamble": "Achtung: Dieser Kalendereintrag wird nicht automatisch aktualisiert, falls sich deine Schichteinteilung ändert. Deine aktuelle Schichteinteilung siehst du online im Mitgliederbereich. Denke bei Änderungen der Schichteinteilung bitte daran, alte Kalendereinträge zu löschen und dir einen neuen Kalendereintrag zu erstellen."
 </i18n>
