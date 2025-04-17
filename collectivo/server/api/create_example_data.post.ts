@@ -36,11 +36,12 @@ async function getRole(name: string) {
 async function create_examples() {
   console.info("Creating example data for collectivo");
   await create_users();
+  await purge_assignments();
   await create_memberships();
   await create_tags();
   await create_tiles();
   await create_emails();
-  // await create_shifts();
+  await create_shifts();
   console.log("Seed successful");
 }
 
@@ -237,12 +238,21 @@ async function create_tiles() {
   }
 }
 
+async function purge_assignments() {
+  const directus = await useDirectusAdmin();
+
+  console.info("Purging shift assignments");
+
+  await directus.request(deleteItems("shifts_assignments", { limit: 1000 }));
+}
+
 async function create_memberships() {
   const directus = await useDirectusAdmin();
 
   console.info("Creating memberships 1");
 
   // Clean up old data
+  // might error because of not_null constraint in assignment relation
   await directus.request(deleteItems("memberships", { limit: 1000 }));
 
   console.info("Creating memberships 2");
@@ -283,12 +293,12 @@ async function create_memberships() {
 
 async function create_shifts() {
   console.log("Creating shifts");
+  console.log("  claning shifts...");
   await cleanShiftsData();
+  console.log("  creating shifts...");
   await createShifts();
-  await createSlots();
-  // await createSkills();
+  console.log("  creating assignments...");
   await createAssignments();
-  // await addSkillsToUsers();
   // await createLogs();
 }
 
@@ -297,19 +307,19 @@ async function cleanShiftsData() {
 
   const schemas = [
     "shifts_shifts",
-    "shifts_slots",
     "shifts_assignments",
     "shifts_absences",
     "shifts_logs",
   ];
 
   for (const schema of schemas) {
+    console.log(`    deleting 1000 items in schema ${schema} ...`);
     await directus.request(deleteItems(schema, { limit: 1000 }));
   }
 }
 
-const SHIFT_TIMES_OF_DAY = [10, 13, 16, 19];
-const SHIFT_CYCLE_START = DateTime.local(2024, 1, 1);
+const SHIFT_TIMES_OF_DAY = [8, 11, 14, 17];
+const SHIFT_CYCLE_START = DateTime.now().minus({ weeks: 4 }).startOf("week");
 const SHIFT_CYCLE_DURATION_WEEKS = 4;
 
 async function createShifts() {
@@ -335,9 +345,11 @@ async function createShifts() {
           shifts_from: day.set({ hour: time_of_day }).toString(),
           shifts_from_time: String(time_of_day) + ":00",
           shifts_to_time: String(time_of_day + 3) + ":00",
+	  shifts_is_regular: true,
           shifts_repeats_every: nb_weeks * 7,
           shifts_status: "published",
-          shifts_location: "Shop",
+	  shifts_slots: 2,
+	  shifts_allow_self_assignment: true,
         });
       }
     }
@@ -346,37 +358,11 @@ async function createShifts() {
   await directus.request(createItems("shifts_shifts", shiftsRequests));
 }
 
-async function createSlots() {
-  const directus = await useDirectusAdmin();
-
-  const shifts = await directus.request(readItems("shifts_shifts"));
-  const slotsRequests = [];
-
-  for (const shift of shifts) {
-    slotsRequests.push({
-      shifts_name: "Cleaning",
-      shifts_shift: shift.id,
-    });
-
-    slotsRequests.push({
-      shifts_name: "Cashier",
-      shifts_shift: shift.id,
-    });
-
-    slotsRequests.push({
-      shifts_name: "Shelves",
-      shifts_shift: shift.id,
-    });
-  }
-
-  await directus.request(createItems("shifts_slots", slotsRequests));
-}
-
 async function createAssignments() {
   const directus = await useDirectusAdmin();
 
-  const slots = await directus.request(
-    readItems("shifts_slots", {
+  const shifts = await directus.request(
+    readItems("shifts_shifts", {
       fields: ["id"],
     }),
   );
@@ -390,52 +376,22 @@ async function createAssignments() {
   const assignments = [];
 
   for (const mship of mships) {
-    const slot = slots.pop();
+    const shift = shifts.pop();
 
-    if (!slot) {
+    if (!shift) {
       break;
     }
 
     assignments.push({
       shifts_from: DateTime.now().toString(),
-      shifts_slot: slot.id,
+      shifts_shift: shift.id,
       shifts_membership: mship.id,
+      shifts_is_regular: true,
     });
   }
 
   await directus.request(createItems("shifts_assignments", assignments));
 }
-
-// async function addSkillsToUsers() {
-//   const directus = await useDirectusAdmin();
-
-//   const skills = await directus.request(
-//     readItems("shifts_skills", {
-//       fields: ["id", "shifts_name"],
-//     }),
-//   );
-
-//   if (!skills) return;
-
-//   const users = await directus.request(
-//     readUsers({
-//       fields: ["id"],
-//     }),
-//   );
-
-//   const links: ShiftsSkillUserLink[] = [];
-
-//   users.forEach((user, index) => {
-//     const skill = skills[index % skills.length];
-
-//     links.push({
-//       directus_users_id: user.id,
-//       shifts_skills_id: skill.id,
-//     });
-//   });
-
-//   await directus.request(createItems("shifts_skills_directus_users", links));
-// }
 
 // async function createLogs() {
 //   const directus = await useDirectusAdmin();
@@ -471,41 +427,6 @@ async function createAssignments() {
 //   }
 
 //   await directus.request(createItems("shifts_logs", requests));
-// }
-
-// async function createSkills() {
-//   const directus = await useDirectusAdmin();
-
-//   const cashierSkill = await directus.request(
-//     createItem("shifts_skills", {
-//       shifts_name: "Cashier",
-//       shifts_status: ItemStatus.PUBLISHED,
-//     }),
-//   );
-
-//   await directus.request(
-//     createItem("shifts_skills", {
-//       shifts_name: "First aid",
-//       shifts_status: ItemStatus.PUBLISHED,
-//     }),
-//   );
-
-//   const slots = await directus.request(
-//     readItems("shifts_slots", {
-//       fields: ["id"],
-//       filter: { shifts_name: { _eq: "Cashier" } },
-//     }),
-//   );
-
-//   const requests = [];
-
-//   for (const slot of slots) {
-//     requests.push({
-//       shifts_skills_id: cashierSkill.id,
-//       shifts_slots_id: slot.id,
-//     });
-//   }
-//   await directus.request(createItems("shifts_skills_shifts_slots", requests));
 // }
 
 //   // Payments ----------------------------------------------------------------------
