@@ -319,7 +319,7 @@ async function cleanShiftsData() {
 }
 
 const SHIFT_TIMES_OF_DAY = [8, 11, 14, 17];
-const SHIFT_CYCLE_START = DateTime.local(2025, 4, 7);
+const SHIFT_CYCLE_START = DateTime.now().minus({ weeks: 4 }).startOf("week");
 const SHIFT_CYCLE_DURATION_WEEKS = 4;
 
 async function createShifts() {
@@ -348,6 +348,7 @@ async function createShifts() {
 	  shifts_is_regular: true,
           shifts_repeats_every: nb_weeks * 7,
           shifts_status: "published",
+	  shifts_slots: 2,
 	  shifts_allow_self_assignment: true,
         });
       }
@@ -385,6 +386,7 @@ async function createAssignments() {
       shifts_from: DateTime.now().toString(),
       shifts_shift: shift.id,
       shifts_membership: mship.id,
+      shifts_is_regular: true,
     });
   }
 
