@@ -61,3 +61,19 @@ yarn preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## Cypress
+
+```bash
+
+# remove the old Cypress configuration file if it exists
+# (For Windows users, use `del collectivo\cypress.config.js` instead)
+rm collectivo/cypress.config.js
+
+# re-install Cypress
+pnpm remove cypress
+pnpm add cypress@latest --save-dev
+
+# start using Cypress
+pnpm e2e:dev
+```
