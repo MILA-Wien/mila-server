@@ -170,6 +170,14 @@ declare global {
     shifts_assignment: number;
   }
 
+  interface ShiftsAssignmentInfos {
+    assignment: ShiftsAssignment;
+    coworkers: string[];
+    nextOccurrence: Date | null;
+    nextOccurrenceAbsent: boolean | null;
+    isRegular: boolean;
+  }
+
   interface ShiftsAssignmentRules {
     assignment: ShiftsAssignmentGet;
     absences: ShiftsAbsenceGet[];

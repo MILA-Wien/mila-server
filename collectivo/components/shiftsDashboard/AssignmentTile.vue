@@ -11,17 +11,17 @@ const signOutModalIsOpen = ref(false);
 
 const props = defineProps({
   shiftAssignment: {
-    type: Object as PropType<ShiftsAssignmentRules>,
+    type: Object as PropType<ShiftsAssignmentInfos>,
     required: true,
   },
 });
 
 // This is the next occurence of the assignment, not the shift itself!
 const ass = props.shiftAssignment;
-const nextOccurrence = ass.nextOccurrence as String; // just represents the day, not the time
-const nextOccurrenceAbsent = ass.nextOccurrenceAbsent as Boolean;
-const assignment = ass.assignment as ShiftsAssignment;
-const coworkers = ass.coworkers as String[];
+const nextOccurrence = ass.nextOccurrence as String; // Date without time
+const nextOccurrenceAbsent = ass.nextOccurrenceAbsent;
+const assignment = ass.assignment;
+const coworkers = ass.coworkers;
 const shift = assignment.shifts_shift as ShiftsShift;
 const nextOccurrenceStart = DateTime.fromISO(nextOccurrence, locale).plus(
   Duration.fromISOTime(shift.shifts_from_time),

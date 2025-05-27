@@ -1,3 +1,5 @@
+// Get shift assignments and absences of current user
+
 import { RRule, RRuleSet } from "rrule";
 import { readItems } from "@directus/sdk";
 
@@ -9,15 +11,16 @@ export const getUserAssignments = async (mship: number) => {
   const directus = useDirectusAdmin();
   const now = getCurrentDate();
   const nowStr = now.toISOString();
-  const filter = {
-    shifts_membership: { id: { _eq: mship } },
-    shifts_to: {
-      _or: [{ _gte: nowStr }, { _null: true }],
-    },
-  };
+
+  // Get user shift assignments
   const assignments = (await directus.request(
     readItems("shifts_assignments", {
-      filter: filter,
+      filter: {
+        shifts_membership: { id: { _eq: mship } },
+        shifts_to: {
+          _or: [{ _gte: nowStr }, { _null: true }],
+        },
+      },
       limit: -1,
       fields: [
         "*",
@@ -29,6 +32,7 @@ export const getUserAssignments = async (mship: number) => {
     }),
   )) as ShiftsAssignmentGet[];
 
+  // Get user shift absences
   const absences = (await directus.request(
     readItems("shifts_absences", {
       limit: -1,
@@ -52,10 +56,9 @@ export const getUserAssignments = async (mship: number) => {
     }),
   )) as ShiftsAbsenceGet[];
 
+  // Get user holidays
   const holidays = [] as ShiftsAbsenceGet[];
   const holidaysCurrent = [] as ShiftsAbsenceGet[];
-
-  // Get holidays
   for (const absence of absences) {
     if (absence.shifts_is_holiday) {
       holidays.push(absence);
@@ -88,86 +91,21 @@ export const getUserAssignments = async (mship: number) => {
     );
   });
 
-  const assignmentRules: ShiftsAssignmentRules[] = await Promise.all(
+  // Get assignment infos
+  const assignmentInfos = await Promise.all(
     assignments.map(async (assignment) => {
-      const filteredAbsences = absences.filter(
-        (absence) =>
-          absence.shifts_assignment == assignment.id ||
-          absence.shifts_assignment == null,
-      );
-
-      const rules = getAssignmentRRule(
+      return await getAssignmentInfos(
         assignment,
-        filteredAbsences,
+        absences,
         publicHolidaRruleSet,
+        mship,
       );
-
-      const assignmentRule = rules[0];
-      const absencesRule = rules[1];
-      const nextOccurence = assignmentRule.after(now, true);
-      let secondNextOccurence = null;
-      let nextOccurrenceAbsent = null;
-      const names = [];
-      if (nextOccurence) {
-        secondNextOccurence = assignmentRule.after(nextOccurence);
-
-        const occs = await getShiftOccurrences(
-          nextOccurence,
-          nextOccurence,
-          false,
-          assignment.shifts_shift.id,
-          mship,
-        );
-
-        if (occs.occurrences.length > 0) {
-          const asss = occs.occurrences[0].assignments;
-          for (const a of asss) {
-            const u = a.assignment.shifts_membership.memberships_user;
-
-            if (a.isSelf) continue;
-            names.push(u.first_name + " " + u.last_name);
-          }
-        }
-        // Get other assignments for this occurrence
-        // const otherAssignments = await getShiftAssignments(
-        //   assignment.shifts_shift.id,
-        //   nextOccurence,
-        //   nextOccurence,
-        // );
-
-        // for (const a of otherAssignments) {
-        //   const mship1 = a.shifts_membership;
-        //   const user = mship1.memberships_user;
-        //   if (mship1.id == mship) continue;
-        //   names.push(
-        //     !user.hide_name
-        //       ? `${user.first_name} ${user.last_name}`
-        //       : "Anonymous",
-        //   );
-        // }
-
-        // Solve absences here
-        if (absencesRule) {
-          nextOccurrenceAbsent =
-            absencesRule.after(nextOccurence, true) != null;
-        }
-      }
-
-      return {
-        assignment: assignment,
-        coworkers: names,
-        absences: filteredAbsences,
-        assignmentRule: assignmentRule,
-        nextOccurrenceAbsent: nextOccurrenceAbsent,
-        nextOccurrence: nextOccurence,
-        isRegular: secondNextOccurence != null,
-      };
     }),
   );
 
-  assignmentRules.sort((a, b) => {
-    const nextA = a.assignmentRule.after(now, true);
-    const nextB = b.assignmentRule.after(now, true);
+  assignmentInfos.sort((a, b) => {
+    const nextA = a.nextOccurrence;
+    const nextB = b.nextOccurrence;
     if (!nextA && !nextB) return 0;
     if (!nextA) return 1;
     if (!nextB) return -1;
@@ -175,21 +113,89 @@ export const getUserAssignments = async (mship: number) => {
     return nextA > nextB ? 1 : -1;
   });
 
-  assignmentRules.forEach((rule) => {
-    delete rule.assignmentRule;
-    delete rule.absences;
-  });
-
   return {
-    assignmentRules: assignmentRules.filter((rule) => rule.nextOccurrence),
+    assignmentRules: assignmentInfos.filter((rule) => rule.nextOccurrence),
     absences: absences,
     holidays: holidays,
     holidaysCurrent: holidaysCurrent,
   };
 };
 
+const getAssignmentInfos = async (
+  assignment: ShiftsAssignment,
+  absences: ShiftsAbsence[],
+  publicHolidaRruleSet: RRuleSet,
+  mship: number,
+) => {
+  const now = getCurrentDate();
+
+  const filteredAbsences = absences.filter(
+    (absence) =>
+      absence.shifts_assignment == assignment.id ||
+      absence.shifts_assignment == null,
+  );
+
+  const [assignmentRule, absencesRule] = getAssignmentRRule(
+    assignment,
+    filteredAbsences,
+    publicHolidaRruleSet,
+  );
+
+  const nextOccurence = assignmentRule.after(now, true);
+  let secondNextOccurence = null;
+  let nextOccurrenceAbsent = null;
+  const coworkers = [];
+
+  if (nextOccurence) {
+    secondNextOccurence = assignmentRule.after(nextOccurence);
+
+    const coworkers_ = await getCoworkers(assignment, nextOccurence, mship);
+    console.log("coworkers_", coworkers_);
+    coworkers.push(...coworkers_);
+
+    if (absencesRule) {
+      nextOccurrenceAbsent = absencesRule.after(nextOccurence, true) != null;
+    }
+  }
+
+  return {
+    assignment: assignment,
+    coworkers: coworkers,
+    nextOccurrence: nextOccurence,
+    nextOccurrenceAbsent: nextOccurrenceAbsent,
+    isRegular: secondNextOccurence != null,
+  };
+};
+
+// Get names of coworkers for a shift assignment
+const getCoworkers = async (
+  assignment: ShiftsAssignment,
+  nextOccurence: Date,
+  mship: number,
+) => {
+  const coworkers = [];
+  const occs = await getShiftOccurrences(
+    nextOccurence,
+    nextOccurence,
+    false,
+    assignment.shifts_shift.id,
+    mship,
+  );
+
+  if (occs.occurrences.length > 0) {
+    const assignments = occs.occurrences[0].assignments;
+    for (const a of assignments) {
+      const u = a.assignment.shifts_membership.memberships_user;
+      if (a.isSelf) continue;
+      if (!a.isActive) continue;
+      coworkers.push(u.first_name + " " + u.last_name);
+    }
+  }
+
+  return coworkers;
+};
+
 // Get assignment rrule
-// Creates a slice of the shift rrule within the assignment timeframe
 export const getAssignmentRRule = (
   assignment: ShiftsAssignment,
   absences?: ShiftsAbsence[],

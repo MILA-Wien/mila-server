@@ -10,7 +10,7 @@ setPageTitle(t("Shifts Overview"));
 
 const mship = useCurrentUser().value.membership!;
 const isActive = mship.shifts_user_type != "inactive";
-const activeAssignments: Ref<ShiftsAssignmentRules[]> = ref([]);
+const activeAssignments: Ref<ShiftsAssignmentInfos[]> = ref([]);
 const holidaysAll: Ref<ShiftsAbsenceGet[]> = ref([]);
 const holidaysCurrent: Ref<ShiftsAbsenceGet[]> = ref([]);
 const activeAbsences: Ref<ShiftsAbsenceGet[]> = ref([]);
@@ -31,20 +31,15 @@ async function getLogs() {
   );
 }
 
-getLogs();
-
-async function fetchAssignments() {
-  return await $fetch("/api/shifts/assignments");
-}
-
 async function loadData() {
   dataLoaded.value = false;
-  const res = await fetchAssignments();
-  activeAssignments.value = res.assignmentRules;
-  holidaysAll.value = res.holidays;
+  getLogs();
+  const res = await $fetch("/api/shifts/assignments");
+  activeAssignments.value = res.assignmentRules as ShiftsAssignmentInfos[];
+  holidaysAll.value = res.holidays as ShiftsAbsenceGet[];
   console.log(holidaysAll.value);
-  holidaysCurrent.value = res.holidaysCurrent;
-  activeAbsences.value = res.absences;
+  holidaysCurrent.value = res.holidaysCurrent as ShiftsAbsenceGet[];
+  activeAbsences.value = res.absences as ShiftsAbsenceGet[];
   canShop.value =
     (mship.shifts_counter > -1 && holidaysCurrent.value.length == 0) ||
     mship.shifts_user_type == "exempt";
