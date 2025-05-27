@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "license": "AGPL-3.0",
-  "author": "Joël Foramitti",
+  "author": "MILA Mitmach Supermarkt e.G.",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev --dotenv .env --p 3000 --host",
