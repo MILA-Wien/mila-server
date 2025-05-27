@@ -1,3 +1,6 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
 @font-face {
   font-family: "AvoryII";
   src: url("~/assets/fonts/AvoryIIPE-Bl.otf") format("opentype");
@@ -21,7 +24,7 @@
   font-weight: 700;
 }
 
-html {
+/* html {
   @apply text-black break-words font-normal font-OpenSans tracking-wide subpixel-antialiased;
 }
 
@@ -50,4 +53,4 @@ h5 {
 
 p {
   @apply text-base font-normal;
-}
+} */
