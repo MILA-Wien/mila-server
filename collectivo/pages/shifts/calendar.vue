@@ -8,10 +8,6 @@ setPageTitle(t("Shift calendar"), {
   backLink: "/shifts",
   backLinkLabel: t("Back to overview"),
 });
-
-definePageMeta({
-  middleware: ["auth"],
-});
 </script>
 
 <template>

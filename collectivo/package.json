@@ -47,13 +47,13 @@
     "@types/luxon": "^3.4.2",
     "@types/nodemailer": "^6.4.16",
     "@types/sanitize-html": "^2.13.0",
+    "cypress": "^14.1.0",
     "eslint": "9.14.0",
-    "nuxt": "^3.14.159",
+    "nuxt": "^3.17.4",
     "prettier": "3.3.3",
     "sass": "^1.80.7",
-    "vitest": "^2.1.5",
     "unhead": "1.11.18",
-    "vue": "latest",
-    "cypress": "^14.1.0"
+    "vitest": "^2.1.5",
+    "vue": "latest"
   }
 }
