@@ -23,20 +23,6 @@
     "name": "Skript ausführen",
     "key": "automation_name",
     "type": "exec",
-    "position_x": 8,
-    "position_y": 54,
-    "options": {
-      "code": "module.exports = async function(data) {\n\tif (data[\"read_assignment\"][\"shifts_is_regular\"]){\n\t\treturn { \"automation_name\": \"shifts_assignment_created_regular\" }\n    }\n\treturn { \"automation_name\": \"shifts_assignment_created_jumper\" }\n}"
-    },
-    "resolve": "594dbc33-1c9e-4e63-a503-70bd92f784d3",
-    "reject": null,
-    "flow": "4132f37d-df4d-4d17-ae4f-f048b8a74af5",
-    "_syncId": "b72ff107-a5c3-452a-bd54-9179161c97b6"
-  },
-  {
-    "name": "Skript ausführen",
-    "key": "automation_name",
-    "type": "exec",
     "position_x": 19,
     "position_y": 1,
     "options": {
@@ -46,6 +32,20 @@
     "reject": null,
     "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
     "_syncId": "cb8ea7e4-d20a-4466-af9c-d5e59bae36a6"
+  },
+  {
+    "name": "Skript ausführen",
+    "key": "automation_name",
+    "type": "exec",
+    "position_x": 8,
+    "position_y": 54,
+    "options": {
+      "code": "module.exports = async function(data) {\n\tif (data[\"read_assignment\"][\"shifts_is_regular\"]){\n\t\treturn { \"automation_name\": \"shifts_assignment_created_regular\" }\n    }\n\treturn { \"automation_name\": \"shifts_assignment_created_jumper\" }\n}"
+    },
+    "resolve": "594dbc33-1c9e-4e63-a503-70bd92f784d3",
+    "reject": null,
+    "flow": "4132f37d-df4d-4d17-ae4f-f048b8a74af5",
+    "_syncId": "b72ff107-a5c3-452a-bd54-9179161c97b6"
   },
   {
     "name": "calcShares",
@@ -645,28 +645,6 @@
     "name": "postToNuxtAPI",
     "key": "post_to_nuxt_api",
     "type": "request",
-    "position_x": 37,
-    "position_y": 1,
-    "options": {
-      "method": "POST",
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/user_sync_keycloak",
-      "headers": [
-        {
-          "header": "Authorization",
-          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
-        }
-      ],
-      "body": "{{$trigger}}"
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
-    "_syncId": "0c188aa8-7df4-4fea-bd78-23758e8a9013"
-  },
-  {
-    "name": "postToNuxtAPI",
-    "key": "post_to_nuxt_api",
-    "type": "request",
     "position_x": 19,
     "position_y": 1,
     "options": {
@@ -684,6 +662,28 @@
     "reject": null,
     "flow": "5ea28856-7cb2-49a4-86b8-eacbd27ac54d",
     "_syncId": "ad799be4-d215-4375-97d7-6308e05f46f4"
+  },
+  {
+    "name": "postToNuxtAPI",
+    "key": "post_to_nuxt_api",
+    "type": "request",
+    "position_x": 37,
+    "position_y": 1,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/user_sync_keycloak",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{{$trigger}}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
+    "_syncId": "0c188aa8-7df4-4fea-bd78-23758e8a9013"
   },
   {
     "name": "postToNuxtAPI",
@@ -1458,20 +1458,6 @@
     "_syncId": "cfd6218a-7de5-4c15-9757-597a1312f9a6"
   },
   {
-    "name": "User ids",
-    "key": "user_ids",
-    "type": "exec",
-    "position_x": 21,
-    "position_y": 18,
-    "options": {
-      "code": "module.exports = async function(data) {\n\t\n    const user_ids_active = []\n    const user_ids_investing = []\n    let id = undefined\n    \n    for (i in data[\"read_memberships\"]) {\n    \tconst mship = data[\"read_memberships\"][i]\n        const id = mship.memberships_user\n        const isActive = mship.memberships_type === \"Aktiv\"\n        if (id) {\n            if (isActive) {\n               user_ids_active.push(id)\n            } else {\n               user_ids_investing.push(id)\n            }\n        }\n    }\n    \n\treturn { user_ids_active, user_ids_investing };\n}"
-    },
-    "resolve": "e3494be9-be8b-4787-b63d-d0b485ca9158",
-    "reject": null,
-    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
-    "_syncId": "1b8c6e64-414b-4ff4-a9ed-fd3ab6286ee8"
-  },
-  {
     "name": "Skript ausführen",
     "key": "user_ids",
     "type": "exec",
@@ -1498,5 +1484,19 @@
     "reject": null,
     "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
     "_syncId": "4bb7b88f-e8cc-4b46-b7ed-a075b3cd334b"
+  },
+  {
+    "name": "User ids",
+    "key": "user_ids",
+    "type": "exec",
+    "position_x": 21,
+    "position_y": 18,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t\n    const user_ids_active = []\n    const user_ids_investing = []\n    let id = undefined\n    \n    for (i in data[\"read_memberships\"]) {\n    \tconst mship = data[\"read_memberships\"][i]\n        const id = mship.memberships_user\n        const isActive = mship.memberships_type === \"Aktiv\"\n        if (id) {\n            if (isActive) {\n               user_ids_active.push(id)\n            } else {\n               user_ids_investing.push(id)\n            }\n        }\n    }\n    \n\treturn { user_ids_active, user_ids_investing };\n}"
+    },
+    "resolve": "e3494be9-be8b-4787-b63d-d0b485ca9158",
+    "reject": null,
+    "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
+    "_syncId": "1b8c6e64-414b-4ff4-a9ed-fd3ab6286ee8"
   }
 ]
