@@ -598,6 +598,7 @@ const form: Ref<CollectivoForm> = ref({
       choices: [
         { label: "German", value: "Deutsch" },
         { label: "English", value: "Englisch" },
+        { label: "French", value: "Französisch" },
         { label: "Turkish", value: "Türkisch" },
         { label: "BKMS", value: "BKMS" },
         { label: "Ukrainian", value: "Ukrainisch" },
