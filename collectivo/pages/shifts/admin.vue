@@ -5,10 +5,6 @@ definePageMeta({
 
 const { t } = useI18n();
 setPageTitle(t("Shifts calendar (admin)"));
-
-definePageMeta({
-  middleware: ["auth"],
-});
 </script>
 
 <template>

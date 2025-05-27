@@ -12,9 +12,10 @@
     "preview": "node collectivo/.output/server/index.mjs",
     "seed": "curl -f -LI --header \"Authorization:badToken\" --request POST \"http://localhost:3000/api/create_example_data\""
   },
-  "author": "Joël Foramitti",
+  "author": "MILA Mitmach Supermarkt e.G.",
   "license": "AGPL-3.0",
   "devDependencies": {
-    "concurrently": "^8.2.2"
-  }
+    "concurrently": "^9.1.2"
+  },
+  "packageManager": "pnpm@8.11.0+sha1.01bf39424f1008f29012bbae851d2acb8a20a0d0"
 }

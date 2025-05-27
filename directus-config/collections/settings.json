@@ -19,6 +19,11 @@
       },
       {
         "type": "module",
+        "id": "visual",
+        "enabled": false
+      },
+      {
+        "type": "module",
         "id": "users",
         "enabled": true
       },
@@ -86,6 +91,7 @@
     "public_registration_verify_email": true,
     "public_registration_role": null,
     "public_registration_email_filter": null,
+    "visual_editor_urls": null,
     "_syncId": "fccf1fca-5972-4e36-a853-25c7f7d20f9b"
   }
 ]

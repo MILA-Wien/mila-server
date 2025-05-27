@@ -3,7 +3,8 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-setPageTitle("Dashboard");
+const { t } = useI18n();
+setPageTitle(t("Dashboard"));
 
 const tiles = useDashboardTiles();
 
@@ -53,3 +54,8 @@ tiles.value.load();
     </CollectivoCard>
   </div>
 </template>
+
+<i18n lang="yaml">
+de:
+  "Dashboard": "Startseite"
+</i18n>
