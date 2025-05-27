@@ -23,8 +23,12 @@ const nextOccurrenceAbsent = ass.nextOccurrenceAbsent as Boolean;
 const assignment = ass.assignment as ShiftsAssignment;
 const coworkers = ass.coworkers as String[];
 const shift = assignment.shifts_shift as ShiftsShift;
-const nextOccurrenceStart = DateTime.fromISO(nextOccurrence, locale).plus(Duration.fromISOTime(shift.shifts_from_time)); // DateTime object representing the occurrence's start, including time of day
-const nextOccurrenceEnd = DateTime.fromISO(nextOccurrence, locale).plus( Duration.fromISOTime(shift.shifts_to_time)); // DateTime object representing the occurrence's end, including time of day
+const nextOccurrenceStart = DateTime.fromISO(nextOccurrence, locale).plus(
+  Duration.fromISOTime(shift.shifts_from_time),
+); // DateTime object representing the occurrence's start, including time of day
+const nextOccurrenceEnd = DateTime.fromISO(nextOccurrence, locale).plus(
+  Duration.fromISOTime(shift.shifts_to_time),
+); // DateTime object representing the occurrence's end, including time of day
 const user = useCurrentUser();
 const emit = defineEmits(["reload"]);
 
@@ -68,7 +72,21 @@ function downloadICS() {
   // downloads the next occurrence as a ICS calendar entry file, and if it is a regular shift assignment, as a recurring event.
   const event = {
     title: "MILA " + t("Shift"),
-    description: t("ics_preamble") + "\\n*****\\n\\n" + t("Shift") + " " + shift.shifts_name + " (" + (ass.isRegular ? (t("Shift repeats every") + " " + shift.shifts_repeats_every + " " + t("days")) : t("One-time shift"))  + ")",
+    description:
+      t("ics_preamble") +
+      "\\n*****\\n\\n" +
+      t("Shift") +
+      " " +
+      shift.shifts_name +
+      " (" +
+      (ass.isRegular
+        ? t("Shift repeats every") +
+          " " +
+          shift.shifts_repeats_every +
+          " " +
+          t("days")
+        : t("One-time shift")) +
+      ")",
     location: "MILA",
     start: nextOccurrenceStart.toJSDate(),
     end: nextOccurrenceEnd.toJSDate(),
@@ -80,20 +98,21 @@ function downloadICS() {
   };
 
   const formatDate = (date) => {
-    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
   };
 
   let rrule_line = "";
-  if(event.regular) {
-    rrule_line = `RRULE:FREQ=DAILY;INTERVAL=${event.regularity}`
-    if(event.regularity_until) {
-      rrule_line += `;UNTIL=${formatDate(DateTime.fromISO(event.regularity_until, locale).toJSDate())}`
+  if (event.regular) {
+    rrule_line = `RRULE:FREQ=DAILY;INTERVAL=${event.regularity}`;
+    if (event.regularity_until) {
+      rrule_line += `;UNTIL=${formatDate(DateTime.fromISO(event.regularity_until, locale).toJSDate())}`;
     }
     rrule_line += `
-`
+`;
   }
 
-  const icsContent = `BEGIN:VCALENDAR
+  const icsContent =
+    `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//MILA//Collectivo//EN
 BEGIN:VEVENT
@@ -104,21 +123,22 @@ DTSTART:${formatDate(event.start)}
 DTEND:${formatDate(event.end)}
 UID:${event.uid}
 DTSTAMP:${formatDate(event.timestamp)}
-` + rrule_line + `END:VEVENT
+` +
+    rrule_line +
+    `END:VEVENT
 END:VCALENDAR`;
 
-  const blob = new Blob([icsContent], { type: 'text/calendar' });
+  const blob = new Blob([icsContent], { type: "text/calendar" });
   const url = URL.createObjectURL(blob);
 
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   link.href = url;
-  link.download = 'event.ics';
+  link.download = "event.ics";
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 }
-
 </script>
 
 <template>
@@ -138,8 +158,9 @@ END:VCALENDAR`;
           </p>
           <template v-else>
             <p>
-              {{ t("Shift repeats every") }} {{ shift.shifts_repeats_every }}
-              {{ t("days") }}
+              {{ t("Shift repeats every") }}
+              {{ shift.shifts_repeats_every / 7 }}
+              {{ t("weeks") }}
 
               <span v-if="assignment.shifts_to">
                 {{ t("until") }} {{ getEndDate(assignment.shifts_to) }}
@@ -166,10 +187,7 @@ END:VCALENDAR`;
         </div>
         <!-- Space for buttons -->
         <div class="flex flex-wrap gap-3">
-          <UButton
-            size="sm"
-            color="yellow"
-            @click="downloadICS()"
+          <UButton size="sm" color="yellow" @click="downloadICS()"
             >{{ t("Calendar download") }}
           </UButton>
           <UButton
@@ -225,6 +243,7 @@ de:
   "until": "bis"
   "Shift repeats every": "Schicht wiederholt sich alle"
   "days": "Tage"
+  "weeks": "Wochen"
   "from": "von"
   "to": "bis"
   "Absences": "Abwesenheiten"

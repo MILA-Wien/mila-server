@@ -83,7 +83,7 @@ async function getActiveHolidays(date: Date): Promise<number[]> {
 // Decrement shifts counter for all users that
 // 1) are not on holiday
 // 2) are active as well as jumpers or regulars
-// 3) have a shifts counter < 0 (if counter hits zero, user is blocked)
+// 3) have a shifts counter > 0 (if counter hits zero, it remains at zero)
 async function decrement_shifts_counter(mshipIdsOnHoliday: number[]) {
   const directus = await useDirectusAdmin();
   const memberships = await directus.request(
