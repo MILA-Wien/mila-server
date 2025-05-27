@@ -1,12 +1,4 @@
 export default defineAppConfig({
-  mila: {
-    supportNumber: "0670 202 63 68",
-    supportNumberLink: "tel:+436702026368",
-  },
-  localesDict: {
-    de: "Deutsch",
-    en: "English",
-  },
   ui: {
     primary: "purple",
     gray: "cool",
@@ -146,9 +138,6 @@ export default defineAppConfig({
         },
       },
     },
-
-    // Forms ---------------------------------------------------------------------------------
-
     formGroup: {
       label: {
         base: "block text-md font-semibold",
@@ -231,7 +220,6 @@ export default defineAppConfig({
       option: {
         rounded: "rounded-none",
       },
-      // TODO: Add light border "border-1 border-[#edf0f7]",
     },
     checkbox: {
       base: "h-[18px] w-[18px] disabled:cursor-not-allowed cursor-pointer disabled:opacity-50 focus:ring-0 focus:ring-transparent focus:ring-offset-transparent",
