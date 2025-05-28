@@ -37,9 +37,7 @@ export async function updateShiftLogsAdmin(
   const payload: Partial<ShiftLogsAdmin> = {
     shifts_type: type,
   };
-  if (type === "missed") {
-    payload["shifts_score"] = 0;
-  }
+  payload["shifts_score"] = type === "attended" ? 28 : 0;
   return await directus.request(updateItem("shifts_logs", logID, payload));
 }
 
@@ -57,7 +55,7 @@ export async function createShiftLog(
   note?: string,
 ) {
   if (!score) {
-    score = type === "attended" ? 1 : type === "missed" ? -1 : 0;
+    score = type === "attended" ? 28 : 0;
   }
   const directus = useDirectus();
   return await directus.request(

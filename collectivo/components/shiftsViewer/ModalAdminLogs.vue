@@ -82,7 +82,7 @@ async function createCustomLog() {
 </script>
 
 <template>
-  <h2 class="mb-2 mt-6">{{ t("Logs") }}</h2>
+  <h2 class="mb-2 mt-6">Extra logs (Ohne Anmeldung)</h2>
   <template v-for="log of writableLogs" :key="log.id">
     <ShiftsViewerModalAdminBox
       :id="log.id!"
@@ -108,7 +108,7 @@ async function createCustomLog() {
     </ShiftsViewerModalAdminBox>
   </template>
   <div class="mt-3">
-    <UButton @click="openLogModal">{{ t("Create log") }}</UButton>
+    <UButton @click="openLogModal">Extra log erstellen</UButton>
   </div>
 
   <UModal v-model="logModalIsOpen" :transition="false">
