@@ -60,7 +60,7 @@ shiftTitle += " (" + shift.shifts_name + ")";
           {{
             assignment.assignment.shifts_membership.memberships_user
               .first_name === ""
-              ? "[Name verborgen]"
+              ? "Anonym"
               : assignment.assignment.shifts_membership.memberships_user
                   .first_name
           }}

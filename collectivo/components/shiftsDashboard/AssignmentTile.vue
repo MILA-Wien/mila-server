@@ -169,11 +169,10 @@ END:VCALENDAR`;
           </template>
 
           <!-- Shift coworkers -->
-          <p v-if="coworkers.length > 0">
-            {{ t("Registered") }}:
-            <span v-for="(item, index) in coworkers" :key="index">
-              {{ item === " " ? t("[name hidden]") : item
-              }}<span v-if="index < coworkers.length - 1">, </span>
+          <p>
+            {{ t("Registered") }}: {{ t("You")
+            }}<span v-for="(item, index) in coworkers" :key="index"
+              >, {{ item === " " ? t("Anonymous") : item }}
             </span>
           </p>
 
@@ -207,7 +206,7 @@ END:VCALENDAR`;
         class="p-8 flex flex-col gap-2"
         v-if="dateWithinTimeSpan(nextOccurrence, MAX_DAYS_TO_SIGN_OUT_BEFORE)"
       >
-        <h2>{{ t("Shift Sign-Out") }}</h2>
+        <h2>{{ t("Sign out") }}</h2>
 
         <p>{{ t("Sign out from the following shift") }}:</p>
         <p>
@@ -223,7 +222,7 @@ END:VCALENDAR`;
         </div>
       </div>
       <div v-else class="p-8 flex flex-col gap-2">
-        <h2>{{ t("Shift Sign-Out") }}</h2>
+        <h2>{{ t("Sign out") }}</h2>
         <p>
           {{
             t("Sign-out is not possible anymore. Please contact the office.")
@@ -240,24 +239,22 @@ en:
   "ics_preamble": "Warning: This calendar entry will not be automatically updated if your shift schedule changes. You can view your current shift schedule online in the member area. Please remember to delete old calendar entries and create a new one if your shift schedule changes."
   "Calendar download": "Calendar export"
 de:
-  "until": "bis"
+  "Shift": "Schicht"
+  "Absences": "Abwesenheiten"
+  "One-time shift": "Einmalige Schicht"
   "Shift repeats every": "Schicht wiederholt sich alle"
   "days": "Tage"
   "weeks": "Wochen"
   "from": "von"
   "to": "bis"
-  "Absences": "Abwesenheiten"
-  "One-time shift": "Einmalige Schicht"
-  "Location": "Ort"
-  "Shift name": "Schichtname"
+  "until": "bis"
+  "You": "Du"
   "Sign out": "Abmelden"
-  "Shift Sign-Out": "Schicht Abmeldung"
   "Sign out from the following shift": "Von folgender Schicht abmelden"
   "Registered": "Angemeldet"
-  "[name hidden]": "[Name verborgen]"
+  "Anonymous": "Anonym"
   "Contact": "Kontakt"
   "Sign-out is not possible anymore. Please contact the office.": "Abmeldung ist nicht mehr möglich. Bitte kontaktiere das Mitgliederbüro."
   "Calendar download": "Kalender-Export"
-  "Shift": "Schicht"
   "ics_preamble": "Achtung: Dieser Kalendereintrag wird nicht automatisch aktualisiert, falls sich deine Schichteinteilung ändert. Deine aktuelle Schichteinteilung siehst du online im Mitgliederbereich. Denke bei Änderungen der Schichteinteilung bitte daran, alte Kalendereinträge zu löschen und dir einen neuen Kalendereintrag zu erstellen."
 </i18n>
