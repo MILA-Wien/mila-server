@@ -21,33 +21,38 @@ export default defineEventHandler(async (event) => {
   } catch (e) {
     console.error("Error in cronjobs", e);
   }
+  console.log("Finished cronjobs");
 });
 
 async function runCronjobs() {
   const directus = await useDirectusAdmin();
+  const settings = await directus.request(readSingleton("settings_hidden"));
 
   // Get days since last cronjob (do not include day of last cronjob)
-  const settings = await directus.request(readSingleton("settings_hidden"));
   const from = new Date(settings.last_cronjob + "Z");
   from.setDate(from.getDate() + 1);
   from.setUTCHours(0, 0, 0, 0);
   const to = new Date();
-
-  const dates_since_last_cronjob = [];
+  const days_since_last_cronjob = [];
   for (let d = new Date(from); d <= to; d.setDate(d.getDate() + 1)) {
-    dates_since_last_cronjob.push(new Date(d));
+    days_since_last_cronjob.push(new Date(d));
   }
 
   // Perform cronjobs
-  for (const date of dates_since_last_cronjob) {
+  for (const date of days_since_last_cronjob) {
     const holidays = await getActiveHolidays(date);
+
+    // Job 1
     await create_shift_logs(date, date, holidays, settings);
+
+    // Job 2
     try {
       await sendShiftReminders(date);
     } catch (e) {
       console.error("Error in sendShiftReminders", e);
     }
 
+    // Job 3
     if (settings.shift_point_system) {
       await decrement_shifts_counter(holidays);
     }
@@ -66,9 +71,6 @@ async function getActiveHolidays(date: Date): Promise<number[]> {
   const holidays = await directus.request(
     readItems("shifts_absences", {
       filter: {
-        shifts_status: {
-          _eq: "accepted",
-        },
         shifts_is_holiday: { _eq: true },
         shifts_to: { _gte: date.toISOString() },
         shifts_from: { _lte: date.toISOString() },
