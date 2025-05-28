@@ -1,97 +1,26 @@
-// Get shift assignments and absences of current user
+// Get overview of shifts for current user
+// Includes shifts, assignments, absences, holidays, logs
 
 import { RRule, RRuleSet } from "rrule";
 import { readItems } from "@directus/sdk";
 
 export default defineEventHandler(async (event) => {
-  return getUserAssignments(event.context.auth.mship);
+  return await getMyShiftsInfos(event.context.auth.mship);
 });
 
-export const getUserAssignments = async (mship: number) => {
-  const directus = useDirectusAdmin();
-  const now = getCurrentDate();
-  const nowStr = now.toISOString();
+const getMyShiftsInfos = async (mship: number) => {
+  const [
+    assignments,
+    [absences, holidays, holidaysCurrent],
+    publicHolidaRruleSet,
+    logs,
+  ] = await Promise.all([
+    getAssignments(mship),
+    getAbsences(mship),
+    getPublicHolidays(),
+    getLogs(mship),
+  ]);
 
-  // Get user shift assignments
-  const assignments = (await directus.request(
-    readItems("shifts_assignments", {
-      filter: {
-        shifts_membership: { id: { _eq: mship } },
-        shifts_to: {
-          _or: [{ _gte: nowStr }, { _null: true }],
-        },
-      },
-      limit: -1,
-      fields: [
-        "*",
-        { shifts_shift: ["*"] },
-        {
-          shifts_membership: { memberships_user: ["first_name", "last_name"] },
-        },
-      ],
-    }),
-  )) as ShiftsAssignmentGet[];
-
-  // Get user shift absences
-  const absences = (await directus.request(
-    readItems("shifts_absences", {
-      limit: -1,
-      filter: {
-        _or: [
-          { shifts_membership: { id: { _eq: mship } } },
-          {
-            shifts_assignment: { shifts_membership: { id: { _eq: mship } } },
-          },
-        ],
-
-        shifts_to: { _gte: nowStr },
-      },
-      fields: [
-        "*",
-        { shifts_shift: ["*"] },
-        {
-          shifts_membership: { memberships_user: ["first_name", "last_name"] },
-        },
-      ],
-    }),
-  )) as ShiftsAbsenceGet[];
-
-  // Get user holidays
-  const holidays = [] as ShiftsAbsenceGet[];
-  const holidaysCurrent = [] as ShiftsAbsenceGet[];
-  for (const absence of absences) {
-    if (absence.shifts_is_holiday) {
-      holidays.push(absence);
-      if (new Date(absence.shifts_from) <= new Date(nowStr)) {
-        holidaysCurrent.push(absence);
-      }
-    }
-  }
-
-  // Get public holidays
-  const publicHolidays = (await directus.request(
-    readItems("shifts_holidays_public", {
-      filter: {
-        date: {
-          _and: [{ _gte: now }],
-        },
-      },
-      limit: -1,
-      fields: ["date"],
-    }),
-  )) as ShiftsPublicHoliday[];
-
-  const publicHolidaRruleSet = new RRuleSet();
-  publicHolidays.forEach((holiday) => {
-    publicHolidaRruleSet.rrule(
-      new RRule({
-        dtstart: new Date(holiday.date),
-        count: 1,
-      }),
-    );
-  });
-
-  // Get assignment infos
   const assignmentInfos = await Promise.all(
     assignments.map(async (assignment) => {
       return await getAssignmentInfos(
@@ -118,8 +47,113 @@ export const getUserAssignments = async (mship: number) => {
     absences: absences,
     holidays: holidays,
     holidaysCurrent: holidaysCurrent,
+    logs: logs,
   };
 };
+
+async function getAssignments(mship: number) {
+  const now = getCurrentDate();
+  const nowStr = now.toISOString();
+  const directus = useDirectusAdmin();
+  return (await directus.request(
+    readItems("shifts_assignments", {
+      filter: {
+        shifts_membership: { id: { _eq: mship } },
+        shifts_to: {
+          _or: [{ _gte: nowStr }, { _null: true }],
+        },
+      },
+      limit: -1,
+      fields: [
+        "*",
+        { shifts_shift: ["*"] },
+        {
+          shifts_membership: { memberships_user: ["first_name", "last_name"] },
+        },
+      ],
+    }),
+  )) as ShiftsAssignmentGet[];
+}
+
+async function getAbsences(mship: number) {
+  const directus = useDirectusAdmin();
+  const now = getCurrentDate();
+  const nowStr = now.toISOString();
+  const absences = (await directus.request(
+    readItems("shifts_absences", {
+      limit: -1,
+      filter: {
+        _or: [
+          { shifts_membership: { id: { _eq: mship } } },
+          {
+            shifts_assignment: { shifts_membership: { id: { _eq: mship } } },
+          },
+        ],
+
+        shifts_to: { _gte: nowStr },
+      },
+      fields: [
+        "*",
+        { shifts_shift: ["*"] },
+        {
+          shifts_membership: { memberships_user: ["first_name", "last_name"] },
+        },
+      ],
+    }),
+  )) as ShiftsAbsenceGet[];
+
+  const holidays = [] as ShiftsAbsenceGet[];
+  const holidaysCurrent = [] as ShiftsAbsenceGet[];
+  for (const absence of absences) {
+    if (absence.shifts_is_holiday) {
+      holidays.push(absence);
+      if (new Date(absence.shifts_from) <= new Date(nowStr)) {
+        holidaysCurrent.push(absence);
+      }
+    }
+  }
+
+  return [absences, holidays, holidaysCurrent];
+}
+
+async function getPublicHolidays() {
+  const now = getCurrentDate();
+  const directus = useDirectusAdmin();
+  const publicHolidays = (await directus.request(
+    readItems("shifts_holidays_public", {
+      filter: {
+        date: {
+          _and: [{ _gte: now }],
+        },
+      },
+      limit: -1,
+      fields: ["date"],
+    }),
+  )) as ShiftsPublicHoliday[];
+
+  const publicHolidaRruleSet = new RRuleSet();
+  publicHolidays.forEach((holiday) => {
+    publicHolidaRruleSet.rrule(
+      new RRule({
+        dtstart: new Date(holiday.date),
+        count: 1,
+      }),
+    );
+  });
+
+  return publicHolidaRruleSet;
+}
+
+async function getLogs(mship: number) {
+  const directus = useDirectusAdmin();
+  return await directus.request(
+    readItems("shifts_logs", {
+      filter: { shifts_membership: mship },
+      sort: ["-shifts_date"],
+      limit: 5,
+    }),
+  );
+}
 
 const getAssignmentInfos = async (
   assignment: ShiftsAssignment,
@@ -150,7 +184,6 @@ const getAssignmentInfos = async (
     secondNextOccurence = assignmentRule.after(nextOccurence);
 
     const coworkers_ = await getCoworkers(assignment, nextOccurence, mship);
-    console.log("coworkers_", coworkers_);
     coworkers.push(...coworkers_);
 
     if (absencesRule) {

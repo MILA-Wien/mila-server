@@ -156,6 +156,10 @@ declare global {
     shifts_shift: number;
   }
 
+  interface ShiftsAssignmentGetFull extends ShiftsAssignmentGet {
+    shifts_shift: ShiftsShift;
+  }
+
   interface ShiftsAbsence {
     id?: number;
     shifts_from: string;
@@ -171,7 +175,7 @@ declare global {
   }
 
   interface ShiftsAssignmentInfos {
-    assignment: ShiftsAssignment;
+    assignment: ShiftsAssignmentGetFull;
     coworkers: string[];
     nextOccurrence: Date | null;
     nextOccurrenceAbsent: boolean | null;

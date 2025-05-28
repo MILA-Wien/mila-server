@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { readItems } from "@directus/sdk";
-
 definePageMeta({
   middleware: ["auth"],
 });
@@ -14,32 +12,20 @@ const activeAssignments: Ref<ShiftsAssignmentInfos[]> = ref([]);
 const holidaysAll: Ref<ShiftsAbsenceGet[]> = ref([]);
 const holidaysCurrent: Ref<ShiftsAbsenceGet[]> = ref([]);
 const activeAbsences: Ref<ShiftsAbsenceGet[]> = ref([]);
-const directus = useDirectus();
 const { settingsState, fetchSettings } = useSettings();
 const canShop = ref(false);
 const dataLoaded = ref(false);
 const absencePostModalOpen = ref(false);
 const logs = ref<ShiftsLog[]>([]);
 
-async function getLogs() {
-  logs.value = await directus.request(
-    readItems("shifts_logs", {
-      filter: { shifts_membership: mship.id },
-      sort: ["-shifts_date"],
-      limit: 5,
-    }),
-  );
-}
-
 async function loadData() {
   dataLoaded.value = false;
-  getLogs();
-  const res = await $fetch("/api/shifts/assignments");
+  const res = await $fetch("/api/shifts/my_shifts");
   activeAssignments.value = res.assignmentRules as ShiftsAssignmentInfos[];
   holidaysAll.value = res.holidays as ShiftsAbsenceGet[];
-  console.log(holidaysAll.value);
   holidaysCurrent.value = res.holidaysCurrent as ShiftsAbsenceGet[];
   activeAbsences.value = res.absences as ShiftsAbsenceGet[];
+  logs.value = res.logs as ShiftsLog[];
   canShop.value =
     (mship.shifts_counter > -1 && holidaysCurrent.value.length == 0) ||
     mship.shifts_user_type == "exempt";
@@ -54,21 +40,12 @@ function getShiftName(assignmentID: number) {
   return assignment?.assignment.shifts_shift.shifts_name;
 }
 
-function displayShiftScore(score: number) {
-  if (score == 0) return "";
-  return " (" + (score > 0 ? "+" + score : score) + ")";
-}
-
 if (isActive) loadData();
+else throw createError({ statusCode: 403 });
 </script>
 
 <template>
-  <div v-if="!isActive">
-    <p>
-      {{ t("Shift system has not been activated for this account.") }}
-    </p>
-  </div>
-  <div v-else-if="dataLoaded">
+  <div v-if="dataLoaded">
     <CollectivoCard :color="canShop ? 'green' : 'orange'" class="mb-4">
       <div>
         <h4>{{ t("My status") }}</h4>
