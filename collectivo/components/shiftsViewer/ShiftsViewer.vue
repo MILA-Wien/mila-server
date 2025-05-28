@@ -380,13 +380,11 @@ loadEvents();
 </template>
 
 <style lang="scss" scoped>
-:deep {
-  .fc-daygrid-event {
-    border-radius: 0;
-  }
-  .fc-event-main {
-    padding: 4px 0px 4px 5px;
-  }
+:deep(.fc-daygrid-event) {
+  border-radius: 0;
+}
+:deep(.fc-event-main) {
+  padding: 4px 0px 4px 5px;
 }
 </style>
 
