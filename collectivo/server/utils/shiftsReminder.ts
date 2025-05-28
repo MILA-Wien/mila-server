@@ -8,11 +8,11 @@ import { createItem, readItems, updateItems } from "@directus/sdk";
 
 export async function sendShiftReminders(date: Date) {
   const automation = await getAutomation("shifts_reminder");
-  const assignments = await getAssignments(date);
+  const assignments = await getAssignmentsInTwoDays(date);
   await sendRemindersInner(assignments, automation);
 }
 
-async function getAssignments(date: Date) {
+async function getAssignmentsInTwoDays(date: Date) {
   const directus = useDirectusAdmin();
   const targetDate = new Date(date);
   targetDate.setDate(targetDate.getDate() + 2);

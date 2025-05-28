@@ -162,8 +162,8 @@ declare global {
 
   interface ShiftsAbsence {
     id?: number;
-    shifts_from: string;
-    shifts_to: string;
+    shifts_from: "datetime";
+    shifts_to: "datetime";
     shifts_assignment?: number | ShiftsAssignment;
     shifts_membership: MembershipsMembership | number;
     shifts_is_for_all_assignments: boolean;
@@ -196,7 +196,7 @@ declare global {
     shifts_membership: MembershipsMembership | number;
     shifts_type: string;
     shifts_note: string;
-    shifts_date: string;
+    shifts_date: "datetime";
     shifts_score: number;
     shifts_shift?: ShiftsShift | number;
   }
