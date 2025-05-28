@@ -1,3 +1,6 @@
+// Runs once a day at 03:00 in the morning, called by directus API
+// Only runs cronjob for past days since last successful cronjob
+
 import {
   createItem,
   readItems,
@@ -8,33 +11,36 @@ import {
 import { getShiftOccurrences } from "~/server/utils/shiftsOccurrences";
 import { sendShiftReminders } from "../utils/shiftsReminder";
 
-// Runs once a day at 03:00 in the morning, called by directus API
-// Only runs cronjob for past days since last successful cronjob
-
 const CYCLE_DAYS = 28;
 
 export default defineEventHandler(async (event) => {
   verifyCollectivoApiToken(event);
   console.log("Running cronjobs");
+  const query = getQuery(event);
+  const force_yesterday = query.force_yesterday === "true";
   try {
-    await runCronjobs();
+    await runCronjobs(force_yesterday);
   } catch (e) {
     console.error("Error in cronjobs", e);
   }
   console.log("Finished cronjobs");
 });
 
-async function runCronjobs() {
+async function runCronjobs(force_yesterday: boolean) {
   const directus = await useDirectusAdmin();
   const settings = await directus.request(readSingleton("settings_hidden"));
 
   // Get days since last cronjob (including day of last cronjob, not including current day)
   const from = new Date(settings.last_cronjob + "Z");
-  from.setDate(from.getDate());
+  if (force_yesterday) {
+    // If repeat is true, run cronjobs for the last day
+    from.setDate(new Date().getDate() - 1);
+  }
   from.setUTCHours(0, 0, 0, 0);
   const to = new Date();
+  to.setDate(to.getDate() - 1); // Run until yesterday, exclude today
   const days_since_last_cronjob = [];
-  for (let d = new Date(from); d <= to; d.setDate(d.getDate())) {
+  for (let d = new Date(from); d <= to; d.setDate(d.getDate() + 1)) {
     days_since_last_cronjob.push(new Date(d));
   }
 
