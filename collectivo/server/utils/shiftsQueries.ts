@@ -93,6 +93,10 @@ export async function getShiftAssignments(
   );
 }
 
+export type ShiftsAssignmentsQuery = Awaited<
+  ReturnType<typeof getShiftAssignments>
+>;
+
 export async function getShiftAbsences(
   assignmentIds: number[],
   from: Date,
@@ -176,7 +180,7 @@ export const getShiftRrule = (
 export const getAssignmentRrules = (
   shift: ShiftsShift,
   shiftRule: RRule,
-  assignments: ShiftsAssignment[],
+  assignments: ShiftsAssignmentsQuery,
   absences: ShiftsAbsence[],
 ): AssignmentRrule[] => {
   const assignmentRules: AssignmentRrule[] = [];
