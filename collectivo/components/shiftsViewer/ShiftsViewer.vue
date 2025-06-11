@@ -22,18 +22,18 @@ function openModal(occ: ShiftOccurrenceFrontend) {
 
 // Fetching events from API (occurrences and public holidays)
 const render = ref(false);
-const events = ref<ShiftOccurrenceApiResponse | null>(null);
+const events = ref<Awaited<ReturnType<typeof getOccurrencesAdmin>> | null>(
+  null,
+);
 const startDate = ref(new Date());
 const endDate = ref(new Date());
 async function loadEvents() {
   events.value = null;
-  events.value = await $fetch("/api/shifts/occurrences", {
-    query: {
-      from: startDate.value.toISOString(),
-      to: endDate.value.toISOString(),
-      admin: props.admin,
-    },
-  });
+  events.value = await getOccurrencesAdmin(
+    startDate.value.toISOString(),
+    endDate.value.toISOString(),
+    props.admin,
+  );
   render.value = true;
 }
 

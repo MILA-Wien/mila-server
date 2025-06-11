@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import type { PropType } from "vue";
 
+type OccurrencesResponse = Awaited<ReturnType<typeof getOccurrencesAdmin>>;
+type Occurrence = OccurrencesResponse["occurrences"][number];
+
 const props = defineProps({
   admin: {
     type: Boolean,
     default: false,
   },
   events: {
-    type: Object as PropType<ShiftOccurrenceApiResponse>,
+    type: Object as PropType<Awaited<ReturnType<typeof getOccurrencesAdmin>>>,
     required: true,
   },
   status: {
@@ -35,7 +38,7 @@ interface Events {
     date: Date;
     dateString: string;
     isPublicHoliday: boolean;
-    occurrences: ShiftOccurrenceFrontend[];
+    occurrences: Occurrence[];
   };
 }
 const groups: Events = {};
@@ -81,7 +84,8 @@ props.events.occurrences.forEach((occurrence) => {
 
   if (
     allCats &&
-    !(occurrence.shift.shifts_category_2 === null) &&
+    occurrence.shift.shifts_category_2 !== null &&
+    occurrence.shift.shifts_category_2 !== undefined &&
     !props.allowedCategories.includes(occurrence.shift.shifts_category_2)
   ) {
     return;
@@ -99,7 +103,7 @@ props.events.publicHolidays.forEach((holiday) => {
   }
 });
 
-function emitOcc(occ: ShiftOccurrenceFrontend) {
+function emitOcc(occ: Occurrence) {
   emit("openOccurrence", occ);
 }
 </script>

@@ -11,7 +11,7 @@ function getTime(date: Date) {
 const emit = defineEmits(["data-has-changed"]);
 const props = defineProps({
   shiftOccurence: {
-    type: Object as PropType<ShiftOccurrence>,
+    type: Object as PropType<ShiftOccurrenceFrontend>,
     required: true,
   },
 });
@@ -50,19 +50,23 @@ const mainModalIsOpen = defineModel("isOpen", {
 });
 
 // SHIFT LOGS
-const logs = ref<ShiftLogsAdmin[]>([]);
+const extraLogs = ref<ShiftLogsAdmin[]>([]);
 const logsLoaded = ref(false);
 
-getShiftLogsAdmin(startDateString, shift.id).then((logs_: ShiftLogsAdmin[]) => {
-  for (const log of logs_) {
+getShiftLogsAdmin(startDateString, shift.id).then((logs: ShiftLogsAdmin[]) => {
+  let matched = false;
+  for (const log of logs) {
+    matched = false;
     for (const assignment of occ.value.assignments) {
       if (
         assignment.assignment.shifts_membership.id === log.shifts_membership.id
       ) {
         assignment.log = log;
-      } else {
-        logs.value.push(log);
+        matched = true;
       }
+    }
+    if (!matched) {
+      extraLogs.value.push(log);
     }
   }
   logsLoaded.value = true;
@@ -491,7 +495,7 @@ function checkIfMshipInAssignments(mship: number) {
 
       <!-- Logs -->
       <div v-if="isPast && logsLoaded">
-        <ShiftsViewerModalAdminLogs :logs="logs" :occurence="occ" />
+        <ShiftsViewerModalAdminLogs :logs="extraLogs" :occurence="occ" />
       </div>
     </div>
 

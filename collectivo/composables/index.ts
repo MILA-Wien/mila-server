@@ -8,3 +8,7 @@ export {
   deleteShiftLogsAdmin,
   type ShiftLogsAdmin,
 } from "./shifts/logs";
+export {
+  getOccurrencesAdmin,
+  type OccurrencesAdmin,
+} from "./shifts/occurrences";

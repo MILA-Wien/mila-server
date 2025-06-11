@@ -96,13 +96,13 @@ const createShiftOccurrence = (
   shiftRule: RRule,
   assignmentRrules: AssignmentRrule[],
   mship?: number,
-): ShiftOccurrence => {
+) => {
   let n_assigned = 0;
   let selfAssigned = false;
   let needsCoordinator = shift.shifts_needs_coordinator;
 
   // Get all assignments for this shift
-  const assignments: AssignmentOccurrence[] = [];
+  const assignments = [];
   for (const ass of assignmentRrules ?? []) {
     if (ass.rrule.between(date, date, true).length > 0) {
       const occ: AssignmentOccurrence = {

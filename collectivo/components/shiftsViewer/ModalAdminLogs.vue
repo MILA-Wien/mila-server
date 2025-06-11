@@ -12,6 +12,11 @@ const props = defineProps({
   },
 });
 
+async function removeLog(logID: number) {
+  await deleteShiftLogsAdmin(logID);
+  writableLogs.value = writableLogs.value.filter((l) => l.id !== logID);
+}
+
 type SelectedMembership = Awaited<ReturnType<typeof getMembership>>;
 const mshipData = ref<SelectedMembership | null>(null);
 const mshipError = ref<boolean>(false);
@@ -55,18 +60,6 @@ function openLogModal() {
   logModalIsOpen.value = true;
 }
 
-async function updateLog(logID: number, type: "attended" | "missed") {
-  const log = writableLogs.value.find((l) => l.id === logID);
-  if (!log) return;
-  log.shifts_type = type;
-  await updateShiftLogsAdmin(logID, type);
-}
-
-async function removeLog(logID: number) {
-  await deleteShiftLogsAdmin(logID);
-  writableLogs.value = writableLogs.value.filter((l) => l.id !== logID);
-}
-
 async function createCustomLog() {
   const log = await createShiftLog(
     logEntryType.value!,
@@ -94,17 +87,11 @@ async function createCustomLog() {
       }}</template>
       <p>{{ t("t:" + log.shifts_type) }} ({{ log.shifts_score }})</p>
       <p v-if="log.shifts_note">Notes: {{ log.shifts_note }}</p>
-      <div class="mt-1 flex flex-wrap gap-2">
-        <UButton size="sm" color="green" @click="updateLog(log.id, 'attended')">
-          {{ t("Attended") }}
-        </UButton>
-        <UButton size="sm" color="red" @click="updateLog(log.id, 'missed')">
-          {{ t("Missed") }}
-        </UButton>
+      <template #bottom-right>
         <UButton size="sm" color="gray" @click="removeLog(log.id)">
           {{ t("Remove") }}
         </UButton>
-      </div>
+      </template>
     </ShiftsViewerModalAdminBox>
   </template>
   <div class="mt-3">
