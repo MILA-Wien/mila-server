@@ -228,7 +228,6 @@ const getCoworkers = async (
   if (occs.occurrences.length > 0) {
     const assignments = occs.occurrences[0].assignments;
     for (const a of assignments) {
-      console.log(a.assignment.shifts_membership);
       const u = a.assignment.shifts_membership.memberships_user;
       if (a.isSelf) continue;
       if (!a.isActive) continue;
