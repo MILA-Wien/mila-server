@@ -141,7 +141,7 @@ services:
       KC_DB_URL_HOST: "keycloak-db"
       KC_DB_URL_PORT: 5432
       KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
-    command: ${KEYCLOAK_COMMAND}
+    command: ${KEYCLOAK_COMMAND:-}
     ports:
       - 8080:8080
     healthcheck:
