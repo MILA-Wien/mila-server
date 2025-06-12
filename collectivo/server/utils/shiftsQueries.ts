@@ -4,11 +4,7 @@ import { RRule, RRuleSet } from "rrule";
 
 const directus = useDirectusAdmin();
 
-export async function getShiftShifts(
-  from: Date,
-  to: Date,
-  shiftID?: number,
-): Promise<ShiftsShift[]> {
+export async function getShiftShifts(from: Date, to: Date, shiftID?: number) {
   const filter: QueryFilter<DbSchema, ShiftsShift> = {
     _or: [
       {
@@ -143,7 +139,6 @@ export const getShiftRrule = (
   publicHolidays?: Pick<ShiftsPublicHoliday, "date">[],
 ): RRuleSet => {
   const rruleSet = new RRuleSet();
-
   const mainShiftRule = new RRule({
     freq: RRule.DAILY,
     interval: shift.shifts_repeats_every,
@@ -176,7 +171,7 @@ export const getShiftRrule = (
 export const getAssignmentRrules = (
   shift: ShiftsShift,
   shiftRule: RRule,
-  assignments: ShiftsAssignment[],
+  assignments: ShiftsAssignmentsQuery,
   absences: ShiftsAbsence[],
 ): AssignmentRrule[] => {
   const assignmentRules: AssignmentRrule[] = [];
@@ -208,7 +203,7 @@ export const getAssignmentRrules = (
         absence.shifts_assignment == assignment.id ||
         (absence.shifts_assignment == null &&
           absence.shifts_membership ==
-            (assignment.shifts_membership as MembershipsMembership).id),
+            (assignment.shifts_membership as Membership).id),
     );
 
     const absenceRrules = [];

@@ -11,20 +11,35 @@ const signOutModalIsOpen = ref(false);
 
 const props = defineProps({
   shiftAssignment: {
-    type: Object as PropType<ShiftsAssignmentRules>,
+    type: Object as PropType<ApiShiftsUserAssignmentInfos>,
     required: true,
   },
 });
 
-// This is the next occurence of the assignment, not the shift itself!
-const ass = props.shiftAssignment;
-const nextOccurrence = ass.nextOccurrence as String; // just represents the day, not the time
-const nextOccurrenceAbsent = ass.nextOccurrenceAbsent as Boolean;
-const assignment = ass.assignment as ShiftsAssignment;
-const coworkers = ass.coworkers as String[];
-const shift = assignment.shifts_shift as ShiftsShift;
-const nextOccurrenceStart = DateTime.fromISO(nextOccurrence, locale).plus(Duration.fromISOTime(shift.shifts_from_time)); // DateTime object representing the occurrence's start, including time of day
-const nextOccurrenceEnd = DateTime.fromISO(nextOccurrence, locale).plus( Duration.fromISOTime(shift.shifts_to_time)); // DateTime object representing the occurrence's end, including time of day
+function createDateTime(date: string, time?: string) {
+  const datetime = DateTime.fromISO(date, { locale: locale.value });
+  if (time) {
+    return datetime.plus(Duration.fromISOTime(time));
+  }
+  return datetime;
+}
+
+const ass = props.shiftAssignment as ApiShiftsUserAssignmentInfos;
+
+if (!ass.nextOccurrence) {
+  throw new Error("Needs next occurrence");
+}
+
+const nextOcc = ass.nextOccurrence as string;
+const nextOccurrenceAbsent = ass.nextOccurrenceAbsent;
+const nextOccurrenceWithAbsences = ass.nextOccurrenceWithAbsences as string;
+const assignment = ass.assignment;
+const coworkers = ass.coworkers;
+const shift = ass.assignment.shifts_shift;
+const time_from = shift.shifts_from_time;
+const time_to = shift.shifts_to_time;
+const nextOccurrenceStart = createDateTime(nextOcc, time_from);
+const nextOccurrenceEnd = createDateTime(nextOcc, time_to);
 const user = useCurrentUser();
 const emit = defineEmits(["reload"]);
 
@@ -32,29 +47,23 @@ function getEndDate(endDate: string) {
   return DateTime.fromISO(endDate).toLocaleString(DateTime.DATE_MED);
 }
 
-async function requestSignOut() {
-  console.log("Request sign-out");
-  if (!nextOccurrence || !user.value.membership) {
-    return;
-  }
-
-  const payload = {
-    shifts_status: "accepted",
-    shifts_membership: user.value.membership?.id,
-    shifts_from: nextOccurrence,
-    shifts_to: nextOccurrence,
-    shifts_is_holiday: false,
-    shifts_is_for_all_assignments: false,
-    shifts_assignment: assignment.id,
-  } as ShiftsAbsence;
-
-  await directus.request(createItem("shifts_absences", payload));
+async function createAbsence() {
+  await directus.request(
+    createItem("shifts_absences", {
+      shifts_membership: user.value.membership!.id,
+      shifts_from: nextOcc,
+      shifts_to: nextOcc,
+      shifts_is_holiday: false,
+      shifts_is_for_all_assignments: false,
+      shifts_assignment: assignment.id,
+    }),
+  );
 
   emit("reload");
   signOutModalIsOpen.value = false;
 }
 
-function getColor() {
+function getTileColor() {
   if (nextOccurrenceAbsent) {
     return "gray";
   } else if (props.shiftAssignment.isRegular) {
@@ -68,7 +77,21 @@ function downloadICS() {
   // downloads the next occurrence as a ICS calendar entry file, and if it is a regular shift assignment, as a recurring event.
   const event = {
     title: "MILA " + t("Shift"),
-    description: t("ics_preamble") + "\\n*****\\n\\n" + t("Shift") + " " + shift.shifts_name + " (" + (ass.isRegular ? (t("Shift repeats every") + " " + shift.shifts_repeats_every + " " + t("days")) : t("One-time shift"))  + ")",
+    description:
+      t("ics_preamble") +
+      "\\n*****\\n\\n" +
+      t("Shift") +
+      " " +
+      shift.shifts_name +
+      " (" +
+      (ass.isRegular
+        ? t("Shift repeats every") +
+          " " +
+          shift.shifts_repeats_every +
+          " " +
+          t("days")
+        : t("One-time shift")) +
+      ")",
     location: "MILA",
     start: nextOccurrenceStart.toJSDate(),
     end: nextOccurrenceEnd.toJSDate(),
@@ -79,21 +102,22 @@ function downloadICS() {
     regularity_until: shift.shifts_to,
   };
 
-  const formatDate = (date) => {
-    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  const formatDate = (date: Date) => {
+    return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
   };
 
   let rrule_line = "";
-  if(event.regular) {
-    rrule_line = `RRULE:FREQ=DAILY;INTERVAL=${event.regularity}`
-    if(event.regularity_until) {
-      rrule_line += `;UNTIL=${formatDate(DateTime.fromISO(event.regularity_until, locale).toJSDate())}`
+  if (event.regular) {
+    rrule_line = `RRULE:FREQ=DAILY;INTERVAL=${event.regularity}`;
+    if (event.regularity_until) {
+      rrule_line += `;UNTIL=${formatDate(DateTime.fromISO(event.regularity_until, { locale: locale.value }).toJSDate())}`;
     }
     rrule_line += `
-`
+`;
   }
 
-  const icsContent = `BEGIN:VCALENDAR
+  const icsContent =
+    `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//MILA//Collectivo//EN
 BEGIN:VEVENT
@@ -104,42 +128,50 @@ DTSTART:${formatDate(event.start)}
 DTEND:${formatDate(event.end)}
 UID:${event.uid}
 DTSTAMP:${formatDate(event.timestamp)}
-` + rrule_line + `END:VEVENT
+` +
+    rrule_line +
+    `END:VEVENT
 END:VCALENDAR`;
 
-  const blob = new Blob([icsContent], { type: 'text/calendar' });
+  const blob = new Blob([icsContent], { type: "text/calendar" });
   const url = URL.createObjectURL(blob);
 
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   link.href = url;
-  link.download = 'event.ics';
+  link.download = "event.ics";
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 }
-
 </script>
 
 <template>
-  <div v-if="nextOccurrence">
-    <CollectivoCard :color="getColor()">
+  <div v-if="nextOcc">
+    <CollectivoCard :color="getTileColor()">
       <div class="flex flex-wrap justify-between items-start">
         <div class="flex-1 min-w-60">
           <h4>
             {{
-              getDateTimeWithTimeSpanString(shift, nextOccurrence, locale, t)
+              getDateTimeWithTimeSpanString(
+                shift.shifts_from_time,
+                shift.shifts_to_time,
+                nextOcc,
+                locale,
+                t,
+              )
             }}
             <span v-if="shift.shifts_name"> ({{ shift.shifts_name }})</span>
           </h4>
+
           <!-- Repetition info -->
-          <p v-if="!(shift.shifts_repeats_every && shiftAssignment.isRegular)">
-            {{ t("One-time shift") }}
-          </p>
-          <template v-else>
+          <template
+            v-if="shift.shifts_repeats_every && shiftAssignment.isRegular"
+          >
             <p>
-              {{ t("Shift repeats every") }} {{ shift.shifts_repeats_every }}
-              {{ t("days") }}
+              {{ t("This shift repeats every") }}
+              {{ shift.shifts_repeats_every / 7 }}
+              {{ t("weeks") }}
 
               <span v-if="assignment.shifts_to">
                 {{ t("until") }} {{ getEndDate(assignment.shifts_to) }}
@@ -148,35 +180,41 @@ END:VCALENDAR`;
           </template>
 
           <!-- Shift coworkers -->
-          <p v-if="coworkers.length > 0">
-            {{ t("Registered") }}:
-            <span v-for="(item, index) in coworkers" :key="index">
-              {{ item === " " ? t("[name hidden]") : item
-              }}<span v-if="index < coworkers.length - 1">, </span>
+          <p>
+            {{ t("Assigned people") }}: {{ t("You")
+            }}<span v-for="(item, index) in coworkers" :key="index"
+              >, {{ item === " " ? t("Anonymous") : item }}
             </span>
           </p>
+
+          <!-- Signed out info -->
+          <template v-if="nextOccurrenceAbsent">
+            <p class="pt-4 font-bold">
+              {{ t("You are signed out for this shift") }}
+            </p>
+            <p v-if="nextOccurrenceWithAbsences">
+              {{ t("Your next date: ") }}
+              {{ getDateString(nextOccurrenceWithAbsences, locale) }}
+            </p>
+          </template>
 
           <!-- Shift infos -->
           <!-- eslint-disable vue/no-v-html -->
           <p
             v-if="shift.shifts_description"
+            class="pt-4"
             v-html="parse(shift.shifts_description)"
           />
           <!-- eslint-enable vue/no-v-html -->
         </div>
+
         <!-- Space for buttons -->
-        <div class="flex flex-wrap gap-3">
-          <UButton
-            size="sm"
-            color="yellow"
-            @click="downloadICS()"
+        <div v-if="!ass.nextOccurrenceAbsent" class="flex flex-wrap gap-3">
+          <UButton size="sm" color="yellow" @click="downloadICS()"
             >{{ t("Calendar download") }}
           </UButton>
-          <UButton
-            v-if="!assignment.shifts_is_regular"
-            size="sm"
-            color="green"
-            @click="signOutModalIsOpen = true"
+          <!-- v-if="!assignment.shifts_is_regular" -->
+          <UButton size="sm" color="green" @click="signOutModalIsOpen = true"
             >{{ t("Sign out") }}
           </UButton>
         </div>
@@ -186,26 +224,38 @@ END:VCALENDAR`;
     <!-- Signout Modal -->
     <UModal v-model="signOutModalIsOpen">
       <div
+        v-if="dateWithinTimeSpan(nextOcc, MAX_DAYS_TO_SIGN_OUT_BEFORE)"
         class="p-8 flex flex-col gap-2"
-        v-if="dateWithinTimeSpan(nextOccurrence, MAX_DAYS_TO_SIGN_OUT_BEFORE)"
       >
-        <h2>{{ t("Shift Sign-Out") }}</h2>
+        <h2>{{ t("Sign out") }}</h2>
 
         <p>{{ t("Sign out from the following shift") }}:</p>
         <p>
-          {{ getDateTimeWithTimeSpanString(shift, nextOccurrence, locale, t) }}
+          {{
+            getDateTimeWithTimeSpanString(
+              shift.shifts_from_time,
+              shift.shifts_to_time,
+              nextOcc,
+              locale,
+              t,
+            )
+          }}
+        </p>
+        <p v-if="assignment.shifts_is_regular">
+          <span class="font-bold">{{ t("Attention") }}:</span>
+          {{ t("t:signout_regular") }}
         </p>
         <div class="flex flex-wrap gap-2 mt-4 justify-end">
           <UButton color="gray" @click="signOutModalIsOpen = false">
             {{ t("Cancel") }}
           </UButton>
-          <UButton size="sm" @click="requestSignOut">{{
+          <UButton size="sm" @click="createAbsence">{{
             t("Sign out")
           }}</UButton>
         </div>
       </div>
       <div v-else class="p-8 flex flex-col gap-2">
-        <h2>{{ t("Shift Sign-Out") }}</h2>
+        <h2>{{ t("Sign out") }}</h2>
         <p>
           {{
             t("Sign-out is not possible anymore. Please contact the office.")
@@ -219,26 +269,30 @@ END:VCALENDAR`;
 
 <i18n lang="yaml">
 en:
+  "t:signout_regular": "You are only unsubscribed for this date – future events are not affected. For a permanent unsubscription, please contact the membership office."
   "ics_preamble": "Warning: This calendar entry will not be automatically updated if your shift schedule changes. You can view your current shift schedule online in the member area. Please remember to delete old calendar entries and create a new one if your shift schedule changes."
   "Calendar download": "Calendar export"
 de:
-  "until": "bis"
-  "Shift repeats every": "Schicht wiederholt sich alle"
-  "days": "Tage"
-  "from": "von"
-  "to": "bis"
+  "Shift": "Schicht"
   "Absences": "Abwesenheiten"
   "One-time shift": "Einmalige Schicht"
-  "Location": "Ort"
-  "Shift name": "Schichtname"
+  "This shift repeats every": "Diese Schicht wiederholt sich alle"
+  "days": "Tage"
+  "weeks": "Wochen"
+  "from": "von"
+  "to": "bis"
+  "until": "bis"
+  "You": "Du"
   "Sign out": "Abmelden"
-  "Shift Sign-Out": "Schicht Abmeldung"
   "Sign out from the following shift": "Von folgender Schicht abmelden"
-  "Registered": "Angemeldet"
-  "[name hidden]": "[Name verborgen]"
+  "You are signed out for this shift": "Du bist für diese Schicht abgemeldet"
+  "Your next date: ": "Dein nächster Termin: "
+  "Assigned people": "Angemeldete Personen"
+  "Anonymous": "Anonym"
   "Contact": "Kontakt"
+  "Attention": "Achtung"
+  "t:signout_regular": "Du wirst nur für dieses Datum abgemeldet, nicht jedoch für zukünftige Termine. Für eine dauerhafte Abmeldung wende dich bitte an das Mitgliederbüro."
   "Sign-out is not possible anymore. Please contact the office.": "Abmeldung ist nicht mehr möglich. Bitte kontaktiere das Mitgliederbüro."
   "Calendar download": "Kalender-Export"
-  "Shift": "Schicht"
   "ics_preamble": "Achtung: Dieser Kalendereintrag wird nicht automatisch aktualisiert, falls sich deine Schichteinteilung ändert. Deine aktuelle Schichteinteilung siehst du online im Mitgliederbereich. Denke bei Änderungen der Schichteinteilung bitte daran, alte Kalendereinträge zu löschen und dir einen neuen Kalendereintrag zu erstellen."
 </i18n>

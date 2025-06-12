@@ -364,7 +364,7 @@ export const getAssignmentRrules = (
         absence.shifts_assignment == assignment.id ||
         (absence.shifts_assignment == null &&
           absence.shifts_membership ==
-            (assignment.shifts_membership as MembershipsMembership).id),
+            (assignment.shifts_membership as Membership).id),
     );
 
     for (const absence of filteredAbsences) {

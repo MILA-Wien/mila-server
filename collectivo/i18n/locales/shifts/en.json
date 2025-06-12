@@ -10,5 +10,5 @@
   "log:attended": "Shift done",
   "log:missed": "Shift missed",
   "log:cancelled": "Shift cancelled",
-  "log:other": "Other"
+  "log:other": "Special entry"
 }

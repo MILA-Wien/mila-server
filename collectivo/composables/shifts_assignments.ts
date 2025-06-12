@@ -7,7 +7,7 @@ import { readItems } from "@directus/sdk";
 // Otherwise ALL future absences and holidays are fetched
 // Get absences and public holidays between now and next occasion to display
 
-export const getUserAssignments = async (mship: MembershipsMembership) => {
+export const getUserAssignments = async (mship: Membership) => {
   const directus = useDirectus();
   const now = getCurrentDate();
   const nowStr = now.toISOString();

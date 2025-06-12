@@ -2,18 +2,11 @@
 import ProfileMenu2 from "./components/ProfileMenu2.vue";
 
 const pageTitle = usePageTitle();
-const appConfig = useAppConfig();
 const { setLocale, t, locale } = useI18n();
-const user = useCurrentUser();
-const userMenu = [
-  [
-    {
-      label: "Logout",
-      icon: "i-heroicons-arrow-left-on-rectangle-solid",
-      click: user.value.logout,
-    },
-  ],
-];
+const localesDict = {
+  de: "Deutsch",
+  en: "English",
+};
 </script>
 
 <template>
@@ -40,7 +33,7 @@ const userMenu = [
             </h1>
             <div class="flex flex-wrap gap-2 mb-4">
               <UButton
-                v-for="(value, key) in appConfig.localesDict"
+                v-for="(value, key) in localesDict"
                 :key="key"
                 :disabled="locale === key"
                 @click="setLocale(key)"

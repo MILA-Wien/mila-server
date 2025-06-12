@@ -59,7 +59,7 @@ async function getMembershipData(event) {
         { memberships_user: ["first_name", "last_name"] },
       ],
     }),
-  )) as MembershipsMembership[];
+  )) as Membership[];
 
   if (memberships.length > 1) {
     return {
@@ -100,7 +100,7 @@ async function getMembershipData(event) {
           { memberships_user: ["first_name", "last_name"] },
         ],
       }),
-    )) as MembershipsMembership[];
+    )) as Membership[];
 
     if (!memberships2.length) {
       return {

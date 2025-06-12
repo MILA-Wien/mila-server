@@ -3,9 +3,9 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-const appConfig = useAppConfig();
 const config = useRuntimeConfig();
-
+const supportNumber = "0670 202 63 68";
+const supportNumberLink = "tel:+436702026368";
 const { t } = useI18n();
 setPageTitle(t("You have questions?"));
 </script>
@@ -41,8 +41,7 @@ setPageTitle(t("You have questions?"));
           </span>
         </a>
         {{ t("or via phone under") }}
-        <a :href="appConfig.mila.supportNumberLink" class="font-bold">
-          {{ appConfig.mila.supportNumber }} </a
+        <a :href="supportNumberLink" class="font-bold"> {{ supportNumber }} </a
         >.
         {{
           t(
@@ -54,7 +53,7 @@ setPageTitle(t("You have questions?"));
         <a :href="`mailto:${config.public.contactEmail}`">
           <UButton color="green">{{ t("Write an email") }}</UButton>
         </a>
-        <a :href="appConfig.mila.supportNumberLink">
+        <a :href="supportNumberLink">
           <UButton color="green">{{ t("Call us") }}</UButton>
         </a>
       </div>

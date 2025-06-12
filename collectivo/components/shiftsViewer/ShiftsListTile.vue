@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import type { PropType } from "vue";
 
+type OccurrencesResponse = Awaited<ReturnType<typeof getOccurrencesAdmin>>;
+type Occurrence = OccurrencesResponse["occurrences"][number];
+
 const emit = defineEmits(["openOccurrence"]);
 
 const { t } = useI18n();
 const props = defineProps({
   occurrence: {
-    type: Object as PropType<ShiftOccurrenceFrontend>,
+    type: Object as PropType<Occurrence>,
     required: true,
   },
   admin: {
@@ -60,7 +63,7 @@ shiftTitle += " (" + shift.shifts_name + ")";
           {{
             assignment.assignment.shifts_membership.memberships_user
               .first_name === ""
-              ? "[Name verborgen]"
+              ? "Anonym"
               : assignment.assignment.shifts_membership.memberships_user
                   .first_name
           }}

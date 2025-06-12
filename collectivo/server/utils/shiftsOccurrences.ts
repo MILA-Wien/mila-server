@@ -5,7 +5,7 @@ export const getShiftOccurrences = async (
   to: Date,
   admin: boolean = false,
   shiftID?: number,
-  mship?: number, // This is only used for self-assigned
+  mship?: number,
 ) => {
   // Get shifts within timeframe
   const shifts = await getShiftShifts(from, to, shiftID);
@@ -56,7 +56,7 @@ export const getShiftOccurrences = async (
 // Get all occurrences for a shift in a given timeframe
 async function getSingleShiftOccurrences(
   shift: ShiftsShift,
-  assignments: ShiftsAssignment[],
+  assignments: ShiftsAssignmentApi[],
   absences: ShiftsAbsence[],
   from: Date,
   to: Date,
@@ -95,13 +95,13 @@ const createShiftOccurrence = (
   shiftRule: RRule,
   assignmentRrules: AssignmentRrule[],
   mship?: number,
-): ShiftOccurrence => {
+) => {
   let n_assigned = 0;
   let selfAssigned = false;
   let needsCoordinator = shift.shifts_needs_coordinator;
 
   // Get all assignments for this shift
-  const assignments: AssignmentOccurrence[] = [];
+  const assignments = [];
   for (const ass of assignmentRrules ?? []) {
     if (ass.rrule.between(date, date, true).length > 0) {
       const occ: AssignmentOccurrence = {

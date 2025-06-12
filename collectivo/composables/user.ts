@@ -19,7 +19,7 @@ const STUDIO_ADMIN_ROLES = [
 
 class CurrentUserStore {
   user: UserProfile | null;
-  membership: MembershipsMembership | null;
+  membership: Membership | null;
   tags: number[];
   isAuthenticated: boolean;
   isShiftAdmin: boolean;

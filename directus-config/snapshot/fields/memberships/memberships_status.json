@@ -64,6 +64,11 @@
           "value": "in-exclusion"
         },
         {
+          "color": "#FFA439",
+          "text": "Widerrufen",
+          "value": "widerrufen"
+        },
+        {
           "text": "$t:ended",
           "value": "ended"
         }

@@ -4,6 +4,11 @@ import MobileHeader from "./components/MobileHeader.vue";
 import MobileMenu from "./components/MobileMenu.vue";
 import ProfileMenu2 from "./components/ProfileMenu2.vue";
 import Header from "./components/Header.vue";
+const { locale } = useI18n();
+const localeKey = ref(0);
+watch(locale, () => {
+  localeKey.value++;
+});
 </script>
 
 <template>
@@ -18,8 +23,8 @@ import Header from "./components/Header.vue";
         <div class="px-6 py-3 md:px-12 md:pb-20 lg:px-20 w-full max-w-7xl">
           <Header />
 
-          <!-- Main content -->
-          <slot />
+          <!-- Main content, reload upon locale change -->
+          <slot :key="localeKey" />
         </div>
       </div>
     </div>

@@ -11,7 +11,7 @@ function getTime(date: Date) {
 const emit = defineEmits(["data-has-changed"]);
 const props = defineProps({
   shiftOccurence: {
-    type: Object as PropType<ShiftOccurrence>,
+    type: Object as PropType<ShiftOccurrenceFrontend>,
     required: true,
   },
 });
@@ -50,13 +50,46 @@ const mainModalIsOpen = defineModel("isOpen", {
 });
 
 // SHIFT LOGS
-const logs = ref<ShiftLogsAdmin[]>([]);
+const extraLogs = ref<ShiftLogsAdmin[]>([]);
 const logsLoaded = ref(false);
 
-getShiftLogsAdmin(startDateString, shift.id).then((logs_: ShiftLogsAdmin[]) => {
-  logs.value = logs_;
+getShiftLogsAdmin(startDateString, shift.id).then((logs: ShiftLogsAdmin[]) => {
+  let matched = false;
+  for (const log of logs) {
+    matched = false;
+    for (const assignment of occ.value.assignments) {
+      if (
+        assignment.assignment.shifts_membership.id === log.shifts_membership.id
+      ) {
+        assignment.log = log;
+        matched = true;
+      }
+    }
+    if (!matched) {
+      extraLogs.value.push(log);
+    }
+  }
   logsLoaded.value = true;
 });
+
+async function updateLog(
+  assignment: ShiftsAssignment,
+  type: "attended" | "missed",
+) {
+  if (!assignment.log) {
+    const log = await createShiftLog(
+      type,
+      assignment.assignment.shifts_membership.id,
+      startDateString,
+      shift.id,
+      type === "attended" ? 28 : 0,
+    );
+    assignment.log = log;
+  } else {
+    await updateShiftLogsAdmin(assignment.log.id, type);
+    assignment.log.shifts_type = type;
+  }
+}
 
 // MEMBERSHIP DATA
 type SelectedMembership = Awaited<ReturnType<typeof getMembership>>;
@@ -249,6 +282,10 @@ function getAssignmentColor(assignment: AssignmentOccurrence) {
     return "bg-gray-100";
   }
 
+  if (assignment.log && assignment.log.shifts_type !== "attended") {
+    return "bg-red-100";
+  }
+
   if (assignment.assignment.shifts_is_coordination) {
     return "bg-yellow-100";
   }
@@ -277,7 +314,7 @@ function checkIfMshipInAssignments(mship: number) {
 <template>
   <UModal v-model="mainModalIsOpen" :ui="{ width: 'sm:max-w-[1000px]' }">
     <div class="m-10">
-      <div class="flex items-center justify-between">
+      <div class="flex items-start justify-between">
         <h2>
           {{ shift.shifts_name }} <span v-if="isPast">({{ t("past") }})</span>
         </h2>
@@ -339,18 +376,19 @@ function checkIfMshipInAssignments(mship: number) {
       />
       <!-- eslint-enable -->
 
-      <!-- Shift assignments -->
-      <div v-if="!isPast">
+      <!-- Shift assignments and logs -->
+      <div>
         <div class="flex flex-row items-end mb-5">
           <div class="grow">
             <h2>
-              {{ t("Assignments") }} [{{ occ.n_assigned }}/{{
+              Anmeldungen / Logs [{{ occ.n_assigned }}/{{
                 occ.shift.shifts_slots
               }}]
             </h2>
           </div>
           <div class="mb-1">
             <UButton
+              v-if="!isPast"
               :label="t('Create assignment')"
               size="md"
               icon="i-heroicons-plus-16-solid"
@@ -360,7 +398,7 @@ function checkIfMshipInAssignments(mship: number) {
           </div>
         </div>
 
-        <div class="flex flex-col gap-3 my-2">
+        <div v-if="logsLoaded" class="flex flex-col gap-3 my-2">
           <div
             v-if="occ.needsCoordinator"
             class="bg-yellow-100 p-2 rounded-md font-bold"
@@ -387,12 +425,13 @@ function checkIfMshipInAssignments(mship: number) {
               <template #bottom-right>
                 <div
                   v-if="assignment.isActive && !assignment.removed"
-                  class="flex flex-wrap gap-2"
+                  class="flex flex-col gap-2"
                 >
                   <UButton
+                    v-if="!isPast"
                     icon="i-heroicons-trash-16-solid"
                     size="sm"
-                    :label="t('Remove')"
+                    :label="t('Remove assignment')"
                     @click="startRemoveAssignmentFlow(assignment, ai)"
                   />
                 </div>
@@ -425,6 +464,30 @@ function checkIfMshipInAssignments(mship: number) {
                 {{ t("Absent") }}: {{ absence.shifts_from }} {{ t("to") }}
                 {{ absence.shifts_to }}
               </div>
+
+              <div
+                v-if="
+                  isPast &&
+                  assignment.log &&
+                  assignment.log.shifts_type !== 'attended'
+                "
+                class="flex flex-wrap justify-between"
+              >
+                <div>Log: Schicht wurde verpasst</div>
+                <UButton
+                  size="sm"
+                  label="Log auf absolviert setzen"
+                  @click="updateLog(assignment, 'attended')"
+                />
+              </div>
+              <div v-else class="flex flex-wrap justify-between">
+                <div>Log: Schicht wurde absolviert</div>
+                <UButton
+                  size="sm"
+                  label="Log auf verpasst setzen"
+                  @click="updateLog(assignment, 'missed')"
+                />
+              </div>
             </ShiftsViewerModalAdminBox>
           </template>
         </div>
@@ -432,7 +495,7 @@ function checkIfMshipInAssignments(mship: number) {
 
       <!-- Logs -->
       <div v-if="isPast && logsLoaded">
-        <ShiftsViewerModalAdminLogs :logs="logs" :occurence="occ" />
+        <ShiftsViewerModalAdminLogs :logs="extraLogs" :occurence="occ" />
       </div>
     </div>
 
