@@ -27,16 +27,22 @@ export function getFutureDate(days: number) {
   return new Date(currentDate.setDate(currentDate.getDate() + days));
 }
 
+export function getDateString(occurence: string, locale: string) {
+  const occ = DateTime.fromISO(occurence, { locale: locale });
+  return occ.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
+}
+
 export function getDateTimeWithTimeSpanString(
-  shift: ShiftsShift,
+  from: string | undefined,
+  to: string | undefined,
   occurence: string,
   locale: string,
   t: any,
 ) {
   const occ = DateTime.fromISO(occurence, { locale: locale });
   const weekday = occ.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
-  const startTime = shift.shifts_from_time?.slice(0, 5);
-  const endTime = shift.shifts_to_time?.slice(0, 5);
+  const startTime = from?.slice(0, 5);
+  const endTime = to?.slice(0, 5);
 
   if (!startTime || !endTime) {
     return weekday;

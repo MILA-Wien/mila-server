@@ -9,6 +9,6 @@ export {
   type ShiftLogsAdmin,
 } from "./shifts/logs";
 export {
-  getOccurrencesAdmin,
-  type OccurrencesAdmin,
+  getOccurrences as getOccurrencesAdmin,
+  getOccurrencesUser,
 } from "./shifts/occurrences";

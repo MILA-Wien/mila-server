@@ -5,10 +5,10 @@ import { RRule, RRuleSet } from "rrule";
 import { readItems } from "@directus/sdk";
 
 export default defineEventHandler(async (event) => {
-  return await getMyShiftsInfos(event.context.auth.mship);
+  return await getShiftDataUser(event.context.auth.mship);
 });
 
-const getMyShiftsInfos = async (mship: number) => {
+const getShiftDataUser = async (mship: number) => {
   const [
     assignments,
     [absences, holidays, holidaysCurrent],
@@ -43,12 +43,12 @@ const getMyShiftsInfos = async (mship: number) => {
   });
 
   return {
-    assignmentRules: assignmentInfos.filter((rule) => rule.nextOccurrence),
+    assignments: assignmentInfos.filter((rule) => rule.nextOccurrence),
     absences: absences,
     holidays: holidays,
     holidaysCurrent: holidaysCurrent,
     logs: logs,
-  };
+  } as ApiShiftsUser;
 };
 
 async function getAssignments(mship: number) {
@@ -60,6 +60,7 @@ async function getAssignments(mship: number) {
       filter: {
         shifts_membership: { id: { _eq: mship } },
         shifts_to: {
+          // @ts-expect-error directus date filter bug
           _or: [{ _gte: nowStr }, { _null: true }],
         },
       },
@@ -68,11 +69,15 @@ async function getAssignments(mship: number) {
         "*",
         { shifts_shift: ["*"] },
         {
-          shifts_membership: { memberships_user: ["first_name", "last_name"] },
+          shifts_membership: [
+            {
+              memberships_user: ["first_name", "last_name"],
+            },
+          ],
         },
       ],
     }),
-  )) as ShiftsAssignmentGet[];
+  )) as ShiftsAssignmentApiUser[];
 }
 
 async function getAbsences(mship: number) {
@@ -96,7 +101,11 @@ async function getAbsences(mship: number) {
         "*",
         { shifts_shift: ["*"] },
         {
-          shifts_membership: { memberships_user: ["first_name", "last_name"] },
+          shifts_membership: [
+            {
+              memberships_user: ["first_name", "last_name"],
+            },
+          ],
         },
       ],
     }),
@@ -123,6 +132,7 @@ async function getPublicHolidays() {
     readItems("shifts_holidays_public", {
       filter: {
         date: {
+          // @ts-expect-error directus date filter bug
           _and: [{ _gte: now }],
         },
       },
@@ -156,26 +166,26 @@ async function getLogs(mship: number) {
 }
 
 const getAssignmentInfos = async (
-  assignment: ShiftsAssignment,
+  assignment: ShiftsAssignmentApiUser,
   absences: ShiftsAbsence[],
   publicHolidaRruleSet: RRuleSet,
   mship: number,
 ) => {
   const now = getCurrentDate();
-
   const filteredAbsences = absences.filter(
     (absence) =>
       absence.shifts_assignment == assignment.id ||
       absence.shifts_assignment == null,
   );
 
-  const [assignmentRule, absencesRule] = getAssignmentRRule(
-    assignment,
-    filteredAbsences,
-    publicHolidaRruleSet,
-  );
+  const [assignmentRuleWithAbsences, assignmentRule, absencesRule] =
+    getAssignmentRRule(assignment, filteredAbsences, publicHolidaRruleSet);
 
   const nextOccurence = assignmentRule.after(now, true);
+  const nextOccurrenceWithAbsences = assignmentRuleWithAbsences.after(
+    now,
+    true,
+  );
   let secondNextOccurence = null;
   let nextOccurrenceAbsent = null;
   const coworkers = [];
@@ -190,19 +200,19 @@ const getAssignmentInfos = async (
       nextOccurrenceAbsent = absencesRule.after(nextOccurence, true) != null;
     }
   }
-
   return {
     assignment: assignment,
     coworkers: coworkers,
     nextOccurrence: nextOccurence,
     nextOccurrenceAbsent: nextOccurrenceAbsent,
+    nextOccurrenceWithAbsences: nextOccurrenceWithAbsences,
     isRegular: secondNextOccurence != null,
-  };
+  } as ApiShiftsUserAssignmentInfos;
 };
 
 // Get names of coworkers for a shift assignment
 const getCoworkers = async (
-  assignment: ShiftsAssignment,
+  assignment: ShiftsAssignmentApiUser,
   nextOccurence: Date,
   mship: number,
 ) => {
@@ -218,6 +228,7 @@ const getCoworkers = async (
   if (occs.occurrences.length > 0) {
     const assignments = occs.occurrences[0].assignments;
     for (const a of assignments) {
+      console.log(a.assignment.shifts_membership);
       const u = a.assignment.shifts_membership.memberships_user;
       if (a.isSelf) continue;
       if (!a.isActive) continue;
@@ -230,19 +241,35 @@ const getCoworkers = async (
 
 // Get assignment rrule
 export const getAssignmentRRule = (
-  assignment: ShiftsAssignment,
+  assignment: ShiftsAssignmentApiUser,
   absences?: ShiftsAbsence[],
   publicHolidayDates?: RRuleSet,
 ) => {
-  const shift = assignment.shifts_shift as ShiftsShift;
+  const shift = assignment.shifts_shift;
 
   const shiftRule = getShiftRrule(shift);
 
   const assignmentRule = new RRuleSet();
+  const assignmentRuleWithAbsences = new RRuleSet();
   const absencesRule = new RRuleSet();
 
   // Main assignment rule
   assignmentRule.rrule(
+    new RRule({
+      freq: RRule.DAILY,
+      interval: shift.shifts_repeats_every,
+      count: shift.shifts_repeats_every ? null : 1,
+      dtstart: shiftRule.after(new Date(assignment.shifts_from), true),
+      until: assignment.shifts_is_regular
+        ? assignment.shifts_to
+          ? shiftRule.before(new Date(assignment.shifts_to), true)
+          : null
+        : shiftRule.before(new Date(assignment.shifts_from), true),
+    }),
+  );
+
+  // Assignment rule with absences excluded
+  assignmentRuleWithAbsences.rrule(
     new RRule({
       freq: RRule.DAILY,
       interval: shift.shifts_repeats_every,
@@ -266,13 +293,13 @@ export const getAssignmentRRule = (
     });
 
     absencesRule.rrule(absenceRule);
-    assignmentRule.exrule(absenceRule);
+    assignmentRuleWithAbsences.exrule(absenceRule);
   });
 
   // Exclude public holidays
   if (shift.exclude_public_holidays) {
-    assignmentRule.exrule(publicHolidayDates as RRule);
+    assignmentRuleWithAbsences.exrule(publicHolidayDates as RRule);
   }
 
-  return [assignmentRule, absencesRule];
+  return [assignmentRuleWithAbsences, assignmentRule, absencesRule];
 };

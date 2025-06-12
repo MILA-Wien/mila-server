@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import type { PropType } from "vue";
 
+type OccurrencesResponse = Awaited<ReturnType<typeof getOccurrencesAdmin>>;
+type Occurrence = OccurrencesResponse["occurrences"][number];
+
 const emit = defineEmits(["openOccurrence"]);
 
 const { t } = useI18n();
 const props = defineProps({
   occurrence: {
-    type: Object as PropType<ShiftOccurrenceFrontend>,
+    type: Object as PropType<Occurrence>,
     required: true,
   },
   admin: {

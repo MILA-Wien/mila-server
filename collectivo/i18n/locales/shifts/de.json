@@ -66,5 +66,5 @@
   "log:attended": "Schicht absolviert",
   "log:missed": "Schicht verpasst",
   "log:cancelled": "Schicht abgesagt",
-  "log:other": "Anderes"
+  "log:other": "Spezialeintrag"
 }

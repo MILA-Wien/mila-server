@@ -1,5 +1,4 @@
 import type { RRule } from "rrule";
-import type { ShiftsAssignmentsQuery } from "./shiftsQueries";
 
 export const getShiftOccurrences = async (
   from: Date,
@@ -57,7 +56,7 @@ export const getShiftOccurrences = async (
 // Get all occurrences for a shift in a given timeframe
 async function getSingleShiftOccurrences(
   shift: ShiftsShift,
-  assignments: ShiftsAssignmentsQuery,
+  assignments: ShiftsAssignmentApi[],
   absences: ShiftsAbsence[],
   from: Date,
   to: Date,

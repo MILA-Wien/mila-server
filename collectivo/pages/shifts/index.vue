@@ -4,24 +4,25 @@ definePageMeta({
 });
 
 const { t, locale } = useI18n();
+const { settingsState, fetchSettings } = useSettings();
 setPageTitle(t("Shifts Overview"));
 
 const mship = useCurrentUser().value.membership!;
 const isActive = mship.shifts_user_type != "inactive";
-const activeAssignments: Ref<ShiftsAssignmentInfos[]> = ref([]);
-const holidaysAll: Ref<ShiftsAbsenceGet[]> = ref([]);
-const holidaysCurrent: Ref<ShiftsAbsenceGet[]> = ref([]);
-const activeAbsences: Ref<ShiftsAbsenceGet[]> = ref([]);
-const { settingsState, fetchSettings } = useSettings();
 const canShop = ref(false);
 const dataLoaded = ref(false);
 const absencePostModalOpen = ref(false);
+
+const assignments: Ref<ApiShiftsUserAssignmentInfos[]> = ref([]);
+const holidaysAll: Ref<ShiftsAbsenceGet[]> = ref([]);
+const holidaysCurrent: Ref<ShiftsAbsenceGet[]> = ref([]);
+const activeAbsences: Ref<ShiftsAbsenceGet[]> = ref([]);
 const logs = ref<ShiftsLog[]>([]);
 
 async function loadData() {
   dataLoaded.value = false;
-  const res = await $fetch("/api/shifts/my_shifts");
-  activeAssignments.value = res.assignmentRules as ShiftsAssignmentInfos[];
+  const [res, _] = await Promise.all([getOccurrencesUser(), fetchSettings()]);
+  assignments.value = res.assignments as ApiShiftsUserAssignmentInfos[];
   holidaysAll.value = res.holidays as ShiftsAbsenceGet[];
   holidaysCurrent.value = res.holidaysCurrent as ShiftsAbsenceGet[];
   activeAbsences.value = res.absences as ShiftsAbsenceGet[];
@@ -29,12 +30,11 @@ async function loadData() {
   canShop.value =
     (mship.shifts_counter > -1 && holidaysCurrent.value.length == 0) ||
     mship.shifts_user_type == "exempt";
-  await fetchSettings();
   dataLoaded.value = true;
 }
 
 function getShiftName(assignmentID: number) {
-  const assignment = activeAssignments.value.find(
+  const assignment = assignments.value.find(
     (a) => a.assignment.id == assignmentID,
   );
   return assignment?.assignment.shifts_shift.shifts_name;
@@ -106,19 +106,20 @@ else throw createError({ statusCode: 403 });
       </NuxtLink>
     </div>
 
-    <!-- SHIFT OCCURRENCES -->
+    <!-- SHIFT ASSIGNMENTS OCCURRENCES -->
     <div class="mb-12">
       <h2>{{ t("My assignments") }}</h2>
-      <p v-if="!activeAssignments.length">
+      <p v-if="!assignments.length">
         {{ t("No upcoming shifts") }}
       </p>
       <div class="flex flex-col gap-4 my-4">
-        <ShiftsDashboardAssignmentTile
-          v-for="assignment in activeAssignments"
-          :key="assignment.assignment.id"
-          :shift-assignment="assignment"
-          @reload="loadData"
-        />
+        <template v-for="(assignment, index) in assignments" :key="index">
+          <ShiftsDashboardAssignmentTile
+            v-if="assignment.nextOccurrence"
+            :shift-assignment="assignment"
+            @reload="loadData"
+          />
+        </template>
       </div>
     </div>
 
@@ -156,14 +157,14 @@ else throw createError({ statusCode: 403 });
     <div v-if="logs.length" class="mb-12">
       <h2>{{ t("Past shifts") }}</h2>
       <div class="my-4">
-        <div class="flex flex-col gap-1">
-          <div v-for="log in logs" :key="log.id">
-            <CollectivoCard :color="'gray'">
+        <CollectivoCard :color="'gray'">
+          <div class="flex flex-col gap-1">
+            <div v-for="log in logs" :key="log.id">
               {{ log.shifts_date }}: {{ t("log:" + log.shifts_type) }}.
               {{ log.shifts_note }}
-            </CollectivoCard>
-          </div>
-        </div>
+            </div>
+          </div></CollectivoCard
+        >
       </div>
     </div>
 

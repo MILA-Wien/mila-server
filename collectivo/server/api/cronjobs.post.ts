@@ -146,7 +146,7 @@ async function create_shift_logs(
   for (const occurrence of occurrences) {
     const occDate = occurrence.start.toISOString().split("T")[0];
     for (const ass of occurrence.assignments) {
-      const mship = ass.assignment.shifts_membership as MembershipsMembership;
+      const mship = ass.assignment.shifts_membership as Membership;
 
       // Skip if assignment inactive, user on holiday, or log already exists
       if (

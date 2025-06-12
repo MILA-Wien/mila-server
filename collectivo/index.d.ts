@@ -1,8 +1,8 @@
 declare global {
   interface DbSchema {
     directus_users: UserProfile[];
-    collectivo_tags: UserTag[];
-    memberships: MembershipsMembership[];
+    collectivo_tags: Tag[];
+    memberships: Membership[];
     collectivo_tiles: DashboardTile[];
     memberships_coshoppers: MembershipsCoshopper[];
     shifts_assignments: ShiftsAssignment[];
@@ -15,13 +15,6 @@ declare global {
     milaccess_log: CheckinLogEntry[];
   }
 
-  interface CheckinLogEntry {
-    id: number;
-    membership: MembershipsMembership | number;
-    date: string;
-    coshopper: MembershipsCoshopper | number;
-  }
-
   interface UserProfile {
     id: string;
     first_name: string;
@@ -29,11 +22,11 @@ declare global {
     email: string;
     hide_name: boolean;
     collectivo_tags?: { collectivo_tags_id: number }[];
-    memberships?: MembershipsMembership[];
+    memberships?: Membership[];
     [key: string]: string | undefined;
   }
 
-  interface UserTag {
+  interface Tag {
     id: number;
     tags_name: string;
     tags_users: UserProfile[] | number[];
@@ -41,7 +34,7 @@ declare global {
 
   export type ShiftsUserType = "jumper" | "regular" | "exempt" | "inactive";
 
-  interface MembershipsMembership {
+  interface Membership {
     id: number;
     name: string;
     memberships_user: UserProfile | number;
@@ -55,6 +48,10 @@ declare global {
     shifts_categories_allowed: { shifts_categories_id: number }[];
     coshoppers?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
     kids?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
+  }
+
+  interface MembershipApi extends Membership {
+    memberships_user: UserProfile;
   }
 
   interface MembershipsCoshopper {
@@ -142,44 +139,36 @@ declare global {
   interface ShiftsAssignment {
     id: number;
     shifts_is_regular: boolean;
-    shifts_from: string;
-    shifts_to?: string;
+    shifts_from: "datetime" | string;
+    shifts_to?: "datetime" | string;
     shifts_shift: ShiftsShift | number;
-    shifts_membership: MembershipsMembership | number;
+    shifts_membership: Membership | number;
     shifts_is_coordination: boolean;
     send_reminders: boolean;
   }
 
-  interface ShiftsAssignmentGet extends ShiftsAssignment {
-    id: number;
-    shifts_membership: MembershipsMembership;
-    shifts_shift: number;
+  interface ShiftsAssignmentApi extends ShiftsAssignment {
+    shifts_membership: ShiftsAssignmentGetMembership;
   }
 
-  interface ShiftsAssignmentGetFull extends ShiftsAssignmentGet {
+  interface ShiftsAssignmentApiUser extends ShiftsAssignment {
     shifts_shift: ShiftsShift;
+    shifts_membership: ShiftsAssignmentGetMembership;
   }
 
   interface ShiftsAbsence {
     id?: number;
-    shifts_from: "datetime";
-    shifts_to: "datetime";
+    shifts_from: "datetime" | string;
+    shifts_to: "datetime" | string;
+    shifts_shift?: ShiftsShift | number;
     shifts_assignment?: number | ShiftsAssignment;
-    shifts_membership: MembershipsMembership | number;
+    shifts_membership: Membership | number;
     shifts_is_for_all_assignments: boolean;
     shifts_is_holiday?: boolean;
   }
 
   interface ShiftsAbsenceGet extends ShiftsAbsence {
     shifts_assignment: number;
-  }
-
-  interface ShiftsAssignmentInfos {
-    assignment: ShiftsAssignmentGetFull;
-    coworkers: string[];
-    nextOccurrence: Date | null;
-    nextOccurrenceAbsent: boolean | null;
-    isRegular: boolean;
   }
 
   interface ShiftsAssignmentRules {
@@ -193,7 +182,7 @@ declare global {
 
   interface ShiftsLog {
     id?: number;
-    shifts_membership: MembershipsMembership | number;
+    shifts_membership: Membership | number;
     shifts_type: string;
     shifts_note: string;
     shifts_date: "datetime";
@@ -204,22 +193,6 @@ declare global {
   interface ShiftsCategory {
     id: number;
     name: string;
-  }
-
-  interface ShiftOccurrenceApiResponse {
-    occurrences: ShiftOccurrenceFrontend[];
-    publicHolidays: ShiftsPublicHoliday[];
-  }
-
-  interface ShiftOccurrenceFrontend {
-    shift: ShiftsShift;
-    start: string;
-    end: string;
-    shiftRule: RRuleSet;
-    n_assigned: number;
-    assignments: AssignmentOccurrence[];
-    selfAssigned?: boolean;
-    needsCoordinator?: boolean;
   }
 
   interface ShiftOccurrence {
@@ -247,11 +220,29 @@ declare global {
   }
 
   interface AssignmentOccurrence {
-    assignment: ShiftsAssignment;
+    assignment: ShiftsAssignmentApi;
     absences: ShiftsAbsence[];
     isOneTime?: boolean;
     isActive?: boolean;
     isSelf?: boolean;
+  }
+
+  // API Responses
+  interface ApiShiftsUserAssignmentInfos {
+    assignment: ShiftsAssignmentApiUser;
+    coworkers: string[];
+    nextOccurrence: Date | string | null;
+    nextOccurrenceAbsent: boolean | null;
+    nextOccurrenceWithAbsences?: Date | string | null;
+    isRegular: boolean;
+  }
+
+  interface ApiShiftsUser {
+    assignments: ApiShiftsUserAssignmentInfos[];
+    absences: ShiftsAbsenceGet[];
+    holidays: ShiftsAbsenceGet[];
+    holidaysCurrent: ShiftsAbsenceGet[];
+    logs: ShiftsLog[];
   }
 
   // Layout
@@ -271,6 +262,13 @@ declare global {
     target?: string; // Default "_self"
     hideOnMobile?: boolean; // Default false
     filter?: (item: CollectivoMenuItem) => Promise<boolean> | boolean;
+  }
+
+  interface CheckinLogEntry {
+    id: number;
+    membership: Membership | number;
+    date: string;
+    coshopper: MembershipsCoshopper | number;
   }
 
   // Forms

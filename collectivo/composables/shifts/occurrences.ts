@@ -1,4 +1,4 @@
-export async function getOccurrencesAdmin(
+export async function getOccurrences(
   startDate: string,
   endDate: string,
   admin: boolean,
@@ -10,4 +10,8 @@ export async function getOccurrencesAdmin(
       admin: admin,
     },
   });
+}
+
+export async function getOccurrencesUser() {
+  return await $fetch("/api/shifts/occurrences_user");
 }
