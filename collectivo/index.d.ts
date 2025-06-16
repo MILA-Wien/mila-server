@@ -151,16 +151,10 @@ declare global {
     shifts_membership: ShiftsAssignmentGetMembership;
   }
 
-  interface ShiftsAssignmentApiUser extends ShiftsAssignment {
-    shifts_shift: ShiftsShift;
-    shifts_membership: ShiftsAssignmentGetMembership;
-  }
-
   interface ShiftsAbsence {
     id?: number;
     shifts_from: "datetime" | string;
     shifts_to: "datetime" | string;
-    shifts_shift?: ShiftsShift | number;
     shifts_assignment?: number | ShiftsAssignment;
     shifts_membership: Membership | number;
     shifts_is_for_all_assignments: boolean;
@@ -195,6 +189,23 @@ declare global {
     name: string;
   }
 
+  // API Occurrences
+
+  interface ShiftsViewerData {
+    occurrences: ShiftsOccurrenceViewer[];
+    publicHolidays: Pick<ShiftsPublicHoliday, "date">[];
+  }
+
+  interface ShiftsOccurrenceViewer {
+    shift: ShiftsShift;
+    start: string;
+    end: string;
+    n_assigned: number;
+    assignments: AssignmentOccurrence[];
+    selfAssigned?: boolean;
+    needsCoordinator?: boolean;
+  }
+
   interface ShiftOccurrence {
     shift: ShiftsShift;
     start: Date;
@@ -227,22 +238,30 @@ declare global {
     isSelf?: boolean;
   }
 
-  // API Responses
-  interface ApiShiftsUserAssignmentInfos {
-    assignment: ShiftsAssignmentApiUser;
+  // Shifts dashboard
+  interface ShiftsDashboard {
+    assignments: ShiftsOccurrenceDashboard[];
+    signouts: ShiftsAbsenceDashboard[];
+    holidays: ShiftsAbsenceDashboard[];
+    holidaysCurrent: ShiftsAbsenceDashboard[];
+    logs: ShiftsLog[];
+  }
+
+  interface ShiftsOccurrenceDashboard {
+    assignment: ShiftsAssignmentDashboard;
     coworkers: string[];
-    nextOccurrence: Date | string | null;
-    nextOccurrenceAbsent: boolean | null;
-    nextOccurrenceWithAbsences?: Date | string | null;
+    nextOccurrence: string | null;
+    secondNextOccurence: string | null;
     isRegular: boolean;
   }
 
-  interface ApiShiftsUser {
-    assignments: ApiShiftsUserAssignmentInfos[];
-    absences: ShiftsAbsenceGet[];
-    holidays: ShiftsAbsenceGet[];
-    holidaysCurrent: ShiftsAbsenceGet[];
-    logs: ShiftsLog[];
+  interface ShiftsAssignmentDashboard extends ShiftsAssignment {
+    shifts_shift: ShiftsShift;
+    shifts_membership: ShiftsAssignmentGetMembership;
+  }
+
+  interface ShiftsAbsenceDashboard extends ShiftsAbsence {
+    shifts_assignment: ShiftsAssignmentDashboard;
   }
 
   // Layout

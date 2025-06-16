@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
 const getShiftDataUser = async (mship: number) => {
   const [
     assignments,
-    [absences, holidays, holidaysCurrent],
+    [absences, signouts, holidays, holidaysCurrent],
     publicHolidaRruleSet,
     logs,
   ] = await Promise.all([
@@ -44,11 +44,11 @@ const getShiftDataUser = async (mship: number) => {
 
   return {
     assignments: assignmentInfos.filter((rule) => rule.nextOccurrence),
-    absences: absences,
+    signouts: signouts,
     holidays: holidays,
     holidaysCurrent: holidaysCurrent,
     logs: logs,
-  } as ApiShiftsUser;
+  } as ShiftsDashboard;
 };
 
 async function getAssignments(mship: number) {
@@ -77,7 +77,7 @@ async function getAssignments(mship: number) {
         },
       ],
     }),
-  )) as ShiftsAssignmentApiUser[];
+  )) as ShiftsAssignmentDashboard[];
 }
 
 async function getAbsences(mship: number) {
@@ -99,7 +99,7 @@ async function getAbsences(mship: number) {
       },
       fields: [
         "*",
-        { shifts_shift: ["*"] },
+        { shifts_assignment: ["id", { shifts_shift: ["shifts_name"] }] },
         {
           shifts_membership: [
             {
@@ -109,20 +109,23 @@ async function getAbsences(mship: number) {
         },
       ],
     }),
-  )) as ShiftsAbsenceGet[];
+  )) as ShiftsAbsenceDashboard[];
 
-  const holidays = [] as ShiftsAbsenceGet[];
-  const holidaysCurrent = [] as ShiftsAbsenceGet[];
+  const holidays = [] as ShiftsAbsenceDashboard[];
+  const signouts = [] as ShiftsAbsenceDashboard[];
+  const holidaysCurrent = [] as ShiftsAbsenceDashboard[];
   for (const absence of absences) {
     if (absence.shifts_is_holiday) {
       holidays.push(absence);
       if (new Date(absence.shifts_from) <= new Date(nowStr)) {
         holidaysCurrent.push(absence);
       }
+    } else {
+      signouts.push(absence);
     }
   }
 
-  return [absences, holidays, holidaysCurrent];
+  return [absences, signouts, holidays, holidaysCurrent];
 }
 
 async function getPublicHolidays() {
@@ -166,53 +169,47 @@ async function getLogs(mship: number) {
 }
 
 const getAssignmentInfos = async (
-  assignment: ShiftsAssignmentApiUser,
-  absences: ShiftsAbsence[],
+  assignment: ShiftsAssignmentDashboard,
+  absences: ShiftsAbsenceDashboard[],
   publicHolidaRruleSet: RRuleSet,
   mship: number,
 ) => {
   const now = getCurrentDate();
+
   const filteredAbsences = absences.filter(
     (absence) =>
-      absence.shifts_assignment == assignment.id ||
+      absence.shifts_assignment.id == assignment.id ||
       absence.shifts_assignment == null,
   );
 
-  const [assignmentRuleWithAbsences, assignmentRule, absencesRule] =
-    getAssignmentRRule(assignment, filteredAbsences, publicHolidaRruleSet);
-
-  const nextOccurence = assignmentRule.after(now, true);
-  const nextOccurrenceWithAbsences = assignmentRuleWithAbsences.after(
-    now,
-    true,
+  const assignmentRuleWithAbsences = getAssignmentRRule(
+    assignment,
+    filteredAbsences,
+    publicHolidaRruleSet,
   );
+
+  const nextOccurrence = assignmentRuleWithAbsences.after(now, true);
   let secondNextOccurence = null;
-  let nextOccurrenceAbsent = null;
   const coworkers = [];
 
-  if (nextOccurence) {
-    secondNextOccurence = assignmentRule.after(nextOccurence);
-
-    const coworkers_ = await getCoworkers(assignment, nextOccurence, mship);
+  if (nextOccurrence) {
+    secondNextOccurence = assignmentRuleWithAbsences.after(nextOccurrence);
+    const coworkers_ = await getCoworkers(assignment, nextOccurrence, mship);
     coworkers.push(...coworkers_);
-
-    if (absencesRule) {
-      nextOccurrenceAbsent = absencesRule.after(nextOccurence, true) != null;
-    }
   }
+
   return {
     assignment: assignment,
     coworkers: coworkers,
-    nextOccurrence: nextOccurence,
-    nextOccurrenceAbsent: nextOccurrenceAbsent,
-    nextOccurrenceWithAbsences: nextOccurrenceWithAbsences,
+    nextOccurrence: nextOccurrence?.toISOString(),
+    secondNextOccurence: secondNextOccurence?.toISOString(),
     isRegular: secondNextOccurence != null,
-  } as ApiShiftsUserAssignmentInfos;
+  } as ShiftsOccurrenceDashboard;
 };
 
 // Get names of coworkers for a shift assignment
 const getCoworkers = async (
-  assignment: ShiftsAssignmentApiUser,
+  assignment: ShiftsAssignmentDashboard,
   nextOccurence: Date,
   mship: number,
 ) => {
@@ -229,7 +226,6 @@ const getCoworkers = async (
     const assignments = occs.occurrences[0].assignments;
     for (const a of assignments) {
       const u = a.assignment.shifts_membership.memberships_user;
-      if (a.isSelf) continue;
       if (!a.isActive) continue;
       coworkers.push(u.first_name + " " + u.last_name);
     }
@@ -240,35 +236,17 @@ const getCoworkers = async (
 
 // Get assignment rrule
 export const getAssignmentRRule = (
-  assignment: ShiftsAssignmentApiUser,
+  assignment: ShiftsAssignmentDashboard,
   absences?: ShiftsAbsence[],
   publicHolidayDates?: RRuleSet,
 ) => {
   const shift = assignment.shifts_shift;
-
   const shiftRule = getShiftRrule(shift);
 
   const assignmentRule = new RRuleSet();
-  const assignmentRuleWithAbsences = new RRuleSet();
-  const absencesRule = new RRuleSet();
-
-  // Main assignment rule
-  assignmentRule.rrule(
-    new RRule({
-      freq: RRule.DAILY,
-      interval: shift.shifts_repeats_every,
-      count: shift.shifts_repeats_every ? null : 1,
-      dtstart: shiftRule.after(new Date(assignment.shifts_from), true),
-      until: assignment.shifts_is_regular
-        ? assignment.shifts_to
-          ? shiftRule.before(new Date(assignment.shifts_to), true)
-          : null
-        : shiftRule.before(new Date(assignment.shifts_from), true),
-    }),
-  );
 
   // Assignment rule with absences excluded
-  assignmentRuleWithAbsences.rrule(
+  assignmentRule.rrule(
     new RRule({
       freq: RRule.DAILY,
       interval: shift.shifts_repeats_every,
@@ -291,14 +269,13 @@ export const getAssignmentRRule = (
       until: shiftRule.before(new Date(absence.shifts_to), true),
     });
 
-    absencesRule.rrule(absenceRule);
-    assignmentRuleWithAbsences.exrule(absenceRule);
+    assignmentRule.exrule(absenceRule);
   });
 
   // Exclude public holidays
   if (shift.exclude_public_holidays) {
-    assignmentRuleWithAbsences.exrule(publicHolidayDates as RRule);
+    assignmentRule.exrule(publicHolidayDates as RRule);
   }
 
-  return [assignmentRuleWithAbsences, assignmentRule, absencesRule];
+  return assignmentRule;
 };

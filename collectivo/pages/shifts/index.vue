@@ -13,31 +13,24 @@ const canShop = ref(false);
 const dataLoaded = ref(false);
 const absencePostModalOpen = ref(false);
 
-const assignments: Ref<ApiShiftsUserAssignmentInfos[]> = ref([]);
-const holidaysAll: Ref<ShiftsAbsenceGet[]> = ref([]);
-const holidaysCurrent: Ref<ShiftsAbsenceGet[]> = ref([]);
-const activeAbsences: Ref<ShiftsAbsenceGet[]> = ref([]);
+const assignments: Ref<ShiftsOccurrenceDashboard[]> = ref([]);
+const holidaysAll: Ref<ShiftsAbsenceDashboard[]> = ref([]);
+const holidaysCurrent: Ref<ShiftsAbsenceDashboard[]> = ref([]);
+const absences: Ref<ShiftsAbsenceDashboard[]> = ref([]);
 const logs = ref<ShiftsLog[]>([]);
 
 async function loadData() {
   dataLoaded.value = false;
   const [res, _] = await Promise.all([getOccurrencesUser(), fetchSettings()]);
-  assignments.value = res.assignments as ApiShiftsUserAssignmentInfos[];
-  holidaysAll.value = res.holidays as ShiftsAbsenceGet[];
-  holidaysCurrent.value = res.holidaysCurrent as ShiftsAbsenceGet[];
-  activeAbsences.value = res.absences as ShiftsAbsenceGet[];
+  assignments.value = res.assignments as ShiftsOccurrenceDashboard[];
+  holidaysAll.value = res.holidays as ShiftsAbsenceDashboard[];
+  holidaysCurrent.value = res.holidaysCurrent as ShiftsAbsenceDashboard[];
+  absences.value = res.signouts as ShiftsAbsenceDashboard[];
   logs.value = res.logs as ShiftsLog[];
   canShop.value =
     (mship.shifts_counter > -1 && holidaysCurrent.value.length == 0) ||
     mship.shifts_user_type == "exempt";
   dataLoaded.value = true;
-}
-
-function getShiftName(assignmentID: number) {
-  const assignment = assignments.value.find(
-    (a) => a.assignment.id == assignmentID,
-  );
-  return assignment?.assignment.shifts_shift.shifts_name;
 }
 
 if (isActive) loadData();
@@ -70,11 +63,16 @@ else throw createError({ statusCode: 403 });
         <p
           v-if="
             settingsState!.shift_point_system &&
-            mship.shifts_user_type != 'exempt'
+            mship.shifts_user_type != 'exempt' &&
+            mship.shifts_counter >= 0
           "
         >
-          {{ t("Next shift required in") }}: {{ mship.shifts_counter }}
-          {{ t("days") }}
+          {{ t("Points") }}: {{ mship.shifts_counter }}
+          {{ t("Next shift required in") }}:
+          <span v-if="mship.shifts_counter >= 1">
+            {{ mship.shifts_counter }} {{ t("days") }}
+          </span>
+          <span v-else-if="mship.shifts_counter == 1"> 1 {{ t("day") }} </span>
         </p>
       </div>
     </CollectivoCard>
@@ -114,12 +112,41 @@ else throw createError({ statusCode: 403 });
       </p>
       <div class="flex flex-col gap-4 my-4">
         <template v-for="(assignment, index) in assignments" :key="index">
-          <ShiftsDashboardAssignmentTile
-            v-if="assignment.nextOccurrence"
-            :shift-assignment="assignment"
-            @reload="loadData"
-          />
+          <template v-if="assignment.nextOccurrence">
+            <ShiftsDashboardAssignmentTile
+              v-if="assignment.nextOccurrence"
+              :shift-assignment="assignment"
+              @reload="loadData"
+            />
+          </template>
         </template>
+      </div>
+    </div>
+
+    <!-- ABSENCES -->
+    <div v-if="absences.length" class="mb-12">
+      <h2>{{ t("My signouts") }}</h2>
+      <div class="flex flex-col gap-4 my-4">
+        <CollectivoCard
+          v-for="absence in absences"
+          :key="absence.id"
+          :color="'gray'"
+        >
+          <p>
+            {{
+              getDateSpanString(
+                absence.shifts_from,
+                absence.shifts_to,
+                locale,
+                t,
+              )
+            }}
+          </p>
+          <p v-if="absence.shifts_assignment">
+            {{ t("Shift") }}ID:
+            {{ absence.shifts_assignment.shifts_shift.shifts_name }}
+          </p>
+        </CollectivoCard>
       </div>
     </div>
 
@@ -133,7 +160,7 @@ else throw createError({ statusCode: 403 });
             :key="absence.id"
             :color="'blue'"
           >
-            <h4>
+            <p>
               {{
                 getDateSpanString(
                   absence.shifts_from,
@@ -142,12 +169,7 @@ else throw createError({ statusCode: 403 });
                   t,
                 )
               }}
-            </h4>
-            <div v-if="!absence.shifts_is_for_all_assignments">
-              {{ t("Info") }}:
-              {{ t("This absence affects only the shift") }}
-              {{ getShiftName(absence.shifts_assignment) }}
-            </div>
+            </p>
           </CollectivoCard>
         </div>
       </div>
@@ -179,12 +201,14 @@ else throw createError({ statusCode: 403 });
 
 <i18n lang="yaml">
 de:
+  "Shift": "Schicht"
   "Shift calendar": "Schichtkalender"
   "My shifts": "Meine Schichten"
   "My holidays": "Meine Urlaube"
   "My recent activities": "Meine letzten Aktivitäten"
   "Past shifts": "Vergangene Schichten"
   "My assignments": "Meine Anmeldungen"
+  "My signouts": "Meine Abmeldungen"
   "Next shift required in": "Nächste Schicht erforderlich in"
   "days": "Tagen"
   "Timespan": "Zeitraum"

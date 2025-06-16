@@ -40,46 +40,6 @@
     "_syncId": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a"
   },
   {
-    "name": "collectivo_assign_default_role_to_new_users",
-    "icon": "supervised_user_circle",
-    "color": null,
-    "description": null,
-    "status": "active",
-    "trigger": "event",
-    "accountability": "all",
-    "options": {
-      "type": "action",
-      "scope": [
-        "items.create"
-      ],
-      "collections": [
-        "directus_users"
-      ]
-    },
-    "operation": "1588caf8-5a50-4d81-8241-519cfb76605b",
-    "_syncId": "1496bf80-5a7f-4218-97b6-ee9bfafe2d3e"
-  },
-  {
-    "name": "Mail Abwesenheit Status Update",
-    "icon": "outgoing_mail",
-    "color": "#E35169",
-    "description": null,
-    "status": "inactive",
-    "trigger": "event",
-    "accountability": "all",
-    "options": {
-      "type": "action",
-      "scope": [
-        "items.update"
-      ],
-      "collections": [
-        "shifts_absences"
-      ]
-    },
-    "operation": "cb8ea7e4-d20a-4466-af9c-d5e59bae36a6",
-    "_syncId": "1b86184f-c905-4bd2-afb8-1b1546c82471"
-  },
-  {
     "name": "Log Create -> Score",
     "icon": "readiness_score",
     "color": "#3399FF",
@@ -138,26 +98,6 @@
     },
     "operation": "ecafe208-21b8-4aa9-ab60-ad3663271ffe",
     "_syncId": "28c0f3c7-d900-4f6d-be60-da5a803be396"
-  },
-  {
-    "name": "Membership Create & Update",
-    "icon": "bolt",
-    "color": "#6644FF",
-    "description": "Automatischer Mitglied Tag",
-    "status": "active",
-    "trigger": "event",
-    "accountability": "all",
-    "options": {
-      "type": "action",
-      "scope": [
-        "items.update"
-      ],
-      "collections": [
-        "memberships"
-      ]
-    },
-    "operation": "0bec9ec7-45cc-4375-89f9-27231942ddba",
-    "_syncId": "2d68cc8b-f561-4f7f-8cc2-a847cb57054c"
   },
   {
     "name": "memberships_user_search",
@@ -451,28 +391,6 @@
     },
     "operation": "7750689a-c74f-4538-8375-652eff307512",
     "_syncId": "c36a2159-395e-4eec-acb7-86cbd1d81d5c"
-  },
-  {
-    "name": "User Sync Keycloak Groups",
-    "icon": "sync",
-    "color": "#6644FF",
-    "description": "Gruppen mit Keycloak synchronisieren",
-    "status": "active",
-    "trigger": "event",
-    "accountability": "all",
-    "options": {
-      "type": "filter",
-      "scope": [
-        "items.create",
-        "items.update",
-        "items.delete"
-      ],
-      "collections": [
-        "collectivo_tags_directus_users"
-      ]
-    },
-    "operation": "18d5537d-bd68-4f51-878c-f87c054092f4",
-    "_syncId": "c9a409a7-e523-4a19-90da-2811aecd2bf4"
   },
   {
     "name": "memberships_user_search_inner",

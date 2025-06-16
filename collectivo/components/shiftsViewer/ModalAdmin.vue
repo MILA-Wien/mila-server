@@ -11,7 +11,7 @@ function getTime(date: Date) {
 const emit = defineEmits(["data-has-changed"]);
 const props = defineProps({
   shiftOccurence: {
-    type: Object as PropType<ShiftOccurrenceFrontend>,
+    type: Object as PropType<ShiftOccurrence>,
     required: true,
   },
 });
@@ -416,6 +416,7 @@ function checkIfMshipInAssignments(mship: number) {
               collection="shifts_assignments"
             >
               <template #header>
+                <span v-if="!assignment.isActive"> Abgemeldet: </span>
                 <span v-if="assignment.assignment.shifts_is_coordination">
                   {{ t("Shift coordination") }}:
                 </span>
@@ -465,28 +466,31 @@ function checkIfMshipInAssignments(mship: number) {
                 {{ absence.shifts_to }}
               </div>
 
-              <div
-                v-if="
-                  isPast &&
-                  assignment.log &&
-                  assignment.log.shifts_type !== 'attended'
-                "
-                class="flex flex-wrap justify-between"
-              >
-                <div>Log: Schicht wurde verpasst</div>
-                <UButton
-                  size="sm"
-                  label="Log auf absolviert setzen"
-                  @click="updateLog(assignment, 'attended')"
-                />
-              </div>
-              <div v-else class="flex flex-wrap justify-between">
-                <div>Log: Schicht wurde absolviert</div>
-                <UButton
-                  size="sm"
-                  label="Log auf verpasst setzen"
-                  @click="updateLog(assignment, 'missed')"
-                />
+              <div v-if="isPast">
+                <div
+                  v-if="
+                    assignment.log && assignment.log.shifts_type !== 'attended'
+                  "
+                  class="flex flex-wrap justify-between"
+                >
+                  <div v-if="assignment.isActive">
+                    Log: Schicht wurde verpasst
+                  </div>
+                  <div v-else>Log: Schicht wurde abgesagt</div>
+                  <UButton
+                    size="sm"
+                    label="Log auf absolviert setzen"
+                    @click="updateLog(assignment, 'attended')"
+                  />
+                </div>
+                <div v-else class="flex flex-wrap justify-between">
+                  <div>Log: Schicht wurde absolviert</div>
+                  <UButton
+                    size="sm"
+                    label="Log auf verpasst setzen"
+                    @click="updateLog(assignment, 'missed')"
+                  />
+                </div>
               </div>
             </ShiftsViewerModalAdminBox>
           </template>

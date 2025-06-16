@@ -7,38 +7,34 @@ const MAX_DAYS_TO_SIGN_OUT_BEFORE = 2;
 
 const { t, locale } = useI18n();
 const directus = useDirectus();
+
 const signOutModalIsOpen = ref(false);
 
 const props = defineProps({
   shiftAssignment: {
-    type: Object as PropType<ApiShiftsUserAssignmentInfos>,
+    type: Object as PropType<ShiftsOccurrenceDashboard>,
     required: true,
   },
 });
 
 // creates a DateTime object from the given strings, where `date` must be a string starting with format yyyy-mm-dd (e.g. an ISO-format) and `time` must be a duration in format "hh:mm:ss". Returns the so-created time of day in the Vienna timezone.
 function createDateTime(date: string, time?: string) {
-  const datetime = DateTime.fromISO(date.slice(0, 10), { zone: "Europe/Vienna" })
+  const datetime = DateTime.fromISO(date.slice(0, 10), {
+    zone: "Europe/Vienna",
+  });
   if (time) {
     return datetime.plus(Duration.fromISOTime(time));
   }
   return datetime;
 }
 
-const ass = props.shiftAssignment as ApiShiftsUserAssignmentInfos;
-
-if (!ass.nextOccurrence) {
-  throw new Error("Needs next occurrence");
-}
-
-const nextOcc = ass.nextOccurrence as string; // day in format 2025-06-26T00:00:00.000Z (UTC+0)
-const nextOccurrenceAbsent = ass.nextOccurrenceAbsent;
-const nextOccurrenceWithAbsences = ass.nextOccurrenceWithAbsences as string;
-const assignment = ass.assignment;
-const coworkers = ass.coworkers;
-const shift = ass.assignment.shifts_shift;
-const time_from = shift.shifts_from_time; // string in format hh:mm:ss
-const time_to = shift.shifts_to_time; // string in format hh:mm:ss
+const data = props.shiftAssignment;
+const nextOcc = data.nextOccurrence!;
+const assignment = data.assignment;
+const coworkers = data.coworkers;
+const shift = data.assignment.shifts_shift;
+const time_from = shift.shifts_from_time; // string in format hh:mm
+const time_to = shift.shifts_to_time; // string in format hh:mm
 const nextOccurrenceStart = createDateTime(nextOcc, time_from); // DateTime object representing the occurrence's start, including time of day
 const nextOccurrenceEnd = createDateTime(nextOcc, time_to); // DateTime object representing the occurrence's end, including time of day
 const user = useCurrentUser();
@@ -64,16 +60,6 @@ async function createAbsence() {
   signOutModalIsOpen.value = false;
 }
 
-function getTileColor() {
-  if (nextOccurrenceAbsent) {
-    return "gray";
-  } else if (props.shiftAssignment.isRegular) {
-    return "blue";
-  } else {
-    return "green";
-  }
-}
-
 function downloadICS() {
   // downloads the next occurrence as a ICS calendar entry file, and if it is a regular shift assignment, as a recurring event.
   const event = {
@@ -85,7 +71,7 @@ function downloadICS() {
       " " +
       shift.shifts_name +
       " (" +
-      (ass.isRegular
+      (data.isRegular
         ? t("Shift repeats every") +
           " " +
           shift.shifts_repeats_every +
@@ -98,7 +84,7 @@ function downloadICS() {
     end: nextOccurrenceEnd.toJSDate(),
     uid: assignment.id,
     timestamp: new Date(),
-    regular: ass.isRegular,
+    regular: data.isRegular,
     regularity: shift.shifts_repeats_every,
     regularity_until: shift.shifts_to,
   };
@@ -149,7 +135,7 @@ END:VCALENDAR`;
 
 <template>
   <div v-if="nextOcc">
-    <CollectivoCard :color="getTileColor()">
+    <CollectivoCard>
       <div class="flex flex-wrap justify-between items-start">
         <div class="flex-1 min-w-60">
           <h4>
@@ -162,42 +148,45 @@ END:VCALENDAR`;
                 t,
               )
             }}
-            <span v-if="shift.shifts_name"> ({{ shift.shifts_name }})</span>
           </h4>
 
           <!-- Repetition info -->
-          <template
-            v-if="shift.shifts_repeats_every && shiftAssignment.isRegular"
-          >
+          <template v-if="data.secondNextOccurence">
             <p>
-              {{ t("This shift repeats every") }}
-              {{ shift.shifts_repeats_every / 7 }}
+              {{ t("Regular shift: This signup repeats every") }}
+              {{ shift.shifts_repeats_every! / 7 }}
               {{ t("weeks") }}
 
               <span v-if="assignment.shifts_to">
                 {{ t("until") }} {{ getEndDate(assignment.shifts_to) }}
               </span>
             </p>
+            <p>
+              {{ t("Your next date: ") }}
+              {{
+                getDateTimeWithTimeSpanString(
+                  shift.shifts_from_time,
+                  shift.shifts_to_time,
+                  data.secondNextOccurence,
+                  locale,
+                  t,
+                )
+              }}
+            </p>
           </template>
 
           <!-- Shift coworkers -->
-          <p>
-            {{ t("Assigned people") }}: {{ t("You")
-            }}<span v-for="(item, index) in coworkers" :key="index"
-              >, {{ item === " " ? t("Anonymous") : item }}
+          <p v-if="coworkers.length > 0">
+            {{ t("Shift team") }}:
+            <span v-for="(item, index) in coworkers" :key="index">
+              {{ item === " " ? t("Anonymous") : item
+              }}<span v-if="index < coworkers.length - 1">, </span>
             </span>
           </p>
 
-          <!-- Signed out info -->
-          <template v-if="nextOccurrenceAbsent">
-            <p class="pt-4 font-bold">
-              {{ t("You are signed out for this shift") }}
-            </p>
-            <p v-if="nextOccurrenceWithAbsences">
-              {{ t("Your next date: ") }}
-              {{ getDateString(nextOccurrenceWithAbsences, locale) }}
-            </p>
-          </template>
+          <p v-if="shift.shifts_name">
+            {{ t("Shift") }}ID: {{ shift.shifts_name }}
+          </p>
 
           <!-- Shift infos -->
           <!-- eslint-disable vue/no-v-html -->
@@ -210,7 +199,7 @@ END:VCALENDAR`;
         </div>
 
         <!-- Space for buttons -->
-        <div v-if="!ass.nextOccurrenceAbsent" class="flex flex-wrap gap-3">
+        <div class="flex flex-wrap gap-3">
           <UButton size="sm" color="yellow" @click="downloadICS()"
             >{{ t("Calendar download") }}
           </UButton>
@@ -277,7 +266,7 @@ de:
   "Shift": "Schicht"
   "Absences": "Abwesenheiten"
   "One-time shift": "Einmalige Schicht"
-  "This shift repeats every": "Diese Schicht wiederholt sich alle"
+  "Regular shift: This signup repeats every": "Festschicht: Diese Anmeldung wiederholt sich alle"
   "days": "Tage"
   "weeks": "Wochen"
   "from": "von"
@@ -286,11 +275,13 @@ de:
   "You": "Du"
   "Sign out": "Abmelden"
   "Sign out from the following shift": "Von folgender Schicht abmelden"
-  "You are signed out for this shift": "Du bist für diese Schicht abgemeldet"
+  "You are signed out for this shift": "Du bist von dieser Schicht abgemeldet"
   "Your next date: ": "Dein nächster Termin: "
   "Assigned people": "Angemeldete Personen"
   "Anonymous": "Anonym"
   "Contact": "Kontakt"
+  "Shift team": "Schichtteam"
+  "Cancelled": "Abgemeldet"
   "Attention": "Achtung"
   "t:signout_regular": "Du wirst nur für dieses Datum abgemeldet, nicht jedoch für zukünftige Termine. Für eine dauerhafte Abmeldung wende dich bitte an das Mitgliederbüro."
   "Sign-out is not possible anymore. Please contact the office.": "Abmeldung ist nicht mehr möglich. Bitte kontaktiere das Mitgliederbüro."
