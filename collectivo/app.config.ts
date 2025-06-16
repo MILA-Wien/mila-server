@@ -178,7 +178,7 @@ export default defineAppConfig({
       padding: {
         baseSize: "py-4 px-[18px]",
       },
-      rounded: "rounded-lg",
+      rounded: "rounded-sm",
       default: {
         size: "md",
         color: "blue",
@@ -228,6 +228,7 @@ export default defineAppConfig({
       border: "border border-gray-500",
       label: "text-sm font-medium",
     },
+
     radioGroup: {
       wrapper: "flex items-start",
       fieldset: "w-full",

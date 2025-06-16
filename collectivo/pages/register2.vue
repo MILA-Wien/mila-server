@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { object, string, ref, number, type InferType } from "yup";
+import { object, string, ref, number, type InferType, array } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 const { t } = useI18n();
 
@@ -92,9 +92,9 @@ const schema = object({
   ),
   directus_users__mila_survey_contact: string(),
   directus_users__mila_survey_motivation: string(),
-  directus_users__mila_groups_interested_2: string(),
-  directus_users__mila_skills_2: string(),
-  directus_users__survey_languages: string(),
+  directus_users__mila_groups_interested_2: array(string()),
+  directus_users__mila_skills_2: array(string()),
+  directus_users__survey_languages: array(string()),
   directus_users__survey_languages_additional: string(),
   _statutes_approval: string(),
   _data_approval: string(),
@@ -269,8 +269,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         name="directus_users__memberships_gender"
         required
       >
-        TODO SELECT
-        <UInput v-model="state.directus_users__memberships_gender" />
+        <USelectMenu
+          v-model="state.directus_users__memberships_gender"
+          :options="['female', 'male', 'diverse', 'inter', 'open', 'no-answer']"
+        >
+          <template #label>{{
+            t("l:" + (state.directus_users__memberships_gender ?? "choose"))
+          }}</template>
+          <template #option="{ option }">{{ t("l:" + option) }}</template>
+        </USelectMenu>
       </UFormGroup>
 
       <UFormGroup :label="t('Phone')" name="directus_users__memberships_phone">
@@ -284,20 +291,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         name="directus_users__memberships_birthday"
         required
       >
-        TODO DATEPICKER
-        <UInput v-model="state.directus_users__memberships_birthday" />
-
-        <!-- <CollectivoFormDatePicker
-                v-if="input.useDatePicker"
-                v-model="state[input.key]"
-              />
-              <CollectivoFormDate
-                v-else
-                v-model="state[input.key]"
-                :max-years-future="input.maxYearsFuture"
-                :max-years-past="input.maxYearsPast"
-                :disabled="input.disabled"
-              /> -->
+        <CollectivoFormDate
+          v-model="state.directus_users__memberships_birthday"
+        />
       </UFormGroup>
 
       <UFormGroup
@@ -453,7 +449,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       </USelectMenu>
     </UFormGroup>
 
-    <template v-if="state.directus_users__payments_type === 'sepa'">
+    <div
+      v-if="state.directus_users__payments_type === 'sepa'"
+      class="grid md:grid-cols-2 gap-4"
+    >
       <UFormGroup
         :label="t('Bank account IBAN')"
         name="directus_users__payments_account_iban"
@@ -469,7 +468,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       >
         <UInput v-model="state.directus_users__payments_account_owner" />
       </UFormGroup>
-    </template>
+    </div>
 
     <div class="pt-6">
       <h2>{{ t("Survey") }}</h2>
@@ -482,7 +481,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       <UFormGroup
         :label="t('How did you hear about us?')"
         name="directus_users__mila_survey_contact"
-        required
       >
         <UTextarea v-model="state.directus_users__mila_survey_contact" />
       </UFormGroup>
@@ -490,41 +488,159 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       <UFormGroup
         :label="t('What convinced you to join MILA?')"
         name="directus_users__mila_survey_motivation"
-        required
       >
         <UTextarea v-model="state.directus_users__mila_survey_motivation" />
       </UFormGroup>
 
-      TODO SURVEY
+      <UFormGroup
+        :label="t('Do you want to participate in a working group?')"
+        name="directus_users__mila_groups_interested_2"
+      >
+        <div class="text-sm mb-2">
+          {{ t("You can find more information about the working groups") }}
+          <a
+            href="https://www.mila.wien/mitmachen/arbeitsgruppen/"
+            class="font-bold"
+            >{{ t("here") }}</a
+          >.
+        </div>
+        <CollectivoFormCheckboxGroup
+          v-model="state.directus_users__mila_groups_interested_2"
+          :choices="[
+            { label: 'Sortiment', value: 'Sortiment' },
+            { label: 'Öffentlichkeitsarbeit', value: 'Öffentlichkeitsarbeit' },
+            { label: 'Minimarkt', value: 'Minimarkt' },
+            { label: 'Finanzen', value: 'Finanzen' },
+            { label: 'Genossenschaft', value: 'Genossenschaft' },
+            { label: 'Standort', value: 'Standort' },
+            { label: 'IT und Digitales', value: 'ITundDigitales' },
+            { label: 'Diversität', value: 'Diversität' },
+            { label: 'Events/Infogespräche', value: 'EventsInfogespräche' },
+            { label: 'Mitgliedergewinnung', value: 'Mitgliedergewinnung' },
+            { label: 'Mitgliederbüro', value: 'Mitgliederbüro' },
+          ]"
+        />
+      </UFormGroup>
 
-      <!-- <CollectivoFormCheckboxGroup
-                  v-model="state[input.key]"
-                  :choices="input.choices"
-                /> -->
+      <UFormGroup
+        :label="t('What are your skills?')"
+        name="directus_users__mila_skills_2"
+      >
+        <CollectivoFormCheckboxGroup
+          v-model="state.directus_users__mila_skills_2"
+          :choices="[
+            { label: 'Handwerk (Elektrik, Tischlerei, …)', value: 'handwerk' },
+            { label: 'Einzelhandel', value: 'handel' },
+            {
+              label: 'Organisationsentwicklung',
+              value: 'geno',
+            },
+            { label: 'Finanzen (BWL, Buchhaltung,…)', value: 'finanzen' },
+            { label: 'Immobilien/Architektur/Planung/Bau', value: 'immo' },
+            {
+              label: 'Personalmanagement',
+              value: 'personal',
+            },
+          ]"
+        />
+      </UFormGroup>
+
+      <UFormGroup
+        :label="t('What languages do you speak?')"
+        name="directus_users__survey_languages"
+      >
+        <CollectivoFormCheckboxGroup
+          v-model="state.directus_users__survey_languages"
+          :choices="[
+            { label: 'German', value: 'Deutsch' },
+            { label: 'English', value: 'Englisch' },
+            { label: 'French', value: 'Französisch' },
+            { label: 'Turkish', value: 'Türkisch' },
+            { label: 'BKMS', value: 'BKMS' },
+            { label: 'Ukrainian', value: 'Ukrainisch' },
+            { label: 'Russian', value: 'Russisch' },
+            { label: 'Arabic', value: 'Arabisch' },
+          ]"
+        />
+      </UFormGroup>
+
+      <UFormGroup
+        :label="t('Additional languages')"
+        name="directus_users__survey_languages_additional"
+      >
+        <UInput v-model="state.directus_users__survey_languages_additional" />
+      </UFormGroup>
     </div>
 
     <div class="pt-6">
       <h2>{{ t("Conditions") }}</h2>
     </div>
 
-    TODO Conditions
+    <UFormGroup :label="t('Statutes')" name="_statutes_approval" required>
+      <div class="bg-blue-50 p-2 rounded-sm text-sm flex flex-row">
+        <UToggle v-model="state._statutes_approval" class="mt-0.5 mr-2" />
+        <span class="">
+          {{ t("t:mila_form_check2") }}
+          <a
+            href="https://wolke.mila.wien/s/BRKPrbzjssqkzbz"
+            class="font-bold"
+            >{{ t("Satzung") }}</a
+          ></span
+        >
+      </div>
+    </UFormGroup>
 
-    <!-- <div class="form-box flex flex-row">
-                <UToggle
-                  v-model="state[input.key]"
-                  :disabled="input.disabled"
-                  class="mt-0.5 mr-2"
-                />
-                <span
-                  v-if="input.content"
-                  class="md-description md-small"
-                  v-html="prepareHTML(input.content)"
-                />
-              </div> -->
+    <UFormGroup :label="t('Data use')" name="_data_approval" required>
+      <div class="bg-blue-50 p-2 rounded-sm text-sm flex flex-row">
+        <UToggle v-model="state._data_approval" class="mt-0.5 mr-2" />
+        <span class="">
+          {{ t("t:mila_form_check3") }}
+          <a href="https://www.mila.wien/datenschutz/" class="font-bold">{{
+            t("Privacy Page")
+          }}</a>
+        </span>
+      </div>
+    </UFormGroup>
 
-    <UButton type="submit" color="green" size="lg" block>
-      {{ t("Submit application") }}
-    </UButton>
+    <UFormGroup :label="t('PR Work')" name="directus_users__mila_pr_approved">
+      <div class="bg-blue-50 p-2 rounded-sm text-sm flex flex-row">
+        <UToggle v-model="state._statutes_approval" class="mt-0.5 mr-2" />
+        <span class="">
+          {{ t("t:mila_form_check1") }}
+          <a href="https://www.mila.wien/datenschutz/" class="font-bold">{{
+            t("Privacy Page")
+          }}</a>
+        </span>
+      </div>
+    </UFormGroup>
+
+    <div>
+      <p class="text-sm font-semibold mb-1">{{ t("Liability") }}</p>
+      <p class="text-sm">{{ t("t:mila_form_final1") }}</p>
+    </div>
+
+    <div>
+      <p class="text-sm font-semibold mb-1">
+        {{ t("Payout upon termination") }}
+      </p>
+      <p class="text-sm">
+        {{ t("t:mila_form_final2") }}
+        <a href="https://wolke.mila.wien/s/RomRixR2xb5LGNK" class="font-bold">{{
+          t("Work Guidelines")
+        }}</a>
+      </p>
+    </div>
+
+    <div>
+      <p class="text-sm font-semibold mb-1">{{ t("Revocation") }}</p>
+      <p class="text-sm">{{ t("t:mila_form_final3") }}</p>
+    </div>
+
+    <div class="py-6">
+      <UButton type="submit" color="green" size="lg" block>
+        {{ t("Submit application") }}
+      </UButton>
+    </div>
   </UForm>
 </template>
 
@@ -542,7 +658,8 @@ de:
   "How did you hear about us?": "Woher kennst du MILA?"
   "What convinced you to join MILA?": "Was hat dich von MILA überzeugt?"
   "Do you want to participate in a working group?": "Möchtest du  in einer Arbeitsgruppe (AG) mitmachen?"
-  "You can find more information about the working groups here: https://www.mila.wien/mitmachen/arbeitsgruppen/": "Mehr informationen über die Arbeitsgruppen findest du unter https://www.mila.wien/mitmachen/arbeitsgruppen/"
+  "You can find more information about the working groups": "Mehr informationen über die Arbeitsgruppen findest du"
+  "here": "hier"
   "What are your skills?": "Welche Fähigkeiten bringst du mit?"
   "PR Work": "Öffentlichkeitsarbeit"
   "Statutes": "Satzung"
@@ -603,6 +720,12 @@ de:
   "l:sepa": "SEPA Bankeinzug"
   "l:transfer": "Überweisung"
   "l:choose": "Bitte auswählen"
+  "l:female": "Weiblich"
+  "l:male": "Männlich"
+  "l:diverse": "Divers"
+  "l:inter": "Inter"
+  "l:open": "Offen"
+  "l:no-answer": "Keine Angabe"
 
   "t:memberships_form_ptype": "Ich stelle diesen Antrag als:"
   "t:memberships_form_mtype": "Welche Art der Mitgliedschaft wählst du?"
@@ -641,6 +764,12 @@ en:
   "l:sepa": "SEPA direct debit"
   "l:transfer": "Bank transfer"
   "l:choose": "Please choose"
+  "l:male": "Male"
+  "l:female": "Female"
+  "l:diverse": "Diverse"
+  "l:inter": "Inter"
+  "l:open": "Open"
+  "l:no-answer": "No answer"
 
   "t:memberships_form_ptype": "I am applying for a membership as:"
   "t:memberships_form_mtype": "Which type of membership do you choose?"
