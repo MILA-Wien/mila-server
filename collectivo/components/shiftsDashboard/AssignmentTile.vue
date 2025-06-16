@@ -17,8 +17,11 @@ const props = defineProps({
   },
 });
 
+// creates a DateTime object from the given strings, where `date` must be a string starting with format yyyy-mm-dd (e.g. an ISO-format) and `time` must be a duration in format "hh:mm:ss". Returns the so-created time of day in the Vienna timezone.
 function createDateTime(date: string, time?: string) {
-  const datetime = DateTime.fromISO(date, { locale: locale.value });
+  const datetime = DateTime.fromISO(date.slice(0, 10), {
+    zone: "Europe/Vienna",
+  });
   if (time) {
     return datetime.plus(Duration.fromISOTime(time));
   }
@@ -31,10 +34,10 @@ const nextOcc = ass.nextOccurrence!;
 const assignment = ass.assignment;
 const coworkers = ass.coworkers;
 const shift = ass.assignment.shifts_shift;
-const time_from = shift.shifts_from_time;
-const time_to = shift.shifts_to_time;
-const nextOccurrenceStart = createDateTime(nextOcc, time_from);
-const nextOccurrenceEnd = createDateTime(nextOcc, time_to);
+const time_from = shift.shifts_from_time; // string in format hh:mm:ss
+const time_to = shift.shifts_to_time; // string in format hh:mm:ss
+const nextOccurrenceStart = createDateTime(nextOcc, time_from); // DateTime object representing the occurrence's start, including time of day
+const nextOccurrenceEnd = createDateTime(nextOcc, time_to); // DateTime object representing the occurrence's end, including time of day
 const user = useCurrentUser();
 const emit = defineEmits(["reload"]);
 
