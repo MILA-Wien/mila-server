@@ -48,7 +48,7 @@ const getShiftDataUser = async (mship: number) => {
     holidays: holidays,
     holidaysCurrent: holidaysCurrent,
     logs: logs,
-  } as ApiShiftsUser;
+  } as ShiftsDashboard;
 };
 
 async function getAssignments(mship: number) {
@@ -77,7 +77,7 @@ async function getAssignments(mship: number) {
         },
       ],
     }),
-  )) as ShiftsAssignmentApiUser[];
+  )) as ShiftsAssignmentDashboard[];
 }
 
 async function getAbsences(mship: number) {
@@ -99,7 +99,7 @@ async function getAbsences(mship: number) {
       },
       fields: [
         "*",
-        { shifts_shift: ["*"] },
+        { shifts_assignment: [{ shifts_shift: ["shifts_name"] }] },
         {
           shifts_membership: [
             {
@@ -109,20 +109,23 @@ async function getAbsences(mship: number) {
         },
       ],
     }),
-  )) as ShiftsAbsenceGet[];
+  )) as ShiftsAbsenceDashboard[];
 
-  const holidays = [] as ShiftsAbsenceGet[];
-  const holidaysCurrent = [] as ShiftsAbsenceGet[];
+  const holidays = [] as ShiftsAbsenceDashboard[];
+  const remainingAbsences = [] as ShiftsAbsenceDashboard[];
+  const holidaysCurrent = [] as ShiftsAbsenceDashboard[];
   for (const absence of absences) {
     if (absence.shifts_is_holiday) {
       holidays.push(absence);
       if (new Date(absence.shifts_from) <= new Date(nowStr)) {
         holidaysCurrent.push(absence);
       }
+    } else {
+      remainingAbsences.push(absence);
     }
   }
 
-  return [absences, holidays, holidaysCurrent];
+  return [remainingAbsences, holidays, holidaysCurrent];
 }
 
 async function getPublicHolidays() {
@@ -166,7 +169,7 @@ async function getLogs(mship: number) {
 }
 
 const getAssignmentInfos = async (
-  assignment: ShiftsAssignmentApiUser,
+  assignment: ShiftsAssignmentDashboard,
   absences: ShiftsAbsence[],
   publicHolidaRruleSet: RRuleSet,
   mship: number,
@@ -200,12 +203,12 @@ const getAssignmentInfos = async (
     nextOccurrence: nextOccurrence?.toISOString(),
     secondNextOccurence: secondNextOccurence?.toISOString(),
     isRegular: secondNextOccurence != null,
-  } as ApiShiftsUserAssignmentInfos;
+  } as ShiftsOccurrenceDashboard;
 };
 
 // Get names of coworkers for a shift assignment
 const getCoworkers = async (
-  assignment: ShiftsAssignmentApiUser,
+  assignment: ShiftsAssignmentDashboard,
   nextOccurence: Date,
   mship: number,
 ) => {
@@ -232,7 +235,7 @@ const getCoworkers = async (
 
 // Get assignment rrule
 export const getAssignmentRRule = (
-  assignment: ShiftsAssignmentApiUser,
+  assignment: ShiftsAssignmentDashboard,
   absences?: ShiftsAbsence[],
   publicHolidayDates?: RRuleSet,
 ) => {

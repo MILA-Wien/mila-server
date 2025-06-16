@@ -12,7 +12,7 @@ const signOutModalIsOpen = ref(false);
 
 const props = defineProps({
   shiftAssignment: {
-    type: Object as PropType<ApiShiftsUserAssignmentInfos>,
+    type: Object as PropType<ShiftsOccurrenceDashboard>,
     required: true,
   },
 });
@@ -28,14 +28,13 @@ function createDateTime(date: string, time?: string) {
   return datetime;
 }
 
-const ass = props.shiftAssignment as ApiShiftsUserAssignmentInfos;
-
-const nextOcc = ass.nextOccurrence!;
-const assignment = ass.assignment;
-const coworkers = ass.coworkers;
-const shift = ass.assignment.shifts_shift;
-const time_from = shift.shifts_from_time; // string in format hh:mm:ss
-const time_to = shift.shifts_to_time; // string in format hh:mm:ss
+const data = props.shiftAssignment;
+const nextOcc = data.nextOccurrence!;
+const assignment = data.assignment;
+const coworkers = data.coworkers;
+const shift = data.assignment.shifts_shift;
+const time_from = shift.shifts_from_time; // string in format hh:mm
+const time_to = shift.shifts_to_time; // string in format hh:mm
 const nextOccurrenceStart = createDateTime(nextOcc, time_from); // DateTime object representing the occurrence's start, including time of day
 const nextOccurrenceEnd = createDateTime(nextOcc, time_to); // DateTime object representing the occurrence's end, including time of day
 const user = useCurrentUser();
@@ -72,7 +71,7 @@ function downloadICS() {
       " " +
       shift.shifts_name +
       " (" +
-      (ass.isRegular
+      (data.isRegular
         ? t("Shift repeats every") +
           " " +
           shift.shifts_repeats_every +
@@ -85,7 +84,7 @@ function downloadICS() {
     end: nextOccurrenceEnd.toJSDate(),
     uid: assignment.id,
     timestamp: new Date(),
-    regular: ass.isRegular,
+    regular: data.isRegular,
     regularity: shift.shifts_repeats_every,
     regularity_until: shift.shifts_to,
   };
@@ -152,17 +151,27 @@ END:VCALENDAR`;
           </h4>
 
           <!-- Repetition info -->
-          <template
-            v-if="shift.shifts_repeats_every && shiftAssignment.isRegular"
-          >
+          <template v-if="data.secondNextOccurence">
             <p>
-              {{ t("This shift repeats every") }}
-              {{ shift.shifts_repeats_every / 7 }}
+              {{ t("Regular shift: This signup repeats every") }}
+              {{ shift.shifts_repeats_every! / 7 }}
               {{ t("weeks") }}
 
               <span v-if="assignment.shifts_to">
                 {{ t("until") }} {{ getEndDate(assignment.shifts_to) }}
               </span>
+            </p>
+            <p>
+              {{ t("Your next date: ") }}
+              {{
+                getDateTimeWithTimeSpanString(
+                  shift.shifts_from_time,
+                  shift.shifts_to_time,
+                  data.secondNextOccurence,
+                  locale,
+                  t,
+                )
+              }}
             </p>
           </template>
 
@@ -175,7 +184,9 @@ END:VCALENDAR`;
             </span>
           </p>
 
-          <p v-if="shift.shifts_name">ID: {{ shift.shifts_name }}</p>
+          <p v-if="shift.shifts_name">
+            {{ t("Shift") }}ID: {{ shift.shifts_name }}
+          </p>
 
           <!-- Shift infos -->
           <!-- eslint-disable vue/no-v-html -->
@@ -255,7 +266,7 @@ de:
   "Shift": "Schicht"
   "Absences": "Abwesenheiten"
   "One-time shift": "Einmalige Schicht"
-  "This shift repeats every": "Diese Schicht wiederholt sich alle"
+  "Regular shift: This signup repeats every": "Festschicht: Diese Anmeldung wiederholt sich alle"
   "days": "Tage"
   "weeks": "Wochen"
   "from": "von"

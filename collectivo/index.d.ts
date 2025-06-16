@@ -151,16 +151,10 @@ declare global {
     shifts_membership: ShiftsAssignmentGetMembership;
   }
 
-  interface ShiftsAssignmentApiUser extends ShiftsAssignment {
-    shifts_shift: ShiftsShift;
-    shifts_membership: ShiftsAssignmentGetMembership;
-  }
-
   interface ShiftsAbsence {
     id?: number;
     shifts_from: "datetime" | string;
     shifts_to: "datetime" | string;
-    shifts_shift?: ShiftsShift | number;
     shifts_assignment?: number | ShiftsAssignment;
     shifts_membership: Membership | number;
     shifts_is_for_all_assignments: boolean;
@@ -227,21 +221,30 @@ declare global {
     isSelf?: boolean;
   }
 
-  // API Responses
-  interface ApiShiftsUserAssignmentInfos {
-    assignment: ShiftsAssignmentApiUser;
+  // Shifts dashboard
+  interface ShiftsDashboard {
+    assignments: ShiftsOccurrenceDashboard[];
+    absences: ShiftsAbsenceDashboard[];
+    holidays: ShiftsAbsenceDashboard[];
+    holidaysCurrent: ShiftsAbsenceDashboard[];
+    logs: ShiftsLog[];
+  }
+
+  interface ShiftsOccurrenceDashboard {
+    assignment: ShiftsAssignmentDashboard;
     coworkers: string[];
     nextOccurrence: string | null;
     secondNextOccurence: string | null;
     isRegular: boolean;
   }
 
-  interface ApiShiftsUser {
-    assignments: ApiShiftsUserAssignmentInfos[];
-    absences: ShiftsAbsenceGet[];
-    holidays: ShiftsAbsenceGet[];
-    holidaysCurrent: ShiftsAbsenceGet[];
-    logs: ShiftsLog[];
+  interface ShiftsAssignmentDashboard extends ShiftsAssignment {
+    shifts_shift: ShiftsShift;
+    shifts_membership: ShiftsAssignmentGetMembership;
+  }
+
+  interface ShiftsAbsenceDashboard extends ShiftsAbsence {
+    shifts_assignment: ShiftsAssignmentDashboard;
   }
 
   // Layout

@@ -53,14 +53,16 @@ export function getDateTimeWithTimeSpanString(
 
 export function getDateSpanString(
   from: string,
-  to: string,
+  to: string | undefined,
   locale: string,
   t: any,
 ) {
   const fromDate = DateTime.fromISO(from, { locale: locale });
-  const toDate = DateTime.fromISO(to, { locale: locale });
   const fromWeekDay = fromDate.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
+  if (from == to || !to) {
+    return fromWeekDay;
+  }
+  const toDate = DateTime.fromISO(to, { locale: locale });
   const toWeekDay = toDate.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
-
   return `${fromWeekDay} ${t("to")} ${toWeekDay}`;
 }
