@@ -46,6 +46,7 @@ async function onSubmitNuxt(data: any) {
 }
 
 async function onSubmit(data: any) {
+  console.log("Submitting form with data:", data);
   try {
     const dataReady = props.form.beforeSubmit
       ? await props.form.beforeSubmit(data)

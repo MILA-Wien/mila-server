@@ -230,19 +230,25 @@ export default defineAppConfig({
     },
     radioGroup: {
       wrapper: "flex items-start",
-      base: "h-4 w-4 disabled:opacity-50 disabled:cursor-not-allowed focus:ring-0 focus:ring-purple focus:ring-offset-active",
-      color: "text-purple-500",
-      background: "bg-purple dark:bg-gray-900",
-      border: "border border-gray-500-300 dark:border-gray-500-700",
-      ring: "focus-visible:ring-2 focus-visible:ring-primary  focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
-      label: "text-sm font-medium text-gray-500-700 dark:text-gray-500-200",
-      default: {
-        color: "primary",
-      },
+      fieldset: "w-full",
     },
     radio: {
       wrapper:
-        "relative flex items-start bg-[#F4F7FE] shadow-sm rounded-lg mb-2 last:mb-0 px-5 py-3",
+        "relative flex items-start bg-[#F4F7FE] shadow-sm rounded-sm mb-2 last:mb-0 px-5 py-3",
+      container: "flex items-center h-5",
+      base: "h-4 w-4 dark:checked:bg-current dark:checked:border-transparent disabled:opacity-50 disabled:cursor-not-allowed focus:ring-0 focus:ring-transparent focus:ring-offset-transparent",
+      form: "form-radio",
+      color: "text-{color}-500 dark:text-{color}-400",
+      background: "bg-white dark:bg-gray-900",
+      border: "border border-gray-300 dark:border-gray-700",
+      ring: "focus-visible:ring-2 focus-visible:ring-{color}-500 dark:focus-visible:ring-{color}-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
+      inner: "ms-3 flex flex-col",
+      label: "text-sm font-medium text-gray-700 dark:text-gray-200",
+      required: "text-sm text-red-500 dark:text-red-400",
+      help: "text-sm text-gray-500 dark:text-gray-400",
+      default: {
+        color: "primary",
+      },
     },
   },
 });

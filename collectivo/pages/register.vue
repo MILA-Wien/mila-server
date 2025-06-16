@@ -96,12 +96,14 @@ const form: Ref<CollectivoForm> = ref({
   submitPath: "/api/membership_application",
   submitLabel: "Submit application",
   beforeSubmit: async (data: any) => {
+    console.log("data", data);
+    console.log("options", data.shares_options);
     if (data.shares_options === "normal") {
       data.memberships__memberships_shares = 9;
     } else if (data.shares_options === "social") {
       data.memberships__memberships_shares = 1;
     }
-
+    console.log("options2", data.memberships__memberships_shares);
     if (
       !data.memberships__memberships_shares ||
       data.memberships__memberships_shares <= 0
