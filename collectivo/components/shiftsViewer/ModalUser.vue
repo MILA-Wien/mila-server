@@ -6,7 +6,7 @@ const { locale } = useI18n();
 
 const props = defineProps({
   shiftOccurence: {
-    type: Object as PropType<ShiftOccurrence>,
+    type: Object as PropType<ShiftsOccurrenceViewer>,
     required: true,
   },
   shiftType: {
@@ -165,9 +165,6 @@ async function postAssignmentInner() {
             {{ start.toLocaleString(DateTime.DATE_MED) }}
           </p>
         </div>
-        <p v-if="shift.shifts_category && shift.shifts_category !== 'normal'">
-          {{ t("Category") }}: {{ t("shifts:" + shift.shifts_category) }}
-        </p>
       </div>
 
       <!-- Shift infos -->

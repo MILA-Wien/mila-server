@@ -25,7 +25,7 @@ async function loadData() {
   assignments.value = res.assignments as ShiftsOccurrenceDashboard[];
   holidaysAll.value = res.holidays as ShiftsAbsenceDashboard[];
   holidaysCurrent.value = res.holidaysCurrent as ShiftsAbsenceDashboard[];
-  absences.value = res.absences as ShiftsAbsenceDashboard[];
+  absences.value = res.signouts as ShiftsAbsenceDashboard[];
   logs.value = res.logs as ShiftsLog[];
   canShop.value =
     (mship.shifts_counter > -1 && holidaysCurrent.value.length == 0) ||

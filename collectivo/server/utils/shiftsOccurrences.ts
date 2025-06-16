@@ -79,7 +79,7 @@ async function getSingleShiftOccurrences(
   );
 
   const dates = shiftRule.between(from, to, true);
-  const shiftOccurrences: ShiftOccurrence[] = [];
+  const shiftOccurrences: ShiftsOccurrenceViewer[] = [];
   for (const date of dates) {
     shiftOccurrences.push(
       createShiftOccurrence(shift, date, shiftRule, assignmentRrules, mship),

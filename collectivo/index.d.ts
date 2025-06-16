@@ -189,6 +189,23 @@ declare global {
     name: string;
   }
 
+  // API Occurrences
+
+  interface ShiftsViewerData {
+    occurrences: ShiftsOccurrenceViewer[];
+    publicHolidays: Pick<ShiftsPublicHoliday, "date">[];
+  }
+
+  interface ShiftsOccurrenceViewer {
+    shift: ShiftsShift;
+    start: string;
+    end: string;
+    n_assigned: number;
+    assignments: AssignmentOccurrence[];
+    selfAssigned?: boolean;
+    needsCoordinator?: boolean;
+  }
+
   interface ShiftOccurrence {
     shift: ShiftsShift;
     start: Date;
@@ -224,7 +241,7 @@ declare global {
   // Shifts dashboard
   interface ShiftsDashboard {
     assignments: ShiftsOccurrenceDashboard[];
-    absences: ShiftsAbsenceDashboard[];
+    signouts: ShiftsAbsenceDashboard[];
     holidays: ShiftsAbsenceDashboard[];
     holidaysCurrent: ShiftsAbsenceDashboard[];
     logs: ShiftsLog[];
