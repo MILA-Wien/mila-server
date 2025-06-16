@@ -467,9 +467,18 @@ function checkIfMshipInAssignments(mship: number) {
               </div>
 
               <div v-if="isPast">
+                <!-- Wenn es einen non-attendance log gibt, wurde die Schicht verpasst. 
+                 Wenn es keinen log gibt, und die schicht wurde abgesagt, 
+                 dann ist die Person wie geplant nicht gekommen. 
+                 Wenn es keine absage gibt und keinen log, 
+                 gehen wir davon aus dass die schicht stattgefunden hat -
+                 in diesem Fall wird automatisch ein Log vom Cronjob erstellt
+                 (außer schichtdaten werden nachträglich für die vergangenheit geändert) -->
                 <div
                   v-if="
-                    assignment.log && assignment.log.shifts_type !== 'attended'
+                    (assignment.log &&
+                      assignment.log.shifts_type !== 'attended') ||
+                    (!assignment.isActive && !assignment.log)
                   "
                   class="flex flex-wrap justify-between"
                 >
