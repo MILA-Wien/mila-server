@@ -114,11 +114,13 @@ else throw createError({ statusCode: 403 });
       </p>
       <div class="flex flex-col gap-4 my-4">
         <template v-for="(assignment, index) in assignments" :key="index">
-          <ShiftsDashboardAssignmentTile
-            v-if="assignment.nextOccurrence"
-            :shift-assignment="assignment"
-            @reload="loadData"
-          />
+          <template v-if="assignment.nextOccurrence">
+            <ShiftsDashboardAssignmentTile
+              v-if="assignment.nextOccurrence"
+              :shift-assignment="assignment"
+              @reload="loadData"
+            />
+          </template>
         </template>
       </div>
     </div>

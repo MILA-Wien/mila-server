@@ -18,7 +18,10 @@ export const getShiftOccurrences = async (
   // Hide names if not admin
   if (!admin) {
     for (const assignment of assignments) {
-      if (assignment.shifts_membership.memberships_user.hide_name) {
+      if (
+        assignment.shifts_membership.memberships_user.hide_name &&
+        (!mship || mship != assignment.shifts_membership.id)
+      ) {
         assignment.shifts_membership.memberships_user.first_name = "";
         assignment.shifts_membership.memberships_user.last_name = "";
       }

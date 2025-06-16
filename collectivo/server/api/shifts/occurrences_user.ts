@@ -178,34 +178,27 @@ const getAssignmentInfos = async (
       absence.shifts_assignment == null,
   );
 
-  const [assignmentRuleWithAbsences, assignmentRule, absencesRule] =
-    getAssignmentRRule(assignment, filteredAbsences, publicHolidaRruleSet);
-
-  const nextOccurence = assignmentRule.after(now, true);
-  const nextOccurrenceWithAbsences = assignmentRuleWithAbsences.after(
-    now,
-    true,
+  const [assignmentRuleWithAbsences, assignmentRule, _] = getAssignmentRRule(
+    assignment,
+    filteredAbsences,
+    publicHolidaRruleSet,
   );
+
+  const nextOccurrence = assignmentRuleWithAbsences.after(now, true);
   let secondNextOccurence = null;
-  let nextOccurrenceAbsent = null;
   const coworkers = [];
 
-  if (nextOccurence) {
-    secondNextOccurence = assignmentRule.after(nextOccurence);
-
-    const coworkers_ = await getCoworkers(assignment, nextOccurence, mship);
+  if (nextOccurrence) {
+    secondNextOccurence = assignmentRule.after(nextOccurrence);
+    const coworkers_ = await getCoworkers(assignment, nextOccurrence, mship);
     coworkers.push(...coworkers_);
-
-    if (absencesRule) {
-      nextOccurrenceAbsent = absencesRule.after(nextOccurence, true) != null;
-    }
   }
+
   return {
     assignment: assignment,
     coworkers: coworkers,
-    nextOccurrence: nextOccurence,
-    nextOccurrenceAbsent: nextOccurrenceAbsent,
-    nextOccurrenceWithAbsences: nextOccurrenceWithAbsences,
+    nextOccurrence: nextOccurrence?.toISOString(),
+    secondNextOccurence: secondNextOccurence?.toISOString(),
     isRegular: secondNextOccurence != null,
   } as ApiShiftsUserAssignmentInfos;
 };
@@ -229,7 +222,6 @@ const getCoworkers = async (
     const assignments = occs.occurrences[0].assignments;
     for (const a of assignments) {
       const u = a.assignment.shifts_membership.memberships_user;
-      if (a.isSelf) continue;
       if (!a.isActive) continue;
       coworkers.push(u.first_name + " " + u.last_name);
     }

@@ -7,6 +7,7 @@ const MAX_DAYS_TO_SIGN_OUT_BEFORE = 2;
 
 const { t, locale } = useI18n();
 const directus = useDirectus();
+
 const signOutModalIsOpen = ref(false);
 
 const props = defineProps({
@@ -26,13 +27,7 @@ function createDateTime(date: string, time?: string) {
 
 const ass = props.shiftAssignment as ApiShiftsUserAssignmentInfos;
 
-if (!ass.nextOccurrence) {
-  throw new Error("Needs next occurrence");
-}
-
-const nextOcc = ass.nextOccurrence as string;
-const nextOccurrenceAbsent = ass.nextOccurrenceAbsent;
-const nextOccurrenceWithAbsences = ass.nextOccurrenceWithAbsences as string;
+const nextOcc = ass.nextOccurrence!;
 const assignment = ass.assignment;
 const coworkers = ass.coworkers;
 const shift = ass.assignment.shifts_shift;
@@ -61,16 +56,6 @@ async function createAbsence() {
 
   emit("reload");
   signOutModalIsOpen.value = false;
-}
-
-function getTileColor() {
-  if (nextOccurrenceAbsent) {
-    return "gray";
-  } else if (props.shiftAssignment.isRegular) {
-    return "blue";
-  } else {
-    return "green";
-  }
 }
 
 function downloadICS() {
@@ -148,7 +133,7 @@ END:VCALENDAR`;
 
 <template>
   <div v-if="nextOcc">
-    <CollectivoCard :color="getTileColor()">
+    <CollectivoCard>
       <div class="flex flex-wrap justify-between items-start">
         <div class="flex-1 min-w-60">
           <h4>
@@ -161,7 +146,6 @@ END:VCALENDAR`;
                 t,
               )
             }}
-            <span v-if="shift.shifts_name"> ({{ shift.shifts_name }})</span>
           </h4>
 
           <!-- Repetition info -->
@@ -180,23 +164,15 @@ END:VCALENDAR`;
           </template>
 
           <!-- Shift coworkers -->
-          <p>
-            {{ t("Assigned people") }}: {{ t("You")
-            }}<span v-for="(item, index) in coworkers" :key="index"
-              >, {{ item === " " ? t("Anonymous") : item }}
+          <p v-if="coworkers.length > 0">
+            {{ t("Shift team") }}:
+            <span v-for="(item, index) in coworkers" :key="index">
+              {{ item === " " ? t("Anonymous") : item
+              }}<span v-if="index < coworkers.length - 1">, </span>
             </span>
           </p>
 
-          <!-- Signed out info -->
-          <template v-if="nextOccurrenceAbsent">
-            <p class="pt-4 font-bold">
-              {{ t("You are signed out for this shift") }}
-            </p>
-            <p v-if="nextOccurrenceWithAbsences">
-              {{ t("Your next date: ") }}
-              {{ getDateString(nextOccurrenceWithAbsences, locale) }}
-            </p>
-          </template>
+          <p v-if="shift.shifts_name">ID: {{ shift.shifts_name }}</p>
 
           <!-- Shift infos -->
           <!-- eslint-disable vue/no-v-html -->
@@ -209,7 +185,7 @@ END:VCALENDAR`;
         </div>
 
         <!-- Space for buttons -->
-        <div v-if="!ass.nextOccurrenceAbsent" class="flex flex-wrap gap-3">
+        <div class="flex flex-wrap gap-3">
           <UButton size="sm" color="yellow" @click="downloadICS()"
             >{{ t("Calendar download") }}
           </UButton>
@@ -285,11 +261,13 @@ de:
   "You": "Du"
   "Sign out": "Abmelden"
   "Sign out from the following shift": "Von folgender Schicht abmelden"
-  "You are signed out for this shift": "Du bist für diese Schicht abgemeldet"
+  "You are signed out for this shift": "Du bist von dieser Schicht abgemeldet"
   "Your next date: ": "Dein nächster Termin: "
   "Assigned people": "Angemeldete Personen"
   "Anonymous": "Anonym"
   "Contact": "Kontakt"
+  "Shift team": "Schichtteam"
+  "Cancelled": "Abgemeldet"
   "Attention": "Achtung"
   "t:signout_regular": "Du wirst nur für dieses Datum abgemeldet, nicht jedoch für zukünftige Termine. Für eine dauerhafte Abmeldung wende dich bitte an das Mitgliederbüro."
   "Sign-out is not possible anymore. Please contact the office.": "Abmeldung ist nicht mehr möglich. Bitte kontaktiere das Mitgliederbüro."

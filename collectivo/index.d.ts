@@ -231,9 +231,8 @@ declare global {
   interface ApiShiftsUserAssignmentInfos {
     assignment: ShiftsAssignmentApiUser;
     coworkers: string[];
-    nextOccurrence: Date | string | null;
-    nextOccurrenceAbsent: boolean | null;
-    nextOccurrenceWithAbsences?: Date | string | null;
+    nextOccurrence: string | null;
+    secondNextOccurence: string | null;
     isRegular: boolean;
   }
 
