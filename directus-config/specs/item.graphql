@@ -25,10 +25,6 @@ type Query {
   junction_directus_users_files_by_id(id: ID!, version: String): junction_directus_users_files
   junction_directus_users_files_aggregated(groupBy: [String], filter: junction_directus_users_files_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [junction_directus_users_files_aggregated!]!
   junction_directus_users_files_by_version(version: String!, id: ID!): version_junction_directus_users_files
-  memberships(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships!]!
-  memberships_by_id(id: ID!, version: String): memberships
-  memberships_aggregated(groupBy: [String], filter: memberships_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_aggregated!]!
-  memberships_by_version(version: String!, id: ID!): version_memberships
   memberships_coshoppers(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_coshoppers!]!
   memberships_coshoppers_by_id(id: ID!, version: String): memberships_coshoppers
   memberships_coshoppers_aggregated(groupBy: [String], filter: memberships_coshoppers_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_coshoppers_aggregated!]!
@@ -105,6 +101,10 @@ type Query {
   shifts_logs_by_id(id: ID!, version: String): shifts_logs
   shifts_logs_aggregated(groupBy: [String], filter: shifts_logs_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_logs_aggregated!]!
   shifts_logs_by_version(version: String!, id: ID!): version_shifts_logs
+  memberships(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships!]!
+  memberships_by_id(id: ID!, version: String): memberships
+  memberships_aggregated(groupBy: [String], filter: memberships_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_aggregated!]!
+  memberships_by_version(version: String!, id: ID!): version_memberships
 }
 
 type Mutation {
@@ -120,8 +120,6 @@ type Mutation {
   create_collectivo_tiles_buttons_item(data: create_collectivo_tiles_buttons_input!): collectivo_tiles_buttons
   create_junction_directus_users_files_items(filter: junction_directus_users_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_junction_directus_users_files_input!]): [junction_directus_users_files!]!
   create_junction_directus_users_files_item(data: create_junction_directus_users_files_input!): junction_directus_users_files
-  create_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_input!]): [memberships!]!
-  create_memberships_item(data: create_memberships_input!): memberships
   create_memberships_coshoppers_items(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_coshoppers_input!]): [memberships_coshoppers!]!
   create_memberships_coshoppers_item(data: create_memberships_coshoppers_input!): memberships_coshoppers
   create_memberships_memberships_coshoppers_items(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_memberships_coshoppers_input!]): [memberships_memberships_coshoppers!]!
@@ -160,6 +158,8 @@ type Mutation {
   create_shifts_holidays_public_item(data: create_shifts_holidays_public_input!): shifts_holidays_public
   create_shifts_logs_items(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_logs_input!]): [shifts_logs!]!
   create_shifts_logs_item(data: create_shifts_logs_input!): shifts_logs
+  create_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_input!]): [memberships!]!
+  create_memberships_item(data: create_memberships_input!): memberships
   update_directus_sync_id_map_items(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_sync_id_map_input!): [directus_sync_id_map!]!
   update_directus_sync_id_map_batch(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_sync_id_map_input!]): [directus_sync_id_map!]!
   update_directus_sync_id_map_item(id: ID!, data: update_directus_sync_id_map_input!): directus_sync_id_map
@@ -179,9 +179,6 @@ type Mutation {
   update_junction_directus_users_files_items(filter: junction_directus_users_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_junction_directus_users_files_input!): [junction_directus_users_files!]!
   update_junction_directus_users_files_batch(filter: junction_directus_users_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_junction_directus_users_files_input!]): [junction_directus_users_files!]!
   update_junction_directus_users_files_item(id: ID!, data: update_junction_directus_users_files_input!): junction_directus_users_files
-  update_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_input!): [memberships!]!
-  update_memberships_batch(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_input!]): [memberships!]!
-  update_memberships_item(id: ID!, data: update_memberships_input!): memberships
   update_memberships_coshoppers_items(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_coshoppers_input!): [memberships_coshoppers!]!
   update_memberships_coshoppers_batch(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_coshoppers_input!]): [memberships_coshoppers!]!
   update_memberships_coshoppers_item(id: ID!, data: update_memberships_coshoppers_input!): memberships_coshoppers
@@ -239,6 +236,9 @@ type Mutation {
   update_shifts_logs_items(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_logs_input!): [shifts_logs!]!
   update_shifts_logs_batch(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_logs_input!]): [shifts_logs!]!
   update_shifts_logs_item(id: ID!, data: update_shifts_logs_input!): shifts_logs
+  update_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_input!): [memberships!]!
+  update_memberships_batch(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_input!]): [memberships!]!
+  update_memberships_item(id: ID!, data: update_memberships_input!): memberships
   delete_directus_sync_id_map_items(ids: [ID]!): delete_many
   delete_directus_sync_id_map_item(id: ID!): delete_one
   delete_collectivo_tags_items(ids: [ID]!): delete_many
@@ -251,8 +251,6 @@ type Mutation {
   delete_collectivo_tiles_buttons_item(id: ID!): delete_one
   delete_junction_directus_users_files_items(ids: [ID]!): delete_many
   delete_junction_directus_users_files_item(id: ID!): delete_one
-  delete_memberships_items(ids: [ID]!): delete_many
-  delete_memberships_item(id: ID!): delete_one
   delete_memberships_coshoppers_items(ids: [ID]!): delete_many
   delete_memberships_coshoppers_item(id: ID!): delete_one
   delete_memberships_memberships_coshoppers_items(ids: [ID]!): delete_many
@@ -291,6 +289,8 @@ type Mutation {
   delete_shifts_holidays_public_item(id: ID!): delete_one
   delete_shifts_logs_items(ids: [ID]!): delete_many
   delete_shifts_logs_item(id: ID!): delete_one
+  delete_memberships_items(ids: [ID]!): delete_many
+  delete_memberships_item(id: ID!): delete_one
 }
 
 type Subscription {
@@ -322,7 +322,6 @@ type Subscription {
   collectivo_tiles_mutated(event: EventEnum): collectivo_tiles_mutated
   collectivo_tiles_buttons_mutated(event: EventEnum): collectivo_tiles_buttons_mutated
   junction_directus_users_files_mutated(event: EventEnum): junction_directus_users_files_mutated
-  memberships_mutated(event: EventEnum): memberships_mutated
   memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
   memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
   memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
@@ -342,6 +341,7 @@ type Subscription {
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_holidays_public_mutated(event: EventEnum): shifts_holidays_public_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
+  memberships_mutated(event: EventEnum): memberships_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
