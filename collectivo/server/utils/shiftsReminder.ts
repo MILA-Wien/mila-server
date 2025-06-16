@@ -132,6 +132,10 @@ async function sendRemindersInner(occurrences: any[], automation: any) {
       shift_description: "markdown:" + shift.shifts_description,
     };
 
+    if (!user.id) {
+      throw new Error(`User ID is missing for assignment ${assignment.id}`);
+    }
+
     payloads.push([
       {
         messages_recipients: {

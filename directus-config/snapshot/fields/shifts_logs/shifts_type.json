@@ -15,11 +15,6 @@
     "options": {
       "choices": [
         {
-          "color": "#A2B5CD",
-          "text": "Entwurf",
-          "value": "attended_draft"
-        },
-        {
           "color": "#2ECDA7",
           "text": "Schicht absolviert",
           "value": "attended"

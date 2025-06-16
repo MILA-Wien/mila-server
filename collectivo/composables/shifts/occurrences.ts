@@ -12,6 +12,6 @@ export async function getOccurrences(
   });
 }
 
-export async function getOccurrencesUser() {
-  return await $fetch("/api/shifts/occurrences_user");
+export async function getShiftsDashboard() {
+  return await $fetch("/api/shifts/dashboard");
 }

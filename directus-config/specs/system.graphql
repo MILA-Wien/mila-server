@@ -269,7 +269,6 @@ type Subscription {
   collectivo_tiles_mutated(event: EventEnum): collectivo_tiles_mutated
   collectivo_tiles_buttons_mutated(event: EventEnum): collectivo_tiles_buttons_mutated
   junction_directus_users_files_mutated(event: EventEnum): junction_directus_users_files_mutated
-  memberships_mutated(event: EventEnum): memberships_mutated
   memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
   memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
   memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
@@ -289,6 +288,7 @@ type Subscription {
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_holidays_public_mutated(event: EventEnum): shifts_holidays_public_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
+  memberships_mutated(event: EventEnum): memberships_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""

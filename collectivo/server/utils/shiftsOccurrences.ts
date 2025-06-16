@@ -18,7 +18,10 @@ export const getShiftOccurrences = async (
   // Hide names if not admin
   if (!admin) {
     for (const assignment of assignments) {
-      if (assignment.shifts_membership.memberships_user.hide_name) {
+      if (
+        assignment.shifts_membership.memberships_user.hide_name &&
+        (!mship || mship != assignment.shifts_membership.id)
+      ) {
         assignment.shifts_membership.memberships_user.first_name = "";
         assignment.shifts_membership.memberships_user.last_name = "";
       }
@@ -76,7 +79,7 @@ async function getSingleShiftOccurrences(
   );
 
   const dates = shiftRule.between(from, to, true);
-  const shiftOccurrences: ShiftOccurrence[] = [];
+  const shiftOccurrences: ShiftsOccurrenceViewer[] = [];
   for (const date of dates) {
     shiftOccurrences.push(
       createShiftOccurrence(shift, date, shiftRule, assignmentRrules, mship),

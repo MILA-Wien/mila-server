@@ -80,7 +80,7 @@ export async function getShiftAssignments(
             "shifts_counter",
             "count(shifts_logs)",
             {
-              memberships_user: ["first_name", "last_name", "hide_name"],
+              memberships_user: ["id", "first_name", "last_name", "hide_name"],
             },
           ],
         },

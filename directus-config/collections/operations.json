@@ -1,39 +1,5 @@
 [
   {
-    "name": "assignRole",
-    "key": "assignRole",
-    "type": "item-update",
-    "position_x": 23,
-    "position_y": 21,
-    "options": {
-      "collection": "directus_users",
-      "key": [
-        "{{$trigger.key}}"
-      ],
-      "payload": {
-        "role": "{{readRole[0].id}}"
-      }
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "1496bf80-5a7f-4218-97b6-ee9bfafe2d3e",
-    "_syncId": "f6ff8f73-2405-41a9-acee-1365b411e163"
-  },
-  {
-    "name": "Skript ausführen",
-    "key": "automation_name",
-    "type": "exec",
-    "position_x": 19,
-    "position_y": 1,
-    "options": {
-      "code": "module.exports = async function(data) {\n    if (data[\"$trigger\"].payload.shifts_status==\"accepted\") {\n        return {\"automation_name\":\"shifts_absence_accepted\"};\n    }\n    if (data[\"$trigger\"].payload.shifts_status==\"denied\") {\n        return {\"automation_name\":\"shifts_absence_denied\"};\n    }\n\t\n    throw new Error(\"Only for status changes\")\n}"
-    },
-    "resolve": "d77f14d0-af63-48d8-9a6e-04978f3bcdd3",
-    "reject": null,
-    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
-    "_syncId": "cb8ea7e4-d20a-4466-af9c-d5e59bae36a6"
-  },
-  {
     "name": "Skript ausführen",
     "key": "automation_name",
     "type": "exec",
@@ -723,30 +689,6 @@
   },
   {
     "name": "Daten lesen",
-    "key": "read_absences",
-    "type": "item-read",
-    "position_x": 5,
-    "position_y": 19,
-    "options": {
-      "collection": "shifts_absences",
-      "query": {
-        "filter": {
-          "id": {
-            "_in": "{{ $trigger.keys }}"
-          }
-        },
-        "fields": [
-          "shifts_membership.memberships_user"
-        ]
-      }
-    },
-    "resolve": "204eeadb-0643-4626-8f35-a4fea89e5d65",
-    "reject": null,
-    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
-    "_syncId": "d77f14d0-af63-48d8-9a6e-04978f3bcdd3"
-  },
-  {
-    "name": "Daten lesen",
     "key": "read_assignment",
     "type": "item-read",
     "position_x": 18,
@@ -833,31 +775,6 @@
     "reject": null,
     "flow": "4132f37d-df4d-4d17-ae4f-f048b8a74af5",
     "_syncId": "208af1eb-eaa7-49a5-92c9-22360a4a2b5b"
-  },
-  {
-    "name": "Daten lesen",
-    "key": "read_memberships",
-    "type": "item-read",
-    "position_x": 53,
-    "position_y": 32,
-    "options": {
-      "permissions": "$full",
-      "collection": "memberships",
-      "query": {
-        "fields": [
-          "memberships_user"
-        ],
-        "filter": {
-          "id": {
-            "_in": "{{$trigger.keys}}"
-          }
-        }
-      }
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
-    "_syncId": "f971c8b1-cb1a-4bb6-8534-896a37f2ffd2"
   },
   {
     "name": "Read memberships",
@@ -998,27 +915,6 @@
     "_syncId": "bf786ac0-4a7b-49c3-9084-9ff1129d6e79"
   },
   {
-    "name": "readRole",
-    "key": "readRole",
-    "type": "item-read",
-    "position_x": 3,
-    "position_y": 21,
-    "options": {
-      "collection": "directus_roles",
-      "query": {
-        "filter": {
-          "name": {
-            "_eq": "collectivo_user"
-          }
-        }
-      }
-    },
-    "resolve": "f6ff8f73-2405-41a9-acee-1365b411e163",
-    "reject": null,
-    "flow": "1496bf80-5a7f-4218-97b6-ee9bfafe2d3e",
-    "_syncId": "1588caf8-5a50-4d81-8241-519cfb76605b"
-  },
-  {
     "name": "readSharesEntries",
     "key": "readSharesEntries",
     "type": "item-read",
@@ -1100,28 +996,6 @@
   },
   {
     "name": "Webhook / Anfrage URL",
-    "key": "request_bpt1v",
-    "type": "request",
-    "position_x": 19,
-    "position_y": 1,
-    "options": {
-      "method": "POST",
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/groups_sync_keycloak",
-      "headers": [
-        {
-          "header": "Authorization",
-          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
-        }
-      ],
-      "body": "{{$trigger}}"
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "c9a409a7-e523-4a19-90da-2811aecd2bf4",
-    "_syncId": "18d5537d-bd68-4f51-878c-f87c054092f4"
-  },
-  {
-    "name": "Webhook / Anfrage URL",
     "key": "request_cls83",
     "type": "request",
     "position_x": 19,
@@ -1188,28 +1062,6 @@
   },
   {
     "name": "Webhook / Anfrage URL",
-    "key": "request_f478k",
-    "type": "request",
-    "position_x": 6,
-    "position_y": 41,
-    "options": {
-      "method": "POST",
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns/campaign",
-      "headers": [
-        {
-          "header": "Authorization",
-          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
-        }
-      ],
-      "body": "{\n    \"automation_name\": \"{{automation_name.automation_name}}\",\n    \"user_ids\": {{user_ids.user_ids}}\n}"
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
-    "_syncId": "c3c444aa-0b91-4855-8a24-ceb0e0ba594e"
-  },
-  {
-    "name": "Webhook / Anfrage URL",
     "key": "request_o180l",
     "type": "request",
     "position_x": 40,
@@ -1251,28 +1103,6 @@
     "reject": null,
     "flow": "610aa314-bd89-461e-b8a0-10d0ad75f2d4",
     "_syncId": "d3b67397-8a80-4eb4-b0e3-1efb24a935b7"
-  },
-  {
-    "name": "Webhook / Anfrage URL",
-    "key": "request_tsrb6",
-    "type": "request",
-    "position_x": 19,
-    "position_y": 1,
-    "options": {
-      "method": "POST",
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/membership_changed",
-      "headers": [
-        {
-          "header": "Authorization",
-          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
-        }
-      ],
-      "body": "{{$trigger}}"
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "2d68cc8b-f561-4f7f-8cc2-a847cb57054c",
-    "_syncId": "0bec9ec7-45cc-4375-89f9-27231942ddba"
   },
   {
     "name": "Webhook / Anfrage URL",
@@ -1456,20 +1286,6 @@
     "reject": null,
     "flow": "493c1260-3bb9-47e7-940d-115b8b0f1ccc",
     "_syncId": "cfd6218a-7de5-4c15-9757-597a1312f9a6"
-  },
-  {
-    "name": "Skript ausführen",
-    "key": "user_ids",
-    "type": "exec",
-    "position_x": 22,
-    "position_y": 20,
-    "options": {
-      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_absences\"]) {\n    \tid = data[\"read_absences\"][i].shifts_membership.memberships_user\n        if (id) {\n            user_ids.push(id)\n        }\n    }\n    \n\treturn { user_ids };\n}"
-    },
-    "resolve": "c3c444aa-0b91-4855-8a24-ceb0e0ba594e",
-    "reject": null,
-    "flow": "1b86184f-c905-4bd2-afb8-1b1546c82471",
-    "_syncId": "204eeadb-0643-4626-8f35-a4fea89e5d65"
   },
   {
     "name": "User ids",

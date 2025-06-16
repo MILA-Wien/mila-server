@@ -10,5 +10,5 @@ export {
 } from "./shifts/logs";
 export {
   getOccurrences as getOccurrencesAdmin,
-  getOccurrencesUser,
+  getShiftsDashboard as getOccurrencesUser,
 } from "./shifts/occurrences";

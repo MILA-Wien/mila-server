@@ -45,28 +45,9 @@ Test keycloak users for frontend and directus:
 - `editor@example.com` / `editor`
 - `user@example.com` / `user`
 
-## Production setup
+## Deployment
 
-- Install Docker and PNPM
-- Set .env vars
-  - Generate secure secrets, keys, and passwords
-  - Set `COMPOSE_PROFILES="production"`
-  - Set `KEYCLOAK_COMMAND="start"`
-- [Set up a reverse proxy](https://www.linode.com/docs/guides/using-nginx-proxy-manager/) with a docker network called `proxiable`
-- Set the following [custom Nginx configuration](https://stackoverflow.com/questions/56126864) for Keycloak
-  ```
-  proxy_buffer_size   128k;
-  proxy_buffers   4 256k;
-  proxy_busy_buffers_size   256k;
-  ```
-- Clone this repository
-- Run `pnpm i` and `pnpm build`
-- Run `docker compose up -d`
-- Apply database schema (see below)
-
-## Updates
-
-Update collectivo on the server
+For deploying updates on the server:
 
 - Create a database backup (see below)
 - Run `git pull`
@@ -74,11 +55,6 @@ Update collectivo on the server
 - Run `pnpm build`
 - Run `docker compose restart collectivo`
 - Optional: Apply database schema changes (see below)
-
-Update packages
-
-- `cd collectivo`
-- `pnpm up --latest`
 
 ## Database schemas
 
@@ -102,7 +78,7 @@ Troubleshooting
 
 Backups are created automatically for `directus-db` and `keycloak-db`, using [`postgres-backup-local`](https://github.com/prodrigestivill/docker-postgres-backup-local?tab=readme-ov-file#how-the-backups-folder-works). The backups can be found in the directories `directus-db-backups` and `keycloak-db-backups`.
 
-To run a manual backup, run:
+To run a manual backup, go to `\collectivo-mila` and run:
 
 ```sh
 docker compose exec directus-db-backups /backup.sh
@@ -127,3 +103,21 @@ Notes:
   - To remove the volume, you need to use `docker volume rm`, as `docker compose rm -v` does not work.
   - Do not start directus before restoring the backup as it will start migrations on an empty db.
 - Backups are run with `--clean` so that they can be applied to an existing database.
+
+## Production setup
+
+- Install Docker and PNPM
+- Set .env vars
+  - Generate secure secrets, keys, and passwords
+  - Set `COMPOSE_PROFILES="production"`
+  - Remove variable `KEYCLOAK_COMMAND`
+- [Set up a reverse proxy](https://www.linode.com/docs/guides/using-nginx-proxy-manager/) with a docker network called `proxiable`
+- Set the following [custom Nginx configuration](https://stackoverflow.com/questions/56126864) for Keycloak
+  ```
+  proxy_buffer_size   128k;
+  proxy_buffers   4 256k;
+  proxy_busy_buffers_size   256k;
+  ```
+- Clone this repository
+- Run `pnpm i` and `pnpm build`
+- Run `docker compose up -d`
