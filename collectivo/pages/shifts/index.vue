@@ -63,11 +63,16 @@ else throw createError({ statusCode: 403 });
         <p
           v-if="
             settingsState!.shift_point_system &&
-            mship.shifts_user_type != 'exempt'
+            mship.shifts_user_type != 'exempt' &&
+            mship.shifts_counter >= 0
           "
         >
-          {{ t("Next shift required in") }}: {{ mship.shifts_counter }}
-          {{ t("days") }}
+          {{ t("Points") }}: {{ mship.shifts_counter }}
+          {{ t("Next shift required in") }}:
+          <span v-if="mship.shifts_counter >= 1">
+            {{ mship.shifts_counter }} {{ t("days") }}
+          </span>
+          <span v-else-if="mship.shifts_counter == 1"> 1 {{ t("day") }} </span>
         </p>
       </div>
     </CollectivoCard>
