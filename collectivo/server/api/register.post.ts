@@ -95,6 +95,27 @@ async function registerMembership(body: any, userID: string | undefined) {
   const userData: any = {};
   const membershipData: any = {};
 
+  // Assign share numbers based on shares_options
+  if (body.shares_options === "normal") {
+    body.memberships__memberships_shares = 9;
+  } else if (body.shares_options === "social") {
+    body.memberships__memberships_shares = 1;
+  }
+  if (
+    !body.memberships__memberships_shares ||
+    body.memberships__memberships_shares <= 0
+  ) {
+    throw new Error("Incorrect number of shares.");
+  }
+  console.log(
+    "Shares: " +
+      body.memberships__memberships_shares +
+      " (" +
+      body.shares_options +
+      ")",
+  );
+
+  // Extract user and membership data from body
   for (const [key, value] of Object.entries(body)) {
     if (key.startsWith("directus_users__")) {
       userData[key.replace("directus_users__", "")] = value;

@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { object, string, ref, number, type InferType, array } from "yup";
+import {
+  object,
+  string,
+  ref,
+  number,
+  type InferType,
+  array,
+  boolean,
+  date,
+} from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 const { t } = useI18n();
 
@@ -9,6 +18,8 @@ definePageMeta({
   layout: "forms",
 });
 
+const linkStatutes = "https://wolke.mila.wien/s/BRKPrbzjssqkzbz";
+const debug = useRuntimeConfig().public.debug;
 const schema = object({
   directus_users__memberships_person_type: string().required(),
   directus_users__email: string().email().required(),
@@ -40,8 +51,8 @@ const schema = object({
   directus_users__first_name: string().required(),
   directus_users__last_name: string().required(),
   directus_users__memberships_gender: string().required(),
-  directus_users__memberships_phone: string().required(),
-  directus_users__memberships_birthday: string().when(
+  directus_users__memberships_phone: string(),
+  directus_users__memberships_birthday: date().when(
     "directus_users__memberships_person_type",
     {
       is: "natural",
@@ -96,14 +107,14 @@ const schema = object({
   directus_users__mila_skills_2: array(string()),
   directus_users__survey_languages: array(string()),
   directus_users__survey_languages_additional: string(),
-  _statutes_approval: string(),
-  _data_approval: string(),
-  directus_users__mila_pr_approved: string(),
+  _statutes_approval: boolean().required().oneOf([true], "Must be accepted"),
+  _data_approval: boolean().required().oneOf([true], "Must be accepted"),
+  directus_users__mila_pr_approved: boolean(),
 });
 
 type Schema = InferType<typeof schema>;
 
-const state = reactive({
+const state: any = reactive({
   directus_users__memberships_person_type: "natural",
   directus_users__email: undefined,
   directus_users__password: undefined,
@@ -141,18 +152,87 @@ const state = reactive({
   directus_users__mila_pr_approved: undefined,
 });
 
+function fillTestData() {
+  state.directus_users__memberships_person_type = "natural";
+  state.directus_users__email =
+    new Date().toISOString().replace(/[-:.]/g, "_") + "@example.com";
+  state.directus_users__password = "test";
+  state._pw_confirm = "test";
+  state.directus_users__first_name = "Max";
+  state.directus_users__last_name = "Mustermann";
+  state.directus_users__memberships_gender = "male";
+  state.directus_users__memberships_birthday = new Date();
+  state.directus_users__memberships_occupation = "Software Engineer";
+  state.directus_users__memberships_street = "Musterstraße";
+  state.directus_users__memberships_streetnumber = "1";
+  state.directus_users__memberships_postcode = "1010";
+  state.directus_users__memberships_city = "Wien";
+  state.directus_users__memberships_country = "Österreich";
+  state.memberships__memberships_type = "active";
+  state.shares_options = "normal";
+  state.directus_users__payments_type = "transfer";
+  state._statutes_approval = true;
+  state._data_approval = true;
+}
+
 const isNatural = computed(
   () => state.directus_users__memberships_person_type === "natural",
 );
 
+async function getApiHeaders() {
+  const directus = useDirectus();
+  const headers: { [key: string]: string } = {
+    Accept: "application/json",
+  };
+  try {
+    // Add token to header if exists
+    const token = await directus.refresh();
+    headers["Authorization"] = `${token.access_token}`;
+  } catch {
+    // do nothing
+  }
+  return headers;
+}
+
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  // Do something with event.data
-  console.log(event.data);
+  const res = await useFetch("/api/register", {
+    method: "POST",
+    headers: await getApiHeaders(),
+    body: JSON.stringify(event.data),
+  });
+
+  if (res.status.value === "error") {
+    toast.add({
+      title: t("There was an error"),
+      icon: "i-heroicons-exclamation-triangle",
+      color: "red",
+      timeout: 0,
+    });
+  } else {
+    navigateTo("/register/success");
+  }
+}
+
+const toast = useToast();
+
+async function onError() {
+  toast.add({
+    title: t("Some fields are not filled in correctly"),
+    icon: "i-heroicons-exclamation-triangle",
+    color: "red",
+    timeout: 0,
+  });
 }
 </script>
 
 <template>
-  <UForm :schema="schema" :state="state" class="space-y-6" @submit="onSubmit">
+  <UForm
+    :schema="schema"
+    :state="state"
+    class="space-y-6"
+    @submit="onSubmit"
+    @error="onError"
+  >
     <div class="">
       <h2>{{ t("Welcome to MILA!") }}</h2>
 
@@ -291,9 +371,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         name="directus_users__memberships_birthday"
         required
       >
-        <CollectivoFormDate
-          v-model="state.directus_users__memberships_birthday"
-        />
+        <FormsDate v-model="state.directus_users__memberships_birthday" />
       </UFormGroup>
 
       <UFormGroup
@@ -383,8 +461,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           isNatural
             ? t("t:mila_form_cshares_natural")
             : t("t:mila_form_cshares_orga")
-        }}<a
+        }}
+        <a
           class="font-bold"
+          target="_blank"
           href="https://www.mila.wien/uber-uns/haeufige-fragen/"
           >{{ t("Frequently Asked Questions") }}</a
         >.
@@ -500,11 +580,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           {{ t("You can find more information about the working groups") }}
           <a
             href="https://www.mila.wien/mitmachen/arbeitsgruppen/"
+            target="_blank"
             class="font-bold"
             >{{ t("here") }}</a
           >.
         </div>
-        <CollectivoFormCheckboxGroup
+        <FormsCheckboxGroup
           v-model="state.directus_users__mila_groups_interested_2"
           :choices="[
             { label: 'Sortiment', value: 'Sortiment' },
@@ -526,7 +607,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         :label="t('What are your skills?')"
         name="directus_users__mila_skills_2"
       >
-        <CollectivoFormCheckboxGroup
+        <FormsCheckboxGroup
           v-model="state.directus_users__mila_skills_2"
           :choices="[
             { label: 'Handwerk (Elektrik, Tischlerei, …)', value: 'handwerk' },
@@ -549,7 +630,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         :label="t('What languages do you speak?')"
         name="directus_users__survey_languages"
       >
-        <CollectivoFormCheckboxGroup
+        <FormsCheckboxGroup
           v-model="state.directus_users__survey_languages"
           :choices="[
             { label: 'German', value: 'Deutsch' },
@@ -581,11 +662,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <UToggle v-model="state._statutes_approval" class="mt-0.5 mr-2" />
         <span class="">
           {{ t("t:mila_form_check2") }}
-          <a
-            href="https://wolke.mila.wien/s/BRKPrbzjssqkzbz"
-            class="font-bold"
-            >{{ t("Satzung") }}</a
-          ></span
+          <a :href="linkStatutes" class="font-bold">{{
+            t("Statutes")
+          }}</a></span
         >
       </div>
     </UFormGroup>
@@ -595,21 +674,30 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <UToggle v-model="state._data_approval" class="mt-0.5 mr-2" />
         <span class="">
           {{ t("t:mila_form_check3") }}
-          <a href="https://www.mila.wien/datenschutz/" class="font-bold">{{
-            t("Privacy Page")
-          }}</a>
+          <a
+            href="https://www.mila.wien/datenschutz/"
+            target="_blank"
+            class="font-bold"
+            >{{ t("Privacy Policy") }}</a
+          >.
         </span>
       </div>
     </UFormGroup>
 
     <UFormGroup :label="t('PR Work')" name="directus_users__mila_pr_approved">
       <div class="bg-blue-50 p-2 rounded-sm text-sm flex flex-row">
-        <UToggle v-model="state._statutes_approval" class="mt-0.5 mr-2" />
+        <UToggle
+          v-model="state.directus_users__mila_pr_approved"
+          class="mt-0.5 mr-2"
+        />
         <span class="">
           {{ t("t:mila_form_check1") }}
-          <a href="https://www.mila.wien/datenschutz/" class="font-bold">{{
-            t("Privacy Page")
-          }}</a>
+          <a
+            href="https://www.mila.wien/datenschutz/"
+            target="_blank"
+            class="font-bold"
+            >{{ t("Privacy Policy") }}</a
+          >.
         </span>
       </div>
     </UFormGroup>
@@ -625,9 +713,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       </p>
       <p class="text-sm">
         {{ t("t:mila_form_final2") }}
-        <a href="https://wolke.mila.wien/s/RomRixR2xb5LGNK" class="font-bold">{{
-          t("Work Guidelines")
-        }}</a>
+        <a :href="linkStatutes" target="_blank" class="font-bold">{{
+          t("Rules of Procedure")
+        }}</a
+        >.
       </p>
     </div>
 
@@ -641,11 +730,17 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         {{ t("Submit application") }}
       </UButton>
     </div>
+    <div v-if="debug" class="text-sm text-gray-500">
+      <UButton @click="fillTestData">{{ t("Fill test data") }}</UButton>
+      <pre>{{ JSON.stringify(state, null, 2) }}</pre>
+    </div>
   </UForm>
 </template>
 
 <i18n lang="yaml">
 de:
+  "Some fields are not filled in correctly": "Einige Felder sind nicht korrekt ausgefüllt"
+
   "Membership Application": "Beitrittserklärung"
   "Welcome to MILA!": "Willkommen bei MILA!"
   "Type of membership": "Art der Mitgliedschaft"
@@ -702,6 +797,8 @@ de:
   "Conditions": "Bedingungen"
   "Payment type": "Zahlungsart"
   "Payment details": "Zahlungsdetails"
+  "Rules of Procedure": "Geschäftsordnung"
+  "Privacy Policy": "Datenschutzerklärung"
 
   "Organization": "Organisation"
   "Organization name": "Name der Organisation"
@@ -730,8 +827,6 @@ de:
   "t:memberships_form_ptype": "Ich stelle diesen Antrag als:"
   "t:memberships_form_mtype": "Welche Art der Mitgliedschaft wählst du?"
   "t:memberships_form_intro": "Bitte fülle das Formular aus, um Mitglied zu werden."
-  "t:memberships_form_success": "Bitte melde dich an, um deine E-Mail Adresse zu bestätigen."
-  "t:memberships_form_already_member": "Deine Beitrittserklärung wurde erfolgreich abgesendet. Vielen Dank für deine Anmeldung!"
 
   "t:mila_form_intro": "Um unserer Genossenschaft beitreten zu können, brauchen wir noch einige Informationen von dir. Bitte fülle die folgenden Fragen aus. Wenn etwas unklar ist, wende dich bitte an"
   "t:mila_form_account": "Bitte lege hier eine E-Mail Adresse und Passwort für deinen MILA Account fest."
@@ -747,11 +842,11 @@ de:
   "t:mila_form_payment": "Du kannst entweder durch SEPA-Bankeinzug oder durch Direktüberweisung deine Anteile bezahlen."
   "t:mila_form_survey": "Juhu! Fast fertig! Möchtest du noch weitere Informationen mit uns teilen?"
   "t:mila_form_check1": "Ich unterstütze die Öffentlichkeitsarbeit und erlaube MILA, Bildmaterial, auf dem ich zu sehen bin, zu verwenden. Nähere Informationen zur Datenverarbeitung des Bildmaterials in der"
-  "t:mila_form_check2": "Ich kann die Satzung unter folgendem Link einsehen und ich erkenne die Bestimmungen und Beschlüsse der Generalversammlung in vollem Umfang an."
+  "t:mila_form_check2": "Ich kann die Satzung unter folgendem Link einsehen und ich erkenne die Bestimmungen und Beschlüsse der Generalversammlung in vollem Umfang an:"
   "t:mila_form_check3": "Ich erkläre mich ausdrücklich einverstanden, dass meine personenbezogenen Daten für Zwecke der Mitgliedschaft gem. GenG verarbeitet werden. Weitere Infos in der"
   "t:mila_form_final1": "Im Fall der Insolvenz und/oder Auflösung der Genossenschaft haften die Mitglieder der Genossenschaft deren Gläubigern mit ihren Geschäftsanteilen und zusätzlich mit einem Betrag in der Höhe ihrer Geschäftsanteile (Nachschusspflicht in der einfachen Höhe der Geschäftsanteile)."
   "t:mila_form_final2": "Bei Kündigung wird dein eingezahlter Betrag am Ende des folgenden Geschäftsjahres zurückgezahlt, sofern es die wirtschaftliche Lage von MILA es zulässt. Mehr Infos in der"
-  "t:mila_form_final3": "Du hast das Recht binnen 14 Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Frist beträgt 14 Tage ab der Zustellung der Annahme der Zeichnung durch den Vorstand der Genossenschaft"
+  "t:mila_form_final3": "Du hast das Recht binnen 14 Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Frist beträgt 14 Tage ab der Zustellung der Annahme der Zeichnung durch den Vorstand der Genossenschaft."
 
 en:
   "l:natural": "Individual"
