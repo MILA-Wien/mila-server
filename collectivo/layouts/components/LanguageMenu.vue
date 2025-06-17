@@ -53,11 +53,3 @@ Object.entries(locales).forEach(([key, label]) => {
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped></style>
-
-<i18n lang="yaml">
-de:
-  "Logout": "Abmelden"
-  "Login": "Anmelden"
-</i18n>

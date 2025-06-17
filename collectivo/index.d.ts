@@ -290,7 +290,7 @@ declare global {
     coshopper: MembershipsCoshopper | number;
   }
 
-  // Server middleware
+  // Server side user object
   interface ServerUserInfo {
     user: string;
     email: string;
@@ -300,12 +300,7 @@ declare global {
   }
 }
 
-// Types for input of app.config.ts
-declare module "nuxt/schema" {
-  interface AppConfigInput {}
-}
-
-// Server middleware
+// Server Side Authentication
 declare module "h3" {
   interface EventHandlerRequest {
     context: {
