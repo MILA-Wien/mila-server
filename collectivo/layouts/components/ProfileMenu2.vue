@@ -102,6 +102,7 @@ for (const item of items) {
 
 <i18n lang="yaml">
 de:
+  "Profile": "Profil"
   "Logout": "Abmelden"
   "Login": "Anmelden"
 </i18n>

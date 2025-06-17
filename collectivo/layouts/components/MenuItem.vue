@@ -48,6 +48,13 @@ async function filterItem(item: CollectivoMenuItem) {
   </div>
 </template>
 
+<i18n lang="yaml">
+de:
+  "Home": "Startseite"
+  "Shifts": "Schichten"
+  "Help": "Hilfe"
+</i18n>
+
 <style lang="scss">
 .item {
   @apply text-white flex flex-col gap-1 items-center px-3 py-4 mb-2 transition-all cursor-pointer;

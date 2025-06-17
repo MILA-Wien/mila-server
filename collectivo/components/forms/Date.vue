@@ -17,7 +17,7 @@ const props = defineProps({
 const { t } = useI18n();
 const emit = defineEmits(["update:modelValue"]);
 
-const date: Ref<Date | string | undefined> = ref();
+const date: Ref<Date | undefined> = ref();
 
 const day = ref();
 const month = ref();
@@ -53,6 +53,30 @@ if (props.modelValue) {
   month.value = months[date.value.getUTCMonth()];
   year.value = date.value.getUTCFullYear().toString();
 }
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    console.log("Updating date from modelValue", newValue);
+    if (
+      !date.value ||
+      newValue.getUTCSeconds() !== date.value.getUTCSeconds()
+    ) {
+      if (newValue) {
+        const d = new Date(newValue);
+        day.value = d.getUTCDate().toString().padStart(2, "0");
+        month.value = months[d.getUTCMonth()];
+        year.value = d.getUTCFullYear().toString();
+        date.value = d;
+      } else {
+        day.value = undefined;
+        month.value = undefined;
+        year.value = undefined;
+        date.value = undefined;
+      }
+    }
+  },
+);
 
 watch(
   () => date.value,

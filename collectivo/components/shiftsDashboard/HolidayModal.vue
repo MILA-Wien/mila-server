@@ -106,14 +106,14 @@ function closeModal() {
         {{ t("t:holiday") }}
       </p>
       <UFormGroup :label="t('From')" class="my-5">
-        <CollectivoFormDate
+        <FormsDate
           v-model="absenceFromDate"
           :max-years-past="1"
           :max-years-future="1"
         />
       </UFormGroup>
       <UFormGroup :label="t('To')" class="my-5">
-        <CollectivoFormDate
+        <FormsDate
           v-model="absenceToDate"
           :max-years-past="1"
           :max-years-future="1"
