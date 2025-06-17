@@ -20,6 +20,7 @@ definePageMeta({
 
 const linkStatutes = "https://wolke.mila.wien/s/BRKPrbzjssqkzbz";
 const debug = useRuntimeConfig().public.debug;
+const user = useCurrentUser();
 const schema = object({
   directus_users__memberships_person_type: string().required(),
   directus_users__email: string().email().required(),
@@ -226,7 +227,25 @@ async function onError() {
 </script>
 
 <template>
+  <div
+    v-if="user.user && user.isAuthenticated"
+    class="space-y-2 p-6 border-2 rounded-sm shadow-sm"
+  >
+    <p>
+      {{ t("You are currently logged in as") }} {{ user.user.first_name }}
+      {{ user.user?.first_name }}.
+    </p>
+    <p>
+      {{
+        t(
+          "Log out to fill out a new membership application for a different person.",
+        )
+      }}
+    </p>
+    <UButton href="/logout">{{ t("Log out") }}</UButton>
+  </div>
   <UForm
+    v-else
     :schema="schema"
     :state="state"
     class="space-y-6"
@@ -740,6 +759,9 @@ async function onError() {
 <i18n lang="yaml">
 de:
   "Some fields are not filled in correctly": "Einige Felder sind nicht korrekt ausgefüllt"
+  "You are currently logged in as": "Du bist aktuell angemeldet als"
+  "Log out to fill out a new membership application for a different person.": "Melde dich ab, um eine neue Beitrittserklärung für eine andere Person auszufüllen."
+  "Log out": "Abmelden"
 
   "Membership Application": "Beitrittserklärung"
   "Welcome to MILA!": "Willkommen bei MILA!"
