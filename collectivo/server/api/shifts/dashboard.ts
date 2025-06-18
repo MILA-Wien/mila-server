@@ -178,8 +178,8 @@ const getAssignmentInfos = async (
 
   const filteredAbsences = absences.filter(
     (absence) =>
-      absence.shifts_assignment.id == assignment.id ||
-      absence.shifts_assignment == null,
+      absence.shifts_assignment == null ||
+      absence.shifts_assignment.id == assignment.id,
   );
 
   const assignmentRuleWithAbsences = getAssignmentRRule(
