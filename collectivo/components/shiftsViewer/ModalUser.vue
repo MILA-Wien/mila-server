@@ -9,10 +9,6 @@ const props = defineProps({
     type: Object as PropType<ShiftsOccurrenceViewer>,
     required: true,
   },
-  shiftType: {
-    type: String,
-    default: "regular",
-  },
 });
 
 const emit = defineEmits(["reload"]);
@@ -25,15 +21,14 @@ const start = DateTime.fromISO(props.shiftOccurence.start, {
   locale: locale.value,
   zone: "utc",
 });
+const isNextInstance = start < DateTime.now().plus({ days: 28 });
 
 const end = DateTime.fromISO(props.shiftOccurence.end, {
   locale: locale.value,
   zone: "utc",
 });
 const submitLoading = ref(false);
-const repeats = shift.shifts_repeats_every ?? 0;
-const isWeeks = repeats % 7 === 0;
-const frequency = isWeeks ? repeats / 7 : repeats;
+const isRegular = shift.shifts_repeats_every == 28;
 const isPast = new Date(props.shiftOccurence.start) < new Date();
 
 function checkAssignmentPossible() {
@@ -53,10 +48,10 @@ function checkAssignmentPossible() {
 
 const assignmentPossible = checkAssignmentPossible();
 
-async function postAssignment() {
+async function postAssignment(regular = false) {
   console.log("postAssignment");
   try {
-    await postAssignmentInner();
+    await postAssignmentInner(regular);
 
     showToast({
       type: "success",
@@ -88,7 +83,7 @@ async function fetchOccurrences(
   });
 }
 
-async function postAssignmentInner() {
+async function postAssignmentInner(regular: boolean) {
   submitLoading.value = true;
 
   const shiftStartString = start.toISO()!;
@@ -117,16 +112,14 @@ async function postAssignmentInner() {
     shifts_membership: user.value.membership!.id,
     shifts_shift: shift.id!,
     shifts_from: shiftStartString,
-    shifts_is_regular: false,
+    shifts_is_regular: regular,
     shifts_is_coordination: false,
   };
 
   // One-time shifts have same start and end date
   // Regular shifts are either until freeUntil or forever
-  if (props.shiftType === "jumper") {
+  if (!regular) {
     payload.shifts_to = shiftStartString;
-  } else {
-    throw new Error("Regular shifts are not supported yet");
   }
 
   await directus.request(createItem("shifts_assignments", payload));
@@ -138,33 +131,16 @@ async function postAssignmentInner() {
     <div class="m-10">
       <h2>{{ shift.shifts_name }}</h2>
 
-      <div v-if="shiftType" class="shift-infos">
-        <div v-if="shiftType === 'jumper'">
-          <p>{{ t("One-time shift") }}</p>
-          <p>
-            {{ start.toLocaleString(DateTime.DATE_MED) }} {{ t("from") }}
-            {{ start.toLocaleString(DateTime.TIME_24_SIMPLE) }}
-            {{ t("to") }}
-            {{ end.toLocaleString(DateTime.TIME_24_SIMPLE) }}
-          </p>
-        </div>
-        <div v-else>
-          <p>{{ t("Regular shift") }}</p>
-          <p>
-            {{ start.weekdayLong }} {{ t("from") }}
-            {{ start.toLocaleString(DateTime.TIME_24_SIMPLE) }}
-            {{ t("to") }}
-            {{ end.toLocaleString(DateTime.TIME_24_SIMPLE) }}
-          </p>
-          <p>
-            {{ t("Repeating every") }}
-            {{ frequency }} {{ isWeeks ? t("weeks") : t("days") }}
-          </p>
-          <p>
-            {{ t("Starting from") }}
-            {{ start.toLocaleString(DateTime.DATE_MED) }}
-          </p>
-        </div>
+      <div class="flex flex-col gap-2 text-lg my-5 leading-7">
+        <p class="font-bold">
+          {{ start.toLocaleString(DateTime.DATE_MED) }} {{ t("from") }}
+          {{ start.toLocaleString(DateTime.TIME_24_SIMPLE) }}
+          {{ t("to") }}
+          {{ end.toLocaleString(DateTime.TIME_24_SIMPLE) }}
+        </p>
+        <p v-if="isRegular">
+          {{ t("Shift repeats every four weeks") }}
+        </p>
       </div>
 
       <!-- Shift infos -->
@@ -176,15 +152,27 @@ async function postAssignmentInner() {
       />
       <!-- eslint-enable -->
 
-      <div v-if="assignmentPossible">
+      <div v-if="assignmentPossible" class="flex flex-col gap-2">
         <UButton
           class="w-full"
           size="lg"
+          color="green"
           icon="i-heroicons-pencil-square"
           :loading="submitLoading"
           @click="postAssignment()"
         >
-          {{ t("Sign up") }}
+          {{ t("Sign up one-time for") }}
+          {{ shiftOccurence.start.split("T")[0] }}
+        </UButton>
+        <UButton
+          v-if="isRegular && isNextInstance"
+          class="w-full"
+          size="lg"
+          icon="i-heroicons-arrow-path"
+          :loading="submitLoading"
+          @click="postAssignment(true)"
+        >
+          {{ t("Sign up regularly, every 4 weeks") }}
         </UButton>
       </div>
       <div v-else-if="shiftOccurence.selfAssigned">
@@ -201,18 +189,8 @@ async function postAssignmentInner() {
   </UModal>
 </template>
 
-<style lang="scss" scoped>
-.shift-infos {
-  @apply flex flex-col gap-2 text-lg my-5 leading-7;
-}
-.shift-infos p {
-  @apply font-bold;
-}
-</style>
-
 <i18n lang="yaml">
 de:
-  "Sign up": "Verbindlich anmelden"
   from: "von"
   to: "bis"
   Repeating every: "Wiederholt sich alle"
@@ -225,4 +203,7 @@ de:
   Location: "Ort"
   Assignment not possible: "Anmeldung nicht möglich"
   Already signed up: "Bereits angemeldet"
+  "Sign up one-time for": "Einmalig anmelden für"
+  "Sign up regularly, every 4 weeks": "Regelmäßig anmelden, alle 4 Wochen"
+  "Shift repeats every four weeks": "Schicht wiederholt sich alle vier Wochen"
 </i18n>
