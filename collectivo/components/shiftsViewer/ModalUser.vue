@@ -21,7 +21,7 @@ const start = DateTime.fromISO(props.shiftOccurence.start, {
   locale: locale.value,
   zone: "utc",
 });
-const isNextInstance = start < DateTime.now().plus({ days: 28 });
+// const isNextInstance = start < DateTime.now().plus({ days: 28 });
 
 const end = DateTime.fromISO(props.shiftOccurence.end, {
   locale: locale.value,
@@ -165,7 +165,7 @@ async function postAssignmentInner(regular: boolean) {
           {{ shiftOccurence.start.split("T")[0] }}
         </UButton>
         <UButton
-          v-if="isRegular && isNextInstance"
+          v-if="isRegular"
           class="w-full"
           size="lg"
           icon="i-heroicons-arrow-path"
