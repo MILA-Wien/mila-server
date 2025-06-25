@@ -3,6 +3,7 @@
 
 import { RRule, RRuleSet } from "rrule";
 import { readItems } from "@directus/sdk";
+import { createAssignmentRrule } from "~/server/utils/shiftsQueries";
 
 export default defineEventHandler(async (event) => {
   return await getShiftDataUser(event.context.auth.mship);
@@ -245,19 +246,15 @@ export const getAssignmentRRule = (
 
   const assignmentRule = new RRuleSet();
 
-  // Assignment rule with absences excluded
+  // Assignment rule
   assignmentRule.rrule(
-    new RRule({
-      freq: RRule.DAILY,
-      interval: shift.shifts_repeats_every,
-      count: shift.shifts_repeats_every ? null : 1,
-      dtstart: shiftRule.after(new Date(assignment.shifts_from), true),
-      until: assignment.shifts_is_regular
-        ? assignment.shifts_to
-          ? shiftRule.before(new Date(assignment.shifts_to), true)
-          : null
-        : shiftRule.before(new Date(assignment.shifts_from), true),
-    }),
+    createAssignmentRrule(
+      assignment.shifts_from,
+      assignment.shifts_to,
+      shift.shifts_repeats_every,
+      assignment.shifts_is_regular,
+      shiftRule,
+    ),
   );
 
   // Absence rules

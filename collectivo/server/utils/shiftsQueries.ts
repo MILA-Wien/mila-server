@@ -168,6 +168,40 @@ export const getShiftRrule = (
   return rruleSet;
 };
 
+export const createAssignmentRrule = (
+  fromString: string,
+  toString: string | null | undefined,
+  interval: number | undefined,
+  regular: boolean,
+  shiftRule: RRuleSet | RRule,
+) => {
+  let until: Date | null = null;
+  let invalid = false;
+
+  const dtstart = shiftRule.after(new Date(fromString), true);
+  if (!dtstart) {
+    invalid = true;
+  }
+
+  // One time shifts have same from and to date
+  const assignmentTo = regular ? toString : fromString;
+
+  if (assignmentTo) {
+    until = shiftRule.before(new Date(assignmentTo), true);
+    if (!until) {
+      invalid = true;
+    }
+  }
+
+  return new RRule({
+    freq: RRule.DAILY,
+    interval: interval,
+    count: invalid ? 0 : regular ? null : 1,
+    dtstart: dtstart,
+    until: until,
+  });
+};
+
 export const getAssignmentRrules = (
   shift: ShiftsShift,
   shiftRule: RRule,
@@ -180,18 +214,13 @@ export const getAssignmentRrules = (
     const assRrule = new RRuleSet();
     const assRruleWithAbs = new RRuleSet();
 
-    const mainRule = new RRule({
-      freq: RRule.DAILY,
-      interval: shift.shifts_repeats_every,
-      dtstart: shiftRule.after(new Date(assignment.shifts_from), true),
-      until: !assignment.shifts_is_regular
-        ? new Date(assignment.shifts_from)
-        : assignment.shifts_to
-          ? new Date(assignment.shifts_to)
-          : shift.shifts_to
-            ? new Date(shift.shifts_to)
-            : null,
-    });
+    const mainRule = createAssignmentRrule(
+      assignment.shifts_from,
+      assignment.shifts_to,
+      shift.shifts_repeats_every,
+      assignment.shifts_is_regular,
+      shiftRule,
+    );
 
     assRrule.rrule(mainRule);
     assRruleWithAbs.rrule(mainRule);
