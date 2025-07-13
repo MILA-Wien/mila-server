@@ -18,7 +18,7 @@ Anwendungen des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/), inklusiv
 - Create .env file with `cp .env.example .env`
 - Create a network `docker network create proxiable`
 - Run `docker compose up -d`
-- Run `docker compose exec -u root directus chown -R node:node /directus/extensions /directus/uploads`
+- Run `docker compose exec -u root directus-dev chown -R node:node /directus/extensions /directus/uploads`
 - Install packages with `pnpm i`
 - Start dev server with `pnpm dev`
 - In a second terminal, make an API call to create example data with `pnpm seed`
