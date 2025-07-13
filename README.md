@@ -49,8 +49,7 @@ For deploying updates on the server:
 ## Database schemas
 
 Collectivo uses [directus-sync](https://github.com/tractr/directus-sync) to apply the database schema.
-The container will automatically apply the schema on first startup and then create a file `./directus/uploads/sync.lock`.
-To apply changes in the database schema, remove this file and restart the container or follow the last steps below.
+As long as there is no lock file under `./directus/uploads/sync.lock`, database schema will be applied on every startup of the container.
 
 Changing the database schema
 
