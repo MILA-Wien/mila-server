@@ -24,6 +24,12 @@ async function useKeycloak() {
 
 // Update keycloak user
 export default defineEventHandler(async (event) => {
+  const debug = useRuntimeConfig().public.debug;
+
+  if (debug) {
+    return; // In debug mode, we do not use Keycloak
+  }
+
   try {
     console.log("Running user_sync_keycloak");
     return await syncKeycloakUser(event);

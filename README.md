@@ -10,11 +10,11 @@ Anwendungen des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/), inklusiv
 - Direktkreditverwaltung (habidat & habidat-db)
 - Backups (directus-db-backup & keycloak-db-backup)
 
-## Local setup
+## Local development setup (only Nuxt and Directus)
 
 - Install Docker and PNPM
 - Clone this repository
-- Add the following to your etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak`
+
 - Create .env file with `cp .env.example .env`
 - Create a network `docker network create proxiable`
 - Run `docker compose up -d`
@@ -27,17 +27,6 @@ The following services will then be available:
 
 - Frontend http://localhost:3000
 - Directus http://localhost:8055
-- Keycloak http://localhost:8080
-
-Login credentials for directus admin (without keycloak):
-
-- Username `directus-admin@example.com`
-- Password `admin`
-
-Login credentials for keycloak admin UI:
-
-- Username `keycloak-admin@example.com`
-- Password `admin`
 
 Test keycloak users for frontend and directus:
 
@@ -54,6 +43,7 @@ For deploying updates on the server:
 - Optional: Run `pnpm i`
 - Run `pnpm build`
 - Run `docker compose restart collectivo`
+
 - Optional: Apply database schema changes (see below)
 
 ## Database schemas
@@ -103,6 +93,23 @@ Notes:
   - To remove the volume, you need to use `docker volume rm`, as `docker compose rm -v` does not work.
   - Do not start directus before restoring the backup as it will start migrations on an empty db.
 - Backups are run with `--clean` so that they can be applied to an existing database.
+
+## Local setup with Keycloak
+
+- In `collectivo/.env`, set `DEBUG = "false"`
+- In `.env`, set `COMPOSE_PROFILES = "production"`
+- In `.env`, set `DIRECTUS_AUTH_PROVIDERS`to `keycloak`
+- Add the following to your etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak`
+
+Login credentials for directus admin without keycloak:
+
+- Username `directus-admin@example.com`
+- Password `admin`
+
+Login credentials for keycloak admin UI:
+
+- Username `keycloak-admin@example.com`
+- Password `admin`
 
 ## Production setup
 
