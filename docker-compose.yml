@@ -42,7 +42,8 @@ services:
       NUXT_LOTZAPP_USER: ${LOTZAPP_USER}
       NUXT_LOTZAPP_PASSWORD: ${LOTZAPP_PASSWORD}
 
-  directus:
+  directus-dev:
+    profiles: [dev]
     build:
       context: ./directus
       dockerfile: Dockerfile
@@ -80,7 +81,61 @@ services:
       DB_USER: "directus"
       DB_PASSWORD: ${DIRECTUS_DB_PASSWORD}
 
-      AUTH_PROVIDERS: "${DIRECTUS_AUTH_PROVIDERS}"
+      SESSION_COOKIE_DOMAIN: "${DIRECTUS_SESSION_COOKIE_DOMAIN}"
+      SESSION_COOKIE_SECURE: "true"
+      SESSION_COOKIE_SAME_SITE: "lax"
+
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "true"
+
+      WEBSOCKETS_ENABLED: true
+
+      COLLECTIVO_API_URL: ${COLLECTIVO_API_URL}
+      COLLECTIVO_API_TOKEN: ${COLLECTIVO_API_TOKEN}
+      FLOWS_ENV_ALLOW_LIST: "PUBLIC_URL,COLLECTIVO_API_URL,COLLECTIVO_API_TOKEN"
+
+      MARKETPLACE_TRUST: all
+
+  directus:
+    profiles: [production]
+    build:
+      context: ./directus
+      dockerfile: Dockerfile
+    container_name: ${DIRECTUS_CONTAINER_NAME}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      directus-db:
+        condition: service_started
+    expose:
+      - 8055
+    ports:
+      - 8055:8055
+    networks:
+      - proxiable
+      - default
+    volumes:
+      - ./directus/uploads:/directus/uploads
+      - ./directus-config:/directus/directus-config
+    entrypoint: ["/entrypoint.sh"]
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: ${DIRECTUS_URL}
+      KEY: ${DIRECTUS_KEY}
+      SECRET: ${DIRECTUS_SECRET}
+
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+      ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
+
+      DB_CLIENT: "pg"
+      DB_HOST: "directus-db"
+      DB_PORT: "5432"
+      DB_DATABASE: "directus"
+      DB_USER: "directus"
+      DB_PASSWORD: ${DIRECTUS_DB_PASSWORD}
+
+      AUTH_PROVIDERS: "keycloak"
       AUTH_KEYCLOAK_DRIVER: "openid"
       AUTH_KEYCLOAK_CLIENT_ID: ${KEYCLOAK_DIRECTUS_CLIENT}
       AUTH_KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_DIRECTUS_SECRET}

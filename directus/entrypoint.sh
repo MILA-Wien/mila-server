@@ -3,11 +3,11 @@ set -e  # Exit on errors
 
 LOCK_FILE="/directus/uploads/sync.lock"
 
-# Wait for Keycloak to become healthy
-until wget -q --spider "${AUTH_KEYCLOAK_ISSUER_URL}"; do
-    echo "Waiting for Keycloak to be ready at ${AUTH_KEYCLOAK_ISSUER_URL}..."
-    sleep 10
-done
+# # Wait for Keycloak to become healthy
+# until wget -q --spider "${AUTH_KEYCLOAK_ISSUER_URL}"; do
+#     echo "Waiting for Keycloak to be ready at ${AUTH_KEYCLOAK_ISSUER_URL}..."
+#     sleep 10
+# done
 
 # Start Directus in the background
 cd /directus

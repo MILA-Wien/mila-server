@@ -28,7 +28,7 @@ The following services will then be available:
 - Frontend http://localhost:3000
 - Directus http://localhost:8055
 
-Test keycloak users for frontend and directus:
+Test users for frontend and directus:
 
 - `admin@example.com` / `admin`
 - `editor@example.com` / `editor`
