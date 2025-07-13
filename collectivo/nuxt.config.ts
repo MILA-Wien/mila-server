@@ -36,7 +36,7 @@ export default defineNuxtConfig({
     lotzappPassword: "",
 
     public: {
-      debug: false,
+      debug: true,
 
       collectivoUrl: process.env.COLLECTIVO_URL || "http://localhost:3000",
       contactEmail: process.env.COLLECTIVO_CONTACT_EMAIL || "info@example.com",
