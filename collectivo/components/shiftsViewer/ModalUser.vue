@@ -113,7 +113,6 @@ async function postAssignmentInner(regular: boolean) {
     shifts_shift: shift.id!,
     shifts_from: shiftStartString,
     shifts_is_regular: regular,
-    shifts_is_coordination: false,
   };
 
   // One-time shifts have same start and end date

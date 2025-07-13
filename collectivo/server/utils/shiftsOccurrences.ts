@@ -101,8 +101,7 @@ const createShiftOccurrence = (
 ) => {
   let n_assigned = 0;
   let selfAssigned = false;
-  let needsCoordinator = shift.shifts_needs_coordinator;
-
+  
   // Get all assignments for this shift
   const assignments = [];
   for (const ass of assignmentRrules ?? []) {
@@ -124,9 +123,6 @@ const createShiftOccurrence = (
       if (occ.absences.length == 0) {
         occ.isActive = true;
         n_assigned += 1;
-        if (occ.assignment.shifts_is_coordination) {
-          needsCoordinator = false;
-        }
         if (
           (mship &&
             typeof occ.assignment.shifts_membership == "object" &&
@@ -157,6 +153,5 @@ const createShiftOccurrence = (
     n_assigned: n_assigned,
     assignments: assignments,
     selfAssigned: selfAssigned,
-    needsCoordinator: needsCoordinator,
   };
 };

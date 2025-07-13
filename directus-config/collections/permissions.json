@@ -2702,8 +2702,7 @@
       "id",
       "shifts_is_regular",
       "shifts_shift",
-      "shifts_absences",
-      "shifts_is_coordination"
+      "shifts_absences"
     ],
     "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
     "_syncId": "da15fda6-9248-4677-81ad-1c08d6068715"
@@ -2723,7 +2722,6 @@
       "id",
       "shifts_shift",
       "shifts_is_regular",
-      "shifts_is_coordination"
     ],
     "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
     "_syncId": "9d335557-9fcf-45eb-96f7-11f9a1839667"
@@ -2798,7 +2796,6 @@
       "shifts_from_time",
       "shifts_to_time",
       "shifts_slots",
-      "shifts_needs_coordinator",
       "shifts_location",
       "shifts_description",
       "id",

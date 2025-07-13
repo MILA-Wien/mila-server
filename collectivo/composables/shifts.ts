@@ -67,7 +67,6 @@ export const getShiftOccurrences = async (
                   "shifts_to",
                   "shifts_shift",
                   "shifts_is_regular",
-                  "shifts_is_coordination",
                   {
                     shifts_membership: [
                       "id",
@@ -231,7 +230,6 @@ const getSingleShiftOccurence = (
   const assignments: AssignmentOccurrence[] = [];
   let n_assigned = 0;
   let selfAssigned = false;
-  let needsCoordinator = shift.shifts_needs_coordinator;
 
   for (const ass of assignmentRrules ?? []) {
     // This rule is true, should be false
@@ -252,9 +250,6 @@ const getSingleShiftOccurence = (
       if (occ.absences.length == 0) {
         occ.isActive = true;
         n_assigned += 1;
-        if (occ.assignment.shifts_is_coordination) {
-          needsCoordinator = false;
-        }
         if (
           (typeof occ.assignment.shifts_membership == "object" &&
             occ.assignment.shifts_membership.id == mship?.id) ||
@@ -286,7 +281,6 @@ const getSingleShiftOccurence = (
     n_assigned: n_assigned,
     assignments: assignments,
     selfAssigned: selfAssigned,
-    needsCoordinator: needsCoordinator,
   };
 };
 
