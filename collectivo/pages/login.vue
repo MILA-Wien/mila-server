@@ -21,10 +21,7 @@ if (!debug) {
 
 async function logInDebug(email: string, password: string) {
   loading.value = true;
-  console.log(`Logging in as ${email} with password ${password}`);
   await directus.login(email, password);
-  console.log("Login successful, redirecting to home page");
-  console.log("Redirected to home page");
   window.location.href = "http://localhost:3000";
 }
 
