@@ -23,7 +23,6 @@ done
 if [ ! -f "$LOCK_FILE" ]; then
     echo "No sync lock detected, syncing collections and fields"
     npx directus-sync push -u "http://localhost:8055" -e "$ADMIN_EMAIL" -p "$ADMIN_PASSWORD"
-    touch "$LOCK_FILE"
 fi
 
 echo "Directus is running and synced."

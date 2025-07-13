@@ -114,6 +114,7 @@ Login credentials for keycloak admin UI:
 ## Production setup
 
 - Install Docker and PNPM
+- Create a sync lock file `"/directus/uploads/sync.lock"`
 - Set .env vars
   - Generate secure secrets, keys, and passwords
   - Set `COMPOSE_PROFILES="production"`
