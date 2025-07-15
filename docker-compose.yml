@@ -30,6 +30,7 @@ services:
       NUXT_PUBLIC_DIRECTUS_URL: ${DIRECTUS_URL}
       NUXT_PUBLIC_KEYCLOAK_URL: ${KEYCLOAK_URL}
       NUXT_PUBLIC_KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      NUXT_PUBLIC_DEBUG: "false"
 
       NUXT_EMAIL_FROM: ${EMAIL_FROM}
       NUXT_EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST}
@@ -43,7 +44,62 @@ services:
       NUXT_LOTZAPP_USER: ${LOTZAPP_USER}
       NUXT_LOTZAPP_PASSWORD: ${LOTZAPP_PASSWORD}
 
+  directus-dev:
+    profiles: [dev]
+    build:
+      context: ./directus
+      dockerfile: Dockerfile
+    container_name: ${DIRECTUS_CONTAINER_NAME}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      directus-db:
+        condition: service_started
+    expose:
+      - 8055
+    ports:
+      - 8055:8055
+    networks:
+      - proxiable
+      - default
+    volumes:
+      - ./directus/uploads:/directus/uploads
+      - ./directus-config:/directus/directus-config
+    entrypoint: ["/entrypoint.sh"]
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: ${DIRECTUS_URL}
+      KEY: ${DIRECTUS_KEY}
+      SECRET: ${DIRECTUS_SECRET}
+
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+      ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
+
+      DB_CLIENT: "pg"
+      DB_HOST: "directus-db"
+      DB_PORT: "5432"
+      DB_DATABASE: "directus"
+      DB_USER: "directus"
+      DB_PASSWORD: ${DIRECTUS_DB_PASSWORD}
+
+      SESSION_COOKIE_DOMAIN: "${DIRECTUS_SESSION_COOKIE_DOMAIN}"
+      SESSION_COOKIE_SECURE: "true"
+      SESSION_COOKIE_SAME_SITE: "lax"
+
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "true"
+
+      WEBSOCKETS_ENABLED: true
+
+      COLLECTIVO_API_URL: ${COLLECTIVO_API_URL}
+      COLLECTIVO_API_TOKEN: ${COLLECTIVO_API_TOKEN}
+      FLOWS_ENV_ALLOW_LIST: "PUBLIC_URL,COLLECTIVO_API_URL,COLLECTIVO_API_TOKEN"
+
+      MARKETPLACE_TRUST: all
+
   directus:
+    profiles: [production]
     build:
       context: ./directus
       dockerfile: Dockerfile
@@ -129,6 +185,7 @@ services:
   keycloak:
     build: ./keycloak
     container_name: keycloak
+    profiles: [production]
     environment:
       COMPOSE_PROFILES: ${COMPOSE_PROFILES}
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
@@ -163,6 +220,7 @@ services:
   keycloak-db:
     image: postgres:14-alpine
     container_name: keycloak-db
+    profiles: [production]
     volumes:
       - keycloak-db-data:/var/lib/postgresql/data
       - ./keycloak-db-backups:/backups

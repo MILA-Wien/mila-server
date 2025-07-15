@@ -9,7 +9,17 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const directus = await useDirectusAdmin();
   const roleID = await getRole("NutzerInnen");
+  const debug = useRuntimeConfig().public.debug;
 
+  if (debug) {
+    // In debug mode, we do not use Keycloak
+    await directus.request(
+      updateUser(body.key, {
+        role: roleID,
+      }),
+    );
+    return;
+  }
   await directus.request(
     updateUser(body.key, {
       role: roleID,

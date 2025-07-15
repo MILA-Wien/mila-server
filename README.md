@@ -1,6 +1,6 @@
 # MILA Server
 
-Anwendungen des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/), inklusive Mitglieder- und Schichtenverwaltung. Weitere Informationen für Mitglieder unter https://handbuch.mila.wien/.
+Mitglieder- und Schichtenverwaltung des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/). Weitere Informationen für Mitglieder unter https://handbuch.mila.wien/.
 
 ## Services
 
@@ -10,15 +10,15 @@ Anwendungen des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/), inklusiv
 - Direktkreditverwaltung (habidat & habidat-db)
 - Backups (directus-db-backup & keycloak-db-backup)
 
-## Local setup
+## Local development setup (only Nuxt and Directus)
 
 - Install Docker and PNPM
 - Clone this repository
-- Add the following to your etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak`
+
 - Create .env file with `cp .env.example .env`
 - Create a network `docker network create proxiable`
 - Run `docker compose up -d`
-- Run `docker compose exec -u root directus chown -R node:node /directus/extensions /directus/uploads`
+- Run `docker compose exec -u root directus-dev chown -R node:node /directus/extensions /directus/uploads`
 - Install packages with `pnpm i`
 - Start dev server with `pnpm dev`
 - In a second terminal, make an API call to create example data with `pnpm seed`
@@ -27,19 +27,8 @@ The following services will then be available:
 
 - Frontend http://localhost:3000
 - Directus http://localhost:8055
-- Keycloak http://localhost:8080
 
-Login credentials for directus admin (without keycloak):
-
-- Username `directus-admin@example.com`
-- Password `admin`
-
-Login credentials for keycloak admin UI:
-
-- Username `keycloak-admin@example.com`
-- Password `admin`
-
-Test keycloak users for frontend and directus:
+Test users for frontend and directus:
 
 - `admin@example.com` / `admin`
 - `editor@example.com` / `editor`
@@ -54,13 +43,13 @@ For deploying updates on the server:
 - Optional: Run `pnpm i`
 - Run `pnpm build`
 - Run `docker compose restart collectivo`
+
 - Optional: Apply database schema changes (see below)
 
 ## Database schemas
 
 Collectivo uses [directus-sync](https://github.com/tractr/directus-sync) to apply the database schema.
-The container will automatically apply the schema on first startup and then create a file `./directus/uploads/sync.lock`.
-To apply changes in the database schema, remove this file and restart the container or follow the last steps below.
+As long as there is no lock file under `./directus/uploads/sync.lock`, database schema will be applied on every startup of the container.
 
 Changing the database schema
 
@@ -104,9 +93,27 @@ Notes:
   - Do not start directus before restoring the backup as it will start migrations on an empty db.
 - Backups are run with `--clean` so that they can be applied to an existing database.
 
+## Local setup with Keycloak
+
+- In `collectivo/.env`, set `DEBUG = "false"`
+- In `.env`, set `COMPOSE_PROFILES = "production"`
+- In `.env`, set `DIRECTUS_AUTH_PROVIDERS`to `keycloak`
+- Add the following to your etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak`
+
+Login credentials for directus admin without keycloak:
+
+- Username `directus-admin@example.com`
+- Password `admin`
+
+Login credentials for keycloak admin UI:
+
+- Username `keycloak-admin@example.com`
+- Password `admin`
+
 ## Production setup
 
 - Install Docker and PNPM
+- Create a sync lock file `"/directus/uploads/sync.lock"`
 - Set .env vars
   - Generate secure secrets, keys, and passwords
   - Set `COMPOSE_PROFILES="production"`

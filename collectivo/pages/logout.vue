@@ -14,23 +14,30 @@ try {
   console.error("Failed to log out from Directus:", error);
 }
 
-try {
-  const keycloak = new Keycloak({
-    url: config.public.keycloakUrl,
-    realm: config.public.keycloakRealm,
-    clientId: config.public.keycloakClient,
-  });
+const debug = useRuntimeConfig().public.debug;
 
-  await keycloak.init({
-    onLoad: "check-sso",
-    redirectUri: config.public.collectivoUrl + "/logout",
-  });
+if (debug) {
+  console.log("Debug mode enabled, skipping Keycloak logout");
+  await navigateTo("/login");
+} else {
+  try {
+    const keycloak = new Keycloak({
+      url: config.public.keycloakUrl,
+      realm: config.public.keycloakRealm,
+      clientId: config.public.keycloakClient,
+    });
 
-  await keycloak.logout({
-    redirectUri: config.public.collectivoUrl,
-  });
-} catch (error) {
-  console.error("Failed to log out from Keycloak:", error);
+    await keycloak.init({
+      onLoad: "check-sso",
+      redirectUri: config.public.collectivoUrl + "/logout",
+    });
+
+    await keycloak.logout({
+      redirectUri: config.public.collectivoUrl,
+    });
+  } catch (error) {
+    console.error("Failed to log out from Keycloak:", error);
+  }
 }
 </script>
 
