@@ -161,18 +161,6 @@ END:VCALENDAR`;
                 {{ t("until") }} {{ getEndDate(assignment.shifts_to) }}
               </span>
             </p>
-            <p>
-              {{ t("Your next date: ") }}
-              {{
-                getDateTimeWithTimeSpanString(
-                  shift.shifts_from_time,
-                  shift.shifts_to_time,
-                  data.secondNextOccurence,
-                  locale,
-                  t,
-                )
-              }}
-            </p>
           </template>
 
           <!-- Shift coworkers -->
@@ -276,7 +264,6 @@ de:
   "Sign out": "Abmelden"
   "Sign out from the following shift": "Von folgender Schicht abmelden"
   "You are signed out for this shift": "Du bist von dieser Schicht abgemeldet"
-  "Your next date: ": "Dein nächster Termin: "
   "Assigned people": "Angemeldete Personen"
   "Anonymous": "Anonym"
   "Contact": "Kontakt"
