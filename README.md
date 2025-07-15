@@ -1,6 +1,6 @@
 # MILA Server
 
-Anwendungen des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/), inklusive Mitglieder- und Schichtenverwaltung. Weitere Informationen für Mitglieder unter https://handbuch.mila.wien/.
+Mitglieder- und Schichtenverwaltung des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/). Weitere Informationen für Mitglieder unter https://handbuch.mila.wien/.
 
 ## Services
 

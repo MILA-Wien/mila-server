@@ -22,7 +22,8 @@ if (!debug) {
 async function logInDebug(email: string, password: string) {
   loading.value = true;
   await directus.login(email, password);
-  window.location.href = "http://localhost:3000";
+  // Nuxt navigateTo does not work in this context, don't know why
+  window.location.href = runtimeConfig.public.collectivoUrl;
 }
 
 const TEST_USERS = [
