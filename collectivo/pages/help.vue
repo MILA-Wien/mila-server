@@ -13,7 +13,7 @@ setPageTitle(t("You have questions?"));
 <template>
   <div class="flex flex-col gap-5">
     <CollectivoCard>
-      <h2>{{ t("Handbook") }}</h2>
+      <h2>{{ t("Members Handbook") }}</h2>
       <p class="mb-3">
         {{
           t("Here you can find guides and information about our cooperative.")
@@ -72,6 +72,6 @@ de:
   Write an email: E-Mail schreiben
   Call us: Anrufen
   Members Handbook: Mitgliederhandbuch
-  IT Handbook: IT-Handbuch
   Guides and information: Anleitungen und Informationen
+  You have questions?: Du hast Fragen?
 </i18n>
