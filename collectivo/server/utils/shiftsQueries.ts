@@ -86,6 +86,7 @@ export async function getShiftAssignments(
                 "hide_name",
                 "email",
                 "memberships_phone",
+                "send_notifications",
               ],
             },
           ],
