@@ -1,10 +1,10 @@
-# MILA Server
+# MILA Mitgliederplattform
 
-Mitglieder- und Schichtenverwaltung des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/). Weitere Informationen für Mitglieder unter https://handbuch.mila.wien/.
+Mitglieder- und Schichtenverwaltung des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/). Erreichbar unter https://mein.mila.wien/. Weitere Informationen für Mitglieder unter https://handbuch.mila.wien/.
 
-## Services
+## Applikationen
 
-- Mitgliederplattform (collectivo)
+- Mitgliederplattform (nuxt, ehemalig collectivo)
 - Datenstudio (directus & directus-db)
 - Zugangsverwaltung (keycloak & keycloak-db)
 - Direktkreditverwaltung (habidat & habidat-db)
@@ -33,18 +33,6 @@ Test users for frontend and directus:
 - `admin@example.com` / `admin`
 - `editor@example.com` / `editor`
 - `user@example.com` / `user`
-
-## Deployment
-
-For deploying updates on the server:
-
-- Create a database backup (see below)
-- Run `git pull`
-- Optional: Run `pnpm i`
-- Run `pnpm build`
-- Run `docker compose restart collectivo`
-
-- Optional: Apply database schema changes (see below)
 
 ## Database schemas
 
@@ -128,3 +116,14 @@ Login credentials for keycloak admin UI:
 - Clone this repository
 - Run `pnpm i` and `pnpm build`
 - Run `docker compose up -d`
+
+## Server updates
+
+For deploying updates on the server:
+
+- Create a database backup (see below)
+- Run `git pull`
+- Optional: Run `pnpm i`
+- Run `pnpm build`
+- Run `docker compose restart collectivo`
+- Optional: Apply database schema changes (see below)
