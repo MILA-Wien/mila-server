@@ -1,6 +1,7 @@
 import { readItems } from "@directus/sdk";
 import type { QueryFilter } from "@directus/sdk";
 import { RRule, RRuleSet } from "rrule";
+import { parseUtcMidnight } from "./dates";
 
 const directus = useDirectusAdmin();
 
@@ -150,12 +151,12 @@ export const getShiftRrule = (
     freq: RRule.DAILY,
     interval: shift.shifts_repeats_every,
     count: shift.shifts_is_regular ? null : 1,
-    dtstart: new Date(shift.shifts_from),
+    dtstart: parseUtcMidnight(shift.shifts_from),
     until: shift.shifts_is_regular
       ? shift.shifts_to
-        ? new Date(shift.shifts_to)
+        ? parseUtcMidnight(shift.shifts_to)
         : null
-      : new Date(shift.shifts_from),
+      : parseUtcMidnight(shift.shifts_from),
   });
 
   rruleSet.rrule(mainShiftRule);
@@ -166,8 +167,8 @@ export const getShiftRrule = (
       const holidayRule = new RRule({
         freq: RRule.DAILY,
         interval: 1,
-        dtstart: new Date(holiday.date),
-        until: new Date(holiday.date),
+        dtstart: parseUtcMidnight(holiday.date),
+        until: parseUtcMidnight(holiday.date),
       });
       rruleSet.exrule(holidayRule);
     }
@@ -185,7 +186,7 @@ export const createAssignmentRrule = (
   let until: Date | null = null;
   let invalid = false;
 
-  const dtstart = shiftRule.after(new Date(fromString), true);
+  const dtstart = shiftRule.after(parseUtcMidnight(fromString), true);
   if (!dtstart) {
     invalid = true;
   }
@@ -194,7 +195,7 @@ export const createAssignmentRrule = (
   const assignmentTo = regular ? toString : fromString;
 
   if (assignmentTo) {
-    until = shiftRule.before(new Date(assignmentTo), true);
+    until = shiftRule.before(parseUtcMidnight(assignmentTo), true);
     if (!until) {
       invalid = true;
     }
@@ -247,8 +248,8 @@ export const getAssignmentRrules = (
       const absenceRule = new RRule({
         freq: RRule.DAILY,
         interval: shift.shifts_repeats_every,
-        dtstart: shiftRule.after(new Date(absence.shifts_from), true),
-        until: shiftRule.before(new Date(absence.shifts_to), true),
+        dtstart: shiftRule.after(parseUtcMidnight(absence.shifts_from), true),
+        until: shiftRule.before(parseUtcMidnight(absence.shifts_to), true),
       });
       absenceRrules.push({
         absence: absence as ShiftsAbsence,
