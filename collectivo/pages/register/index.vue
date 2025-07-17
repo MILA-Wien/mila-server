@@ -169,7 +169,7 @@ function fillTestData() {
   state.directus_users__memberships_postcode = "1010";
   state.directus_users__memberships_city = "Wien";
   state.directus_users__memberships_country = "Österreich";
-  state.memberships__memberships_type = "active";
+  state.memberships__memberships_type = "Aktiv";
   state.shares_options = "normal";
   state.directus_users__payments_type = "transfer";
   state._statutes_approval = true;
@@ -467,7 +467,7 @@ async function onError() {
     >
       <URadioGroup
         v-model="state.memberships__memberships_type"
-        :options="isNatural ? ['active', 'investing'] : ['investing']"
+        :options="isNatural ? ['Aktiv', 'Investierend'] : ['Investierend']"
       >
         <template #label="{ option }">{{ t("l:" + option.label) }}</template>
       </URadioGroup>
@@ -831,8 +831,8 @@ de:
 
   "l:natural": "Einzelperson"
   "l:legal": "Organisation"
-  "l:active": "Aktives Mitglied"
-  "l:investing": "Investierendes Mitglied"
+  "l:Aktiv": "Aktives Mitglied"
+  "l:Investierend": "Investierendes Mitglied"
   "l:social": "Sozialtarif (1 Anteil) 20€"
   "l:normal": "Regeltarif (9 Anteile) 180€"
   "l:more": "Mehr (10 oder mehr, 20€ pro Anteil)"
@@ -873,8 +873,8 @@ de:
 en:
   "l:natural": "Individual"
   "l:legal": "Organisation"
-  "l:active": "Active member"
-  "l:investing": "Investing member"
+  "l:Aktiv": "Active member"
+  "l:Investierend": "Investing member"
   "l:social": "Social rate (1 share) 20€"
   "l:normal": "Standard rate (9 shares) 180€"
   "l:more": "More (10 or more, 20€ per share)"
