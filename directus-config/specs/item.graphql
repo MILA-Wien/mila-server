@@ -295,11 +295,12 @@ type Mutation {
 
 type Subscription {
   directus_roles_mutated(event: EventEnum): directus_roles_mutated
-  directus_files_mutated(event: EventEnum): directus_files_mutated
-  directus_folders_mutated(event: EventEnum): directus_folders_mutated
   directus_revisions_mutated(event: EventEnum): directus_revisions_mutated
-  directus_permissions_mutated(event: EventEnum): directus_permissions_mutated
+  directus_folders_mutated(event: EventEnum): directus_folders_mutated
   directus_activity_mutated(event: EventEnum): directus_activity_mutated
+  directus_files_mutated(event: EventEnum): directus_files_mutated
+  directus_settings_mutated(event: EventEnum): directus_settings_mutated
+  directus_permissions_mutated(event: EventEnum): directus_permissions_mutated
   directus_presets_mutated(event: EventEnum): directus_presets_mutated
   directus_panels_mutated(event: EventEnum): directus_panels_mutated
   directus_notifications_mutated(event: EventEnum): directus_notifications_mutated
@@ -308,15 +309,13 @@ type Subscription {
   directus_operations_mutated(event: EventEnum): directus_operations_mutated
   directus_dashboards_mutated(event: EventEnum): directus_dashboards_mutated
   directus_translations_mutated(event: EventEnum): directus_translations_mutated
-  directus_comments_mutated(event: EventEnum): directus_comments_mutated
-  directus_versions_mutated(event: EventEnum): directus_versions_mutated
-  directus_settings_mutated(event: EventEnum): directus_settings_mutated
-  directus_webhooks_mutated(event: EventEnum): directus_webhooks_mutated
   directus_sync_id_map_mutated(event: EventEnum): directus_sync_id_map_mutated
+  directus_webhooks_mutated(event: EventEnum): directus_webhooks_mutated
   directus_policies_mutated(event: EventEnum): directus_policies_mutated
   directus_access_mutated(event: EventEnum): directus_access_mutated
+  directus_comments_mutated(event: EventEnum): directus_comments_mutated
+  directus_versions_mutated(event: EventEnum): directus_versions_mutated
   settings_hidden_mutated(event: EventEnum): settings_hidden_mutated
-  directus_users_mutated(event: EventEnum): directus_users_mutated
   collectivo_tags_mutated(event: EventEnum): collectivo_tags_mutated
   collectivo_tags_directus_users_mutated(event: EventEnum): collectivo_tags_directus_users_mutated
   collectivo_tiles_mutated(event: EventEnum): collectivo_tiles_mutated
@@ -342,6 +341,7 @@ type Subscription {
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_holidays_public_mutated(event: EventEnum): shifts_holidays_public_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
+  directus_users_mutated(event: EventEnum): directus_users_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -1154,6 +1154,7 @@ type directus_users {
   payments_type: String
   survey_languages: String
   survey_languages_additional: String
+  send_notifications: Boolean
   collectivo_tags(filter: collectivo_tags_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_tags_directus_users]
   collectivo_tags_func: count_functions
   memberships(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships]
@@ -1295,18 +1296,18 @@ type memberships {
   shifts_user_type: String
   user_created: ID
   user_updated: ID
-  shifts_assignments(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_assignments]
-  shifts_assignments_func: count_functions
-  shifts_logs(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_logs]
-  shifts_logs_func: count_functions
   coshoppers(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers]
   coshoppers_func: count_functions
   kids(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers_1]
   kids_func: count_functions
+  shifts_logs(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_logs]
+  shifts_logs_func: count_functions
   memberships_invoices(filter: payments_invoices_out_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [payments_invoices_out]
   memberships_invoices_func: count_functions
   shifts_categories_allowed(filter: memberships_shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_shifts_categories]
   shifts_categories_allowed_func: count_functions
+  shifts_assignments(filter: shifts_assignments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_assignments]
+  shifts_assignments_func: count_functions
 }
 
 type memberships_aggregated {
@@ -1359,10 +1360,9 @@ type memberships_aggregated_count {
   shifts_user_type: Int
   user_created: Int
   user_updated: Int
-  shifts_assignments: Int
-  shifts_logs: Int
   coshoppers: Int
   kids: Int
+  shifts_logs: Int
 
   """Rechnungen für Anteils-Zahlungen"""
   memberships_invoices: Int
@@ -1371,6 +1371,7 @@ type memberships_aggregated_count {
   Für folgende Schichtkategorien darf sich diese Person selbstständig eintragen.
   """
   shifts_categories_allowed: Int
+  shifts_assignments: Int
 }
 
 type memberships_aggregated_fields {
@@ -2111,9 +2112,6 @@ type shifts_assignments {
   date_updated: Date
   date_updated_func: datetime_functions
   id: ID!
-
-  """Erinnerungs-E-Mails vor Schichtantritt aktivieren"""
-  send_reminders: Boolean
   shifts_from: Date!
   shifts_from_func: date_functions
 
@@ -2148,9 +2146,6 @@ type shifts_assignments_aggregated_count {
   date_created: Int
   date_updated: Int
   id: Int
-
-  """Erinnerungs-E-Mails vor Schichtantritt aktivieren"""
-  send_reminders: Int
   shifts_from: Int
 
   """Soll diese Anmeldung langfristig aktiv sein?"""
@@ -2537,12 +2532,12 @@ type version_memberships {
   shifts_user_type: String
   user_created: ID
   user_updated: ID
-  shifts_assignments: JSON
-  shifts_logs: JSON
   coshoppers: JSON
   kids: JSON
+  shifts_logs: JSON
   memberships_invoices: JSON
   shifts_categories_allowed: JSON
+  shifts_assignments: JSON
 }
 
 """"""
@@ -2733,9 +2728,6 @@ type version_shifts_assignments {
   date_created: Date
   date_updated: Date
   id: ID
-
-  """Erinnerungs-E-Mails vor Schichtantritt aktivieren"""
-  send_reminders: Boolean
   shifts_from: Date
 
   """Soll diese Anmeldung langfristig aktiv sein?"""
@@ -3129,6 +3121,7 @@ input create_directus_users_input {
   payments_type: String
   survey_languages: String
   survey_languages_additional: String
+  send_notifications: Boolean
   collectivo_tags: [create_collectivo_tags_directus_users_input]
   memberships: [create_memberships_input]
   messages_campaigns: [create_messages_campaigns_directus_users_input]
@@ -3190,12 +3183,12 @@ input create_memberships_input {
   shifts_user_type: String
   user_created: ID
   user_updated: ID
-  shifts_assignments: [create_shifts_assignments_input]
-  shifts_logs: [create_shifts_logs_input]
   coshoppers: [create_memberships_memberships_coshoppers_input]
   kids: [create_memberships_memberships_coshoppers_1_input]
+  shifts_logs: [create_shifts_logs_input]
   memberships_invoices: [create_payments_invoices_out_input]
   shifts_categories_allowed: [create_memberships_shifts_categories_input]
+  shifts_assignments: [create_shifts_assignments_input]
 }
 
 input create_memberships_memberships_coshoppers_1_input {
@@ -3351,9 +3344,6 @@ input create_shifts_assignments_input {
   date_created: Date
   date_updated: Date
   id: ID
-
-  """Erinnerungs-E-Mails vor Schichtantritt aktivieren"""
-  send_reminders: Boolean
   shifts_from: Date!
 
   """Soll diese Anmeldung langfristig aktiv sein?"""
@@ -3871,6 +3861,7 @@ input directus_users_filter {
   payments_type: string_filter_operators
   survey_languages: string_filter_operators
   survey_languages_additional: string_filter_operators
+  send_notifications: boolean_filter_operators
   collectivo_tags: collectivo_tags_directus_users_quantifier_filter
   collectivo_tags_func: count_function_filter_operators
   memberships: memberships_quantifier_filter
@@ -3946,6 +3937,7 @@ input directus_users_quantifier_filter {
   payments_type: string_filter_operators
   survey_languages: string_filter_operators
   survey_languages_additional: string_filter_operators
+  send_notifications: boolean_filter_operators
   collectivo_tags: collectivo_tags_directus_users_quantifier_filter
   collectivo_tags_func: count_function_filter_operators
   memberships: memberships_quantifier_filter
@@ -4076,18 +4068,18 @@ input memberships_filter {
   shifts_user_type: string_filter_operators
   user_created: id_filter_operators
   user_updated: id_filter_operators
-  shifts_assignments: shifts_assignments_quantifier_filter
-  shifts_assignments_func: count_function_filter_operators
-  shifts_logs: shifts_logs_quantifier_filter
-  shifts_logs_func: count_function_filter_operators
   coshoppers: memberships_memberships_coshoppers_quantifier_filter
   coshoppers_func: count_function_filter_operators
   kids: memberships_memberships_coshoppers_1_quantifier_filter
   kids_func: count_function_filter_operators
+  shifts_logs: shifts_logs_quantifier_filter
+  shifts_logs_func: count_function_filter_operators
   memberships_invoices: payments_invoices_out_quantifier_filter
   memberships_invoices_func: count_function_filter_operators
   shifts_categories_allowed: memberships_shifts_categories_quantifier_filter
   shifts_categories_allowed_func: count_function_filter_operators
+  shifts_assignments: shifts_assignments_quantifier_filter
+  shifts_assignments_func: count_function_filter_operators
   _and: [memberships_filter]
   _or: [memberships_filter]
 }
@@ -4163,18 +4155,18 @@ input memberships_quantifier_filter {
   shifts_user_type: string_filter_operators
   user_created: id_filter_operators
   user_updated: id_filter_operators
-  shifts_assignments: shifts_assignments_quantifier_filter
-  shifts_assignments_func: count_function_filter_operators
-  shifts_logs: shifts_logs_quantifier_filter
-  shifts_logs_func: count_function_filter_operators
   coshoppers: memberships_memberships_coshoppers_quantifier_filter
   coshoppers_func: count_function_filter_operators
   kids: memberships_memberships_coshoppers_1_quantifier_filter
   kids_func: count_function_filter_operators
+  shifts_logs: shifts_logs_quantifier_filter
+  shifts_logs_func: count_function_filter_operators
   memberships_invoices: payments_invoices_out_quantifier_filter
   memberships_invoices_func: count_function_filter_operators
   shifts_categories_allowed: memberships_shifts_categories_quantifier_filter
   shifts_categories_allowed_func: count_function_filter_operators
+  shifts_assignments: shifts_assignments_quantifier_filter
+  shifts_assignments_func: count_function_filter_operators
   _and: [memberships_filter]
   _or: [memberships_filter]
   _some: memberships_filter
@@ -4479,7 +4471,6 @@ input shifts_assignments_filter {
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
   id: number_filter_operators
-  send_reminders: boolean_filter_operators
   shifts_from: date_filter_operators
   shifts_from_func: date_function_filter_operators
   shifts_is_regular: boolean_filter_operators
@@ -4502,7 +4493,6 @@ input shifts_assignments_quantifier_filter {
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
   id: number_filter_operators
-  send_reminders: boolean_filter_operators
   shifts_from: date_filter_operators
   shifts_from_func: date_function_filter_operators
   shifts_is_regular: boolean_filter_operators
@@ -4830,6 +4820,7 @@ input update_directus_users_input {
   payments_type: String
   survey_languages: String
   survey_languages_additional: String
+  send_notifications: Boolean
   collectivo_tags: [update_collectivo_tags_directus_users_input]
   memberships: [update_memberships_input]
   messages_campaigns: [update_messages_campaigns_directus_users_input]
@@ -4891,12 +4882,12 @@ input update_memberships_input {
   shifts_user_type: String
   user_created: ID
   user_updated: ID
-  shifts_assignments: [update_shifts_assignments_input]
-  shifts_logs: [update_shifts_logs_input]
   coshoppers: [update_memberships_memberships_coshoppers_input]
   kids: [update_memberships_memberships_coshoppers_1_input]
+  shifts_logs: [update_shifts_logs_input]
   memberships_invoices: [update_payments_invoices_out_input]
   shifts_categories_allowed: [update_memberships_shifts_categories_input]
+  shifts_assignments: [update_shifts_assignments_input]
 }
 
 input update_memberships_memberships_coshoppers_1_input {
@@ -5058,9 +5049,6 @@ input update_shifts_assignments_input {
   date_created: Date
   date_updated: Date
   id: ID
-
-  """Erinnerungs-E-Mails vor Schichtantritt aktivieren"""
-  send_reminders: Boolean
   shifts_from: Date
 
   """Soll diese Anmeldung langfristig aktiv sein?"""

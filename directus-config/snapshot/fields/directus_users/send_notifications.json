@@ -1,37 +1,37 @@
 {
-  "collection": "shifts_assignments",
-  "field": "send_reminders",
+  "collection": "directus_users",
+  "field": "send_notifications",
   "type": "boolean",
   "meta": {
-    "collection": "shifts_assignments",
+    "collection": "directus_users",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "send_reminders",
+    "field": "send_notifications",
     "group": null,
     "hidden": false,
     "interface": "boolean",
-    "note": "Erinnerungs-E-Mails vor Schichtantritt aktivieren",
+    "note": null,
     "options": null,
     "readonly": false,
     "required": false,
-    "sort": 6,
+    "sort": 14,
     "special": [
       "cast-boolean"
     ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Erinnerung senden"
+        "translation": "Schichterinnerungen senden"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "send_reminders",
-    "table": "shifts_assignments",
+    "name": "send_notifications",
+    "table": "directus_users",
     "data_type": "boolean",
     "default_value": true,
     "max_length": null,

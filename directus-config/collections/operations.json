@@ -611,28 +611,6 @@
     "name": "postToNuxtAPI",
     "key": "post_to_nuxt_api",
     "type": "request",
-    "position_x": 19,
-    "position_y": 1,
-    "options": {
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/user_create",
-      "method": "POST",
-      "body": "{{$trigger}}",
-      "headers": [
-        {
-          "header": "Authorization",
-          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
-        }
-      ]
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "5ea28856-7cb2-49a4-86b8-eacbd27ac54d",
-    "_syncId": "ad799be4-d215-4375-97d7-6308e05f46f4"
-  },
-  {
-    "name": "postToNuxtAPI",
-    "key": "post_to_nuxt_api",
-    "type": "request",
     "position_x": 37,
     "position_y": 1,
     "options": {
@@ -650,6 +628,28 @@
     "reject": null,
     "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
     "_syncId": "0c188aa8-7df4-4fea-bd78-23758e8a9013"
+  },
+  {
+    "name": "postToNuxtAPI",
+    "key": "post_to_nuxt_api",
+    "type": "request",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/user_create",
+      "method": "POST",
+      "body": "{{$trigger}}",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ]
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "5ea28856-7cb2-49a4-86b8-eacbd27ac54d",
+    "_syncId": "ad799be4-d215-4375-97d7-6308e05f46f4"
   },
   {
     "name": "postToNuxtAPI",
@@ -1291,20 +1291,6 @@
     "name": "User ids",
     "key": "user_ids",
     "type": "exec",
-    "position_x": 22,
-    "position_y": 19,
-    "options": {
-      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_invoices\"]) {\n    \tid = data[\"read_invoices\"][i].payments_recipient_user\n        if (id) {\n            user_ids.push(id)\n        }\n    }\n    \n\treturn { user_ids };\n}"
-    },
-    "resolve": "91166d55-508c-40f2-ac22-405e25ec647b",
-    "reject": null,
-    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
-    "_syncId": "4bb7b88f-e8cc-4b46-b7ed-a075b3cd334b"
-  },
-  {
-    "name": "User ids",
-    "key": "user_ids",
-    "type": "exec",
     "position_x": 21,
     "position_y": 18,
     "options": {
@@ -1314,5 +1300,19 @@
     "reject": null,
     "flow": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a",
     "_syncId": "1b8c6e64-414b-4ff4-a9ed-fd3ab6286ee8"
+  },
+  {
+    "name": "User ids",
+    "key": "user_ids",
+    "type": "exec",
+    "position_x": 22,
+    "position_y": 19,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    \n    for (i in data[\"read_invoices\"]) {\n    \tid = data[\"read_invoices\"][i].payments_recipient_user\n        if (id) {\n            user_ids.push(id)\n        }\n    }\n    \n\treturn { user_ids };\n}"
+    },
+    "resolve": "91166d55-508c-40f2-ac22-405e25ec647b",
+    "reject": null,
+    "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
+    "_syncId": "4bb7b88f-e8cc-4b46-b7ed-a075b3cd334b"
   }
 ]
