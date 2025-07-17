@@ -141,7 +141,6 @@ declare global {
     shifts_to?: "datetime" | string;
     shifts_shift: ShiftsShift | number;
     shifts_membership: Membership | number;
-    send_reminders: boolean;
   }
 
   interface ShiftsAssignmentApi extends ShiftsAssignment {

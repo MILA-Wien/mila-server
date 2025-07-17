@@ -72,7 +72,6 @@ export async function getShiftAssignments(
         "shifts_to",
         "shifts_shift",
         "shifts_is_regular",
-        "send_reminders",
         {
           shifts_membership: [
             "id",

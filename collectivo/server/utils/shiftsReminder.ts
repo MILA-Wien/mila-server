@@ -118,9 +118,10 @@ async function sendRemindersInner(occurrences: any[], automation: any) {
   for (const occ of occurrences) {
     const assignment = occ.assignment.assignment;
 
-    if (!assignment.send_reminders) {
-      continue;
-    }
+    // TODO - Get info from user object
+    // if (!assignment.send_reminders) {
+    //   continue;
+    // }
 
     const user = assignment.shifts_membership.memberships_user;
     const shift = occ.assignment.shift!;
