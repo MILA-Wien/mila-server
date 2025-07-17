@@ -19,6 +19,7 @@ export async function getMembership(id: number) {
 
 type RequiredFields = {
   id: number;
+  shifts_can_be_coordinator: boolean;
   memberships_user: {
     first_name: string;
     last_name: string;
@@ -27,5 +28,5 @@ type RequiredFields = {
 
 export function displayMembership<T extends RequiredFields>(mship: T) {
   const user = mship.memberships_user;
-  return `#${mship.id} ${user.first_name} ${user.last_name}`;
+  return `#${mship.id} ${user.first_name} ${user.last_name} ${mship.shifts_can_be_coordinator ? "(Koordinator*in)" : ""}`;
 }

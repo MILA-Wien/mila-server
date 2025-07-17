@@ -20,7 +20,8 @@ export const getShiftOccurrences = async (
     for (const assignment of assignments) {
       if (
         assignment.shifts_membership.memberships_user.hide_name &&
-        (!mship || mship != assignment.shifts_membership.id)
+        (!mship || mship != assignment.shifts_membership.id) &&
+        !assignment.shifts_membership.shifts_can_be_coordinator
       ) {
         assignment.shifts_membership.memberships_user.first_name = "";
         assignment.shifts_membership.memberships_user.last_name = "";
@@ -101,7 +102,7 @@ const createShiftOccurrence = (
 ) => {
   let n_assigned = 0;
   let selfAssigned = false;
-  
+
   // Get all assignments for this shift
   const assignments = [];
   for (const ass of assignmentRrules ?? []) {

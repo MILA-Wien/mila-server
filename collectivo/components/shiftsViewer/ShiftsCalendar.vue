@@ -118,6 +118,16 @@ async function prepareEvents() {
         "]";
     }
 
+    // If any of the assignments memberships has shifts_can_be_coordinator set, show (K) after the name
+    if (
+      occurrence.assignments.some(
+        (assignment) =>
+          assignment.assignment.shifts_membership.shifts_can_be_coordinator,
+      )
+    ) {
+      title += "*";
+    }
+
     // Apply filters
     if (unfilled) {
       if (!props.admin && occurrence.selfAssigned) {
@@ -169,6 +179,12 @@ prepareEvents();
 <!-- calendarRef.getApi() -->
 <template>
   <full-calendar ref="calendarRef" :options="calendarOptions" />
+  <div class="pt-10 text-sm text-gray-500">
+    <p class="font-bold">
+      {{ t("Legend") }}
+    </p>
+    <p class="">* : {{ t("This shift has a coordinator") }}</p>
+  </div>
 </template>
 
 <style scoped>
@@ -189,4 +205,6 @@ prepareEvents();
 <i18n lang="yaml">
 de:
   "Public holiday": "Feiertag"
+  "Legend": "Legende"
+  "This shift has a coordinator": "Diese Schicht hat eine*n Koordinator*in"
 </i18n>

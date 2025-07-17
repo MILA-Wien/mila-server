@@ -23,6 +23,7 @@ declare global {
     hide_name: boolean;
     collectivo_tags?: { collectivo_tags_id: number }[];
     memberships?: Membership[];
+    memberships_phone?: string;
     [key: string]: string | undefined;
   }
 
@@ -244,6 +245,7 @@ declare global {
   interface ShiftsOccurrenceDashboard {
     assignment: ShiftsAssignmentDashboard;
     coworkers: string[];
+    coordinators: string[];
     nextOccurrence: string | null;
     secondNextOccurence: string | null;
     isRegular: boolean;

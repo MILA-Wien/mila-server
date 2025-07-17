@@ -77,8 +77,16 @@ export async function getShiftAssignments(
             "id",
             "shifts_counter",
             "count(shifts_logs)",
+            "shifts_can_be_coordinator",
             {
-              memberships_user: ["id", "first_name", "last_name", "hide_name"],
+              memberships_user: [
+                "id",
+                "first_name",
+                "last_name",
+                "hide_name",
+                "email",
+                "memberships_phone",
+              ],
             },
           ],
         },
