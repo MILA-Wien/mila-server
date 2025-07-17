@@ -75,9 +75,7 @@ async function create_users() {
       email: email,
       password: `${userName.toLowerCase()}`,
       role: userRole,
-      provider: "keycloak",
       status: "active",
-      external_identifier: email,
     };
 
     if (userName == "Admin") {
@@ -345,11 +343,11 @@ async function createShifts() {
           shifts_from: day.set({ hour: time_of_day }).toString(),
           shifts_from_time: String(time_of_day) + ":00",
           shifts_to_time: String(time_of_day + 3) + ":00",
-	  shifts_is_regular: true,
+          shifts_is_regular: true,
           shifts_repeats_every: nb_weeks * 7,
           shifts_status: "published",
-	  shifts_slots: 2,
-	  shifts_allow_self_assignment: true,
+          shifts_slots: 2,
+          shifts_allow_self_assignment: true,
         });
       }
     }
