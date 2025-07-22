@@ -77,7 +77,15 @@
         "sort": 1
       },
       {
+        "role": "_sync_default_admin_role",
+        "sort": 2
+      },
+      {
         "role": "85affc9c-9e79-4c6a-b8e2-11d32328c334",
+        "sort": 2
+      },
+      {
+        "role": "c5a40dad-70d5-4586-9151-1dacac5677b1",
         "sort": 2
       }
     ],
