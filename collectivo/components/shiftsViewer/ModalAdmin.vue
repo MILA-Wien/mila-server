@@ -182,21 +182,16 @@ async function removeAssignment(onetime: boolean) {
 
   removeAssignmentObject.value.removed = true;
   removeAssignmentModalIsOpen.value = false;
-  if (removeAssignmentObject.value.assignment.shifts_is_coordination) {
-    occ.value.needsCoordinator = true;
-  }
   occ.value.n_assigned--;
   emit("data-has-changed");
 }
 
 // CREATE ASSIGNMENT FLOW
 const createAssignmentModalIsOpen = ref(false);
-const createAssignmentCoordinator = ref(false);
 
 function startCreateAssignmentFlow() {
   mshipID.value = undefined;
   createAssignmentModalIsOpen.value = true;
-  createAssignmentCoordinator.value = false;
 }
 
 async function fetchOccurrences(date: string, shiftID: number) {
@@ -238,7 +233,6 @@ async function createAssignment(onetime: boolean) {
     shifts_shift: shift.id!,
     shifts_from: startDateString,
     shifts_is_regular: !onetime,
-    shifts_is_coordination: createAssignmentCoordinator.value,
   };
 
   const res = (await directus.request(
@@ -247,7 +241,6 @@ async function createAssignment(onetime: boolean) {
         "id",
         "shifts_membership",
         "shifts_is_regular",
-        "shifts_is_coordination",
         "shifts_shift",
         "shifts_from",
         "shifts_to",
@@ -269,10 +262,7 @@ async function createAssignment(onetime: boolean) {
   } as AssignmentOccurrence);
 
   createAssignmentModalIsOpen.value = false;
-  if (createAssignmentCoordinator.value) {
-    occ.value.needsCoordinator = false;
-  }
-
+  
   occ.value.n_assigned++;
   emit("data-has-changed");
 }
@@ -284,10 +274,6 @@ function getAssignmentColor(assignment: AssignmentOccurrence) {
 
   if (assignment.log && assignment.log.shifts_type !== "attended") {
     return "bg-red-100";
-  }
-
-  if (assignment.assignment.shifts_is_coordination) {
-    return "bg-yellow-100";
   }
 
   if (assignment.isOneTime) {
@@ -399,12 +385,6 @@ function checkIfMshipInAssignments(mship: number) {
         </div>
 
         <div v-if="logsLoaded" class="flex flex-col gap-3 my-2">
-          <div
-            v-if="occ.needsCoordinator"
-            class="bg-yellow-100 p-2 rounded-md font-bold"
-          >
-            {{ t("Shift needs coordinator") }}
-          </div>
           <template
             v-for="(assignment, ai) of occ.assignments"
             :key="assignment.assignment.id"
@@ -417,9 +397,6 @@ function checkIfMshipInAssignments(mship: number) {
             >
               <template #header>
                 <span v-if="!assignment.isActive"> Abgemeldet: </span>
-                <span v-if="assignment.assignment.shifts_is_coordination">
-                  {{ t("Shift coordination") }}:
-                </span>
                 {{ displayMembership(assignment.assignment.shifts_membership) }}
               </template>
 
@@ -550,20 +527,6 @@ function checkIfMshipInAssignments(mship: number) {
             {{ t("Member is already assigned for this shift") }}
           </div>
           <div v-else>
-            <UFormGroup
-              v-if="occ.needsCoordinator && mshipData.shifts_can_be_coordinator"
-              :label="t('Shift coordinator')"
-              name="createShiftCoordinator"
-              class="my-5"
-            >
-              <div class="form-box flex flex-row">
-                <UToggle
-                  v-model="createAssignmentCoordinator"
-                  class="mt-0.5 mr-2"
-                />
-                <span>{{ t("Assign this person as coordinator") }}</span>
-              </div>
-            </UFormGroup>
             <div class="flex flex-wrap gap-2 mt-3">
               <UButton class="w-full" @click="createAssignment(true)">{{
                 t("Create one-time assignment")
@@ -683,12 +646,8 @@ de:
   Removed: "Entfernt"
   Location: "Ort"
   All day: "Ganztägig"
-  "Shift coordinator": "Schichtkoordinator*in"
-  "Shift coordination": "Schichtkoordination"
 
   "Required skills": "Benötigte Fähigkeiten"
-  "Shift needs coordinator": "Schicht benötigt Koordinator*in"
-  "Assign this person as coordinator": "Diese Person als Koordinator*in eintragen"
 
   Skills: "Fähigkeiten"
   Category: Kategorie

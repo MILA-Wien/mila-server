@@ -246,7 +246,6 @@ watch(selectedCategory, async () => {
 // Watch changes in locale (needs re-render)
 const showCalendar = ref(true);
 watch(locale, () => {
-  console.log("Locale changed");
   showCalendar.value = false;
   showCalendar.value = true;
 });

@@ -14,6 +14,7 @@
  * @property {number} [shiftID] - The ID of the specific shift to retrieve occurrences for.
  */
 import { z } from "zod";
+import { parseUtcMidnight } from "~/server/utils/dates";
 import { getShiftOccurrences } from "~/server/utils/shiftsOccurrences";
 
 const querySchema = z.object({
@@ -32,9 +33,10 @@ export default defineEventHandler(async (event) => {
   if (params.admin && !user.shiftAdmin) {
     throw new Error("Unauthorized");
   }
+
   return getShiftOccurrences(
-    params.from,
-    params.to,
+    parseUtcMidnight(params.from),
+    parseUtcMidnight(params.to),
     params.admin,
     params.shiftID,
     user.mship ?? undefined,

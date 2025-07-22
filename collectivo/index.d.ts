@@ -23,6 +23,7 @@ declare global {
     hide_name: boolean;
     collectivo_tags?: { collectivo_tags_id: number }[];
     memberships?: Membership[];
+    memberships_phone?: string;
     [key: string]: string | undefined;
   }
 
@@ -113,7 +114,6 @@ declare global {
     shifts_from_time?: string;
     shifts_to_time?: string;
     shifts_slots: number;
-    shifts_needs_coordinator: boolean;
     shifts_allow_self_assignment: boolean;
     shifts_is_regular: boolean;
     shifts_category_2?: number;
@@ -121,7 +121,6 @@ declare global {
     shifts_status: string;
     shifts_description?: string;
     shifts_location?: string;
-    shifts_needs_coordinator: boolean;
     shifts_assignments?: ShiftsAssignment[] | number[];
     exclude_public_holidays?: boolean;
   }
@@ -143,8 +142,6 @@ declare global {
     shifts_to?: "datetime" | string;
     shifts_shift: ShiftsShift | number;
     shifts_membership: Membership | number;
-    shifts_is_coordination: boolean;
-    send_reminders: boolean;
   }
 
   interface ShiftsAssignmentApi extends ShiftsAssignment {
@@ -203,7 +200,6 @@ declare global {
     n_assigned: number;
     assignments: AssignmentOccurrence[];
     selfAssigned?: boolean;
-    needsCoordinator?: boolean;
   }
 
   interface ShiftOccurrence {
@@ -214,7 +210,6 @@ declare global {
     n_assigned: number;
     assignments: AssignmentOccurrence[];
     selfAssigned?: boolean;
-    needsCoordinator?: boolean;
   }
 
   interface AssignmentRrule {
@@ -250,6 +245,7 @@ declare global {
   interface ShiftsOccurrenceDashboard {
     assignment: ShiftsAssignmentDashboard;
     coworkers: string[];
+    coordinators: string[];
     nextOccurrence: string | null;
     secondNextOccurence: string | null;
     isRegular: boolean;

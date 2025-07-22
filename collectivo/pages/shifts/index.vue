@@ -182,7 +182,8 @@ else throw createError({ statusCode: 403 });
         <CollectivoCard :color="'gray'">
           <div class="flex flex-col gap-1">
             <div v-for="log in logs" :key="log.id">
-              {{ log.shifts_date }}: {{ t("log:" + log.shifts_type) }}.
+              {{ getDateString(log.shifts_date, locale) }}:
+              {{ t("log:" + log.shifts_type) }}.
               {{ log.shifts_note }}
             </div>
           </div></CollectivoCard

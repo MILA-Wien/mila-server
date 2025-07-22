@@ -20,7 +20,8 @@ export const getShiftOccurrences = async (
     for (const assignment of assignments) {
       if (
         assignment.shifts_membership.memberships_user.hide_name &&
-        (!mship || mship != assignment.shifts_membership.id)
+        (!mship || mship != assignment.shifts_membership.id) &&
+        !assignment.shifts_membership.shifts_can_be_coordinator
       ) {
         assignment.shifts_membership.memberships_user.first_name = "";
         assignment.shifts_membership.memberships_user.last_name = "";
@@ -101,7 +102,6 @@ const createShiftOccurrence = (
 ) => {
   let n_assigned = 0;
   let selfAssigned = false;
-  let needsCoordinator = shift.shifts_needs_coordinator;
 
   // Get all assignments for this shift
   const assignments = [];
@@ -124,9 +124,6 @@ const createShiftOccurrence = (
       if (occ.absences.length == 0) {
         occ.isActive = true;
         n_assigned += 1;
-        if (occ.assignment.shifts_is_coordination) {
-          needsCoordinator = false;
-        }
         if (
           (mship &&
             typeof occ.assignment.shifts_membership == "object" &&
@@ -157,6 +154,5 @@ const createShiftOccurrence = (
     n_assigned: n_assigned,
     assignments: assignments,
     selfAssigned: selfAssigned,
-    needsCoordinator: needsCoordinator,
   };
 };

@@ -10,9 +10,12 @@
     "field": "shifts_logs",
     "group": null,
     "hidden": false,
-    "interface": null,
+    "interface": "list-o2m",
     "note": null,
-    "options": null,
+    "options": {
+      "limit": 5,
+      "template": "{{shifts_date}} {{shifts_type}}"
+    },
     "readonly": false,
     "required": false,
     "sort": 12,

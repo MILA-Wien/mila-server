@@ -17,6 +17,7 @@ const schema = object({
   last_name: string().required(t("Last name")),
   email: string().email(t("Email")).required(t("Email")),
   hide_name: string().optional(),
+  send_notifications: string().optional(),
 });
 
 type Schema = InferType<typeof schema>;
@@ -26,6 +27,7 @@ const state = reactive({
   last_name: user.last_name,
   email: user.email,
   hide_name: user.hide_name,
+  send_notifications: user.send_notifications,
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -82,6 +84,20 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           </div>
         </UFormGroup>
 
+        <UFormGroup
+          :label="t('Send shift reminders')"
+          name="send_notifications"
+        >
+          <div
+            class="flex items-center gap-2 p-4 rounded-sm bg-blue-50 text-sm"
+          >
+            <UToggle v-model="state.send_notifications" />
+            <div>
+              {{ t("Receive email notifications about upcoming shifts.") }}
+            </div>
+          </div>
+        </UFormGroup>
+
         <UButton type="submit"> {{ t("Aktualisieren") }} </UButton>
       </UForm>
     </div>
@@ -95,8 +111,11 @@ de:
   "Last name": "Nachname"
   "Email": "E-Mail"
   "Stay anonymous": "Anonym bleiben"
-  "Do not show my name to other members on the platform.": "Zeige meinen Namen nicht anderen Mitgliedern auf der Plattform an."
+  "Do not show my name to other members on the platform.": "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform."
   "Persönliche Daten": "Persönliche Daten"
   "Success": "Erfolg"
+  "Error": "Fehler"
   "Erfolgreich gespeichert": "Erfolgreich gespeichert"
+  "Send shift reminders": "Schicht-Erinnerungen senden"
+  "Receive email notifications about upcoming shifts.": "Erhalte E-Mail-Benachrichtigungen über bevorstehende Schichten."
 </i18n>

@@ -19,7 +19,12 @@
     "special": [
       "cast-boolean"
     ],
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Schichtkoordinator*in"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "half"

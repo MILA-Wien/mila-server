@@ -22,3 +22,10 @@ export function getFutureDate(days: number) {
   );
   return twoDaysAhead;
 }
+
+export function parseUtcMidnight(dateInput: string | Date) {
+  const date = new Date(dateInput);
+  return new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
+  );
+}

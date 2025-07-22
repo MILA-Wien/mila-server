@@ -16,7 +16,9 @@ const isOpen = defineModel("isOpen", { required: true, type: Boolean });
 const { t } = useI18n();
 const directus = useDirectus();
 const user = useCurrentUser();
+const occ = props.shiftOccurence;
 const shift = props.shiftOccurence.shift;
+
 const start = DateTime.fromISO(props.shiftOccurence.start, {
   locale: locale.value,
   zone: "utc",
@@ -113,7 +115,6 @@ async function postAssignmentInner(regular: boolean) {
     shifts_shift: shift.id!,
     shifts_from: shiftStartString,
     shifts_is_regular: regular,
-    shifts_is_coordination: false,
   };
 
   // One-time shifts have same start and end date
@@ -131,7 +132,7 @@ async function postAssignmentInner(regular: boolean) {
     <div class="m-10">
       <h2>{{ shift.shifts_name }}</h2>
 
-      <div class="flex flex-col gap-2 text-lg my-5 leading-7">
+      <div class="flex flex-col gap-2 my-5 leading-7">
         <p class="font-bold">
           {{ start.toLocaleString(DateTime.DATE_MED) }} {{ t("from") }}
           {{ start.toLocaleString(DateTime.TIME_24_SIMPLE) }}
@@ -141,6 +142,7 @@ async function postAssignmentInner(regular: boolean) {
         <p v-if="isRegular">
           {{ t("Shift repeats every four weeks") }}
         </p>
+        <ShiftsViewerAssignmentList :occurrence="occ" />
       </div>
 
       <!-- Shift infos -->

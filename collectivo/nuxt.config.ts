@@ -1,6 +1,11 @@
 // Main configuration file
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
+// Runtimeconfig is overwritten by environment variables
+// In dev mode, variables are loaded from .env file using process.env and dotenv
+// In production, variables are loaded from docker-compose file
+// https://nuxt.com/docs/4.x/guide/going-further/runtime-config
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
@@ -36,7 +41,7 @@ export default defineNuxtConfig({
     lotzappPassword: "",
 
     public: {
-      debug: true,
+      useKeycloak: process.env.USE_KEYCLOAK === "true" || false,
 
       collectivoUrl: process.env.COLLECTIVO_URL || "http://localhost:3000",
       contactEmail: process.env.COLLECTIVO_CONTACT_EMAIL || "info@example.com",

@@ -32,6 +32,7 @@ const data = props.shiftAssignment;
 const nextOcc = data.nextOccurrence!;
 const assignment = data.assignment;
 const coworkers = data.coworkers;
+const coordinators = data.coordinators || [];
 const shift = data.assignment.shifts_shift;
 const time_from = shift.shifts_from_time; // string in format hh:mm
 const time_to = shift.shifts_to_time; // string in format hh:mm
@@ -163,6 +164,15 @@ END:VCALENDAR`;
             </p>
           </template>
 
+          <!-- Shift coordinators -->
+          <p v-if="coordinators.length > 0">
+            {{ t("Coordinator") }}:
+            <span v-for="(item, index) in coordinators" :key="index">
+              {{ item === " " ? t("Anonymous") : item
+              }}<span v-if="index < coordinators.length - 1">, </span>
+            </span>
+          </p>
+
           <!-- Shift coworkers -->
           <p v-if="coworkers.length > 0">
             {{ t("Shift team") }}:
@@ -254,7 +264,7 @@ de:
   "Shift": "Schicht"
   "Absences": "Abwesenheiten"
   "One-time shift": "Einmalige Schicht"
-  "Regular shift: This signup repeats every": "Festschicht: Diese Anmeldung wiederholt sich alle"
+  "Regular shift: This signup repeats every": "Festschicht: Diese Schicht wiederholt sich alle"
   "days": "Tage"
   "weeks": "Wochen"
   "from": "von"
@@ -262,6 +272,7 @@ de:
   "until": "bis"
   "You": "Du"
   "Sign out": "Abmelden"
+  "Coordinator": "Koordinator*in"
   "Sign out from the following shift": "Von folgender Schicht abmelden"
   "You are signed out for this shift": "Du bist von dieser Schicht abgemeldet"
   "Assigned people": "Angemeldete Personen"

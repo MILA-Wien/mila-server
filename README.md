@@ -1,10 +1,10 @@
-# MILA Server
+# MILA Mitgliederplattform
 
-Mitglieder- und Schichtenverwaltung des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/). Weitere Informationen für Mitglieder unter https://handbuch.mila.wien/.
+Mitglieder- und Schichtenverwaltung des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/). Erreichbar unter https://mein.mila.wien/. Weitere Informationen für Mitglieder unter https://handbuch.mila.wien/.
 
-## Services
+## Applikationen
 
-- Mitgliederplattform (collectivo)
+- Mitgliederplattform (nuxt, ehemalig collectivo)
 - Datenstudio (directus & directus-db)
 - Zugangsverwaltung (keycloak & keycloak-db)
 - Direktkreditverwaltung (habidat & habidat-db)
@@ -34,29 +34,18 @@ Test users for frontend and directus:
 - `editor@example.com` / `editor`
 - `user@example.com` / `user`
 
-## Deployment
-
-For deploying updates on the server:
-
-- Create a database backup (see below)
-- Run `git pull`
-- Optional: Run `pnpm i`
-- Run `pnpm build`
-- Run `docker compose restart collectivo`
-
-- Optional: Apply database schema changes (see below)
-
 ## Database schemas
 
 Collectivo uses [directus-sync](https://github.com/tractr/directus-sync) to apply the database schema.
-As long as there is no lock file under `./directus/uploads/sync.lock`, database schema will be applied on every startup of the container.
+The schema is automatically applied, every time the directus container is started.
+To prevent this, create a file `./directus/uploads/sync.lock`.
 
 Changing the database schema
 
 - Make changes to the database schema on your local system
 - Run `npx directus-sync pull` to update the database schema in the repository
 - Make a database backup of the production system (see below)
-- Remove `./directus/uploads/sync.lock` and restart the container or run `npx directus-sync push -u "http://localhost:8055" -e "<EMAIL>" -p "<PASSWORD>"` to apply the new database schema to the production system
+- Remove `./directus/uploads/sync.lock` and restart the container or run `npx directus-sync push -u "http://localhost:8055" -e "<EMAIL>" -p "<PASSWORD>"`
 
 Troubleshooting
 
@@ -95,7 +84,7 @@ Notes:
 
 ## Local setup with Keycloak
 
-- In `collectivo/.env`, set `DEBUG = "false"`
+- In `collectivo/.env`, set `NUXT_PUBLIC_USE_KEYCLOAK = "true"`
 - In `.env`, set `COMPOSE_PROFILES = "production"`
 - In `.env`, set `DIRECTUS_AUTH_PROVIDERS`to `keycloak`
 - Add the following to your etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak`
@@ -128,3 +117,14 @@ Login credentials for keycloak admin UI:
 - Clone this repository
 - Run `pnpm i` and `pnpm build`
 - Run `docker compose up -d`
+
+## Server updates
+
+For deploying updates on the server:
+
+- Create a database backup (see below)
+- Run `git pull`
+- Optional: Run `pnpm i`
+- Run `pnpm build`
+- Run `docker compose restart collectivo`
+- Optional: Apply database schema changes (see below)
