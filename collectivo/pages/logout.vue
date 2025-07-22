@@ -14,10 +14,9 @@ try {
   console.error("Failed to log out from Directus:", error);
 }
 
-const debug = useRuntimeConfig().public.debug;
+const useKeycloak = config.public.useKeycloak;
 
-if (debug) {
-  console.log("Debug mode enabled, skipping Keycloak logout");
+if (!useKeycloak) {
   await navigateTo("/login");
 } else {
   try {

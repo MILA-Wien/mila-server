@@ -24,10 +24,10 @@ async function useKeycloak() {
 
 // Update keycloak user
 export default defineEventHandler(async (event) => {
-  const debug = useRuntimeConfig().public.debug;
+  const useKeycloak = useRuntimeConfig().public.useKeycloak;
 
-  if (debug) {
-    return; // In debug mode, we do not use Keycloak
+  if (!useKeycloak) {
+    return; // In development mode, we do not use Keycloak
   }
 
   try {

@@ -19,7 +19,7 @@ definePageMeta({
 });
 
 const linkStatutes = "https://wolke.mila.wien/s/BRKPrbzjssqkzbz";
-const debug = useRuntimeConfig().public.debug;
+const devMode = import.meta.dev;
 const user = useCurrentUser();
 const schema = object({
   directus_users__memberships_person_type: string().required(),
@@ -749,7 +749,7 @@ async function onError() {
         {{ t("Submit application") }}
       </UButton>
     </div>
-    <div v-if="debug" class="text-sm text-gray-500">
+    <div v-if="devMode" class="text-sm text-gray-500">
       <UButton @click="fillTestData">{{ t("Fill test data") }}</UButton>
       <pre>{{ JSON.stringify(state, null, 2) }}</pre>
     </div>

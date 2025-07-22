@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // If user is not authenticated, log out of directus and redirect to keycloak
-// In local debug mode, keycloak is not used, so we log in directly to Directus
+// In local dev mode, keycloak is not used, so we log in directly to Directus
 
 definePageMeta({
   layout: false,
@@ -8,10 +8,9 @@ definePageMeta({
 
 const directus = useDirectus();
 const runtimeConfig = useRuntimeConfig();
+const useKeycloak = runtimeConfig.public.useKeycloak;
 
-const debug = useRuntimeConfig().public.debug;
-
-if (!debug) {
+if (useKeycloak) {
   directus.logout();
   navigateTo(
     `${runtimeConfig.public.directusUrl}/auth/login/keycloak?redirect=${runtimeConfig.public.collectivoUrl}`,
@@ -19,7 +18,7 @@ if (!debug) {
   );
 }
 
-async function logInDebug(email: string, password: string) {
+async function loginDevMode(email: string, password: string) {
   loading.value = true;
   await directus.login(email, password);
   // Nuxt navigateTo does not work in this context, don't know why
@@ -37,12 +36,12 @@ const loading = ref(false);
 
 <template>
   <div
-    v-if="debug"
+    v-if="!useKeycloak"
     class="flex flex-col items-center justify-center h-screen gap-3"
   >
-    <h1>LOGIN DEBUG MODE</h1>
+    <h1>LOGIN DEV MODE</h1>
     <template v-for="[email, password] in TEST_USERS" :key="email">
-      <UButton :loading="loading" @click="logInDebug(email, password)">
+      <UButton :loading="loading" @click="loginDevMode(email, password)">
         Log in as {{ email }}
       </UButton>
     </template>
