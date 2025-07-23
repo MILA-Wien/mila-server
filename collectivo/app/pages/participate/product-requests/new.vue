@@ -66,6 +66,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           <UTextarea v-model="state.wunsch" />
         </UFormGroup>
 
+        <div class="text-sm text-gray-500">{{ t("t:waittime") }}</div>
         <UButton type="submit"> {{ t("Einreichen") }} </UButton>
       </UForm>
     </div>
@@ -80,7 +81,9 @@ de:
   "Here you can submit requests for products that you would like to see in our store.": "Hier kannst du Wünsche für Produkte einreichen, die du gerne in unserem Supermarkt sehen würdest."
   "New product request": "Neuer Sortimentswunsch"
   "Describe the product": "Beschreibe das Produkt"
+  "t:waittime": "Gib uns bitte 4-6 Wochen Zeit für eine Antwort"
   "t:description-wunsch": "Bitte so viele Infos wie möglich: Name, Verpackungseinheit, Produzent*in, Qualitätskriterien (Bio, Herkunft, Verpackungsart, usw) – Umso genauer, umso besser!"
 en:
+  "t:waittime": "Please give us 4-6 weeks to respond"
   "t:description-wunsch": "Please provide as much information as possible: Name, packaging unit, producer, quality criteria (organic, origin, packaging type, etc.) - The more accurate, the better!"
 </i18n>
