@@ -262,13 +262,13 @@ declare global {
 
   // Layout
   interface NavigationMenus {
-    main: CollectivoMenuItem[];
-    main_public: CollectivoMenuItem[];
-    profile: CollectivoMenuItem[];
-    profile_public: CollectivoMenuItem[];
+    main: NavigationMenuItem[];
+    main_public: NavigationMenuItem[];
+    profile: NavigationMenuItem[];
+    profile_public: NavigationMenuItem[];
   }
 
-  interface CollectivoMenuItem {
+  interface NavigationMenuItem {
     label: string;
     icon?: string;
     to?: string;
@@ -276,7 +276,7 @@ declare global {
     external?: boolean; // Defaults to false
     target?: string; // Default "_self"
     hideOnMobile?: boolean; // Default false
-    filter?: (item: CollectivoMenuItem) => Promise<boolean> | boolean;
+    filter?: (item: NavigationMenuItem) => Promise<boolean> | boolean;
   }
 
   interface CheckinLogEntry {

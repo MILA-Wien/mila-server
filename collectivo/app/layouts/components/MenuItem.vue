@@ -3,7 +3,7 @@ const { t } = useI18n();
 
 const props = defineProps({
   item: {
-    type: Object as PropType<CollectivoMenuItem>,
+    type: Object as PropType<NavigationMenuItem>,
     required: true,
   },
 });
@@ -11,7 +11,7 @@ const props = defineProps({
 const visible = ref(false);
 filterItem(props.item);
 
-async function filterItem(item: CollectivoMenuItem) {
+async function filterItem(item: NavigationMenuItem) {
   if (item.filter) {
     visible.value = await item.filter(item);
     return;

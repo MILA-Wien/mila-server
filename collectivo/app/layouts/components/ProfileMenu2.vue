@@ -12,7 +12,7 @@ interface MenuItem {
 
 const profileMenu: Ref<MenuItem[][]> = ref([[]]);
 
-const profileItems: CollectivoMenuItem[] = [
+const profileItems: NavigationMenuItem[] = [
   {
     label: "Profile",
     icon: "i-heroicons-user-circle",
@@ -20,7 +20,7 @@ const profileItems: CollectivoMenuItem[] = [
   },
 ];
 
-const profilePublicItems: CollectivoMenuItem[] = [
+const profilePublicItems: NavigationMenuItem[] = [
   {
     label: "Login",
     icon: "i-heroicons-arrow-right-on-rectangle-solid",
