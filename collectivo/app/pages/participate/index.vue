@@ -20,14 +20,17 @@ setPageTitle(t("Participate"));
         }}
       </p>
       <div class="flex flex-wrap gap-4">
-        <a href="/product-requests">
-          <UButton color="green">{{ t("Open request list") }}</UButton>
-        </a>
-        <a href="/product-requests/new">
-          <UButton color="green" icon="i-heroicons-plus">{{
-            t("Submit request")
-          }}</UButton>
-        </a>
+        <UButton color="green" to="/participate/product-requests">
+          {{ t("Open request list") }}
+        </UButton>
+
+        <UButton
+          color="green"
+          to="/participate/product-requests/new"
+          icon="i-heroicons-plus"
+        >
+          {{ t("Submit request") }}
+        </UButton>
       </div>
     </CollectivoCard>
   </div>

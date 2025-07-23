@@ -11,21 +11,15 @@ setPageTitle(t("Product requests"));
 <template>
   <div class="flex flex-col gap-5">
     <CollectivoCard>
-      <h2>{{ t("Product requests") }}</h2>
-      <p class="mb-3">
-        {{
-          t(
-            "Here you can submit requests for products that you would like to see in our store.",
-          )
-        }}
-      </p>
+      <h2>{{ t("My requests") }}</h2>
       <div class="flex flex-wrap gap-4">
-        <a href="/product-requests">
-          <UButton color="green">{{ t("Submit request") }}</UButton>
-        </a>
-        <!-- <a href="https://handbuch.mila.wien/books/it-handbuch" target="_blank">
-        <UButton>{{ t("IT Handbook") }}</UButton>
-      </a> -->
+        <UButton
+          color="green"
+          to="/participate/product-requests/new"
+          icon="i-heroicons-plus"
+        >
+          {{ t("Submit request") }}
+        </UButton>
       </div>
     </CollectivoCard>
   </div>
@@ -35,5 +29,8 @@ setPageTitle(t("Product requests"));
 de:
   Participate: Mitwirken
   "Product requests": "Sortimentswünsche"
+  "Open request list": "Wunschliste öffnen"
+  "Submit request": "Wunsch einreichen"
+  "My requests": "Meine Wünsche"
   "Here you can submit requests for products that you would like to see in our store.": "Hier kannst du Wünsche für Produkte einreichen, die du gerne in unserem Supermarkt sehen würdest."
 </i18n>
