@@ -41,6 +41,23 @@ export const useNavigationMenus = () =>
           },
         },
         {
+          label: "Participate",
+          icon: "i-heroicons-hand-raised",
+          to: "/participate",
+          filter: async () => {
+            return Boolean(user.membership);
+          },
+        },
+        {
+          label: "Membership",
+          icon: "i-heroicons-user-circle",
+          to: "/profile",
+          hideOnMobile: true,
+          filter: async () => {
+            return Boolean(user.membership);
+          },
+        },
+        {
           label: "Help",
           icon: "i-heroicons-question-mark-circle",
           to: "/help",

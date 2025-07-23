@@ -52,6 +52,9 @@ async function filterItem(item: NavigationMenuItem) {
 de:
   "Home": "Startseite"
   "Shifts": "Schichten"
+  "Participate": "Mitwirken"
+  "Membership": "Mitgliedschaft"
+  "Profile": "Profil"
   "Help": "Hilfe"
 </i18n>
 
