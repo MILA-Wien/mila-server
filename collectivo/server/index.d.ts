@@ -102,9 +102,11 @@ declare global {
 
   interface SortimentsWuensche {
     id: number;
+    name: string;
     wunsch: string;
     wunsch_von?: Membership | number;
     antwort: string;
+    date_created: string;
     status:
       | "inarbeit"
       | "habensimilar"
@@ -279,25 +281,6 @@ declare global {
 
   interface ShiftsAbsenceDashboard extends ShiftsAbsence {
     shifts_assignment: ShiftsAssignmentDashboard;
-  }
-
-  // Layout
-  interface NavigationMenus {
-    main: NavigationMenuItem[];
-    main_public: NavigationMenuItem[];
-    profile: NavigationMenuItem[];
-    profile_public: NavigationMenuItem[];
-  }
-
-  interface NavigationMenuItem {
-    label: string;
-    icon?: string;
-    to?: string;
-    click?: () => void;
-    external?: boolean; // Defaults to false
-    target?: string; // Default "_self"
-    hideOnMobile?: boolean; // Default false
-    filter?: (item: NavigationMenuItem) => Promise<boolean> | boolean;
   }
 
   // Server side user object

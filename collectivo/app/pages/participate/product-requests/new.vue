@@ -11,12 +11,14 @@ setPageTitle(t("New product request"));
 const toast = useToast();
 
 const schema = object({
+  name: string().required(),
   wunsch: string().required(),
 });
 
 type Schema = InferType<typeof schema>;
 
 const state = reactive({
+  name: "",
   wunsch: "",
 });
 
@@ -36,7 +38,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         title: "Success",
         description: "Erfolgreich gespeichert",
       });
-      // navigateTo("/participate/product-requests");
+      navigateTo("/participate/product-requests");
     },
   });
 }
@@ -51,6 +53,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         class="space-y-4"
         @submit="onSubmit"
       >
+        <UFormGroup :label="t('Name of the product')" name="name">
+          <UInput v-model="state.name" />
+        </UFormGroup>
+
         <UFormGroup :label="t('Describe the product')" name="wunsch">
           <div>
             <p class="text-sm text-gray-500 pb-2">
@@ -69,6 +75,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 <i18n lang="yaml">
 de:
   Participate: Mitwirken
+  "Name of the product": "Name des Produkts"
   "Product requests": "Sortimentswünsche"
   "Here you can submit requests for products that you would like to see in our store.": "Hier kannst du Wünsche für Produkte einreichen, die du gerne in unserem Supermarkt sehen würdest."
   "New product request": "Neuer Sortimentswunsch"

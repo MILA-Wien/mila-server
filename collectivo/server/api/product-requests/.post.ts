@@ -1,12 +1,13 @@
 import { z } from "zod";
 import { createItem } from "@directus/sdk";
 
-const querySchema = z.object({
+const schema = z.object({
+  name: z.string().min(1),
   wunsch: z.string().min(1),
 });
 
 export default defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, querySchema.parse);
+  const body = await readValidatedBody(event, schema.parse);
   const user = event.context.auth as ServerUserInfo;
 
   if (!user.mship) {
@@ -18,6 +19,7 @@ export default defineEventHandler(async (event) => {
   try {
     await directus.request(
       createItem("sortimentswuensche", {
+        name: body.name,
         wunsch: body.wunsch,
         wunsch_von: user.mship,
       }),
