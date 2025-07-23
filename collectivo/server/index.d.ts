@@ -13,6 +13,7 @@ declare global {
     shifts_holidays_public: ShiftsPublicHoliday[];
     settings_hidden: SettingsHidden;
     milaccess_log: CheckinLogEntry[];
+    sortimentswuensche: SortimentsWuensche[];
   }
 
   interface UserProfile {
@@ -278,6 +279,25 @@ declare global {
 
   interface ShiftsAbsenceDashboard extends ShiftsAbsence {
     shifts_assignment: ShiftsAssignmentDashboard;
+  }
+
+  // Layout
+  interface NavigationMenus {
+    main: NavigationMenuItem[];
+    main_public: NavigationMenuItem[];
+    profile: NavigationMenuItem[];
+    profile_public: NavigationMenuItem[];
+  }
+
+  interface NavigationMenuItem {
+    label: string;
+    icon?: string;
+    to?: string;
+    click?: () => void;
+    external?: boolean; // Defaults to false
+    target?: string; // Default "_self"
+    hideOnMobile?: boolean; // Default false
+    filter?: (item: NavigationMenuItem) => Promise<boolean> | boolean;
   }
 
   // Server side user object
