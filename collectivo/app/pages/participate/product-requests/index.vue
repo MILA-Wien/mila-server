@@ -53,23 +53,22 @@ fetchData();
 
 <template>
   <div class="flex flex-row justify-between gap-5 pb-8">
-    <div class="flex flex-row border border-gray-200 pb-4 flex-1">
+    <div class="flex flex-row pb-4 gap-3 flex-1">
       <UInput
         v-model="filterSearch"
         :placeholder="t('Search product requests')"
         class="flex-1"
         icon="i-heroicons-magnifying-glass"
       />
-      <UToggle
-        v-model="filterFromSelf"
-        :label="t('Show my requests')"
-        class="ml-4"
-      />
-      <UToggle
-        v-model="filterHasAnswer"
-        :label="t('Show answered requests')"
-        class="ml-4"
-      />
+      <UFormGroup :label="t('Only my requests')">
+        <UToggle v-model="filterFromSelf" class="ml-4"
+      /></UFormGroup>
+      <UFormGroup :label="t('Only answered requests')">
+        <UToggle v-model="filterHasAnswer" class="ml-4" />
+      </UFormGroup>
+      <UButton color="green" @click="fetchData">
+        {{ t("Apply filter") }}
+      </UButton>
     </div>
     <div class="flex flex-wrap gap-4">
       <UButton
