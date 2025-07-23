@@ -51,10 +51,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         class="space-y-4"
         @submit="onSubmit"
       >
-        <UFormGroup
-          :label="t('Describe the product that you want')"
-          name="wunsch"
-        >
+        <UFormGroup :label="t('Describe the product')" name="wunsch">
           <div>
             <p class="text-sm text-gray-500 pb-2">
               {{ t("t:description-wunsch") }}
@@ -75,7 +72,7 @@ de:
   "Product requests": "Sortimentswünsche"
   "Here you can submit requests for products that you would like to see in our store.": "Hier kannst du Wünsche für Produkte einreichen, die du gerne in unserem Supermarkt sehen würdest."
   "New product request": "Neuer Sortimentswunsch"
-  "Describe the product that you want": "Beschreibe das Produkt, das du dir wünschst"
+  "Describe the product": "Beschreibe das Produkt"
   "t:description-wunsch": "Bitte so viele Infos wie möglich: Name, Verpackungseinheit, Produzent*in, Qualitätskriterien (Bio, Herkunft, Verpackungsart, usw) – Umso genauer, umso besser!"
 en:
   "t:description-wunsch": "Please provide as much information as possible: Name, packaging unit, producer, quality criteria (organic, origin, packaging type, etc.) - The more accurate, the better!"
