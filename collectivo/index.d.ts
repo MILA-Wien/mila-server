@@ -92,7 +92,27 @@ declare global {
     shift_point_system: boolean;
   }
 
-  // Shifts
+  interface CheckinLogEntry {
+    id: number;
+    membership: Membership | number;
+    date: string;
+    coshopper: MembershipsCoshopper | number;
+  }
+
+  interface SortimentsWuensche {
+    id: number;
+    wunsch: string;
+    wunsch_von?: Membership | number;
+    antwort: string;
+    status:
+      | "inarbeit"
+      | "habensimilar"
+      | "gehtnicht"
+      | "bereitsda"
+      | "erledigt";
+  }
+
+  // Shifts Schema
   interface ShiftsFilter {
     label: string;
     value: string;
@@ -277,13 +297,6 @@ declare global {
     target?: string; // Default "_self"
     hideOnMobile?: boolean; // Default false
     filter?: (item: NavigationMenuItem) => Promise<boolean> | boolean;
-  }
-
-  interface CheckinLogEntry {
-    id: number;
-    membership: Membership | number;
-    date: string;
-    coshopper: MembershipsCoshopper | number;
   }
 
   // Server side user object
