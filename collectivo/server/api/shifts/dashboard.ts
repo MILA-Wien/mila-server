@@ -3,7 +3,7 @@
 
 import { RRule, RRuleSet } from "rrule";
 import { readItems } from "@directus/sdk";
-import { createAssignmentRrule } from "~/server/utils/shiftsQueries";
+import { createAssignmentRrule } from "../../utils/shiftsQueries";
 
 export default defineEventHandler(async (event) => {
   return await getShiftDataUser(event.context.auth.mship);
