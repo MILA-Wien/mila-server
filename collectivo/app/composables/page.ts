@@ -49,7 +49,7 @@ export const useNavigationMenus = () =>
           },
         },
         {
-          label: "Membership",
+          label: "Profile",
           icon: "i-heroicons-user-circle",
           to: "/profile",
           hideOnMobile: true,
