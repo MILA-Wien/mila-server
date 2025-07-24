@@ -99,7 +99,7 @@ declare global {
     coshopper: MembershipsCoshopper | number;
   }
 
-  interface SortimentsWuensche {
+  interface product_requests {
     id: number;
     wunsch: string;
     wunsch_von?: Membership | number;

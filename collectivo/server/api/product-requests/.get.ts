@@ -25,7 +25,12 @@ export default defineEventHandler(async (event) => {
   const filter: Record<string, any> = {};
 
   if (query.search) {
-    filter["wunsch"] = { _contains: query.search };
+    filter["_or"] = [
+      {
+        wunsch: { _contains: query.search },
+        name: { _contains: query.search },
+      },
+    ];
   }
 
   if (query.from_self) {
@@ -33,7 +38,7 @@ export default defineEventHandler(async (event) => {
   }
 
   if (query.has_answer) {
-    filter["antwort"] = { _nnull: true };
+    filter["status"] = { _neq: "inarbeit" };
   }
 
   const [productRequests, totalCount] = await Promise.all([
@@ -55,7 +60,7 @@ async function getProductRequests(filter: Record<string, any>, page: number) {
   const directus = useDirectusAdmin();
   try {
     return await directus.request(
-      readItems("sortimentswuensche", {
+      readItems("product_requests", {
         fields: ["id", "date_created", "name", "wunsch", "antwort", "status"],
         filter: filter,
         limit: PERPAGE,
@@ -64,8 +69,8 @@ async function getProductRequests(filter: Record<string, any>, page: number) {
       }),
     );
   } catch (error) {
-    console.error("Error creating product request:", error);
-    throw new Error("Failed to create product request");
+    console.error("Error reading product request:", error);
+    throw new Error("Failed to read product request");
   }
 }
 
@@ -73,7 +78,7 @@ async function getTotalCount(filter: Record<string, any>) {
   const directus = useDirectusAdmin();
   try {
     const response = await directus.request(
-      aggregate("sortimentswuensche", {
+      aggregate("product_requests", {
         aggregate: { count: "*" },
         query: { filter: filter },
       }),

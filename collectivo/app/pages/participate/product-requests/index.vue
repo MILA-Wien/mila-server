@@ -3,7 +3,6 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-const config = useRuntimeConfig();
 const { t } = useI18n();
 setPageTitle(t("Product requests"));
 
@@ -52,31 +51,38 @@ fetchData();
 </script>
 
 <template>
+  <div class="w-full pb-10">
+    <UButton
+      color="green"
+      class="w-full"
+      size="xl"
+      to="/participate/product-requests/new"
+      icon="i-heroicons-plus"
+    >
+      {{ t("Submit new product request") }}
+    </UButton>
+  </div>
+
   <div class="flex flex-row justify-between gap-5 pb-8">
-    <div class="flex flex-row pb-4 gap-3 flex-1">
+    <div class="flex flex-wrap pb-4 gap-3 flex-1">
       <UInput
         v-model="filterSearch"
         :placeholder="t('Search product requests')"
-        class="flex-1"
+        class="flex-1 min-w-[200px]"
         icon="i-heroicons-magnifying-glass"
       />
-      <UFormGroup :label="t('Only my requests')">
-        <UToggle v-model="filterFromSelf" class="ml-4"
-      /></UFormGroup>
-      <UFormGroup :label="t('Only answered requests')">
+      <div class="bg-blue-50 py-3 pr-3 flex flex-row items-center gap-3">
+        <UToggle v-model="filterFromSelf" class="ml-4" />
+        <span class="text-sm font-semibold">{{ t("Only my requests") }}</span>
+      </div>
+      <div class="bg-blue-50 py-3 pr-3 flex flex-row items-center gap-3">
         <UToggle v-model="filterHasAnswer" class="ml-4" />
-      </UFormGroup>
-      <UButton color="green" @click="fetchData">
+        <span class="text-sm font-semibold">{{
+          t("Only answered requests")
+        }}</span>
+      </div>
+      <UButton @click="fetchData">
         {{ t("Apply filter") }}
-      </UButton>
-    </div>
-    <div class="flex flex-wrap gap-4">
-      <UButton
-        color="green"
-        to="/participate/product-requests/new"
-        icon="i-heroicons-plus"
-      >
-        {{ t("Submit request") }}
       </UButton>
     </div>
   </div>
@@ -84,7 +90,7 @@ fetchData();
   <div v-if="data" class="flex flex-col gap-4">
     <div v-for="item in data.data" :key="item.id">
       <CollectivoCard>
-        <div class="flex items-center justify-between">
+        <div class="flex flex-wrap gap-3 items-center justify-between">
           <div>
             <h3>{{ item.name }}</h3>
             <p class="text-sm text-gray-500">
@@ -92,14 +98,14 @@ fetchData();
               {{ new Date(item.date_created).toLocaleDateString() }}
             </p>
           </div>
-          <div>
+          <div class="text-sm text-white font-semibold">
             <span
               v-if="item.status === 'inarbeit'"
-              class="bg-orange-500 text-white px-2 py-1 rounded"
+              class="bg-orange-500 px-2 py-1 rounded"
             >
               {{ t("In progress") }}
             </span>
-            <span v-else class="bg-green-500 text-white px-2 py-1 rounded">
+            <span v-else class="bg-green-500 px-2 py-1 rounded">
               {{ t("Answered") }}
             </span>
           </div>
@@ -139,6 +145,11 @@ de:
   "Answered": "Beantwortet"
   "Response": "Antwort"
   "Request": "Wunsch"
+  "Apply filter": "Filter anwenden"
+  "Search product requests": "Sortimentswünsche suchen"
+  "Only my requests": "Nur meine Wünsche"
+  "Only answered requests": "Nur beantwortete Wünsche"
   "No requests found": "Keine Wünsche gefunden"
+  "Submit new product request": "Neuen Sortimentswunsch einreichen"
   "Here you can submit requests for products that you would like to see in our store.": "Hier kannst du Wünsche für Produkte einreichen, die du gerne in unserem Supermarkt sehen würdest."
 </i18n>

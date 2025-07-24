@@ -13,7 +13,7 @@ declare global {
     shifts_holidays_public: ShiftsPublicHoliday[];
     settings_hidden: SettingsHidden;
     milaccess_log: CheckinLogEntry[];
-    sortimentswuensche: SortimentsWuensche[];
+    product_requests: ProductRequests[];
   }
 
   interface UserProfile {
@@ -100,7 +100,7 @@ declare global {
     coshopper: MembershipsCoshopper | number;
   }
 
-  interface SortimentsWuensche {
+  interface ProductRequests {
     id: number;
     name: string;
     wunsch: string;

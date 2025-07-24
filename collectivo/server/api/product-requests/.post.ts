@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     await directus.request(
-      createItem("sortimentswuensche", {
+      createItem("product_requests", {
         name: body.name,
         wunsch: body.wunsch,
         wunsch_von: user.mship,
