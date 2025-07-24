@@ -85,6 +85,11 @@ class CurrentUserStore {
   }
 
   async login(force: boolean = false) {
+    console.log(
+      "Is logged in:",
+      useCurrentUser().value.isAuthenticated === true,
+    );
+    console.log("Current user:", useCurrentUser().value);
     if (useCurrentUser().value.isAuthenticated === true && !force) return;
     return navigateTo("/login");
   }

@@ -1,0 +1,25 @@
+{
+  "collection": "product_requests",
+  "field": "wunsch_von",
+  "related_collection": "memberships",
+  "meta": {
+    "junction_field": null,
+    "many_collection": "product_requests",
+    "many_field": "wunsch_von",
+    "one_allowed_collections": null,
+    "one_collection": "memberships",
+    "one_collection_field": null,
+    "one_deselect_action": "nullify",
+    "one_field": null,
+    "sort_field": null
+  },
+  "schema": {
+    "table": "product_requests",
+    "column": "wunsch_von",
+    "foreign_key_table": "memberships",
+    "foreign_key_column": "id",
+    "constraint_name": "product_requests_wunsch_von_foreign",
+    "on_update": "NO ACTION",
+    "on_delete": "SET NULL"
+  }
+}

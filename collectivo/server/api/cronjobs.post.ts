@@ -8,7 +8,7 @@ import {
   updateItem,
   updateSingleton,
 } from "@directus/sdk";
-import { getShiftOccurrences } from "~/server/utils/shiftsOccurrences";
+import { getShiftOccurrences } from "../utils/shiftsOccurrences";
 import { sendShiftReminders } from "../utils/shiftsReminder";
 
 const CYCLE_DAYS = 28;

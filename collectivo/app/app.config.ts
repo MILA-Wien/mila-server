@@ -30,6 +30,42 @@ export default defineAppConfig({
         size: "md",
       },
     },
+    pagination: {
+      wrapper: "flex items-center ",
+      base: "h-8",
+      rounded: "first:rounded-s-md last:rounded-e-md",
+      default: {
+        size: "sm",
+        activeButton: {
+          color: "primary",
+        },
+        inactiveButton: {
+          color: "white",
+        },
+        firstButton: {
+          color: "white",
+          size: "sm",
+          class: "rtl:[&_span:first-child]:rotate-180 text-gray-500",
+          icon: "i-heroicons-chevron-double-left-20-solid",
+        },
+        lastButton: {
+          color: "white",
+          size: "sm",
+          class: "rtl:[&_span:last-child]:rotate-180",
+          icon: "i-heroicons-chevron-double-right-20-solid",
+        },
+        prevButton: {
+          color: "white",
+          class: "rtl:[&_span:first-child]:rotate-180",
+          icon: "i-heroicons-chevron-left-20-solid",
+        },
+        nextButton: {
+          color: "white",
+          class: "rtl:[&_span:last-child]:rotate-180",
+          icon: "i-heroicons-chevron-right-20-solid",
+        },
+      },
+    },
     card: {
       base: "mb-5 lg:mb-10 last:mb-0",
       background: "bg-white",
@@ -102,39 +138,6 @@ export default defineAppConfig({
           font: "font-urbanist font-semibold",
           rounded: "",
           shadow: "",
-        },
-      },
-    },
-    pagination: {
-      wrapper: "flex items-center gap-1 lg:gap-2",
-      base: "h-8 w-8 lg:h-12 lg:w-12",
-      color: "text-primary",
-      rounded: "rounded-lg",
-      default: {
-        size: "pagination",
-        activeButton: {
-          size: "pagination",
-          color: "purple",
-          variant: "solid",
-        },
-        inactiveButton: {
-          color: "gray",
-          size: "pagination",
-          variant: "outline",
-        },
-        prevButton: {
-          color: "gray",
-          size: "pagination",
-          variant: "outline",
-          class: "rtl:[&_span:first-child]:rotate-180",
-          icon: "i-heroicons-chevron-left-20-solid w-5 h-5 lg:w-[26px] lg:h-[26px]",
-        },
-        nextButton: {
-          color: "gray",
-          size: "pagination",
-          variant: "outline",
-          class: "rtl:[&_span:last-child]:rotate-180",
-          icon: "i-heroicons-chevron-right-20-solid w-5 h-5 lg:w-[26px] lg:h-[26px]",
         },
       },
     },

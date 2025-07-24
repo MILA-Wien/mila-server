@@ -3,7 +3,7 @@ const { t } = useI18n();
 
 const props = defineProps({
   items: {
-    type: Object as PropType<CollectivoMenuItem[]>,
+    type: Object as PropType<NavigationMenuItem[]>,
     required: true,
   },
 });

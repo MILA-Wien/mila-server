@@ -15,24 +15,6 @@ export default defineEventHandler(async (_event) => {
   create_examples();
 });
 
-async function getRole(name: string) {
-  const directus = await useDirectusAdmin();
-
-  const membersRoles = await directus.request(
-    readRoles({
-      filter: {
-        name: { _eq: name },
-      },
-    }),
-  );
-
-  if (membersRoles.length < 1) {
-    throw new Error(name + " role not found");
-  }
-
-  return membersRoles[0].id;
-}
-
 async function create_examples() {
   console.info("Creating example data for collectivo");
   await create_users();
@@ -42,7 +24,73 @@ async function create_examples() {
   await create_tiles();
   await create_emails();
   await create_shifts();
+  await create_product_requests();
   console.log("Seed successful");
+}
+
+async function create_product_requests() {
+  const directus = await useDirectusAdmin();
+
+  // Clean up old data
+  await directus.request(deleteItems("product_requests", { limit: 1000 }));
+
+  const mships = await directus.request(
+    readItems("memberships", {
+      fields: ["id"],
+      limit: 100,
+    }),
+  );
+
+  const requests = [];
+
+  for (let i = 0; i < 20; i++) {
+    const mship = mships[i % mships.length];
+    const statuses = [
+      "inarbeit",
+      "habensimilar",
+      "gehtnicht",
+      "bereitsda",
+      "erledigt",
+    ];
+    const status = statuses[i % statuses.length];
+
+    const antwort =
+      status !== "inarbeit"
+        ? `This is an example answer to request #${i + 1}.`
+        : null;
+
+    requests.push({
+      wunsch_von: mship.id,
+      name: `Request ${i + 1}`,
+      wunsch: `This is example request #${i + 1}.`,
+      status: status,
+      antwort: antwort,
+    });
+  }
+
+  try {
+    await directus.request(createItems("product_requests", requests));
+  } catch (error) {
+    console.info(error);
+  }
+}
+
+async function getRole(name: string) {
+  const directus = await useDirectusAdmin();
+
+  const roles = await directus.request(
+    readRoles({
+      filter: {
+        name: { _eq: name },
+      },
+    }),
+  );
+
+  if (roles.length < 1) {
+    throw new Error(name + " role not found");
+  }
+
+  return roles[0].id;
 }
 
 async function create_users() {
@@ -247,13 +295,11 @@ async function purge_assignments() {
 async function create_memberships() {
   const directus = await useDirectusAdmin();
 
-  console.info("Creating memberships 1");
+  console.info("Creating memberships");
 
   // Clean up old data
   // might error because of not_null constraint in assignment relation
   await directus.request(deleteItems("memberships", { limit: 1000 }));
-
-  console.info("Creating memberships 2");
 
   // Create some memberships
   const mships = [
@@ -267,13 +313,12 @@ async function create_memberships() {
   ];
 
   for (const mship of mships) {
-    console.info("Creating memberships 3", mship);
     // Get user id
     const user_id = (
-      await directus.request(readUsers({ filter: { first_name: mship[0] } }))
+      await directus.request(
+        readUsers({ filter: { first_name: mship[0], last_name: "Example" } }),
+      )
     )[0].id;
-
-    console.info("Creating memberships 4");
 
     // Create membership
     await directus.request(
@@ -285,8 +330,6 @@ async function create_memberships() {
       }),
     );
   }
-
-  console.info("Creating memberships 5");
 }
 
 async function create_shifts() {
