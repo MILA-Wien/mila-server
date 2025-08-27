@@ -247,9 +247,9 @@ export const getAssignmentRrules = (
     for (const absence of filteredAbsences) {
       const absenceRule = new RRule({
         freq: RRule.DAILY,
-        interval: shift.shifts_repeats_every,
-        dtstart: shiftRule.after(parseUtcMidnight(absence.shifts_from), true),
-        until: shiftRule.before(parseUtcMidnight(absence.shifts_to), true),
+        interval: 1,
+        dtstart: parseUtcMidnight(absence.shifts_from),
+        until: parseUtcMidnight(absence.shifts_to),
       });
       absenceRrules.push({
         absence: absence as ShiftsAbsence,

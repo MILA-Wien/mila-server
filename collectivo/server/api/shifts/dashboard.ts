@@ -192,6 +192,7 @@ const getAssignmentInfos = async (
   );
 
   const nextOccurrence = assignmentRuleWithAbsences.after(now, true);
+
   let secondNextOccurence = null;
   const coworkers = [];
   const coordinators = [];
@@ -275,9 +276,9 @@ export const getAssignmentRRule = (
   absences?.forEach((absence) => {
     const absenceRule = new RRule({
       freq: RRule.DAILY,
-      interval: shift.shifts_repeats_every,
-      dtstart: shiftRule.after(new Date(absence.shifts_from), true),
-      until: shiftRule.before(new Date(absence.shifts_to), true),
+      interval: 1,
+      dtstart: parseUtcMidnight(absence.shifts_from),
+      until: parseUtcMidnight(absence.shifts_to),
     });
 
     assignmentRule.exrule(absenceRule);
