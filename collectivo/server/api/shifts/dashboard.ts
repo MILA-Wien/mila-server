@@ -6,10 +6,10 @@ import { readItems } from "@directus/sdk";
 import { createAssignmentRrule } from "~/server/utils/shiftsQueries";
 
 export default defineEventHandler(async (event) => {
-  return await getShiftDataUser(event.context.auth.mship);
+  return await getShiftDataDashboard(event.context.auth.mship);
 });
 
-const getShiftDataUser = async (mship: number) => {
+const getShiftDataDashboard = async (mship: number) => {
   const [
     assignments,
     [absences, signouts, holidays, holidaysCurrent],
@@ -43,8 +43,13 @@ const getShiftDataUser = async (mship: number) => {
     return nextA > nextB ? 1 : -1;
   });
 
+  const activeAssignments = assignmentInfos.filter(
+    (info) => info.nextOccurrence,
+  );
+
+  // Only return assignments that have an upcoming occurrence
   return {
-    assignments: assignmentInfos.filter((rule) => rule.nextOccurrence),
+    assignments: activeAssignments,
     signouts: signouts,
     holidays: holidays,
     holidaysCurrent: holidaysCurrent,
@@ -61,7 +66,6 @@ async function getAssignments(mship: number) {
       filter: {
         shifts_membership: { id: { _eq: mship } },
         shifts_to: {
-          // @ts-expect-error directus date filter bug
           _or: [{ _gte: nowStr }, { _null: true }],
         },
       },
@@ -250,7 +254,6 @@ const getCoworkers = async (
   return [coworkers, coordinators];
 };
 
-// Get assignment rrule
 export const getAssignmentRRule = (
   assignment: ShiftsAssignmentDashboard,
   absences?: ShiftsAbsence[],
@@ -272,7 +275,7 @@ export const getAssignmentRRule = (
     ),
   );
 
-  // Absence rules
+  // Exclude absences
   absences?.forEach((absence) => {
     const absenceRule = new RRule({
       freq: RRule.DAILY,
