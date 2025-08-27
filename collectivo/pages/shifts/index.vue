@@ -91,10 +91,13 @@ else throw createError({ statusCode: 403 });
       <UButton
         class="flex-1"
         block
+        disabled
         icon="i-heroicons-pause-circle"
         @click="absencePostModalOpen = true"
-        >{{ t("Submit holiday") }}</UButton
       >
+        <!-- {{ t("Submit holiday") }} -->
+        Urlaub einreichen (grad kaputt, sry)
+      </UButton>
       <NuxtLink to="/help" class="flex-1">
         <UButton
           block
