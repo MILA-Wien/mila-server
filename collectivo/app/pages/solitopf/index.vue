@@ -15,12 +15,37 @@ setPageTitle(t("Solidaritäts-Topf"), {
 
 <template>
   <BetaMessage />
-  <div class="flex flex-col gap-5">
-    <CollectivoCard
-      class="flex flex-col gap-3"
-      title="Meine Soli-Topf Anträge"
-      v-if="meldungen && meldungen.length > 0"
-    >
+  <div class="flex flex-col gap-8">
+    <div class="flex flex-col gap-3">
+      <h2>Wie funktioniert der Soli-Topf?</h2>
+      <h5>
+        Der Solidaritäts-Topf hilft Mitgliedern mit wenig Geld, trotzdem bei
+        MILA einkaufen zu können.
+      </h5>
+      <p>
+        Wenn du Unterstützung brauchst, kannst du sie einfach und vertraulich
+        beantragen. Das hilft auch unserer Genossenschaft und unseren
+        Produzent*innen. Das Ziel: Allen Mitgliedern soll der Zugang zu gutem,
+        gesundem Essen ermöglicht werden – unabhängig vom Einkommen.
+      </p>
+      <h5>Warum braucht es den Soli-Topf?</h5>
+      <p>
+        Trotz günstigeren Preisen bei MILA bleiben Lebensmittel für einige
+        Mitglieder zu teuer. Nicht alle können genug verdienen, um ihren Einkauf
+        ohne Sorge zu finanzieren. Der Soli-Topf ist ein solidarischer Ausgleich
+        innerhalb der Genossenschaft – finanziert durch freiwillige Spenden
+        anderer Mitglieder und verwaltet vom MILA-Verein. Die Spenden sind
+        derzeit nicht steuerlich absetzbar.
+      </p>
+      <h5>Was passiert, wenn nicht genug im Topf ist?</h5>
+      <p>
+        Dann gibt es eine Warteliste. Unterstützung wird nur vergeben, wenn
+        genügend Geld im Topf ist.
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-3" v-if="meldungen && meldungen.length > 0">
+      <h2>Meine Soli-Topf Anträge</h2>
       <div class="flex flex-col gap-2">
         <div
           v-for="meldung in meldungen"
@@ -48,37 +73,7 @@ setPageTitle(t("Solidaritäts-Topf"), {
           </p>
         </div>
       </div>
-    </CollectivoCard>
-
-    <CollectivoCard
-      class="flex flex-col gap-3"
-      title="Wie funktioniert der Soli-Topf?"
-    >
-      <h5>
-        Der Solidaritäts-Topf hilft Mitgliedern mit wenig Geld, trotzdem bei
-        MILA einkaufen zu können.
-      </h5>
-      <p>
-        Wenn du Unterstützung brauchst, kannst du sie einfach und vertraulich
-        beantragen. Das hilft auch unserer Genossenschaft und unseren
-        Produzent*innen. Das Ziel: Allen Mitgliedern soll der Zugang zu gutem,
-        gesundem Essen ermöglicht werden – unabhängig vom Einkommen.
-      </p>
-      <h5>Warum braucht es den Soli-Topf?</h5>
-      <p>
-        Trotz günstigeren Preisen bei MILA bleiben Lebensmittel für einige
-        Mitglieder zu teuer. Nicht alle können genug verdienen, um ihren Einkauf
-        ohne Sorge zu finanzieren. Der Soli-Topf ist ein solidarischer Ausgleich
-        innerhalb der Genossenschaft – finanziert durch freiwillige Spenden
-        anderer Mitglieder und verwaltet vom MILA-Verein. Die Spenden sind
-        derzeit nicht steuerlich absetzbar.
-      </p>
-      <h5>Was passiert, wenn nicht genug im Topf ist?</h5>
-      <p>
-        Dann gibt es eine Warteliste. Unterstützung wird nur vergeben, wenn
-        genügend Geld im Topf ist.
-      </p>
-    </CollectivoCard>
+    </div>
 
     <CollectivoCard
       class="flex flex-col gap-3"
