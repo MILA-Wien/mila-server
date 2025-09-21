@@ -14,8 +14,8 @@
  * @property {number} [shiftID] - The ID of the specific shift to retrieve occurrences for.
  */
 import { z } from "zod";
-import { parseUtcMidnight } from "~/server/utils/dates";
-import { getShiftOccurrences } from "~/server/utils/shiftsOccurrences";
+import { parseUtcMidnight } from "../../utils/dates";
+import { getShiftOccurrences } from "../../utils/shiftsOccurrences";
 
 const querySchema = z.object({
   from: z.coerce.date(),
