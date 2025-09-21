@@ -1,5 +1,6 @@
 import { createDirectus, readMe, withToken, rest } from "@directus/sdk";
-
+import type { DbSchema } from "~~/server/utils/dbSchema";
+import { UserInfo } from "~~/server/utils/userInfo";
 const EXPIRATION_TIME = 3600000; // 1 hour
 const CLEANUP_INTERVAL = 3600000; // 1 hour
 
@@ -46,6 +47,7 @@ export default defineEventHandler(async (event) => {
               memberships: ["id"],
             },
             {
+              // @ts-ignore directus bug with role relation
               role: ["name"],
             },
           ],
@@ -54,20 +56,24 @@ export default defineEventHandler(async (event) => {
     );
 
     let mship = null;
+    // @ts-ignore directus bug with memberships relation
     if (user.memberships.length > 0) {
+      // @ts-ignore directus bug with memberships relation
       mship = user.memberships[0].id;
     }
 
     const isShiftAdmin = user.role
-      ? SHIFT_ADMIN_ROLES.includes(user.role.name)
+      ? // @ts-ignore directus bug with memberships relation
+        SHIFT_ADMIN_ROLES.includes(user.role.name)
       : false;
     const isStudioAdmin = user.role
-      ? STUDIO_ADMIN_ROLES.includes(user.role.name)
+      ? // @ts-ignore directus bug with memberships relation
+        STUDIO_ADMIN_ROLES.includes(user.role.name)
       : false;
 
     // Cache user token for one hour
     const expiresAt = Date.now() + EXPIRATION_TIME;
-    const authContext: ServerUserInfo = {
+    const authContext: UserInfo = {
       user: user.id,
       email: user.email!,
       mship: mship,
@@ -83,13 +89,14 @@ export default defineEventHandler(async (event) => {
   }
 });
 
-interface TokenCacheEntry {
-  authContext: ServerUserInfo;
-  expiresAt: number;
-}
-
 // Token cache to store user tokens
-const tokenCache = new Map<string, TokenCacheEntry>();
+const tokenCache = new Map<
+  string,
+  {
+    authContext: UserInfo;
+    expiresAt: number;
+  }
+>();
 
 // Cleanup function to remove expired tokens
 const cleanupExpiredTokens = () => {
