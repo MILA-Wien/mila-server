@@ -51,6 +51,7 @@ class CurrentUserStore {
           "memberships.*",
           "memberships.shifts_categories_allowed.shifts_categories_id",
           "collectivo_tags.collectivo_tags_id",
+          "memberships.bedarfsmeldung_solitopf.*",
         ],
       }),
     )) as UserProfile;
@@ -73,6 +74,12 @@ class CurrentUserStore {
       }
     }
     delete this.user.memberships;
+  }
+
+  async reload() {
+    const { $directus } = useNuxtApp();
+    if (!$directus) throw new Error("Directus client not initialized");
+    await this.init($directus);
   }
 
   async save(data: UserProfile) {

@@ -1,48 +1,23 @@
-/*
- * Endpoint used by an organiser (BP/SK/K) to request a subject.
- */
+// Create a new Bedarfsmeldung Solitopf entry
+
 import { createItem } from "@directus/sdk";
 import { z } from "zod";
+import { getMemberOrThrowError } from "~~/server/utils/userInfo";
 
 const schema = z.object({
   auszahlung: z.enum(["v300a1", "v50a6"]),
   weitere_unterstuetzung: z.coerce.boolean().optional().default(false),
 });
 
-type Schema = z.infer<typeof schema>;
-
 export default defineEventHandler(async (event) => {
-  const user = event.context.auth as ServerUserInfo;
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
-
-  const result = await readValidatedBody(event, (query) =>
-    schema.safeParse(query),
-  );
-
-  if (!result.success) {
-    throw result.error.issues;
-  }
-
-  const p = result.data;
-
-  try {
-    return await postBedarfsmeldung(p, user);
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-});
-
-async function postBedarfsmeldung(p: Schema, u: SessionUser) {
+  const user = getMemberOrThrowError(event);
+  const data = await readDataorThrowError(event, schema);
   const directus = useDirectusAdmin();
-
   await directus.request(
     createItem("bedarfsmeldung_solitopf", {
-      membership: u.mship,
-      auszahlung: p.auszahlung,
-      weitere_unterstuetzung: p.weitere_unterstuetzung,
+      membership: user.mship,
+      auszahlung: data.auszahlung,
+      weitere_unterstuetzung: data.weitere_unterstuetzung,
     }),
   );
-}
+});

@@ -2,7 +2,10 @@
 definePageMeta({
   middleware: ["auth"],
 });
-
+const user = useCurrentUser();
+const meldungen = computed(
+  () => user.value?.membership.bedarfsmeldung_solitopf,
+);
 const { t } = useI18n();
 setPageTitle(t("Solidaritäts-Topf"), {
   backLinkLabel: t("Zurück zur Startseite"),
@@ -13,6 +16,40 @@ setPageTitle(t("Solidaritäts-Topf"), {
 <template>
   <BetaMessage />
   <div class="flex flex-col gap-5">
+    <CollectivoCard
+      class="flex flex-col gap-3"
+      title="Meine Soli-Topf Anträge"
+      v-if="meldungen && meldungen.length > 0"
+    >
+      <div class="flex flex-col gap-2">
+        <div
+          v-for="meldung in meldungen"
+          :key="meldung.id"
+          class="border-black border-2 p-3"
+        >
+          <p>
+            <strong>Datum der Meldung:</strong>
+            {{ new Date(meldung.date_created).toLocaleDateString("de-AT") }}
+          </p>
+          <p>
+            <strong>Gewünschte Auszahlung:</strong>
+            {{
+              meldung.auszahlung === "v300a1"
+                ? "300 € einmalig"
+                : "50 € monatlich für 6 Monate"
+            }}
+          </p>
+          <p v-if="meldung.weitere_unterstuetzung">
+            <strong>Weitere Unterstützung gewünscht:</strong> Ja
+          </p>
+          <p v-else><strong>Weitere Unterstützung gewünscht:</strong> Nein</p>
+          <p v-if="meldung.status">
+            <strong>Status:</strong> {{ meldung.status }}
+          </p>
+        </div>
+      </div>
+    </CollectivoCard>
+
     <CollectivoCard
       class="flex flex-col gap-3"
       title="Wie funktioniert der Soli-Topf?"

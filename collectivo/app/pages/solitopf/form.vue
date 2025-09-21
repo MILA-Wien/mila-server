@@ -44,9 +44,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     });
   } else {
     toast.add({
-      title: "Success",
-      description: "Erfolgreich abgesendet",
+      title: "Antrag erfolgreich abgesendet",
     });
+    await userData.value.reload();
     navigateTo("/solitopf");
   }
 }
