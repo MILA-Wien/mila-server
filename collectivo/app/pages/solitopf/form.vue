@@ -5,6 +5,7 @@ import type { FormSubmitEvent } from "#ui/types";
 definePageMeta({
   middleware: ["auth"],
 });
+
 const { t } = useI18n();
 setPageTitle(t("Soli-Topf Antrag"), {
   backLink: "/solitopf",
@@ -52,6 +53,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
+  <BetaMessage />
   <UForm :schema="schema" :state="state" class="space-y-8" @submit="onSubmit">
     <UFormGroup name="auszahlung">
       <div class="font-bold mb-2">

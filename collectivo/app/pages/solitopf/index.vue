@@ -11,6 +11,7 @@ setPageTitle(t("Solidaritäts-Topf"), {
 </script>
 
 <template>
+  <BetaMessage />
   <div class="flex flex-col gap-5">
     <CollectivoCard
       class="flex flex-col gap-3"
