@@ -609,14 +609,12 @@ async function onError() {
           :choices="[
             { label: 'Sortiment', value: 'Sortiment' },
             { label: 'Öffentlichkeitsarbeit', value: 'Öffentlichkeitsarbeit' },
-            { label: 'Minimarkt', value: 'Minimarkt' },
             { label: 'Finanzen', value: 'Finanzen' },
             { label: 'Genossenschaft', value: 'Genossenschaft' },
             { label: 'Standort', value: 'Standort' },
             { label: 'IT und Digitales', value: 'ITundDigitales' },
             { label: 'Diversität', value: 'Diversität' },
             { label: 'Events/Infogespräche', value: 'EventsInfogespräche' },
-            { label: 'Mitgliedergewinnung', value: 'Mitgliedergewinnung' },
             { label: 'Mitgliederbüro', value: 'Mitgliederbüro' },
           ]"
         />
