@@ -180,21 +180,6 @@ const isNatural = computed(
   () => state.directus_users__memberships_person_type === "natural",
 );
 
-async function getApiHeaders() {
-  const directus = useDirectus();
-  const headers: { [key: string]: string } = {
-    Accept: "application/json",
-  };
-  try {
-    // Add token to header if exists
-    const token = await directus.refresh();
-    headers["Authorization"] = `${token.access_token}`;
-  } catch {
-    // do nothing
-  }
-  return headers;
-}
-
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const res = await useFetch("/api/register", {
     method: "POST",

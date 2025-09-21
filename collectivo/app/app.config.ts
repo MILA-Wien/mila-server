@@ -222,10 +222,10 @@ export default defineAppConfig({
       },
     },
     checkbox: {
-      base: "h-[18px] w-[18px] disabled:cursor-not-allowed cursor-pointer disabled:opacity-50 focus:ring-0 focus:ring-transparent focus:ring-offset-transparent",
+      base: "h-[20px] w-[20px] disabled:cursor-not-allowed cursor-pointer disabled:opacity-50 focus:ring-0 focus:ring-transparent focus:ring-offset-transparent",
       background: "bg-transparent",
-      rounded: "rounded-[5px]",
-      border: "border border-gray-500",
+      rounded: "rounded-none",
+      border: "border border-black border-2",
       label: "text-sm font-medium",
     },
 
