@@ -51,22 +51,31 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
       <p>
         Menschen mit Unterstützungs-Bedarf benötigen Hilfe beim Mitmachen bei
-        MILA. So können sie aktiv und wie alle anderen bei einer Fixschicht
+        MILA.
+        <br /><br />
+        So können sie aktiv und wie alle anderen bei einer Fixschicht
         mitarbeiten.
-      </p>
-      <p>
+        <br /><br />
         Der Grund für Unterstützungsbedarf ist unterschiedlich.
-        Unterstützungsbedarf entsteht manchmal auch durch mehrere Dinge. Zum
-        Beispiel können Barrieren bei MILA das Mitmachen erschweren. Vielleicht
-        fühlst du dich mit einem Buddy sicherer. Vielleicht hast du mit einem
-        Buddy weniger Stress. Wir verstehen Unterstützung als gemeinsamen
-        Prozess. Dabei wollen wir die einzelnen Lebensumstände und Bedürfnisse
-        achten. Durch die Mitmach-Schichten kann jede*r selbstbestimmt und auf
-        Augenhöhe teilhaben.
+        <br /><br />
+        Unterstützungsbedarf entsteht manchmal auch durch mehrere Dinge.
+        <br /><br />
+        Zum Beispiel können Barrieren bei MILA das Mitmachen erschweren.
+        <br /><br />
+        Vielleicht fühlst du dich mit einem Buddy sicherer.
+        <br /><br />
+        Vielleicht hast du mit einem Buddy weniger Stress.
+        <br /><br />
+        Wir verstehen Unterstützung als gemeinsamen Prozess.
+        <br /><br />
+        Dabei wollen wir die einzelnen Lebensumstände und Bedürfnisse beachten.
+        <br /><br />
+        Durch die Mitmach-Schichten kann jede*r selbstbestimmt und auf Augenhöhe
+        teilhaben.
       </p>
     </div>
     <div>
-      <h2>Mein Buddy-Status</h2>
+      <h2>Mein Status</h2>
       <UForm
         :schema="schema"
         :state="state"
