@@ -77,6 +77,9 @@ const isWaiting = computed(
           <p v-if="meldung.status">
             <strong>Status:</strong> {{ meldung.status }}
           </p>
+          <p v-if="meldung.anmerkung">
+            <strong>Anmerkung:</strong> {{ meldung.anmerkung }}
+          </p>
         </div>
       </div>
     </div>

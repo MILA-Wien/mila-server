@@ -15,6 +15,7 @@ export interface DbSchema {
   settings_hidden: SettingsHidden;
   milaccess_log: CheckinLogEntry[];
   bedarfsmeldung_solitopf: BedarfsmeldungSolitopf[];
+  product_requests: ProductRequests[];
 }
 
 interface UserProfile {
@@ -160,6 +161,16 @@ interface BedarfsmeldungSolitopf {
   date_created: string;
   status: "warteliste" | "angenommen" | "abgelehnt";
   anmerkung: string;
+}
+
+interface ProductRequests {
+  id: number;
+  name: string;
+  wunsch: string;
+  wunsch_von?: Membership | number;
+  antwort: string;
+  date_created: string;
+  status: "inarbeit" | "habensimilar" | "gehtnicht" | "bereitsda" | "erledigt";
 }
 
 // // Shifts
