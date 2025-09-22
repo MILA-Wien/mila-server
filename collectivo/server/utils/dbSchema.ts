@@ -158,6 +158,8 @@ interface BedarfsmeldungSolitopf {
   auszahlung: "v300a1" | "v50a6";
   weitere_unterstuetzung: boolean;
   date_created: string;
+  status: "warteliste" | "angenommen" | "abgelehnt";
+  anmerkung: string;
 }
 
 // // Shifts

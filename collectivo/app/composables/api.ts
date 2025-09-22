@@ -4,11 +4,8 @@ export async function getApiHeaders() {
     Accept: "application/json",
   };
   try {
-    // Add token to header if exists
     const token = await directus.refresh();
     headers["Authorization"] = `${token.access_token}`;
-  } catch {
-    // do nothing
-  }
+  } catch {}
   return headers;
 }

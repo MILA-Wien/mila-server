@@ -34,7 +34,7 @@ function toggle(value: string) {
     >
       <UCheckbox
         :model-value="model === opt.value"
-        @update:model-value="toggle(opt.value)"
+        onUpdate:model-value="toggle(opt.value)"
         class=""
       />
 

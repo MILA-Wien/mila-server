@@ -51,7 +51,6 @@ class CurrentUserStore {
           "memberships.*",
           "memberships.shifts_categories_allowed.shifts_categories_id",
           "collectivo_tags.collectivo_tags_id",
-          "memberships.bedarfsmeldung_solitopf.*",
         ],
       }),
     )) as UserProfile;

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { bool, object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
+import type { UseFetchOptions } from "#app";
 
 definePageMeta({
   middleware: ["auth"],
@@ -35,19 +36,22 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     body: JSON.stringify(event.data),
   });
 
-  if (res.status.value === "error") {
+  if (res.status.value === "success") {
     toast.add({
-      title: t("There was an error"),
+      title: t("Dein Antrag wurde erfolgreich eingereicht."),
+      color: "green",
+    });
+    await userData.value.reload();
+    navigateTo("/solitopf");
+  } else {
+    toast.add({
+      title: t(
+        "Es ist ein Fehler aufgetreten. Bitte versuche es später erneut.",
+      ),
       icon: "i-heroicons-exclamation-triangle",
       color: "red",
       timeout: 0,
     });
-  } else {
-    toast.add({
-      title: "Antrag erfolgreich abgesendet",
-    });
-    await userData.value.reload();
-    navigateTo("/solitopf");
   }
 }
 </script>

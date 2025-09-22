@@ -2,15 +2,21 @@
 definePageMeta({
   middleware: ["auth"],
 });
-const user = useCurrentUser();
-const meldungen = computed(
-  () => user.value?.membership.bedarfsmeldung_solitopf,
-);
 const { t } = useI18n();
 setPageTitle(t("Solidaritäts-Topf"), {
   backLinkLabel: t("Zurück zur Startseite"),
   backLink: "/",
 });
+
+const { data: meldungen } = await useFetch("/api/solitopf/bedarf", {
+  headers: await getApiHeaders(),
+});
+
+const isWaiting = computed(
+  () =>
+    meldungen.value &&
+    meldungen.value.some((meldung) => meldung.status === "warteliste"),
+);
 </script>
 
 <template>
@@ -104,7 +110,20 @@ setPageTitle(t("Solidaritäts-Topf"), {
         Du hast den Test gemacht – oder weißt einfach: Ich brauche gerade
         Unterstützung? Dann kannst du hier Geld aus dem Soli-Topf beantragen.
       </p>
-      <UButton to="/solitopf/form" icon="i-heroicons-arrow-right">
+      <UButton
+        v-if="isWaiting"
+        icon="i-heroicons-check"
+        disabled
+        color="purple"
+      >
+        Du bist bereits auf der Warteliste
+      </UButton>
+      <UButton
+        v-else
+        to="/solitopf/form"
+        icon="i-heroicons-arrow-right"
+        color="purple"
+      >
         Unterstützung beantragen
       </UButton>
     </CollectivoCard>
