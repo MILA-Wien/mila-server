@@ -8,9 +8,7 @@ setPageTitle(t("Solidaritäts-Topf"), {
   backLink: "/",
 });
 
-const { data: meldungen } = await useFetch("/api/solitopf/bedarf", {
-  headers: await getApiHeaders(),
-});
+const { data: meldungen } = await useFetch("/api/solitopf/bedarf");
 
 const isWaiting = computed(
   () =>

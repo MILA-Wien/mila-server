@@ -183,7 +183,6 @@ const isNatural = computed(
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const res = await useFetch("/api/register", {
     method: "POST",
-    headers: await getApiHeaders(),
     body: JSON.stringify(event.data),
   });
 

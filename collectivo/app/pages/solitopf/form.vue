@@ -32,7 +32,6 @@ const state = reactive({
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const res = await useFetch("/api/solitopf/bedarf", {
     method: "POST",
-    headers: await getApiHeaders(),
     body: JSON.stringify(event.data),
   });
 
