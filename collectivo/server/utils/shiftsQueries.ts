@@ -82,8 +82,7 @@ export async function getShiftAssignments(
             {
               memberships_user: [
                 "id",
-                "first_name",
-                "last_name",
+                "username",
                 "hide_name",
                 "email",
                 "memberships_phone",

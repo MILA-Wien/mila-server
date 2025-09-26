@@ -168,7 +168,7 @@ END:VCALENDAR`;
           <p v-if="coordinators.length > 0">
             {{ t("Coordinator") }}:
             <span v-for="(item, index) in coordinators" :key="index">
-              {{ item === " " ? t("Anonymous") : item
+              {{ item === "" ? t("Anonymous") : item
               }}<span v-if="index < coordinators.length - 1">, </span>
             </span>
           </p>
@@ -177,7 +177,7 @@ END:VCALENDAR`;
           <p v-if="coworkers.length > 0">
             {{ t("Shift team") }}:
             <span v-for="(item, index) in coworkers" :key="index">
-              {{ item === " " ? t("Anonymous") : item
+              {{ item === "" ? t("Anonymous") : item
               }}<span v-if="index < coworkers.length - 1">, </span>
             </span>
           </p>
@@ -277,6 +277,7 @@ de:
   "You are signed out for this shift": "Du bist von dieser Schicht abgemeldet"
   "Assigned people": "Angemeldete Personen"
   "Anonymous": "Anonym"
+  "Name hidden": "Name verborgen"
   "Contact": "Kontakt"
   "Shift team": "Schichtteam"
   "Cancelled": "Abgemeldet"

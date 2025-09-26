@@ -24,14 +24,12 @@ const shift = occ.shift;
     >
       <span v-if="assignment.isActive">
         {{
-          assignment.assignment.shifts_membership.memberships_user
-            .first_name === ""
+          assignment.assignment.shifts_membership.memberships_user.username ===
+          ""
             ? "Anonym"
-            : assignment.assignment.shifts_membership.memberships_user
-                .first_name
+            : assignment.assignment.shifts_membership.memberships_user.username
         }}
-        {{ assignment.assignment.shifts_membership.memberships_user.last_name
-        }}<span
+        <span
           v-if="
             assignment.assignment.shifts_membership.shifts_can_be_coordinator
           "

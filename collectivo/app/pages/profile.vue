@@ -34,6 +34,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     body: event.data,
   });
   if (res.status.value === "success") {
+    await userData.value.reload();
     toast.add({
       title: t("Dein Profil wurde erfolgreich aktualisiert."),
       color: "green",

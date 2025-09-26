@@ -75,9 +75,7 @@ for (const item of items) {
     <div v-if="user.isAuthenticated">
       <UDropdown :items="profileMenu" :popper="{ placement: 'bottom' }">
         <div class="flex flex-row items-center">
-          <span class="text-lg font-semibold"
-            >{{ user.user?.first_name }} {{ user.user?.last_name }}</span
-          >
+          <span class="text-lg font-semibold">{{ user.user?.username }}</span>
           <UIcon name="i-heroicons-user-circle" class="h-7 w-7 ml-2" />
         </div>
 

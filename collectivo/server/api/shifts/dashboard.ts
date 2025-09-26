@@ -76,7 +76,7 @@ async function getAssignments(mship: number) {
         {
           shifts_membership: [
             {
-              memberships_user: ["first_name", "last_name"],
+              memberships_user: ["username", "hide_name"],
             },
             "shifts_can_be_coordinator",
           ],
@@ -109,7 +109,7 @@ async function getAbsences(mship: number) {
         {
           shifts_membership: [
             {
-              memberships_user: ["first_name", "last_name"],
+              memberships_user: ["username", "hide_name"],
             },
             "shifts_can_be_coordinator",
           ],
@@ -244,9 +244,9 @@ const getCoworkers = async (
       const u = a.assignment.shifts_membership.memberships_user;
       if (!a.isActive) continue;
       if (a.assignment.shifts_membership.shifts_can_be_coordinator) {
-        coordinators.push(u.first_name + " " + u.last_name);
+        coordinators.push(u.username);
       } else {
-        coworkers.push(u.first_name + " " + u.last_name);
+        coworkers.push(u.username);
       }
     }
   }
