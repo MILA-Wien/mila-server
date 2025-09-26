@@ -34,7 +34,7 @@ const props = defineProps({
       <UPopover v-if="infotext" class="ml-1 z-50">
         <UButton
           variant="ghost"
-          class="!m-0 !p-0 leading-none"
+          class="m-0! p-0! leading-none"
           size="md"
           color="white"
         >

@@ -39,7 +39,7 @@ export default defineAppConfig({
       },
     },
     button: {
-      base: "focus:outline-none focus-visible:outline-0 disabled:cursor-default disabled:opacity-75 aria-disabled:cursor-default aria-disabled:opacity-75 flex-shrink-0",
+      base: "focus:outline-none focus-visible:outline-0 disabled:cursor-default disabled:opacity-75 aria-disabled:cursor-default aria-disabled:opacity-75 shrink-0",
       font: "font-semibold tracking-wider",
       rounded: "rounded-sm",
       size: {
@@ -85,7 +85,7 @@ export default defineAppConfig({
       padding: "p-3 lg:p-5",
       rounded: "rounded-xl",
       icon: {
-        base: "flex-shrink-0 h-7 w-7",
+        base: "shrink-0 h-7 w-7",
       },
       color: {
         success: {
@@ -121,8 +121,8 @@ export default defineAppConfig({
         width: "",
         marker: {
           wrapper:
-            "absolute !h-[1px] !top-[29px] left-0 duration-200 ease-out focus:outline-none",
-          base: "!h-[1px]",
+            "absolute h-px! top-[29px]! left-0 duration-200 ease-out focus:outline-none",
+          base: "h-px!",
           background: "bg-primary dark:bg-gray-900",
           rounded: "",
           shadow: "",

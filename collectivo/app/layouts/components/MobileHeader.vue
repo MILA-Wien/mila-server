@@ -13,7 +13,7 @@ const { t } = useI18n();
       <div class="text-2xl font-Avory truncate">
         {{ t(pageTitle) }}
       </div>
-      <div class="pt-[1px]"><MobileProfileMenu /></div>
+      <div class="pt-px"><MobileProfileMenu /></div>
     </div>
     <div class="h-header" />
   </div>
