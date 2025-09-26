@@ -1,23 +1,22 @@
 export default defineAppConfig({
   ui: {
-    primary: "purple",
-    gray: "cool",
+    colors: {
+      primary: "purple",
+      secondary: "green",
+    },
     button: {
       slots: {
-        base: "rounded-none cursor-pointer font-semibold tracking-wider",
+        base: "rounded-none cursor-pointer font-semibold tracking-wider hover:bg-blue-200",
       },
       variants: {
         color: {
-          primary: "bg-purple-500 hover:bg-purple-600", // legacy
-          purple: "bg-purple-500 hover:bg-purple-600",
-          orange: "bg-orange-500 hover:bg-orange-600",
-          blue: "bg-blue-500 hover:bg-blue-600",
-          green: "bg-green-500 hover:bg-green-600",
-          pink: "bg-pink-500 hover:bg-pink-600",
-          red: "bg-red-500 hover:bg-red-600",
-        },
-        variant: {
-          solid: "text-white",
+          purple: "text-white bg-purple-500 hover:bg-purple-600",
+          orange: "text-white bg-orange-500 hover:bg-orange-600",
+          blue: "text-white bg-blue-500 hover:bg-blue-600",
+          green: "text-white bg-green-500 hover:bg-green-600",
+          pink: "text-white bg-pink-500 hover:bg-pink-600",
+          red: "text-white bg-red-500 hover:bg-red-600",
+          none: "text-black bg-transparent hover:bg-transparent",
         },
         size: {
           sm: {
@@ -32,13 +31,49 @@ export default defineAppConfig({
         },
       },
     },
-  },
-  dropdownMenu: {
-    slots: {
-      content: "cursor-pointer",
+    input: {
+      slots: {
+        root: "w-full outline-none",
+        base: "rounded-none h-[50px] !pl-4",
+      },
+      variants: {
+        variant: {
+          outline: "ring-black",
+        },
+      },
     },
   },
 });
+
+//   input: {
+//     wrapper: "relative",
+//     base: "disabled:cursor-default disabled:opacity-50",
+//     size: {
+//       md: "text-sm",
+//     },
+//     variant: {
+//       solid:
+//         "h-[50px] shadow-sm bg-blue-50 focus:bg-primary-50 text-gray-900 ring-0 focus:ring-0",
+//       outline:
+//         " h-[50px] border-2 border-black ring-0 focus:ring-0 text-base focus:border-primary",
+//     },
+//     padding: {
+//       md: "py-4 px-[18px] pe-9",
+//       numberInput: "py-4 px-[18px] pe-[56px]",
+//     },
+//     rounded: "rounded-none",
+//     icon: {
+//       color: "text-gray-500",
+//       trailing: {
+//         wrapper: "end-[5px]",
+//       },
+//     },
+//     default: {
+//       size: "md",
+//       color: "primary",
+//       variant: "solid",
+//     },
+//   },
 
 // pagination: {
 //   wrapper: "flex items-center ",

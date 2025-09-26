@@ -26,25 +26,20 @@ const props = defineProps({
 </script>
 
 <template>
-  <UFormGroup :name="props.name">
+  <UFormField :name="props.name">
     <div class="font-bold inline-flex items-start">
       <template v-if="props.label">{{ props.label }}</template>
       <slot name="title"></slot>
       <span v-if="props.required" class="text-red-600 ml-1">*</span>
       <UPopover v-if="infotext" class="ml-1 z-50">
-        <UButton
-          variant="ghost"
-          class="m-0! p-0! leading-none"
-          size="md"
-          color="white"
-        >
+        <UButton color="none" class="ml-1 mr-0 my-0 p-0 leading-none">
           <UIcon
             name="i-heroicons-question-mark-circle"
             class="text-[1em] h-6 w-6"
           />
         </UButton>
 
-        <template #panel>
+        <template #content>
           <div class="p-4 w-72 font-normal text-sm">
             {{ infotext }}
           </div>
@@ -55,5 +50,5 @@ const props = defineProps({
       <slot name="description"></slot>
     </div>
     <slot></slot>
-  </UFormGroup>
+  </UFormField>
 </template>

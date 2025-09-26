@@ -70,7 +70,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           required
         >
           <template #description> </template>
-          <UInput variant="outline" v-model="state.username" />
+          <UInput v-model="state.username" />
         </FormsFormGroup>
 
         <FormsFormGroup
