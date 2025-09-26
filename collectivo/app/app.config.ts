@@ -34,7 +34,7 @@ export default defineAppConfig({
     input: {
       slots: {
         root: "w-full outline-none",
-        base: "rounded-none h-[50px] !pl-4",
+        base: "rounded-none h-12 !pl-4",
       },
       variants: {
         variant: {
@@ -42,8 +42,26 @@ export default defineAppConfig({
         },
       },
     },
+    checkbox: {
+      slots: {
+        base: "rounded-none ring-black cursor-pointer",
+      },
+      variants: {
+        size: {
+          md: "h-4.5 w-4.5",
+        },
+      },
+    },
   },
 });
+
+//   checkbox: {
+//     base: "h-[20px] w-[20px] disabled:cursor-not-allowed cursor-pointer disabled:opacity-50 focus:ring-0 focus:ring-transparent focus:ring-offset-transparent",
+//     background: "bg-transparent",
+//     rounded: "rounded-none",
+//     border: "border border-black border-2",
+//     label: "text-sm font-medium",
+//   },
 
 //   input: {
 //     wrapper: "relative",
