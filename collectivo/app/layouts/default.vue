@@ -22,7 +22,6 @@ watch(locale, () => {
       <div class="flex flex-row justify-center">
         <div class="px-6 py-3 md:px-12 md:pb-20 lg:px-20 w-full max-w-7xl">
           <Header />
-
           <!-- Main content, reload upon locale change -->
           <slot :key="localeKey" />
         </div>
@@ -42,7 +41,7 @@ watch(locale, () => {
 }
 
 .layout {
-  @apply h-full;
+  height: 100%;
   overflow-x: auto; /* or overflow-x: hidden; */
   max-width: 100%; /* Ensure it doesn't expand beyond the viewport */
 }

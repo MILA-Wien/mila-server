@@ -39,31 +39,33 @@ export default defineAppConfig({
       },
     },
     button: {
-      base: "focus:outline-none focus-visible:outline-0 disabled:cursor-default disabled:opacity-75 aria-disabled:cursor-default aria-disabled:opacity-75 shrink-0",
-      font: "font-semibold tracking-wider",
-      rounded: "rounded-sm",
-      size: {
-        sm: "text-sm",
-        md: "text-base",
+      slots: {
+        base: "rounded-none cursor-pointer font-semibold tracking-wider",
       },
-      gap: {
-        sm: "gap-x-2.5",
-        md: "gap-x-2.5",
-      },
-      padding: {
-        sm: "px-3 py-2",
-        md: "px-3.5 py-2.5",
-        lg: "px-4 py-3",
-      },
-      icon: {
-        size: {
-          sm: "h-4 w-4",
-          md: "h-5 w-5",
-          lg: "h-5 w-5",
+      variants: {
+        color: {
+          primary: "bg-purple-500 hover:bg-purple-600", // legacy
+          purple: "bg-purple-500 hover:bg-purple-600",
+          orange: "bg-orange-500 hover:bg-orange-600",
+          blue: "bg-blue-500 hover:bg-blue-600",
+          green: "bg-green-500 hover:bg-green-600",
+          pink: "bg-pink-500 hover:bg-pink-600",
+          red: "bg-red-500 hover:bg-red-600",
         },
-      },
-      default: {
-        size: "md",
+        variant: {
+          solid: "text-white",
+        },
+        size: {
+          sm: {
+            base: "text-sm px-3 py-2",
+          },
+          md: {
+            base: "text-base px-4 py-2.5",
+          },
+          lg: {
+            base: "text-lg px-5 py-3",
+          },
+        },
       },
     },
     card: {

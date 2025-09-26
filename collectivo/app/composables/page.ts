@@ -1,5 +1,23 @@
 export const usePageTitle = () => useState<string>("pageTitle", () => "");
 
+export interface NavigationMenus {
+  main: CollectivoMenuItem[];
+  main_public: CollectivoMenuItem[];
+  profile: CollectivoMenuItem[];
+  profile_public: CollectivoMenuItem[];
+}
+
+export interface CollectivoMenuItem {
+  label: string;
+  icon?: string;
+  to?: string;
+  click?: () => void;
+  external?: boolean; // Defaults to false
+  target?: string; // Default "_self"
+  hideOnMobile?: boolean; // Default false
+  filter?: (item: CollectivoMenuItem) => Promise<boolean> | boolean;
+}
+
 export const usePageBackLink = () =>
   useState<string | undefined>("pageBackLink", () => "");
 

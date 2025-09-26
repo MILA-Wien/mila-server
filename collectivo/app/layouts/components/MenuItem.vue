@@ -6,6 +6,10 @@ const props = defineProps({
     type: Object as PropType<CollectivoMenuItem>,
     required: true,
   },
+  mobile: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const visible = ref(false);
@@ -24,25 +28,37 @@ async function filterItem(item: CollectivoMenuItem) {
 <template>
   <div v-if="visible">
     <div v-if="item.click">
-      <a class="item" @click="item.click()">
+      <a
+        class="text-white flex flex-col gap-1 items-center transition-all cursor-pointer hover:bg-milaGreenHover [&.router-link-exact-active]:bg-milaGreenHover"
+        :class="mobile ? 'py-2 px-2.5 mb-0 mx-0 min-w-16' : 'px-3 py-4 mb-2'"
+        @click="item.click()"
+      >
         <slot name="icon">
-          <UIcon v-if="item.icon" :name="item.icon" class="item__icon" />
+          <UIcon v-if="item.icon" :name="item.icon" class="h-5 w-5 mb-0" />
         </slot>
-        <span class="item__title">{{ t(item.label) }}</span>
+        <span class="font-semibold" :class="mobile ? 'text-sm' : ''">{{
+          t(item.label)
+        }}</span>
       </a>
     </div>
     <div v-else-if="item.external">
       <a :href="item.to" :target="item.target ?? '_blank'" class="item">
-        <UIcon v-if="item.icon" :name="item.icon" class="item__icon" />
+        <UIcon v-if="item.icon" :name="item.icon" class="h-5 w-5 mb-0" />
 
-        <span class="item__title">{{ t(item.label) }}</span>
+        <span class="font-semibold">{{ t(item.label) }}</span>
       </a>
     </div>
     <div v-else>
-      <NuxtLink :to="item.to" class="item">
-        <UIcon v-if="item.icon" :name="item.icon" class="item__icon" />
+      <NuxtLink
+        :to="item.to"
+        class="text-white flex flex-col gap-1 items-center transition-all cursor-pointer hover:bg-milaGreenHover [&.router-link-exact-active]:bg-milaGreenHover"
+        :class="mobile ? 'py-2 px-2.5 mb-0 mx-0 min-w-16' : 'px-3 py-4 mb-2'"
+      >
+        <UIcon v-if="item.icon" :name="item.icon" class="h-5 w-5 mb-0" />
 
-        <span class="item__title">{{ t(item.label) }}</span>
+        <span class="font-semibold" :class="mobile ? 'text-sm' : ''">{{
+          t(item.label)
+        }}</span>
       </NuxtLink>
     </div>
   </div>
@@ -54,33 +70,3 @@ de:
   "Shifts": "Schichten"
   "Help": "Hilfe"
 </i18n>
-
-<style lang="scss">
-.item {
-  @apply text-white flex flex-col gap-1 items-center px-3 py-4 mb-2 transition-all cursor-pointer;
-  &__icon {
-    @apply h-5 w-5 mb-0;
-  }
-
-  &__title {
-    @apply font-semibold;
-  }
-
-  &:hover,
-  &.router-link-exact-active {
-    @apply bg-milaGreenHover;
-  }
-}
-
-.mobile-menu-item {
-  @apply p-0 mb-0;
-
-  .item {
-    @apply py-2 px-2.5 mb-0 mx-0 min-w-16;
-
-    &__title {
-      @apply text-xs;
-    }
-  }
-}
-</style>
