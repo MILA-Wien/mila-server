@@ -1,5 +1,6 @@
 import { readMe, updateMe } from "@directus/sdk";
 import type { RestClient } from "@directus/sdk";
+import { use } from "marked";
 
 export const useCurrentUser = () => {
   const state = useState<CurrentUserStore>("collectivo_user", () => {
@@ -43,17 +44,13 @@ class CurrentUserStore {
   }
 
   async init(directus: RestClient<DbSchema>) {
-    this.user = (await directus.request(
-      readMe({
-        fields: [
-          "*",
-          "role.name",
-          "memberships.*",
-          "memberships.shifts_categories_allowed.shifts_categories_id",
-          "collectivo_tags.collectivo_tags_id",
-        ],
-      }),
-    )) as UserProfile;
+    const data = await useFetch("/api/profile");
+    if (data.error.value) {
+      this.error = data.error.value;
+      return;
+    }
+
+    this.user = data.data as UserProfile;
 
     // Check if admin
     this.isShiftAdmin = SHIFT_ADMIN_ROLES.includes(this.user.role.name);
