@@ -128,66 +128,68 @@ async function postAssignmentInner(regular: boolean) {
 </script>
 
 <template>
-  <UModal v-model="isOpen">
-    <div class="m-10">
-      <h2>{{ shift.shifts_name }}</h2>
+  <UModal v-model:open="isOpen">
+    <template #content>
+      <div class="m-10">
+        <h2>{{ shift.shifts_name }}</h2>
 
-      <div class="flex flex-col gap-2 my-5 leading-7">
-        <p class="font-bold">
-          {{ start.toLocaleString(DateTime.DATE_MED) }} {{ t("from") }}
-          {{ start.toLocaleString(DateTime.TIME_24_SIMPLE) }}
-          {{ t("to") }}
-          {{ end.toLocaleString(DateTime.TIME_24_SIMPLE) }}
-        </p>
-        <p v-if="isRegular">
-          {{ t("Shift repeats every four weeks") }}
-        </p>
-        <ShiftsViewerAssignmentList :occurrence="occ" />
-      </div>
+        <div class="flex flex-col gap-2 my-5 leading-7">
+          <p class="font-bold">
+            {{ start.toLocaleString(DateTime.DATE_MED) }} {{ t("from") }}
+            {{ start.toLocaleString(DateTime.TIME_24_SIMPLE) }}
+            {{ t("to") }}
+            {{ end.toLocaleString(DateTime.TIME_24_SIMPLE) }}
+          </p>
+          <p v-if="isRegular">
+            {{ t("Shift repeats every four weeks") }}
+          </p>
+          <ShiftsViewerAssignmentList :occurrence="occ" />
+        </div>
 
-      <!-- Shift infos -->
-      <!-- eslint-disable vue/no-v-html -->
-      <p
-        v-if="shift.shifts_description"
-        class="mb-5"
-        v-html="parse(shift.shifts_description)"
-      />
-      <!-- eslint-enable -->
+        <!-- Shift infos -->
+        <!-- eslint-disable vue/no-v-html -->
+        <p
+          v-if="shift.shifts_description"
+          class="mb-5"
+          v-html="parse(shift.shifts_description)"
+        />
+        <!-- eslint-enable -->
 
-      <div v-if="assignmentPossible" class="flex flex-col gap-2">
-        <UButton
-          class="w-full"
-          size="lg"
-          color="green"
-          icon="i-heroicons-pencil-square"
-          :loading="submitLoading"
-          @click="postAssignment()"
-        >
-          {{ t("Sign up one-time for") }}
-          {{ shiftOccurence.start.split("T")[0] }}
-        </UButton>
-        <UButton
-          v-if="isRegular"
-          class="w-full"
-          size="lg"
-          icon="i-heroicons-arrow-path"
-          :loading="submitLoading"
-          @click="postAssignment(true)"
-        >
-          {{ t("Sign up regularly, every 4 weeks") }}
-        </UButton>
+        <div v-if="assignmentPossible" class="flex flex-col gap-2">
+          <UButton
+            class="w-full"
+            size="lg"
+            color="green"
+            icon="i-heroicons-pencil-square"
+            :loading="submitLoading"
+            @click="postAssignment()"
+          >
+            {{ t("Sign up one-time for") }}
+            {{ shiftOccurence.start.split("T")[0] }}
+          </UButton>
+          <UButton
+            v-if="isRegular"
+            class="w-full"
+            size="lg"
+            icon="i-heroicons-arrow-path"
+            :loading="submitLoading"
+            @click="postAssignment(true)"
+          >
+            {{ t("Sign up regularly, every 4 weeks") }}
+          </UButton>
+        </div>
+        <div v-else-if="shiftOccurence.selfAssigned">
+          <UButton class="w-full" size="lg" color="gray" disabled>
+            {{ t("Already signed up") }}
+          </UButton>
+        </div>
+        <div v-else>
+          <UButton class="w-full" size="lg" color="gray" disabled>
+            {{ t("Assignment not possible") }}
+          </UButton>
+        </div>
       </div>
-      <div v-else-if="shiftOccurence.selfAssigned">
-        <UButton class="w-full" size="lg" color="gray" disabled>
-          {{ t("Already signed up") }}
-        </UButton>
-      </div>
-      <div v-else>
-        <UButton class="w-full" size="lg" color="gray" disabled>
-          {{ t("Assignment not possible") }}
-        </UButton>
-      </div>
-    </div>
+    </template>
   </UModal>
 </template>
 

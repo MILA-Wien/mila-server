@@ -98,47 +98,49 @@ async function createCustomLog() {
     <UButton @click="openLogModal">Extra log erstellen</UButton>
   </div>
 
-  <UModal v-model="logModalIsOpen" :transition="false">
-    <div class="p-10 flex flex-col gap-4">
-      <h2>{{ t("Create log entry") }}</h2>
-      <UFormGroup :label="t('Membership number')" name="membershipID">
-        <UInput v-model="mshipID" />
-      </UFormGroup>
-      <UButton @click="loadMembership">{{ t("Load membership") }}</UButton>
-
-      <div v-if="mshipData">
-        <p class="font-bold">
-          {{ mshipData.memberships_user.first_name }}
-          {{ mshipData.memberships_user.last_name }}
-        </p>
-        <p>Membership type: {{ mshipData.memberships_type }}</p>
-
-        <p>Membership status: {{ mshipData.memberships_status }}</p>
-
-        <p>Shift type: {{ mshipData.shifts_user_type }}</p>
-
-        <UFormGroup :label="t('Type')" name="logEntryType">
-          <USelect v-model="logEntryType" :options="logEntryOptions" />
+  <UModal v-model:open="logModalIsOpen" :transition="false">
+    <template #content>
+      <div class="p-10 flex flex-col gap-4">
+        <h2>{{ t("Create log entry") }}</h2>
+        <UFormGroup :label="t('Membership number')" name="membershipID">
+          <UInput v-model="mshipID" />
         </UFormGroup>
+        <UButton @click="loadMembership">{{ t("Load membership") }}</UButton>
 
-        <UFormGroup :label="t('Score')" name="logEntryScore">
-          <UInput v-model="logEntryScore" />
-        </UFormGroup>
+        <div v-if="mshipData">
+          <p class="font-bold">
+            {{ mshipData.memberships_user.first_name }}
+            {{ mshipData.memberships_user.last_name }}
+          </p>
+          <p>Membership type: {{ mshipData.memberships_type }}</p>
 
-        <UFormGroup :label="t('Note')" name="logEntryNote">
-          <UInput v-model="logEntryNote" />
-        </UFormGroup>
+          <p>Membership status: {{ mshipData.memberships_status }}</p>
 
-        <div class="flex flex-wrap gap-2 mt-3">
-          <UButton @click="createCustomLog()">{{
-            t("Create log entry")
-          }}</UButton>
+          <p>Shift type: {{ mshipData.shifts_user_type }}</p>
+
+          <UFormGroup :label="t('Type')" name="logEntryType">
+            <USelect v-model="logEntryType" :options="logEntryOptions" />
+          </UFormGroup>
+
+          <UFormGroup :label="t('Score')" name="logEntryScore">
+            <UInput v-model="logEntryScore" />
+          </UFormGroup>
+
+          <UFormGroup :label="t('Note')" name="logEntryNote">
+            <UInput v-model="logEntryNote" />
+          </UFormGroup>
+
+          <div class="flex flex-wrap gap-2 mt-3">
+            <UButton @click="createCustomLog()">{{
+              t("Create log entry")
+            }}</UButton>
+          </div>
+        </div>
+        <div v-if="mshipError">
+          {{ t("Member") }} {{ mshipID }} {{ t("not found") }}
         </div>
       </div>
-      <div v-if="mshipError">
-        {{ t("Member") }} {{ mshipID }} {{ t("not found") }}
-      </div>
-    </div>
+    </template>
   </UModal>
 </template>
 

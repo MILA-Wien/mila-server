@@ -262,7 +262,7 @@ async function createAssignment(onetime: boolean) {
   } as AssignmentOccurrence);
 
   createAssignmentModalIsOpen.value = false;
-  
+
   occ.value.n_assigned++;
   emit("data-has-changed");
 }
@@ -298,297 +298,311 @@ function checkIfMshipInAssignments(mship: number) {
 </script>
 
 <template>
-  <UModal v-model="mainModalIsOpen" :ui="{ width: 'sm:max-w-[1000px]' }">
-    <div class="m-10">
-      <div class="flex items-start justify-between">
-        <h2>
-          {{ shift.shifts_name }} <span v-if="isPast">({{ t("past") }})</span>
-        </h2>
-        <a
-          :href="`${runtimeConfig.public.directusUrl}/admin/content/shifts_shifts/${shift.id}`"
-          target="blank"
-          class="flex flex-row items-center align-middle text-xs gap-1"
-        >
-          <span class="text-xs">{{ t("Shift") }} {{ shift.id }}</span>
-          <UIcon name="i-heroicons-arrow-top-right-on-square-16-solid" />
-        </a>
-      </div>
-
-      <!-- Shift infos -->
-      <div class="font-bold text-lg my-5 leading-7">
-        <div>
-          <span v-if="frequency">
-            {{ t("Regular shift") }}
-            ({{ frequency }} {{ isWeeks ? t("weeks") : t("days") }})
-          </span>
-          <span v-else>
-            {{ t("One-time shift") }}
-          </span>
-        </div>
-
-        <div>
-          {{ t("Date") }}:
-          {{ start.toISOString().split("T")[0] }}
-        </div>
-
-        <div v-if="shift.shifts_is_all_day">
-          {{ t("All day") }}
-        </div>
-        <div v-else>
-          {{ t("Time") }}: {{ getTime(start) }} - {{ getTime(end) }}
-        </div>
-        <div v-if="categories.loaded">
-          {{ t("Category") }}:
-          {{
-            t(
-              categories.data.value.find(
-                (category) => category.id === shift.shifts_category_2,
-              )?.name ?? "Normal",
-            )
-          }}
-        </div>
-
-        <div v-if="shift.shifts_location">
-          {{ t("Location") }}:
-          {{ shift.shifts_location }}
-        </div>
-      </div>
-
-      <!-- eslint-disable vue/no-v-html -->
-      <p
-        v-if="shift.shifts_description"
-        class="mb-5"
-        v-html="sanitizeHtml(parse(shift.shifts_description) as string)"
-      />
-      <!-- eslint-enable -->
-
-      <!-- Shift assignments and logs -->
-      <div>
-        <div class="flex flex-row items-end mb-5">
-          <div class="grow">
-            <h2>
-              Anmeldungen / Logs [{{ occ.n_assigned }}/{{
-                occ.shift.shifts_slots
-              }}]
-            </h2>
-          </div>
-          <div class="mb-1">
-            <UButton
-              v-if="!isPast"
-              :label="t('Create assignment')"
-              size="md"
-              icon="i-heroicons-plus-16-solid"
-              :disabled="occ.n_assigned >= occ.shift.shifts_slots"
-              @click="startCreateAssignmentFlow()"
-            />
-          </div>
-        </div>
-
-        <div v-if="logsLoaded" class="flex flex-col gap-3 my-2">
-          <template
-            v-for="(assignment, ai) of occ.assignments"
-            :key="assignment.assignment.id"
+  <UModal v-model:open="mainModalIsOpen" :ui="{ width: 'sm:max-w-[1000px]' }">
+    <template #content>
+      <div class="m-10">
+        <div class="flex items-start justify-between">
+          <h2>
+            {{ shift.shifts_name }} <span v-if="isPast">({{ t("past") }})</span>
+          </h2>
+          <a
+            :href="`${runtimeConfig.public.directusUrl}/admin/content/shifts_shifts/${shift.id}`"
+            target="blank"
+            class="flex flex-row items-center align-middle text-xs gap-1"
           >
-            <ShiftsViewerModalAdminBox
-              :id="assignment.assignment.id!"
-              :label="t('Assignment')"
-              :class="getAssignmentColor(assignment)"
-              collection="shifts_assignments"
+            <span class="text-xs">{{ t("Shift") }} {{ shift.id }}</span>
+            <UIcon name="i-heroicons-arrow-top-right-on-square-16-solid" />
+          </a>
+        </div>
+
+        <!-- Shift infos -->
+        <div class="font-bold text-lg my-5 leading-7">
+          <div>
+            <span v-if="frequency">
+              {{ t("Regular shift") }}
+              ({{ frequency }} {{ isWeeks ? t("weeks") : t("days") }})
+            </span>
+            <span v-else>
+              {{ t("One-time shift") }}
+            </span>
+          </div>
+
+          <div>
+            {{ t("Date") }}:
+            {{ start.toISOString().split("T")[0] }}
+          </div>
+
+          <div v-if="shift.shifts_is_all_day">
+            {{ t("All day") }}
+          </div>
+          <div v-else>
+            {{ t("Time") }}: {{ getTime(start) }} - {{ getTime(end) }}
+          </div>
+          <div v-if="categories.loaded">
+            {{ t("Category") }}:
+            {{
+              t(
+                categories.data.value.find(
+                  (category) => category.id === shift.shifts_category_2,
+                )?.name ?? "Normal",
+              )
+            }}
+          </div>
+
+          <div v-if="shift.shifts_location">
+            {{ t("Location") }}:
+            {{ shift.shifts_location }}
+          </div>
+        </div>
+
+        <!-- eslint-disable vue/no-v-html -->
+        <p
+          v-if="shift.shifts_description"
+          class="mb-5"
+          v-html="sanitizeHtml(parse(shift.shifts_description) as string)"
+        />
+        <!-- eslint-enable -->
+
+        <!-- Shift assignments and logs -->
+        <div>
+          <div class="flex flex-row items-end mb-5">
+            <div class="grow">
+              <h2>
+                Anmeldungen / Logs [{{ occ.n_assigned }}/{{
+                  occ.shift.shifts_slots
+                }}]
+              </h2>
+            </div>
+            <div class="mb-1">
+              <UButton
+                v-if="!isPast"
+                :label="t('Create assignment')"
+                size="md"
+                icon="i-heroicons-plus-16-solid"
+                :disabled="occ.n_assigned >= occ.shift.shifts_slots"
+                @click="startCreateAssignmentFlow()"
+              />
+            </div>
+          </div>
+
+          <div v-if="logsLoaded" class="flex flex-col gap-3 my-2">
+            <template
+              v-for="(assignment, ai) of occ.assignments"
+              :key="assignment.assignment.id"
             >
-              <template #header>
-                <span v-if="!assignment.isActive"> Abgemeldet: </span>
-                {{ displayMembership(assignment.assignment.shifts_membership) }}
-              </template>
-
-              <template #bottom-right>
-                <div
-                  v-if="assignment.isActive && !assignment.removed"
-                  class="flex flex-col gap-2"
-                >
-                  <UButton
-                    v-if="!isPast"
-                    icon="i-heroicons-trash-16-solid"
-                    size="sm"
-                    :label="t('Remove assignment')"
-                    @click="startRemoveAssignmentFlow(assignment, ai)"
-                  />
-                </div>
-              </template>
-
-              <span v-if="assignment.isOneTime">
-                {{ t("One-time shift") }}
-              </span>
-
-              <span v-else>
-                {{ t("Regular shift") }}
-                <span v-if="assignment.assignment.shifts_to">
-                  {{ t("until") }}
-                  {{ assignment.assignment.shifts_to }}
-                </span>
-              </span>
-
-              <span
-                v-if="
-                  assignment.assignment.shifts_membership
-                    .shifts_assignments_count <= 1
-                "
+              <ShiftsViewerModalAdminBox
+                :id="assignment.assignment.id!"
+                :label="t('Assignment')"
+                :class="getAssignmentColor(assignment)"
+                collection="shifts_assignments"
               >
-                {{ t("(first shift!)") }}
-              </span>
+                <template #header>
+                  <span v-if="!assignment.isActive"> Abgemeldet: </span>
+                  {{
+                    displayMembership(assignment.assignment.shifts_membership)
+                  }}
+                </template>
 
-              <span v-if="assignment.removed"> ({{ t("Removed") }}) </span>
+                <template #bottom-right>
+                  <div
+                    v-if="assignment.isActive && !assignment.removed"
+                    class="flex flex-col gap-2"
+                  >
+                    <UButton
+                      v-if="!isPast"
+                      icon="i-heroicons-trash-16-solid"
+                      size="sm"
+                      :label="t('Remove assignment')"
+                      @click="startRemoveAssignmentFlow(assignment, ai)"
+                    />
+                  </div>
+                </template>
 
-              <div v-for="absence of assignment.absences" :key="absence.id">
-                {{ t("Absent") }}: {{ absence.shifts_from }} {{ t("to") }}
-                {{ absence.shifts_to }}
-              </div>
+                <span v-if="assignment.isOneTime">
+                  {{ t("One-time shift") }}
+                </span>
 
-              <div v-if="isPast">
-                <!-- Wenn es einen non-attendance log gibt, wurde die Schicht verpasst. 
+                <span v-else>
+                  {{ t("Regular shift") }}
+                  <span v-if="assignment.assignment.shifts_to">
+                    {{ t("until") }}
+                    {{ assignment.assignment.shifts_to }}
+                  </span>
+                </span>
+
+                <span
+                  v-if="
+                    assignment.assignment.shifts_membership
+                      .shifts_assignments_count <= 1
+                  "
+                >
+                  {{ t("(first shift!)") }}
+                </span>
+
+                <span v-if="assignment.removed"> ({{ t("Removed") }}) </span>
+
+                <div v-for="absence of assignment.absences" :key="absence.id">
+                  {{ t("Absent") }}: {{ absence.shifts_from }} {{ t("to") }}
+                  {{ absence.shifts_to }}
+                </div>
+
+                <div v-if="isPast">
+                  <!-- Wenn es einen non-attendance log gibt, wurde die Schicht verpasst. 
                  Wenn es keinen log gibt, und die schicht wurde abgesagt, 
                  dann ist die Person wie geplant nicht gekommen. 
                  Wenn es keine absage gibt und keinen log, 
                  gehen wir davon aus dass die schicht stattgefunden hat -
                  in diesem Fall wird automatisch ein Log vom Cronjob erstellt
                  (außer schichtdaten werden nachträglich für die vergangenheit geändert) -->
-                <div
-                  v-if="
-                    (assignment.log &&
-                      assignment.log.shifts_type !== 'attended') ||
-                    (!assignment.isActive && !assignment.log)
-                  "
-                  class="flex flex-wrap justify-between"
-                >
-                  <div v-if="assignment.isActive">
-                    Log: Schicht wurde verpasst
+                  <div
+                    v-if="
+                      (assignment.log &&
+                        assignment.log.shifts_type !== 'attended') ||
+                      (!assignment.isActive && !assignment.log)
+                    "
+                    class="flex flex-wrap justify-between"
+                  >
+                    <div v-if="assignment.isActive">
+                      Log: Schicht wurde verpasst
+                    </div>
+                    <div v-else>Log: Schicht wurde abgesagt</div>
+                    <UButton
+                      size="sm"
+                      label="Log auf absolviert setzen"
+                      @click="updateLog(assignment, 'attended')"
+                    />
                   </div>
-                  <div v-else>Log: Schicht wurde abgesagt</div>
-                  <UButton
-                    size="sm"
-                    label="Log auf absolviert setzen"
-                    @click="updateLog(assignment, 'attended')"
-                  />
+                  <div v-else class="flex flex-wrap justify-between">
+                    <div>Log: Schicht wurde absolviert</div>
+                    <UButton
+                      size="sm"
+                      label="Log auf verpasst setzen"
+                      @click="updateLog(assignment, 'missed')"
+                    />
+                  </div>
                 </div>
-                <div v-else class="flex flex-wrap justify-between">
-                  <div>Log: Schicht wurde absolviert</div>
+              </ShiftsViewerModalAdminBox>
+            </template>
+          </div>
+        </div>
+
+        <!-- Logs -->
+        <div v-if="isPast && logsLoaded">
+          <ShiftsViewerModalAdminLogs :logs="extraLogs" :occurence="occ" />
+        </div>
+      </div>
+
+      <!-- CREATE ASSIGNMENT FLOW -->
+
+      <UModal v-model:open="createAssignmentModalIsOpen" :transition="false">
+        <template #content>
+          <div class="p-10 flex flex-col gap-4">
+            <h2>{{ t("Create assignment") }}</h2>
+            <UFormGroup :label="t('Membership number')" name="membershipID">
+              <UInput v-model="mshipID" />
+            </UFormGroup>
+            <UButton @click="loadMembership">{{
+              t("Load membership")
+            }}</UButton>
+
+            <div v-if="mshipData">
+              <p class="font-bold">
+                {{ mshipData.memberships_user.first_name }}
+                {{ mshipData.memberships_user.last_name }}
+              </p>
+              <p>
+                {{ t("Membership type") }}: {{ mshipData.memberships_type }}
+              </p>
+
+              <p>
+                {{ t("Membership status") }}:
+                {{ t(mshipData.memberships_status) }}
+              </p>
+
+              <p>{{ t("Shift type") }}: {{ t(mshipData.shifts_user_type) }}</p>
+
+              <p v-if="mshipData.shifts_skills">
+                {{ t("Skills") }}:
+                <span v-for="skill in mshipData.shifts_skills" :key="skill">
+                  {{ t("skill:" + skill) }},
+                </span>
+              </p>
+
+              <div
+                v-if="checkIfMshipInAssignments(mshipData.id)"
+                class="bg-red-100 p-2 rounded-md mt-3 font-bold"
+              >
+                {{ t("Member is already assigned for this shift") }}
+              </div>
+              <div v-else>
+                <div class="flex flex-wrap gap-2 mt-3">
+                  <UButton class="w-full" @click="createAssignment(true)">{{
+                    t("Create one-time assignment")
+                  }}</UButton>
                   <UButton
-                    size="sm"
-                    label="Log auf verpasst setzen"
-                    @click="updateLog(assignment, 'missed')"
-                  />
+                    v-if="props.shiftOccurence.shift.shifts_is_regular"
+                    class="w-full"
+                    @click="createAssignment(false)"
+                    >{{ t("Create regular assignment") }}</UButton
+                  >
                 </div>
               </div>
-            </ShiftsViewerModalAdminBox>
-          </template>
-        </div>
-      </div>
-
-      <!-- Logs -->
-      <div v-if="isPast && logsLoaded">
-        <ShiftsViewerModalAdminLogs :logs="extraLogs" :occurence="occ" />
-      </div>
-    </div>
-
-    <!-- CREATE ASSIGNMENT FLOW -->
-
-    <UModal v-model="createAssignmentModalIsOpen" :transition="false">
-      <div class="p-10 flex flex-col gap-4">
-        <h2>{{ t("Create assignment") }}</h2>
-        <UFormGroup :label="t('Membership number')" name="membershipID">
-          <UInput v-model="mshipID" />
-        </UFormGroup>
-        <UButton @click="loadMembership">{{ t("Load membership") }}</UButton>
-
-        <div v-if="mshipData">
-          <p class="font-bold">
-            {{ mshipData.memberships_user.first_name }}
-            {{ mshipData.memberships_user.last_name }}
-          </p>
-          <p>{{ t("Membership type") }}: {{ mshipData.memberships_type }}</p>
-
-          <p>
-            {{ t("Membership status") }}:
-            {{ t(mshipData.memberships_status) }}
-          </p>
-
-          <p>{{ t("Shift type") }}: {{ t(mshipData.shifts_user_type) }}</p>
-
-          <p v-if="mshipData.shifts_skills">
-            {{ t("Skills") }}:
-            <span v-for="skill in mshipData.shifts_skills" :key="skill">
-              {{ t("skill:" + skill) }},
-            </span>
-          </p>
-
-          <div
-            v-if="checkIfMshipInAssignments(mshipData.id)"
-            class="bg-red-100 p-2 rounded-md mt-3 font-bold"
-          >
-            {{ t("Member is already assigned for this shift") }}
-          </div>
-          <div v-else>
-            <div class="flex flex-wrap gap-2 mt-3">
-              <UButton class="w-full" @click="createAssignment(true)">{{
-                t("Create one-time assignment")
-              }}</UButton>
-              <UButton
-                v-if="props.shiftOccurence.shift.shifts_is_regular"
-                class="w-full"
-                @click="createAssignment(false)"
-                >{{ t("Create regular assignment") }}</UButton
-              >
+            </div>
+            <div v-if="mshipError">
+              {{ t("Member") }} {{ mshipID }} {{ t("not found") }}
             </div>
           </div>
-        </div>
-        <div v-if="mshipError">
-          {{ t("Member") }} {{ mshipID }} {{ t("not found") }}
-        </div>
-      </div>
-    </UModal>
+        </template>
+      </UModal>
 
-    <!-- REMOVE ASSIGNMENT FLOW -->
+      <!-- REMOVE ASSIGNMENT FLOW -->
 
-    <UModal
-      v-if="removeAssignmentObject"
-      v-model="removeAssignmentModalIsOpen"
-      :transition="false"
-    >
-      <div class="p-10 flex flex-col gap-4">
-        <h2>{{ t("Remove assignment") }}</h2>
-        <div>
-          <p>
-            {{
-              displayMembership(
-                removeAssignmentObject.assignment.shifts_membership,
-              )
-            }}
-          </p>
-          <p v-if="!removeAssignmentObject.assignment.shifts_is_regular">
-            {{ removeAssignmentObject.assignment.shifts_from }} ({{
-              t("One-time shift")
-            }})
-          </p>
-          <p v-else>
-            {{ removeAssignmentObject.assignment.shifts_from }} {{ t("to") }}
-            {{
-              removeAssignmentObject.assignment.shifts_to || t("No end date")
-            }}
-          </p>
-        </div>
-        <div class="flex flex-wrap gap-2 mt-3">
-          <UButton @click="removeAssignment(true)">
-            {{ t("Remove assignment for") }} {{ startDateString }}
-          </UButton>
-          <UButton
-            v-if="removeAssignmentObject.assignment.shifts_is_regular"
-            @click="removeAssignment(false)"
-          >
-            {{ t("Remove for ") }} {{ startDateString }}
-            {{ t("and all future dates") }}
-          </UButton>
-        </div>
-      </div>
-    </UModal>
+      <UModal
+        v-if="removeAssignmentObject"
+        v-model:open="removeAssignmentModalIsOpen"
+        :transition="false"
+      >
+        <template #content>
+          <div class="p-10 flex flex-col gap-4">
+            <h2>{{ t("Remove assignment") }}</h2>
+            <div>
+              <p>
+                {{
+                  displayMembership(
+                    removeAssignmentObject.assignment.shifts_membership,
+                  )
+                }}
+              </p>
+              <p v-if="!removeAssignmentObject.assignment.shifts_is_regular">
+                {{ removeAssignmentObject.assignment.shifts_from }} ({{
+                  t("One-time shift")
+                }})
+              </p>
+              <p v-else>
+                {{ removeAssignmentObject.assignment.shifts_from }}
+                {{ t("to") }}
+                {{
+                  removeAssignmentObject.assignment.shifts_to ||
+                  t("No end date")
+                }}
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <UButton @click="removeAssignment(true)">
+                {{ t("Remove assignment for") }} {{ startDateString }}
+              </UButton>
+              <UButton
+                v-if="removeAssignmentObject.assignment.shifts_is_regular"
+                @click="removeAssignment(false)"
+              >
+                {{ t("Remove for ") }} {{ startDateString }}
+                {{ t("and all future dates") }}
+              </UButton>
+            </div>
+          </div>
+        </template>
+      </UModal>
+    </template>
   </UModal>
 </template>
 

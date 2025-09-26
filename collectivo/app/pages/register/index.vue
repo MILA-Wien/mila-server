@@ -50,7 +50,7 @@ const schema = object({
     },
   ),
   directus_users__username: string().required(),
-  directus_users__pronouns: string().required(),
+  directus_users__pronouns: string(),
   directus_users__use_pronouns_on_card: boolean(),
   directus_users__first_name: string().required(),
   directus_users__last_name: string().required(),
@@ -158,6 +158,7 @@ const state: any = reactive({
 
 function fillTestData() {
   state.directus_users__memberships_person_type = "natural";
+  state.directus_users__username = "Max Mustermann";
   state.directus_users__email =
     new Date().toISOString().replace(/[-:.]/g, "_") + "@example.com";
   state.directus_users__password = "test";
@@ -193,8 +194,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     toast.add({
       title: t("There was an error"),
       icon: "i-heroicons-exclamation-triangle",
-      color: "red",
-      timeout: 0,
     });
   } else {
     navigateTo("/register/success");
@@ -207,8 +206,6 @@ async function onError() {
   toast.add({
     title: t("Some fields are not filled in correctly"),
     icon: "i-heroicons-exclamation-triangle",
-    color: "red",
-    timeout: 0,
   });
 }
 </script>
@@ -255,12 +252,18 @@ async function onError() {
       name="directus_users__memberships_person_type"
       required
     >
-      <FormsSingleChoice
+      <URadioGroup
+        variant="card"
         v-model="state.directus_users__memberships_person_type"
-        :options="['natural', 'legal']"
+        :items="[
+          { label: 'natural', value: 'natural' },
+          { label: 'legal', value: 'legal' },
+        ]"
       >
-        <template #label="{ option }">{{ t("l:" + option.label) }}</template>
-      </FormsSingleChoice>
+        <template #label="{ item }">
+          {{ t("l:" + item.label) }}
+        </template>
+      </URadioGroup>
     </FormsFormGroup>
 
     <div class="pt-6">
@@ -270,30 +273,40 @@ async function onError() {
       </p>
     </div>
 
-    <FormsFormGroup
-      :label="t('E-Mail Address')"
-      name="directus_users__email"
-      required
-    >
-      <UInput variant="outline" v-model="state.directus_users__email" />
-    </FormsFormGroup>
-
-    <div class="grid md:grid-cols-2 gap-4">
+    <div class="grid gap-4">
       <FormsFormGroup
-        :label="t('Password')"
-        name="directus_users__password"
+        :label="t('E-Mail Address')"
+        name="directus_users__email"
         required
       >
-        <UInput
-          variant="outline"
-          v-model="state.directus_users__password"
-          type="password"
-        />
+        <UInput variant="outline" v-model="state.directus_users__email" />
       </FormsFormGroup>
 
-      <FormsFormGroup :label="t('Repeat password')" name="_pw_confirm" required>
-        <UInput variant="outline" v-model="state._pw_confirm" type="password" />
-      </FormsFormGroup>
+      <div class="grid md:grid-cols-2 gap-4">
+        <FormsFormGroup
+          :label="t('Password')"
+          name="directus_users__password"
+          required
+        >
+          <UInput
+            variant="outline"
+            v-model="state.directus_users__password"
+            type="password"
+          />
+        </FormsFormGroup>
+
+        <FormsFormGroup
+          :label="t('Repeat password')"
+          name="_pw_confirm"
+          required
+        >
+          <UInput
+            variant="outline"
+            v-model="state._pw_confirm"
+            type="password"
+          />
+        </FormsFormGroup>
+      </div>
     </div>
 
     <template v-if="!isNatural">
@@ -302,7 +315,7 @@ async function onError() {
       </div>
 
       <div class="grid md:grid-cols-2 gap-4">
-        <UFormGroup
+        <FormsFormGroup
           :label="t('Organization name')"
           name="directus_users__memberships_organization_name"
           required
@@ -311,9 +324,9 @@ async function onError() {
             variant="outline"
             v-model="state.directus_users__memberships_organization_name"
           />
-        </UFormGroup>
+        </FormsFormGroup>
 
-        <UFormGroup
+        <FormsFormGroup
           :label="t('Organization type')"
           name="directus_users__memberships_organization_type"
           required
@@ -322,9 +335,9 @@ async function onError() {
             variant="outline"
             v-model="state.directus_users__memberships_organization_type"
           />
-        </UFormGroup>
+        </FormsFormGroup>
 
-        <UFormGroup
+        <FormsFormGroup
           :label="t('Organization ID')"
           name="directus_users__memberships_organization_id"
           required
@@ -333,7 +346,7 @@ async function onError() {
             variant="outline"
             v-model="state.directus_users__memberships_organization_id"
           />
-        </UFormGroup>
+        </FormsFormGroup>
       </div>
     </template>
 
@@ -398,90 +411,96 @@ async function onError() {
     </div>
 
     <div class="pt-6">
-      <h2 v-if="isNatural">
+      <h2 v-if="isNatural" class="mb-0 pb-0">
         {{ t("Personal data") }}
       </h2>
-      <h2 v-else>
+      <h2 v-else class="mb-0">
         {{ t("Organization contact person") }}
       </h2>
-    </div>
 
-    <div v-if="isNatural">
-      {{
-        t(
-          "Diese Daten brauchen wir rechtlich für das Mitgliederregister der Genossenschaft. Bitte gib hier deinen amtlichen Namen an. Diese Daten sind nur für das Mitgliederbüro einsehbar.",
-        )
-      }}
-    </div>
+      <div v-if="isNatural" class="mb-4">
+        {{
+          t(
+            "Diese Daten brauchen wir rechtlich für das Mitgliederregister der Genossenschaft. Bitte gib hier deinen amtlichen Namen an. Diese Daten sind nur für das Mitgliederbüro einsehbar.",
+          )
+        }}
+      </div>
 
-    <div class="grid md:grid-cols-2 gap-4">
-      <UFormGroup
-        :label="t('First name')"
-        name="directus_users__first_name"
-        required
-      >
-        <UInput variant="outline" v-model="state.directus_users__first_name" />
-      </UFormGroup>
-
-      <UFormGroup
-        :label="t('Last name')"
-        name="directus_users__last_name"
-        required
-      >
-        <UInput variant="outline" v-model="state.directus_users__last_name" />
-      </UFormGroup>
-
-      <UFormGroup
-        :label="t('Gender')"
-        name="directus_users__memberships_gender"
-        required
-      >
-        <USelectMenu
-          v-model="state.directus_users__memberships_gender"
-          :options="['female', 'male', 'diverse', 'inter', 'open', 'no-answer']"
+      <div class="grid md:grid-cols-2 gap-4">
+        <FormsFormGroup
+          :label="t('First name')"
+          name="directus_users__first_name"
+          required
         >
-          <template #label>{{
-            t("l:" + (state.directus_users__memberships_gender ?? "choose"))
-          }}</template>
-          <template #option="{ option }">{{ t("l:" + option) }}</template>
-        </USelectMenu>
-      </UFormGroup>
+          <UInput
+            variant="outline"
+            v-model="state.directus_users__first_name"
+          />
+        </FormsFormGroup>
 
-      <UFormGroup :label="t('Phone')" name="directus_users__memberships_phone">
-        <UInput
-          variant="outline"
-          v-model="state.directus_users__memberships_phone"
-        />
-      </UFormGroup>
+        <FormsFormGroup
+          :label="t('Last name')"
+          name="directus_users__last_name"
+          required
+        >
+          <UInput variant="outline" v-model="state.directus_users__last_name" />
+        </FormsFormGroup>
+
+        <FormsFormGroup
+          :label="t('Gender')"
+          name="directus_users__memberships_gender"
+          required
+        >
+          <USelectMenu
+            v-model="state.directus_users__memberships_gender"
+            :search-input="false"
+            :items="['female', 'male', 'diverse', 'inter', 'open', 'no-answer']"
+          >
+            <template #default>{{
+              t("l:" + (state.directus_users__memberships_gender ?? "choose"))
+            }}</template>
+            <template #item-label="{ item }">{{ t("l:" + item) }}</template>
+          </USelectMenu>
+        </FormsFormGroup>
+
+        <FormsFormGroup
+          :label="t('Phone')"
+          name="directus_users__memberships_phone"
+        >
+          <UInput
+            variant="outline"
+            v-model="state.directus_users__memberships_phone"
+          />
+        </FormsFormGroup>
+      </div>
+
+      <div v-if="isNatural" class="mt-4 grid gap-4">
+        <FormsFormGroup
+          :label="t('Birthday')"
+          name="directus_users__memberships_birthday"
+          required
+        >
+          <FormsDate v-model="state.directus_users__memberships_birthday" />
+        </FormsFormGroup>
+
+        <FormsFormGroup
+          :label="t('Occupation')"
+          name="directus_users__memberships_occupation"
+          required
+        >
+          <UInput
+            variant="outline"
+            v-model="state.directus_users__memberships_occupation"
+          />
+        </FormsFormGroup>
+      </div>
     </div>
-
-    <template v-if="isNatural">
-      <UFormGroup
-        :label="t('Birthday')"
-        name="directus_users__memberships_birthday"
-        required
-      >
-        <FormsDate v-model="state.directus_users__memberships_birthday" />
-      </UFormGroup>
-
-      <UFormGroup
-        :label="t('Occupation')"
-        name="directus_users__memberships_occupation"
-        required
-      >
-        <UInput
-          variant="outline"
-          v-model="state.directus_users__memberships_occupation"
-        />
-      </UFormGroup>
-    </template>
-
     <div class="pt-6">
       <h2>{{ t("Address") }}</h2>
     </div>
 
     <div class="grid md:grid-cols-2 gap-4">
-      <UFormGroup
+      <FormsFormGroup
         :label="t('Street')"
         name="directus_users__memberships_street"
         required
@@ -490,8 +509,8 @@ async function onError() {
           variant="outline"
           v-model="state.directus_users__memberships_street"
         />
-      </UFormGroup>
-      <UFormGroup
+      </FormsFormGroup>
+      <FormsFormGroup
         :label="t('Number')"
         name="directus_users__memberships_streetnumber"
         required
@@ -500,20 +519,26 @@ async function onError() {
           variant="outline"
           v-model="state.directus_users__memberships_streetnumber"
         />
-      </UFormGroup>
-      <UFormGroup :label="t('Stair')" name="directus_users__memberships_stair">
+      </FormsFormGroup>
+      <FormsFormGroup
+        :label="t('Stair')"
+        name="directus_users__memberships_stair"
+      >
         <UInput
           variant="outline"
           v-model="state.directus_users__memberships_stair"
         />
-      </UFormGroup>
-      <UFormGroup :label="t('Door')" name="directus_users__memberships_door">
+      </FormsFormGroup>
+      <FormsFormGroup
+        :label="t('Door')"
+        name="directus_users__memberships_door"
+      >
         <UInput
           variant="outline"
           v-model="state.directus_users__memberships_door"
         />
-      </UFormGroup>
-      <UFormGroup
+      </FormsFormGroup>
+      <FormsFormGroup
         :label="t('Postcode')"
         name="directus_users__memberships_postcode"
         required
@@ -522,8 +547,8 @@ async function onError() {
           variant="outline"
           v-model="state.directus_users__memberships_postcode"
         />
-      </UFormGroup>
-      <UFormGroup
+      </FormsFormGroup>
+      <FormsFormGroup
         :label="t('City')"
         name="directus_users__memberships_city"
         required
@@ -532,8 +557,8 @@ async function onError() {
           variant="outline"
           v-model="state.directus_users__memberships_city"
         />
-      </UFormGroup>
-      <UFormGroup
+      </FormsFormGroup>
+      <FormsFormGroup
         :label="t('Country')"
         name="directus_users__memberships_country"
         required
@@ -542,7 +567,7 @@ async function onError() {
           variant="outline"
           v-model="state.directus_users__memberships_country"
         />
-      </UFormGroup>
+      </FormsFormGroup>
     </div>
 
     <div class="pt-6">
@@ -555,18 +580,26 @@ async function onError() {
       </p>
     </div>
 
-    <UFormGroup
+    <FormsFormGroup
       :label="t('t:memberships_form_mtype')"
       name="memberships__memberships_type"
       required
     >
       <URadioGroup
         v-model="state.memberships__memberships_type"
-        :options="isNatural ? ['Aktiv', 'Investierend'] : ['Investierend']"
+        variant="card"
+        :items="
+          isNatural
+            ? [
+                { label: 'Aktiv', value: 'Aktiv' },
+                { label: 'Investierend', value: 'Investierend' },
+              ]
+            : [{ label: 'Investierend', value: 'Investierend' }]
+        "
       >
-        <template #label="{ option }">{{ t("l:" + option.label) }}</template>
+        <template #label="{ item }">{{ t("l:" + item.label) }}</template>
       </URadioGroup>
-    </UFormGroup>
+    </FormsFormGroup>
 
     <div class="pt-6">
       <h2>{{ t("Cooperative shares") }}</h2>
@@ -585,20 +618,32 @@ async function onError() {
       </p>
     </div>
 
-    <UFormGroup
+    <FormsFormGroup
       :label="t('How many shares do you want?')"
       name="shares_options"
       required
     >
       <URadioGroup
         v-model="state.shares_options"
-        :options="isNatural ? ['social', 'normal', 'more'] : ['normal', 'more']"
+        variant="card"
+        :items="
+          isNatural
+            ? [
+                { label: 'social', value: 'social' },
+                { label: 'normal', value: 'normal' },
+                { label: 'more', value: 'more' },
+              ]
+            : [
+                { label: 'normal', value: 'normal' },
+                { label: 'more', value: 'more' },
+              ]
+        "
       >
-        <template #label="{ option }">{{ t("l:" + option.label) }}</template>
+        <template #label="{ item }">{{ t("l:" + item.label) }}</template>
       </URadioGroup>
-    </UFormGroup>
+    </FormsFormGroup>
 
-    <UFormGroup
+    <FormsFormGroup
       v-if="state.shares_options === 'more'"
       :label="t('Number of shares (10 or more, 20€ per share)')"
       name="memberships__memberships_shares"
@@ -609,11 +654,11 @@ async function onError() {
         v-model="state.memberships__memberships_shares"
         type="number"
       />
-    </UFormGroup>
+    </FormsFormGroup>
 
     <div v-if="state.shares_options">
-      <p class="text-sm font-semibold pb-1">{{ t("Chosen shares") }}</p>
-      <div class="bg-blue-50 rounded-sm p-4 text-sm">
+      <div class="pb-1 font-bold">{{ t("Chosen shares") }}</div>
+      <div class="border border-black p-4">
         {{
           state.shares_options === "social"
             ? t("t:mila_form_shares_social")
@@ -631,27 +676,28 @@ async function onError() {
       </p>
     </div>
 
-    <UFormGroup
+    <FormsFormGroup
       :label="t('Payment type')"
       name="directus_users__payments_type"
       required
     >
       <USelectMenu
         v-model="state.directus_users__payments_type"
-        :options="['sepa', 'transfer']"
+        :items="['sepa', 'transfer']"
+        :search-input="false"
       >
-        <template #label>{{
+        <template #default>{{
           t("l:" + (state.directus_users__payments_type ?? "choose"))
         }}</template>
-        <template #option="{ option }">{{ t("l:" + option) }}</template>
+        <template #item="{ item }">{{ t("l:" + item) }}</template>
       </USelectMenu>
-    </UFormGroup>
+    </FormsFormGroup>
 
     <div
       v-if="state.directus_users__payments_type === 'sepa'"
       class="grid md:grid-cols-2 gap-4"
     >
-      <UFormGroup
+      <FormsFormGroup
         :label="t('Bank account IBAN')"
         name="directus_users__payments_account_iban"
         required
@@ -660,9 +706,9 @@ async function onError() {
           variant="outline"
           v-model="state.directus_users__payments_account_iban"
         />
-      </UFormGroup>
+      </FormsFormGroup>
 
-      <UFormGroup
+      <FormsFormGroup
         :label="t('Bank account owner')"
         name="directus_users__payments_account_owner"
         required
@@ -671,7 +717,7 @@ async function onError() {
           variant="outline"
           v-model="state.directus_users__payments_account_owner"
         />
-      </UFormGroup>
+      </FormsFormGroup>
     </div>
 
     <div class="pt-6">
@@ -682,21 +728,21 @@ async function onError() {
     </div>
 
     <div class="grid md:grid-cols-2 gap-4">
-      <UFormGroup
+      <FormsFormGroup
         :label="t('How did you hear about us?')"
         name="directus_users__mila_survey_contact"
       >
         <UTextarea v-model="state.directus_users__mila_survey_contact" />
-      </UFormGroup>
+      </FormsFormGroup>
 
-      <UFormGroup
+      <FormsFormGroup
         :label="t('What convinced you to join MILA?')"
         name="directus_users__mila_survey_motivation"
       >
         <UTextarea v-model="state.directus_users__mila_survey_motivation" />
-      </UFormGroup>
+      </FormsFormGroup>
 
-      <UFormGroup
+      <FormsFormGroup
         :label="t('Do you want to participate in a working group?')"
         name="directus_users__mila_groups_interested_2"
       >
@@ -723,9 +769,9 @@ async function onError() {
             { label: 'Mitgliederbüro', value: 'Mitgliederbüro' },
           ]"
         />
-      </UFormGroup>
+      </FormsFormGroup>
 
-      <UFormGroup
+      <FormsFormGroup
         :label="t('What are your skills?')"
         name="directus_users__mila_skills_2"
       >
@@ -746,9 +792,9 @@ async function onError() {
             },
           ]"
         />
-      </UFormGroup>
+      </FormsFormGroup>
 
-      <UFormGroup
+      <FormsFormGroup
         :label="t('What languages do you speak?')"
         name="directus_users__survey_languages"
       >
@@ -765,9 +811,9 @@ async function onError() {
             { label: 'Arabic', value: 'Arabisch' },
           ]"
         />
-      </UFormGroup>
+      </FormsFormGroup>
 
-      <UFormGroup
+      <FormsFormGroup
         :label="t('Additional languages')"
         name="directus_users__survey_languages_additional"
       >
@@ -775,28 +821,26 @@ async function onError() {
           variant="outline"
           v-model="state.directus_users__survey_languages_additional"
         />
-      </UFormGroup>
+      </FormsFormGroup>
     </div>
 
     <div class="pt-6">
       <h2>{{ t("Conditions") }}</h2>
     </div>
 
-    <UFormGroup :label="t('Statutes')" name="_statutes_approval" required>
-      <div class="bg-blue-50 p-2 rounded-sm text-sm flex flex-row">
-        <UToggle v-model="state._statutes_approval" class="mt-0.5 mr-2" />
+    <FormsFormGroup :label="t('Statutes')" name="_statutes_approval" required>
+      <FormsCheckbox v-model="state._statutes_approval" class="mt-0.5 mr-2">
         <span class="">
           {{ t("t:mila_form_check2") }}
-          <a :href="linkStatutes" class="font-bold">{{
+          <a :href="linkStatutes" class="font-bold" target="_blank">{{
             t("Statutes")
           }}</a></span
-        >
-      </div>
-    </UFormGroup>
+        ></FormsCheckbox
+      >
+    </FormsFormGroup>
 
-    <UFormGroup :label="t('Data use')" name="_data_approval" required>
-      <div class="bg-blue-50 p-2 rounded-sm text-sm flex flex-row">
-        <UToggle v-model="state._data_approval" class="mt-0.5 mr-2" />
+    <FormsFormGroup :label="t('Data use')" name="_data_approval" required>
+      <FormsCheckbox v-model="state._data_approval" class="mt-0.5 mr-2">
         <span class="">
           {{ t("t:mila_form_check3") }}
           <a
@@ -805,16 +849,18 @@ async function onError() {
             class="font-bold"
             >{{ t("Privacy Policy") }}</a
           >.
-        </span>
-      </div>
-    </UFormGroup>
+        </span></FormsCheckbox
+      >
+    </FormsFormGroup>
 
-    <UFormGroup :label="t('PR Work')" name="directus_users__mila_pr_approved">
-      <div class="bg-blue-50 p-2 rounded-sm text-sm flex flex-row">
-        <UToggle
-          v-model="state.directus_users__mila_pr_approved"
-          class="mt-0.5 mr-2"
-        />
+    <FormsFormGroup
+      :label="t('PR Work')"
+      name="directus_users__mila_pr_approved"
+    >
+      <FormsCheckbox
+        v-model="state.directus_users__mila_pr_approved"
+        class="mt-0.5 mr-2"
+      >
         <span class="">
           {{ t("t:mila_form_check1") }}
           <a
@@ -824,19 +870,19 @@ async function onError() {
             >{{ t("Privacy Policy") }}</a
           >.
         </span>
-      </div>
-    </UFormGroup>
+      </FormsCheckbox>
+    </FormsFormGroup>
 
     <div>
-      <p class="text-sm font-semibold mb-1">{{ t("Liability") }}</p>
-      <p class="text-sm">{{ t("t:mila_form_final1") }}</p>
+      <div class="font-bold mb-1">{{ t("Liability") }}</div>
+      <p class="">{{ t("t:mila_form_final1") }}</p>
     </div>
 
     <div>
-      <p class="text-sm font-semibold mb-1">
+      <div class="font-bold mb-1">
         {{ t("Payout upon termination") }}
-      </p>
-      <p class="text-sm">
+      </div>
+      <p class="">
         {{ t("t:mila_form_final2") }}
         <a :href="linkStatutes" target="_blank" class="font-bold">{{
           t("Rules of Procedure")
@@ -846,8 +892,8 @@ async function onError() {
     </div>
 
     <div>
-      <p class="text-sm font-semibold mb-1">{{ t("Revocation") }}</p>
-      <p class="text-sm">{{ t("t:mila_form_final3") }}</p>
+      <div class="font-bold mb-1">{{ t("Revocation") }}</div>
+      <p class="">{{ t("t:mila_form_final3") }}</p>
     </div>
 
     <div class="py-6">
@@ -855,7 +901,7 @@ async function onError() {
         {{ t("Submit application") }}
       </UButton>
     </div>
-    <div v-if="devMode" class="text-sm text-gray-500">
+    <div v-if="devMode" class="text-gray-500">
       <UButton @click="fillTestData">{{ t("Fill test data") }}</UButton>
       <pre>{{ JSON.stringify(state, null, 2) }}</pre>
     </div>
@@ -1016,8 +1062,8 @@ en:
   "t:memberships_form_success": "Please log in in order to verify your E-Mail address."
   "t:memberships_form_already_member": "Your membership application has been submitted. Thank you for your application!"
 
-  "t:mila_form_intro": "In order to join our cooperative, we need some information from you. Please complete the following questions. If something is unclear, please contact mitglied[at]mila.wien."
-  "t:mila_form_account": "Please enter an E-Mail address and password for your MILA user account here. (If you already have an account, click on 'Login' in the top right corner.)"
+  "t:mila_form_intro": "In order to join our cooperative, we need some information from you. Please complete the following questions. If something is unclear, please contact "
+  "t:mila_form_account": "Please enter an E-Mail address and password for your MILA user account here."
   "t:mila_form_mtype_orga": "As an organization, you are automatically an investing member. As an investing member, you support us financially, but you cannot buy anything."
   "t:mila_form_cshares_orga": "You pay your cooperative share only once (not annually). The standard rate is € 180 (that's 9 shares). You can choose more than 9. You can find out more under"
   "t:mila_form_mtype_natural": "As an active member, you work in the supermarket and can shop. As an investing member, you support us financially, but cannot shop. You can also switch between active and investing later."
@@ -1034,6 +1080,6 @@ en:
   "t:mila_form_check2": "The statutes are available to me at and I fully accept the decisions of the general assembly."
   "t:mila_form_check3": "I agree that my personal data will be processed for membership purposes in accordance with GenG. Further information at:"
   "t:mila_form_final1": "In the event of insolvency and/or dissolution of the cooperative, the members of the cooperative are liable to their creditors with their shares and additionally with an amount equal to the amount of their shares (obligation to make additional contributions in the simple amount of the shares)."
-  "t:mila_form_final2": "If you cancel your membership, your deposit will be refunded at the end of the following financial year, provided that MILA's financial situation allows it. More information in the [statutes](https://wolke.mila.wien/s/BRKPrbzjssqkzbz)"
+  "t:mila_form_final2": "If you cancel your membership, your deposit will be refunded at the end of the following financial year, provided that MILA's financial situation allows it. More information in the "
   "t:mila_form_final3": "You have the right to cancel this contract within 14 days without giving reasons. The deadline is 14 days from the delivery of the acceptance of the membership by the board of the cooperative."
 </i18n>

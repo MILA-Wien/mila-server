@@ -94,20 +94,33 @@ watch([day, month, year], ([day, month, year]) => {
 <template>
   <div class="flex flex-wrap gap-2">
     <div class="w-third-with-gap min-w-24">
-      <USelectMenu v-model="day" :options="days" :placeholder="t('Day')" />
+      <USelectMenu
+        v-model="day"
+        :items="days"
+        :placeholder="t('Day')"
+        :searchInput="false"
+      />
     </div>
     <div class="w-third-with-gap min-w-24">
-      <USelectMenu v-model="month" :options="months" :placeholder="t('Month')">
-        <template #label>
-          {{ t(month ?? "Month") }}
-        </template>
-        <template #option="{ option }">
-          {{ t(option) }}
+      <USelectMenu
+        v-model="month"
+        :items="months"
+        :placeholder="t('Month')"
+        :searchInput="false"
+      >
+        <template #default> {{ t(month ?? "Month") }} </template>
+        <template #item="{ item }">
+          {{ t(item) }}
         </template>
       </USelectMenu>
     </div>
     <div class="w-1/3 min-w-24">
-      <USelectMenu v-model="year" :options="years" :placeholder="t('Year')" />
+      <USelectMenu
+        v-model="year"
+        :items="years"
+        :placeholder="t('Year')"
+        :searchInput="false"
+      />
     </div>
   </div>
 </template>

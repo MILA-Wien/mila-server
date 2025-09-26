@@ -38,7 +38,10 @@ else throw createError({ statusCode: 403 });
 </script>
 
 <template>
-  <div v-if="dataLoaded">
+  <div v-if="!dataLoaded" class="">
+    <USkeleton class="h-32 w-full rounded-none" />
+  </div>
+  <div v-else>
     <CollectivoCard :color="canShop ? 'green' : 'orange'" class="mb-4">
       <div>
         <h4>{{ t("My status") }}</h4>

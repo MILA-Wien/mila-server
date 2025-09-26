@@ -260,9 +260,9 @@ loadEvents();
     v-if="categoriesLoaded"
     class="flex flex-wrap justify-between items-center gap-4"
   >
-    <UFormGroup :label="t(selectedView.label)" class="flex-[1_0_0]">
+    <FormsFormGroup :label="t(selectedView.label)" class="flex-[1_0_0]">
       <div
-        class="flex flex-row justify-between items-center h-[50px] bg-blue-50"
+        class="flex flex-row justify-between items-center h-[50px] border border-black"
       >
         <UButton
           size="sm"
@@ -286,37 +286,37 @@ loadEvents();
           <UIcon name="i-heroicons-chevron-right-16-solid" class="text-2xl" />
         </UButton>
       </div>
-    </UFormGroup>
+    </FormsFormGroup>
 
-    <UFormGroup :label="t('Display')" class="flex-1">
+    <FormsFormGroup :label="t('Display')" class="flex-1">
       <USelectMenu
         v-model="selectedView"
-        :options="viewOptions"
-        option-attribute="label"
+        :items="viewOptions"
+        item-attribute="label"
         class="whitespace-nowrap"
       >
-        <template #label>{{ t(selectedView?.label) }}</template>
-        <template #option="{ option }">
-          {{ t(option.label) }}
+        <template #default>{{ t(selectedView?.label) }}</template>
+        <template #item-label="{ item }">
+          {{ t(item.label) }}
         </template>
       </USelectMenu>
-    </UFormGroup>
+    </FormsFormGroup>
 
-    <UFormGroup :label="t('Filter')" class="flex-1">
+    <FormsFormGroup :label="t('Filter')" class="flex-1">
       <USelectMenu
         v-model="selectedFilter"
-        :options="filterOptions"
+        :items="filterOptions"
         option-attribute="label"
         class="whitespace-nowrap"
       >
-        <template #label>{{ t(selectedFilter?.label) }}</template>
-        <template #option="{ option }">
-          {{ t(option.label) }}
+        <template #default>{{ t(selectedFilter?.label) }}</template>
+        <template #item-label="{ item }">
+          {{ t(item.label) }}
         </template>
       </USelectMenu>
-    </UFormGroup>
+    </FormsFormGroup>
 
-    <UFormGroup
+    <FormsFormGroup
       v-if="categories.length > 1"
       :label="t('Category')"
       class="flex-1"
@@ -326,12 +326,12 @@ loadEvents();
         :options="categories"
         class="whitespace-nowrap"
       >
-        <template #label>{{ t(selectedCategory.name) }}</template>
-        <template #option="{ option }">
-          {{ t(option.name) }}
+        <template #default>{{ t(selectedCategory.name) }}</template>
+        <template #item-label="{ item }">
+          {{ t(item.name) }}
         </template>
       </USelectMenu>
-    </UFormGroup>
+    </FormsFormGroup>
   </div>
   <div v-if="render && events != null" class="pt-10">
     <ShiftsViewerShiftsList

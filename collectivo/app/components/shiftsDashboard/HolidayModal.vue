@@ -78,57 +78,59 @@ function closeModal() {
 </script>
 
 <template>
-  <UModal v-model="isOpen">
-    <div v-if="success === true" class="p-10 flex flex-col">
-      <h2>{{ t("Request holiday") }}</h2>
-      <div class="flex flex-wrap items-center gap-3 pb-3">
-        <UIcon
-          name="i-heroicons-check-circle-16-solid"
-          class="text-green-500 w-16 h-16"
-        />
-        <p>{{ t("Holiday submitted successfully.") }}</p>
+  <UModal v-model:open="isOpen">
+    <template #content>
+      <div v-if="success === true" class="p-10 flex flex-col">
+        <h2>{{ t("Request holiday") }}</h2>
+        <div class="flex flex-wrap items-center gap-3 pb-3">
+          <UIcon
+            name="i-heroicons-check-circle-16-solid"
+            class="text-green-500 w-16 h-16"
+          />
+          <p>{{ t("Holiday submitted successfully.") }}</p>
+        </div>
+        <UButton class="w-full" @click="closeModal">
+          {{ t("Close") }}
+        </UButton>
       </div>
-      <UButton class="w-full" @click="closeModal">
-        {{ t("Close") }}
-      </UButton>
-    </div>
-    <div v-else-if="success === false" class="p-10 flex flex-col gap-3">
-      <h2 class="mb-5">{{ t("Request holiday") }}</h2>
-      <p>{{ t("Something went wrong") }}</p>
-      <p>{{ t("Please try again later or contact us.") }}</p>
-      <UButton class="w-full" @click="closeModal">
-        {{ t("Close") }}
-      </UButton>
-    </div>
-    <div v-else class="p-10">
-      <h2 class="mb-5">{{ t("Request holiday") }}</h2>
-      <p>
-        {{ t("t:holiday") }}
-      </p>
-      <UFormGroup :label="t('From')" class="my-5">
-        <FormsDate
-          v-model="absenceFromDate"
-          :max-years-past="1"
-          :max-years-future="1"
-        />
-      </UFormGroup>
-      <UFormGroup :label="t('To')" class="my-5">
-        <FormsDate
-          v-model="absenceToDate"
-          :max-years-past="1"
-          :max-years-future="1"
-        />
-      </UFormGroup>
+      <div v-else-if="success === false" class="p-10 flex flex-col gap-3">
+        <h2 class="mb-5">{{ t("Request holiday") }}</h2>
+        <p>{{ t("Something went wrong") }}</p>
+        <p>{{ t("Please try again later or contact us.") }}</p>
+        <UButton class="w-full" @click="closeModal">
+          {{ t("Close") }}
+        </UButton>
+      </div>
+      <div v-else class="p-10">
+        <h2 class="mb-5">{{ t("Request holiday") }}</h2>
+        <p>
+          {{ t("t:holiday") }}
+        </p>
+        <FormsFormGroup :label="t('From')" class="my-5">
+          <FormsDate
+            v-model="absenceFromDate"
+            :max-years-past="1"
+            :max-years-future="1"
+          />
+        </FormsFormGroup>
+        <FormsFormGroup :label="t('To')" class="my-5">
+          <FormsDate
+            v-model="absenceToDate"
+            :max-years-past="1"
+            :max-years-future="1"
+          />
+        </FormsFormGroup>
 
-      <UButton
-        class="w-full mt-4"
-        size="lg"
-        icon="i-heroicons-pencil-square"
-        @click="postAbsence()"
-      >
-        {{ t("Request holiday") }}
-      </UButton>
-    </div>
+        <UButton
+          class="w-full mt-4"
+          size="lg"
+          icon="i-heroicons-pencil-square"
+          @click="postAbsence()"
+        >
+          {{ t("Request holiday") }}
+        </UButton>
+      </div>
+    </template>
   </UModal>
 </template>
 

@@ -198,7 +198,7 @@ END:VCALENDAR`;
 
         <!-- Space for buttons -->
         <div class="flex flex-wrap gap-3">
-          <UButton size="sm" color="yellow" @click="downloadICS()"
+          <UButton size="sm" color="orange" @click="downloadICS()"
             >{{ t("Calendar download") }}
           </UButton>
           <!-- v-if="!assignment.shifts_is_regular" -->
@@ -210,47 +210,47 @@ END:VCALENDAR`;
     </CollectivoCard>
 
     <!-- Signout Modal -->
-    <UModal v-model="signOutModalIsOpen">
-      <div
-        v-if="dateWithinTimeSpan(nextOcc, MAX_DAYS_TO_SIGN_OUT_BEFORE)"
-        class="p-8 flex flex-col gap-2"
-      >
-        <h2>{{ t("Sign out") }}</h2>
+    <UModal v-model:open="signOutModalIsOpen">
+      <template #content>
+        <div
+          v-if="dateWithinTimeSpan(nextOcc, MAX_DAYS_TO_SIGN_OUT_BEFORE)"
+          class="p-8 flex flex-col gap-2"
+        >
+          <h2>{{ t("Sign out") }}</h2>
 
-        <p>{{ t("Sign out from the following shift") }}:</p>
-        <p>
-          {{
-            getDateTimeWithTimeSpanString(
-              shift.shifts_from_time,
-              shift.shifts_to_time,
-              nextOcc,
-              locale,
-              t,
-            )
-          }}
-        </p>
-        <p v-if="assignment.shifts_is_regular">
-          <span class="font-bold">{{ t("Attention") }}:</span>
-          {{ t("t:signout_regular") }}
-        </p>
-        <div class="flex flex-wrap gap-2 mt-4 justify-end">
-          <UButton color="gray" @click="signOutModalIsOpen = false">
-            {{ t("Cancel") }}
-          </UButton>
-          <UButton size="sm" @click="createAbsence">{{
-            t("Sign out")
-          }}</UButton>
+          <p>{{ t("Sign out from the following shift") }}:</p>
+          <p>
+            {{
+              getDateTimeWithTimeSpanString(
+                shift.shifts_from_time,
+                shift.shifts_to_time,
+                nextOcc,
+                locale,
+                t,
+              )
+            }}
+          </p>
+          <p v-if="assignment.shifts_is_regular">
+            <span class="font-bold">{{ t("Attention") }}:</span>
+            {{ t("t:signout_regular") }}
+          </p>
+          <div class="flex flex-wrap gap-2 mt-4 justify-end">
+            <UButton color="gray" @click="signOutModalIsOpen = false">
+              {{ t("Cancel") }}
+            </UButton>
+            <UButton @click="createAbsence">{{ t("Sign out") }}</UButton>
+          </div>
         </div>
-      </div>
-      <div v-else class="p-8 flex flex-col gap-2">
-        <h2>{{ t("Sign out") }}</h2>
-        <p>
-          {{
-            t("Sign-out is not possible anymore. Please contact the office.")
-          }}
-        </p>
-        <UButton size="sm" to="help">{{ t("Contact") }}</UButton>
-      </div>
+        <div v-else class="p-8 flex flex-col gap-2">
+          <h2>{{ t("Sign out") }}</h2>
+          <p>
+            {{
+              t("Sign-out is not possible anymore. Please contact the office.")
+            }}
+          </p>
+          <UButton size="sm" to="help">{{ t("Contact") }}</UButton>
+        </div>
+      </template>
     </UModal>
   </div>
 </template>
@@ -285,5 +285,6 @@ de:
   "t:signout_regular": "Du wirst nur für dieses Datum abgemeldet, nicht jedoch für zukünftige Termine. Für eine dauerhafte Abmeldung wende dich bitte an das Mitgliederbüro."
   "Sign-out is not possible anymore. Please contact the office.": "Abmeldung ist nicht mehr möglich. Bitte kontaktiere das Mitgliederbüro."
   "Calendar download": "Kalender-Export"
+  "Cancel": "Abbrechen"
   "ics_preamble": "Achtung: Dieser Kalendereintrag wird nicht automatisch aktualisiert, falls sich deine Schichteinteilung ändert. Deine aktuelle Schichteinteilung siehst du online im Mitgliederbereich. Denke bei Änderungen der Schichteinteilung bitte daran, alte Kalendereinträge zu löschen und dir einen neuen Kalendereintrag zu erstellen."
 </i18n>

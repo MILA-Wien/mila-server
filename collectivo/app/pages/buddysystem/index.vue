@@ -46,7 +46,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 <template>
   <BetaMessage />
   <div class="flex flex-col gap-8">
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-1">
       <h2 class="mb-0 pb-0">Was bedeutet Unterstützungs-Bedarf?</h2>
 
       <p>
@@ -82,10 +82,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         class="space-y-4"
         @submit="onSubmit"
       >
-        <UFormGroup name="buddysystem_need_buddy">
-          <FormsSingleChoice
+        <FormsFormGroup name="buddysystem_need_buddy">
+          <URadioGroup
+            variant="card"
             v-model="state.buddy_status"
-            :options="[
+            :items="[
               {
                 label:
                   'Ich brauche Unterstützung. Ein Buddy soll mich während der Festschicht unterstützen. Ein Buddy ist ein anderes MILA-Mitglied. Eine Festschicht wiederholt sich alle 4 Wochen.',
@@ -102,9 +103,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
               },
             ]"
           />
-        </UFormGroup>
-
-        <UButton type="submit"> {{ t("Aktualisieren") }} </UButton>
+        </FormsFormGroup>
+        <div>
+          <UButton type="submit"> {{ t("Aktualisieren") }} </UButton>
+        </div>
       </UForm>
     </div>
   </div>

@@ -35,7 +35,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   if (res.status.value === "success") {
     toast.add({
       title: t("Dein Antrag wurde erfolgreich eingereicht."),
-      color: "green",
     });
     await userData.value.reload();
     navigateTo("/solitopf");
@@ -43,7 +42,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     toast.add({
       title: t("Es ist ein Fehler aufgetreten."),
       icon: "i-heroicons-exclamation-triangle",
-      color: "red",
     });
   }
 }
@@ -57,9 +55,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         Ich möchte Unterstützung aus dem Soli-Topf erhalten.
       </template>
       <template #description> Für mich passt am besten: </template>
-      <FormsSingleChoice
+      <URadioGroup
         v-model="state.auszahlung"
-        :options="[
+        variant="card"
+        :items="[
           {
             label: t('Eine einmalige Auszahlung von 300 €.'),
             value: 'v300a1',

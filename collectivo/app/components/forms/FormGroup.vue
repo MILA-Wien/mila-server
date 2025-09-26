@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import type { PropType } from "vue";
-import { required } from "zod/v4-mini";
 
 const props = defineProps({
   name: {
     type: String as PropType<string>,
-    required: true,
+    required: false,
   },
   required: {
     type: Boolean as PropType<boolean>,
@@ -27,7 +26,10 @@ const props = defineProps({
 
 <template>
   <UFormField :name="props.name">
-    <div class="font-bold inline-flex items-start">
+    <div
+      v-if="props.label || $slots.title"
+      class="font-bold inline-flex items-start"
+    >
       <template v-if="props.label">{{ props.label }}</template>
       <slot name="title"></slot>
       <span v-if="props.required" class="text-red-600 ml-1">*</span>
@@ -46,9 +48,10 @@ const props = defineProps({
         </template>
       </UPopover>
     </div>
-    <div class="mt-1 mb-2">
+    <div v-if="$slots.description" class="mt-1 mb-2">
       <slot name="description"></slot>
     </div>
+    <div v-else class="mt-1"></div>
     <slot></slot>
   </UFormField>
 </template>
