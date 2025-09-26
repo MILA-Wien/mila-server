@@ -39,7 +39,7 @@ const props = defineProps({
           color="white"
         >
           <UIcon
-            name="i-heroicons-question-mark-circle "
+            name="i-heroicons-question-mark-circle"
             class="text-[1em] h-6 w-6"
           />
         </UButton>

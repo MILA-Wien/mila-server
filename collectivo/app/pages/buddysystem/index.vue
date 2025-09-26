@@ -53,7 +53,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         Menschen mit Unterstützungs-Bedarf benötigen Hilfe beim Mitmachen bei
         MILA.
         <br /><br />
-        So können sie aktiv und wie alle anderen bei einer Fixschicht
+        So können sie aktiv und wie alle anderen bei einer Festschicht
         mitarbeiten.
         <br /><br />
         Der Grund für Unterstützungsbedarf ist unterschiedlich.
@@ -88,12 +88,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             :options="[
               {
                 label:
-                  'Ich brauche Unterstützung. Ein Buddy soll mich während der Fixschicht unterstützen. Ein Buddy ist ein anderes MILA-Mitglied. Eine Fixschicht wiederholt sich alle 4 Wochen.',
+                  'Ich brauche Unterstützung. Ein Buddy soll mich während der Festschicht unterstützen. Ein Buddy ist ein anderes MILA-Mitglied. Eine Festschicht wiederholt sich alle 4 Wochen.',
                 value: 'need_buddy',
               },
               {
                 label:
-                  'Ich kann mir vorstellen eine Person mit Unterstützungs-Bedarf in meiner Fixschicht als Buddy zu begleiten.',
+                  'Ich kann mir vorstellen eine Person mit Unterstützungs-Bedarf in meiner Festschicht als Buddy zu begleiten.',
                 value: 'is_buddy',
               },
               {

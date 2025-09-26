@@ -5,9 +5,15 @@ const model = defineModel<string>(); // holds the selected option value
 
 const props = defineProps({
   options: {
-    type: Array as PropType<{ value: string; label: string }[]>,
+    type: Array as PropType<{ value: string; label: string }[] | string[]>,
     required: true,
   },
+});
+
+const options_refined = computed(() => {
+  return props.options.map((opt) =>
+    typeof opt === "string" ? { value: opt, label: opt } : opt,
+  );
 });
 
 function toggle(value: string) {
@@ -22,7 +28,7 @@ function toggle(value: string) {
 <template>
   <div class="space-y-3">
     <div
-      v-for="opt in props.options"
+      v-for="opt in options_refined"
       :key="opt.value"
       class="p-3 flex flex-row gap-3 border-2 cursor-pointer transition-colors"
       :class="
@@ -39,7 +45,12 @@ function toggle(value: string) {
       />
 
       <div class="-mt-0.5">
-        {{ opt.label }}
+        <slot
+          name="label"
+          :option="typeof opt === 'string' ? { value: opt, label: opt } : opt"
+        >
+          {{ typeof opt === "string" ? opt : opt.label }}
+        </slot>
       </div>
     </div>
   </div>

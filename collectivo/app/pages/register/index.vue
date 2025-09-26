@@ -49,6 +49,9 @@ const schema = object({
       then: (schema) => schema.required(),
     },
   ),
+  directus_users__username: string().required(),
+  directus_users__pronouns: string().required(),
+  directus_users__use_pronouns_on_card: boolean(),
   directus_users__first_name: string().required(),
   directus_users__last_name: string().required(),
   directus_users__memberships_gender: string().required(),
@@ -247,42 +250,50 @@ async function onError() {
       </p>
     </div>
 
-    <UFormGroup
+    <FormsFormGroup
       :label="t('t:memberships_form_ptype')"
       name="directus_users__memberships_person_type"
       required
     >
-      <URadioGroup
+      <FormsSingleChoice
         v-model="state.directus_users__memberships_person_type"
         :options="['natural', 'legal']"
       >
         <template #label="{ option }">{{ t("l:" + option.label) }}</template>
-      </URadioGroup>
-    </UFormGroup>
+      </FormsSingleChoice>
+    </FormsFormGroup>
 
     <div class="pt-6">
-      <h2>{{ t("Create MILA user account") }}</h2>
+      <h2>{{ t("User Account") }}</h2>
       <p>
         {{ t("t:mila_form_account") }}
       </p>
     </div>
 
-    <UFormGroup label="E-Mail" name="directus_users__email" required>
-      <UInput v-model="state.directus_users__email" />
-    </UFormGroup>
+    <FormsFormGroup
+      :label="t('E-Mail Address')"
+      name="directus_users__email"
+      required
+    >
+      <UInput variant="outline" v-model="state.directus_users__email" />
+    </FormsFormGroup>
 
     <div class="grid md:grid-cols-2 gap-4">
-      <UFormGroup
+      <FormsFormGroup
         :label="t('Password')"
         name="directus_users__password"
         required
       >
-        <UInput v-model="state.directus_users__password" type="password" />
-      </UFormGroup>
+        <UInput
+          variant="outline"
+          v-model="state.directus_users__password"
+          type="password"
+        />
+      </FormsFormGroup>
 
-      <UFormGroup :label="t('Repeat password')" name="_pw_confirm" required>
-        <UInput v-model="state._pw_confirm" type="password" />
-      </UFormGroup>
+      <FormsFormGroup :label="t('Repeat password')" name="_pw_confirm" required>
+        <UInput variant="outline" v-model="state._pw_confirm" type="password" />
+      </FormsFormGroup>
     </div>
 
     <template v-if="!isNatural">
@@ -297,6 +308,7 @@ async function onError() {
           required
         >
           <UInput
+            variant="outline"
             v-model="state.directus_users__memberships_organization_name"
           />
         </UFormGroup>
@@ -307,6 +319,7 @@ async function onError() {
           required
         >
           <UInput
+            variant="outline"
             v-model="state.directus_users__memberships_organization_type"
           />
         </UFormGroup>
@@ -316,10 +329,73 @@ async function onError() {
           name="directus_users__memberships_organization_id"
           required
         >
-          <UInput v-model="state.directus_users__memberships_organization_id" />
+          <UInput
+            variant="outline"
+            v-model="state.directus_users__memberships_organization_id"
+          />
         </UFormGroup>
       </div>
     </template>
+
+    <div class="pt-6" v-if="isNatural">
+      <h2>
+        {{ t("Sichtbarer Name") }}
+      </h2>
+
+      <div>
+        {{
+          t(
+            "Dieser Name wird im Schichtplan und auf deiner Mitgliederkarte angezeigt. Er kann sich von deinem rechtlichen Namen unterscheiden.",
+          )
+        }}
+      </div>
+    </div>
+
+    <div class="grid gap-4" v-if="isNatural">
+      <FormsFormGroup
+        :label="t('Wie sollen wir dich ansprechen?')"
+        name="directus_users__username"
+        required
+      >
+        <template #description> </template>
+        <UInput variant="outline" v-model="state.directus_users__username" />
+      </FormsFormGroup>
+
+      <FormsFormGroup
+        :label="t('Mit welchen Pronomen möchtest du angesprochen werden?')"
+        :infotext="t('i_pronouns')"
+        name="directus_users__pronouns"
+      >
+        <UInput variant="outline" v-model="state.directus_users__pronouns" />
+      </FormsFormGroup>
+
+      <FormsFormGroup
+        name="directus_users__use_pronouns_on_card"
+        :label="t('Pronomen auf Mitgliederkarte')"
+        v-if="state.directus_users__pronouns"
+      >
+        <FormsCheckbox v-model="state.directus_users__use_pronouns_on_card">
+          {{
+            t(
+              "Ich möchte, dass meine Pronomen auf meine Mitgliederkarte gedruckt werden.",
+            )
+          }}
+        </FormsCheckbox>
+      </FormsFormGroup>
+
+      <FormsFormGroup
+        name="directus_users__hide_name"
+        :label="t('Anonym bleiben')"
+      >
+        <FormsCheckbox v-model="state.directus_users__hide_name">
+          {{
+            t(
+              "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform.",
+            )
+          }}
+        </FormsCheckbox>
+      </FormsFormGroup>
+    </div>
 
     <div class="pt-6">
       <h2 v-if="isNatural">
@@ -330,13 +406,21 @@ async function onError() {
       </h2>
     </div>
 
+    <div v-if="isNatural">
+      {{
+        t(
+          "Diese Daten brauchen wir rechtlich für das Mitgliederregister der Genossenschaft. Bitte gib hier deinen amtlichen Namen an. Diese Daten sind nur für das Mitgliederbüro einsehbar.",
+        )
+      }}
+    </div>
+
     <div class="grid md:grid-cols-2 gap-4">
       <UFormGroup
         :label="t('First name')"
         name="directus_users__first_name"
         required
       >
-        <UInput v-model="state.directus_users__first_name" />
+        <UInput variant="outline" v-model="state.directus_users__first_name" />
       </UFormGroup>
 
       <UFormGroup
@@ -344,7 +428,7 @@ async function onError() {
         name="directus_users__last_name"
         required
       >
-        <UInput v-model="state.directus_users__last_name" />
+        <UInput variant="outline" v-model="state.directus_users__last_name" />
       </UFormGroup>
 
       <UFormGroup
@@ -364,7 +448,10 @@ async function onError() {
       </UFormGroup>
 
       <UFormGroup :label="t('Phone')" name="directus_users__memberships_phone">
-        <UInput v-model="state.directus_users__memberships_phone" />
+        <UInput
+          variant="outline"
+          v-model="state.directus_users__memberships_phone"
+        />
       </UFormGroup>
     </div>
 
@@ -382,7 +469,10 @@ async function onError() {
         name="directus_users__memberships_occupation"
         required
       >
-        <UInput v-model="state.directus_users__memberships_occupation" />
+        <UInput
+          variant="outline"
+          v-model="state.directus_users__memberships_occupation"
+        />
       </UFormGroup>
     </template>
 
@@ -396,41 +486,62 @@ async function onError() {
         name="directus_users__memberships_street"
         required
       >
-        <UInput v-model="state.directus_users__memberships_street" />
+        <UInput
+          variant="outline"
+          v-model="state.directus_users__memberships_street"
+        />
       </UFormGroup>
       <UFormGroup
         :label="t('Number')"
         name="directus_users__memberships_streetnumber"
         required
       >
-        <UInput v-model="state.directus_users__memberships_streetnumber" />
+        <UInput
+          variant="outline"
+          v-model="state.directus_users__memberships_streetnumber"
+        />
       </UFormGroup>
       <UFormGroup :label="t('Stair')" name="directus_users__memberships_stair">
-        <UInput v-model="state.directus_users__memberships_stair" />
+        <UInput
+          variant="outline"
+          v-model="state.directus_users__memberships_stair"
+        />
       </UFormGroup>
       <UFormGroup :label="t('Door')" name="directus_users__memberships_door">
-        <UInput v-model="state.directus_users__memberships_door" />
+        <UInput
+          variant="outline"
+          v-model="state.directus_users__memberships_door"
+        />
       </UFormGroup>
       <UFormGroup
         :label="t('Postcode')"
         name="directus_users__memberships_postcode"
         required
       >
-        <UInput v-model="state.directus_users__memberships_postcode" />
+        <UInput
+          variant="outline"
+          v-model="state.directus_users__memberships_postcode"
+        />
       </UFormGroup>
       <UFormGroup
         :label="t('City')"
         name="directus_users__memberships_city"
         required
       >
-        <UInput v-model="state.directus_users__memberships_city" />
+        <UInput
+          variant="outline"
+          v-model="state.directus_users__memberships_city"
+        />
       </UFormGroup>
       <UFormGroup
         :label="t('Country')"
         name="directus_users__memberships_country"
         required
       >
-        <UInput v-model="state.directus_users__memberships_country" />
+        <UInput
+          variant="outline"
+          v-model="state.directus_users__memberships_country"
+        />
       </UFormGroup>
     </div>
 
@@ -493,7 +604,11 @@ async function onError() {
       name="memberships__memberships_shares"
       required
     >
-      <UInput v-model="state.memberships__memberships_shares" type="number" />
+      <UInput
+        variant="outline"
+        v-model="state.memberships__memberships_shares"
+        type="number"
+      />
     </UFormGroup>
 
     <div v-if="state.shares_options">
@@ -541,7 +656,10 @@ async function onError() {
         name="directus_users__payments_account_iban"
         required
       >
-        <UInput v-model="state.directus_users__payments_account_iban" />
+        <UInput
+          variant="outline"
+          v-model="state.directus_users__payments_account_iban"
+        />
       </UFormGroup>
 
       <UFormGroup
@@ -549,7 +667,10 @@ async function onError() {
         name="directus_users__payments_account_owner"
         required
       >
-        <UInput v-model="state.directus_users__payments_account_owner" />
+        <UInput
+          variant="outline"
+          v-model="state.directus_users__payments_account_owner"
+        />
       </UFormGroup>
     </div>
 
@@ -650,7 +771,10 @@ async function onError() {
         :label="t('Additional languages')"
         name="directus_users__survey_languages_additional"
       >
-        <UInput v-model="state.directus_users__survey_languages_additional" />
+        <UInput
+          variant="outline"
+          v-model="state.directus_users__survey_languages_additional"
+        />
       </UFormGroup>
     </div>
 
@@ -740,6 +864,8 @@ async function onError() {
 
 <i18n lang="yaml">
 de:
+  "User Account": "Zugangsdaten"
+  "E-Mail Address": "E-Mail Adresse"
   "Some fields are not filled in correctly": "Einige Felder sind nicht korrekt ausgefüllt"
   "You are currently logged in as": "Du bist aktuell angemeldet als"
   "Log out to fill out a new membership application for a different person.": "Melde dich ab, um eine neue Beitrittserklärung für eine andere Person auszufüllen."
@@ -777,7 +903,6 @@ de:
   "Additional languages": "Weitere Sprachen"
   "Payout upon termination": "Auszahlung bei Kündigung"
   "Revocation": "Widerruf"
-  "Create MILA user account": "MILA Account erstellen"
   "Submit application": "Beitrittserklärung einreichen"
   "Cooperative shares": "Genossenschaftsanteile"
   "First name": "Vorname"
@@ -833,7 +958,7 @@ de:
   "t:memberships_form_intro": "Bitte fülle das Formular aus, um Mitglied zu werden."
 
   "t:mila_form_intro": "Um unserer Genossenschaft beitreten zu können, brauchen wir noch einige Informationen von dir. Bitte fülle die folgenden Fragen aus. Wenn etwas unklar ist, wende dich bitte an"
-  "t:mila_form_account": "Bitte lege hier eine E-Mail Adresse und Passwort für deinen MILA Account fest."
+  "t:mila_form_account": "Bitte lege hier eine E-Mail Adresse und Passwort für deinen MILA Zugang fest."
   "t:mila_form_mtype_orga": "Als Organisation bist du automatisch ein investierendes Mitglied. Als investierendes Mitglied unterstützt du uns finanziell, kannst jedoch nicht einkaufen."
   "t:mila_form_cshares_orga": "Deinen Genossenschaftsanteil zahlst du einmalig (nicht jährlich). Der Regeltarif sind € 180 (das sind 9 Anteile). Mehr als 9 kannst du frei wählen. Mehr dazu findest du unter"
   "t:mila_form_mtype_natural": "Als aktives Mitglied arbeitest du im Supermarkt mit und kannst einkaufen. Als investierendes Mitglied unterstützt du uns finanziell, kannst jedoch nicht einkaufen. Du kannst auch später noch zwischen aktiv und investierend wechseln."
@@ -852,7 +977,22 @@ de:
   "t:mila_form_final2": "Bei Kündigung wird dein eingezahlter Betrag am Ende des folgenden Geschäftsjahres zurückgezahlt, sofern es die wirtschaftliche Lage von MILA es zulässt. Mehr Infos in der"
   "t:mila_form_final3": "Du hast das Recht binnen 14 Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Frist beträgt 14 Tage ab der Zustellung der Annahme der Zeichnung durch den Vorstand der Genossenschaft."
 
+  "i_pronouns": "Die Angabe der Pronomen ist freiwillig. Sie soll uns helfen bei Mila einen respektvollen Umgang miteinander zu pflegen, indem wir so mit- und übereinander sprechen, wie die angesprochenen Personen es wünschen."
+
 en:
+  "Wie sollen wir dich ansprechen?": "How should we address you?"
+  "Dieser Name kann sich von deinem amtlichen Namen unterscheiden.": "This name can differ from your legal name."
+  "Mit welchen Pronomen möchtest du angesprochen werden?": "Which pronouns would you like to be addressed with?"
+  "Ich möchte, dass meine Pronomen auf meine Mitgliederkarte gedruckt werden.": "I would like my pronouns to be printed on my membership card."
+  "Anonym bleiben": "Stay anonymous"
+  "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform.": "Do not show my name to other members on the platform."
+  "E-Mail-Benachrichtigungen": "Email notifications"
+  "Erhalte E-Mail-Benachrichtigungen über bevorstehende Schichten.": "Receive email notifications about upcoming shifts."
+  "Sichtbarer Name": "Visible name"
+  "Dieser Name wird im Schichtplan und auf deiner Mitgliederkarte angezeigt. Er kann sich von deinem rechtlichen Namen unterscheiden.": "This name will be displayed in the shift schedule and on your membership card. It can differ from your legal name."
+  "Diese Daten brauchen wir rechtlich für das Mitgliederregister der Genossenschaft. Bitte gib hier deinen amtlichen Namen an. Diese Daten sind nur für das Mitgliederbüro einsehbar.": "We need this data legally for the cooperative's membership register. Please provide your legal name here. This data can only be viewed by the membership office."
+  "i_pronouns": "A declaration of pronouns is optional. They help us at MILA in creating an inclusive environment, by speaking to and about each other in a way, that respects everyones wishes."
+
   "l:natural": "Individual"
   "l:legal": "Organisation"
   "l:Aktiv": "Active member"
