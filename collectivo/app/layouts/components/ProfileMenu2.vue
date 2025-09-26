@@ -1,89 +1,55 @@
 <script setup lang="ts">
+import type { DropdownMenuItem } from "@nuxt/ui";
+
 const user = useCurrentUser();
 const { t } = useI18n();
 const runtimeConfig = useRuntimeConfig();
-const router = useRouter();
 
-interface MenuItem {
-  label: string;
-  icon?: string;
-  click?: () => void;
-}
-
-const profileMenu: Ref<MenuItem[][]> = ref([[]]);
-
-const profileItems: CollectivoMenuItem[] = [
+const items = ref<DropdownMenuItem[]>([
   {
     label: "Profile",
     icon: "i-heroicons-user-circle",
     to: "/profile/",
   },
-];
-
-const profilePublicItems: CollectivoMenuItem[] = [
-  {
-    label: "Login",
-    icon: "i-heroicons-arrow-right-on-rectangle-solid",
-    click: user.value.login,
-  },
-];
+]);
 
 if (user.value.isStudioAdmin) {
-  profileItems.push({
+  items.value.push({
     label: "Datenstudio",
     icon: "i-heroicons-chart-bar-square",
     to: runtimeConfig.public.directusUrl,
-    external: true,
+    target: "_blank",
   });
 }
 if (user.value.isShiftAdmin) {
-  profileItems.push({
+  items.value.push({
     label: "Schichtverwaltung",
     icon: "i-heroicons-calendar-days-solid",
     to: "/shifts/admin",
   });
 }
 
-profileItems.push({
+items.value.push({
   label: "Logout",
   icon: "i-heroicons-arrow-left-on-rectangle-solid",
-  click: user.value.logout,
+  to: "/logout",
 });
-
-const items = user.value.isAuthenticated ? profileItems : profilePublicItems;
-
-for (const item of items) {
-  profileMenu.value[0].push({
-    label: item.label,
-    icon: item.icon,
-    click:
-      item.click ||
-      (() => {
-        if (item.external) {
-          window.open(item.to, "_blank");
-          return;
-        }
-
-        router.push(item.to ?? "/");
-      }),
-  });
-}
 </script>
 
 <template>
   <div class="flex justify-end">
     <div v-if="user.isAuthenticated">
-      <UDropdown :items="profileMenu" :popper="{ placement: 'bottom' }">
-        <div class="flex flex-row items-center">
+      <UDropdownMenu :items="items" :popper="{ placement: 'bottom' }">
+        <div class="flex flex-row items-center cursor-pointer">
           <span class="text-lg font-semibold">{{ user.user?.username }}</span>
           <UIcon name="i-heroicons-user-circle" class="h-7 w-7 ml-2" />
         </div>
 
         <template #item="{ item }">
           <UIcon v-if="item.icon" class="h-5 w-5" :name="item.icon" />
-          <span>{{ t(item.label) }}</span>
+          <span>{{ t(item.label as string) }}</span>
         </template>
-      </UDropdown>
+      </UDropdownMenu>
     </div>
     <div v-else>
       <NuxtLink to="/login">
@@ -95,8 +61,6 @@ for (const item of items) {
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped></style>
 
 <i18n lang="yaml">
 de:

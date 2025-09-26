@@ -15,8 +15,5 @@ const { t } = useI18n();
       </div>
       <div class="pt-px"><MobileProfileMenu /></div>
     </div>
-    <div class="h-header" />
   </div>
 </template>
-
-<style lang="scss" scoped></style>
