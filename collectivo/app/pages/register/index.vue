@@ -824,78 +824,85 @@ async function onError() {
       </FormsFormGroup>
     </div>
 
-    <div class="pt-6">
-      <h2>{{ t("Conditions") }}</h2>
-    </div>
-
-    <FormsFormGroup :label="t('Statutes')" name="_statutes_approval" required>
-      <FormsCheckbox v-model="state._statutes_approval" class="mt-0.5 mr-2">
-        <span class="">
-          {{ t("t:mila_form_check2") }}
-          <a :href="linkStatutes" class="font-bold" target="_blank">{{
-            t("Statutes")
-          }}</a></span
-        ></FormsCheckbox
-      >
-    </FormsFormGroup>
-
-    <FormsFormGroup :label="t('Data use')" name="_data_approval" required>
-      <FormsCheckbox v-model="state._data_approval" class="mt-0.5 mr-2">
-        <span class="">
-          {{ t("t:mila_form_check3") }}
-          <a
-            href="https://www.mila.wien/datenschutz/"
-            target="_blank"
-            class="font-bold"
-            >{{ t("Privacy Policy") }}</a
-          >.
-        </span></FormsCheckbox
-      >
-    </FormsFormGroup>
-
-    <FormsFormGroup
-      :label="t('PR Work')"
-      name="directus_users__mila_pr_approved"
-    >
-      <FormsCheckbox
-        v-model="state.directus_users__mila_pr_approved"
-        class="mt-0.5 mr-2"
-      >
-        <span class="">
-          {{ t("t:mila_form_check1") }}
-          <a
-            href="https://www.mila.wien/datenschutz/"
-            target="_blank"
-            class="font-bold"
-            >{{ t("Privacy Policy") }}</a
-          >.
-        </span>
-      </FormsCheckbox>
-    </FormsFormGroup>
-
     <div>
-      <div class="font-bold mb-1">{{ t("Liability") }}</div>
-      <p class="">{{ t("t:mila_form_final1") }}</p>
-    </div>
-
-    <div>
-      <div class="font-bold mb-1">
-        {{ t("Payout upon termination") }}
+      <div class="pt-6">
+        <h2>{{ t("Conditions") }}</h2>
       </div>
-      <p class="">
-        {{ t("t:mila_form_final2") }}
-        <a :href="linkStatutes" target="_blank" class="font-bold">{{
-          t("Rules of Procedure")
-        }}</a
-        >.
-      </p>
-    </div>
 
-    <div>
-      <div class="font-bold mb-1">{{ t("Revocation") }}</div>
-      <p class="">{{ t("t:mila_form_final3") }}</p>
-    </div>
+      <div class="grid gap-4">
+        <FormsFormGroup
+          :label="t('Statutes')"
+          name="_statutes_approval"
+          required
+        >
+          <FormsCheckbox v-model="state._statutes_approval" class="mt-0.5 mr-2">
+            <span class="">
+              {{ t("t:mila_form_check2") }}
+              <a :href="linkStatutes" class="font-bold" target="_blank">{{
+                t("Statutes")
+              }}</a></span
+            ></FormsCheckbox
+          >
+        </FormsFormGroup>
 
+        <FormsFormGroup :label="t('Data use')" name="_data_approval" required>
+          <FormsCheckbox v-model="state._data_approval" class="mt-0.5 mr-2">
+            <span class="">
+              {{ t("t:mila_form_check3") }}
+              <a
+                href="https://www.mila.wien/datenschutz/"
+                target="_blank"
+                class="font-bold"
+                >{{ t("Privacy Policy") }}</a
+              >.
+            </span></FormsCheckbox
+          >
+        </FormsFormGroup>
+
+        <FormsFormGroup
+          :label="t('PR Work')"
+          name="directus_users__mila_pr_approved"
+        >
+          <FormsCheckbox
+            v-model="state.directus_users__mila_pr_approved"
+            class="mt-0.5 mr-2"
+          >
+            <span class="">
+              {{ t("t:mila_form_check1") }}
+              <a
+                href="https://www.mila.wien/datenschutz/"
+                target="_blank"
+                class="font-bold"
+                >{{ t("Privacy Policy") }}</a
+              >.
+            </span>
+          </FormsCheckbox>
+        </FormsFormGroup>
+
+        <div>
+          <div class="font-bold mb-1">{{ t("Liability") }}</div>
+          <p class="">{{ t("t:mila_form_final1") }}</p>
+        </div>
+
+        <div>
+          <div class="font-bold mb-1">
+            {{ t("Payout upon termination") }}
+          </div>
+          <p class="">
+            {{ t("t:mila_form_final2") }}
+            <a :href="linkStatutes" target="_blank" class="font-bold">{{
+              t("Rules of Procedure")
+            }}</a
+            >.
+          </p>
+        </div>
+
+        <div>
+          <div class="font-bold mb-1">{{ t("Revocation") }}</div>
+          <p class="">{{ t("t:mila_form_final3") }}</p>
+        </div>
+      </div>
+    </div>
     <div class="py-6">
       <UButton type="submit" color="green" size="lg" block>
         {{ t("Submit application") }}
@@ -1067,7 +1074,7 @@ en:
   "t:mila_form_mtype_orga": "As an organization, you are automatically an investing member. As an investing member, you support us financially, but you cannot buy anything."
   "t:mila_form_cshares_orga": "You pay your cooperative share only once (not annually). The standard rate is € 180 (that's 9 shares). You can choose more than 9. You can find out more under"
   "t:mila_form_mtype_natural": "As an active member, you work in the supermarket and can shop. As an investing member, you support us financially, but cannot shop. You can also switch between active and investing later."
-  "t:mila_form_cshares_natural": "You pay your cooperative share once in your life (not annually). The standard rate is €180 (that's 9 shares), the social rate is €20 (that's 1 share). 2-8 shares cannot be chosen, you can choose more than 9 freely). You can find out more about this under [Frequently Asked Questions](https://www.mila.wien/uber-uns/haeufige-fragen/)."
+  "t:mila_form_cshares_natural": "You pay your cooperative share once in your life (not annually). The standard rate is €180 (that's 9 shares), the social rate is €20 (that's 1 share). 2-8 shares cannot be chosen, you can choose more than 9 freely). You can find out more about this under "
   "t:mila_form_mtype_orga2": "As an organization, you are automatically an investing member. As an investing member, you support us financially, but you cannot make purchases. Further information can be found in the "
   "t:mila_form_mtype_natural2": "Only as an active member will you have the opportunity to shop after the supermarket opens. As an investing member, you support us financially, but you cannot make purchases. Further information can be found in the "
 
