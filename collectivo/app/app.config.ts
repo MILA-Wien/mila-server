@@ -155,6 +155,8 @@ export default defineAppConfig({
       variant: {
         solid:
           "h-[50px] shadow-sm bg-blue-50 focus:bg-primary-50 text-gray-900 ring-0 focus:ring-0",
+        outline:
+          " h-[50px] border-2 border-black ring-0 focus:ring-0 text-base focus:border-primary",
       },
       padding: {
         md: "py-4 px-[18px] pe-9",

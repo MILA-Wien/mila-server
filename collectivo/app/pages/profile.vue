@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { object, string, type InferType } from "yup";
+import { object, string, bool, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 
 definePageMeta({
@@ -13,39 +13,38 @@ const userData = useCurrentUser();
 const user = userData.value.user!;
 
 const schema = object({
-  first_name: string().required(t("First name")),
-  last_name: string().required(t("Last name")),
-  email: string().email(t("Email")).required(t("Email")),
-  hide_name: string().optional(),
-  send_notifications: string().optional(),
+  username: string().required(t("Dieses Feld ist erforderlich.")),
+  pronouns: string().optional(),
+  hide_name: bool().optional(),
+  send_notifications: bool().optional(),
 });
 
 type Schema = InferType<typeof schema>;
 
 const state = reactive({
-  first_name: user.first_name,
-  last_name: user.last_name,
-  email: user.email,
+  username: user.username,
+  pronouns: user.pronouns,
   hide_name: user.hide_name,
   send_notifications: user.send_notifications,
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  console.log("Form submitted", event.data);
-  try {
-    await userData.value.save(event.data);
-  } catch (error) {
-    toast.add({
-      title: "Error",
-      description: "Fehler beim Speichern der Daten",
-    });
-    console.error(error);
-    return;
-  }
-  toast.add({
-    title: "Success",
-    description: "Erfolgreich gespeichert",
+  const res = await useFetch("/api/profile", {
+    method: "PUT",
+    body: event.data,
   });
+  if (res.status.value === "success") {
+    toast.add({
+      title: t("Dein Profil wurde erfolgreich aktualisiert."),
+      color: "green",
+    });
+  } else {
+    toast.add({
+      title: t("Es ist ein Fehler aufgetreten."),
+      icon: "i-heroicons-exclamation-triangle",
+      color: "red",
+    });
+  }
 }
 </script>
 
@@ -54,51 +53,61 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     <MembershipsMembershipTile />
 
     <div>
-      <h2>Persönliche Daten</h2>
+      <h2>{{ t("Einstellungen") }}</h2>
       <UForm
         :schema="schema"
         :state="state"
         class="space-y-4"
         @submit="onSubmit"
       >
-        <UFormGroup :label="t('First name')" name="first_name">
-          <UInput v-model="state.first_name" disabled />
-        </UFormGroup>
-
-        <UFormGroup :label="t('Last name')" name="last_name">
-          <UInput v-model="state.last_name" disabled />
-        </UFormGroup>
-
-        <UFormGroup :label="t('Email')" name="email">
-          <UInput v-model="state.first_name" disabled />
-        </UFormGroup>
-
-        <UFormGroup :label="t('Stay anonymous')" name="hide_name">
-          <div
-            class="flex items-center gap-2 p-4 rounded-sm bg-blue-50 text-sm"
-          >
-            <UToggle v-model="state.hide_name" />
-            <div>
-              {{ t("Do not show my name to other members on the platform.") }}
-            </div>
-          </div>
-        </UFormGroup>
-
-        <UFormGroup
-          :label="t('Send shift reminders')"
-          name="send_notifications"
+        <FormsFormGroup
+          :label="t('Wie sollen wir dich ansprechen?')"
+          :infotext="
+            t('Dieser Name kann sich von deinem amtlichen Namen unterscheiden.')
+          "
+          name="username"
+          required
         >
-          <div
-            class="flex items-center gap-2 p-4 rounded-sm bg-blue-50 text-sm"
-          >
-            <UToggle v-model="state.send_notifications" />
-            <div>
-              {{ t("Receive email notifications about upcoming shifts.") }}
-            </div>
-          </div>
-        </UFormGroup>
+          <template #description> </template>
+          <UInput variant="outline" v-model="state.username" />
+        </FormsFormGroup>
 
-        <UButton type="submit"> {{ t("Aktualisieren") }} </UButton>
+        <FormsFormGroup
+          :label="t('Mit welchen Pronomen möchtest du angesprochen werden?')"
+          :infotext="t('i_pronouns')"
+          name="pronouns"
+        >
+          <UInput variant="outline" v-model="state.pronouns" />
+        </FormsFormGroup>
+
+        <FormsFormGroup name="hide_name" :label="t('Anonym bleiben')">
+          <FormsCheckbox v-model="state.hide_name">
+            {{
+              t(
+                "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform.",
+              )
+            }}
+          </FormsCheckbox>
+        </FormsFormGroup>
+
+        <FormsFormGroup
+          name="send_notifications"
+          :label="t('E-Mail-Benachrichtigungen')"
+        >
+          <FormsCheckbox v-model="state.send_notifications">
+            {{
+              t(
+                "Erhalte E-Mail-Benachrichtigungen über bevorstehende Schichten.",
+              )
+            }}
+          </FormsCheckbox>
+        </FormsFormGroup>
+
+        <div class="pt-2">
+          <UButton type="submit">
+            {{ t("Änderungen speichern") }}
+          </UButton>
+        </div>
       </UForm>
     </div>
   </div>
@@ -106,16 +115,20 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <i18n lang="yaml">
 de:
-  "Profile": "Profil"
-  "First name": "Vorname"
-  "Last name": "Nachname"
-  "Email": "E-Mail"
-  "Stay anonymous": "Anonym bleiben"
-  "Do not show my name to other members on the platform.": "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform."
-  "Persönliche Daten": "Persönliche Daten"
-  "Success": "Erfolg"
-  "Error": "Fehler"
-  "Erfolgreich gespeichert": "Erfolgreich gespeichert"
-  "Send shift reminders": "Schicht-Erinnerungen senden"
-  "Receive email notifications about upcoming shifts.": "Erhalte E-Mail-Benachrichtigungen über bevorstehende Schichten."
+  "i_pronouns": "Die Angabe der Pronomen ist freiwillig. Sie soll uns helfen bei Mila einen respektvollen Umgang miteinander zu pflegen, indem wir so mit- und übereinander sprechen, wie die angesprochenen Personen es wünschen."
+en:
+  "Einstellungen": "Settings"
+  "Änderungen speichern": "Save changes"
+  "Es ist ein Fehler aufgetreten.": "An error occurred."
+  "Dein Profil wurde erfolgreich aktualisiert.": "Your profile has been updated successfully."
+
+  "Wie sollen wir dich ansprechen?": "How should we address you?"
+  "Dieser Name kann sich von deinem amtlichen Namen unterscheiden.": "This name can differ from your legal name."
+  "Mit welchen Pronomen möchtest du angesprochen werden?": "Which pronouns would you like to be addressed with?"
+  "Anonym bleiben": "Stay anonymous"
+  "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform.": "Do not show my name to other members on the platform."
+  "E-Mail-Benachrichtigungen": "Email notifications"
+  "Erhalte E-Mail-Benachrichtigungen über bevorstehende Schichten.": "Receive email notifications about upcoming shifts."
+
+  "i_pronouns": "A declaration of pronouns is optional. They help us at MILA in creating an inclusive environment, by speaking to and about each other in a way, that respects everyones wishes."
 </i18n>

@@ -3,24 +3,25 @@ const user = useCurrentUser();
 </script>
 
 <template>
-  <div class="flex flex-col gap-2">
+  <div>
     <h2>Mitgliedschaft</h2>
+
     <div v-if="user.membership?.memberships_date_ended">
       <p>Deine Mitgliedschaft wurde beendet.</p>
     </div>
     <div v-if="user.isMember && user.membership">
       <p v-if="user.membership.memberships_date_approved">
-        Du bist Mitglied seit:
+        Beitrittsdatum:
         <span class="font-bold">
           {{ user.membership.memberships_date_approved }}
         </span>
       </p>
       <p>
-        Deine Mitgliedsnummer ist:
+        Mitgliedsnummer:
         <span class="font-bold">{{ user.membership.id }}</span>
       </p>
       <p>
-        Deine Mitgliedsart ist:
+        Mitgliedsart:
         <span class="font-bold">{{ user.membership.memberships_type }}</span>
       </p>
       <p>

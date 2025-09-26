@@ -19,10 +19,13 @@ export interface DbSchema {
 }
 
 interface UserProfile {
-  hide_name: boolean;
   collectivo_tags: { collectivo_tags_id: number }[];
   memberships: number[] | Membership[];
   memberships_phone: string;
+  hide_name: boolean;
+  send_notifications: boolean;
+  username: string;
+  pronouns: string;
 }
 
 interface Tag {

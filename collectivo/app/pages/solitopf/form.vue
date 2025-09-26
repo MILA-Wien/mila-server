@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { bool, object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
-import type { UseFetchOptions } from "#app";
 
 definePageMeta({
   middleware: ["auth"],
@@ -15,7 +14,6 @@ setPageTitle(t("Soli-Topf Antrag"), {
 
 const toast = useToast();
 const userData = useCurrentUser();
-const user = userData.value.user!;
 
 const schema = object({
   auszahlung: string().required(),
@@ -34,7 +32,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     method: "POST",
     body: JSON.stringify(event.data),
   });
-
   if (res.status.value === "success") {
     toast.add({
       title: t("Dein Antrag wurde erfolgreich eingereicht."),
@@ -44,12 +41,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     navigateTo("/solitopf");
   } else {
     toast.add({
-      title: t(
-        "Es ist ein Fehler aufgetreten. Bitte versuche es später erneut.",
-      ),
+      title: t("Es ist ein Fehler aufgetreten."),
       icon: "i-heroicons-exclamation-triangle",
       color: "red",
-      timeout: 0,
     });
   }
 }
@@ -58,11 +52,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 <template>
   <BetaMessage />
   <UForm :schema="schema" :state="state" class="space-y-8" @submit="onSubmit">
-    <UFormGroup name="auszahlung">
-      <div class="font-bold mb-2">
+    <FormsFormGroup name="auszahlung">
+      <template #title>
         Ich möchte Unterstützung aus dem Soli-Topf erhalten.
-      </div>
-      <div class="mt-1 mb-3">Für mich passt am besten:</div>
+      </template>
+      <template #description> Für mich passt am besten: </template>
       <FormsSingleChoice
         v-model="state.auszahlung"
         :options="[
@@ -78,22 +72,26 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           },
         ]"
       />
-    </UFormGroup>
+    </FormsFormGroup>
 
-    <UFormGroup name="weitere_unterstuetzung">
-      <div class="font-bold">
+    <FormsFormGroup name="weitere_unterstuetzung">
+      <template #title>
         {{ t("Was passiert nach den 6 Monaten?") }}
-      </div>
-      <div class="mt-1 mb-3">
-        Wenn du danach weiterhin Unterstützung brauchst, kannst du dich nach 5
-        Monaten wieder bei uns melden.
-      </div>
+      </template>
+      <template #description>
+        {{
+          t(
+            "Wenn du danach weiterhin Unterstützung brauchst, kannst du dich nach 5 Monaten wieder bei uns melden.",
+          )
+        }}
+      </template>
       <FormsCheckbox v-model="state.weitere_unterstuetzung">
         Ich weiß schon jetzt, dass ich auch nach den 6 Monaten weiter
         Unterstützung brauche (z. B. wegen Mindestpension oder dauerhaft
-        niedrigem Einkommen). → Wir melden uns rechtzeitig bei dir.
+        niedrigem Einkommen) <br />→ Wir melden uns rechtzeitig bei dir.
       </FormsCheckbox>
-    </UFormGroup>
+    </FormsFormGroup>
+
     <div class="flex flex-wrap gap-3">
       <UButton type="submit" icon="i-heroicons-arrow-right">
         {{ t("Antrag einreichen") }}

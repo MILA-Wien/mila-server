@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import type { PropType } from "vue";
-
-const model = defineModel<boolean>(); // boolean v-model
+const model = defineModel<boolean>();
 </script>
 
 <template>
   <div
-    class="p-3 flex flex-row gap-3 border-2 cursor-pointer transition-colors"
+    class="p-3 flex flex-row gap-3 border-2 cursor-pointer transition-colors min-h-50"
     :class="
       model
         ? 'border-primary bg-primary-50'
@@ -16,7 +14,7 @@ const model = defineModel<boolean>(); // boolean v-model
   >
     <UCheckbox v-model="model" />
 
-    <div class="-mt-1">
+    <div class="-mt-0.5">
       <slot></slot>
     </div>
   </div>
