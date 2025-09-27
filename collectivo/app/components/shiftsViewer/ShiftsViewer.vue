@@ -72,23 +72,31 @@ const user = useCurrentUser();
 
 async function loadCategories() {
   if (props.admin) {
-    const allcats = await useShiftsCategories().loadPromise;
-    allowedCategoryIds.value = allcats.map((cat) => cat.id);
-
-    categories.value.push(...allcats);
-    categoriesLoaded.value = true;
-    return;
+    await loadCategoriesAdmin();
+  } else {
+    await loadCategoriesUser();
   }
+  categoriesLoaded.value = true;
+}
 
-  const cats = await useShiftsCategories().loadPromise;
+async function loadCategoriesAdmin() {
+  const allcats = await useShiftsCategories().loadPromise;
+  allowedCategoryIds.value = allcats.map((cat) => cat.id);
+  categories.value.push(...allcats);
+  categoriesLoaded.value = true;
+}
+
+async function loadCategoriesUser() {
+  const allcats = await useShiftsCategories().loadPromise;
+  const seen = new Set();
   for (const ca of user.value.membership?.shifts_categories_allowed || []) {
-    const cat = cats.find((c) => c.id === ca.shifts_categories_id);
-    if (cat) {
+    const cat = allcats.find((c) => c.id === ca.shifts_categories_id);
+    if (cat && !seen.has(cat.id)) {
+      seen.add(cat.id);
       allowedCategoryIds.value.push(cat.id);
       categories.value.push(cat);
     }
   }
-  categoriesLoaded.value = true;
 }
 
 // Date navigation
@@ -293,6 +301,7 @@ loadEvents();
         v-model="selectedView"
         :items="viewOptions"
         item-attribute="label"
+        :search-input="false"
         class="whitespace-nowrap"
       >
         <template #default>{{ t(selectedView?.label) }}</template>
@@ -306,6 +315,7 @@ loadEvents();
       <USelectMenu
         v-model="selectedFilter"
         :items="filterOptions"
+        :search-input="false"
         option-attribute="label"
         class="whitespace-nowrap"
       >
@@ -323,7 +333,8 @@ loadEvents();
     >
       <USelectMenu
         v-model="selectedCategory"
-        :options="categories"
+        :items="categories"
+        :search-input="false"
         class="whitespace-nowrap"
       >
         <template #default>{{ t(selectedCategory.name) }}</template>
