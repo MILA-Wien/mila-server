@@ -17,6 +17,10 @@ export default defineAppConfig({
       slots: {
         base: "rounded-none cursor-pointer font-semibold tracking-wider hover:bg-blue-200 disabled:cursor-default",
       },
+      defaultVariants: {
+        color: "purple",
+        size: "md",
+      },
       variants: {
         color: {
           primary: "text-white bg-purple-500 hover:bg-purple-600",
@@ -45,7 +49,7 @@ export default defineAppConfig({
     input: {
       slots: {
         root: "w-full outline-none",
-        base: "rounded-none h-12 !pl-4",
+        base: "rounded-none h-13 !pl-4",
       },
       variants: {
         variant: {

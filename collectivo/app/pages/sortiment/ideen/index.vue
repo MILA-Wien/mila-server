@@ -49,7 +49,7 @@ fetchData();
     <UButton
       color="green"
       class="w-full"
-      size="xl"
+      size="lg"
       to="/sortiment/ideen/neu"
       icon="i-heroicons-plus"
     >
@@ -63,18 +63,22 @@ fetchData();
         v-model="filterSearch"
         :placeholder="t('Ideen suchen')"
         class="flex-1 min-w-[200px]"
-        icon="i-heroicons-magnifying-glass"
       />
-      <div class="bg-blue-50 py-3 pr-3 flex flex-row items-center gap-3">
-        <UToggle v-model="filterFromSelf" class="ml-4" />
-        <span class="text-sm font-semibold">{{ t("Nur meine Ideen") }}</span>
-      </div>
-      <div class="bg-blue-50 py-3 pr-3 flex flex-row items-center gap-3">
-        <UToggle v-model="filterHasAnswer" class="ml-4" />
-        <span class="text-sm font-semibold">{{
-          t("Nur beantwortete Ideen")
-        }}</span>
-      </div>
+
+      <UCheckbox variant="card" v-model="filterFromSelf" class="flex-1">
+        <template #label>
+          <span class="text-sm font-semibold">{{ t("Nur meine Ideen") }}</span>
+        </template>
+      </UCheckbox>
+
+      <UCheckbox variant="card" v-model="filterHasAnswer" class="flex-1">
+        <template #label>
+          <span class="text-sm font-semibold">{{
+            t("Nur beantwortete Ideen")
+          }}</span>
+        </template>
+      </UCheckbox>
+
       <UButton @click="applyFilter">
         {{ t("Filter anwenden") }}
       </UButton>
@@ -83,11 +87,11 @@ fetchData();
 
   <div v-if="data" class="flex flex-col gap-4">
     <div v-for="item in data.data" :key="item.id">
-      <CollectivoCard>
+      <CollectivoCard :color="item.status === 'inarbeit' ? 'orange' : 'green'">
         <div class="flex flex-wrap gap-3 items-center justify-between">
           <div>
-            <h3>{{ item.name }}</h3>
-            <p class="text-sm text-gray-500">
+            <p class="font-bold">{{ item.name }}</p>
+            <p class="">
               {{ t("Submitted on") }}:
               {{ new Date(item.date_created).toLocaleDateString() }}
             </p>
@@ -106,7 +110,6 @@ fetchData();
         </div>
 
         <div class="mt-4">
-          <p class="font-bold">{{ t("Request") }}:</p>
           <p>{{ item.wunsch }}</p>
         </div>
 
@@ -117,7 +120,7 @@ fetchData();
       </CollectivoCard>
     </div>
     <UPagination
-      v-model="page"
+      v-model:page="page"
       :page-count="10"
       :total="data.meta.totalCount as number"
     />

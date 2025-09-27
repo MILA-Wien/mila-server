@@ -136,6 +136,7 @@ body {
   background-color: theme(colors.white);
   color: theme(colors.black);
   overflow-wrap: break-word; /* `break-words` */
+  font-size: theme(fontSize.base);
   font-weight: theme(fontWeight.normal);
   font-family: var(--font-OpenSans);
   letter-spacing: theme(letterSpacing.wide);
@@ -184,9 +185,4 @@ h4 {
 h5 {
   font-family: var(--font-OpenSans);
   font-weight: theme(fontWeight.extrabold);
-}
-
-p {
-  font-size: theme(fontSize.base);
-  font-weight: theme(fontWeight.normal);
 }

@@ -14,8 +14,8 @@ setPageTitle(t("Neue Sortimentsidee"), {
 const toast = useToast();
 
 const schema = object({
-  name: string().required(),
-  wunsch: string().required(),
+  name: string().required("Dieses Feld ist erforderlich"),
+  wunsch: string().required("Dieses Feld ist erforderlich"),
 });
 
 type Schema = InferType<typeof schema>;
@@ -45,6 +45,13 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     },
   });
 }
+
+async function onError() {
+  toast.add({
+    title: "Bitte alle Felder ausfüllen.",
+    color: "error",
+  });
+}
 </script>
 
 <template>
@@ -55,22 +62,21 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         :state="state"
         class="space-y-4"
         @submit="onSubmit"
+        @error="onError"
       >
-        <UFormGroup :label="t('Name of the product')" name="name">
+        <FormsFormGroup :label="t('Name of the product')" name="name">
           <UInput v-model="state.name" />
-        </UFormGroup>
+        </FormsFormGroup>
 
-        <UFormGroup :label="t('Describe the product')" name="wunsch">
-          <div>
-            <p class="text-sm text-gray-500 pb-2">
-              {{ t("t:description-wunsch") }}
-            </p>
-          </div>
-          <UTextarea v-model="state.wunsch" />
-        </UFormGroup>
+        <FormsFormGroup :label="t('Describe the product')" name="wunsch">
+          <template #description>
+            {{ t("t:description-wunsch") }}
+          </template>
+          <UTextarea v-model="state.wunsch" :rows="12" />
+        </FormsFormGroup>
 
-        <div class="text-sm text-gray-500">{{ t("t:waittime") }}</div>
-        <UButton type="submit"> {{ t("Einreichen") }} </UButton>
+        <div>{{ t("t:waittime") }}</div>
+        <UButton type="submit"> {{ t("Idee einreichen") }} </UButton>
       </UForm>
     </div>
   </div>
@@ -84,9 +90,10 @@ de:
   "Here you can submit requests for products that you would like to see in our store.": "Hier kannst du Wünsche für Produkte einreichen, die du gerne in unserem Supermarkt sehen würdest."
   "New product request": "Neuer Sortimentswunsch"
   "Describe the product": "Beschreibe das Produkt"
-  "t:waittime": "Gib uns bitte 4-6 Wochen Zeit für eine Antwort"
+  "t:waittime": "Gib uns bitte 4-6 Wochen Zeit für eine Antwort."
   "t:description-wunsch": "Bitte so viele Infos wie möglich: Name, Verpackungseinheit, Produzent*in, Qualitätskriterien (Bio, Herkunft, Verpackungsart, usw) – Umso genauer, umso besser!"
 en:
-  "t:waittime": "Please give us 4-6 weeks to respond"
+  "Idee einreichen": "Submit idea"
+  "t:waittime": "Please give us 4-6 weeks to respond."
   "t:description-wunsch": "Please provide as much information as possible: Name, packaging unit, producer, quality criteria (organic, origin, packaging type, etc.) - The more accurate, the better!"
 </i18n>
