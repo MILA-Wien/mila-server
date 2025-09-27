@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { object, string, bool, type InferType } from "yup";
-import type { FormSubmitEvent } from "#ui/types";
+import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
 
 definePageMeta({
   middleware: ["auth"],
@@ -47,6 +47,19 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     });
   }
 }
+
+async function onError(event: FormErrorEvent) {
+  toast.add({
+    title: t("Some fields are not filled in correctly"),
+    icon: "i-heroicons-exclamation-circle",
+    color: "error",
+  });
+  if (event?.errors?.[0]?.id) {
+    const element = document.getElementById(event.errors[0].id);
+    element?.focus();
+    element?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}
 </script>
 
 <template>
@@ -60,6 +73,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         :state="state"
         class="space-y-4"
         @submit="onSubmit"
+        @error="onError"
       >
         <FormsFormGroup
           :label="t('Wie sollen wir dich ansprechen?')"
@@ -120,6 +134,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <i18n lang="yaml">
 de:
+  "Some fields are not filled in correctly": "Einige Felder sind nicht korrekt ausgefüllt."
   "i_pronouns": "Die Angabe der Pronomen ist freiwillig. Sie soll uns helfen bei Mila einen respektvollen Umgang miteinander zu pflegen, indem wir so mit- und übereinander sprechen, wie die angesprochenen Personen es wünschen."
 en:
   "Einstellungen": "Settings"
