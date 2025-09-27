@@ -55,7 +55,7 @@ export default defineEventHandler(async (event) => {
       ),
     );
 
-    let mship = null;
+    let mship = undefined;
     // @ts-ignore directus bug with memberships relation
     if (user.memberships.length > 0) {
       // @ts-ignore directus bug with memberships relation

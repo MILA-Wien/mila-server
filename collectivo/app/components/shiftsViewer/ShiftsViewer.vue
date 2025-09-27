@@ -48,7 +48,12 @@ const selectedView = ref(viewOptions[2]);
 const filterOptions = [
   { label: "All shifts", value: "all" },
   { label: "Open shifts", value: "unfilled" },
+  { label: "Mit Buddy (BETA)", value: "withbuddy" },
 ];
+
+const route = useRoute();
+const router = useRouter();
+
 const selectedFilter = ref(
   filterOptions.find((filter) => filter.value === props.filter) ||
     filterOptions[0],
@@ -66,8 +71,20 @@ const categories = ref<ShiftsCategory[]>([
     name: "Normal",
   },
 ]);
+
 const selectedCategory = ref(categories.value[0]);
 const allowedCategoryIds = ref<number[]>([]);
+
+// Update URL when ref changes
+watch(selectedCategory, (newVal) => {
+  router.replace({
+    query: {
+      ...route.query,
+      cat: newVal.id,
+    },
+  });
+});
+
 const user = useCurrentUser();
 
 async function loadCategories() {
@@ -77,6 +94,22 @@ async function loadCategories() {
     await loadCategoriesUser();
   }
   categoriesLoaded.value = true;
+
+  if (route.query.cat) {
+    const catid = parseInt(route.query.cat as string);
+    const cat = categories.value.find((c) => c.id === catid);
+    if (cat) {
+      selectedCategory.value = cat;
+      return;
+    } else {
+      router.replace({
+        query: {
+          ...route.query,
+          cat: undefined,
+        },
+      });
+    }
+  }
 }
 
 async function loadCategoriesAdmin() {

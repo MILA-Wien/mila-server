@@ -84,7 +84,8 @@ async function prepareEvents() {
   // Prepare events array
   const events = [];
   const allCats = props.category === -1;
-  const unfilled = props.status === "unfilled";
+  const buddyNeeded = props.status === "withbuddy";
+  const unfilled = buddyNeeded || props.status === "unfilled";
 
   // Add public holidays
   for (const holiday of props.events.publicHolidays) {
@@ -139,6 +140,20 @@ async function prepareEvents() {
       if (occurrence.n_assigned >= occurrence.shift.shifts_slots) {
         continue;
       }
+      if (occurrence.assignments.length > 0) {
+        console.log("ass", occurrence.assignments);
+      }
+
+      if (
+        buddyNeeded &&
+        !occurrence.assignments.some(
+          (assignment) =>
+            assignment.assignment.shifts_membership.memberships_user
+              .buddy_status === "is_buddy",
+        )
+      ) {
+        continue;
+      }
     }
 
     if (props.category == 0 && occurrence.shift.shifts_category_2 != null) {
@@ -176,24 +191,24 @@ async function prepareEvents() {
 
 prepareEvents();
 </script>
-<!-- calendarRef.getApi() -->
+
 <template>
   <full-calendar ref="calendarRef" :options="calendarOptions" />
-  <div class="pt-10 text-sm text-gray-500">
-    <p class="font-bold">
+  <div class="pt-10 text-gray-500">
+    <div class="font-bold">
       {{ t("Legend") }}
-    </p>
+    </div>
     <p class="">* : {{ t("This shift has a coordinator") }}</p>
+    <p class="">
+      Buddy (BETA): {{ t("In dieser Schicht gibt es einen Buddy") }}
+    </p>
   </div>
 </template>
 
 <style scoped>
-/* Cursor style on calendar events */
 :deep(.fc-event) {
   cursor: pointer;
 }
-
-/* Allows line break in calendar events */
 :deep(.fc-event-title) {
   white-space: pre-line;
 }

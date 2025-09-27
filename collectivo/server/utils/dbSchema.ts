@@ -18,7 +18,7 @@ export interface DbSchema {
   product_requests: ProductRequests[];
 }
 
-interface UserProfile {
+export interface UserProfile {
   collectivo_tags: { collectivo_tags_id: number }[];
   memberships: number[] | Membership[];
   memberships_phone: string;
@@ -26,9 +26,10 @@ interface UserProfile {
   send_notifications: boolean;
   username: string;
   pronouns: string;
+  buddy_status: "keine_angabe" | "is_buddy" | "need_buddy";
 }
 
-interface Tag {
+export interface Tag {
   id: number;
   tags_name: string;
   tags_users: UserProfile[] | number[];
@@ -36,7 +37,7 @@ interface Tag {
 
 export type ShiftsUserType = "jumper" | "regular" | "exempt" | "inactive";
 
-interface Membership {
+export interface Membership {
   id: number;
   name: string;
   memberships_user: UserProfile | number;
@@ -52,14 +53,14 @@ interface Membership {
   kids?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
 }
 
-interface MembershipsCoshopper {
+export interface MembershipsCoshopper {
   id: number;
   first_name: string;
   last_name: string;
   membership_card_id: string;
 }
 
-interface DashboardTile {
+export interface DashboardTile {
   id: number;
   sort: number;
   tiles_name: string;
@@ -77,19 +78,19 @@ interface DashboardTile {
     | "hide";
 }
 
-interface DashboardTileButton {
+export interface DashboardTileButton {
   id: number;
   tiles_label: string;
   tiles_path: string;
   tiles_is_external: boolean;
 }
 
-interface SettingsHidden {
+export interface SettingsHidden {
   last_cronjob: string;
   shift_point_system: boolean;
 }
 
-interface ShiftsShift {
+export interface ShiftsShift {
   id: number;
   shifts_name: string;
   shifts_from: string;
@@ -109,13 +110,13 @@ interface ShiftsShift {
   exclude_public_holidays?: boolean;
 }
 
-interface ShiftsPublicHoliday {
+export interface ShiftsPublicHoliday {
   id: number;
   name: string;
   date: string;
 }
 
-interface ShiftsAssignment {
+export interface ShiftsAssignment {
   id: number;
   shifts_is_regular: boolean;
   shifts_from: "datetime" | string;
@@ -124,7 +125,7 @@ interface ShiftsAssignment {
   shifts_membership: Membership | number;
 }
 
-interface ShiftsAbsence {
+export interface ShiftsAbsence {
   id?: number;
   shifts_from: "datetime" | string;
   shifts_to: "datetime" | string;
@@ -134,7 +135,7 @@ interface ShiftsAbsence {
   shifts_is_holiday?: boolean;
 }
 
-interface ShiftsLog {
+export interface ShiftsLog {
   id?: number;
   shifts_membership: Membership | number;
   shifts_type: string;
@@ -144,19 +145,19 @@ interface ShiftsLog {
   shifts_shift?: ShiftsShift | number;
 }
 
-interface ShiftsCategory {
+export interface ShiftsCategory {
   id: number;
   name: string;
 }
 
-interface CheckinLogEntry {
+export interface CheckinLogEntry {
   id: number;
   membership: Membership | number;
   date: string;
   coshopper: MembershipsCoshopper | number;
 }
 
-interface BedarfsmeldungSolitopf {
+export interface BedarfsmeldungSolitopf {
   id: number;
   membership: number | Membership;
   auszahlung: "v300a1" | "v50a6";
@@ -166,7 +167,7 @@ interface BedarfsmeldungSolitopf {
   anmerkung: string;
 }
 
-interface ProductRequests {
+export interface ProductRequests {
   id: number;
   name: string;
   wunsch: string;

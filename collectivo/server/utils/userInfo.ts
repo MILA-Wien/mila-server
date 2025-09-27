@@ -1,7 +1,7 @@
 export interface UserInfo {
   user: string;
   email: string;
-  mship: number | null;
+  mship?: number;
   studioAdmin: boolean;
   shiftAdmin: boolean;
 }
@@ -29,7 +29,7 @@ export function getUserOrThrowError(event: any): UserInfo {
   return user;
 }
 
-export function getUserOrNull(event: any): UserInfo | null {
-  const user = event.context.auth || null;
+export function getUserOrUndefined(event: any): UserInfo | undefined {
+  const user = event.context.auth || undefined;
   return user;
 }
