@@ -166,7 +166,9 @@ async function create_shift_logs(
           shifts_membership: mship.id,
           shifts_date: occDate,
           shifts_type: "attended",
-          shifts_score: settings.shift_point_system ? CYCLE_DAYS : 0,
+          shifts_score: settings.shift_point_system
+            ? occurrence.shift.shift_points
+            : 0,
           shifts_shift: occurrence.shift.id,
         }),
       );
