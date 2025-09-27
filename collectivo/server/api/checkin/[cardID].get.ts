@@ -156,7 +156,7 @@ async function getMembershipData(event) {
   }
 
   if (mship.shifts_user_type != "exempt") {
-    if (mship.shifts_counter < -1 || isOnHoliday) {
+    if (mship.shifts_counter <= -28 || isOnHoliday) {
       canShop = false;
     }
   }

@@ -18,6 +18,7 @@ const holidaysAll: Ref<ShiftsAbsenceDashboard[]> = ref([]);
 const holidaysCurrent: Ref<ShiftsAbsenceDashboard[]> = ref([]);
 const absences: Ref<ShiftsAbsenceDashboard[]> = ref([]);
 const logs = ref<ShiftsLog[]>([]);
+const statusColor = ref<"green" | "orange" | "red">("green");
 
 async function loadData() {
   dataLoaded.value = false;
@@ -27,14 +28,40 @@ async function loadData() {
   holidaysCurrent.value = res.holidaysCurrent as ShiftsAbsenceDashboard[];
   absences.value = res.signouts as ShiftsAbsenceDashboard[];
   logs.value = res.logs as ShiftsLog[];
-  canShop.value =
-    (mship.shifts_counter > -1 && holidaysCurrent.value.length == 0) ||
-    mship.shifts_user_type == "exempt";
+
+  if (mship.shifts_user_type == "exempt") {
+    statusColor.value = "pink";
+    canShop.value = true;
+    dataLoaded.value = true;
+    return;
+  }
+
+  if (mship.shifts_user_type == "inactive") {
+    statusColor.value = "red";
+    canShop.value = false;
+    dataLoaded.value = true;
+    return;
+  }
+
+  const isOnHoliday = holidaysCurrent.value.length > 0;
+  if (isOnHoliday) {
+    statusColor.value = "blue";
+    canShop.value = false;
+  }
+
+  if (mship.shifts_counter < 0) {
+    statusColor.value = "orange";
+  }
+
+  if (mship.shifts_counter <= -28) {
+    statusColor.value = "red";
+    canShop.value = false;
+  }
+
   dataLoaded.value = true;
 }
 
-if (isActive) loadData();
-else throw createError({ statusCode: 403 });
+loadData();
 </script>
 
 <template>
@@ -42,41 +69,61 @@ else throw createError({ statusCode: 403 });
     <USkeleton class="h-32 w-full rounded-none" />
   </div>
   <div v-else>
-    <CollectivoCard :color="canShop ? 'green' : 'orange'" class="mb-4">
+    <CollectivoCard :color="statusColor" class="mb-4">
       <div>
         <h4>{{ t("My status") }}</h4>
 
-        <div>
-          <span v-if="holidaysCurrent.length > 0">
-            {{ t("Holiday") }} - {{ t("Shopping is not allowed") }}
-          </span>
-          <span
-            v-else-if="
-              mship.shifts_counter > -1 || mship.shifts_user_type == 'exempt'
-            "
-          >
-            {{ t("Shopping is allowed") }}
-          </span>
-          <span v-else>
-            {{ t("Missing shifts") }}: {{ t("Shopping is not allowed") }}
-          </span>
-        </div>
-        <p>{{ t("Shifttype") }}: {{ t("t:" + mship.shifts_user_type) }}</p>
+        <template v-if="settingsState!.shift_point_system">
+          <p v-if="mship.shifts_user_type == 'inactive'">
+            {{ t("Your membership is currently inactive.") }}<br />
+            {{
+              t(
+                "Please contact the membership office if you want to change your status.",
+              )
+            }}
+          </p>
 
-        <p
-          v-if="
-            settingsState!.shift_point_system &&
-            mship.shifts_user_type != 'exempt' &&
-            mship.shifts_counter >= 0
-          "
-        >
-          {{ t("Points") }}: {{ mship.shifts_counter }}
-          {{ t("Next shift required in") }}:
-          <span v-if="mship.shifts_counter >= 1">
-            {{ mship.shifts_counter }} {{ t("days") }}
+          <p v-else-if="mship.shifts_user_type == 'exempt'">
+            {{ t("You are exempt from shift work.") }}<br />
+            {{ t("You can nonetheless sign up for shifts if you want.") }}
+          </p>
+
+          <span v-else-if="holidaysCurrent.length > 0">
+            {{ t("You have a holiday registered at the moment.") }}<br />
+            {{ t("You cannot go shopping during this time.") }}
           </span>
-          <span v-else-if="mship.shifts_counter == 1"> 1 {{ t("day") }} </span>
-        </p>
+
+          <p v-else-if="mship.shifts_counter >= 0">
+            {{
+              t("Your membership is active. Thank you for your contribution!")
+            }}
+            <br />
+            {{ t("Please do your next shift latest in") }}:
+            <span v-if="mship.shifts_counter >= 1">
+              {{ mship.shifts_counter }} {{ t("days") }}
+            </span>
+            <span v-else-if="mship.shifts_counter == 1">
+              1 {{ t("day") }}
+            </span>
+          </p>
+
+          <p v-else-if="mship.shifts_counter > -28">
+            {{ t("You are") }}
+            {{ -mship.shifts_counter }}
+            {{ t("days late to do your next shift.") }}
+            <br />
+            {{ t("Your membership will be frozen in") }}:
+            {{ 28 + mship.shifts_counter }} {{ t("days") }}.
+          </p>
+
+          <p v-else-if="mship.shifts_counter <= -28">
+            {{ t("You are more than 4 weeks late to do your next shift.") }}
+            <br />
+            {{
+              t("Please sign up for a shift or contact the membership office.")
+            }}
+          </p>
+        </template>
       </div>
     </CollectivoCard>
 
@@ -208,6 +255,8 @@ else throw createError({ statusCode: 403 });
 de:
   "Shift": "Schicht"
   "Shift calendar": "Schichtkalender"
+  "My status": "Mein Status"
+  "You can go shopping": "Du kannst einkaufen gehen"
   "My shifts": "Meine Schichten"
   "My holidays": "Meine Urlaube"
   "My recent activities": "Meine letzten Aktivitäten"
@@ -215,10 +264,22 @@ de:
   "My assignments": "Meine Anmeldungen"
   "My signouts": "Meine Abmeldungen"
   "Next shift required in": "Nächste Schicht erforderlich in"
+  "Your membership will be frozen in": "Deine Mitgliedschaft wird eingefroren in"
+  "You are": "Du bist"
+  "days late to do your next shift.": "Tage zu spät, um deine nächste Schicht zu machen."
+  "You are more than 4 weeks late to do your next shift.": "Du bist mehr als 4 Wochen zu spät, um deine nächste Schicht zu machen."
+  "Please sign up for a shift or contact the membership office.": "Bitte melde dich für eine Schicht an oder kontaktiere das Mitgliederbüro."
+  "You have a holiday registered at the moment.": "Du hast aktuell einen Urlaub eingetragen."
+  "You cannot go shopping during this time.": "Du kannst in dieser Zeit nicht einkaufen gehen."
+  "You are exempt from shift work.": "Du bist von der Schichtarbeit befreit."
+  "Please do your next shift latest in": "Bitte mache deine nächste Schicht spätestens in"
+  "Your membership is active. Thank you for your contribution!": "Deine Mitgliedschaft ist aktiv. Danke für deinen Beitrag!"
+  "You can nonetheless sign up for shifts if you want.": "Du kannst dich trotzdem für Schichten anmelden, wenn du möchtest."
+  "Your membership is currently inactive.": "Deine Mitgliedschaft ist derzeit inaktiv."
+  "Please contact the membership office if you want to change your status.": "Bitte kontaktiere das Mitgliederbüro, wenn du deinen Status ändern möchtest."
   "days": "Tagen"
   "Timespan": "Zeitraum"
   "to": "bis"
-  "My status": "Mein Status"
   "Shifts Overview": "Schichten Übersicht"
   "Register shift": "Schicht anmelden"
   "Submit holiday": "Urlaub einreichen"

@@ -11,8 +11,6 @@ import {
 import { getShiftOccurrences } from "../utils/shiftsOccurrences";
 import { sendShiftReminders } from "../utils/shiftsReminder";
 
-const CYCLE_DAYS = 28;
-
 export default defineEventHandler(async (event) => {
   verifyCollectivoApiToken(event);
   console.log("Running cronjobs");
@@ -112,7 +110,7 @@ async function decrement_shifts_counter(mshipIdsOnHoliday: number[]) {
   );
 
   for (const membership of membershipsToUpdate) {
-    if (membership.shifts_counter < 0) continue;
+    if (membership.shifts_counter < -28) continue;
     await directus.request(
       updateItem("memberships", membership.id, {
         shifts_counter: membership.shifts_counter - 1,
