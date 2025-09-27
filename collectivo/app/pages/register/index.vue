@@ -9,7 +9,7 @@ import {
   boolean,
   date,
 } from "yup";
-import type { FormSubmitEvent } from "#ui/types";
+import type { FormErrorEvent, FormSubmitEvent } from "@nuxt/ui";
 const { t } = useI18n();
 
 setPageTitle(t("Membership Application"));
@@ -22,77 +22,101 @@ const linkStatutes = "https://wolke.mila.wien/s/BRKPrbzjssqkzbz";
 const devMode = import.meta.dev;
 const user = useCurrentUser();
 const schema = object({
-  directus_users__memberships_person_type: string().required(),
-  directus_users__email: string().email().required(),
-  directus_users__password: string().required(),
+  directus_users__memberships_person_type: string().required(
+    "Dieses Feld ist erforderlich",
+  ),
+  directus_users__email: string()
+    .email()
+    .required("Dieses Feld ist erforderlich"),
+  directus_users__password: string().required("Dieses Feld ist erforderlich"),
   _pw_confirm: string()
-    .required()
+    .required("Dieses Feld ist erforderlich")
     .oneOf([ref("directus_users__password")], "Passwords must match"),
   directus_users__memberships_organization_name: string().when(
     "directus_users__memberships_person_type",
     {
       is: "legal",
-      then: (schema) => schema.required(),
+      then: (schema) => schema.required("Dieses Feld ist erforderlich"),
     },
   ),
   directus_users__memberships_organization_type: string().when(
     "directus_users__memberships_person_type",
     {
       is: "legal",
-      then: (schema) => schema.required(),
+      then: (schema) => schema.required("Dieses Feld ist erforderlich"),
     },
   ),
   directus_users__memberships_organization_id: string().when(
     "directus_users__memberships_person_type",
     {
       is: "legal",
-      then: (schema) => schema.required(),
+      then: (schema) => schema.required("Dieses Feld ist erforderlich"),
     },
   ),
-  directus_users__username: string().required(),
+  directus_users__username: string().required("Dieses Feld ist erforderlich"),
   directus_users__pronouns: string(),
   directus_users__use_pronouns_on_card: boolean(),
-  directus_users__first_name: string().required(),
-  directus_users__last_name: string().required(),
-  directus_users__memberships_gender: string().required(),
+  directus_users__hide_name: boolean(),
+  directus_users__first_name: string().required("Dieses Feld ist erforderlich"),
+  directus_users__last_name: string().required("Dieses Feld ist erforderlich"),
+  directus_users__memberships_gender: string().required(
+    "Dieses Feld ist erforderlich",
+  ),
   directus_users__memberships_phone: string(),
   directus_users__memberships_birthday: date().when(
     "directus_users__memberships_person_type",
     {
       is: "natural",
-      then: (schema) => schema.required(),
+      then: (schema) => schema.required("Dieses Feld ist erforderlich"),
     },
   ),
   directus_users__memberships_occupation: string().when(
     "directus_users__memberships_person_type",
     {
       is: "natural",
-      then: (schema) => schema.required(),
+      then: (schema) => schema.required("Dieses Feld ist erforderlich"),
     },
   ),
-  directus_users__memberships_street: string().required(),
-  directus_users__memberships_streetnumber: string().required(),
+  directus_users__memberships_street: string().required(
+    "Dieses Feld ist erforderlich",
+  ),
+  directus_users__memberships_streetnumber: string().required(
+    "Dieses Feld ist erforderlich",
+  ),
   directus_users__memberships_stair: string(),
   directus_users__memberships_door: string(),
-  directus_users__memberships_postcode: string().required(),
-  directus_users__memberships_city: string().required(),
-  directus_users__memberships_country: string().required(),
-  memberships__memberships_type: string(),
-  shares_options: string(),
+  directus_users__memberships_postcode: string().required(
+    "Dieses Feld ist erforderlich",
+  ),
+  directus_users__memberships_city: string().required(
+    "Dieses Feld ist erforderlich",
+  ),
+  directus_users__memberships_country: string().required(
+    "Dieses Feld ist erforderlich",
+  ),
+  memberships__memberships_type: string().required(
+    "Dieses Feld ist erforderlich",
+  ),
+  shares_options: string().required("Dieses Feld ist erforderlich"),
   memberships__memberships_shares: number()
     .integer()
     .when("shares_options", {
       is: "more",
-      then: (schema) => schema.required().min(10, "Must be at least 10"),
+      then: (schema) =>
+        schema
+          .required("Dieses Feld ist erforderlich")
+          .min(10, "Must be at least 10"),
     }),
-  directus_users__payments_type: string(),
+  directus_users__payments_type: string().required(
+    "Dieses Feld ist erforderlich",
+  ),
   directus_users__payments_account_iban: string().when(
     "directus_users__payments_type",
     {
       is: "sepa",
       then: (schema) =>
         schema
-          .required()
+          .required("Dieses Feld ist erforderlich")
           .test("iban", "IBAN nicht gültig", (value, context) => {
             return validateIban(value, context, state);
           }),
@@ -102,7 +126,7 @@ const schema = object({
     "directus_users__payments_type",
     {
       is: "sepa",
-      then: (schema) => schema.required(),
+      then: (schema) => schema.required("Dieses Feld ist erforderlich"),
     },
   ),
   directus_users__mila_survey_contact: string(),
@@ -111,8 +135,12 @@ const schema = object({
   directus_users__mila_skills_2: array(string()),
   directus_users__survey_languages: array(string()),
   directus_users__survey_languages_additional: string(),
-  _statutes_approval: boolean().required().oneOf([true], "Must be accepted"),
-  _data_approval: boolean().required().oneOf([true], "Must be accepted"),
+  _statutes_approval: boolean()
+    .required("Dieses Feld muss akzeptiert werden")
+    .oneOf([true], "Dieses Feld muss akzeptiert werden"),
+  _data_approval: boolean()
+    .required("Dieses Feld muss akzeptiert werden")
+    .oneOf([true], "Dieses Feld muss akzeptiert werden"),
   directus_users__mila_pr_approved: boolean(),
 });
 
@@ -126,6 +154,10 @@ const state: any = reactive({
   directus_users__memberships_organization_name: undefined,
   directus_users__memberships_organization_type: undefined,
   directus_users__memberships_organization_id: undefined,
+  directus_users__username: undefined,
+  directus_users__pronouns: undefined,
+  directus_users__use_pronouns_on_card: false,
+  directus_users__hide_name: false,
   directus_users__first_name: undefined,
   directus_users__last_name: undefined,
   directus_users__memberships_gender: undefined,
@@ -191,9 +223,22 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   });
 
   if (res.status.value === "error") {
+    if (
+      res.error.value?.message &&
+      res.error.value?.message.includes("EMAIL_ALREADY_EXISTS")
+    ) {
+      toast.add({
+        title: t("This email address is already registered"),
+        description: event.data.directus_users__email,
+        icon: "i-heroicons-exclamation-circle",
+        color: "error",
+      });
+      return;
+    }
     toast.add({
       title: t("There was an error"),
-      icon: "i-heroicons-exclamation-triangle",
+      icon: "i-heroicons-exclamation-circle",
+      color: "error",
     });
   } else {
     navigateTo("/register/success");
@@ -202,11 +247,17 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 const toast = useToast();
 
-async function onError() {
+async function onError(event: FormErrorEvent) {
   toast.add({
     title: t("Some fields are not filled in correctly"),
-    icon: "i-heroicons-exclamation-triangle",
+    icon: "i-heroicons-exclamation-circle",
+    color: "error",
   });
+  if (event?.errors?.[0]?.id) {
+    const element = document.getElementById(event.errors[0].id);
+    element?.focus();
+    element?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
 }
 </script>
 
@@ -387,26 +438,33 @@ async function onError() {
         :label="t('Pronomen auf Mitgliederkarte')"
         v-if="state.directus_users__pronouns"
       >
-        <FormsCheckbox v-model="state.directus_users__use_pronouns_on_card">
-          {{
-            t(
-              "Ich möchte, dass meine Pronomen auf meine Mitgliederkarte gedruckt werden.",
-            )
-          }}
-        </FormsCheckbox>
+        <UCheckbox
+          variant="card"
+          v-model="state.directus_users__use_pronouns_on_card"
+        >
+          <template #label>
+            {{
+              t(
+                "Ich möchte, dass meine Pronomen auf meine Mitgliederkarte gedruckt werden.",
+              )
+            }}
+          </template>
+        </UCheckbox>
       </FormsFormGroup>
 
       <FormsFormGroup
         name="directus_users__hide_name"
         :label="t('Anonym bleiben')"
       >
-        <FormsCheckbox v-model="state.directus_users__hide_name">
-          {{
-            t(
-              "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform.",
-            )
-          }}
-        </FormsCheckbox>
+        <UCheckbox variant="card" v-model="state.directus_users__hide_name">
+          <template #label>
+            {{
+              t(
+                "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform.",
+              )
+            }}
+          </template>
+        </UCheckbox>
       </FormsFormGroup>
     </div>
 
@@ -835,48 +893,63 @@ async function onError() {
           name="_statutes_approval"
           required
         >
-          <FormsCheckbox v-model="state._statutes_approval" class="mt-0.5 mr-2">
-            <span class="">
-              {{ t("t:mila_form_check2") }}
-              <a :href="linkStatutes" class="font-bold" target="_blank">{{
-                t("Statutes")
-              }}</a></span
-            ></FormsCheckbox
+          <UCheckbox
+            v-model="state._statutes_approval"
+            class="mt-0.5 mr-2"
+            variant="card"
+          >
+            <template #label>
+              <span class="">
+                {{ t("t:mila_form_check2") }}
+                <a :href="linkStatutes" class="font-bold" target="_blank">{{
+                  t("Statutes")
+                }}</a></span
+              ></template
+            ></UCheckbox
           >
         </FormsFormGroup>
 
         <FormsFormGroup :label="t('Data use')" name="_data_approval" required>
-          <FormsCheckbox v-model="state._data_approval" class="mt-0.5 mr-2">
-            <span class="">
-              {{ t("t:mila_form_check3") }}
-              <a
-                href="https://www.mila.wien/datenschutz/"
-                target="_blank"
-                class="font-bold"
-                >{{ t("Privacy Policy") }}</a
-              >.
-            </span></FormsCheckbox
+          <UCheckbox
+            variant="card"
+            v-model="state._data_approval"
+            class="mt-0.5 mr-2"
           >
+            <template #label>
+              <span class="">
+                {{ t("t:mila_form_check3") }}
+                <a
+                  href="https://www.mila.wien/datenschutz/"
+                  target="_blank"
+                  class="font-bold"
+                  >{{ t("Privacy Policy") }}</a
+                >.
+              </span>
+            </template>
+          </UCheckbox>
         </FormsFormGroup>
 
         <FormsFormGroup
           :label="t('PR Work')"
           name="directus_users__mila_pr_approved"
         >
-          <FormsCheckbox
+          <UCheckbox
             v-model="state.directus_users__mila_pr_approved"
             class="mt-0.5 mr-2"
+            variant="card"
           >
-            <span class="">
-              {{ t("t:mila_form_check1") }}
-              <a
-                href="https://www.mila.wien/datenschutz/"
-                target="_blank"
-                class="font-bold"
-                >{{ t("Privacy Policy") }}</a
-              >.
-            </span>
-          </FormsCheckbox>
+            <template #label>
+              <span class="">
+                {{ t("t:mila_form_check1") }}
+                <a
+                  href="https://www.mila.wien/datenschutz/"
+                  target="_blank"
+                  class="font-bold"
+                  >{{ t("Privacy Policy") }}</a
+                >.
+              </span>
+            </template>
+          </UCheckbox>
         </FormsFormGroup>
 
         <div>
@@ -923,6 +996,7 @@ de:
   "You are currently logged in as": "Du bist aktuell angemeldet als"
   "Log out to fill out a new membership application for a different person.": "Melde dich ab, um eine neue Beitrittserklärung für eine andere Person auszufüllen."
   "Log out": "Abmelden"
+  "This email address is already registered": "Diese E-Mail Adresse ist bereits registriert"
 
   "Membership Application": "Beitrittserklärung"
   "Welcome to MILA!": "Willkommen bei MILA!"

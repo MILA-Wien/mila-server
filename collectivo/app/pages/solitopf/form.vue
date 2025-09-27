@@ -84,11 +84,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           )
         }}
       </template>
-      <FormsCheckbox v-model="state.weitere_unterstuetzung">
-        Ich weiß schon jetzt, dass ich auch nach den 6 Monaten weiter
-        Unterstützung brauche (z. B. wegen Mindestpension oder dauerhaft
-        niedrigem Einkommen) <br />→ Wir melden uns rechtzeitig bei dir.
-      </FormsCheckbox>
+      <UCheckbox variant="card" v-model="state.weitere_unterstuetzung">
+        <template #label>
+          {{
+            t(
+              "Ich weiß schon jetzt, dass ich auch nach den 6 Monaten weiter Unterstützung brauche (z. B. wegen Mindestpension oder dauerhaft niedrigem Einkommen) → Wir melden uns rechtzeitig bei dir.",
+            )
+          }}
+        </template>
+      </UCheckbox>
     </FormsFormGroup>
 
     <div class="flex flex-wrap gap-3">

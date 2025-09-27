@@ -37,13 +37,13 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     await userData.value.reload();
     toast.add({
       title: t("Dein Profil wurde erfolgreich aktualisiert."),
-      color: "green",
+      color: "success",
     });
   } else {
     toast.add({
       title: t("Es ist ein Fehler aufgetreten."),
       icon: "i-heroicons-exclamation-triangle",
-      color: "red",
+      color: "error",
     });
   }
 }
@@ -82,26 +82,30 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         </FormsFormGroup>
 
         <FormsFormGroup name="hide_name" :label="t('Anonym bleiben')">
-          <FormsCheckbox v-model="state.hide_name">
-            {{
-              t(
-                "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform.",
-              )
-            }}
-          </FormsCheckbox>
+          <UCheckbox variant="card" v-model="state.hide_name">
+            <template #label>
+              {{
+                t(
+                  "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform.",
+                )
+              }}</template
+            >
+          </UCheckbox>
         </FormsFormGroup>
 
         <FormsFormGroup
           name="send_notifications"
           :label="t('E-Mail-Benachrichtigungen')"
         >
-          <FormsCheckbox v-model="state.send_notifications">
-            {{
-              t(
-                "Erhalte E-Mail-Benachrichtigungen über bevorstehende Schichten.",
-              )
-            }}
-          </FormsCheckbox>
+          <UCheckbox variant="card" v-model="state.send_notifications">
+            <template #label>
+              {{
+                t(
+                  "Erhalte E-Mail-Benachrichtigungen über bevorstehende Schichten.",
+                )
+              }}
+            </template>
+          </UCheckbox>
         </FormsFormGroup>
 
         <div class="pt-2">

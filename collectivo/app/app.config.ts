@@ -4,6 +4,15 @@ export default defineAppConfig({
       primary: "purple",
       secondary: "green",
     },
+    toast: {
+      slots: {
+        root: "rounded-none border-2 border-black",
+        icon: "size-10",
+        title: "text-base font-bold",
+        description: "text-base text-black",
+        close: "hover:bg-transparent",
+      },
+    },
     button: {
       slots: {
         base: "rounded-none cursor-pointer font-semibold tracking-wider hover:bg-blue-200 disabled:cursor-default",
@@ -47,10 +56,21 @@ export default defineAppConfig({
     checkbox: {
       slots: {
         base: "rounded-none ring-black cursor-pointer",
+        label: "text-black -mt-0.5",
       },
       variants: {
         size: {
-          md: "h-4.5 w-4.5",
+          md: "h-5 w-5",
+        },
+        variant: {
+          card: {
+            root: "w-full rounded-none border border-black px-4 pt-4 !pb-3",
+          },
+        },
+        color: {
+          error: {
+            root: "border-red-500",
+          },
         },
       },
     },
@@ -96,12 +116,17 @@ export default defineAppConfig({
       slots: {
         base: "ring-black",
         label: "block font-medium text-black",
-        item: "has-data-[state=checked]:bg-purple-50 has-data-[state=checked]:ring-1 has-data-[state=checked]:ring-purple-500",
+        item: "has-data-[state=checked]:bg-purple-50 has-data-[state=checked]:ring-1 has-data-[state=checked]:ring-purple-500 ",
       },
       variants: {
         variant: {
           card: {
             item: "rounded-none border-black cursor-pointer ",
+          },
+        },
+        color: {
+          error: {
+            item: "border-red-500",
           },
         },
         orientation: {
