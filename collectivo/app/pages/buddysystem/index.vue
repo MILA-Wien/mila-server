@@ -124,7 +124,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         ]"
       >
         <template #label="{ item }">
-          {{ t(item.label) }}
+          <p class="whitespace-pre-line">
+            {{ t(item.label) }}
+          </p>
         </template>
       </URadioGroup>
     </FormsFormGroup>
@@ -145,7 +147,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 <i18n lang="yaml">
 de:
   "t_is_buddy": "Ich kann mir vorstellen eine andere Person in meiner Fest-Schicht zu unterstützen."
-  "t_need_buddy": "Ich brauche Unterstützung. Ich wünsche mir eine Person, die mir während der Fest-Schicht zur Seite steht. Eine Fest-Schicht wiederholt sich alle 4 Wochen."
+  "t_need_buddy": "Ich brauche Unterstützung.\nIch wünsche mir eine Person, die mir während der Fest-Schicht zur Seite steht.\nEine Fest-Schicht wiederholt sich alle 4 Wochen."
   "t_need_buddy_details": "Ich könnte Unterstützung brauchen bei folgender/n Tätigkeit/en (z.B. Unterstützung beim Lesen, Unterstützung in der Kommunikation, schwerer heben)"
 en:
   "Mein Status": "My status"
@@ -163,6 +165,6 @@ en:
   "Aktualisieren": "Update"
   "Keine Angabe.": "No indication."
   "t_is_buddy": "I can imagine supporting another person in my regular shift."
-  "t_need_buddy": "I need support. I would like to have a person who stands by me during the regular shift. A regular shift repeats every 4 weeks."
+  "t_need_buddy": "I need support.\nI would like to have a person who stands by me during the regular shift.\nA regular shift repeats every 4 weeks."
   "t_need_buddy_details": "I might need support with the following activity/activities (e.g. support with reading, support with communication, heavy lifting)"
 </i18n>
