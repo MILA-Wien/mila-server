@@ -14,8 +14,8 @@ export default defineEventHandler(async (event) => {
   const membershipData: any = {};
 
   // Check if user is authenticated
-  const user = await getUserOrNull(event);
-  const isAuthenticated = user !== null;
+  const user = await getUserOrUndefined(event);
+  const isAuthenticated = user !== undefined;
   let userID = user?.user;
 
   // Assign share numbers based on shares_options
