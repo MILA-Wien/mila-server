@@ -82,7 +82,7 @@ export default defineAppConfig({
       variants: {
         fullscreen: {
           false: {
-            content: "rounded-none ring-black ring-2",
+            content: "rounded-none ring-black ring-2 overflow-y-auto",
           },
         },
       },
