@@ -685,7 +685,7 @@ async function onError(event: FormErrorEvent) {
         v-model="state.shares_options"
         variant="card"
         :items="
-          isNatural
+          isNatural && state.memberships__memberships_type === 'Aktiv'
             ? [
                 { label: 'social', value: 'social' },
                 { label: 'normal', value: 'normal' },
