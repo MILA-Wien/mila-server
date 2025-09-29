@@ -6,7 +6,7 @@ definePageMeta({
   middleware: ["auth"],
 });
 const { t } = useI18n();
-setPageTitle(t("Buddysystem"), {
+setPageTitle(t("Buddy-System"), {
   backLink: "/",
   backLinkLabel: t("Zurück zur Startseite"),
 });
