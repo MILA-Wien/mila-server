@@ -17,7 +17,7 @@
     "options": null,
     "readonly": true,
     "required": false,
-    "sort": 21,
+    "sort": 20,
     "special": [
       "date-updated"
     ],

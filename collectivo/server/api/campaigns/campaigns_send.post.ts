@@ -220,14 +220,15 @@ async function readRecipientData(recipientId: string): Promise<RecipientData> {
 
   const readResult: Record<string, any> = await directus.request(
     readUser(recipientId, {
-      fields: ["first_name", "last_name", "email"],
+      fields: ["username", "email"],
     }),
   );
 
   return {
     id: recipientId,
-    first_name: readResult["first_name"],
-    last_name: readResult["last_name"],
+    username: readResult["username"],
+    first_name: readResult["username"],
+    last_name: "", // Legacy support for old templates with last_name field
     email: readResult["email"],
   };
 }
@@ -284,6 +285,7 @@ function renderTemplateForRecipient(
 
   campaignContext.recipient_first_name = recipientData.first_name;
   campaignContext.recipient_last_name = recipientData.last_name;
+  campaignContext.recipient_username = recipientData.username;
   campaignContext.recipient_email = recipientData.email;
 
   const renderedContent = replaceTemplateTags(
@@ -317,6 +319,7 @@ interface CampaignData {
 
 interface RecipientData {
   id: string;
+  username: string;
   first_name: string;
   last_name: string;
   email: string;

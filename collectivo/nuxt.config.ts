@@ -80,9 +80,5 @@ export default defineNuxtConfig({
 
   css: ["~/assets/css/main.css"],
 
-  ui: {
-    global: true,
-    icons: ["heroicons"],
-    safelistColors: ["primary", "green", "orange", "blue", "pink", "red"],
-  },
+  ui: {},
 });

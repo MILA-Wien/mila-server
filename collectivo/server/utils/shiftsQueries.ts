@@ -2,6 +2,7 @@ import { readItems } from "@directus/sdk";
 import type { QueryFilter } from "@directus/sdk";
 import { RRule, RRuleSet } from "rrule";
 import { parseUtcMidnight } from "./dates";
+import { ShiftsShift } from "./dbSchema";
 
 const directus = useDirectusAdmin();
 
@@ -82,12 +83,12 @@ export async function getShiftAssignments(
             {
               memberships_user: [
                 "id",
-                "first_name",
-                "last_name",
+                "username",
                 "hide_name",
                 "email",
                 "memberships_phone",
                 "send_notifications",
+                "buddy_status",
               ],
             },
           ],

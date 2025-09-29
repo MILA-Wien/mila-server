@@ -1,0 +1,188 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@source inline("border-{green,purple,orange,blue,pink,red,primary}-500");
+@source inline("bg-{green,purple,orange,blue,pink,red,primary}-{50,{100..900..100}}");
+
+@theme {
+  --font-Avory: "AvoryII", sans-serif;
+  --font-OpenSans: "OpenSans", sans-serif;
+  --color-milaGreen: #00867a;
+  --color-milaGreenHover: #009a8c;
+  --color-milaPurple: #3b2776;
+  --color-milaPurpleHover: #554588;
+
+  --color-green-50: #f2fbf9;
+  --color-green-100: #d1f6ee;
+  --color-green-200: #a4ebde;
+  --color-green-300: #6edaca;
+  --color-green-400: #40c1b3;
+  --color-green-500: #00867a;
+  --color-green-600: #1a5552;
+  --color-green-700: #1a4745;
+  --color-green-800: #092a29;
+  --color-green-900: #092a29;
+  --color-green-950: #092a29;
+
+  --color-primary-50: #f1f1fc;
+  --color-primary-100: #e5e6fa;
+  --color-primary-200: #cfcff6;
+  --color-primary-300: #b4b2ef;
+  --color-primary-400: #9c93e6;
+  --color-primary-500: #3b2776;
+  --color-primary-600: #281a4c;
+  --color-primary-700: #281a4c;
+  --color-primary-800: #281a4c;
+  --color-primary-900: #281a4c;
+  --color-primary-950: #281a4c;
+
+  --color-purple-50: #f1f1fc;
+  --color-purple-100: #e5e6fa;
+  --color-purple-200: #cfcff6;
+  --color-purple-300: #b4b2ef;
+  --color-purple-400: #9c93e6;
+  --color-purple-500: #3b2776;
+  --color-purple-600: #281a4c;
+  --color-purple-700: #281a4c;
+  --color-purple-800: #281a4c;
+  --color-purple-900: #281a4c;
+  --color-purple-950: #281a4c;
+
+  --color-blue-50: #f1f5fd;
+  --color-blue-100: #dee7fb;
+  --color-blue-200: #c5d7f8;
+  --color-blue-300: #9dbdf3;
+  --color-blue-400: #6e9aec;
+  --color-blue-500: #5e84e7;
+  --color-blue-600: #385ad8;
+  --color-blue-700: #2f47c6;
+  --color-blue-800: #2c3ba1;
+  --color-blue-900: #283680;
+  --color-blue-950: #1d234e;
+
+  --color-orange-50: #fdf8ef;
+  --color-orange-100: #faeeda;
+  --color-orange-200: #f3dab5;
+  --color-orange-300: #ecc085;
+  --color-orange-400: #e39c54;
+  --color-orange-500: #dc8233;
+  --color-orange-600: #d36d29;
+  --color-orange-700: #ab5323;
+  --color-orange-800: #894323;
+  --color-orange-900: #6f391f;
+  --color-orange-950: #3b1b0f;
+
+  --color-red-50: #fdf3f3;
+  --color-red-100: #fbe5e5;
+  --color-red-200: #f8d0d0;
+  --color-red-300: #f2afaf;
+  --color-red-400: #e98080;
+  --color-red-500: #d94c4c;
+  --color-red-600: #c73b3b;
+  --color-red-700: #a72e2e;
+  --color-red-800: #8b2929;
+  --color-red-900: #742828;
+  --color-red-950: #3e1111;
+
+  --color-pink-50: #fcf6fd;
+  --color-pink-100: #f9ebfc;
+  --color-pink-200: #f4dbf8;
+  --color-pink-300: #ebb7f0;
+  --color-pink-400: #df8ce6;
+  --color-pink-500: #cd5fd6;
+  --color-pink-600: #b340b9;
+  --color-pink-700: #963299;
+  --color-pink-800: #7c2a7e;
+  --color-pink-900: #682768;
+  --color-pink-950: #430f43;
+
+  --color-gray-50: #f6f7f8;
+  --color-gray-100: #ebecee;
+  --color-gray-200: #dcdee1;
+  --color-gray-300: #c4c8cc;
+  --color-gray-400: #a1a6ac;
+  --color-gray-500: #92979f;
+  --color-gray-600: #81868f;
+  --color-gray-700: #747881;
+  --color-gray-800: #62646b;
+  --color-gray-900: #505258;
+  --color-gray-950: #333438;
+}
+
+@font-face {
+  font-family: "AvoryII";
+  src: url("~/assets/fonts/AvoryIIPE-Bl.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "OpenSans";
+  src: url("~/assets/fonts/OpenSans-Regular-webfont.woff") format("woff");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "OpenSans";
+  src: url("~/assets/fonts/OpenSans-Semibold-webfont.woff") format("woff");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "OpenSans";
+  src: url("~/assets/fonts/OpenSans-Bold-webfont.woff") format("woff");
+  font-weight: 700;
+}
+
+body {
+  background-color: theme(colors.white);
+  color: theme(colors.black);
+  overflow-wrap: break-word; /* `break-words` */
+  font-size: theme(fontSize.base);
+  font-weight: theme(fontWeight.normal);
+  font-family: var(--font-OpenSans);
+  letter-spacing: theme(letterSpacing.wide);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  font-family: var(--font-Avory);
+  font-size: theme(fontSize.3xl);
+  margin-top: theme(spacing.8);
+  margin-bottom: theme(spacing.2);
+  letter-spacing: 1.5px;
+}
+
+@media (min-width: theme(screens.md)) {
+  h1 {
+    font-size: theme(fontSize.4xl);
+  }
+}
+
+h2 {
+  font-family: var(--font-Avory);
+  font-size: theme(fontSize.2xl);
+  margin-bottom: theme(spacing.2);
+  letter-spacing: 0.7px;
+}
+
+@media (min-width: theme(screens.md)) {
+  h2 {
+    font-size: theme(fontSize.3xl);
+  }
+}
+
+h3 {
+  font-family: var(--font-Avory);
+  font-size: theme(fontSize.2xl);
+  letter-spacing: 0.7px;
+}
+
+h4 {
+  font-family: var(--font-OpenSans);
+  font-weight: theme(fontWeight.extrabold);
+  font-size: theme(fontSize.lg);
+}
+
+h5 {
+  font-family: var(--font-OpenSans);
+  font-weight: theme(fontWeight.extrabold);
+}

@@ -8,10 +8,8 @@ import {
   updateItem,
   updateSingleton,
 } from "@directus/sdk";
-import { getShiftOccurrences } from "~/server/utils/shiftsOccurrences";
+import { getShiftOccurrences } from "../utils/shiftsOccurrences";
 import { sendShiftReminders } from "../utils/shiftsReminder";
-
-const CYCLE_DAYS = 28;
 
 export default defineEventHandler(async (event) => {
   verifyCollectivoApiToken(event);
@@ -112,7 +110,7 @@ async function decrement_shifts_counter(mshipIdsOnHoliday: number[]) {
   );
 
   for (const membership of membershipsToUpdate) {
-    if (membership.shifts_counter < 0) continue;
+    if (membership.shifts_counter < -28) continue;
     await directus.request(
       updateItem("memberships", membership.id, {
         shifts_counter: membership.shifts_counter - 1,
@@ -166,7 +164,9 @@ async function create_shift_logs(
           shifts_membership: mship.id,
           shifts_date: occDate,
           shifts_type: "attended",
-          shifts_score: settings.shift_point_system ? CYCLE_DAYS : 0,
+          shifts_score: settings.shift_point_system
+            ? occurrence.shift.shift_points
+            : 0,
           shifts_shift: occurrence.shift.id,
         }),
       );
