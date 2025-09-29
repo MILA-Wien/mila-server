@@ -29,6 +29,13 @@ async function loadData() {
   absences.value = res.signouts as ShiftsAbsenceDashboard[];
   logs.value = res.logs as ShiftsLog[];
 
+  if (!settingsState!.shift_point_system) {
+    statusColor.value = "green";
+    canShop.value = true;
+    dataLoaded.value = true;
+    return;
+  }
+
   if (mship.shifts_user_type == "exempt") {
     statusColor.value = "pink";
     canShop.value = true;
@@ -73,7 +80,11 @@ loadData();
       <div>
         <h4>{{ t("My status") }}</h4>
 
-        <template v-if="settingsState!.shift_point_system">
+        <template v-if="!settingsState!.shift_point_system">
+          {{ t("Shopping is allowed") }}
+        </template>
+
+        <template v-else>
           <p v-if="mship.shifts_user_type == 'inactive'">
             {{ t("Your membership is currently inactive.") }}<br />
             {{
