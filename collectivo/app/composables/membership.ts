@@ -6,7 +6,7 @@ export async function getMembership(id: number) {
     readItem("memberships", id, {
       fields: [
         "id",
-        { memberships_user: ["first_name", "last_name"] },
+        { memberships_user: ["username"] },
         "memberships_type",
         "memberships_status",
         "shifts_categories_allowed",
@@ -21,12 +21,11 @@ type RequiredFields = {
   id: number;
   shifts_can_be_coordinator: boolean;
   memberships_user: {
-    first_name: string;
-    last_name: string;
+    username: string;
   };
 };
 
 export function displayMembership<T extends RequiredFields>(mship: T) {
   const user = mship.memberships_user;
-  return `#${mship.id} ${user.first_name} ${user.last_name} ${mship.shifts_can_be_coordinator ? "(Koordinator*in)" : ""}`;
+  return `#${mship.id} ${user.username} ${mship.shifts_can_be_coordinator ? "(Koordinator*in)" : ""}`;
 }

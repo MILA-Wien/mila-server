@@ -56,7 +56,7 @@ async function getMembershipData(event) {
         "id",
         "shifts_counter",
         "shifts_user_type",
-        { memberships_user: ["first_name", "last_name"] },
+        { memberships_user: ["first_name", "last_name", "username"] },
       ],
     }),
   )) as Membership[];
@@ -97,7 +97,7 @@ async function getMembershipData(event) {
           "memberships_type",
           "shifts_counter",
           "shifts_user_type",
-          { memberships_user: ["first_name", "last_name"] },
+          { memberships_user: ["first_name", "last_name", "username"] },
         ],
       }),
     )) as Membership[];
@@ -191,6 +191,7 @@ async function getMembershipData(event) {
     membershipsType: mship.memberships_type,
     firstName: mship.memberships_user.first_name,
     lastName: mship.memberships_user.last_name,
+    username: mship.memberships_user.username,
     shiftScore: mship.shifts_counter,
     shiftsType: mship.shifts_user_type,
     isOnHoliday: isOnHoliday,

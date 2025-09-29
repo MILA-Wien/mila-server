@@ -25,7 +25,7 @@ export const getUserAssignments = async (mship: Membership) => {
         "*",
         { shifts_shift: ["*"] },
         {
-          shifts_membership: { memberships_user: ["first_name", "last_name"] },
+          shifts_membership: { memberships_user: ["username"] },
         },
       ],
     }),
@@ -48,7 +48,7 @@ export const getUserAssignments = async (mship: Membership) => {
         "*",
         { shifts_shift: ["*"] },
         {
-          shifts_membership: { memberships_user: ["first_name", "last_name"] },
+          shifts_membership: { memberships_user: ["username"] },
         },
       ],
     }),

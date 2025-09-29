@@ -266,10 +266,7 @@ async function onError(event: FormErrorEvent) {
     v-if="user.user && user.isAuthenticated"
     class="space-y-2 p-6 border-2 rounded-sm shadow-sm"
   >
-    <p>
-      {{ t("You are currently logged in as") }} {{ user.user.first_name }}
-      {{ user.user?.first_name }}.
-    </p>
+    <p>{{ t("You are currently logged in as") }} {{ user.user?.username }}.</p>
     <p>
       {{
         t(
