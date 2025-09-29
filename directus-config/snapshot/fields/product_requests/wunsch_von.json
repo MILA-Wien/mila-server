@@ -1,40 +1,35 @@
 {
-  "collection": "shifts_shifts",
-  "field": "shifts_category_2",
+  "collection": "product_requests",
+  "field": "wunsch_von",
   "type": "integer",
   "meta": {
-    "collection": "shifts_shifts",
+    "collection": "product_requests",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_category_2",
+    "field": "wunsch_von",
     "group": null,
     "hidden": false,
     "interface": "select-dropdown-m2o",
-    "note": "Frei lassen für normale Schichten",
+    "note": null,
     "options": {
       "enableCreate": false,
-      "template": "{{name}}"
+      "template": "{{memberships_user.first_name}} {{memberships_user.last_name}}"
     },
     "readonly": false,
     "required": false,
-    "sort": 3,
+    "sort": 9,
     "special": [
       "m2o"
     ],
-    "translations": [
-      {
-        "language": "de-DE",
-        "translation": "Schichtkategorie"
-      }
-    ],
+    "translations": null,
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "shifts_category_2",
-    "table": "shifts_shifts",
+    "name": "wunsch_von",
+    "table": "product_requests",
     "data_type": "integer",
     "default_value": null,
     "max_length": null,
@@ -47,7 +42,7 @@
     "is_generated": false,
     "generation_expression": null,
     "has_auto_increment": false,
-    "foreign_key_table": "shifts_categories",
+    "foreign_key_table": "memberships",
     "foreign_key_column": "id"
   }
 }

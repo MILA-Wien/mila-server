@@ -1,40 +1,38 @@
 {
-  "collection": "shifts_shifts",
-  "field": "user_updated",
-  "type": "uuid",
+  "collection": "bedarfsmeldung_solitopf",
+  "field": "weitere_unterstuetzung",
+  "type": "boolean",
   "meta": {
-    "collection": "shifts_shifts",
+    "collection": "bedarfsmeldung_solitopf",
     "conditions": null,
-    "display": "user",
+    "display": null,
     "display_options": null,
-    "field": "user_updated",
+    "field": "weitere_unterstuetzung",
     "group": null,
-    "hidden": true,
-    "interface": "select-dropdown-m2o",
+    "hidden": false,
+    "interface": "boolean",
     "note": null,
-    "options": {
-      "template": "{{avatar.$thumbnail}} {{first_name}} {{last_name}}"
-    },
-    "readonly": true,
+    "options": null,
+    "readonly": false,
     "required": false,
-    "sort": 19,
+    "sort": 7,
     "special": [
-      "user-updated"
+      "cast-boolean"
     ],
     "translations": null,
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "user_updated",
-    "table": "shifts_shifts",
-    "data_type": "uuid",
-    "default_value": null,
+    "name": "weitere_unterstuetzung",
+    "table": "bedarfsmeldung_solitopf",
+    "data_type": "boolean",
+    "default_value": false,
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
-    "is_nullable": true,
+    "is_nullable": false,
     "is_unique": false,
     "is_indexed": false,
     "is_primary_key": false,

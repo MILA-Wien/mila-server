@@ -1,42 +1,47 @@
 {
   "collection": "shifts_shifts",
-  "field": "id",
+  "field": "shift_points",
   "type": "integer",
   "meta": {
     "collection": "shifts_shifts",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "id",
+    "field": "shift_points",
     "group": null,
-    "hidden": true,
-    "interface": "numeric",
-    "note": null,
+    "hidden": false,
+    "interface": "input",
+    "note": "Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)",
     "options": null,
-    "readonly": true,
-    "required": false,
-    "sort": 16,
+    "readonly": false,
+    "required": true,
+    "sort": 14,
     "special": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Schichtpunkte"
+      }
+    ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
-    "name": "id",
+    "name": "shift_points",
     "table": "shifts_shifts",
     "data_type": "integer",
-    "default_value": "nextval('shifts_shifts_id_seq'::regclass)",
+    "default_value": 28,
     "max_length": null,
     "numeric_precision": 32,
     "numeric_scale": 0,
-    "is_nullable": false,
-    "is_unique": true,
+    "is_nullable": true,
+    "is_unique": false,
     "is_indexed": false,
-    "is_primary_key": true,
+    "is_primary_key": false,
     "is_generated": false,
     "generation_expression": null,
-    "has_auto_increment": true,
+    "has_auto_increment": false,
     "foreign_key_table": null,
     "foreign_key_column": null
   }

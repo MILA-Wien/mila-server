@@ -1,25 +1,25 @@
 {
-  "collection": "shifts_shifts",
-  "field": "user_updated",
-  "type": "uuid",
+  "collection": "bedarfsmeldung_solitopf",
+  "field": "date_created",
+  "type": "timestamp",
   "meta": {
-    "collection": "shifts_shifts",
+    "collection": "bedarfsmeldung_solitopf",
     "conditions": null,
-    "display": "user",
-    "display_options": null,
-    "field": "user_updated",
-    "group": null,
-    "hidden": true,
-    "interface": "select-dropdown-m2o",
-    "note": null,
-    "options": {
-      "template": "{{avatar.$thumbnail}} {{first_name}} {{last_name}}"
+    "display": "datetime",
+    "display_options": {
+      "relative": true
     },
+    "field": "date_created",
+    "group": null,
+    "hidden": false,
+    "interface": "datetime",
+    "note": null,
+    "options": null,
     "readonly": true,
     "required": false,
-    "sort": 19,
+    "sort": 3,
     "special": [
-      "user-updated"
+      "date-created"
     ],
     "translations": null,
     "validation": null,
@@ -27,9 +27,9 @@
     "width": "half"
   },
   "schema": {
-    "name": "user_updated",
-    "table": "shifts_shifts",
-    "data_type": "uuid",
+    "name": "date_created",
+    "table": "bedarfsmeldung_solitopf",
+    "data_type": "timestamp with time zone",
     "default_value": null,
     "max_length": null,
     "numeric_precision": null,

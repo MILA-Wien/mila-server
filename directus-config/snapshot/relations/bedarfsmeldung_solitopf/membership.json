@@ -1,0 +1,25 @@
+{
+  "collection": "bedarfsmeldung_solitopf",
+  "field": "membership",
+  "related_collection": "memberships",
+  "meta": {
+    "junction_field": null,
+    "many_collection": "bedarfsmeldung_solitopf",
+    "many_field": "membership",
+    "one_allowed_collections": null,
+    "one_collection": "memberships",
+    "one_collection_field": null,
+    "one_deselect_action": "nullify",
+    "one_field": "bedarfsmeldung_solitopf",
+    "sort_field": null
+  },
+  "schema": {
+    "table": "bedarfsmeldung_solitopf",
+    "column": "membership",
+    "foreign_key_table": "memberships",
+    "foreign_key_column": "id",
+    "constraint_name": "bedarfsmeldung_solitopf_membership_foreign",
+    "on_update": "NO ACTION",
+    "on_delete": "SET NULL"
+  }
+}
