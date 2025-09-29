@@ -32,14 +32,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     onResponse({ response }) {
       if (!response.ok) {
         toast.add({
-          title: "Error",
-          description: "Etwas ist schiefgelaufen.",
+          title: "Etwas ist schiefgelaufen.",
         });
         return;
       }
       toast.add({
-        title: "Error",
-        description: "Danke für deine Idee!",
+        title: "Danke für deine Idee!",
       });
       navigateTo("/sortiment/ideen");
     },
