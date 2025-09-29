@@ -42,6 +42,7 @@ watch(
     <UCheckbox
       v-for="choice in choices"
       :key="choice.value"
+      :id="choice.value"
       v-model="choice_values[choice.value]"
       :label="t(choice.label)"
     />
