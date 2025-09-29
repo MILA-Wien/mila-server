@@ -132,7 +132,7 @@ loadData();
       v-if="isActive"
       class="flex flex-wrap mb-14 gap-3 w-full justify-center whitespace-nowrap"
     >
-      <NuxtLink to="/shifts/calendar" class="flex-1">
+      <NuxtLink to="/shifts/calendar?filter=unfilled" class="flex-1">
         <UButton block icon="i-heroicons-calendar-days-16-solid">{{
           t("Register shift")
         }}</UButton>

@@ -114,6 +114,11 @@ export default defineAppConfig({
         variant: {
           outline: "text-highlighted bg-default ring ring-inset ring-black",
         },
+        size: {
+          md: {
+            base: "text-base",
+          },
+        },
       },
     },
     radioGroup: {
@@ -131,6 +136,13 @@ export default defineAppConfig({
         color: {
           error: {
             item: "border-red-500",
+          },
+        },
+        size: {
+          md: {
+            label: "text-base",
+            legend: "text-base",
+            item: "text-base",
           },
         },
         orientation: {

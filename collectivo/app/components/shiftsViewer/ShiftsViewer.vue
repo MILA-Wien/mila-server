@@ -4,10 +4,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  filter: {
-    type: String,
-    default: "all",
-  },
 });
 
 const { locale, t } = useI18n();
@@ -54,10 +50,25 @@ const filterOptions = [
 const route = useRoute();
 const router = useRouter();
 
-const selectedFilter = ref(
-  filterOptions.find((filter) => filter.value === props.filter) ||
-    filterOptions[0],
-);
+const selectedFilter = ref(filterOptions[0]);
+
+if (route.query.filter) {
+  const filter = filterOptions.find(
+    (f) => f.value === (route.query.filter as string),
+  );
+  if (filter) {
+    selectedFilter.value = filter;
+  }
+}
+
+watch(selectedFilter, (newVal) => {
+  router.replace({
+    query: {
+      ...route.query,
+      filter: newVal.value,
+    },
+  });
+});
 
 // Categories
 const categoriesLoaded = ref(false);

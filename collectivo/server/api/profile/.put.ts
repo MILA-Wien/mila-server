@@ -1,4 +1,4 @@
-import { createItem, updateUser } from "@directus/sdk";
+import { updateUser } from "@directus/sdk";
 import { z } from "zod";
 
 const schema = z.object({
@@ -6,6 +6,8 @@ const schema = z.object({
   pronouns: z.string().optional(),
   hide_name: z.boolean().optional(),
   send_notifications: z.boolean().optional(),
+  buddy_status: z.enum(["need_buddy", "is_buddy", "keine_angabe"]).optional(),
+  buddy_details: z.string().optional(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -18,6 +20,8 @@ export default defineEventHandler(async (event) => {
       pronouns: data.pronouns,
       hide_name: data.hide_name,
       send_notifications: data.send_notifications,
+      buddy_status: data.buddy_status,
+      buddy_details: data.buddy_details,
     }),
   );
 });

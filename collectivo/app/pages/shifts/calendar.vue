@@ -11,7 +11,7 @@ setPageTitle(t("Shift calendar"), {
 </script>
 
 <template>
-  <ShiftsViewer :filter="'unfilled'" />
+  <ShiftsViewer />
 </template>
 
 <i18n lang="yaml">
