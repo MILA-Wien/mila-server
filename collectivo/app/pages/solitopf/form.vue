@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { bool, object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
+import { marked } from "marked";
 
 definePageMeta({
   middleware: ["auth"],
 });
 
 const { t } = useI18n();
-setPageTitle(t("Soli-Topf Antrag"), {
+setPageTitle(t("Geld aus dem Soli-Topf bekommen"), {
   backLink: "/solitopf",
   backLinkLabel: t("Zurück zu den Soli-Topf Infos"),
 });
@@ -52,25 +53,30 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   <UForm :schema="schema" :state="state" class="space-y-8" @submit="onSubmit">
     <FormsFormGroup name="auszahlung">
       <template #title>
-        Ich möchte Unterstützung aus dem Soli-Topf erhalten.
+        {{ t("Ich möchte Geld aus dem Soli-Topf bekommen.") }}
       </template>
-      <template #description> Für mich passt am besten: </template>
+      <template #description> {{ t("Für mich passt am besten:") }} </template>
       <URadioGroup
         v-model="state.auszahlung"
         variant="card"
         :items="[
           {
-            label: t('Eine einmalige Auszahlung von 300 €.'),
+            label: t('Einmalig 300 €'),
             value: 'v300a1',
           },
           {
-            label: t(
-              'Eine monatliche Auszahlung von 50 € über 6 Monate (= insgesamt ebenfalls 300 €).',
-            ),
+            label: t('50 € pro Monat für 6 Monate (auch insgesamt 300 €)'),
             value: 'v50a6',
           },
         ]"
       />
+      <p class="mt-2">
+        {{
+          t(
+            "Das Geld wird auf deine MILA-Mitgliedskarte geladen. Alle Angaben bleiben vertraulich.",
+          )
+        }}
+      </p>
     </FormsFormGroup>
 
     <FormsFormGroup name="weitere_unterstuetzung">
@@ -80,24 +86,20 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       <template #description>
         {{
           t(
-            "Wenn du danach weiterhin Unterstützung brauchst, kannst du dich nach 5 Monaten wieder bei uns melden.",
+            "Wenn du danach weiterhin Geld aus dem Soli-Topf brauchst, kannst du dich nach 5 Monaten wieder bei uns melden.",
           )
         }}
       </template>
       <UCheckbox variant="card" v-model="state.weitere_unterstuetzung">
         <template #label>
-          {{
-            t(
-              "Ich weiß schon jetzt, dass ich auch nach den 6 Monaten weiter Unterstützung brauche (z. B. wegen Mindestpension oder dauerhaft niedrigem Einkommen) → Wir melden uns rechtzeitig bei dir.",
-            )
-          }}
+          <div v-html="marked(t('t_extra_support'))" />
         </template>
       </UCheckbox>
     </FormsFormGroup>
 
     <div class="flex flex-wrap gap-3">
       <UButton type="submit" icon="i-heroicons-arrow-right">
-        {{ t("Antrag einreichen") }}
+        {{ t("Anfrage absenden") }}
       </UButton>
     </div>
   </UForm>
@@ -105,16 +107,24 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <i18n lang="yaml">
 de:
-  "Profile": "Profil"
-  "First name": "Vorname"
-  "Last name": "Nachname"
-  "Email": "E-Mail"
-  "Stay anonymous": "Anonym bleiben"
-  "Do not show my name to other members on the platform.": "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform."
-  "Persönliche Daten": "Persönliche Daten"
-  "Success": "Erfolg"
-  "Error": "Fehler"
-  "Erfolgreich gespeichert": "Erfolgreich gespeichert"
-  "Send shift reminders": "Schicht-Erinnerungen senden"
-  "Receive email notifications about upcoming shifts.": "Erhalte E-Mail-Benachrichtigungen über bevorstehende Schichten."
+  t_extra_support: |
+    Ich weiß schon jetzt, dass ich auch nach den 6 Monaten weiter Unterstützung brauche 
+    (z. B. wegen Mindestpension oder dauerhaft niedrigem Einkommen).  
+    *→ Wir melden uns rechtzeitig bei dir.*
+
+en:
+  Geld aus dem Soli-Topf bekommen: "Receive money from the solidarity fund"
+  Zurück zu den Soli-Topf Infos: "Back to the solidarity fund info"
+  Ich möchte Geld aus dem Soli-Topf bekommen.: "I would like to receive money from the solidarity fund."
+  Für mich passt am besten:: "The best option for me is:"
+  Einmalig 300 €: "One-time 300 €"
+  "50 € pro Monat für 6 Monate (auch insgesamt 300 €)": "50 € per month for 6 months (also a total of 300 €)"
+  Das Geld wird auf deine MILA-Mitgliedskarte geladen. Alle Angaben bleiben vertraulich.: "The money will be loaded onto your MILA membership card. All information remains confidential."
+  Was passiert nach den 6 Monaten?: "What happens after the 6 months?"
+  Wenn du danach weiterhin Geld aus dem Soli-Topf brauchst, kannst du dich nach 5 Monaten wieder bei uns melden.: "If you still need money from the solidarity fund after that, you can contact us again after 5 months."
+  t_extra_support: |
+    I already know that I will need further support after the 6 months
+    (e.g. due to minimum pension or permanently low income).  
+    *→ We will contact you in time.*
+  Anfrage absenden: "Submit request"
 </i18n>

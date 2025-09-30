@@ -6,6 +6,7 @@ const props = defineProps({
   },
 });
 const user = useCurrentUser();
+const { t } = useI18n();
 
 if (props.adminOnly && !user.value.isStudioAdmin) {
   throw createError({
@@ -18,9 +19,16 @@ if (props.adminOnly && !user.value.isStudioAdmin) {
 
 <template>
   <div class="p-4 bg-black text-white font-bold mb-4">
-    BETA: Dieser Bereich ist in der Testphase. Feedback bitte an
+    {{ t("Beta Message") }}
     <a href="mailto:mitmachen@mila.wien" class="underline"
       >mitmachen@mila.wien</a
     >.
   </div>
 </template>
+
+<i18n lang="yaml">
+de:
+  Beta Message: "BETA: Dieser Bereich ist in der Testphase. Feedback bitte an"
+en:
+  Beta Message: "BETA: This area is in the testing phase. Please send feedback to"
+</i18n>
