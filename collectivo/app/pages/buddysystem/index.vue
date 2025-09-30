@@ -91,18 +91,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         )
       }}
     </p>
-    <div>
-      <NuxtLink to="/shifts/calendar?filter=withbuddy">
-        <UButton icon="i-heroicons-calendar-days-16-solid">
-          {{ t("Offene Schichten mit Buddies anzeigen") }}
-        </UButton>
-      </NuxtLink>
-    </div>
   </div>
 
   <SectionDivider />
 
-  <h2>Mein Status</h2>
+  <h2>{{ t("Mein Status") }}</h2>
   <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
     <FormsFormGroup name="buddy_status">
       <URadioGroup
@@ -142,6 +135,24 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       <UButton type="submit"> {{ t("Aktualisieren") }} </UButton>
     </div>
   </UForm>
+
+  <SectionDivider />
+
+  <h2>{{ t("Schichtkalender") }}</h2>
+  <p class="mb-4">
+    {{
+      t(
+        "Im Schichtkalender findest du freie Schichten, in denen ein Buddy zur Verfügung steht.",
+      )
+    }}
+  </p>
+  <div>
+    <NuxtLink to="/shifts/calendar?filter=withbuddy">
+      <UButton icon="i-heroicons-calendar-days-16-solid">
+        {{ t("Offene Schichten mit Buddies anzeigen") }}
+      </UButton>
+    </NuxtLink>
+  </div>
 </template>
 
 <i18n lang="yaml">
@@ -167,4 +178,8 @@ en:
   "t_is_buddy": "I can imagine supporting another person in my regular shift."
   "t_need_buddy": "I need support.\nI would like to have a person who stands by me during the regular shift.\nA regular shift repeats every 4 weeks."
   "t_need_buddy_details": "I might need support with the following activity/activities (e.g. support with reading, support with communication, heavy lifting)"
+  "Schichtkalender": "Shift calendar"
+  "Offene Schichten mit Buddies anzeigen": "Show open shifts with buddies"
+  "Im Schichtkalender findest du freie Schichten, in denen ein Buddy zur Verfügung steht.": "In the shift calendar you will find free shifts in which a buddy is available."
+  "Zurück zur Startseite": "Back to the homepage"
 </i18n>
