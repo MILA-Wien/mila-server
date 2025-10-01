@@ -13,7 +13,7 @@ const props = defineProps({
     default: false,
   },
   events: {
-    type: Object as PropType<ShiftOccurrenceApiResponse>,
+    type: Object,
     required: true,
   },
   status: {
@@ -39,7 +39,7 @@ const props = defineProps({
 });
 
 const { locale, t } = useI18n();
-const colors = ["#00867a", "#ce6a28", "#942020"];
+
 const emit = defineEmits(["openOccurrence"]);
 
 // Set up full calendar
@@ -76,8 +76,30 @@ const calendarOptions: Ref<CalendarOptions> = ref({
 
 onMounted(() => {
   const target = props.fromDate.toISOString().split("T")[0];
-  calendarRef.value?.getApi().gotoDate(target);
+  calendarRef.value?.getApi().gotoDate(target!);
 });
+
+const colors = {
+  gray: "#6d6d6d",
+  red: "#942020",
+  orange: "#ce6a28",
+  green: "#00867a",
+  blue: "#385ad8",
+};
+
+function getColor(slots: number, n_assigned: number, isPast: boolean) {
+  const n_missing = slots - n_assigned;
+  if (isPast) {
+    return colors.gray;
+  }
+  if (n_missing > 1) {
+    return colors.red;
+  }
+  if (n_missing === 1) {
+    return colors.orange;
+  }
+  return colors.green;
+}
 
 // Fetch events based on given timespan
 async function prepareEvents() {
@@ -93,21 +115,21 @@ async function prepareEvents() {
       title: t("Public holiday"),
       start: holiday.date,
       allDay: true,
-      color: "#385ad8",
+      color: colors.blue,
     });
   }
 
   // Add shift occurrences
   for (const occurrence of props.events.occurrences) {
-    const n_missing = occurrence.shift.shifts_slots - occurrence.n_assigned;
     const start = new Date(occurrence.start);
     const isPast = start < new Date();
     let title = occurrence.shift.shifts_name;
-    let color = "";
 
-    color = isPast
-      ? "#6d6d6d"
-      : colors[n_missing >= 0 && n_missing < 3 ? n_missing : 2];
+    const color = getColor(
+      occurrence.shift.shifts_slots,
+      occurrence.n_assigned,
+      isPast,
+    );
 
     // Show slot status for future shifts in admin mode
     if (props.admin && !isPast) {
@@ -122,7 +144,7 @@ async function prepareEvents() {
     // If any of the assignments memberships has shifts_can_be_coordinator set, show (K) after the name
     if (
       occurrence.assignments.some(
-        (assignment) =>
+        (assignment: any) =>
           assignment.assignment.shifts_membership.shifts_can_be_coordinator,
       )
     ) {
@@ -140,14 +162,10 @@ async function prepareEvents() {
       if (occurrence.n_assigned >= occurrence.shift.shifts_slots) {
         continue;
       }
-      if (occurrence.assignments.length > 0) {
-        console.log("ass", occurrence.assignments);
-      }
-
       if (
         buddyNeeded &&
         !occurrence.assignments.some(
-          (assignment) =>
+          (assignment: any) =>
             assignment.assignment.shifts_membership.memberships_user
               .buddy_status === "is_buddy",
         )
@@ -198,9 +216,16 @@ prepareEvents();
     <div class="font-bold">
       {{ t("Legend") }}
     </div>
-    <p class="">* : {{ t("This shift has a coordinator") }}</p>
+    <p class="">Stern (*): {{ t("This shift has a coordinator") }}</p>
     <p class="">
       Buddy (BETA): {{ t("In dieser Schicht gibt es einen Buddy") }}
+    </p>
+    <p class="">
+      Rot: Diese Schicht ist stark unterbesetzt (mehr als 1 Platz frei) <br />
+      Orange: Diese Schicht ist leicht unterbesetzt (1 Platz frei) <br />
+      Grün: Diese Schicht ist voll besetzt <br />
+      Grau: Vergangene Schicht <br />
+      Blau: Feiertag <br />
     </p>
   </div>
 </template>
