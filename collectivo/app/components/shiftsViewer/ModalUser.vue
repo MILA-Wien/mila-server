@@ -6,7 +6,7 @@ const { locale } = useI18n();
 
 const props = defineProps({
   shiftOccurence: {
-    type: Object as PropType<ShiftsOccurrenceViewer>,
+    type: Object,
     required: true,
   },
 });
@@ -23,14 +23,13 @@ const start = DateTime.fromISO(props.shiftOccurence.start, {
   locale: locale.value,
   zone: "utc",
 });
-// const isNextInstance = start < DateTime.now().plus({ days: 28 });
 
 const end = DateTime.fromISO(props.shiftOccurence.end, {
   locale: locale.value,
   zone: "utc",
 });
 const submitLoading = ref(false);
-const isRegular = shift.shifts_repeats_every == 28;
+const isRegular = shift.shifts_is_regular;
 const isPast = new Date(props.shiftOccurence.start) < new Date();
 
 function checkAssignmentPossible() {
@@ -71,11 +70,7 @@ async function postAssignment(regular = false) {
   }
 }
 
-async function fetchOccurrences(
-  from: DateTime,
-  to: DateTime,
-  shiftID: number,
-): Promise<{ occurrences: ShiftOccurrence[] }> {
+async function fetchOccurrences(from: DateTime, to: DateTime, shiftID: number) {
   return await $fetch("/api/shifts/occurrences", {
     query: {
       from: from.toISODate(),
@@ -142,6 +137,9 @@ async function postAssignmentInner(regular: boolean) {
           </p>
           <p v-if="isRegular">
             {{ t("Shift repeats every four weeks") }}
+          </p>
+          <p v-else>
+            {{ t("One-time shift") }}
           </p>
           <ShiftsViewerAssignmentList :occurrence="occ" />
         </div>
