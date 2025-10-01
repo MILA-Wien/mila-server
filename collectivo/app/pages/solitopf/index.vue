@@ -11,12 +11,6 @@ setPageTitle(t("Solidaritäts-Topf"), {
 });
 
 const { data: meldungen } = await useFetch("/api/solitopf/bedarf");
-
-const isWaiting = computed(
-  () =>
-    meldungen.value &&
-    meldungen.value.some((meldung) => meldung.status === "warteliste"),
-);
 </script>
 
 <template>
@@ -87,17 +81,7 @@ const isWaiting = computed(
         )
       }}
     </p>
-    <UButton v-if="isWaiting" icon="i-heroicons-check" disabled color="purple">
-      {{ t("Du bist bereits auf der Warteliste") }}
-    </UButton>
-    <UButton
-      v-else
-      to="/solitopf/form"
-      icon="i-heroicons-arrow-right"
-      color="purple"
-    >
-      {{ t("Zum Formular") }}
-    </UButton>
+    <SolitopfFormButton />
   </CollectivoCard>
 
   <CollectivoCard color="orange">
