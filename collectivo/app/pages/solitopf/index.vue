@@ -80,7 +80,7 @@ const isWaiting = computed(
     <h3>
       {{ t("Ich brauche Geld aus dem Soli-Topf") }}
     </h3>
-    <p>
+    <p class="pb-3">
       {{
         t(
           "Du hast den Test gemacht – oder weißt einfach: Ich brauche gerade Geld, um bei MILA einzukaufen? Dann kannst du das hier beantragen.",
