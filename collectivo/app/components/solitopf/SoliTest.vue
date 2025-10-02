@@ -144,8 +144,6 @@ const state = reactive({
       <p class="font-bold mb-3">{{ t("q_test_yes") }}</p>
 
       <div class="flex flex-wrap gap-3">
-        <SolitopfFormButton />
-
         <UButton
           to="/solitopf"
           color="gray"
@@ -154,6 +152,8 @@ const state = reactive({
         >
           {{ t("Zurück") }}
         </UButton>
+
+        <SolitopfFormButton />
       </div>
     </div>
 
@@ -221,6 +221,7 @@ en:
   Ja: Yes
   Nein: No
   Weiß nicht: Don't know
+  Zurück: Go back
   Zurück zu den Soli-Topf Infos: Back to the Solidarity Fund Info
   t_test_intro: |
     These questions can help you decide if the solidarity fund is right for you. 
