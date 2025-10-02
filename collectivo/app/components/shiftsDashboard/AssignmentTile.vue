@@ -2,6 +2,7 @@
 import { createItem } from "@directus/sdk";
 import { DateTime, Duration } from "luxon";
 import { parse } from "marked";
+import occurrencesGet from "~~/server/api/shifts/occurrences.get";
 
 const MAX_DAYS_TO_SIGN_OUT_BEFORE = 2;
 
@@ -10,9 +11,13 @@ const directus = useDirectus();
 
 const signOutModalIsOpen = ref(false);
 
+type AssignmentInfo = Awaited<
+  ReturnType<typeof getOccurrencesUser>
+>["assignments"][number];
+
 const props = defineProps({
   shiftAssignment: {
-    type: Object as PropType<ShiftsOccurrenceDashboard>,
+    type: Object as PropType<AssignmentInfo>,
     required: true,
   },
 });
@@ -29,15 +34,15 @@ function createDateTime(date: string, time?: string) {
 }
 
 const data = props.shiftAssignment;
-const nextOcc = data.nextOccurrence!;
+const occurrences = data.occurrences;
 const assignment = data.assignment;
 const coworkers = data.coworkers;
 const coordinators = data.coordinators || [];
 const shift = data.assignment.shifts_shift;
 const time_from = shift.shifts_from_time; // string in format hh:mm
 const time_to = shift.shifts_to_time; // string in format hh:mm
-const nextOccurrenceStart = createDateTime(nextOcc, time_from); // DateTime object representing the occurrence's start, including time of day
-const nextOccurrenceEnd = createDateTime(nextOcc, time_to); // DateTime object representing the occurrence's end, including time of day
+// const nextOccurrenceStart = createDateTime(nextOcc, time_from); // DateTime object representing the occurrence's start, including time of day
+// const nextOccurrenceEnd = createDateTime(nextOcc, time_to); // DateTime object representing the occurrence's end, including time of day
 const user = useCurrentUser();
 const emit = defineEmits(["reload"]);
 
@@ -135,124 +140,135 @@ END:VCALENDAR`;
 </script>
 
 <template>
-  <div v-if="nextOcc">
-    <CollectivoCard>
-      <div class="flex flex-wrap justify-between items-start">
-        <div class="flex-1 min-w-60">
-          <h4>
+  <CollectivoCard>
+    <div class="flex flex-wrap justify-between items-start">
+      <div class="flex-1 min-w-60">
+        <h4>{{ shift.shifts_name }}</h4>
+
+        <!-- Repetition info -->
+        <template v-if="data.isRegular">
+          <p>
+            {{ t("Regular shift: This signup repeats every") }}
+            {{ shift.shifts_repeats_every! / 7 }}
+            {{ t("weeks") }}
+
+            <span v-if="assignment.shifts_to">
+              {{ t("until") }} {{ getEndDate(assignment.shifts_to) }}
+            </span>
+          </p>
+        </template>
+
+        <!-- Shift coordinators -->
+        <p v-if="coordinators.length > 0">
+          {{ t("Coordinator") }}:
+          <span v-for="(item, index) in coordinators" :key="index">
+            {{ item === "" ? t("Anonymous") : item
+            }}<span v-if="index < coordinators.length - 1">, </span>
+          </span>
+        </p>
+
+        <!-- Shift coworkers -->
+        <p v-if="coworkers.length > 0">
+          {{ t("Shift team") }}:
+          <span v-for="(item, index) in coworkers" :key="index">
+            {{ item === "" ? t("Anonymous") : item
+            }}<span v-if="index < coworkers.length - 1">, </span>
+          </span>
+        </p>
+
+        <!-- Shift infos -->
+        <!-- eslint-disable vue/no-v-html -->
+        <p
+          v-if="shift.shifts_description"
+          class="pt-4"
+          v-html="parse(shift.shifts_description)"
+        />
+        <!-- eslint-enable vue/no-v-html -->
+        <SectionDivider></SectionDivider>
+        <h4>{{ t("Next dates") }}</h4>
+        <div
+          v-for="(occ, index) in occurrences"
+          :key="index"
+          class="border border-black p-4"
+        >
+          <p>
             {{
               getDateTimeWithTimeSpanString(
                 shift.shifts_from_time,
                 shift.shifts_to_time,
-                nextOcc,
+                occ.date,
                 locale,
                 t,
               )
             }}
-          </h4>
-
-          <!-- Repetition info -->
-          <template v-if="data.secondNextOccurence">
-            <p>
-              {{ t("Regular shift: This signup repeats every") }}
-              {{ shift.shifts_repeats_every! / 7 }}
-              {{ t("weeks") }}
-
-              <span v-if="assignment.shifts_to">
-                {{ t("until") }} {{ getEndDate(assignment.shifts_to) }}
-              </span>
-            </p>
-          </template>
-
-          <!-- Shift coordinators -->
-          <p v-if="coordinators.length > 0">
-            {{ t("Coordinator") }}:
-            <span v-for="(item, index) in coordinators" :key="index">
-              {{ item === "" ? t("Anonymous") : item
-              }}<span v-if="index < coordinators.length - 1">, </span>
-            </span>
           </p>
-
-          <!-- Shift coworkers -->
-          <p v-if="coworkers.length > 0">
-            {{ t("Shift team") }}:
-            <span v-for="(item, index) in coworkers" :key="index">
-              {{ item === "" ? t("Anonymous") : item
-              }}<span v-if="index < coworkers.length - 1">, </span>
-            </span>
+          <p>Active? {{ occ.isActive }}</p>
+          <p>
+            {{ occ.isHoliday ? t("You are signed out for this shift") : "" }}
+            {{
+              occ.isOtherAbsence ? t("You are signed out for this shift") : ""
+            }}
+            {{ occ.isPublicHoliday ? t("Cancelled") : "" }}
           </p>
-
-          <p v-if="shift.shifts_name">
-            {{ t("Shift") }}ID: {{ shift.shifts_name }}
-          </p>
-
-          <!-- Shift infos -->
-          <!-- eslint-disable vue/no-v-html -->
-          <p
-            v-if="shift.shifts_description"
-            class="pt-4"
-            v-html="parse(shift.shifts_description)"
-          />
-          <!-- eslint-enable vue/no-v-html -->
-        </div>
-
-        <!-- Space for buttons -->
-        <div class="flex flex-wrap gap-3">
-          <UButton size="sm" color="orange" @click="downloadICS()"
-            >{{ t("Calendar download") }}
-          </UButton>
-          <!-- v-if="!assignment.shifts_is_regular" -->
-          <UButton size="sm" color="green" @click="signOutModalIsOpen = true"
-            >{{ t("Sign out") }}
-          </UButton>
         </div>
       </div>
-    </CollectivoCard>
 
-    <!-- Signout Modal -->
-    <UModal v-model:open="signOutModalIsOpen">
-      <template #content>
-        <div
-          v-if="dateWithinTimeSpan(nextOcc, MAX_DAYS_TO_SIGN_OUT_BEFORE)"
-          class="p-8 flex flex-col gap-2"
-        >
-          <h2>{{ t("Sign out") }}</h2>
+      <!-- Space for buttons -->
+      <div class="flex flex-wrap gap-3">
+        <UButton size="sm" color="orange" @click="downloadICS()"
+          >{{ t("Calendar download") }}
+        </UButton>
+        <!-- v-if="!assignment.shifts_is_regular" -->
+        <UButton size="sm" color="green" @click="signOutModalIsOpen = true"
+          >{{ t("Sign out") }}
+        </UButton>
+      </div>
+    </div>
+  </CollectivoCard>
 
-          <p>{{ t("Sign out from the following shift") }}:</p>
-          <p>
-            {{
-              getDateTimeWithTimeSpanString(
-                shift.shifts_from_time,
-                shift.shifts_to_time,
-                nextOcc,
-                locale,
-                t,
-              )
-            }}
-          </p>
-          <p v-if="assignment.shifts_is_regular">
-            <span class="font-bold">{{ t("Attention") }}:</span>
-            {{ t("t:signout_regular") }}
-          </p>
-          <div class="flex flex-wrap gap-2 mt-4 justify-end">
-            <UButton color="gray" @click="signOutModalIsOpen = false">
-              {{ t("Cancel") }}
-            </UButton>
-            <UButton @click="createAbsence">{{ t("Sign out") }}</UButton>
-          </div>
+  <!-- Signout Modal -->
+  <UModal v-model:open="signOutModalIsOpen">
+    <template #content>
+      <div
+        v-if="dateWithinTimeSpan(nextOcc, MAX_DAYS_TO_SIGN_OUT_BEFORE)"
+        class="p-8 flex flex-col gap-2"
+      >
+        <h2>{{ t("Sign out") }}</h2>
+
+        <p>{{ t("Sign out from the following shift") }}:</p>
+        <p>
+          {{
+            getDateTimeWithTimeSpanString(
+              shift.shifts_from_time,
+              shift.shifts_to_time,
+              nextOcc,
+              locale,
+              t,
+            )
+          }}
+        </p>
+        <p v-if="assignment.shifts_is_regular">
+          <span class="font-bold">{{ t("Attention") }}:</span>
+          {{ t("t:signout_regular") }}
+        </p>
+        <div class="flex flex-wrap gap-2 mt-4 justify-end">
+          <UButton color="gray" @click="signOutModalIsOpen = false">
+            {{ t("Cancel") }}
+          </UButton>
+          <UButton @click="createAbsence">{{ t("Sign out") }}</UButton>
         </div>
-        <div v-else class="p-8 flex flex-col gap-2">
-          <h2>{{ t("Sign out") }}</h2>
-          <p>
-            {{
-              t("Sign-out is not possible anymore. Please contact the office.")
-            }}
-          </p>
-          <UButton size="sm" to="help">{{ t("Contact") }}</UButton>
-        </div>
-      </template>
-    </UModal>
-  </div>
+      </div>
+      <div v-else class="p-8 flex flex-col gap-2">
+        <h2>{{ t("Sign out") }}</h2>
+        <p>
+          {{
+            t("Sign-out is not possible anymore. Please contact the office.")
+          }}
+        </p>
+        <UButton size="sm" to="help">{{ t("Contact") }}</UButton>
+      </div>
+    </template>
+  </UModal>
 </template>
 
 <i18n lang="yaml">

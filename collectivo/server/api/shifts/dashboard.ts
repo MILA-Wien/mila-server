@@ -33,9 +33,14 @@ const getShiftDataDashboard = async (mship: number) => {
     }),
   );
 
-  assignmentInfos.sort((a, b) => {
-    const nextA = a.nextOccurrence;
-    const nextB = b.nextOccurrence;
+  const activeAssignments = assignmentInfos.filter(
+    (info) => info.occurrences.length > 0,
+  );
+
+  activeAssignments.sort((a, b) => {
+    console.log(a.occurrences[0]?.date, b.occurrences[0]?.date);
+    const nextA = a.occurrences[0]?.date;
+    const nextB = b.occurrences[0]?.date;
     if (!nextA && !nextB) return 0;
     if (!nextA) return 1;
     if (!nextB) return -1;
@@ -43,25 +48,20 @@ const getShiftDataDashboard = async (mship: number) => {
     return nextA > nextB ? 1 : -1;
   });
 
-  const activeAssignments = assignmentInfos.filter(
-    (info) => info.nextOccurrence,
-  );
-
-  // Only return assignments that have an upcoming occurrence
   return {
     assignments: activeAssignments,
     signouts: signouts,
     holidays: holidays,
     holidaysCurrent: holidaysCurrent,
     logs: logs,
-  } as ShiftsDashboard;
+  };
 };
 
 async function getAssignments(mship: number) {
   const now = getCurrentDate();
   const nowStr = now.toISOString();
   const directus = useDirectusAdmin();
-  return (await directus.request(
+  return await directus.request(
     readItems("shifts_assignments", {
       filter: {
         shifts_membership: { id: { _eq: mship } },
@@ -83,14 +83,14 @@ async function getAssignments(mship: number) {
         },
       ],
     }),
-  )) as ShiftsAssignmentDashboard[];
+  );
 }
 
 async function getAbsences(mship: number) {
   const directus = useDirectusAdmin();
   const now = getCurrentDate();
   const nowStr = now.toISOString();
-  const absences = (await directus.request(
+  const absences = await directus.request(
     readItems("shifts_absences", {
       limit: -1,
       filter: {
@@ -116,11 +116,11 @@ async function getAbsences(mship: number) {
         },
       ],
     }),
-  )) as ShiftsAbsenceDashboard[];
+  );
 
-  const holidays = [] as ShiftsAbsenceDashboard[];
-  const signouts = [] as ShiftsAbsenceDashboard[];
-  const holidaysCurrent = [] as ShiftsAbsenceDashboard[];
+  const holidays = [];
+  const signouts = [];
+  const holidaysCurrent = [];
   for (const absence of absences) {
     if (absence.shifts_is_holiday) {
       holidays.push(absence);
@@ -175,9 +175,31 @@ async function getLogs(mship: number) {
   );
 }
 
+interface OccurrenceInfo {
+  date: Date;
+  isHoliday: boolean;
+  isPublicHoliday: boolean;
+  isOtherAbsence: boolean;
+  isActive: boolean;
+}
+
+function getOccurrenceInfo(occ: Date, hr: RRule, oar: RRule, phr: RRule) {
+  const isHoliday = hr.between(occ, occ).length > 0;
+  const isPublicHoliday = phr.between(occ, occ).length > 0;
+  const isOtherAbsence = oar.between(occ, occ).length > 0;
+  console.log(occ);
+  return {
+    date: new Date(occ),
+    isHoliday: isHoliday,
+    isPublicHoliday: isPublicHoliday,
+    isOtherAbsence: isOtherAbsence,
+    isActive: !(isHoliday || isPublicHoliday || isOtherAbsence),
+  };
+}
+
 const getAssignmentInfos = async (
-  assignment: ShiftsAssignmentDashboard,
-  absences: ShiftsAbsenceDashboard[],
+  assignment: Awaited<ReturnType<typeof getAssignments>>[number],
+  absences: Awaited<ReturnType<typeof getAbsences>>[number][],
   publicHolidaRruleSet: RRuleSet,
   mship: number,
 ) => {
@@ -189,23 +211,40 @@ const getAssignmentInfos = async (
       absence.shifts_assignment.id == assignment.id,
   );
 
-  const assignmentRuleWithAbsences = getAssignmentRRule(
+  const { assignmentRule, holidayRule, otherAbsencesRule } = getAssignmentRRule(
     assignment,
     filteredAbsences,
-    publicHolidaRruleSet,
   );
 
-  const nextOccurrence = assignmentRuleWithAbsences.after(now, true);
+  // Get the next 4 occurrences
+  const occurrences: OccurrenceInfo[] = [];
+  let currentDate: Date | null = null;
+  for (let i = 0; i < 4; i++) {
+    if (i == 0) {
+      currentDate = assignmentRule.after(now, true);
+    } else {
+      if (!currentDate) break;
+      currentDate = assignmentRule.after(currentDate, false);
+    }
+    if (currentDate) {
+      occurrences.push(
+        getOccurrenceInfo(
+          currentDate,
+          holidayRule,
+          otherAbsencesRule,
+          publicHolidaRruleSet,
+        ),
+      );
+    }
+  }
 
-  let secondNextOccurence = null;
   const coworkers = [];
   const coordinators = [];
 
-  if (nextOccurrence) {
-    secondNextOccurence = assignmentRuleWithAbsences.after(nextOccurrence);
+  if (occurrences.length > 0) {
     const [coworkers_, coordinators_] = await getCoworkers(
       assignment,
-      nextOccurrence,
+      occurrences[0].date,
       mship,
     );
     coworkers.push(...coworkers_);
@@ -216,15 +255,14 @@ const getAssignmentInfos = async (
     assignment: assignment,
     coworkers: coworkers,
     coordinators: coordinators,
-    nextOccurrence: nextOccurrence?.toISOString(),
-    secondNextOccurence: secondNextOccurence?.toISOString(),
-    isRegular: secondNextOccurence != null,
-  } as ShiftsOccurrenceDashboard;
+    occurrences: occurrences,
+    isRegular: occurrences.length > 1,
+  };
 };
 
 // Get names of coworkers for a shift assignment
 const getCoworkers = async (
-  assignment: ShiftsAssignmentDashboard,
+  assignment: any,
   nextOccurence: Date,
   mship: number,
 ) => {
@@ -255,42 +293,35 @@ const getCoworkers = async (
 };
 
 export const getAssignmentRRule = (
-  assignment: ShiftsAssignmentDashboard,
+  assignment: any,
   absences?: ShiftsAbsence[],
-  publicHolidayDates?: RRuleSet,
 ) => {
   const shift = assignment.shifts_shift;
   const shiftRule = getShiftRrule(shift);
 
-  const assignmentRule = new RRuleSet();
-
-  // Assignment rule
-  assignmentRule.rrule(
-    createAssignmentRrule(
-      assignment.shifts_from,
-      assignment.shifts_to,
-      shift.shifts_repeats_every,
-      assignment.shifts_is_regular,
-      shiftRule,
-    ),
+  const assignmentRule = createAssignmentRrule(
+    assignment.shifts_from,
+    assignment.shifts_to,
+    shift.shifts_repeats_every,
+    assignment.shifts_is_regular,
+    shiftRule,
   );
 
-  // Exclude absences
+  const holidayRule = new RRuleSet();
+  const otherAbsencesRule = new RRuleSet();
   absences?.forEach((absence) => {
-    const absenceRule = new RRule({
+    const rule = new RRule({
       freq: RRule.DAILY,
       interval: 1,
       dtstart: parseUtcMidnight(absence.shifts_from),
       until: parseUtcMidnight(absence.shifts_to),
     });
-
-    assignmentRule.exrule(absenceRule);
+    if (absence.shifts_is_holiday) {
+      holidayRule.rrule(rule);
+    } else {
+      otherAbsencesRule.rrule(rule);
+    }
   });
 
-  // Exclude public holidays
-  if (shift.exclude_public_holidays) {
-    assignmentRule.exrule(publicHolidayDates as RRule);
-  }
-
-  return assignmentRule;
+  return { assignmentRule, holidayRule, otherAbsencesRule };
 };

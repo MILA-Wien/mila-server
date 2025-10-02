@@ -23,6 +23,7 @@ const statusColor = ref<"green" | "orange" | "red">("green");
 async function loadData() {
   dataLoaded.value = false;
   const [res, _] = await Promise.all([getOccurrencesUser(), fetchSettings()]);
+  console.log(res);
   assignments.value = res.assignments as ShiftsOccurrenceDashboard[];
   holidaysAll.value = res.holidays as ShiftsAbsenceDashboard[];
   holidaysCurrent.value = res.holidaysCurrent as ShiftsAbsenceDashboard[];
@@ -174,9 +175,8 @@ loadData();
       </p>
       <div class="flex flex-col gap-4 my-4">
         <template v-for="(assignment, index) in assignments" :key="index">
-          <template v-if="assignment.nextOccurrence">
+          <template v-if="assignment.occurrences.length > 0">
             <ShiftsDashboardAssignmentTile
-              v-if="assignment.nextOccurrence"
               :shift-assignment="assignment"
               @reload="loadData"
             />
