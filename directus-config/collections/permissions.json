@@ -642,66 +642,6 @@
     "_syncId": "b6e19901-f739-4e9f-b340-1bed32ec9a02"
   },
   {
-    "collection": "bedarfsmeldung_solitopf",
-    "action": "create",
-    "permissions": null,
-    "validation": null,
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
-    "_syncId": "b4d6fb59-b7da-4098-b209-905765a50ee1"
-  },
-  {
-    "collection": "bedarfsmeldung_solitopf",
-    "action": "delete",
-    "permissions": null,
-    "validation": null,
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
-    "_syncId": "a5761a5b-acae-4c40-8546-3d82ab177a4f"
-  },
-  {
-    "collection": "bedarfsmeldung_solitopf",
-    "action": "read",
-    "permissions": null,
-    "validation": null,
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
-    "_syncId": "7dc2d2e1-36e0-4dc4-8607-5aaf26fab356"
-  },
-  {
-    "collection": "bedarfsmeldung_solitopf",
-    "action": "share",
-    "permissions": null,
-    "validation": null,
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
-    "_syncId": "fd3abca5-fad2-470f-b749-2b6b5ecc28c2"
-  },
-  {
-    "collection": "bedarfsmeldung_solitopf",
-    "action": "update",
-    "permissions": null,
-    "validation": null,
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
-    "_syncId": "ee798be6-0423-496f-9332-71c96a8d1721"
-  },
-  {
     "collection": "collectivo_tags_directus_users",
     "action": "create",
     "permissions": null,
@@ -2537,6 +2477,66 @@
     ],
     "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
     "_syncId": "25a89821-b083-4c94-a9bf-a2e912c035d8"
+  },
+  {
+    "collection": "bedarfsmeldung_solitopf",
+    "action": "create",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "f56298dc-8c17-408d-9c17-321c5300ca5f"
+  },
+  {
+    "collection": "bedarfsmeldung_solitopf",
+    "action": "delete",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "70fc4102-5421-43bb-960b-79a262d63330"
+  },
+  {
+    "collection": "bedarfsmeldung_solitopf",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "3017f6bf-3611-48c3-b898-bd93f33987ba"
+  },
+  {
+    "collection": "bedarfsmeldung_solitopf",
+    "action": "share",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "ff9f8056-49e1-4c36-9841-2fec43972f98"
+  },
+  {
+    "collection": "bedarfsmeldung_solitopf",
+    "action": "update",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "9049198d-88bb-4f18-8ac0-fc98ef633a60"
   },
   {
     "collection": "collectivo_tags_directus_users",

@@ -7,6 +7,13 @@
     "_syncId": "_sync_default_admin_role"
   },
   {
+    "name": "Solitopf Admin",
+    "icon": "supervised_user_circle",
+    "description": null,
+    "parent": null,
+    "_syncId": "84f5a432-ead6-4b62-b93c-f613fd09069b"
+  },
+  {
     "name": "Vorstand",
     "icon": "supervised_user_circle",
     "description": null,
