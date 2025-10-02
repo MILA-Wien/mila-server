@@ -140,7 +140,7 @@ END:VCALENDAR`;
 </script>
 
 <template>
-  <CollectivoCard>
+  <div class="border border-black p-4">
     <div class="flex flex-wrap justify-between items-start">
       <div class="flex-1 min-w-60">
         <h4>{{ shift.shifts_name }}</h4>
@@ -184,47 +184,70 @@ END:VCALENDAR`;
           v-html="parse(shift.shifts_description)"
         />
         <!-- eslint-enable vue/no-v-html -->
-        <SectionDivider></SectionDivider>
-        <h4>{{ t("Next dates") }}</h4>
-        <div
-          v-for="(occ, index) in occurrences"
-          :key="index"
-          class="border border-black p-4"
-        >
-          <p>
-            {{
-              getDateTimeWithTimeSpanString(
-                shift.shifts_from_time,
-                shift.shifts_to_time,
-                occ.date,
-                locale,
-                t,
-              )
-            }}
-          </p>
-          <p>Active? {{ occ.isActive }}</p>
-          <p>
-            {{ occ.isHoliday ? t("You are signed out for this shift") : "" }}
-            {{
-              occ.isOtherAbsence ? t("You are signed out for this shift") : ""
-            }}
-            {{ occ.isPublicHoliday ? t("Cancelled") : "" }}
-          </p>
+
+        <div class="flex flex-col gap-2 mt-2">
+          <div
+            v-for="(occ, index) in occurrences"
+            :key="index"
+            class="border border-black p-4 flex flex-wrap justify-between gap-2"
+            :class="
+              occ.isActive
+                ? 'bg-green-50 border-green-600'
+                : 'bg-red-50 border-red-600'
+            "
+          >
+            <div class="">
+              <div :class="occ.isActive ? '' : ''">
+                <span class="font-bold">
+                  {{
+                    getDateTimeWithTimeSpanString(
+                      shift.shifts_from_time,
+                      shift.shifts_to_time,
+                      occ.date,
+                      locale,
+                      t,
+                    )
+                  }}
+                </span>
+              </div>
+              <div class="mt-1" v-if="!occ.isActive">
+                <span class="italic font-normal" v-if="occ.isHoliday">
+                  {{ t("You declared a holiday on this date") }}
+                </span>
+              </div>
+              <div class="mt-2 cursor-default">
+                <span
+                  v-if="!occ.isActive"
+                  class="bg-red-600 text-sm py-1 px-2 text-white font-bold mr-2"
+                >
+                  {{ t("SIGNED OUT") }}
+                </span>
+                <span
+                  v-else
+                  class="bg-green-600 text-sm py-1 px-2 text-white font-bold mr-2"
+                >
+                  {{ t("SIGNED IN") }}
+                </span>
+              </div>
+            </div>
+            <div class="flex flex-warp items-start gap-2" v-if="occ.isActive">
+              <UButton size="sm" color="red" @click="signOutModalIsOpen = true"
+                >{{ t("Sign out") }}
+              </UButton>
+              <UButton size="sm" color="orange" @click="downloadICS()"
+                >{{ t("Calendar download") }}
+              </UButton>
+              <!-- v-if="!assignment.shifts_is_regular" -->
+            </div>
+            <div v-else class="">
+              <!-- <UButton size="sm" color="red">{{ t("Signed out") }} </UButton> -->
+            </div>
+          </div>
         </div>
       </div>
-
       <!-- Space for buttons -->
-      <div class="flex flex-wrap gap-3">
-        <UButton size="sm" color="orange" @click="downloadICS()"
-          >{{ t("Calendar download") }}
-        </UButton>
-        <!-- v-if="!assignment.shifts_is_regular" -->
-        <UButton size="sm" color="green" @click="signOutModalIsOpen = true"
-          >{{ t("Sign out") }}
-        </UButton>
-      </div>
     </div>
-  </CollectivoCard>
+  </div>
 
   <!-- Signout Modal -->
   <UModal v-model:open="signOutModalIsOpen">
@@ -277,6 +300,9 @@ en:
   "ics_preamble": "Warning: This calendar entry will not be automatically updated if your shift schedule changes. You can view your current shift schedule online in the member area. Please remember to delete old calendar entries and create a new one if your shift schedule changes."
   "Calendar download": "Calendar export"
 de:
+  "SIGNED OUT": "ABGEMELDET"
+  "SIGNED IN": "ANGEMELDET"
+  "You declared a holiday on this date": "Du hast an diesem Tag einen Urlaub eingetragen"
   "Shift": "Schicht"
   "Absences": "Abwesenheiten"
   "One-time shift": "Einmalige Schicht"

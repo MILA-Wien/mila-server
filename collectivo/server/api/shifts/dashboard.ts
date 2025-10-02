@@ -38,7 +38,6 @@ const getShiftDataDashboard = async (mship: number) => {
   );
 
   activeAssignments.sort((a, b) => {
-    console.log(a.occurrences[0]?.date, b.occurrences[0]?.date);
     const nextA = a.occurrences[0]?.date;
     const nextB = b.occurrences[0]?.date;
     if (!nextA && !nextB) return 0;
@@ -184,10 +183,9 @@ interface OccurrenceInfo {
 }
 
 function getOccurrenceInfo(occ: Date, hr: RRule, oar: RRule, phr: RRule) {
-  const isHoliday = hr.between(occ, occ).length > 0;
-  const isPublicHoliday = phr.between(occ, occ).length > 0;
-  const isOtherAbsence = oar.between(occ, occ).length > 0;
-  console.log(occ);
+  const isHoliday = hr.between(occ, occ, true).length > 0;
+  const isPublicHoliday = phr.between(occ, occ, true).length > 0;
+  const isOtherAbsence = oar.between(occ, occ, true).length > 0;
   return {
     date: new Date(occ),
     isHoliday: isHoliday,
@@ -211,7 +209,7 @@ const getAssignmentInfos = async (
       absence.shifts_assignment.id == assignment.id,
   );
 
-  const { assignmentRule, holidayRule, otherAbsencesRule } = getAssignmentRRule(
+  const { assignmentRule, holidayRule, otherAbsencesRule } = getRules(
     assignment,
     filteredAbsences,
   );
@@ -242,7 +240,7 @@ const getAssignmentInfos = async (
   const coordinators = [];
 
   if (occurrences.length > 0) {
-    const [coworkers_, coordinators_] = await getCoworkers(
+    const [coworkers_, coordinators_] = await getShiftTeam(
       assignment,
       occurrences[0].date,
       mship,
@@ -260,8 +258,7 @@ const getAssignmentInfos = async (
   };
 };
 
-// Get names of coworkers for a shift assignment
-const getCoworkers = async (
+const getShiftTeam = async (
   assignment: any,
   nextOccurence: Date,
   mship: number,
@@ -292,10 +289,7 @@ const getCoworkers = async (
   return [coworkers, coordinators];
 };
 
-export const getAssignmentRRule = (
-  assignment: any,
-  absences?: ShiftsAbsence[],
-) => {
+export const getRules = (assignment: any, absences?: ShiftsAbsence[]) => {
   const shift = assignment.shifts_shift;
   const shiftRule = getShiftRrule(shift);
 
