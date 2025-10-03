@@ -14,7 +14,6 @@ const { data: meldungen } = await useFetch("/api/solitopf/bedarf");
 </script>
 
 <template>
-  <BetaMessage />
   <h2>{{ t("Wie funktioniert der Soli-Topf?") }}</h2>
   <div class="flex flex-col gap-3" v-html="marked(t('t_soli_1'))"></div>
   <SectionDivider />
