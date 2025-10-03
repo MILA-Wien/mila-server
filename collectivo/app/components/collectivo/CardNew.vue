@@ -12,7 +12,7 @@ const _ = defineProps({
 </script>
 <template>
   <div
-    :class="`px-5 py-4 h-fit w-full border border-${color}-500 relative overflow-hidden inline-block bg-${color}-50`"
+    :class="`px-5 py-4 h-fit w-full border-2 border-${color}-500 relative overflow-hidden inline-block bg-${color}-50`"
   >
     <h3 v-if="title" class="font-Avory">
       {{ title }}

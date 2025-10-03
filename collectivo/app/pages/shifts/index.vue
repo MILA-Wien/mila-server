@@ -9,62 +9,23 @@ setPageTitle(t("Shifts Overview"));
 
 const mship = useCurrentUser().value.membership!;
 const isActive = mship.shifts_user_type != "inactive";
-const canShop = ref(false);
 const dataLoaded = ref(false);
 const absencePostModalOpen = ref(false);
 
-const assignments: Ref<ShiftsOccurrenceDashboard[]> = ref([]);
-const holidaysAll: Ref<ShiftsAbsenceDashboard[]> = ref([]);
-const holidaysCurrent: Ref<ShiftsAbsenceDashboard[]> = ref([]);
-const absences: Ref<ShiftsAbsenceDashboard[]> = ref([]);
-const logs = ref<ShiftsLog[]>([]);
-const statusColor = ref<"green" | "orange" | "red">("green");
+const assignments: Ref<any> = ref([]);
+const holidaysAll: Ref<any> = ref([]);
+const holidaysCurrent: Ref<any> = ref([]);
+const absences: Ref<any> = ref([]);
+const logs = ref<any>([]);
 
 async function loadData() {
   dataLoaded.value = false;
   const [res, _] = await Promise.all([getOccurrencesUser(), fetchSettings()]);
-  console.log(res);
-  assignments.value = res.assignments as ShiftsOccurrenceDashboard[];
-  holidaysAll.value = res.holidays as ShiftsAbsenceDashboard[];
-  holidaysCurrent.value = res.holidaysCurrent as ShiftsAbsenceDashboard[];
-  absences.value = res.signouts as ShiftsAbsenceDashboard[];
-  logs.value = res.logs as ShiftsLog[];
-
-  if (!settingsState!.shift_point_system) {
-    statusColor.value = "green";
-    canShop.value = true;
-    dataLoaded.value = true;
-    return;
-  }
-
-  if (mship.shifts_user_type == "exempt") {
-    statusColor.value = "pink";
-    canShop.value = true;
-    dataLoaded.value = true;
-    return;
-  }
-
-  if (mship.shifts_user_type == "inactive") {
-    statusColor.value = "red";
-    canShop.value = false;
-    dataLoaded.value = true;
-    return;
-  }
-
-  const isOnHoliday = holidaysCurrent.value.length > 0;
-  if (isOnHoliday) {
-    statusColor.value = "blue";
-    canShop.value = false;
-  }
-
-  if (mship.shifts_counter < 0) {
-    statusColor.value = "orange";
-  }
-
-  if (mship.shifts_counter <= -28) {
-    statusColor.value = "red";
-    canShop.value = false;
-  }
+  assignments.value = res.assignments as any;
+  holidaysAll.value = res.holidays as any;
+  holidaysCurrent.value = res.holidaysCurrent as any;
+  absences.value = res.signouts as any;
+  logs.value = res.logs as any;
 
   dataLoaded.value = true;
 }
@@ -77,68 +38,6 @@ loadData();
     <USkeleton class="h-32 w-full rounded-none" />
   </div>
   <div v-else>
-    <CollectivoCardNew :color="statusColor" class="mb-4">
-      <div>
-        <h4>{{ t("My status") }}</h4>
-
-        <template v-if="!settingsState!.shift_point_system">
-          {{ t("Shopping is allowed") }}
-        </template>
-
-        <template v-else>
-          <p v-if="mship.shifts_user_type == 'inactive'">
-            {{ t("Your membership is currently inactive.") }}<br />
-            {{
-              t(
-                "Please contact the membership office if you want to change your status.",
-              )
-            }}
-          </p>
-
-          <p v-else-if="mship.shifts_user_type == 'exempt'">
-            {{ t("You are exempt from shift work.") }}<br />
-            {{ t("You can nonetheless sign up for shifts if you want.") }}
-          </p>
-
-          <span v-else-if="holidaysCurrent.length > 0">
-            {{ t("You have a holiday registered at the moment.") }}<br />
-            {{ t("You cannot go shopping during this time.") }}
-          </span>
-
-          <p v-else-if="mship.shifts_counter >= 0">
-            {{
-              t("Your membership is active. Thank you for your contribution!")
-            }}
-            <br />
-            {{ t("Please do your next shift latest in") }}:
-            <span v-if="mship.shifts_counter >= 1">
-              {{ mship.shifts_counter }} {{ t("days") }}
-            </span>
-            <span v-else-if="mship.shifts_counter == 1">
-              1 {{ t("day") }}
-            </span>
-          </p>
-
-          <p v-else-if="mship.shifts_counter > -28">
-            {{ t("You are") }}
-            {{ -mship.shifts_counter }}
-            {{ t("days late to do your next shift.") }}
-            <br />
-            {{ t("Your membership will be frozen in") }}:
-            {{ 28 + mship.shifts_counter }} {{ t("days") }}.
-          </p>
-
-          <p v-else-if="mship.shifts_counter <= -28">
-            {{ t("You are more than 4 weeks late to do your next shift.") }}
-            <br />
-            {{
-              t("Please sign up for a shift or contact the membership office.")
-            }}
-          </p>
-        </template>
-      </div>
-    </CollectivoCardNew>
-
     <!-- Action Buttons -->
     <div
       v-if="isActive"
@@ -166,6 +65,17 @@ loadData();
         />
       </NuxtLink>
     </div>
+
+    <div>
+      <h2>{{ t("My status") }}</h2>
+      <ShiftsDashboardStatusTile
+        :mship="mship"
+        :settings-state="settingsState"
+        :holidays-current="holidaysCurrent"
+      />
+    </div>
+
+    <SectionDivider />
 
     <!-- SHIFT ASSIGNMENTS OCCURRENCES -->
     <div class="mb-12">

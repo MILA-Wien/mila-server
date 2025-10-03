@@ -26,17 +26,6 @@ const props = defineProps({
   },
 });
 
-// creates a DateTime object from the given strings, where `date` must be a string starting with format yyyy-mm-dd (e.g. an ISO-format) and `time` must be a duration in format "hh:mm:ss". Returns the so-created time of day in the Vienna timezone.
-function createDateTime(date: string, time?: string) {
-  const datetime = DateTime.fromISO(date.slice(0, 10), {
-    zone: "Europe/Vienna",
-  });
-  if (time) {
-    return datetime.plus(Duration.fromISOTime(time));
-  }
-  return datetime;
-}
-
 const data = props.shiftAssignment;
 const nextOcc = props.occ.date;
 const assignment = data.assignment;
@@ -66,8 +55,8 @@ async function createAbsence() {
     class="border border-black p-4 flex flex-wrap justify-between gap-2"
     :class="
       occ.isActive
-        ? 'bg-green-50 border-green-600'
-        : 'bg-gray-50 border-gray-600 text-gray-900'
+        ? 'bg-green-50 border-green-600 border-2'
+        : 'bg-gray-50 border-gray-600 text-gray-800'
     "
   >
     <div class="">
