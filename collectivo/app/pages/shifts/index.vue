@@ -77,7 +77,7 @@ loadData();
     <USkeleton class="h-32 w-full rounded-none" />
   </div>
   <div v-else>
-    <CollectivoCard :color="statusColor" class="mb-4">
+    <CollectivoCardNew :color="statusColor" class="mb-4">
       <div>
         <h4>{{ t("My status") }}</h4>
 
@@ -137,7 +137,7 @@ loadData();
           </p>
         </template>
       </div>
-    </CollectivoCard>
+    </CollectivoCardNew>
 
     <!-- Action Buttons -->
     <div
@@ -185,43 +185,17 @@ loadData();
       </div>
     </div>
 
-    <!-- ABSENCES -->
-    <div v-if="absences.length" class="mb-12">
-      <h2>{{ t("My signouts") }}</h2>
-      <div class="flex flex-col gap-4 my-4">
-        <CollectivoCard
-          v-for="absence in absences"
-          :key="absence.id"
-          :color="'gray'"
-        >
-          <p>
-            {{
-              getDateSpanString(
-                absence.shifts_from,
-                absence.shifts_to,
-                locale,
-                t,
-              )
-            }}
-          </p>
-          <p v-if="absence.shifts_assignment">
-            {{ t("Shift") }}ID:
-            {{ absence.shifts_assignment.shifts_shift.shifts_name }}
-          </p>
-        </CollectivoCard>
-      </div>
-    </div>
-
     <!-- HOLIDAYS -->
     <div v-if="holidaysAll.length" class="mb-12">
       <h2>{{ t("My holidays") }}</h2>
       <div>
         <div class="flex flex-col gap-4 my-4">
-          <CollectivoCard
+          <div
             v-for="absence in holidaysAll"
             :key="absence.id"
-            :color="'blue'"
+            class="p-4 border"
           >
+            <h4>{{ t("Holiday") }}</h4>
             <p>
               {{
                 getDateSpanString(
@@ -232,24 +206,24 @@ loadData();
                 )
               }}
             </p>
-          </CollectivoCard>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- LOGS -->
     <div v-if="logs.length" class="mb-12">
-      <h2>{{ t("Past shifts") }}</h2>
+      <h2>{{ t("Logbook") }}</h2>
       <div class="my-4">
-        <CollectivoCard :color="'gray'">
+        <div class="p-4 border">
           <div class="flex flex-col gap-1">
             <div v-for="log in logs" :key="log.id">
               {{ getDateString(log.shifts_date, locale) }}:
               {{ t("log:" + log.shifts_type) }}.
               {{ log.shifts_note }}
             </div>
-          </div></CollectivoCard
-        >
+          </div>
+        </div>
       </div>
     </div>
 
@@ -271,7 +245,7 @@ de:
   "My shifts": "Meine Schichten"
   "My holidays": "Meine Urlaube"
   "My recent activities": "Meine letzten Aktivitäten"
-  "Past shifts": "Vergangene Schichten"
+  "Logbook": "Logbuch"
   "My assignments": "Meine Anmeldungen"
   "My signouts": "Meine Abmeldungen"
   "Next shift required in": "Nächste Schicht erforderlich in"
@@ -293,5 +267,5 @@ de:
   "to": "bis"
   "Shifts Overview": "Schichten Übersicht"
   "Register shift": "Schicht anmelden"
-  "Submit holiday": "Urlaub einreichen"
+  "Submit holiday": "Urlaub eintragen"
 </i18n>

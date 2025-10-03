@@ -182,9 +182,9 @@ interface OccurrenceInfo {
   isActive: boolean;
 }
 
-function getOccurrenceInfo(occ: Date, hr: RRule, oar: RRule, phr: RRule) {
+function getOccurrenceInfo(occ: Date, hr: RRule, oar: RRule, phr?: RRule) {
   const isHoliday = hr.between(occ, occ, true).length > 0;
-  const isPublicHoliday = phr.between(occ, occ, true).length > 0;
+  const isPublicHoliday = phr ? phr.between(occ, occ, true).length > 0 : false;
   const isOtherAbsence = oar.between(occ, occ, true).length > 0;
   return {
     date: new Date(occ),
@@ -214,6 +214,8 @@ const getAssignmentInfos = async (
     filteredAbsences,
   );
 
+  const excludePublicHolidays = assignment.shifts_shift.exclude_public_holidays;
+
   // Get the next 4 occurrences
   const occurrences: OccurrenceInfo[] = [];
   let currentDate: Date | null = null;
@@ -230,7 +232,7 @@ const getAssignmentInfos = async (
           currentDate,
           holidayRule,
           otherAbsencesRule,
-          publicHolidaRruleSet,
+          excludePublicHolidays ? publicHolidaRruleSet : undefined,
         ),
       );
     }
