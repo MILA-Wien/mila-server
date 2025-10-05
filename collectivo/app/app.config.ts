@@ -56,11 +56,16 @@ export default defineAppConfig({
     input: {
       slots: {
         root: "w-full outline-none",
-        base: "rounded-none h-13 !pl-4",
+        base: "rounded-none h-13 !pl-4 ",
       },
       variants: {
         variant: {
           outline: "ring-black",
+        },
+        size: {
+          md: {
+            base: "text-base",
+          },
         },
       },
     },

@@ -142,6 +142,7 @@ async function onError(event: FormErrorEvent) {
 
 <i18n lang="yaml">
 de:
+  "Profile": "Profil"
   "Some fields are not filled in correctly": "Einige Felder sind nicht korrekt ausgefüllt."
   "i_pronouns": "Die Angabe der Pronomen ist freiwillig. Sie soll uns helfen bei Mila einen respektvollen Umgang miteinander zu pflegen, indem wir so mit- und übereinander sprechen, wie die angesprochenen Personen es wünschen."
 en:
