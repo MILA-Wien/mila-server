@@ -18,8 +18,9 @@ if (user.value?.user.email !== "checkin@mila.wien") {
     <div class="w-128">
       <h1>MILA Checkin</h1>
       <CheckinCardScanner />
-
-      <CheckinManualInput />
+      <div class="mt-4 flex flex-wrap">
+        <CheckinManualInput />
+      </div>
     </div>
   </div>
 </template>
