@@ -11,9 +11,9 @@ setPageTitle(t("Profile"));
 const toast = useToast();
 const userData = useCurrentUser();
 const user = userData.value.user!;
-
+const mv = "Dieses Feld ist erforderlich";
 const schema = object({
-  username: string().min(1).required(t("Dieses Feld ist erforderlich.")),
+  username: string().min(1, t(mv)).required(t(mv)),
   pronouns: string().optional(),
   hide_name: bool().optional(),
   send_notifications: bool().optional(),
