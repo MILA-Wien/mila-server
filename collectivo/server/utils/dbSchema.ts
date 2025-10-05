@@ -47,11 +47,12 @@ export interface Membership {
   memberships_shares: number;
   shifts_user_type: ShiftsUserType;
   shifts_counter: number;
-  shifts_logs?: ShiftsLog[];
+  shifts_logs: ShiftsLog[];
   shifts_can_be_coordinator: boolean;
   shifts_categories_allowed: { shifts_categories_id: number }[];
-  coshoppers?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
-  kids?: { memberships_coshoppesr_id: MembershipsCoshopper }[];
+  memberships_card_id: string;
+  coshoppers: { memberships_coshoppers_id: MembershipsCoshopper }[];
+  kids: { memberships_coshoppers_id: MembershipsCoshopper }[];
 }
 
 export interface MembershipsCoshopper {

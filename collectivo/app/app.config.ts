@@ -33,7 +33,14 @@ export default defineAppConfig({
           gray: "text-black bg-gray-200 hover:bg-gray-300",
           none: "text-black bg-transparent hover:bg-transparent",
         },
+        variant: {
+          outline:
+            "bg-transparent !text-black border-1 border-black hover:bg-gray-50",
+        },
         size: {
+          xs: {
+            base: "text-sm px-2 py-1",
+          },
           sm: {
             base: "text-sm px-3 py-2",
           },
