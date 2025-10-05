@@ -13,7 +13,7 @@ const userData = useCurrentUser();
 const user = userData.value.user!;
 
 const schema = object({
-  username: string().required(t("Dieses Feld ist erforderlich.")),
+  username: string().min(1).required(t("Dieses Feld ist erforderlich.")),
   pronouns: string().optional(),
   hide_name: bool().optional(),
   send_notifications: bool().optional(),
@@ -26,6 +26,14 @@ const state = reactive({
   pronouns: user.pronouns,
   hide_name: user.hide_name,
   send_notifications: user.send_notifications,
+});
+
+// Directus can return null values
+// But zod and yup want undefined
+Object.keys(state).forEach((key) => {
+  if (state[key] === null) {
+    state[key] = undefined;
+  }
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
