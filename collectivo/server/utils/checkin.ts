@@ -1,6 +1,6 @@
 // SSE state management for the Checkin Card Scanner
 // Currently only supports single subscriber / client
-import { createItem, readItems } from "@directus/sdk";
+import { createItem, readItem, readItems } from "@directus/sdk";
 
 type Subscriber = NodeJS.WritableStream;
 
@@ -30,22 +30,18 @@ const checkinState: CheckinState = {
   subscribers: new Set(),
 };
 
-export function getCheckinCardId() {
-  return checkinState.data?.cardId || null;
+export function confirmCheckinUser(event: any) {
+  const user = getUserOrThrowError(event);
+
+  if (user.email !== "checkin@mila.wien") {
+    throw createError({
+      statusCode: 401,
+    });
+  }
 }
 
-export async function setCheckinCardId(newCardId: string) {
-  if (checkinState.cardId === newCardId) return;
-  const newState = await getCheckinState(newCardId);
-  if (!newState.error) {
-    await createLog(newState);
-  }
-  checkinState.cardId = newCardId;
-  checkinState.data = newState;
-
-  for (const subscriber of checkinState.subscribers) {
-    subscriber.write(`data: ${JSON.stringify(checkinState.data)}\n\n`);
-  }
+export function getCheckinCardId() {
+  return checkinState.data?.cardId || null;
 }
 
 export function addCheckinSubscriber(subscriber: Subscriber) {
@@ -59,32 +55,39 @@ export function removeCheckinSubscriber(subscriber: Subscriber) {
   checkinState.subscribers.delete(subscriber);
 }
 
-async function createLog(state: CheckinData) {
-  const directus = await useDirectusAdmin();
-  const now = getCurrentDate();
-  const nowStr = now.toISOString();
-  const logs = await directus.request(
-    readItems("milaccess_log", {
-      filter: {
-        membership: { _eq: state.membership },
-        date: { _eq: nowStr },
-        coshopper: { _eq: state.coshopperId || null },
-      },
-    }),
-  );
-  if (logs.length == 0) {
-    await directus.request(
-      createItem("milaccess_log", {
-        membership: state.membership,
-        date: nowStr,
-        coshopper: state.coshopperId,
-      }),
-    );
+export async function checkinByCardId(newCardId: string) {
+  if (checkinState.cardId === newCardId) return;
+  const newState = await getCheckinState(newCardId);
+  if (!newState.error) {
+    await createLog(newState);
+  }
+  checkinState.cardId = newCardId;
+  checkinState.data = newState;
+
+  for (const subscriber of checkinState.subscribers) {
+    subscriber.write(`data: ${JSON.stringify(checkinState.data)}\n\n`);
   }
 }
 
-async function getCheckinState(cardID: string) {
-  const { mship, coshopper } = await getMship(cardID);
+export async function checkinByMshipId(mshipId: number) {
+  const newState = await getCheckinState(undefined, mshipId);
+  if (!newState.error) {
+    await createLog(newState);
+  }
+  checkinState.cardId = null;
+  checkinState.data = newState;
+
+  for (const subscriber of checkinState.subscribers) {
+    subscriber.write(`data: ${JSON.stringify(checkinState.data)}\n\n`);
+  }
+}
+
+async function getCheckinState(cardID?: string, mshipId?: number) {
+  if (!cardID && !mshipId) {
+    return { error: "Fehlerhafte Anfrage" };
+  }
+
+  const { mship, coshopper } = await getMship(cardID, mshipId);
 
   if (!mship) {
     return { error: "Diese Karte ist keiner Mitgliedschaft zugeordnet" };
@@ -127,7 +130,7 @@ async function getCheckinState(cardID: string) {
   }
 
   return {
-    cardId: cardID,
+    cardId: cardID || mship.memberships_card_id || "Keine Karte",
     membership: mship.id,
     membershipsType: mship.memberships_type,
     username: mship.memberships_user.username,
@@ -141,13 +144,38 @@ async function getCheckinState(cardID: string) {
   } as CheckinData;
 }
 
-async function getMship(cardID: string) {
+async function getMship(cardID?: string, mshipId?: number) {
+  if (mshipId) {
+    const mship = await getMshipById(mshipId);
+    return { mship, coshopper: undefined };
+  }
+
+  if (!cardID) {
+    throw createError("Something went wrong");
+  }
+
   const mship = await getMshipThroughMainCard(cardID);
   if (mship) return { mship, coshopper: undefined };
 
   // Not found as main card, try as coshopper card
   const { mship: mship2, coshopper } = await getMshipThroughCoCard(cardID);
   return { mship: mship2, coshopper: coshopper };
+}
+
+async function getMshipById(mshipId: number) {
+  const directus = await useDirectusAdmin();
+  return await directus.request(
+    readItem("memberships", mshipId, {
+      fields: [
+        "id",
+        "memberships_card_id",
+        "memberships_type",
+        "shifts_counter",
+        "shifts_user_type",
+        { memberships_user: ["username", "pronouns"] },
+      ],
+    }),
+  );
 }
 
 async function getMshipThroughMainCard(cardID: string) {
@@ -231,4 +259,28 @@ async function getMshipThroughCoCard(cardID: string) {
   }
 
   return { mship: memberships[0], coshopper };
+}
+
+async function createLog(state: CheckinData) {
+  const directus = await useDirectusAdmin();
+  const now = getCurrentDate();
+  const nowStr = now.toISOString();
+  const logs = await directus.request(
+    readItems("milaccess_log", {
+      filter: {
+        membership: { _eq: state.membership },
+        date: { _eq: nowStr },
+        coshopper: { _eq: state.coshopperId || null },
+      },
+    }),
+  );
+  if (logs.length == 0) {
+    await directus.request(
+      createItem("milaccess_log", {
+        membership: state.membership,
+        date: nowStr,
+        coshopper: state.coshopperId,
+      }),
+    );
+  }
 }

@@ -1,9 +1,11 @@
 import {
   addCheckinSubscriber,
+  confirmCheckinUser,
   removeCheckinSubscriber,
 } from "~~/server/utils/checkin";
 
 export default defineEventHandler((event) => {
+  confirmCheckinUser(event);
   const res = event.node.res;
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
