@@ -11,7 +11,6 @@ setPageTitle(t("Soli-Topf Test"), {
 </script>
 
 <template>
-  <BetaMessage />
   <SolitopfSoliTest />
 </template>
 

@@ -9,6 +9,12 @@ setPageTitle(t("Dashboard"));
 const tiles = useDashboardTiles();
 
 tiles.value.load();
+
+// TODO: More general solution
+const user = useCurrentUser();
+if (user.value?.user.email === "checkin@mila.wien") {
+  navigateTo("/checkin");
+}
 </script>
 
 <template>
