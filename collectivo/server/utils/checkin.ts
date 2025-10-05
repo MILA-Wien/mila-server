@@ -5,8 +5,8 @@ import { createItem, readItems } from "@directus/sdk";
 type Subscriber = NodeJS.WritableStream;
 
 interface CheckinData {
-  cardId: string | null;
-  membershipId?: string;
+  cardId?: string | null;
+  membership?: number;
   username?: string;
   shiftsType?: string;
   shiftScore?: number;
@@ -36,12 +36,12 @@ export function getCheckinCardId() {
 
 export async function setCheckinCardId(newCardId: string) {
   if (checkinState.cardId === newCardId) return;
-
-  console.log(`Checkin: New card ID received: ${newCardId}`);
   const newState = await getCheckinState(newCardId);
-
+  if (!newState.error) {
+    await createLog(newState);
+  }
   checkinState.cardId = newCardId;
-  checkinState.data = { cardId: newCardId, ...newState };
+  checkinState.data = newState;
 
   for (const subscriber of checkinState.subscribers) {
     subscriber.write(`data: ${JSON.stringify(checkinState.data)}\n\n`);
@@ -59,36 +59,25 @@ export function removeCheckinSubscriber(subscriber: Subscriber) {
   checkinState.subscribers.delete(subscriber);
 }
 
-async function checkinNewCard(cardId: string) {
+async function createLog(state: CheckinData) {
   const directus = await useDirectusAdmin();
-
-  const { mship, coshopper } = await getMship(cardId);
-
-  if (!mship) {
-    return;
-  }
-
-  // Infer shopping status
-
-  // Return object for stream TODO
-
-  // Create log entry
+  const now = getCurrentDate();
+  const nowStr = now.toISOString();
   const logs = await directus.request(
     readItems("milaccess_log", {
       filter: {
-        membership: { _eq: mship.id },
+        membership: { _eq: state.membership },
         date: { _eq: nowStr },
-        coshopper: { _eq: coshopper?.id },
+        coshopper: { _eq: state.coshopperId || null },
       },
     }),
   );
-
   if (logs.length == 0) {
     await directus.request(
       createItem("milaccess_log", {
-        membership: mship.id,
+        membership: state.membership,
         date: nowStr,
-        coshopper: coshopper?.id,
+        coshopper: state.coshopperId,
       }),
     );
   }
@@ -138,6 +127,7 @@ async function getCheckinState(cardID: string) {
   }
 
   return {
+    cardId: cardID,
     membership: mship.id,
     membershipsType: mship.memberships_type,
     username: mship.memberships_user.username,
@@ -147,7 +137,8 @@ async function getCheckinState(cardID: string) {
     isOnHoliday: isOnHoliday,
     canShop: canShop,
     coshopper: coshopper_name,
-  };
+    coshopperId: coshopper?.id,
+  } as CheckinData;
 }
 
 async function getMship(cardID: string) {
@@ -185,7 +176,6 @@ async function getMshipThroughMainCard(cardID: string) {
 }
 
 async function getMshipThroughCoCard(cardID: string) {
-  console.log("Looking for coshopper card ID:", cardID);
   const directus = await useDirectusAdmin();
   const memberships = await directus.request(
     readItems("memberships", {
@@ -221,8 +211,6 @@ async function getMshipThroughCoCard(cardID: string) {
   if (memberships.length > 1) {
     throw new Error("MULTIPLE_ENTRIES_FOUND_FOR_CARD_ID");
   }
-
-  console.log("memberships found:", memberships);
 
   if (memberships.length === 0) {
     return { mship2: null, coshopper: null };
