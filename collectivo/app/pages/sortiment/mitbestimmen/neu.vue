@@ -6,9 +6,9 @@ definePageMeta({
   middleware: ["auth"],
 });
 const { t } = useI18n();
-setPageTitle(t("Neue Sortimentsidee"), {
-  backLink: "/sortiment/ideen",
-  backLinkLabel: t("Zurück zum Ideenbuch"),
+setPageTitle(t("Sortiment mitbestimmen"), {
+  backLink: "/sortiment/mitbestimmen",
+  backLinkLabel: t("Zurück zur Sortimentsmappe"),
 });
 
 const toast = useToast();
@@ -37,9 +37,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         return;
       }
       toast.add({
-        title: "Danke für deine Idee!",
+        title: "Danke für deinen Beitrag!",
       });
-      navigateTo("/sortiment/ideen");
+      navigateTo("/sortiment/mitbestimmen");
     },
   });
 }
@@ -74,7 +74,7 @@ async function onError() {
         </FormsFormGroup>
 
         <div>{{ t("t:waittime") }}</div>
-        <UButton type="submit"> {{ t("Idee einreichen") }} </UButton>
+        <UButton type="submit"> {{ t("Vorschlag eintragen") }} </UButton>
       </UForm>
     </div>
   </div>
@@ -91,7 +91,9 @@ de:
   "t:waittime": "Gib uns bitte 4-6 Wochen Zeit für eine Antwort."
   "t:description-wunsch": "Bitte so viele Infos wie möglich: Name, Verpackungseinheit, Produzent*in, Qualitätskriterien (Bio, Herkunft, Verpackungsart, usw) – Umso genauer, umso besser!"
 en:
-  "Idee einreichen": "Submit idea"
+  "Sortiment mitbestimmen": "Participate in chosing products"
+  "Vorschlag eintragen": "Submit proposal"
+  "Zurück zur Sortimentsmappe": "Back to participatory assortment"
   "t:waittime": "Please give us 4-6 weeks to respond."
   "t:description-wunsch": "Please provide as much information as possible: Name, packaging unit, producer, quality criteria (organic, origin, packaging type, etc.) - The more accurate, the better!"
 </i18n>

@@ -4,7 +4,7 @@ definePageMeta({
 });
 
 const { t } = useI18n();
-setPageTitle(t("Ideenbuch"), {
+setPageTitle(t("Sortiment mitbestimmen"), {
   backLink: "/sortiment",
   backLinkLabel: t("Zurück zum Sortiment"),
 });
@@ -45,15 +45,25 @@ fetchData();
 
 <template>
   <BetaMessage />
-  <div class="w-full pb-10">
+  <div class="w-full pb-10 flex flex-wrap gap-3">
     <UButton
       color="green"
-      class="w-full"
+      class="flex-1"
       size="lg"
-      to="/sortiment/ideen/neu"
+      to="/sortiment/mitbestimmen/neu"
       icon="i-heroicons-plus"
     >
-      {{ t("Neue Idee einreichen") }}
+      {{ t("Neuen Vorschlag eintragen") }}
+    </UButton>
+    <UButton
+      color="gray"
+      class="flex-1"
+      size="lg"
+      target="_blank"
+      href="https://handbuch.mila.wien/books/mitglieder-handbuch/page/produkte-wunschen"
+      icon="i-heroicons-information-circle"
+    >
+      {{ t("Weitere Infos") }}
     </UButton>
   </div>
 
@@ -61,20 +71,20 @@ fetchData();
     <div class="flex flex-wrap pb-4 gap-3 flex-1">
       <UInput
         v-model="filterSearch"
-        :placeholder="t('Ideen suchen')"
+        :placeholder="t('Suchen')"
         class="flex-1 min-w-[200px]"
       />
 
       <UCheckbox variant="card" v-model="filterFromSelf" class="flex-1">
         <template #label>
-          <span class="text-sm font-semibold">{{ t("Nur meine Ideen") }}</span>
+          <span class="text-sm font-semibold">{{ t("Meine Vorschläge") }}</span>
         </template>
       </UCheckbox>
 
       <UCheckbox variant="card" v-model="filterHasAnswer" class="flex-1">
         <template #label>
           <span class="text-sm font-semibold">{{
-            t("Nur beantwortete Ideen")
+            t("Beantwortete Vorschläge")
           }}</span>
         </template>
       </UCheckbox>
@@ -122,11 +132,11 @@ fetchData();
     <UPagination
       v-model:page="page"
       :page-count="10"
-      :total="data.meta.totalCount as number"
+      :total="data.meta.totalCount"
     />
   </div>
   <div v-else>
-    <p>{{ t("No requests found") }}</p>
+    <p>{{ t("No proposals found") }}</p>
   </div>
 </template>
 
@@ -146,7 +156,7 @@ de:
   "Search product requests": "Sortimentswünsche suchen"
   "Only my requests": "Nur meine Wünsche"
   "Only answered requests": "Nur beantwortete Wünsche"
-  "No requests found": "Keine Wünsche gefunden"
+  "No proposals found": "Keine Vorschläge gefunden"
   "Submit new product request": "Neuen Sortimentswunsch einreichen"
   "Here you can submit requests for products that you would like to see in our store.": "Hier kannst du Wünsche für Produkte einreichen, die du gerne in unserem Supermarkt sehen würdest."
 </i18n>
