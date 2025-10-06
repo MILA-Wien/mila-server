@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount } from "vue";
+import { onMounted, onUnmounted } from "vue";
 
 const checkinState = useCheckinState();
+const POLL_INTERVAL = 1000; // ms
 
-let checkinStream: EventSource | null = null;
+let timeoutId: NodeJS.Timeout | null = null;
+
+const fetchData = async () => {
+  try {
+    checkinState.value = await $fetch("/api/checkin/current_state");
+  } catch (err) {
+    console.error("Fetch error:", err);
+  } finally {
+    timeoutId = setTimeout(fetchData, POLL_INTERVAL);
+  }
+};
 
 onMounted(() => {
-  checkinStream = new EventSource("/api/checkin/stream");
-  checkinStream.onmessage = (event) => {
-    try {
-      const data = JSON.parse(event.data);
-      checkinState.value = data;
-    } catch (err) {
-      console.error("Failed to read card id:", err);
-    }
-  };
-  checkinStream.onerror = (err) => {
-    console.warn("Lost SSE connectionsssdasdsasd, retrying soon...", err);
-  };
+  fetchData();
 });
 
-onBeforeUnmount(() => {
-  checkinStream?.close();
+onUnmounted(() => {
+  if (timeoutId) clearTimeout(timeoutId);
 });
 </script>
 
