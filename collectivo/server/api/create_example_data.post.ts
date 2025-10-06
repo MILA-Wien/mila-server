@@ -57,6 +57,7 @@ async function create_users() {
   const userNames = [
     "Admin",
     "Editor",
+    "Checkin",
     "User",
     "Alice",
     "Bob",
@@ -67,7 +68,11 @@ async function create_users() {
   const users = [];
 
   for (const userName of userNames) {
-    const email = `${userName.toLowerCase()}@example.com`;
+    let email = `${userName.toLowerCase()}@example.com`;
+
+    if (userName == "Checkin") {
+      email = "checkin@mila.wien";
+    }
 
     const u = {
       first_name: userName,
