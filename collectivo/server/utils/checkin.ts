@@ -68,19 +68,19 @@ export async function checkinByCardId(newCardId: string) {
   }
 
   // Legacy mode
-  // return {
-  //   cardNumber: newState.cardId,
-  //   membership: newState.membership,
-  //   firstName: newState.username,
-  //   lastName: "",
-  //   shiftScore: newState.shiftScore,
-  //   canShop: newState.canShop,
-  //   shiftsType: newState.shiftsType,
-  //   isOnHoliday: newState.isOnHoliday,
-  //   isCoshopper: newState.coshopper ? true : false,
-  //   coshopperFirstName: newState.coshopper,
-  //   coshopperLastName: "",
-  // };
+  return {
+    cardNumber: newState.cardId,
+    membership: newState.membership,
+    firstName: newState.username,
+    lastName: "",
+    shiftScore: newState.shiftScore,
+    canShop: newState.canShop,
+    shiftsType: newState.shiftsType,
+    isOnHoliday: newState.isOnHoliday,
+    isCoshopper: newState.coshopper ? true : false,
+    coshopperFirstName: newState.coshopper,
+    coshopperLastName: "",
+  };
 }
 
 export async function checkinByMshipId(mshipId: number) {
