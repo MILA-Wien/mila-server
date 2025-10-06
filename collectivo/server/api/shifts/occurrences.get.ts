@@ -10,11 +10,13 @@ const querySchema = z.object({
     .transform((val) => val === "true")
     .optional(),
   shiftID: z.coerce.number().optional(),
+  mshipID: z.coerce.number().optional(),
 });
 
 export default defineEventHandler(async (event) => {
   const params = await getValidatedQuery(event, querySchema.parse);
   const user = getUserOrThrowError(event);
+  let mship = user.mship;
 
   if (params.admin && !user.shiftAdmin) {
     throw createError({
@@ -23,11 +25,18 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  if (params.mshipID) {
+    confirmCheckinUser(event);
+    mship = params.mshipID;
+  }
+
+  console.log("Fetching occurrences for", mship);
+
   return await getShiftOccurrences(
     parseUtcMidnight(params.from),
     parseUtcMidnight(params.to),
     params.admin,
     params.shiftID,
-    user.mship,
+    mship,
   );
 });

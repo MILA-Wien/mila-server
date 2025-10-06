@@ -4,6 +4,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  mshipId: {
+    type: Number,
+    default: undefined,
+  },
 });
 
 const { locale, t } = useI18n();
@@ -29,6 +33,7 @@ async function loadEvents() {
     startDate.value.toISOString(),
     endDate.value.toISOString(),
     props.admin,
+    props.mshipId,
   );
   render.value = true;
 }
@@ -133,6 +138,7 @@ async function loadCategoriesAdmin() {
 async function loadCategoriesUser() {
   const allcats = await useShiftsCategories().loadPromise;
   const seen = new Set();
+  // TODO: adapt for checkin user
   for (const ca of user.value.membership?.shifts_categories_allowed || []) {
     const cat = allcats.find((c) => c.id === ca.shifts_categories_id);
     if (cat && !seen.has(cat.id)) {
@@ -427,7 +433,7 @@ loadEvents();
       v-if="modalIsOpen && modalOccurrence"
       v-model:is-open="modalIsOpen"
       :shift-occurence="modalOccurrence"
-      :shift-type="'jumper'"
+      :mship-id="mshipId || user.membership?.id"
       @reload="loadEvents"
     />
   </template>

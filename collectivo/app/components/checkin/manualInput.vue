@@ -21,7 +21,7 @@ async function checkinMember() {
 <template>
   <UModal v-model:open="open">
     <UButton variant="outline" class="border-2"
-      >Mit Mitgliedsnummer einchecken</UButton
+      >Neues Mitglied manuell einchecken</UButton
     >
 
     <template #content>

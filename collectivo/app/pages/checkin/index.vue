@@ -18,7 +18,13 @@ if (user.value?.user.email !== "checkin@mila.wien") {
     <div class="w-128">
       <h1>MILA Checkin</h1>
       <CheckinCardScanner />
-      <div class="mt-4 flex flex-wrap">
+      <div class="mt-3 gap-4 flex flex-col">
+        <UButton
+          class="border-2"
+          :to="{ path: '/checkin/calendar' }"
+          variant="outline"
+          >Für aktuelles Mitglied Schicht anmelden</UButton
+        >
         <CheckinManualInput />
       </div>
     </div>
