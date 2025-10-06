@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { DateTime } from "luxon";
 import { parse } from "marked";
-import { createItem } from "@directus/sdk";
 const { locale } = useI18n();
 
 const props = defineProps({
@@ -9,12 +8,15 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  mshipId: {
+    type: String,
+    default: undefined,
+  },
 });
 
 const emit = defineEmits(["reload"]);
 const isOpen = defineModel("isOpen", { required: true, type: Boolean });
 const { t } = useI18n();
-const directus = useDirectus();
 const user = useCurrentUser();
 const occ = props.shiftOccurence;
 const shift = props.shiftOccurence.shift;
@@ -106,7 +108,7 @@ async function postAssignmentInner(regular: boolean) {
   }
 
   const payload: Partial<ShiftsAssignment> = {
-    shifts_membership: user.value.membership!.id,
+    shifts_membership: props.mshipId,
     shifts_shift: shift.id!,
     shifts_from: shiftStartString,
     shifts_is_regular: regular,
@@ -118,7 +120,10 @@ async function postAssignmentInner(regular: boolean) {
     payload.shifts_to = shiftStartString;
   }
 
-  await directus.request(createItem("shifts_assignments", payload));
+  await useFetch("/api/shifts/assignment", {
+    method: "POST",
+    body: payload,
+  });
 }
 </script>
 

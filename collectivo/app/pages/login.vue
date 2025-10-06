@@ -29,6 +29,7 @@ const TEST_USERS = [
   ["admin@example.com", "admin"],
   ["editor@example.com", "editor"],
   ["user@example.com", "user"],
+  ["checkin@mila.wien", "checkin"],
 ];
 
 const loading = ref(false);
