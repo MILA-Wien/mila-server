@@ -22,7 +22,7 @@ setPageTitle(t("Sortiment"));
       </p>
       <div class="flex flex-wrap gap-4">
         <UButton color="green" to="/sortiment/mitbestimmen">
-          {{ t("Zum Sortimentsbuch") }}
+          {{ t("Zur digitalen Sortimentsmappe") }}
         </UButton>
       </div>
     </CollectivoCard>
@@ -47,7 +47,5 @@ setPageTitle(t("Sortiment"));
 <i18n lang="yaml">
 en:
   "Sortiment": "Product range"
-  "Ideenbuch": "Product ideas"
-  "Ideenbuch anzeigen": "View product ideas"
-  "Neue Idee eintragen": "Submit new product idea"
+  "Sortiment mitbestimmen": "Product range participation"
 </i18n>

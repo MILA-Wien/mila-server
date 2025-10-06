@@ -50,7 +50,7 @@ fetchData();
       color="green"
       class="flex-1"
       size="lg"
-      to="/sortiment/ideen/neu"
+      to="/sortiment/mitbestimmen/neu"
       icon="i-heroicons-plus"
     >
       {{ t("Neuen Vorschlag eintragen") }}
@@ -132,11 +132,11 @@ fetchData();
     <UPagination
       v-model:page="page"
       :page-count="10"
-      :total="data.meta.totalCount as number"
+      :total="data.meta.totalCount"
     />
   </div>
   <div v-else>
-    <p>{{ t("No requests found") }}</p>
+    <p>{{ t("No proposals found") }}</p>
   </div>
 </template>
 
@@ -156,7 +156,7 @@ de:
   "Search product requests": "Sortimentswünsche suchen"
   "Only my requests": "Nur meine Wünsche"
   "Only answered requests": "Nur beantwortete Wünsche"
-  "No requests found": "Keine Wünsche gefunden"
+  "No proposals found": "Keine Vorschläge gefunden"
   "Submit new product request": "Neuen Sortimentswunsch einreichen"
   "Here you can submit requests for products that you would like to see in our store.": "Hier kannst du Wünsche für Produkte einreichen, die du gerne in unserem Supermarkt sehen würdest."
 </i18n>
