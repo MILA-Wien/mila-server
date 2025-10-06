@@ -12,25 +12,33 @@ setPageTitle(t("Sortiment"));
   <BetaMessage />
   <div class="flex flex-col gap-5">
     <CollectivoCard>
-      <h2>{{ t("Ideenbuch") }}</h2>
+      <h2>{{ t("Sortiment mitbestimmen") }}</h2>
       <p class="mb-3">
         {{
           t(
-            "Entdecke Ideen für neue Produkte und teile deine eigenen Vorschläge mit uns – welche Produkte würdest du dir in unserem Supermarkt wünschen? Wir sammeln alle Einreichungen und prüfen regelmäßig, welche davon wir umsetzen können.",
+            "Welche Produkte würdest du gerne in unserem Supermarkt haben? Wir sammeln alle Vorschläge und prüfen regelmäßig, welche davon wir umsetzen können.",
           )
         }}
       </p>
       <div class="flex flex-wrap gap-4">
-        <UButton color="green" to="/sortiment/ideen">
-          {{ t("Ideenbuch anzeigen") }}
+        <UButton color="green" to="/sortiment/mitbestimmen">
+          {{ t("Zum Sortimentsbuch") }}
         </UButton>
-        <UButton
-          color="gray"
-          to="https://handbuch.mila.wien/books/mitglieder-handbuch/page/produkte-wunschen"
-          target="_blank"
-        >
-          {{ t("Über das Ideenbuch") }}
-        </UButton>
+      </div>
+    </CollectivoCard>
+    <CollectivoCard color="gray">
+      <h2>{{ t("Aktuelles Sortiment (Coming soon)") }}</h2>
+      <p class="mb-3">
+        {{
+          t(
+            "Hier kannst du in Zukunft alle Produkte und Preise in unserem Supermarkt einsehen.",
+          )
+        }}
+      </p>
+      <div class="flex flex-wrap gap-4">
+        <!-- <UButton color="green" to="/sortiment/mitbestimmen">
+          {{ t("Zum Produktverzeichnis") }}
+        </UButton> -->
       </div>
     </CollectivoCard>
   </div>
