@@ -5,5 +5,5 @@ export default defineEventHandler(async (event) => {
 
   const cardID = getRouterParam(event, "cardID") as string;
 
-  checkinByCardId(cardID);
+  return await checkinByCardId(cardID);
 });
