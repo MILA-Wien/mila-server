@@ -12,9 +12,8 @@ interface CheckinData {
   shiftScore?: number;
   isOnHoliday?: boolean;
   canShop?: boolean;
-  isCoshopper?: boolean;
-  coshopperFirstName?: string;
-  coshopperLastName?: string;
+  coshopper?: string;
+  coshopperId?: string;
   error?: string;
 }
 
@@ -67,6 +66,21 @@ export async function checkinByCardId(newCardId: string) {
   for (const subscriber of checkinState.subscribers) {
     subscriber.write(`data: ${JSON.stringify(checkinState.data)}\n\n`);
   }
+
+  // Legacy mode
+  // return {
+  //   cardNumber: newState.cardId,
+  //   membership: newState.membership,
+  //   firstName: newState.username,
+  //   lastName: "",
+  //   shiftScore: newState.shiftScore,
+  //   canShop: newState.canShop,
+  //   shiftsType: newState.shiftsType,
+  //   isOnHoliday: newState.isOnHoliday,
+  //   isCoshopper: newState.coshopper ? true : false,
+  //   coshopperFirstName: newState.coshopper,
+  //   coshopperLastName: "",
+  // };
 }
 
 export async function checkinByMshipId(mshipId: number) {
