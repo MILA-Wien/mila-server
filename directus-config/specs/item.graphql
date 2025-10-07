@@ -2110,9 +2110,18 @@ type product_requests {
   date_updated_func: datetime_functions
   name: String!
   wunsch: String
+
+  """
+  Antworten sind optional und werden online für alle Mitglieder angezeigt.
+  """
   antwort: String
   wunsch_von(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+
+  """
+  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit".
+  """
   status: String
+  assigned(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
 }
 
 type product_requests_aggregated {
@@ -2136,9 +2145,20 @@ type product_requests_aggregated_count {
   date_updated: Int
   name: Int
   wunsch: Int
+
+  """
+  Antworten sind optional und werden online für alle Mitglieder angezeigt.
+  """
   antwort: Int
   wunsch_von: Int
+
+  """
+  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit".
+  """
   status: Int
+
+  """Diese Person kümmert sich um diesen Vorschlag."""
+  assigned: Int
 }
 
 type product_requests_aggregated_fields {
@@ -2870,9 +2890,18 @@ type version_product_requests {
   date_updated: Date
   name: String
   wunsch: String
+
+  """
+  Antworten sind optional und werden online für alle Mitglieder angezeigt.
+  """
   antwort: String
   wunsch_von: JSON
+
+  """
+  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit".
+  """
   status: String
+  assigned: JSON
 }
 
 """"""
@@ -3569,9 +3598,18 @@ input create_product_requests_input {
   date_updated: Date
   name: String!
   wunsch: String
+
+  """
+  Antworten sind optional und werden online für alle Mitglieder angezeigt.
+  """
   antwort: String
   wunsch_von: create_memberships_input
+
+  """
+  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit".
+  """
   status: String
+  assigned: create_directus_users_input
 }
 
 input create_shifts_absences_input {
@@ -4708,6 +4746,7 @@ input product_requests_filter {
   antwort: string_filter_operators
   wunsch_von: memberships_filter
   status: string_filter_operators
+  assigned: directus_users_filter
   _and: [product_requests_filter]
   _or: [product_requests_filter]
 }
@@ -5337,9 +5376,18 @@ input update_product_requests_input {
   date_updated: Date
   name: String
   wunsch: String
+
+  """
+  Antworten sind optional und werden online für alle Mitglieder angezeigt.
+  """
   antwort: String
   wunsch_von: update_memberships_input
+
+  """
+  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit".
+  """
   status: String
+  assigned: update_directus_users_input
 }
 
 input update_settings_hidden_input {

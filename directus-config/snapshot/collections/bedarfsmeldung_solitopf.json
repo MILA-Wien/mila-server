@@ -21,9 +21,9 @@
     "translations": [
       {
         "language": "de-DE",
-        "plural": "Solitopf Anträge",
-        "singular": "Solitopf Antrag",
-        "translation": "Solitopf Anträge"
+        "plural": "Solitopf Anfragen",
+        "singular": "Solitopf Anfrage",
+        "translation": "Solitopf Anfragen"
       }
     ],
     "unarchive_value": null,

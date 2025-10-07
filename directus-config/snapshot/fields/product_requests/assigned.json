@@ -1,31 +1,42 @@
 {
   "collection": "product_requests",
-  "field": "antwort",
-  "type": "text",
+  "field": "assigned",
+  "type": "uuid",
   "meta": {
     "collection": "product_requests",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "antwort",
+    "field": "assigned",
     "group": null,
     "hidden": false,
-    "interface": "input-multiline",
-    "note": "Antworten sind optional und werden online für alle Mitglieder angezeigt.",
-    "options": null,
+    "interface": "select-dropdown-m2o",
+    "note": "Diese Person kümmert sich um diesen Vorschlag.",
+    "options": {
+      "enableCreate": false,
+      "filter": null,
+      "template": "{{first_name}} {{last_name}}"
+    },
     "readonly": false,
     "required": false,
-    "sort": 8,
-    "special": null,
-    "translations": null,
+    "sort": 11,
+    "special": [
+      "m2o"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Zuständig"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"
   },
   "schema": {
-    "name": "antwort",
+    "name": "assigned",
     "table": "product_requests",
-    "data_type": "text",
+    "data_type": "uuid",
     "default_value": null,
     "max_length": null,
     "numeric_precision": null,
@@ -37,7 +48,7 @@
     "is_generated": false,
     "generation_expression": null,
     "has_auto_increment": false,
-    "foreign_key_table": null,
-    "foreign_key_column": null
+    "foreign_key_table": "directus_users",
+    "foreign_key_column": "id"
   }
 }

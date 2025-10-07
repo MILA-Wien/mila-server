@@ -21,9 +21,9 @@
     "translations": [
       {
         "language": "de-DE",
-        "plural": "Sortimentsideen",
-        "singular": "Sortimentsidee",
-        "translation": "Sortimentsideen"
+        "plural": "Sortiment Vorschläge",
+        "singular": "Sortiment Vorschlag",
+        "translation": "Sortiment Vorschläge"
       }
     ],
     "unarchive_value": null,

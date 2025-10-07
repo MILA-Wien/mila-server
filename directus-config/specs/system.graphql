@@ -2158,9 +2158,18 @@ type product_requests {
   date_updated_func: datetime_functions
   name: String!
   wunsch: String
+
+  """
+  Antworten sind optional und werden online für alle Mitglieder angezeigt.
+  """
   antwort: String
   wunsch_von(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
+
+  """
+  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit".
+  """
   status: String
+  assigned(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
 }
 
 type product_requests_mutated {

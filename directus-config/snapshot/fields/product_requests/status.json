@@ -11,7 +11,7 @@
     "group": null,
     "hidden": false,
     "interface": "select-dropdown",
-    "note": null,
+    "note": "Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen \"inarbeit\".",
     "options": {
       "choices": [
         {

@@ -22692,6 +22692,7 @@
           },
           "antwort": {
             "nullable": true,
+            "description": "Antworten sind optional und werden online für alle Mitglieder angezeigt.",
             "type": "string"
           },
           "wunsch_von": {
@@ -22707,7 +22708,21 @@
           },
           "status": {
             "nullable": true,
+            "description": "Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen \"inarbeit\".",
             "type": "string"
+          },
+          "assigned": {
+            "nullable": true,
+            "description": "Diese Person kümmert sich um diesen Vorschlag.",
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "$ref": "#/components/schemas/Users"
+              }
+            ]
           }
         },
         "x-collection": "product_requests",
