@@ -137,6 +137,35 @@ async function onError(event: FormErrorEvent) {
         </div>
       </UForm>
     </div>
+    <div>
+      <h2>{{ t("Direktkredite") }}</h2>
+      <p>Hier kannst du deinen Direktkredit aufrufen.</p>
+      <UButton
+        href="https://direktkredite.mila.wien/login-oidc"
+        target="_blank"
+        class="mt-4"
+        color="green"
+        icon="i-heroicons-arrow-top-right-on-square"
+      >
+        {{ t("Direktkreditplattform") }}
+      </UButton>
+    </div>
+    <div>
+      <h2>{{ t("Weitere Genossenschaftsanteile zeichnen") }}</h2>
+      <p>
+        Deinen finanziellen Möglichkeiten gemäß kannst du auch mehr als 9
+        Genossenschaftsanteile zeichnen. Wenn du Anteile nachzeichnen möchtest
+        oder Fragen dazu hast, schreibe uns gerne!
+      </p>
+      <UButton
+        href="mailto:mitglied@mila.wien"
+        class="mt-4"
+        color="green"
+        icon="i-heroicons-envelope"
+      >
+        {{ t("Email: mitglied@mila.wien") }}
+      </UButton>
+    </div>
   </div>
 </template>
 
