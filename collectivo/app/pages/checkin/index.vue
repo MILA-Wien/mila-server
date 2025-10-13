@@ -17,6 +17,7 @@ if (user.value?.user.email !== "checkin@mila.wien") {
   <div class="flex flex-row justify-center mt-48">
     <div class="w-128">
       <h1>MILA Checkin</h1>
+      <CheckinStream />
       <CheckinCardScanner />
       <div class="mt-4 flex flex-wrap">
         <CheckinManualInput />

@@ -66,6 +66,7 @@ function createLegacyResponse(data: CheckinData) {
     isCoshopper: data.coshopper ? true : false,
     coshopperFirstName: data.coshopper,
     coshopperLastName: "",
+    error: data.error,
   };
 }
 
