@@ -20,13 +20,11 @@ interface CheckinData {
 interface CheckinState {
   data: CheckinData | null;
   cardId: string | null;
-  subscribers: Set<Subscriber>;
 }
 
 const checkinState: CheckinState = {
   data: null,
   cardId: null,
-  subscribers: new Set(),
 };
 
 export function confirmCheckinUser(event: any) {
@@ -39,64 +37,49 @@ export function confirmCheckinUser(event: any) {
   }
 }
 
-export function getCheckinCardId() {
-  return checkinState.data?.cardId || null;
-}
-
-export function addCheckinSubscriber(subscriber: Subscriber) {
-  console.log("New Checkin Client connected - resetting state");
-  checkinState.cardId = null;
-  checkinState.subscribers.clear();
-  checkinState.subscribers.add(subscriber);
-}
-
-export function removeCheckinSubscriber(subscriber: Subscriber) {
-  checkinState.subscribers.delete(subscriber);
+export function getCheckinState() {
+  return checkinState.data;
 }
 
 export async function checkinByCardId(newCardId: string) {
-  if (checkinState.cardId === newCardId) return;
-  const newState = await getCheckinState(newCardId);
+  if (checkinState.cardId === newCardId)
+    return createLegacyResponse(checkinState.data!);
+  const newState = await createNewCheckinState(newCardId);
   if (!newState.error) {
     await createLog(newState);
   }
   checkinState.cardId = newCardId;
   checkinState.data = newState;
+  return createLegacyResponse(newState);
+}
 
-  for (const subscriber of checkinState.subscribers) {
-    subscriber.write(`data: ${JSON.stringify(checkinState.data)}\n\n`);
-  }
-
-  // Legacy mode
+function createLegacyResponse(data: CheckinData) {
   return {
-    cardNumber: newState.cardId,
-    membership: newState.membership,
-    firstName: newState.username,
+    cardNumber: data.cardId,
+    membership: data.membership,
+    firstName: data.username,
     lastName: "",
-    shiftScore: newState.shiftScore,
-    canShop: newState.canShop,
-    shiftsType: newState.shiftsType,
-    isOnHoliday: newState.isOnHoliday,
-    isCoshopper: newState.coshopper ? true : false,
-    coshopperFirstName: newState.coshopper,
+    shiftScore: data.shiftScore,
+    canShop: data.canShop,
+    shiftsType: data.shiftsType,
+    isOnHoliday: data.isOnHoliday,
+    isCoshopper: data.coshopper ? true : false,
+    coshopperFirstName: data.coshopper,
     coshopperLastName: "",
+    error: data.error,
   };
 }
 
 export async function checkinByMshipId(mshipId: number) {
-  const newState = await getCheckinState(undefined, mshipId);
+  const newState = await createNewCheckinState(undefined, mshipId);
   if (!newState.error) {
     await createLog(newState);
   }
   checkinState.cardId = null;
   checkinState.data = newState;
-
-  for (const subscriber of checkinState.subscribers) {
-    subscriber.write(`data: ${JSON.stringify(checkinState.data)}\n\n`);
-  }
 }
 
-async function getCheckinState(cardID?: string, mshipId?: number) {
+async function createNewCheckinState(cardID?: string, mshipId?: number) {
   if (!cardID && !mshipId) {
     return { error: "Fehlerhafte Anfrage" };
   }
