@@ -171,7 +171,7 @@ const state: any = reactive({
   directus_users__memberships_postcode: undefined,
   directus_users__memberships_city: undefined,
   directus_users__memberships_country: undefined,
-  memberships__memberships_type: undefined,
+  memberships__memberships_type: "Aktiv",
   shares_options: undefined,
   memberships__memberships_shares: undefined,
   directus_users__payments_type: undefined,
@@ -187,6 +187,14 @@ const state: any = reactive({
   _data_approval: undefined,
   directus_users__mila_pr_approved: undefined,
 });
+
+watch(
+  () => state.memberships__memberships_type,
+  () => {
+    state.shares_options = undefined;
+    state.memberships__memberships_shares = undefined;
+  },
+);
 
 function fillTestData() {
   state.directus_users__memberships_person_type = "natural";
