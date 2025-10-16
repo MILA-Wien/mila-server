@@ -42,12 +42,10 @@ setPageTitle(t("You have questions?"));
         </a>
         {{ t("or via phone under") }}
         <a :href="supportNumberLink" class="font-bold"> {{ supportNumber }} </a
-        >.
-        {{
-          t(
-            "Otherwise you can also come talk to us in Person every Tuesday from 16:00 - 19:00 at the MILA Minimarkt (Krichbaumgasse 25, Innenhof, 1120 Wien).",
-          )
-        }}
+        >.<br />
+        {{ t("Öffnungszeiten: Dienstag 16 - 19 Uhr und Freitag 13 - 16 Uhr.")
+        }}<br />
+        Vivenotgasse 29, 1120 Wien.
       </p>
       <div class="flex flex-wrap gap-4">
         <a :href="`mailto:${config.public.contactEmail}`">
@@ -74,4 +72,6 @@ de:
   Members Handbook: Mitgliederhandbuch
   Guides and information: Anleitungen und Informationen
   You have questions?: Du hast Fragen?
+en:
+  "Öffnungszeiten: Dienstag 16 - 19 Uhr und Freitag 13 - 16 Uhr.": "Opening hours: Tuesday 4 - 7 pm and Friday 1 - 4 pm."
 </i18n>
