@@ -252,11 +252,13 @@ export const getAssignmentRrules = (
         dtstart: parseUtcMidnight(absence.shifts_from),
         until: parseUtcMidnight(absence.shifts_to),
       });
+
       absenceRrules.push({
         absence: absence as ShiftsAbsence,
         rrule: absenceRule,
       });
-      absence.shifts_assignment = assignment;
+      // Removed as it overwrites absence and is not needed anywhere?
+      // absence.shifts_assignment = assignment;
       assRruleWithAbs.exrule(absenceRule);
     }
 
