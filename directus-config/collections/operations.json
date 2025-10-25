@@ -354,6 +354,20 @@
   },
   {
     "name": "Skript ausführen",
+    "key": "exec_tg82b",
+    "type": "exec",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "code": "module.exports = async function(data) {\n\tif (data.$trigger.payload.status || data.$trigger.payload.antwort) {\n      return {};\n    }\n\tthrow new Error(\"not relevant\")\n}"
+    },
+    "resolve": "a4a467a1-ae48-4057-a59e-b35c460ad4f7",
+    "reject": null,
+    "flow": "da1d3f39-d1a5-4150-a524-507e048580d5",
+    "_syncId": "6ec25f0d-de91-4dcf-951a-4f088464231f"
+  },
+  {
+    "name": "Skript ausführen",
     "key": "exec_xtr5y",
     "type": "exec",
     "position_x": 23,
@@ -729,6 +743,36 @@
     "_syncId": "60b0542a-cba8-4e5f-bea8-b45e79c7c09e"
   },
   {
+    "name": "Daten lesen",
+    "key": "read_elements",
+    "type": "item-read",
+    "position_x": 4,
+    "position_y": 22,
+    "options": {
+      "permissions": "$full",
+      "emitEvents": false,
+      "collection": "product_requests",
+      "query": {
+        "filter": {
+          "id": {
+            "_eq": "{{$trigger}}"
+          }
+        },
+        "fields": [
+          "name",
+          "id",
+          "status",
+          "antwort",
+          "wunsch_von.memberships_user"
+        ]
+      }
+    },
+    "resolve": "501bf9c8-8fa6-47af-ad46-81aca3b727e7",
+    "reject": null,
+    "flow": "c97d8437-3ee4-49d3-9e95-a1b0b147b9b7",
+    "_syncId": "7cd8064c-336d-4013-ab46-bc3c2f3aa653"
+  },
+  {
     "name": "Read invoices",
     "key": "read_invoices",
     "type": "item-read",
@@ -949,6 +993,28 @@
     "reject": null,
     "flow": "610aa314-bd89-461e-b8a0-10d0ad75f2d4",
     "_syncId": "af82e607-1ee7-4289-8752-49531f48ab86"
+  },
+  {
+    "name": "Webhook / Anfrage URL",
+    "key": "request_1jo36",
+    "type": "request",
+    "position_x": 10,
+    "position_y": 40,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/campaigns/campaign",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{\n    \"automation_name\": \"sortiment_update\",\n    \"wunsch_name\": \"{{read_elements[0].name}}\",\n    \"wunsch_id\": {{read_elements[0].id}},\n    \"user_ids\": {{user_ids.user_ids}}\n}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "c97d8437-3ee4-49d3-9e95-a1b0b147b9b7",
+    "_syncId": "a9c23e19-5e10-4ad6-90fd-4744f3b2fbb1"
   },
   {
     "name": "Webhook / Anfrage URL",
@@ -1221,6 +1287,22 @@
   },
   {
     "name": "Flow auslösen",
+    "key": "trigger_atody",
+    "type": "trigger",
+    "position_x": 10,
+    "position_y": 22,
+    "options": {
+      "iterationMode": "parallel",
+      "payload": "{{ $trigger.keys }}",
+      "flow": "c97d8437-3ee4-49d3-9e95-a1b0b147b9b7"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "da1d3f39-d1a5-4150-a524-507e048580d5",
+    "_syncId": "a4a467a1-ae48-4057-a59e-b35c460ad4f7"
+  },
+  {
+    "name": "Flow auslösen",
     "key": "trigger_f9yog",
     "type": "trigger",
     "position_x": 37,
@@ -1286,6 +1368,20 @@
     "reject": null,
     "flow": "493c1260-3bb9-47e7-940d-115b8b0f1ccc",
     "_syncId": "cfd6218a-7de5-4c15-9757-597a1312f9a6"
+  },
+  {
+    "name": "user ids",
+    "key": "user_ids",
+    "type": "exec",
+    "position_x": 22,
+    "position_y": 22,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    for (i in data.$last) {\n    \tuser_ids.push(data.$last[i].wunsch_von.memberships_user)\n    }\n    \n\treturn { user_ids };\n}"
+    },
+    "resolve": "a9c23e19-5e10-4ad6-90fd-4744f3b2fbb1",
+    "reject": null,
+    "flow": "c97d8437-3ee4-49d3-9e95-a1b0b147b9b7",
+    "_syncId": "501bf9c8-8fa6-47af-ad46-81aca3b727e7"
   },
   {
     "name": "User ids",
