@@ -86,7 +86,7 @@ fetchData();
       <UCheckbox variant="card" v-model="filterHasAnswer" class="flex-1">
         <template #label>
           <span class="text-sm font-semibold whitespace-nowrap">{{
-            t("Nur mit Antwort")
+            t("Nur Beantwortet")
           }}</span>
         </template>
       </UCheckbox>
