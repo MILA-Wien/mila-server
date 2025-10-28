@@ -80,6 +80,7 @@ async function getActiveHolidays(date: Date): Promise<number[]> {
         shifts_from: { _lte: date.toISOString() },
       },
       fields: ["id", "shifts_membership"],
+      limit: -1,
     }),
   );
 
@@ -103,6 +104,7 @@ async function decrement_shifts_counter(mshipIdsOnHoliday: number[]) {
         },
       },
       fields: ["id", "shifts_counter"],
+      limit: -1,
     }),
   );
   const membershipsToUpdate = memberships.filter(

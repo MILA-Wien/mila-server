@@ -90,7 +90,7 @@ setColor();
           {{ -mship.shifts_counter }}
           {{ t("days late to do your next shift.") }}
           <br />
-          {{ t("Your membership will be frozen in") }}:
+          {{ t("You will be blocked from shopping in") }}:
           {{ 28 + mship.shifts_counter }} {{ t("days") }}.
         </p>
 
@@ -119,7 +119,7 @@ de:
   "My assignments": "Meine Anmeldungen"
   "My signouts": "Meine Abmeldungen"
   "Next shift required in": "Nächste Schicht erforderlich in"
-  "Your membership will be frozen in": "Deine Mitgliedschaft wird eingefroren in"
+  "You will be blocked from shopping in": "Du wirst vom Einkaufen gesperrt in"
   "You are": "Du bist"
   "days late to do your next shift.": "Tage zu spät, um deine nächste Schicht zu machen."
   "You are more than 4 weeks late to do your next shift.": "Du bist mehr als 4 Wochen zu spät, um deine nächste Schicht zu machen."

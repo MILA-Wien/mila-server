@@ -84,7 +84,7 @@
     "icon": "outgoing_mail",
     "color": "#E35169",
     "description": "Infomail wenn Rechnung auf bezahlt gestellt wird",
-    "status": "active",
+    "status": "inactive",
     "trigger": "event",
     "accountability": "all",
     "options": {
@@ -391,6 +391,40 @@
     },
     "operation": "7750689a-c74f-4538-8375-652eff307512",
     "_syncId": "c36a2159-395e-4eec-acb7-86cbd1d81d5c"
+  },
+  {
+    "name": "Mail Sortimentsvorschlag Update",
+    "icon": "mail",
+    "color": "#E35169",
+    "description": "Wenn ein Vorschlag beantwortet wird",
+    "status": "active",
+    "trigger": "operation",
+    "accountability": "all",
+    "options": {
+      "return": "$last"
+    },
+    "operation": "7cd8064c-336d-4013-ab46-bc3c2f3aa653",
+    "_syncId": "c97d8437-3ee4-49d3-9e95-a1b0b147b9b7"
+  },
+  {
+    "name": "Mail Sortiment Outer",
+    "icon": "outgoing_mail",
+    "color": "#E35169",
+    "description": null,
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "scope": [
+        "items.update"
+      ],
+      "collections": [
+        "product_requests"
+      ]
+    },
+    "operation": "6ec25f0d-de91-4dcf-951a-4f088464231f",
+    "_syncId": "da1d3f39-d1a5-4150-a524-507e048580d5"
   },
   {
     "name": "memberships_user_search_inner",

@@ -10,7 +10,7 @@ setPageTitle(t("Sortiment mitbestimmen"), {
 });
 
 const filterSearch = ref("");
-const filterFromSelf = ref(false);
+const filterFromSelf = ref(true);
 const filterHasAnswer = ref(false);
 const page = ref(1);
 const data = ref<Awaited<ReturnType<typeof fetchInner>> | null>(null);
@@ -67,8 +67,8 @@ fetchData();
     </UButton>
   </div>
 
-  <div class="flex flex-row justify-between gap-5 pb-8">
-    <div class="flex flex-wrap pb-4 gap-3 flex-1">
+  <div class="flex flex-row justify-between gap-5 mb-8 border p-4">
+    <div class="flex flex-wrap gap-3 flex-1">
       <UInput
         v-model="filterSearch"
         :placeholder="t('Suchen')"
@@ -77,19 +77,21 @@ fetchData();
 
       <UCheckbox variant="card" v-model="filterFromSelf" class="flex-1">
         <template #label>
-          <span class="text-sm font-semibold">{{ t("Meine Vorschläge") }}</span>
+          <span class="text-sm font-semibold whitespace-nowrap">{{
+            t("Meine Vorschläge")
+          }}</span>
         </template>
       </UCheckbox>
 
       <UCheckbox variant="card" v-model="filterHasAnswer" class="flex-1">
         <template #label>
-          <span class="text-sm font-semibold">{{
-            t("Beantwortete Vorschläge")
+          <span class="text-sm font-semibold whitespace-nowrap">{{
+            t("Nur Beantwortet")
           }}</span>
         </template>
       </UCheckbox>
 
-      <UButton @click="applyFilter">
+      <UButton @click="applyFilter" class="flex-1 whitespace-nowrap">
         {{ t("Filter anwenden") }}
       </UButton>
     </div>
@@ -97,7 +99,9 @@ fetchData();
 
   <div v-if="data" class="flex flex-col gap-4">
     <div v-for="item in data.data" :key="item.id">
-      <CollectivoCard :color="item.status === 'inarbeit' ? 'orange' : 'green'">
+      <CollectivoCardNew
+        :color="item.status === 'inarbeit' ? 'orange' : 'green'"
+      >
         <div class="flex flex-wrap gap-3 items-center justify-between">
           <div>
             <p class="font-bold">{{ item.name }}</p>
@@ -109,11 +113,11 @@ fetchData();
           <div class="text-sm text-white font-semibold">
             <span
               v-if="item.status === 'inarbeit'"
-              class="bg-orange-500 px-2 py-1 rounded"
+              class="bg-orange-500 px-2 py-1"
             >
               {{ t("In progress") }}
             </span>
-            <span v-else class="bg-green-500 px-2 py-1 rounded">
+            <span v-else class="bg-green-500 px-2 py-1">
               {{ t("Answered") }}
             </span>
           </div>
@@ -127,7 +131,7 @@ fetchData();
           <p class="font-bold">{{ t("Response") }}:</p>
           <p>{{ item.antwort }}</p>
         </div>
-      </CollectivoCard>
+      </CollectivoCardNew>
     </div>
     <UPagination
       v-model:page="page"
