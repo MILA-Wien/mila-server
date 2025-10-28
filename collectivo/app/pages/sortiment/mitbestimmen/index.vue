@@ -127,9 +127,12 @@ fetchData();
           <p>{{ item.wunsch }}</p>
         </div>
 
-        <div v-if="item.antwort && item.antwort.length > 0" class="mt-4">
+        <div v-if="item.status != 'inarbeit'" class="mt-4">
           <p class="font-bold">{{ t("Response") }}:</p>
-          <p>{{ item.antwort }}</p>
+          <p>{{ t("t:" + item.status) }}</p>
+          <p v-if="item.antwort && item.antwort.length > 0">
+            {{ item.antwort }}
+          </p>
         </div>
       </CollectivoCardNew>
     </div>
@@ -145,7 +148,16 @@ fetchData();
 </template>
 
 <i18n lang="yaml">
+en:
+  "t:bereitsda": "This product is already available in our product range."
+  "t:gehtnicht": "Unfortunately, we cannot include this product in our product range."
+  "t:habensimilar": "We already have a similar product in our product range."
+  "t:erledigt": "Your suggestion has been included in the product range :)"
 de:
+  "t:bereitsda": "Dieses Produkt ist bereits in unserem Sortiment verfügbar."
+  "t:gehtnicht": "Leider können wir dieses Produkt nicht in unser Sortiment aufnehmen."
+  "t:habensimilar": "Wir haben bereits ein ähnliches Produkt im Sortiment."
+  "t:erledigt": "Dein Vorschlag wurde ins Sortiment aufgenommen :)"
   Participate: Mitwirken
   "Product requests": "Sortimentswünsche"
   "Open request list": "Wunschliste öffnen"
