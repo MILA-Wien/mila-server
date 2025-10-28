@@ -10,7 +10,7 @@ setPageTitle(t("Sortiment mitbestimmen"), {
 });
 
 const filterSearch = ref("");
-const filterFromSelf = ref(true);
+const filterFromSelf = ref(false);
 const filterHasAnswer = ref(false);
 const page = ref(1);
 const data = ref<Awaited<ReturnType<typeof fetchInner>> | null>(null);
