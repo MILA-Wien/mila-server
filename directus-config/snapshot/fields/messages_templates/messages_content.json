@@ -11,7 +11,7 @@
     "group": null,
     "hidden": false,
     "interface": "input-rich-text-html",
-    "note": "Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.",
+    "note": "Verwende {{recipient_username}} um Anzeigenamen automatisch einzufügen.",
     "options": {
       "toolbar": [
         "blockquote",

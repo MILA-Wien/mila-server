@@ -1835,7 +1835,7 @@ type messages_templates {
   id: ID!
 
   """
-  Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
+  Verwende {{recipient_username}} um Anzeigenamen automatisch einzufügen.
   """
   messages_content: String
   messages_design(filter: messages_designs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_designs
@@ -1867,7 +1867,7 @@ type messages_templates_aggregated_count {
   id: Int
 
   """
-  Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
+  Verwende {{recipient_username}} um Anzeigenamen automatisch einzufügen.
   """
   messages_content: Int
   messages_design: Int
@@ -2118,7 +2118,7 @@ type product_requests {
   wunsch_von(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
 
   """
-  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit".
+  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit". Aktualisieren des Status versendet eine automatische Info-Mail an das Mitglied (siehe Automatisierung -> sortiment_update).
   """
   status: String
   assigned(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
@@ -2153,7 +2153,7 @@ type product_requests_aggregated_count {
   wunsch_von: Int
 
   """
-  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit".
+  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit". Aktualisieren des Status versendet eine automatische Info-Mail an das Mitglied (siehe Automatisierung -> sortiment_update).
   """
   status: Int
 
@@ -2815,7 +2815,7 @@ type version_messages_templates {
   id: ID
 
   """
-  Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
+  Verwende {{recipient_username}} um Anzeigenamen automatisch einzufügen.
   """
   messages_content: String
   messages_design: JSON
@@ -2898,7 +2898,7 @@ type version_product_requests {
   wunsch_von: JSON
 
   """
-  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit".
+  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit". Aktualisieren des Status versendet eine automatische Info-Mail an das Mitglied (siehe Automatisierung -> sortiment_update).
   """
   status: String
   assigned: JSON
@@ -3528,7 +3528,7 @@ input create_messages_templates_input {
   id: ID
 
   """
-  Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
+  Verwende {{recipient_username}} um Anzeigenamen automatisch einzufügen.
   """
   messages_content: String
   messages_design: create_messages_designs_input
@@ -3606,7 +3606,7 @@ input create_product_requests_input {
   wunsch_von: create_memberships_input
 
   """
-  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit".
+  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit". Aktualisieren des Status versendet eine automatische Info-Mail an das Mitglied (siehe Automatisierung -> sortiment_update).
   """
   status: String
   assigned: create_directus_users_input
@@ -5306,7 +5306,7 @@ input update_messages_templates_input {
   id: ID
 
   """
-  Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
+  Verwende {{recipient_username}} um Anzeigenamen automatisch einzufügen.
   """
   messages_content: String
   messages_design: update_messages_designs_input
@@ -5384,7 +5384,7 @@ input update_product_requests_input {
   wunsch_von: update_memberships_input
 
   """
-  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit".
+  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit". Aktualisieren des Status versendet eine automatische Info-Mail an das Mitglied (siehe Automatisierung -> sortiment_update).
   """
   status: String
   assigned: update_directus_users_input

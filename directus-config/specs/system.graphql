@@ -2040,7 +2040,7 @@ type messages_templates {
   id: ID!
 
   """
-  Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
+  Verwende {{recipient_username}} um Anzeigenamen automatisch einzufügen.
   """
   messages_content: String
   messages_design(filter: messages_designs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): messages_designs
@@ -2166,7 +2166,7 @@ type product_requests {
   wunsch_von(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): memberships
 
   """
-  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit".
+  Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen "inarbeit". Aktualisieren des Status versendet eine automatische Info-Mail an das Mitglied (siehe Automatisierung -> sortiment_update).
   """
   status: String
   assigned(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
@@ -3149,7 +3149,7 @@ input create_messages_templates_input {
   id: ID
 
   """
-  Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
+  Verwende {{recipient_username}} um Anzeigenamen automatisch einzufügen.
   """
   messages_content: String
   messages_design: create_messages_designs_input
@@ -5077,7 +5077,7 @@ input update_messages_templates_input {
   id: ID
 
   """
-  Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.
+  Verwende {{recipient_username}} um Anzeigenamen automatisch einzufügen.
   """
   messages_content: String
   messages_design: update_messages_designs_input

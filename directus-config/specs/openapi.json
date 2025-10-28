@@ -21827,7 +21827,7 @@
           },
           "messages_content": {
             "nullable": true,
-            "description": "Verwende {{recipient_first_name}} {{recipient_last_name}} um Vor- und Nachnamen automatisch einzufügen.",
+            "description": "Verwende {{recipient_username}} um Anzeigenamen automatisch einzufügen.",
             "type": "string"
           },
           "messages_design": {
@@ -22708,7 +22708,7 @@
           },
           "status": {
             "nullable": true,
-            "description": "Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen \"inarbeit\".",
+            "description": "Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen \"inarbeit\". Aktualisieren des Status versendet eine automatische Info-Mail an das Mitglied (siehe Automatisierung -> sortiment_update).",
             "type": "string"
           },
           "assigned": {

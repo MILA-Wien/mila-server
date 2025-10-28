@@ -11,7 +11,7 @@
     "group": null,
     "hidden": false,
     "interface": "select-dropdown",
-    "note": "Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen \"inarbeit\".",
+    "note": "Dieser Status wird Mitgliedern angezeigt. Neue Vorschläge bekommen \"inarbeit\". Aktualisieren des Status versendet eine automatische Info-Mail an das Mitglied (siehe Automatisierung -> sortiment_update).",
     "options": {
       "choices": [
         {
