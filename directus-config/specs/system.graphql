@@ -269,7 +269,6 @@ type Subscription {
   collectivo_tiles_buttons_mutated(event: EventEnum): collectivo_tiles_buttons_mutated
   junction_directus_users_files_mutated(event: EventEnum): junction_directus_users_files_mutated
   memberships_mutated(event: EventEnum): memberships_mutated
-  memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
   memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
   memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
   memberships_shifts_categories_mutated(event: EventEnum): memberships_shifts_categories_mutated
@@ -289,6 +288,7 @@ type Subscription {
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
   product_requests_mutated(event: EventEnum): product_requests_mutated
+  memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   bedarfsmeldung_solitopf_mutated(event: EventEnum): bedarfsmeldung_solitopf_mutated
 }
@@ -1906,6 +1906,7 @@ type memberships_coshoppers {
   membership_card_id: String
   user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  email: String
 }
 
 type memberships_coshoppers_mutated {
@@ -3036,6 +3037,7 @@ input create_memberships_coshoppers_input {
   membership_card_id: String
   user_created: create_directus_users_input
   user_updated: create_directus_users_input
+  email: String
 }
 
 input create_memberships_input {
@@ -3995,6 +3997,7 @@ input memberships_coshoppers_filter {
   membership_card_id: string_filter_operators
   user_created: directus_users_filter
   user_updated: directus_users_filter
+  email: string_filter_operators
   _and: [memberships_coshoppers_filter]
   _or: [memberships_coshoppers_filter]
 }
@@ -4964,6 +4967,7 @@ input update_memberships_coshoppers_input {
   membership_card_id: String
   user_created: update_directus_users_input
   user_updated: update_directus_users_input
+  email: String
 }
 
 input update_memberships_input {

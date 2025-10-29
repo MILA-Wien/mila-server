@@ -29,10 +29,6 @@ type Query {
   memberships_by_id(id: ID!, version: String): memberships
   memberships_aggregated(groupBy: [String], filter: memberships_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_aggregated!]!
   memberships_by_version(version: String!, id: ID!): version_memberships
-  memberships_coshoppers(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_coshoppers!]!
-  memberships_coshoppers_by_id(id: ID!, version: String): memberships_coshoppers
-  memberships_coshoppers_aggregated(groupBy: [String], filter: memberships_coshoppers_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_coshoppers_aggregated!]!
-  memberships_coshoppers_by_version(version: String!, id: ID!): version_memberships_coshoppers
   memberships_memberships_coshoppers(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_memberships_coshoppers!]!
   memberships_memberships_coshoppers_by_id(id: ID!, version: String): memberships_memberships_coshoppers
   memberships_memberships_coshoppers_aggregated(groupBy: [String], filter: memberships_memberships_coshoppers_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_memberships_coshoppers_aggregated!]!
@@ -105,6 +101,10 @@ type Query {
   product_requests_by_id(id: ID!, version: String): product_requests
   product_requests_aggregated(groupBy: [String], filter: product_requests_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [product_requests_aggregated!]!
   product_requests_by_version(version: String!, id: ID!): version_product_requests
+  memberships_coshoppers(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships_coshoppers!]!
+  memberships_coshoppers_by_id(id: ID!, version: String): memberships_coshoppers
+  memberships_coshoppers_aggregated(groupBy: [String], filter: memberships_coshoppers_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_coshoppers_aggregated!]!
+  memberships_coshoppers_by_version(version: String!, id: ID!): version_memberships_coshoppers
   shifts_shifts(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_shifts!]!
   shifts_shifts_by_id(id: ID!, version: String): shifts_shifts
   shifts_shifts_aggregated(groupBy: [String], filter: shifts_shifts_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_shifts_aggregated!]!
@@ -130,8 +130,6 @@ type Mutation {
   create_junction_directus_users_files_item(data: create_junction_directus_users_files_input!): junction_directus_users_files
   create_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_input!]): [memberships!]!
   create_memberships_item(data: create_memberships_input!): memberships
-  create_memberships_coshoppers_items(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_coshoppers_input!]): [memberships_coshoppers!]!
-  create_memberships_coshoppers_item(data: create_memberships_coshoppers_input!): memberships_coshoppers
   create_memberships_memberships_coshoppers_items(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_memberships_coshoppers_input!]): [memberships_memberships_coshoppers!]!
   create_memberships_memberships_coshoppers_item(data: create_memberships_memberships_coshoppers_input!): memberships_memberships_coshoppers
   create_memberships_memberships_coshoppers_1_items(filter: memberships_memberships_coshoppers_1_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_memberships_coshoppers_1_input!]): [memberships_memberships_coshoppers_1!]!
@@ -168,6 +166,8 @@ type Mutation {
   create_shifts_logs_item(data: create_shifts_logs_input!): shifts_logs
   create_product_requests_items(filter: product_requests_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_product_requests_input!]): [product_requests!]!
   create_product_requests_item(data: create_product_requests_input!): product_requests
+  create_memberships_coshoppers_items(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_coshoppers_input!]): [memberships_coshoppers!]!
+  create_memberships_coshoppers_item(data: create_memberships_coshoppers_input!): memberships_coshoppers
   create_shifts_shifts_items(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_shifts_input!]): [shifts_shifts!]!
   create_shifts_shifts_item(data: create_shifts_shifts_input!): shifts_shifts
   create_bedarfsmeldung_solitopf_items(filter: bedarfsmeldung_solitopf_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_bedarfsmeldung_solitopf_input!]): [bedarfsmeldung_solitopf!]!
@@ -194,9 +194,6 @@ type Mutation {
   update_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_input!): [memberships!]!
   update_memberships_batch(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_input!]): [memberships!]!
   update_memberships_item(id: ID!, data: update_memberships_input!): memberships
-  update_memberships_coshoppers_items(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_coshoppers_input!): [memberships_coshoppers!]!
-  update_memberships_coshoppers_batch(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_coshoppers_input!]): [memberships_coshoppers!]!
-  update_memberships_coshoppers_item(id: ID!, data: update_memberships_coshoppers_input!): memberships_coshoppers
   update_memberships_memberships_coshoppers_items(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_memberships_coshoppers_input!): [memberships_memberships_coshoppers!]!
   update_memberships_memberships_coshoppers_batch(filter: memberships_memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_memberships_coshoppers_input!]): [memberships_memberships_coshoppers!]!
   update_memberships_memberships_coshoppers_item(id: ID!, data: update_memberships_memberships_coshoppers_input!): memberships_memberships_coshoppers
@@ -251,6 +248,9 @@ type Mutation {
   update_product_requests_items(filter: product_requests_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_product_requests_input!): [product_requests!]!
   update_product_requests_batch(filter: product_requests_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_product_requests_input!]): [product_requests!]!
   update_product_requests_item(id: ID!, data: update_product_requests_input!): product_requests
+  update_memberships_coshoppers_items(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_coshoppers_input!): [memberships_coshoppers!]!
+  update_memberships_coshoppers_batch(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_coshoppers_input!]): [memberships_coshoppers!]!
+  update_memberships_coshoppers_item(id: ID!, data: update_memberships_coshoppers_input!): memberships_coshoppers
   update_shifts_shifts_items(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_shifts_input!): [shifts_shifts!]!
   update_shifts_shifts_batch(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_shifts_input!]): [shifts_shifts!]!
   update_shifts_shifts_item(id: ID!, data: update_shifts_shifts_input!): shifts_shifts
@@ -271,8 +271,6 @@ type Mutation {
   delete_junction_directus_users_files_item(id: ID!): delete_one
   delete_memberships_items(ids: [ID]!): delete_many
   delete_memberships_item(id: ID!): delete_one
-  delete_memberships_coshoppers_items(ids: [ID]!): delete_many
-  delete_memberships_coshoppers_item(id: ID!): delete_one
   delete_memberships_memberships_coshoppers_items(ids: [ID]!): delete_many
   delete_memberships_memberships_coshoppers_item(id: ID!): delete_one
   delete_memberships_memberships_coshoppers_1_items(ids: [ID]!): delete_many
@@ -309,6 +307,8 @@ type Mutation {
   delete_shifts_logs_item(id: ID!): delete_one
   delete_product_requests_items(ids: [ID]!): delete_many
   delete_product_requests_item(id: ID!): delete_one
+  delete_memberships_coshoppers_items(ids: [ID]!): delete_many
+  delete_memberships_coshoppers_item(id: ID!): delete_one
   delete_shifts_shifts_items(ids: [ID]!): delete_many
   delete_shifts_shifts_item(id: ID!): delete_one
   delete_bedarfsmeldung_solitopf_items(ids: [ID]!): delete_many
@@ -344,7 +344,6 @@ type Subscription {
   collectivo_tiles_buttons_mutated(event: EventEnum): collectivo_tiles_buttons_mutated
   junction_directus_users_files_mutated(event: EventEnum): junction_directus_users_files_mutated
   memberships_mutated(event: EventEnum): memberships_mutated
-  memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
   memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
   memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
   memberships_shifts_categories_mutated(event: EventEnum): memberships_shifts_categories_mutated
@@ -364,6 +363,7 @@ type Subscription {
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
   product_requests_mutated(event: EventEnum): product_requests_mutated
+  memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   bedarfsmeldung_solitopf_mutated(event: EventEnum): bedarfsmeldung_solitopf_mutated
 }
@@ -1482,6 +1482,7 @@ type memberships_coshoppers {
   membership_card_id: String
   user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  email: String
 }
 
 type memberships_coshoppers_aggregated {
@@ -1508,6 +1509,7 @@ type memberships_coshoppers_aggregated_count {
   membership_card_id: Int
   user_created: Int
   user_updated: Int
+  email: Int
 }
 
 type memberships_coshoppers_aggregated_fields {
@@ -2738,6 +2740,7 @@ type version_memberships_coshoppers {
   membership_card_id: String
   user_created: JSON
   user_updated: JSON
+  email: String
 }
 
 """"""
@@ -3415,6 +3418,7 @@ input create_memberships_coshoppers_input {
   membership_card_id: String
   user_created: create_directus_users_input
   user_updated: create_directus_users_input
+  email: String
 }
 
 input create_memberships_input {
@@ -4339,6 +4343,7 @@ input memberships_coshoppers_filter {
   membership_card_id: string_filter_operators
   user_created: directus_users_filter
   user_updated: directus_users_filter
+  email: string_filter_operators
   _and: [memberships_coshoppers_filter]
   _or: [memberships_coshoppers_filter]
 }
@@ -5193,6 +5198,7 @@ input update_memberships_coshoppers_input {
   membership_card_id: String
   user_created: update_directus_users_input
   user_updated: update_directus_users_input
+  email: String
 }
 
 input update_memberships_input {
