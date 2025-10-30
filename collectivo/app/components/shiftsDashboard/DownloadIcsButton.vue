@@ -105,7 +105,11 @@ END:VCALENDAR`;
 
   const link = document.createElement("a");
   link.href = url;
-  link.download = "event.ics";
+  const safeShiftName = shift.shifts_name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-") // replace special chars with "-"
+    .replace(/(^-|-$)/g, ""); // remove leading/trailing dashes
+  link.download = `mila-shift-${safeShiftName}-${nextOccurrenceStart.toFormat("yyyyMMdd-HHmm")}-${assignment.id}.ics`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
