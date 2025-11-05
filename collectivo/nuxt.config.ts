@@ -34,11 +34,11 @@ export default defineNuxtConfig({
     emailSmtpUser: process.env.EMAIL_SMTP_USER || "",
     emailSmtpPassword: process.env.EMAIL_SMTP_PASSWORD || "",
 
-    lotzappMandant: "",
-    lotzappSepaId: "",
-    lotzappTransferId: "",
-    lotzappUser: "",
-    lotzappPassword: "",
+    lotzappMandant: process.env.LOTZAPP_MANDANT || "",
+    lotzappSepaId: process.env.LOTZAPP_SEPA_ID || "",
+    lotzappTransferId: process.env.LOTZAPP_TRANSFER_ID || "",
+    lotzappUser: process.env.LOTZAPP_USER || "",
+    lotzappPassword: process.env.LOTZAPP_PASSWORD || "",
 
     public: {
       useKeycloak: process.env.USE_KEYCLOAK === "true" || false,

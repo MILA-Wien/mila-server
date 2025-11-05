@@ -28,6 +28,7 @@ export interface UserProfile {
   pronouns: string;
   buddy_status: "keine_angabe" | "is_buddy" | "need_buddy";
   buddy_details: string;
+  lotzapp_id: string;
 }
 
 export interface Tag {

@@ -2,6 +2,7 @@ export interface UserInfo {
   user: string;
   email: string;
   mship?: number;
+  lotzappId?: string;
   studioAdmin: boolean;
   shiftAdmin: boolean;
 }
