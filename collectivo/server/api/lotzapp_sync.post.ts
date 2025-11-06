@@ -5,7 +5,6 @@ const config = useRuntimeConfig();
 const lotzapp_mandant = config.lotzappMandant;
 const lotzapp_sepa_id = config.lotzappSepaId;
 const lotzapp_transfer_id = config.lotzappTransferId;
-
 const lotzapp_auth =
   "Basic  " +
   Buffer.from(config.lotzappUser + ":" + config.lotzappPassword).toString(
