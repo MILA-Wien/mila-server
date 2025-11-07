@@ -53,7 +53,7 @@ function getMonthRange(date: Date) {
 
 const monthRange = computed(() => getMonthRange(currentMonth.value));
 
-// initialer Fetch (kein watch in useFetch, wir steuern selbst)
+// initialer Fetch
 const {
   data: belege,
   pending,
@@ -64,7 +64,6 @@ const {
   watch: false,
 });
 
-// neu laden, wenn sich from/to ändern
 watch(
   monthRange,
   () => {
@@ -92,33 +91,48 @@ const monthLabel = computed(() =>
 </script>
 
 <template>
+  <BetaMessage />
   <div class="space-y-4">
-    <div class="flex items-center gap-3 border-2 w-96 px-4 justify-between">
+    <div class="border-2 w-full p-3">{{ t("intro_belege") }}</div>
+    <div class="flex items-center gap-3 border-2 w-full p-3 justify-between">
       <UButton
         icon="i-heroicons-chevron-left"
         variant="ghost"
+        color="gray"
+        style="background-color: transparent !important"
         @click="prevMonth"
       />
-      <h2 class="pt-3">{{ monthLabel }}</h2>
+      <div class="text-lg font-bold">{{ monthLabel }}</div>
       <UButton
         icon="i-heroicons-chevron-right"
         variant="ghost"
+        color="gray"
+        style="background-color: transparent !important"
         @click="nextMonth"
       />
     </div>
 
-    <div v-if="pending" class="text-gray-500">Lade Belege…</div>
-    <div v-else-if="error" class="text-red-600">
+    <div v-if="pending" class="text-gray-500">
+      <USkeleton class="w-full mb-4 h-28" />
+    </div>
+    <div
+      v-else-if="error"
+      class="text-red-600 border-2 border-red-600 p-6 text-center font-bold"
+    >
       Fehler beim Laden der Belege
     </div>
 
-    <CollectivoCardNew v-for="(beleg, ind) in belege" :key="ind" class="p-3">
-      <BelegeBelegZettel :beleg="beleg" />
-    </CollectivoCardNew>
+    <div
+      class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full max-w-6xl mx-auto"
+    >
+      <template v-for="(beleg, index) in belege" :key="index" class="p-3">
+        <BelegeBelegZettel :beleg="beleg" />
+      </template>
+    </div>
 
     <div
       v-if="!pending && (!belege || belege.length === 0)"
-      class="text-gray-400 text-center"
+      class="text-gray-400 text-center border-2 border-gray-300 p-6 font-bold"
     >
       Keine Belege für diesen Monat
     </div>
@@ -126,7 +140,8 @@ const monthLabel = computed(() =>
 </template>
 
 <i18n lang="yaml">
+de:
+  "intro_belege": "Hier findest du eine Übersicht deiner Einkäufe. Bitte beachte: Nur Einkäufe, bei denen du deine Mitgliedskarte an der Kassa scannst, werden deiner Mitgliedschaft zugeordnet."
 en:
-  "Sortiment": "Product range"
-  "Sortiment mitbestimmen": "Product range participation"
+  "intro_belege": "Here you will find an overview of your purchases. Please note: Only purchases where you scan your membership card at the checkout will be assigned to your membership."
 </i18n>

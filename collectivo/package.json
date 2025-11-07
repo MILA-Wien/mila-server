@@ -28,6 +28,7 @@
     "@fullcalendar/vue3": "^6.1.17",
     "@keycloak/keycloak-admin-client": "^26.2.4",
     "axios": "^1.13.2",
+    "html2pdf.js": "^0.12.1",
     "ibantools": "^4.5.1",
     "keycloak-js": "^26.2.0",
     "luxon": "^3.6.1",

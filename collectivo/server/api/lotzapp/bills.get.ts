@@ -38,47 +38,55 @@ export default defineEventHandler(async (event) => {
     return `https://api.lotzapp.org/account/account/${accountID}/receipt?${params.toString()}`;
   };
 
-  const accountIDs = [10]; //, 12, 13];
+  const accountIDs = [10, 12, 13];
   console.log("Fetching accounts:", accountIDs);
   const url = buildUrl(10);
 
   // TODO Temporary unsafe solution
   const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
-  const res = await axios.get(url, {
-    httpsAgent,
-    headers: {
-      Authorization: lotzapp_auth,
-      "x-client-id": lotzapp_mandant,
-    },
-  });
+  // const res = await axios.get(url, {
+  //   httpsAgent,
+  //   headers: {
+  //     Authorization: lotzapp_auth,
+  //     "x-client-id": lotzapp_mandant,
+  //   },
+  // });
 
-  console.log("Response data:", res.data);
+  // console.log("Response data:", res.data);
 
-  return res.data;
+  // return res.data;
   // Fetch all in parallel
-  // const results = await Promise.allSettled(
-  //   accountIDs.map(async (id) => {
-  //     const url = buildUrl(id);
-  //     console.log(url);
-  //     try {
-  //       const res = await $fetch(url, {
-  //         method: "GET",
-  //         headers: {
-  //           Authorization: lotzapp_auth,
-  //           "x-client-id": lotzapp_mandant,
-  //         },
-  //       });
-  //       console.log(
-  //         `[OK] Account ${id}: received ${Array.isArray(res) ? res.length : 1} items`,
-  //       );
-  //       return res;
-  //     } catch (err: any) {
-  //       console.error(`[FAIL] Account ${id}: ${err?.message || err}`);
-  //       throw err
-  //     }
-  //   }),
-  // );
+  const results = await Promise.allSettled(
+    accountIDs.map(async (id) => {
+      const url = buildUrl(id);
+      console.log(url);
+      try {
+        // const res = await $fetch(url, {
+        //   method: "GET",
+        //   headers: {
+        //     Authorization: lotzapp_auth,
+        //     "x-client-id": lotzapp_mandant,
+        //   },
+        // });
+        const res = await axios.get(url, {
+          httpsAgent,
+          headers: {
+            Authorization: lotzapp_auth,
+            "x-client-id": lotzapp_mandant,
+          },
+        });
+
+        console.log(
+          `[OK] Account ${id}: received ${Array.isArray(res.data) ? res.data.length : 1} items`,
+        );
+        return res.data;
+      } catch (err: any) {
+        console.error(`[FAIL] Account ${id}: ${err?.message || err}`);
+        throw err;
+      }
+    }),
+  );
 
   // Collect successful responses
   const data = results
@@ -86,9 +94,24 @@ export default defineEventHandler(async (event) => {
     .map((r: any) => r.value)
     .flat(); // flatten if arrays
 
-  // Optional: sum numeric fields (if needed)
-  // e.g. total amount:
-  // const total = data.reduce((sum, item) => sum + (item.amount || 0), 0)
-
-  return data;
+  return combineByExternalNumber(data);
 });
+
+function combineByExternalNumber(list: any[]) {
+  // only keep elements with name === 'Verkauf'
+  const filtered = list.filter((item) => item.name === "Verkauf");
+
+  const grouped = {};
+
+  for (const item of filtered) {
+    const key = item.external_number;
+    if (!grouped[key]) {
+      grouped[key] = { ...item, positions: [...item.positions] };
+    } else {
+      grouped[key].total += item.total;
+      grouped[key].positions.push(...item.positions);
+    }
+  }
+
+  return Object.values(grouped);
+}
