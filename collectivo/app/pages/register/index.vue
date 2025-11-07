@@ -637,6 +637,16 @@ async function onError(event: FormErrorEvent) {
       <h2>{{ t("Type of membership") }}</h2>
       <p v-if="isNatural">
         {{ t("t:mila_form_mtype_natural") }}
+        <br /><br />
+        Mehr Informationen zu den Mitmachschichten findest du
+        <a
+          class="font-bold"
+          href="https://www.mila.wien/mitmachen/mitmach-schicht/"
+          >hier</a
+        >. Eine Befreiungen von Mitmach-Schichten sind unter bestimmten
+        Voraussetzungen (über 70 Jahre, Krankheit, Behinderung, Mutterschutz
+        etc.) möglich. Bitte nach erfolgtem Beitritt bei mitglied@mila.wien
+        melden.
       </p>
       <p v-else>
         {{ t("t:mila_form_mtype_orga") }}
@@ -809,15 +819,15 @@ async function onError(event: FormErrorEvent) {
         :label="t('Do you want to participate in a working group?')"
         name="directus_users__mila_groups_interested_2"
       >
-        <div class="text-sm mb-2">
+        <!-- <div class="text-sm mb-2">
           {{ t("You can find more information about the working groups") }}
           <a
-            href="https://www.mila.wien/mitmachen/arbeitsgruppen/"
+            href="https://handbuch.mila.wien/books/mitglieder-handbuch/page/arbeitsgruppen"
             target="_blank"
             class="font-bold"
             >{{ t("here") }}</a
           >.
-        </div>
+        </div> -->
         <FormsCheckboxGroup
           v-model="state.directus_users__mila_groups_interested_2"
           :choices="[
