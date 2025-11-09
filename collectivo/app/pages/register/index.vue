@@ -674,6 +674,25 @@ async function onError(event: FormErrorEvent) {
       </URadioGroup>
     </FormsFormGroup>
 
+    <div class="pt-6" v-if="isNatural">
+      <h2>{{ t("Co-shopper") }}</h2>
+      <p>
+        You can include a co-shopper in your membership. This person can shop as
+        well and will receive their own membership card.
+      </p>
+      <div class="grid md:grid-cols-2 gap-4 pt-3">
+        <FormsFormGroup :label="t('Vorname')" name="coshopper_firstname">
+          <UInput variant="outline" v-model="state.coshopper_firstname" />
+        </FormsFormGroup>
+        <FormsFormGroup :label="t('Nachname')" name="coshopper_lastname">
+          <UInput variant="outline" v-model="state.coshopper_lastname" />
+        </FormsFormGroup>
+        <FormsFormGroup :label="t('Email')" name="coshopper_email" required>
+          <UInput variant="outline" v-model="state.coshopper_email" />
+        </FormsFormGroup>
+      </div>
+    </div>
+
     <div class="pt-6">
       <h2>{{ t("Cooperative shares") }}</h2>
       <p>
