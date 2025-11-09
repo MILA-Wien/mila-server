@@ -53,22 +53,26 @@ const vatSummary = computed(() => {
     const net = round2(pos.net * pos.amount);
     const vat = round2(gross - net);
 
-    // ✅ Round *each* item first before adding — avoids 0.01 drifts
     summary[key].gross = round2(summary[key].gross + gross);
     summary[key].net = round2(summary[key].net + net);
     summary[key].vat = round2(summary[key].vat + vat);
   }
 
-  // Sort in order: 10 → 20 → 0 (A → B → D)
-  const order = [10, 20, 0];
+  // Sort in order
+  const order = [10, 20, 13, 0];
   return Object.values(summary).sort(
     (a, b) => order.indexOf(a.rate) - order.indexOf(b.rate),
   );
 });
 
-// helper
-function round2(n: number) {
-  return Math.round((n + Number.EPSILON) * 100) / 100;
+// Round to 2 decimals, same way for negative values
+function round2(value: number): number {
+  const factor = 100;
+  if (value >= 0) {
+    return Math.round(value * factor) / factor;
+  } else {
+    return -Math.round(Math.abs(value) * factor) / factor;
+  }
 }
 
 import html2pdf from "html2pdf.js";
@@ -109,7 +113,7 @@ function downloadPDF() {
 
 <template>
   <div
-    class="text-sm bg-white text-gray-900 border border-gray-300 p-4 mx-auto shadow w-full flex flex-col"
+    class="mb-6 relative overflow-hidden inline-block text-sm bg-white text-gray-900 border border-gray-300 p-4 mx-auto shadow w-full"
   >
     <div ref="receiptRef" class="pb-2">
       <!-- Header -->
@@ -179,7 +183,9 @@ function downloadPDF() {
                     ? "A: 10%"
                     : vals.rate === 20
                       ? "B: 20%"
-                      : "D: 0%"
+                      : vals.rate === 13
+                        ? "C: 13%"
+                        : "D: 0%"
                 }}
               </td>
               <td class="text-right">{{ vals.net.toFixed(2) }}</td>

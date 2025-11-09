@@ -122,9 +122,7 @@ const monthLabel = computed(() =>
       Fehler beim Laden der Belege
     </div>
 
-    <div
-      class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full max-w-6xl mx-auto"
-    >
+    <div class="columns-1 xl:columns-2 gap-6 w-full max-w-6xl mx-auto">
       <template v-for="(beleg, index) in belege" :key="index" class="p-3">
         <BelegeBelegZettel :beleg="beleg" />
       </template>

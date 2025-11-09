@@ -3,7 +3,7 @@ import https from "https";
 import axios from "axios";
 
 const config = useRuntimeConfig();
-const agent = new https.Agent({ rejectUnauthorized: false });
+const accountIDs = [10, 12, 13];
 const lotzapp_mandant = config.lotzappMandant;
 const lotzapp_auth =
   "Basic  " +
@@ -38,24 +38,9 @@ export default defineEventHandler(async (event) => {
     return `https://api.lotzapp.org/account/account/${accountID}/receipt?${params.toString()}`;
   };
 
-  const accountIDs = [10, 12, 13];
-  console.log("Fetching accounts:", accountIDs);
-  const url = buildUrl(10);
-
   // TODO Temporary unsafe solution
   const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
-  // const res = await axios.get(url, {
-  //   httpsAgent,
-  //   headers: {
-  //     Authorization: lotzapp_auth,
-  //     "x-client-id": lotzapp_mandant,
-  //   },
-  // });
-
-  // console.log("Response data:", res.data);
-
-  // return res.data;
   // Fetch all in parallel
   const results = await Promise.allSettled(
     accountIDs.map(async (id) => {
@@ -76,10 +61,6 @@ export default defineEventHandler(async (event) => {
             "x-client-id": lotzapp_mandant,
           },
         });
-
-        console.log(
-          `[OK] Account ${id}: received ${Array.isArray(res.data) ? res.data.length : 1} items`,
-        );
         return res.data;
       } catch (err: any) {
         console.error(`[FAIL] Account ${id}: ${err?.message || err}`);
@@ -88,17 +69,15 @@ export default defineEventHandler(async (event) => {
     }),
   );
 
-  // Collect successful responses
   const data = results
     .filter((r) => r.status === "fulfilled")
     .map((r: any) => r.value)
-    .flat(); // flatten if arrays
+    .flat();
 
   return combineByExternalNumber(data);
 });
 
 function combineByExternalNumber(list: any[]) {
-  // only keep elements with name === 'Verkauf'
   const filtered = list.filter((item) => item.name === "Verkauf");
 
   const grouped = {};
@@ -113,5 +92,13 @@ function combineByExternalNumber(list: any[]) {
     }
   }
 
-  return Object.values(grouped);
+  const data = Object.values(grouped);
+
+  data.sort((a, b) => {
+    const ta = Date.parse(a.timestamp ?? "") || 0;
+    const tb = Date.parse(b.timestamp ?? "") || 0;
+    return tb - ta;
+  });
+
+  return data;
 }
