@@ -77,10 +77,6 @@ const categories = ref<ShiftsCategory[]>([
     id: -1,
     name: "Alle Kategorien",
   },
-  {
-    id: 0,
-    name: "Normal",
-  },
 ]);
 
 const selectedCategory = ref(categories.value[0]);
