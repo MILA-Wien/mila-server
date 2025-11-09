@@ -83,14 +83,13 @@ function downloadPDF() {
 
   const element = receiptRef.value.cloneNode(true) as HTMLElement;
 
-  // Optional: add a white background & extra padding for PDF rendering
   element.style.background = "white";
   element.style.padding = "16px";
   element.style.margin = "0 auto";
-  element.style.width = "80mm"; // good width for receipts
+  element.style.width = "80mm";
 
   const options: any = {
-    margin: [10, 10, 10, 10], // top, left, bottom, right (mm)
+    margin: [10, 10, 10, 10],
     filename: "Beleg.pdf",
     image: { type: "jpeg", quality: 0.98 },
     html2canvas: {
