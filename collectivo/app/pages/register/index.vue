@@ -53,7 +53,28 @@ const schema = object({
       then: (schema) => schema.required("Dieses Feld ist erforderlich"),
     },
   ),
-  directus_users__username: string().required("Dieses Feld ist erforderlich"),
+  directus_users__username: string().when("use_custom_username", {
+    is: true,
+    then: (schema) => schema.required("Dieses Feld ist erforderlich"),
+  }),
+  directus_users__username_last: string().when("use_custom_username", {
+    is: true,
+    then: (schema) => schema.required("Dieses Feld ist erforderlich"),
+  }),
+  coshopper_firstname: string().when("add_coshopper", {
+    is: true,
+    then: (schema) => schema.required("Dieses Feld ist erforderlich"),
+  }),
+  coshopper_lastname: string().when("add_coshopper", {
+    is: true,
+    then: (schema) => schema.required("Dieses Feld ist erforderlich"),
+  }),
+  coshopper_email: string()
+    .email()
+    .when("add_coshopper", {
+      is: true,
+      then: (schema) => schema.required("Dieses Feld ist erforderlich"),
+    }),
   directus_users__pronouns: string(),
   directus_users__use_pronouns_on_card: boolean(),
   directus_users__hide_name: boolean(),
@@ -151,10 +172,16 @@ const state: any = reactive({
   directus_users__email: undefined,
   directus_users__password: undefined,
   _pw_confirm: undefined,
+  use_custom_username: false,
+  add_coshopper: false,
+  coshopper_firstname: undefined,
+  coshopper_lastname: undefined,
+  coshopper_email: undefined,
   directus_users__memberships_organization_name: undefined,
   directus_users__memberships_organization_type: undefined,
   directus_users__memberships_organization_id: undefined,
   directus_users__username: undefined,
+  directus_users__username_last: undefined,
   directus_users__pronouns: undefined,
   directus_users__use_pronouns_on_card: false,
   directus_users__hide_name: false,
@@ -406,73 +433,6 @@ async function onError(event: FormErrorEvent) {
       </div>
     </template>
 
-    <div class="pt-6" v-if="isNatural">
-      <h2>
-        {{ t("Sichtbarer Name") }}
-      </h2>
-
-      <div>
-        {{
-          t(
-            "Dieser Name wird im Schichtplan und auf deiner Mitgliederkarte angezeigt. Er kann sich von deinem rechtlichen Namen unterscheiden.",
-          )
-        }}
-      </div>
-    </div>
-
-    <div class="grid gap-4" v-if="isNatural">
-      <FormsFormGroup
-        :label="t('Wie sollen wir dich ansprechen?')"
-        name="directus_users__username"
-        required
-      >
-        <template #description> </template>
-        <UInput variant="outline" v-model="state.directus_users__username" />
-      </FormsFormGroup>
-
-      <FormsFormGroup
-        :label="t('Mit welchen Pronomen möchtest du angesprochen werden?')"
-        :infotext="t('i_pronouns')"
-        name="directus_users__pronouns"
-      >
-        <UInput variant="outline" v-model="state.directus_users__pronouns" />
-      </FormsFormGroup>
-
-      <FormsFormGroup
-        name="directus_users__use_pronouns_on_card"
-        :label="t('Pronomen auf Mitgliederkarte')"
-        v-if="state.directus_users__pronouns"
-      >
-        <UCheckbox
-          variant="card"
-          v-model="state.directus_users__use_pronouns_on_card"
-        >
-          <template #label>
-            {{
-              t(
-                "Ich möchte, dass meine Pronomen auf meine Mitgliederkarte gedruckt werden.",
-              )
-            }}
-          </template>
-        </UCheckbox>
-      </FormsFormGroup>
-
-      <FormsFormGroup
-        name="directus_users__hide_name"
-        :label="t('Anonym bleiben')"
-      >
-        <UCheckbox variant="card" v-model="state.directus_users__hide_name">
-          <template #label>
-            {{
-              t(
-                "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform.",
-              )
-            }}
-          </template>
-        </UCheckbox>
-      </FormsFormGroup>
-    </div>
-
     <div class="pt-6">
       <h2 v-if="isNatural" class="mb-0 pb-0">
         {{ t("Personal data") }}
@@ -558,6 +518,93 @@ async function onError(event: FormErrorEvent) {
         </FormsFormGroup>
       </div>
     </div>
+
+    <div class="pt-6" v-if="isNatural">
+      <h2>
+        {{ t("Sichtbarer Name") }}
+      </h2>
+    </div>
+
+    <div class="grid gap-4" v-if="isNatural">
+      <FormsFormGroup
+        name="directus_users__hide_name"
+        :label="t('Selbstgewählter Name')"
+      >
+        <UCheckbox variant="card" v-model="state.use_custom_username">
+          <template #label>
+            {{
+              t(
+                "Ich möchte mit einem selbstgewählten Namen angesprochen werden, der von meinem amtlichen Namen abweicht.",
+              )
+            }}
+          </template>
+        </UCheckbox>
+      </FormsFormGroup>
+      <div class="grid md:grid-cols-2 gap-4" v-if="state.use_custom_username">
+        <FormsFormGroup
+          :label="t('Visible first name')"
+          name="directus_users__username"
+          required
+        >
+          <template #description> </template>
+          <UInput variant="outline" v-model="state.directus_users__username" />
+        </FormsFormGroup>
+        <FormsFormGroup
+          :label="t('Visible last name')"
+          name="directus_users__username_last"
+          required
+        >
+          <template #description> </template>
+          <UInput
+            variant="outline"
+            v-model="state.directus_users__username_last"
+          />
+        </FormsFormGroup>
+      </div>
+
+      <FormsFormGroup
+        :label="t('Mit welchen Pronomen möchtest du angesprochen werden?')"
+        :infotext="t('i_pronouns')"
+        name="directus_users__pronouns"
+      >
+        <UInput variant="outline" v-model="state.directus_users__pronouns" />
+      </FormsFormGroup>
+
+      <FormsFormGroup
+        name="directus_users__use_pronouns_on_card"
+        :label="t('Pronomen auf Mitgliederkarte')"
+        v-if="state.directus_users__pronouns"
+      >
+        <UCheckbox
+          variant="card"
+          v-model="state.directus_users__use_pronouns_on_card"
+        >
+          <template #label>
+            {{
+              t(
+                "Ich möchte, dass meine Pronomen auf meine Mitgliederkarte gedruckt werden.",
+              )
+            }}
+          </template>
+        </UCheckbox>
+      </FormsFormGroup>
+
+      <FormsFormGroup
+        name="directus_users__hide_name"
+        :label="t('Anonym bleiben')"
+      >
+        <UCheckbox variant="card" v-model="state.directus_users__hide_name">
+          <template #label>
+            {{
+              t(
+                "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform.",
+              )
+            }}
+          </template>
+        </UCheckbox>
+      </FormsFormGroup>
+    </div>
+
     <div class="pt-6">
       <h2>{{ t("Address") }}</h2>
     </div>
@@ -674,17 +721,34 @@ async function onError(event: FormErrorEvent) {
       </URadioGroup>
     </FormsFormGroup>
 
-    <div class="pt-6" v-if="isNatural">
-      <h2>{{ t("Co-shopper") }}</h2>
-      <p>
-        You can include a co-shopper in your membership. This person can shop as
-        well and will receive their own membership card.
-      </p>
-      <div class="grid md:grid-cols-2 gap-4 pt-3">
-        <FormsFormGroup :label="t('Vorname')" name="coshopper_firstname">
+    <div v-if="isNatural && state.memberships__memberships_type === 'Aktiv'">
+      <FormsFormGroup
+        name="directus_users__hide_name"
+        :label="t('Miteinkäufer:in')"
+      >
+        <UCheckbox variant="card" v-model="state.add_coshopper">
+          <template #label>
+            {{
+              t(
+                "Ich möchte eine*n Miteinkäufer*in angeben. Diese Person erhält ebenfalls eine Karte und kann einkaufen gehen, kann aber keine Mitmach-Schichten übernehmen.",
+              )
+            }}
+          </template>
+        </UCheckbox>
+      </FormsFormGroup>
+      <div class="grid md:grid-cols-2 gap-4 pt-3" v-if="state.add_coshopper">
+        <FormsFormGroup
+          :label="t('Vorname')"
+          name="coshopper_firstname"
+          required
+        >
           <UInput variant="outline" v-model="state.coshopper_firstname" />
         </FormsFormGroup>
-        <FormsFormGroup :label="t('Nachname')" name="coshopper_lastname">
+        <FormsFormGroup
+          :label="t('Nachname')"
+          name="coshopper_lastname"
+          required
+        >
           <UInput variant="outline" v-model="state.coshopper_lastname" />
         </FormsFormGroup>
         <FormsFormGroup :label="t('Email')" name="coshopper_email" required>
@@ -1089,6 +1153,8 @@ de:
   "Privacy Policy": "Datenschutzerklärung"
   "Bank account IBAN": "IBAN des Bankkontos"
   "Bank account owner": "Kontoinhaber:in"
+  "Visible first name": "Sichtbarer Vorname"
+  "Visible last name": "Sichtbarer Nachname"
 
   "Organization": "Organisation"
   "Organization name": "Name der Organisation"
@@ -1153,6 +1219,8 @@ en:
   "Dieser Name wird im Schichtplan und auf deiner Mitgliederkarte angezeigt. Er kann sich von deinem rechtlichen Namen unterscheiden.": "This name will be displayed in the shift schedule and on your membership card. It can differ from your legal name."
   "Diese Daten brauchen wir rechtlich für das Mitgliederregister der Genossenschaft. Bitte gib hier deinen amtlichen Namen an. Diese Daten sind nur für das Mitgliederbüro einsehbar.": "We need this data legally for the cooperative's membership register. Please provide your legal name here. This data can only be viewed by the membership office."
   "i_pronouns": "A declaration of pronouns is optional. They help us at MILA in creating an inclusive environment, by speaking to and about each other in a way, that respects everyones wishes."
+  "Ich möchte eine*n Miteinkäufer*in angeben. Diese Person erhält ebenfalls eine Karte und kann einkaufen gehen, kann aber keine Mitmach-Schichten übernehmen.": "I would like to specify a co-shopper. This person will also receive a card and can go shopping, but cannot take on any participation shifts."
+  "Miteinkäufer:in": "Co-shopper"
 
   "l:natural": "Individual"
   "l:legal": "Organisation"
