@@ -534,7 +534,7 @@ async function onError(event: FormErrorEvent) {
           <template #label>
             {{
               t(
-                "Ich möchte mit einem selbstgewählten Namen angesprochen werden, der von meinem amtlichen Namen abweicht.",
+                "Ich möchte mit einem selbstgewählten Namen angesprochen werden, der von meinem amtlichen Namen abweicht (z.b. für Emails, Mitgliederkarte, Schichtplan).",
               )
             }}
           </template>
@@ -1221,6 +1221,7 @@ en:
   "i_pronouns": "A declaration of pronouns is optional. They help us at MILA in creating an inclusive environment, by speaking to and about each other in a way, that respects everyones wishes."
   "Ich möchte eine*n Miteinkäufer*in angeben. Diese Person erhält ebenfalls eine Karte und kann einkaufen gehen, kann aber keine Mitmach-Schichten übernehmen.": "I would like to specify a co-shopper. This person will also receive a card and can go shopping, but cannot take on any participation shifts."
   "Miteinkäufer:in": "Co-shopper"
+  "Ich möchte mit einem selbstgewählten Namen angesprochen werden, der von meinem amtlichen Namen abweicht (z.b. für Emails, Mitgliederkarte, Schichtplan).": "I would like to be addressed with a self-chosen name that differs from my legal name (e.g. for emails, membership card, shift schedule)."
 
   "l:natural": "Individual"
   "l:legal": "Organisation"

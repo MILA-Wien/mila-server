@@ -15,8 +15,16 @@ export async function sendShiftReminders(date: Date) {
 async function getAssignmentsInTwoDays(date: Date) {
   const directus = useDirectusAdmin();
   const targetDate = new Date(date);
-  targetDate.setDate(targetDate.getDate() + 2);
-  const shifts: ShiftsShift[] = await getShiftShifts(targetDate, targetDate);
+  targetDate.setDate(targetDate.getDate() + 3);
+  console.log("Getting assignments for date:", targetDate.toISOString());
+  const shifts: ShiftsShift[] = await getShiftShifts(
+    targetDate,
+    targetDate,
+    undefined,
+    true,
+  );
+  console.log("Found shifts:", shifts.length);
+
   const shiftIds = shifts.map((shift) => shift.id);
 
   // Get assignments two days ahead
@@ -131,13 +139,18 @@ async function sendRemindersInner(occurrences: any[], automation: any) {
 
     const user = assignment.shifts_membership.memberships_user;
     const shift = occ.assignment.shift!;
-
+    console.log(shift);
     const context = {
       shift_date: occ.date.toISOString().split("T")[0],
       shift_time_start: shift.shifts_from_time?.slice(0, -3),
       shift_time_end: shift.shifts_to_time?.slice(0, -3),
       shift_description: "markdown:" + shift.shifts_description,
+      shift_category: shift.shifts_category_2?.name,
+      shift_category_description:
+        "markdown:" + shift.shifts_category_2?.beschreibung,
     };
+
+    console.log(context);
 
     if (!user.id) {
       throw new Error(`User ID is missing for assignment ${assignment.id}`);

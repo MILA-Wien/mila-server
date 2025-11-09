@@ -6,7 +6,12 @@ import { ShiftsShift } from "./dbSchema";
 
 const directus = useDirectusAdmin();
 
-export async function getShiftShifts(from: Date, to: Date, shiftID?: number) {
+export async function getShiftShifts(
+  from: Date,
+  to: Date,
+  shiftID?: number,
+  loadCat?: boolean = false,
+) {
   const filter: QueryFilter<DbSchema, ShiftsShift> = {
     _or: [
       {
@@ -31,7 +36,7 @@ export async function getShiftShifts(from: Date, to: Date, shiftID?: number) {
     readItems("shifts_shifts", {
       filter: filter,
       limit: -1,
-      fields: ["*"],
+      fields: loadCat ? ["*", "shifts_category_2.*"] : ["*"],
     }),
   );
 
