@@ -902,15 +902,6 @@ async function onError(event: FormErrorEvent) {
         :label="t('Do you want to participate in a working group?')"
         name="directus_users__mila_groups_interested_2"
       >
-        <!-- <div class="text-sm mb-2">
-          {{ t("You can find more information about the working groups") }}
-          <a
-            href="https://handbuch.mila.wien/books/mitglieder-handbuch/page/arbeitsgruppen"
-            target="_blank"
-            class="font-bold"
-            >{{ t("here") }}</a
-          >.
-        </div> -->
         <FormsCheckboxGroup
           v-model="state.directus_users__mila_groups_interested_2"
           :choices="[
