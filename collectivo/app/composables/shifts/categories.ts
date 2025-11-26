@@ -21,7 +21,7 @@ async function loadData() {
   return await directus.request(
     readItems("shifts_categories", {
       limit: -1,
-      fields: ["id", "name"],
+      fields: ["id", "name", "for_all"],
     }),
   );
 }

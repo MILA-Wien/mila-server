@@ -137,6 +137,13 @@ async function loadCategoriesUser() {
       categories.value.push(cat);
     }
   }
+  for (const cat of allcats) {
+    if (cat.for_all === true && !seen.has(cat.id)) {
+      seen.add(cat.id);
+      allowedCategoryIds.value.push(cat.id);
+      categories.value.push(cat);
+    }
+  }
 }
 
 // Date navigation
@@ -366,11 +373,7 @@ loadEvents();
       </USelectMenu>
     </FormsFormGroup>
 
-    <FormsFormGroup
-      v-if="categories.length > 1"
-      :label="t('Category')"
-      class="flex-1"
-    >
+    <FormsFormGroup :label="t('Category')" class="flex-1">
       <USelectMenu
         v-model="selectedCategory"
         :items="categories"
