@@ -16,14 +16,12 @@ async function getAssignmentsInTwoDays(date: Date) {
   const directus = useDirectusAdmin();
   const targetDate = new Date(date);
   targetDate.setDate(targetDate.getDate() + 3);
-  console.log("Getting assignments for date:", targetDate.toISOString());
   const shifts: ShiftsShift[] = await getShiftShifts(
     targetDate,
     targetDate,
     undefined,
     true,
   );
-  console.log("Found shifts:", shifts.length);
 
   const shiftIds = shifts.map((shift) => shift.id);
 
