@@ -30,8 +30,8 @@ const shift = occ.shift;
             : assignment.assignment.shifts_membership.memberships_user
                 .username +
               " " +
-              assignment.assignment.shifts_membership.memberships_user
-                .username_last
+              (assignment.assignment.shifts_membership.memberships_user
+                .username_last ?? "")
         }}
         <span
           v-if="
