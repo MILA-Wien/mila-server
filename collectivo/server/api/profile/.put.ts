@@ -3,6 +3,7 @@ import { z } from "zod";
 
 const schema = z.object({
   username: z.string().optional(),
+  username_last: z.string().optional(),
   pronouns: z.string().optional(),
   hide_name: z.boolean().optional(),
   send_notifications: z.boolean().optional(),
@@ -17,6 +18,7 @@ export default defineEventHandler(async (event) => {
   await directus.request(
     updateUser(user.user, {
       username: data.username,
+      username_last: data.username_last,
       pronouns: data.pronouns,
       hide_name: data.hide_name,
       send_notifications: data.send_notifications,

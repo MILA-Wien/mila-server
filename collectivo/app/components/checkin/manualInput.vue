@@ -36,7 +36,7 @@ async function checkinMember() {
         <div v-if="mship" class="mt-4">
           <FormsFormGroup label="Mitglied">
             <div class="p-3 border-1 border-black">
-              {{ mship.username }}
+              {{ mship.username }} {{ mship.username_last }}
               <span v-if="mship.pronouns"> ({{ mship.pronouns }}) </span>
             </div>
           </FormsFormGroup>

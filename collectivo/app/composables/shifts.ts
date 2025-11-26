@@ -71,7 +71,11 @@ export const getShiftOccurrences = async (
                     shifts_membership: [
                       "id",
                       {
-                        memberships_user: ["username", "email"],
+                        memberships_user: [
+                          "username",
+                          "username_last",
+                          "email",
+                        ],
                       },
                     ],
                   },

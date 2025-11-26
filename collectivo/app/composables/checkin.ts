@@ -3,6 +3,7 @@ interface CheckinState {
   membership?: string;
   membershipsType?: string;
   username?: string;
+  username_last?: string;
   pronouns?: string;
   shiftScore?: number;
   shiftsType?: string;

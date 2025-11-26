@@ -25,6 +25,7 @@ export interface UserProfile {
   hide_name: boolean;
   send_notifications: boolean;
   username: string;
+  username_last: string;
   pronouns: string;
   buddy_status: "keine_angabe" | "is_buddy" | "need_buddy";
   buddy_details: string;

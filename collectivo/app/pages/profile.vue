@@ -14,6 +14,7 @@ const user = userData.value.user!;
 const mv = "Dieses Feld ist erforderlich";
 const schema = object({
   username: string().min(1, t(mv)).required(t(mv)),
+  username_last: string().min(1, t(mv)).required(t(mv)),
   pronouns: string().optional(),
   hide_name: bool().optional(),
   send_notifications: bool().optional(),
@@ -23,6 +24,7 @@ type Schema = InferType<typeof schema>;
 
 const state = reactive({
   username: user.username,
+  username_last: user.username_last,
   pronouns: user.pronouns,
   hide_name: user.hide_name,
   send_notifications: user.send_notifications,
@@ -84,7 +86,7 @@ async function onError(event: FormErrorEvent) {
         @error="onError"
       >
         <FormsFormGroup
-          :label="t('Wie sollen wir dich ansprechen?')"
+          :label="t('Vorname')"
           :infotext="
             t('Dieser Name kann sich von deinem amtlichen Namen unterscheiden.')
           "
@@ -93,6 +95,18 @@ async function onError(event: FormErrorEvent) {
         >
           <template #description> </template>
           <UInput v-model="state.username" />
+        </FormsFormGroup>
+
+        <FormsFormGroup
+          :label="t('Nachname')"
+          :infotext="
+            t('Dieser Name kann sich von deinem amtlichen Namen unterscheiden.')
+          "
+          name="username_last"
+          required
+        >
+          <template #description> </template>
+          <UInput v-model="state.username_last" />
         </FormsFormGroup>
 
         <FormsFormGroup
