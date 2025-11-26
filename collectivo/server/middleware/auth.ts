@@ -42,6 +42,7 @@ export default defineEventHandler(async (event) => {
           fields: [
             "id",
             "email",
+            "lotzapp_id",
             "hide_name",
             {
               memberships: ["id"],
@@ -79,6 +80,7 @@ export default defineEventHandler(async (event) => {
       mship: mship,
       studioAdmin: isStudioAdmin,
       shiftAdmin: isShiftAdmin,
+      lotzappId: user.lotzapp_id,
     };
     tokenCache.set(directusSessionToken, { expiresAt, authContext });
     event.context.auth = authContext;
