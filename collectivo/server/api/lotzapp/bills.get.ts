@@ -1,9 +1,7 @@
 import { z } from "zod";
-import https from "https";
-import axios from "axios";
 
 const config = useRuntimeConfig();
-const accountIDs = [10, 12, 13];
+const accountIDs = config.lotzappAccountIds.split(",");
 const lotzapp_mandant = config.lotzappMandant;
 const lotzapp_auth =
   "Basic  " +
@@ -28,7 +26,7 @@ export default defineEventHandler(async (event) => {
 
   const customer_id = user.lotzappId;
 
-  const buildUrl = (accountID: number) => {
+  const buildUrl = (accountID: string) => {
     const params = new URLSearchParams({
       customer_id: String(customer_id),
     });
@@ -38,34 +36,17 @@ export default defineEventHandler(async (event) => {
     return `https://api.lotzapp.org/account/account/${accountID}/receipt?${params.toString()}`;
   };
 
-  // TODO Temporary unsafe solution
-  const httpsAgent = new https.Agent({ rejectUnauthorized: false });
-
-  // Fetch all in parallel
   const results = await Promise.allSettled(
     accountIDs.map(async (id) => {
       const url = buildUrl(id);
-      console.log(url);
-      try {
-        // const res = await $fetch(url, {
-        //   method: "GET",
-        //   headers: {
-        //     Authorization: lotzapp_auth,
-        //     "x-client-id": lotzapp_mandant,
-        //   },
-        // });
-        const res = await axios.get(url, {
-          httpsAgent,
-          headers: {
-            Authorization: lotzapp_auth,
-            "x-client-id": lotzapp_mandant,
-          },
-        });
-        return res.data;
-      } catch (err: any) {
-        console.error(`[FAIL] Account ${id}: ${err?.message || err}`);
-        throw err;
-      }
+      const res = await $fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: lotzapp_auth,
+          "x-client-id": lotzapp_mandant,
+        },
+      });
+      return res;
     }),
   );
 
@@ -80,7 +61,7 @@ export default defineEventHandler(async (event) => {
 function combineByExternalNumber(list: any[]) {
   const filtered = list.filter((item) => item.name === "Verkauf");
 
-  const grouped = {};
+  const grouped: Record<string, any> = {};
 
   for (const item of filtered) {
     const key = item.external_number;
