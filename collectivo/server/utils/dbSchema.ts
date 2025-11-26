@@ -151,6 +151,8 @@ export interface ShiftsLog {
 export interface ShiftsCategory {
   id: number;
   name: string;
+  for_all: boolean;
+  beschreibung: string;
 }
 
 export interface CheckinLogEntry {
