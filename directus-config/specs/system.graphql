@@ -285,10 +285,10 @@ type Subscription {
   shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
   shifts_holidays_public_mutated(event: EventEnum): shifts_holidays_public_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
-  shifts_categories_mutated(event: EventEnum): shifts_categories_mutated
   product_requests_mutated(event: EventEnum): product_requests_mutated
   memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
+  shifts_categories_mutated(event: EventEnum): shifts_categories_mutated
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   bedarfsmeldung_solitopf_mutated(event: EventEnum): bedarfsmeldung_solitopf_mutated
 }
@@ -2299,7 +2299,10 @@ type shifts_assignments_mutated {
 type shifts_categories {
   id: ID!
   name: String
+
+  """Wir bei allen Schichten mit dieser Kategorie mitangezeigt."""
   beschreibung: String
+  for_all: Boolean
 }
 
 type shifts_categories_mutated {
@@ -3239,7 +3242,10 @@ input create_shifts_assignments_input {
 input create_shifts_categories_input {
   id: ID
   name: String
+
+  """Wir bei allen Schichten mit dieser Kategorie mitangezeigt."""
   beschreibung: String
+  for_all: Boolean
 }
 
 input create_shifts_logs_input {
@@ -4465,6 +4471,7 @@ input shifts_categories_filter {
   id: number_filter_operators
   name: string_filter_operators
   beschreibung: string_filter_operators
+  for_all: boolean_filter_operators
   _and: [shifts_categories_filter]
   _or: [shifts_categories_filter]
 }
@@ -5174,7 +5181,10 @@ input update_shifts_assignments_input {
 input update_shifts_categories_input {
   id: ID
   name: String
+
+  """Wir bei allen Schichten mit dieser Kategorie mitangezeigt."""
   beschreibung: String
+  for_all: Boolean
 }
 
 input update_shifts_logs_input {

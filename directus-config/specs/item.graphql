@@ -93,10 +93,6 @@ type Query {
   shifts_logs_by_id(id: ID!, version: String): shifts_logs
   shifts_logs_aggregated(groupBy: [String], filter: shifts_logs_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_logs_aggregated!]!
   shifts_logs_by_version(version: String!, id: ID!): version_shifts_logs
-  shifts_categories(filter: shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_categories!]!
-  shifts_categories_by_id(id: ID!, version: String): shifts_categories
-  shifts_categories_aggregated(groupBy: [String], filter: shifts_categories_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_categories_aggregated!]!
-  shifts_categories_by_version(version: String!, id: ID!): version_shifts_categories
   product_requests(filter: product_requests_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [product_requests!]!
   product_requests_by_id(id: ID!, version: String): product_requests
   product_requests_aggregated(groupBy: [String], filter: product_requests_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [product_requests_aggregated!]!
@@ -105,6 +101,10 @@ type Query {
   memberships_coshoppers_by_id(id: ID!, version: String): memberships_coshoppers
   memberships_coshoppers_aggregated(groupBy: [String], filter: memberships_coshoppers_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_coshoppers_aggregated!]!
   memberships_coshoppers_by_version(version: String!, id: ID!): version_memberships_coshoppers
+  shifts_categories(filter: shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_categories!]!
+  shifts_categories_by_id(id: ID!, version: String): shifts_categories
+  shifts_categories_aggregated(groupBy: [String], filter: shifts_categories_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_categories_aggregated!]!
+  shifts_categories_by_version(version: String!, id: ID!): version_shifts_categories
   shifts_shifts(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [shifts_shifts!]!
   shifts_shifts_by_id(id: ID!, version: String): shifts_shifts
   shifts_shifts_aggregated(groupBy: [String], filter: shifts_shifts_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_shifts_aggregated!]!
@@ -162,12 +162,12 @@ type Mutation {
   create_shifts_holidays_public_item(data: create_shifts_holidays_public_input!): shifts_holidays_public
   create_shifts_logs_items(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_logs_input!]): [shifts_logs!]!
   create_shifts_logs_item(data: create_shifts_logs_input!): shifts_logs
-  create_shifts_categories_items(filter: shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_categories_input!]): [shifts_categories!]!
-  create_shifts_categories_item(data: create_shifts_categories_input!): shifts_categories
   create_product_requests_items(filter: product_requests_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_product_requests_input!]): [product_requests!]!
   create_product_requests_item(data: create_product_requests_input!): product_requests
   create_memberships_coshoppers_items(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_coshoppers_input!]): [memberships_coshoppers!]!
   create_memberships_coshoppers_item(data: create_memberships_coshoppers_input!): memberships_coshoppers
+  create_shifts_categories_items(filter: shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_categories_input!]): [shifts_categories!]!
+  create_shifts_categories_item(data: create_shifts_categories_input!): shifts_categories
   create_shifts_shifts_items(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_shifts_shifts_input!]): [shifts_shifts!]!
   create_shifts_shifts_item(data: create_shifts_shifts_input!): shifts_shifts
   create_bedarfsmeldung_solitopf_items(filter: bedarfsmeldung_solitopf_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_bedarfsmeldung_solitopf_input!]): [bedarfsmeldung_solitopf!]!
@@ -242,15 +242,15 @@ type Mutation {
   update_shifts_logs_items(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_logs_input!): [shifts_logs!]!
   update_shifts_logs_batch(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_logs_input!]): [shifts_logs!]!
   update_shifts_logs_item(id: ID!, data: update_shifts_logs_input!): shifts_logs
-  update_shifts_categories_items(filter: shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_categories_input!): [shifts_categories!]!
-  update_shifts_categories_batch(filter: shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_categories_input!]): [shifts_categories!]!
-  update_shifts_categories_item(id: ID!, data: update_shifts_categories_input!): shifts_categories
   update_product_requests_items(filter: product_requests_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_product_requests_input!): [product_requests!]!
   update_product_requests_batch(filter: product_requests_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_product_requests_input!]): [product_requests!]!
   update_product_requests_item(id: ID!, data: update_product_requests_input!): product_requests
   update_memberships_coshoppers_items(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_coshoppers_input!): [memberships_coshoppers!]!
   update_memberships_coshoppers_batch(filter: memberships_coshoppers_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_coshoppers_input!]): [memberships_coshoppers!]!
   update_memberships_coshoppers_item(id: ID!, data: update_memberships_coshoppers_input!): memberships_coshoppers
+  update_shifts_categories_items(filter: shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_categories_input!): [shifts_categories!]!
+  update_shifts_categories_batch(filter: shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_categories_input!]): [shifts_categories!]!
+  update_shifts_categories_item(id: ID!, data: update_shifts_categories_input!): shifts_categories
   update_shifts_shifts_items(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_shifts_input!): [shifts_shifts!]!
   update_shifts_shifts_batch(filter: shifts_shifts_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_shifts_input!]): [shifts_shifts!]!
   update_shifts_shifts_item(id: ID!, data: update_shifts_shifts_input!): shifts_shifts
@@ -303,12 +303,12 @@ type Mutation {
   delete_shifts_holidays_public_item(id: ID!): delete_one
   delete_shifts_logs_items(ids: [ID]!): delete_many
   delete_shifts_logs_item(id: ID!): delete_one
-  delete_shifts_categories_items(ids: [ID]!): delete_many
-  delete_shifts_categories_item(id: ID!): delete_one
   delete_product_requests_items(ids: [ID]!): delete_many
   delete_product_requests_item(id: ID!): delete_one
   delete_memberships_coshoppers_items(ids: [ID]!): delete_many
   delete_memberships_coshoppers_item(id: ID!): delete_one
+  delete_shifts_categories_items(ids: [ID]!): delete_many
+  delete_shifts_categories_item(id: ID!): delete_one
   delete_shifts_shifts_items(ids: [ID]!): delete_many
   delete_shifts_shifts_item(id: ID!): delete_one
   delete_bedarfsmeldung_solitopf_items(ids: [ID]!): delete_many
@@ -360,10 +360,10 @@ type Subscription {
   shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
   shifts_holidays_public_mutated(event: EventEnum): shifts_holidays_public_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
-  shifts_categories_mutated(event: EventEnum): shifts_categories_mutated
   product_requests_mutated(event: EventEnum): product_requests_mutated
   memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
+  shifts_categories_mutated(event: EventEnum): shifts_categories_mutated
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   bedarfsmeldung_solitopf_mutated(event: EventEnum): bedarfsmeldung_solitopf_mutated
 }
@@ -2336,7 +2336,10 @@ type shifts_assignments_mutated {
 type shifts_categories {
   id: ID!
   name: String
+
+  """Wir bei allen Schichten mit dieser Kategorie mitangezeigt."""
   beschreibung: String
+  for_all: Boolean
 }
 
 type shifts_categories_aggregated {
@@ -2355,7 +2358,10 @@ type shifts_categories_aggregated {
 type shifts_categories_aggregated_count {
   id: Int
   name: Int
+
+  """Wir bei allen Schichten mit dieser Kategorie mitangezeigt."""
   beschreibung: Int
+  for_all: Int
 }
 
 type shifts_categories_aggregated_fields {
@@ -2961,7 +2967,10 @@ type version_shifts_assignments {
 type version_shifts_categories {
   id: ID
   name: String
+
+  """Wir bei allen Schichten mit dieser Kategorie mitangezeigt."""
   beschreibung: String
+  for_all: Boolean
 }
 
 """"""
@@ -3662,7 +3671,10 @@ input create_shifts_assignments_input {
 input create_shifts_categories_input {
   id: ID
   name: String
+
+  """Wir bei allen Schichten mit dieser Kategorie mitangezeigt."""
   beschreibung: String
+  for_all: Boolean
 }
 
 input create_shifts_holidays_public_input {
@@ -4856,6 +4868,7 @@ input shifts_categories_filter {
   id: number_filter_operators
   name: string_filter_operators
   beschreibung: string_filter_operators
+  for_all: boolean_filter_operators
   _and: [shifts_categories_filter]
   _or: [shifts_categories_filter]
 }
@@ -5453,7 +5466,10 @@ input update_shifts_assignments_input {
 input update_shifts_categories_input {
   id: ID
   name: String
+
+  """Wir bei allen Schichten mit dieser Kategorie mitangezeigt."""
   beschreibung: String
+  for_all: Boolean
 }
 
 input update_shifts_holidays_public_input {

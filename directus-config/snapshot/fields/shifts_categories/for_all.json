@@ -1,46 +1,39 @@
 {
   "collection": "shifts_categories",
-  "field": "beschreibung",
-  "type": "text",
+  "field": "for_all",
+  "type": "boolean",
   "meta": {
     "collection": "shifts_categories",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "beschreibung",
+    "field": "for_all",
     "group": null,
     "hidden": false,
-    "interface": "input-rich-text-md",
-    "note": "Wir bei allen Schichten mit dieser Kategorie mitangezeigt.",
-    "options": {
-      "toolbar": [
-        "heading",
-        "bold",
-        "italic",
-        "strikethrough",
-        "blockquote",
-        "bullist",
-        "numlist",
-        "table",
-        "code",
-        "link",
-        "empty"
-      ]
-    },
+    "interface": "boolean",
+    "note": null,
+    "options": null,
     "readonly": false,
     "required": false,
-    "sort": 4,
-    "special": null,
-    "translations": null,
+    "sort": 3,
+    "special": [
+      "cast-boolean"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Für alle Mitglieder sichtbar"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"
   },
   "schema": {
-    "name": "beschreibung",
+    "name": "for_all",
     "table": "shifts_categories",
-    "data_type": "text",
-    "default_value": null,
+    "data_type": "boolean",
+    "default_value": false,
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
