@@ -28,10 +28,10 @@ function getColor() {
     </div>
     <div v-if="checkinState.coshopper">
       Name: {{ checkinState.coshopper }} (Miteinkäufer*in von
-      {{ checkinState.username }})
+      {{ checkinState.username }} {{ checkinState.username_last }})
     </div>
     <div v-else-if="checkinState.username">
-      Name: {{ checkinState.username }}
+      Name: {{ checkinState.username }} {{ checkinState.username_last }}
       <span v-if="checkinState.pronouns">({{ checkinState.pronouns }})</span>
     </div>
     <div v-if="checkinState.membership">

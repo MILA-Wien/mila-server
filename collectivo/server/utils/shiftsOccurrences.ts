@@ -20,6 +20,7 @@ export const getShiftOccurrences = async (
     for (const assignment of assignments) {
       if (assignment.shifts_membership.memberships_user.hide_name) {
         assignment.shifts_membership.memberships_user.username = "";
+        assignment.shifts_membership.memberships_user.username_last = "";
       }
     }
   }

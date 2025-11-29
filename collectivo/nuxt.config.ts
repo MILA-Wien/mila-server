@@ -51,6 +51,9 @@ export default defineNuxtConfig({
       keycloakRealm: process.env.KEYCLOAK_REALM || "collectivo",
       keycloakClient: process.env.KEYCLOAK_NUXT_CLIENT || "nuxt",
       directusUrl: process.env.DIRECTUS_URL || "http://localhost:8055",
+
+      lotzappShopUrl: process.env.LOTZAPP_SHOP_URL || "",
+      annyLoginUrl: process.env.ANNY_LOGIN_URL || "",
     },
   },
 

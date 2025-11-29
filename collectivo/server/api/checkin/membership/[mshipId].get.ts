@@ -7,11 +7,14 @@ export default defineEventHandler(async (event) => {
   const directus = useDirectusAdmin();
   const mship = await directus.request(
     readItem("memberships", mshipId, {
-      fields: [{ memberships_user: ["username", "pronouns"] }],
+      fields: [{ memberships_user: ["username", "username_last", "pronouns"] }],
     }),
   );
   return {
-    username: mship.memberships_user.username,
+    username:
+      mship.memberships_user.username +
+      " " +
+      mship.memberships_user.username_last,
     pronouns: mship.memberships_user.pronouns,
   };
 });

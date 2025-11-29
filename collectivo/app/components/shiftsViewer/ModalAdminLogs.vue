@@ -110,6 +110,7 @@ async function createCustomLog() {
         <div v-if="mshipData">
           <p class="font-bold">
             {{ mshipData.memberships_user.username }}
+            {{ mshipData.memberships_user.username_last ?? "" }}
           </p>
           <p>Membership type: {{ mshipData.memberships_type }}</p>
 

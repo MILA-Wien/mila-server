@@ -248,7 +248,7 @@ async function createAssignment(onetime: boolean) {
           shifts_membership: [
             "id",
             {
-              memberships_user: ["username", "email"],
+              memberships_user: ["username", "username_last", "email"],
             },
           ],
         },
@@ -510,6 +510,7 @@ function checkIfMshipInAssignments(mship: number) {
             <div v-if="mshipData">
               <p class="font-bold">
                 {{ mshipData.memberships_user.username }}
+                {{ mshipData.memberships_user.username_last ?? "" }}
               </p>
               <p>
                 {{ t("Membership type") }}: {{ mshipData.memberships_type }}

@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const userData: any = {};
   const membershipData: any = {};
+  const coshopperData: any = {};
 
   // Check if user is authenticated
   const user = await getUserOrUndefined(event);
@@ -44,6 +45,8 @@ export default defineEventHandler(async (event) => {
       userData[key.replace("directus_users__", "")] = value;
     } else if (key.startsWith("memberships__")) {
       membershipData[key.replace("memberships__", "")] = value;
+    } else if (key.startsWith("coshopper")) {
+      coshopperData[key] = value;
     }
   }
 
@@ -58,6 +61,12 @@ export default defineEventHandler(async (event) => {
   if (isAuthenticated) {
     delete userData.password;
     delete userData.email;
+  }
+
+  // Set custom username if applicable
+  if (!body.use_custom_username) {
+    userData.username = userData.first_name;
+    userData.username_last = userData.last_name;
   }
 
   // Transform checkboxgroups to string
@@ -105,6 +114,28 @@ export default defineEventHandler(async (event) => {
     }
 
     throw e;
+  }
+
+  try {
+    // Create coshopper user if applicable
+    if (body.add_coshopper) {
+      const coshopper = await directus.request(
+        createItem("memberships_coshoppers", {
+          first_name: coshopperData.coshopper_firstname,
+          last_name: coshopperData.coshopper_lastname,
+          email: coshopperData.coshopper_email,
+        }),
+      );
+      // Link coshopper to membership
+      await directus.request(
+        createItem("memberships_memberships_coshoppers", {
+          memberships_id: membership.id,
+          memberships_coshoppers_id: coshopper.id,
+        }),
+      );
+    }
+  } catch (e) {
+    console.log("Error creating coshopper:", e);
   }
 
   return {

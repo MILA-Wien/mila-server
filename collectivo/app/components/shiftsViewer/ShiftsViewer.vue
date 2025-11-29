@@ -77,10 +77,6 @@ const categories = ref<ShiftsCategory[]>([
     id: -1,
     name: "Alle Kategorien",
   },
-  {
-    id: 0,
-    name: "Normal",
-  },
 ]);
 
 const selectedCategory = ref(categories.value[0]);
@@ -136,6 +132,13 @@ async function loadCategoriesUser() {
   for (const ca of user.value.membership?.shifts_categories_allowed || []) {
     const cat = allcats.find((c) => c.id === ca.shifts_categories_id);
     if (cat && !seen.has(cat.id)) {
+      seen.add(cat.id);
+      allowedCategoryIds.value.push(cat.id);
+      categories.value.push(cat);
+    }
+  }
+  for (const cat of allcats) {
+    if (cat.for_all === true && !seen.has(cat.id)) {
       seen.add(cat.id);
       allowedCategoryIds.value.push(cat.id);
       categories.value.push(cat);
@@ -370,11 +373,7 @@ loadEvents();
       </USelectMenu>
     </FormsFormGroup>
 
-    <FormsFormGroup
-      v-if="categories.length > 1"
-      :label="t('Category')"
-      class="flex-1"
-    >
+    <FormsFormGroup :label="t('Category')" class="flex-1">
       <USelectMenu
         v-model="selectedCategory"
         :items="categories"

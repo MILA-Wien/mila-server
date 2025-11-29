@@ -272,7 +272,6 @@ type Subscription {
   memberships_memberships_coshoppers_mutated(event: EventEnum): memberships_memberships_coshoppers_mutated
   memberships_memberships_coshoppers_1_mutated(event: EventEnum): memberships_memberships_coshoppers_1_mutated
   memberships_shifts_categories_mutated(event: EventEnum): memberships_shifts_categories_mutated
-  shifts_categories_mutated(event: EventEnum): shifts_categories_mutated
   messages_templates_mutated(event: EventEnum): messages_templates_mutated
   messages_campaigns_mutated(event: EventEnum): messages_campaigns_mutated
   messages_campaigns_directus_users_mutated(event: EventEnum): messages_campaigns_directus_users_mutated
@@ -286,9 +285,10 @@ type Subscription {
   shifts_absences_mutated(event: EventEnum): shifts_absences_mutated
   shifts_holidays_public_mutated(event: EventEnum): shifts_holidays_public_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
-  directus_users_mutated(event: EventEnum): directus_users_mutated
+  shifts_categories_mutated(event: EventEnum): shifts_categories_mutated
   product_requests_mutated(event: EventEnum): product_requests_mutated
   memberships_coshoppers_mutated(event: EventEnum): memberships_coshoppers_mutated
+  directus_users_mutated(event: EventEnum): directus_users_mutated
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   bedarfsmeldung_solitopf_mutated(event: EventEnum): bedarfsmeldung_solitopf_mutated
 }
@@ -1633,10 +1633,11 @@ type directus_users {
   pronouns: String
   use_pronouns_on_card: Boolean
   buddy_details: String
-  memberships(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships]
-  memberships_func: count_functions
+  username_last: String
   collectivo_tags(filter: collectivo_tags_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_tags_directus_users]
   collectivo_tags_func: count_functions
+  memberships(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships]
+  memberships_func: count_functions
   mila_documents(filter: junction_directus_users_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [junction_directus_users_files]
   mila_documents_func: count_functions
   messages_campaigns(filter: messages_campaigns_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [messages_campaigns_directus_users]
@@ -1712,8 +1713,9 @@ type directus_users_aggregated_count {
   pronouns: Int
   use_pronouns_on_card: Int
   buddy_details: Int
-  memberships: Int
+  username_last: Int
   collectivo_tags: Int
+  memberships: Int
   mila_documents: Int
   messages_campaigns: Int
   policies: Int
@@ -2297,6 +2299,7 @@ type shifts_assignments_mutated {
 type shifts_categories {
   id: ID!
   name: String
+  beschreibung: String
 }
 
 type shifts_categories_mutated {
@@ -2985,8 +2988,9 @@ input create_directus_users_input {
   pronouns: String
   use_pronouns_on_card: Boolean
   buddy_details: String
-  memberships: [create_memberships_input]
+  username_last: String
   collectivo_tags: [create_collectivo_tags_directus_users_input]
+  memberships: [create_memberships_input]
   mila_documents: [create_junction_directus_users_files_input]
   messages_campaigns: [create_messages_campaigns_directus_users_input]
   policies: [create_directus_access_input]
@@ -3235,6 +3239,7 @@ input create_shifts_assignments_input {
 input create_shifts_categories_input {
   id: ID
   name: String
+  beschreibung: String
 }
 
 input create_shifts_logs_input {
@@ -3805,10 +3810,11 @@ input directus_users_filter {
   pronouns: string_filter_operators
   use_pronouns_on_card: boolean_filter_operators
   buddy_details: string_filter_operators
-  memberships: memberships_quantifier_filter
-  memberships_func: count_function_filter_operators
+  username_last: string_filter_operators
   collectivo_tags: collectivo_tags_directus_users_quantifier_filter
   collectivo_tags_func: count_function_filter_operators
+  memberships: memberships_quantifier_filter
+  memberships_func: count_function_filter_operators
   mila_documents: junction_directus_users_files_quantifier_filter
   mila_documents_func: count_function_filter_operators
   messages_campaigns: messages_campaigns_directus_users_quantifier_filter
@@ -3886,10 +3892,11 @@ input directus_users_quantifier_filter {
   pronouns: string_filter_operators
   use_pronouns_on_card: boolean_filter_operators
   buddy_details: string_filter_operators
-  memberships: memberships_quantifier_filter
-  memberships_func: count_function_filter_operators
+  username_last: string_filter_operators
   collectivo_tags: collectivo_tags_directus_users_quantifier_filter
   collectivo_tags_func: count_function_filter_operators
+  memberships: memberships_quantifier_filter
+  memberships_func: count_function_filter_operators
   mila_documents: junction_directus_users_files_quantifier_filter
   mila_documents_func: count_function_filter_operators
   messages_campaigns: messages_campaigns_directus_users_quantifier_filter
@@ -4457,6 +4464,7 @@ input shifts_assignments_quantifier_filter {
 input shifts_categories_filter {
   id: number_filter_operators
   name: string_filter_operators
+  beschreibung: string_filter_operators
   _and: [shifts_categories_filter]
   _or: [shifts_categories_filter]
 }
@@ -4915,8 +4923,9 @@ input update_directus_users_input {
   pronouns: String
   use_pronouns_on_card: Boolean
   buddy_details: String
-  memberships: [update_memberships_input]
+  username_last: String
   collectivo_tags: [update_collectivo_tags_directus_users_input]
+  memberships: [update_memberships_input]
   mila_documents: [update_junction_directus_users_files_input]
   messages_campaigns: [update_messages_campaigns_directus_users_input]
   policies: [update_directus_access_input]
@@ -5165,6 +5174,7 @@ input update_shifts_assignments_input {
 input update_shifts_categories_input {
   id: ID
   name: String
+  beschreibung: String
 }
 
 input update_shifts_logs_input {

@@ -16,7 +16,7 @@ setPageTitle(t("Sortiment"));
       <p class="mb-3">
         {{
           t(
-            "Welche Produkte würdest du gerne in unserem Supermarkt haben? Wir sammeln alle Vorschläge und prüfen regelmäßig, welche davon wir umsetzen können.",
+            "Was kaufst du noch woanders? Was braucht unser Supermarkt? Wir sammeln alle Vorschläge und prüfen regelmäßig, welche davon wir umsetzen können.",
           )
         }}
       </p>
@@ -48,4 +48,7 @@ setPageTitle(t("Sortiment"));
 en:
   "Sortiment": "Product range"
   "Sortiment mitbestimmen": "Product range participation"
+  "Was kaufst du noch woanders? Was braucht unser Supermarkt? Wir sammeln alle Vorschläge und prüfen regelmäßig, welche davon wir umsetzen können.": "What do you still buy elsewhere? What does our supermarket need? We collect all suggestions and regularly check which ones we can implement."
+  "Zur digitalen Sortimentsmappe": "To the digital product range folder"
+  "Aktuelles Sortiment (Coming soon)": "Current product range (Coming soon)"
 </i18n>

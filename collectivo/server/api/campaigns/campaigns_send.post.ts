@@ -220,15 +220,15 @@ async function readRecipientData(recipientId: string): Promise<RecipientData> {
 
   const readResult: Record<string, any> = await directus.request(
     readUser(recipientId, {
-      fields: ["username", "email"],
+      fields: ["username", "username_last", "email"],
     }),
   );
 
   return {
     id: recipientId,
-    username: readResult["username"],
+    username: readResult["username"] + " " + readResult["username_last"],
     first_name: readResult["username"],
-    last_name: "", // Legacy support for old templates with last_name field
+    last_name: readResult["username_last"],
     email: readResult["email"],
   };
 }

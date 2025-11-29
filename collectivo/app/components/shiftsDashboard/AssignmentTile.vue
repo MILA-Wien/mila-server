@@ -19,6 +19,7 @@ const assignment = data.assignment;
 const coworkers = data.coworkers;
 const coordinators = data.coordinators || [];
 const shift = data.assignment.shifts_shift;
+const cats = useShiftsCategories();
 const emit = defineEmits(["reload"]);
 
 function getEndDate(endDate: string) {
@@ -70,6 +71,29 @@ function getEndDate(endDate: string) {
           class="pt-4"
           v-html="parse(shift.shifts_description)"
         ></p>
+
+        <div
+          v-if="
+            cats.dict &&
+            shift.shifts_category_2 &&
+            cats.dict.value[shift.shifts_category_2]
+          "
+          class="pt-4"
+        >
+          <p>
+            <strong>{{ t("Category") }}:</strong>
+            {{ cats.dict.value[shift.shifts_category_2]?.name }}
+          </p>
+          <p
+            v-html="
+              parse(
+                cats.dict.value[shift.shifts_category_2]?.beschreibung ?? '',
+              )
+            "
+          ></p>
+        </div>
+
+        <!-- v-html="parse(shift.shifts_category_2)" -->
         <!-- eslint-enable vue/no-v-html -->
 
         <p class="font-bold mt-4">{{ t("Next occurrences") }}</p>

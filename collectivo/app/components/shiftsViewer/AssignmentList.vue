@@ -27,7 +27,11 @@ const shift = occ.shift;
           assignment.assignment.shifts_membership.memberships_user.username ===
           ""
             ? "Anonym"
-            : assignment.assignment.shifts_membership.memberships_user.username
+            : assignment.assignment.shifts_membership.memberships_user
+                .username +
+              " " +
+              (assignment.assignment.shifts_membership.memberships_user
+                .username_last ?? "")
         }}
         <span
           v-if="
