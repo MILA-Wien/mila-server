@@ -10,7 +10,7 @@ const config = useRuntimeConfig();
 <template>
   <div class="iframe-container">
     <iframe
-      :src="config.public.lotzappShopUrl"
+      :src="config.public.lotzappSortimentUrl"
       title="MILA Sortiment Aktuell"
       class="iframe"
     />
