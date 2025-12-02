@@ -1,8 +1,16 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from "vue";
 
+
 definePageMeta({
   middleware: ["auth"],
+});
+
+// Temporarily disable the page
+throw createError({
+  statusCode: 404,
+  message: "Page not found",
+  fatal: true,
 });
 
 interface Beleg {

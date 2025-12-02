@@ -53,6 +53,7 @@ export default defineNuxtConfig({
       directusUrl: process.env.DIRECTUS_URL || "http://localhost:8055",
 
       lotzappShopUrl: process.env.LOTZAPP_SHOP_URL || "",
+      lotzappSortimentUrl: process.env.LOTZAPP_SORTIMENT_URL || "",
       annyLoginUrl: process.env.ANNY_LOGIN_URL || "",
     },
   },
