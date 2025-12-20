@@ -1,5 +1,21 @@
 {
   "version": 1,
-  "directus": "11.7.2",
-  "vendor": "postgres"
+  "directus": "11.14.0",
+  "vendor": "postgres",
+  "systemFields": [
+    {
+      "collection": "directus_activity",
+      "field": "timestamp",
+      "schema": {
+        "is_indexed": true
+      }
+    },
+    {
+      "collection": "directus_revisions",
+      "field": "parent",
+      "schema": {
+        "is_indexed": true
+      }
+    }
+  ]
 }

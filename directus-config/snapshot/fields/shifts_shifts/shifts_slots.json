@@ -17,6 +17,7 @@
     },
     "readonly": false,
     "required": true,
+    "searchable": true,
     "sort": 11,
     "special": null,
     "translations": [

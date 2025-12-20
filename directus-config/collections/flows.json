@@ -16,7 +16,7 @@
         "memberships"
       ]
     },
-    "operation": "427ccca3-cdea-470b-b7ad-bdea1cb50516",
+    "operation": null,
     "_syncId": "093c3c49-f5f8-41e0-bc77-7a6ec9fe7a80"
   },
   {
@@ -36,7 +36,7 @@
         "memberships"
       ]
     },
-    "operation": "5949437b-9948-4cd8-9495-35141213a78b",
+    "operation": null,
     "_syncId": "0bb93aa4-2de7-4219-aae6-6f9e6e26ba0a"
   },
   {
@@ -56,7 +56,7 @@
         "shifts_logs"
       ]
     },
-    "operation": "6bd0005f-43d3-495e-a242-d39bd20b604e",
+    "operation": null,
     "_syncId": "1cea747f-3aeb-43c2-a4b8-63d269d7774a"
   },
   {
@@ -76,7 +76,7 @@
         "messages_campaigns"
       ]
     },
-    "operation": "686e608a-82b1-4116-8946-5b904e8f3c86",
+    "operation": null,
     "_syncId": "24887665-6c92-44f5-b0ef-8fce13f01df2"
   },
   {
@@ -96,7 +96,7 @@
         "payments_invoices_out"
       ]
     },
-    "operation": "ecafe208-21b8-4aa9-ab60-ad3663271ffe",
+    "operation": null,
     "_syncId": "28c0f3c7-d900-4f6d-be60-da5a803be396"
   },
   {
@@ -117,7 +117,7 @@
         "directus_users"
       ]
     },
-    "operation": "39e3ab8b-b5de-4870-b556-fc2c69a2fa24",
+    "operation": null,
     "_syncId": "3bfde787-1881-4718-b02f-743d5f1f2a74"
   },
   {
@@ -137,7 +137,7 @@
         "shifts_assignments"
       ]
     },
-    "operation": "56545fbc-5162-43b7-84fa-55e38ab983e3",
+    "operation": null,
     "_syncId": "4132f37d-df4d-4d17-ae4f-f048b8a74af5"
   },
   {
@@ -157,7 +157,7 @@
         "memberships"
       ]
     },
-    "operation": "cfd6218a-7de5-4c15-9757-597a1312f9a6",
+    "operation": null,
     "_syncId": "493c1260-3bb9-47e7-940d-115b8b0f1ccc"
   },
   {
@@ -169,7 +169,7 @@
     "trigger": "operation",
     "accountability": "all",
     "options": {},
-    "operation": "3986d585-25ed-4e0b-a78f-0bb88798d3d9",
+    "operation": null,
     "_syncId": "55cc41e8-4d68-4895-b42e-e5af00a316f4"
   },
   {
@@ -191,7 +191,7 @@
         "directus_users"
       ]
     },
-    "operation": "fdb6da80-fa90-4f76-8d09-bf653ded0f32",
+    "operation": null,
     "_syncId": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1"
   },
   {
@@ -211,7 +211,7 @@
         "directus_users"
       ]
     },
-    "operation": "ad799be4-d215-4375-97d7-6308e05f46f4",
+    "operation": null,
     "_syncId": "5ea28856-7cb2-49a4-86b8-eacbd27ac54d"
   },
   {
@@ -231,7 +231,7 @@
         "shifts_absences"
       ]
     },
-    "operation": "af82e607-1ee7-4289-8752-49531f48ab86",
+    "operation": null,
     "_syncId": "610aa314-bd89-461e-b8a0-10d0ad75f2d4"
   },
   {
@@ -243,7 +243,7 @@
     "trigger": "operation",
     "accountability": "all",
     "options": {},
-    "operation": "7c31049c-0d2e-4d2a-82b6-5f541e8954d6",
+    "operation": null,
     "_syncId": "6179bf54-3ad8-4def-834d-b0cccf33c0dc"
   },
   {
@@ -262,7 +262,7 @@
       "confirmationDescription": "Möchtest du diese Kampagne absenden?",
       "location": "collection"
     },
-    "operation": "5bbba7d2-4d6a-4969-856b-f83c3347411d",
+    "operation": null,
     "_syncId": "8b324a75-f005-403d-8197-48accc2d3538"
   },
   {
@@ -278,7 +278,7 @@
       "interval": "0 3 * * *",
       "cron": "0 0 1 * * * "
     },
-    "operation": "9e5efeae-a13a-4841-9653-b4efb31192c8",
+    "operation": null,
     "_syncId": "8fbda46c-8ed1-4578-a38a-5ddbd11ee4da"
   },
   {
@@ -298,7 +298,7 @@
         "memberships"
       ]
     },
-    "operation": "5cdb0368-47f9-4f1c-b09a-6e386191c418",
+    "operation": null,
     "_syncId": "9231dda9-725b-4104-a466-6d8bc1589c22"
   },
   {
@@ -316,7 +316,7 @@
       "requireConfirmation": true,
       "confirmationDescription": "Ausgewählte Rechnungen in Lotzapp anlegen? (nicht ausstehende und bereits in Lotzapp existierende Rechnungen werden ignoriert)"
     },
-    "operation": "0b6f13b8-c0ce-4b3a-830f-c68221337073",
+    "operation": null,
     "_syncId": "939f6a73-ceb3-4974-b4b2-65649be03c84"
   },
   {
@@ -349,7 +349,7 @@
       ],
       "confirmationDescription": "Please choose a template"
     },
-    "operation": "bf786ac0-4a7b-49c3-9084-9ff1129d6e79",
+    "operation": null,
     "_syncId": "9ee2e72d-ca7e-4c4b-ab18-97abfd062ddf"
   },
   {
@@ -369,7 +369,7 @@
         "shifts_logs"
       ]
     },
-    "operation": "bec48064-fe97-4a23-9a03-246c8af492e7",
+    "operation": null,
     "_syncId": "ad8b2f6a-a0ec-4325-ad14-4b678b9acd83"
   },
   {
@@ -389,7 +389,7 @@
         "shifts_logs"
       ]
     },
-    "operation": "7750689a-c74f-4538-8375-652eff307512",
+    "operation": null,
     "_syncId": "c36a2159-395e-4eec-acb7-86cbd1d81d5c"
   },
   {
@@ -403,7 +403,7 @@
     "options": {
       "return": "$last"
     },
-    "operation": "7cd8064c-336d-4013-ab46-bc3c2f3aa653",
+    "operation": null,
     "_syncId": "c97d8437-3ee4-49d3-9e95-a1b0b147b9b7"
   },
   {
@@ -423,7 +423,7 @@
         "product_requests"
       ]
     },
-    "operation": "6ec25f0d-de91-4dcf-951a-4f088464231f",
+    "operation": null,
     "_syncId": "da1d3f39-d1a5-4150-a524-507e048580d5"
   },
   {
@@ -437,7 +437,7 @@
     "options": {
       "return": "$last"
     },
-    "operation": "b032fcb2-5cc5-40ad-ae75-62b7870377a6",
+    "operation": null,
     "_syncId": "e67933a7-f0df-41e2-b905-d49a8f2482db"
   },
   {
@@ -451,7 +451,7 @@
     "options": {
       "return": "$last"
     },
-    "operation": "0c32433c-4785-46f0-9e73-ec8747a61aa2",
+    "operation": null,
     "_syncId": "f714c75a-e78a-4c80-9b4d-4b39943d6444"
   }
 ]
