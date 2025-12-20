@@ -57,6 +57,7 @@ Troubleshooting
 
 - Changing the directus version also changes the schema. Pull the schema after changing the version and starting the container.
 - Changing flows often creates errors on push, this can be solved by deleting the changed flows manually before pushing.
+- When changing the directus version, push the schema first, then change the directus version, and then pull the schema again.
 
 ## Database backups
 
