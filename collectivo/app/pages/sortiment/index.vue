@@ -33,7 +33,7 @@ setPageTitle(t("Sortiment"));
         {{ t("Hier kannst du ausgewählte Produkte vorbestellen.") }}
       </p>
       <div class="flex flex-wrap gap-4">
-        <UButton color="green" to="/vorbestellen">
+        <UButton color="green" to="/sortiment/vorbestellen">
           {{ t("Zum Webshop für Vorbestellung") }}
         </UButton>
       </div>
@@ -45,7 +45,7 @@ setPageTitle(t("Sortiment"));
         {{ t("Hier kannst du unsere aktuellen Artikel und Preise einsehen.") }}
       </p>
       <div class="flex flex-wrap gap-4">
-        <UButton color="green" to="/aktuell">
+        <UButton color="green" to="/sortiment/aktuell">
           {{ t("Zum Sortiment") }}
         </UButton>
       </div>
