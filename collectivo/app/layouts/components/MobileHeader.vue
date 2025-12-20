@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import MobileProfileMenu from "./MobileProfileMenu.vue";
-
 const pageTitle = usePageTitle();
 const { t } = useI18n();
+
+const isDrawerOpen = defineModel<boolean>("drawerOpen", { default: false });
 </script>
 
 <template>
@@ -13,7 +13,12 @@ const { t } = useI18n();
       <div class="text-2xl font-Avory truncate">
         {{ t(pageTitle) }}
       </div>
-      <div class="pt-px"><MobileProfileMenu /></div>
+      <button
+        @click="isDrawerOpen = true"
+        class="pt-px p-2 hover:bg-gray-100 rounded transition-all"
+      >
+        <UIcon name="i-heroicons-bars-3" class="h-7 w-7" />
+      </button>
     </div>
   </div>
 </template>
