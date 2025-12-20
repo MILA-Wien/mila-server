@@ -1,16 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect } from "vue";
-
+import { ref, computed } from "vue";
 
 definePageMeta({
   middleware: ["auth"],
-});
-
-// Temporarily disable the page
-throw createError({
-  statusCode: 404,
-  message: "Page not found",
-  fatal: true,
 });
 
 interface Beleg {
@@ -67,7 +59,7 @@ const {
   pending,
   error,
   refresh,
-} = await useFetch("/api/lotzapp/bills", {
+} = await useFetch<Beleg[]>("/api/lotzapp/bills", {
   query: monthRange,
   watch: false,
 });
@@ -101,7 +93,16 @@ const monthLabel = computed(() =>
 <template>
   <BetaMessage />
   <div class="space-y-4">
-    <div class="border-2 w-full p-3">{{ t("intro_belege") }}</div>
+    <div class="border-2 w-full p-3">
+      {{ t("intro_belege") }}
+      <a
+        href="https://www.mila.wien/datenschutz/"
+        class="underline"
+        target="_blank"
+      >
+        {{ t("Datenschutzerklärung") }}</a
+      >.
+    </div>
     <div class="flex items-center gap-3 border-2 w-full p-3 justify-between">
       <UButton
         icon="i-heroicons-chevron-left"
@@ -147,7 +148,8 @@ const monthLabel = computed(() =>
 
 <i18n lang="yaml">
 de:
-  "intro_belege": "Hier findest du eine Übersicht deiner Einkäufe. Bitte beachte: Nur Einkäufe, bei denen du deine Mitgliedskarte an der Kassa scannst, werden deiner Mitgliedschaft zugeordnet."
+  "intro_belege": "Hier findest du eine Übersicht deiner Einkäufe. Bitte beachte: Nur Einkäufe, bei denen du deine Mitgliedskarte an der Kassa scannst, werden deiner Mitgliedschaft zugeordnet. Für mehr Infos, siehe unsere "
 en:
-  "intro_belege": "Here you will find an overview of your purchases. Please note: Only purchases where you scan your membership card at the checkout will be assigned to your membership."
+  "intro_belege": "Here you will find an overview of your purchases. Please note: Only purchases where you scan your membership card at the checkout will be assigned to your membership. For more information, see our "
+  "Datenschutzerklärung": "Privacy Policy"
 </i18n>
