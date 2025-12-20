@@ -17,35 +17,41 @@ Mitglieder- und Schichtenverwaltung des [MILA Mitmach-Supermarkt e.G.](https://w
 
 - Create .env file with `cp .env.example .env`
 - Create a network `docker network create proxiable`
-- Run `docker compose up -d`
+- Run `docker compose up -d` and wait for directus to be ready
 - Run `docker compose exec -u root directus-dev chown -R node:node /directus/extensions /directus/uploads`
+- Run `npx directus-sync push` to apply data schema
 - Install packages with `pnpm i`
 - Start dev server with `pnpm dev`
-- In a second terminal, make an API call to create example data with `pnpm seed`
+- Go to http://localhost:3000 and click on "Seed example data" or run `pnpm seed`
 
 The following services will then be available:
 
 - Frontend http://localhost:3000
 - Directus http://localhost:8055
 
-Test users for frontend and directus:
+Test users for frontend and directus (after seeding):
 
 - `admin@example.com` / `admin`
 - `editor@example.com` / `editor`
 - `user@example.com` / `user`
 
+## Troubleshooting
+
+- Resetting everything
+  - Delete `.env` and `collectivo/.env`
+  - To be super clean, also delete `node_modules`, `collectivo/node_modules`, and `collectivo/.nuxt`
+  - Run `docker compose down -v`
+
 ## Database schemas
 
 Collectivo uses [directus-sync](https://github.com/tractr/directus-sync) to apply the database schema.
-The schema is automatically applied, every time the directus container is started.
-To prevent this, create a file `./directus/uploads/sync.lock`.
 
-Changing the database schema
+Updating the database schema
 
 - Make changes to the database schema on your local system
 - Run `npx directus-sync pull` to update the database schema in the repository
 - Make a database backup of the production system (see below)
-- Remove `./directus/uploads/sync.lock` and restart the container or run `npx directus-sync push -u "http://localhost:8055" -e "<EMAIL>" -p "<PASSWORD>"`
+- Run `npx directus-sync push` (credentials will be taken from .env)
 
 Troubleshooting
 
@@ -83,6 +89,8 @@ Notes:
 - Backups are run with `--clean` so that they can be applied to an existing database.
 
 ## Local setup with Keycloak
+
+The dev setup runs without keycloak. To test keycloak integration:
 
 - In `collectivo/.env`, set `NUXT_PUBLIC_USE_KEYCLOAK = "true"`
 - In `.env`, set `COMPOSE_PROFILES = "production"`

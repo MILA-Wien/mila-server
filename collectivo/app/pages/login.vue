@@ -25,7 +25,28 @@ async function loginDevMode(email: string, password: string) {
   window.location.href = runtimeConfig.public.collectivoUrl;
 }
 
-const TEST_USERS = [
+async function handleLogin() {
+  await loginDevMode(email.value, password.value);
+}
+
+async function seedData() {
+  seeding.value = true;
+  try {
+    await $fetch("/api/create_example_data", {
+      method: "POST",
+      headers: {
+        Authorization: "badToken",
+      },
+    });
+    alert("Data seed started. See terminal for more info.");
+  } catch (error) {
+    alert("Error seeding data: " + error);
+  } finally {
+    seeding.value = false;
+  }
+}
+
+const TEST_USERS: [string, string][] = [
   ["admin@example.com", "admin"],
   ["editor@example.com", "editor"],
   ["user@example.com", "user"],
@@ -33,18 +54,66 @@ const TEST_USERS = [
 ];
 
 const loading = ref(false);
+const seeding = ref(false);
+const email = ref("admin@example.com");
+const password = ref("admin");
 </script>
 
 <template>
   <div
     v-if="!useKeycloak"
-    class="flex flex-col items-center justify-center h-screen gap-3"
+    class="flex flex-col items-center justify-center h-screen gap-6"
   >
-    <h1>LOGIN DEV MODE</h1>
-    <template v-for="[email, password] in TEST_USERS" :key="email">
-      <UButton :loading="loading" @click="loginDevMode(email, password)">
-        Log in as {{ email }}
-      </UButton>
-    </template>
+    <h1 class="text-2xl font-bold">LOGIN DEV MODE</h1>
+
+    <form @submit.prevent="handleLogin" class="flex flex-col gap-4 w-80">
+      <div class="flex flex-col gap-2">
+        <label for="email" class="text-sm font-medium">Email</label>
+        <input
+          id="email"
+          v-model="email"
+          type="email"
+          class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        />
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="password" class="text-sm font-medium">Password</label>
+        <input
+          id="password"
+          v-model="password"
+          type="password"
+          class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        />
+      </div>
+
+      <UButton type="submit" :loading="loading" class="mt-2"> Login </UButton>
+    </form>
+
+    <div class="flex flex-col gap-3 w-80">
+      <div class="border-t border-gray-300 pt-4">
+        <h2 class="text-sm font-medium mb-3 text-center">Quick Login</h2>
+        <div class="flex flex-col gap-2">
+          <template v-for="user in TEST_USERS" :key="user[0]">
+            <UButton
+              :loading="loading"
+              @click="loginDevMode(user[0], user[1])"
+              variant="outline"
+              size="sm"
+            >
+              Log in as {{ user[0] }}
+            </UButton>
+          </template>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-300 pt-4">
+        <UButton :loading="seeding" @click="seedData" color="green" block>
+          Seed Example Data
+        </UButton>
+      </div>
+    </div>
   </div>
 </template>
