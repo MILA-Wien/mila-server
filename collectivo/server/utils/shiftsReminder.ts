@@ -5,6 +5,7 @@
  * Requires an active automation with the name "shifts_reminder".
  */
 import { createItem, readItems, updateItems } from "@directus/sdk";
+import { getFutureHolidayRrule } from "./shiftsQueries";
 
 export async function sendShiftReminders(date: Date) {
   const automation = await getAutomation("shifts_reminder");
@@ -16,6 +17,7 @@ async function getAssignmentsInTwoDays(date: Date) {
   const directus = useDirectusAdmin();
   const targetDate = new Date(date);
   targetDate.setDate(targetDate.getDate() + 3);
+  console.log("Sending reminders for shifts on ", targetDate.toISOString());
   const shifts: ShiftsShift[] = await getShiftShifts(
     targetDate,
     targetDate,
@@ -44,7 +46,6 @@ async function getAssignmentsInTwoDays(date: Date) {
     absences.push(...absences_);
   }
 
-  // Get public holidays within timeframe
   const publicHolidays = (await directus.request(
     readItems("shifts_holidays_public", {
       filter: {
@@ -56,6 +57,8 @@ async function getAssignmentsInTwoDays(date: Date) {
       fields: ["*"],
     }),
   )) as ShiftsPublicHoliday[];
+
+  const holidayRrule = await getFutureHolidayRrule();
 
   const assignmentRules: AssignmentRrule[] = [];
 
@@ -82,6 +85,13 @@ async function getAssignmentsInTwoDays(date: Date) {
     const occs = rule.rruleWithAbsences.between(targetDate, targetDate, true);
 
     for (const occ of occs) {
+      if (
+        holidayRrule.between(occ, occ, true).length > 0 &&
+        rule.shift.exclude_public_holidays == true
+      ) {
+        continue;
+      }
+
       occurrences.push({
         assignment: rule,
         date: occ,

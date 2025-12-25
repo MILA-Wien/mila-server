@@ -3,7 +3,10 @@
 
 import { RRule, RRuleSet } from "rrule";
 import { readItems } from "@directus/sdk";
-import { createAssignmentRrule } from "../../utils/shiftsQueries";
+import {
+  createAssignmentRrule,
+  getFutureHolidayRrule,
+} from "../../utils/shiftsQueries";
 
 export default defineEventHandler(async (event) => {
   return await getShiftDataDashboard(event.context.auth.mship);
@@ -13,12 +16,12 @@ const getShiftDataDashboard = async (mship: number) => {
   const [
     assignments,
     [absences, signouts, holidays, holidaysCurrent],
-    publicHolidaRruleSet,
+    holidayRrule,
     logs,
   ] = await Promise.all([
     getAssignments(mship),
     getAbsences(mship),
-    getPublicHolidays(),
+    getFutureHolidayRrule(),
     getLogs(mship),
   ]);
 
@@ -27,7 +30,7 @@ const getShiftDataDashboard = async (mship: number) => {
       return await getAssignmentInfos(
         assignment,
         absences,
-        publicHolidaRruleSet,
+        holidayRrule,
         mship,
       );
     }),
@@ -134,35 +137,6 @@ async function getAbsences(mship: number) {
   return [absences, signouts, holidays, holidaysCurrent];
 }
 
-async function getPublicHolidays() {
-  const now = getCurrentDate();
-  const directus = useDirectusAdmin();
-  const publicHolidays = (await directus.request(
-    readItems("shifts_holidays_public", {
-      filter: {
-        date: {
-          // @ts-expect-error directus date filter bug
-          _and: [{ _gte: now }],
-        },
-      },
-      limit: -1,
-      fields: ["date"],
-    }),
-  )) as ShiftsPublicHoliday[];
-
-  const publicHolidaRruleSet = new RRuleSet();
-  publicHolidays.forEach((holiday) => {
-    publicHolidaRruleSet.rrule(
-      new RRule({
-        dtstart: new Date(holiday.date),
-        count: 1,
-      }),
-    );
-  });
-
-  return publicHolidaRruleSet;
-}
-
 async function getLogs(mship: number) {
   const directus = useDirectusAdmin();
   return await directus.request(
@@ -198,7 +172,7 @@ function getOccurrenceInfo(occ: Date, hr: RRule, oar: RRule, phr?: RRule) {
 const getAssignmentInfos = async (
   assignment: Awaited<ReturnType<typeof getAssignments>>[number],
   absences: Awaited<ReturnType<typeof getAbsences>>[number][],
-  publicHolidaRruleSet: RRuleSet,
+  holidayRrule: RRuleSet,
   mship: number,
 ) => {
   const now = getCurrentDate();
@@ -232,7 +206,7 @@ const getAssignmentInfos = async (
           currentDate,
           holidayRule,
           otherAbsencesRule,
-          excludePublicHolidays ? publicHolidaRruleSet : undefined,
+          excludePublicHolidays ? holidayRrule : undefined,
         ),
       );
     }
