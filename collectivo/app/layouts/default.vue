@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import Sidebar from "./components/Sidebar.vue";
 import MobileHeader from "./components/MobileHeader.vue";
-import MobileMenu from "./components/MobileMenu.vue";
+import MobileSideDrawer from "./components/MobileSideDrawer.vue";
 import ProfileMenu2 from "./components/ProfileMenu2.vue";
 import Header from "./components/Header.vue";
 const { locale } = useI18n();
 const localeKey = ref(0);
+const mobileDrawerOpen = ref(false);
+
 watch(locale, () => {
   localeKey.value++;
 });
@@ -14,8 +16,9 @@ watch(locale, () => {
 <template>
   <div class="layout">
     <Sidebar />
-    <MobileHeader />
-    <div class="md:pl-44 lg:pl-52 pb-10">
+    <MobileHeader v-model:drawer-open="mobileDrawerOpen" />
+    <MobileSideDrawer v-model="mobileDrawerOpen" />
+    <div class="md:pl-44 lg:pl-52">
       <div class="hidden md:flex w-full justify-end px-8 pt-8 pb-4 right-0">
         <ProfileMenu2 />
       </div>
@@ -27,7 +30,6 @@ watch(locale, () => {
         </div>
       </div>
     </div>
-    <MobileMenu />
   </div>
 </template>
 

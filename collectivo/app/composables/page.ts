@@ -59,6 +59,17 @@ export const useNavigationMenus = () =>
           },
         },
         {
+          label: "Belege",
+          icon: "i-heroicons-document-text",
+          to: "/belege",
+        },
+        {
+          label: "Sortiment",
+          icon: "i-heroicons-shopping-bag",
+          to: "/sortiment",
+        },
+
+        {
           label: "Help",
           icon: "i-heroicons-question-mark-circle",
           to: "/help",

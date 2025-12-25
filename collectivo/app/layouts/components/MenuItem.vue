@@ -10,6 +10,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  drawer: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const visible = ref(false);
@@ -29,8 +33,8 @@ async function filterItem(item: CollectivoMenuItem) {
   <div v-if="visible">
     <div v-if="item.click">
       <a
-        class="text-white flex flex-col gap-1 items-center transition-all cursor-pointer hover:bg-milaGreenHover [&.router-link-exact-active]:bg-milaGreenHover"
-        :class="mobile ? 'py-2 px-2.5 mb-0 mx-0 min-w-16' : 'px-3 py-4 mb-2'"
+        class="text-white flex transition-all cursor-pointer hover:bg-milaGreenHover [&.router-link-exact-active]:bg-milaGreenHover"
+        :class="drawer ? 'flex-row gap-3 items-center px-3 py-3 mb-0' : mobile ? 'flex-col gap-1 items-center py-2 px-2.5 mb-0 mx-0 min-w-16' : 'flex-col gap-1 items-center px-3 py-4 mb-2'"
         @click="item.click()"
       >
         <slot name="icon">
@@ -42,7 +46,12 @@ async function filterItem(item: CollectivoMenuItem) {
       </a>
     </div>
     <div v-else-if="item.external">
-      <a :href="item.to" :target="item.target ?? '_blank'" class="item">
+      <a
+        :href="item.to"
+        :target="item.target ?? '_blank'"
+        class="text-white flex transition-all cursor-pointer hover:bg-milaGreenHover"
+        :class="drawer ? 'flex-row gap-3 items-center px-3 py-3 mb-0' : 'flex-col gap-1 items-center px-3 py-4 mb-2'"
+      >
         <UIcon v-if="item.icon" :name="item.icon" class="h-5 w-5 mb-0" />
 
         <span class="font-semibold">{{ t(item.label) }}</span>
@@ -51,8 +60,8 @@ async function filterItem(item: CollectivoMenuItem) {
     <div v-else>
       <NuxtLink
         :to="item.to"
-        class="text-white flex flex-col gap-1 items-center transition-all cursor-pointer hover:bg-milaGreenHover [&.router-link-exact-active]:bg-milaGreenHover"
-        :class="mobile ? 'py-2 px-2.5 mb-0 mx-0 min-w-16' : 'px-3 py-4 mb-2'"
+        class="text-white flex transition-all cursor-pointer hover:bg-milaGreenHover [&.router-link-exact-active]:bg-milaGreenHover"
+        :class="drawer ? 'flex-row gap-3 items-center px-3 py-3 mb-0' : mobile ? 'flex-col gap-1 items-center py-2 px-2.5 mb-0 mx-0 min-w-16' : 'flex-col gap-1 items-center px-3 py-4 mb-2'"
       >
         <UIcon v-if="item.icon" :name="item.icon" class="h-5 w-5 mb-0" />
 
