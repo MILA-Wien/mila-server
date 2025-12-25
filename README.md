@@ -93,7 +93,7 @@ Notes:
 The dev setup runs without keycloak. To test keycloak integration:
 
 - In `collectivo/.env`, set `NUXT_PUBLIC_USE_KEYCLOAK = "true"`
-- In `.env`, set `COMPOSE_PROFILES = "production"`
+- In `.env`, set `COMPOSE_PROFILES = "dev,keycloak"`
 - In `.env`, set `DIRECTUS_AUTH_PROVIDERS`to `keycloak`
 - Add the following to your etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak`
 
