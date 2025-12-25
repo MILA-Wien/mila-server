@@ -10,8 +10,6 @@ services:
         condition: service_started
       keycloak:
         condition: service_healthy
-    ports:
-      - 8055:8055
     volumes:
       - ./directus/uploads:/directus/uploads
       - ./directus-config:/directus/directus-config
