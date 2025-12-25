@@ -20,9 +20,17 @@ if (useKeycloak) {
 
 async function loginDevMode(email: string, password: string) {
   loading.value = true;
-  await directus.login(email, password);
-  // Nuxt navigateTo does not work in this context, don't know why
-  window.location.href = runtimeConfig.public.collectivoUrl;
+  errorMessage.value = "";
+  try {
+    await directus.login(email, password);
+    // Nuxt navigateTo does not work in this context, don't know why
+    window.location.href = runtimeConfig.public.collectivoUrl;
+  } catch (error) {
+    errorMessage.value =
+      "Login failed. User may not exist. Have you clicked 'Seed Example Data' yet?";
+  } finally {
+    loading.value = false;
+  }
 }
 
 async function handleLogin() {
@@ -57,6 +65,7 @@ const loading = ref(false);
 const seeding = ref(false);
 const email = ref("admin@example.com");
 const password = ref("admin");
+const errorMessage = ref("");
 </script>
 
 <template>
@@ -91,6 +100,10 @@ const password = ref("admin");
 
       <UButton type="submit" :loading="loading" class="mt-2"> Login </UButton>
     </form>
+
+    <div v-if="errorMessage" class="w-80 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-sm">
+      {{ errorMessage }}
+    </div>
 
     <div class="flex flex-col gap-3 w-80">
       <div class="border-t border-gray-300 pt-4">

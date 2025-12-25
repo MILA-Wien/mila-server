@@ -81,6 +81,9 @@ export default defineNuxtConfig({
       { code: "en", files: ["shifts/en.json"] }, //
       { code: "de", files: ["shifts/de.json"] }, //
     ],
+    bundle: {
+      optimizeTranslationDirective: false,
+    },
   },
 
   css: ["~/assets/css/main.css"],

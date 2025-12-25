@@ -11,51 +11,37 @@ services:
     build:
       context: ./directus
       dockerfile: Dockerfile
-    container_name: ${DIRECTUS_CONTAINER_NAME}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
-      directus-db:
-        condition: service_started
-    expose:
-      - 8055
+      directus-db-dev:
+        condition: service_healthy
     ports:
       - 8055:8055
-    networks:
-      - proxiable
-      - default
     volumes:
       - ./directus/uploads:/directus/uploads
       - ./directus-config:/directus/directus-config
     restart: unless-stopped
     environment:
       PUBLIC_URL: ${DIRECTUS_URL}
-      KEY: ${DIRECTUS_KEY}
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "true"
       SECRET: ${DIRECTUS_SECRET}
       ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
       ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
       ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
       DB_CLIENT: "pg"
-      DB_HOST: "directus-db"
+      DB_HOST: "directus-db-dev"
       DB_PORT: "5432"
       DB_DATABASE: "directus"
       DB_USER: "directus"
       DB_PASSWORD: ${DIRECTUS_DB_PASSWORD}
-      SESSION_COOKIE_DOMAIN: "${DIRECTUS_SESSION_COOKIE_DOMAIN}"
-      SESSION_COOKIE_SECURE: "true"
-      SESSION_COOKIE_SAME_SITE: "lax"
-      CORS_ENABLED: "true"
-      CORS_ORIGIN: "true"
-      WEBSOCKETS_ENABLED: true
       COLLECTIVO_API_URL: ${COLLECTIVO_API_URL}
       COLLECTIVO_API_TOKEN: ${COLLECTIVO_API_TOKEN}
       FLOWS_ENV_ALLOW_LIST: "PUBLIC_URL,COLLECTIVO_API_URL,COLLECTIVO_API_TOKEN"
-      MARKETPLACE_TRUST: all
 
-  # DB same in production and dev
-
-  directus-db:
-    container_name: directus-db
+  directus-db-dev:
+    profiles: [dev]
     image: postgis/postgis:16-3.4-alpine
     volumes:
       - directus-db-data:/var/lib/postgresql/data
@@ -67,11 +53,9 @@ services:
       timeout: 5s
       retries: 5
     environment:
+      POSTGRES_DB: "directus"
       POSTGRES_USER: "directus"
       POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
-      POSTGRES_DB: "directus"
-    networks:
-      - default
 
   # Production Services
 
@@ -139,6 +123,26 @@ services:
       FLOWS_ENV_ALLOW_LIST: "PUBLIC_URL,COLLECTIVO_API_URL,COLLECTIVO_API_TOKEN"
 
       MARKETPLACE_TRUST: all
+
+  directus-db:
+    container_name: directus-db
+    image: postgis/postgis:16-3.4-alpine
+    profiles: [production]
+    volumes:
+      - directus-db-data:/var/lib/postgresql/data
+      - ./directus-db-backups:/backups
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_USER: "directus"
+      POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
+      POSTGRES_DB: "directus"
+    networks:
+      - default
   collectivo:
     container_name: collectivo
     image: node:18-alpine

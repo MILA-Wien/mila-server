@@ -1,6 +1,6 @@
 # MILA Mitgliederplattform
 
-Mitglieder- und Schichtenverwaltung des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/). Erreichbar unter https://mein.mila.wien/. Weitere Informationen für Mitglieder unter https://handbuch.mila.wien/.
+Mitgliederplattform des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/).
 
 ## Applikationen
 
@@ -10,13 +10,12 @@ Mitglieder- und Schichtenverwaltung des [MILA Mitmach-Supermarkt e.G.](https://w
 - Direktkreditverwaltung (habidat & habidat-db)
 - Backups (directus-db-backup & keycloak-db-backup)
 
-## Local development setup (only Nuxt and Directus)
+## Local development setup
 
 - Install Docker and PNPM
 - Clone this repository
 
 - Create .env file with `cp .env.example .env`
-- Create a network `docker network create proxiable`
 - Run `docker compose up -d` and wait for directus to be ready
 - Run `docker compose exec -u root directus-dev chown -R node:node /directus/extensions /directus/uploads`
 - Run `npx directus-sync push` to apply data schema
