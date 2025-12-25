@@ -72,6 +72,8 @@ async function create_users() {
     const u = {
       first_name: userName,
       last_name: "Example",
+      username: userName,
+      username_last: "Example",
       email: email,
       password: `${userName.toLowerCase()}`,
       role: userRole,
@@ -128,19 +130,6 @@ async function create_tags() {
       tags_name: tagName,
     });
   }
-
-  // Add some members to some tags
-  // TODO: This is not working
-  // console.info("Creating tag-member relations");
-  // for (var i = 0; i < 3; i++) {
-  //   tags[i].directus_users = {
-  //     create: [
-  //       { collectivo_tags_id: "+", directus_users_id: { id: 1 } },
-  //       { collectivo_tags_id: "+", directus_users_id: { id: 2 } },
-  //       { collectivo_tags_id: "+", directus_users_id: { id: 3 } },
-  //     ],
-  //   };
-  // }
 
   try {
     await directus.request(createItems("collectivo_tags", tags));
@@ -390,76 +379,3 @@ async function createAssignments() {
 
   await directus.request(createItems("shifts_assignments", assignments));
 }
-
-// async function createLogs() {
-//   const directus = await useDirectusAdmin();
-
-//   const assignments = await directus.request(
-//     readItems("shifts_assignments", {
-//       fields: ["*"],
-//     }),
-//   );
-
-//   const requests: ShiftsLog[] = [];
-
-//   for (const assignment of assignments) {
-//     const nbLogs = getRandomInt(5, 20);
-
-//     for (let i = 0; i < nbLogs; i++) {
-//       const types = [
-//         ShiftLogType.ATTENDED,
-//         ShiftLogType.ATTENDED,
-//         ShiftLogType.MISSED,
-//         ShiftLogType.CANCELLED,
-//       ];
-
-//       requests.push({
-//         shifts_type: types[getRandomInt(0, types.length)],
-//         shifts_date: DateTime.now()
-//           .plus({ days: getRandomInt(-10, 10) })
-//           .toISO(),
-//         shifts_assignment: assignment.id,
-//         shifts_user: assignment.shifts_user,
-//       });
-//     }
-//   }
-
-//   await directus.request(createItems("shifts_logs", requests));
-// }
-
-//   // Payments ----------------------------------------------------------------------
-
-//   // Clean up old data
-//   await directus.request(deleteItems("payments_invoices_out", { limit: 1000 }));
-
-//   const invoice_ids = [];
-
-//   const users = await directus.request(
-//     readUsers({ filter: { first_name: "Alice" } }),
-//   );
-
-//   for (const status of ["pending", "paid"]) {
-//     const res = await directus.request(
-//       createItem("payments_invoices_out", {
-//         payments_recipient_user: users[0].id,
-//         payments_status: status,
-//         payments_date_issued: new Date(),
-//       }),
-//     );
-
-//     invoice_ids.push(res.id);
-//   }
-
-//   for (const invoice_id of invoice_ids) {
-//     await directus.request(
-//       createItem("payments_invoices_entries", {
-//         payments_invoice: invoice_id,
-//         payments_description: "Test item",
-//         payments_quantity: 1,
-//         payments_price: 100,
-//       }),
-//     );
-//   }
-// }
-
-// import { createItem, deleteItems, readUsers } from "@directus/sdk";
