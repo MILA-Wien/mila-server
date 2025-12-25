@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   try {
     const date = new Date();
     date.setUTCHours(0, 0, 0, 0);
-    date.setDate(date.getDate() - 1);
+    date.setDate(date.getDate() - 3);
     await sendShiftReminders(date);
   } catch (e) {
     console.error("Error in test shift reminders", e);

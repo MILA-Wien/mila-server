@@ -17,6 +17,7 @@ async function getAssignmentsInTwoDays(date: Date) {
   const directus = useDirectusAdmin();
   const targetDate = new Date(date);
   targetDate.setDate(targetDate.getDate() + 3);
+  console.log("Sending reminders for shifts on ", targetDate.toISOString());
   const shifts: ShiftsShift[] = await getShiftShifts(
     targetDate,
     targetDate,
@@ -84,7 +85,10 @@ async function getAssignmentsInTwoDays(date: Date) {
     const occs = rule.rruleWithAbsences.between(targetDate, targetDate, true);
 
     for (const occ of occs) {
-      if (holidayRrule.between(occ, occ, true).length > 0) {
+      if (
+        holidayRrule.between(occ, occ, true).length > 0 &&
+        rule.shift.exclude_public_holidays == true
+      ) {
         continue;
       }
 
