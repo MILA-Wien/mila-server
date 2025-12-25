@@ -1,6 +1,4 @@
-import { readMe, updateMe } from "@directus/sdk";
 import type { RestClient } from "@directus/sdk";
-import { use } from "marked";
 
 export const useCurrentUser = () => {
   const state = useState<CurrentUserStore>("collectivo_user", () => {
@@ -78,11 +76,13 @@ class CurrentUserStore {
     await this.init($directus);
   }
 
-  async save(data: UserProfile) {
-    const { $directus } = useNuxtApp();
+  async save(data: Partial<UserProfile>) {
     this.saving = true;
-    await $directus?.request(updateMe(data));
-    this.user = data;
+    await $fetch("/api/profile", {
+      method: "PUT",
+      body: data,
+    });
+    this.user = { ...this.user, ...data } as UserProfile;
     this.saving = false;
     return this;
   }

@@ -1,5 +1,3 @@
-import { readItems } from "@directus/sdk";
-
 let loaded = false;
 let loadPromise: Promise<ShiftsCategory[]> = Promise.resolve([]);
 
@@ -13,10 +11,13 @@ export function useShiftsCategories() {
   if (!loaded) {
     loadPromise = loadData().then((categories) => {
       data.value = categories;
-      dict.value = categories.reduce((acc, category) => {
-        acc[category.id] = category;
-        return acc;
-      }, {});
+      dict.value = categories.reduce(
+        (acc, category) => {
+          acc[category.id] = category;
+          return acc;
+        },
+        {} as Record<string, ShiftsCategory>,
+      );
       loaded = true;
       return categories;
     });
@@ -25,11 +26,5 @@ export function useShiftsCategories() {
 }
 
 async function loadData() {
-  const directus = useDirectus();
-  return await directus.request(
-    readItems("shifts_categories", {
-      limit: -1,
-      fields: ["id", "name", "beschreibung", "for_all"],
-    }),
-  );
+  return await $fetch<ShiftsCategory[]>("/api/shifts/categories");
 }

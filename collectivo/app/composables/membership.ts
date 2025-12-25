@@ -1,20 +1,5 @@
-import { readItem } from "@directus/sdk";
-
 export async function getMembership(id: number) {
-  const directus = useDirectus();
-  return await directus.request(
-    readItem("memberships", id, {
-      fields: [
-        "id",
-        { memberships_user: ["username", "username_last"] },
-        "memberships_type",
-        "memberships_status",
-        "shifts_categories_allowed",
-        "shifts_user_type",
-        "shifts_can_be_coordinator",
-      ],
-    }),
-  );
+  return await $fetch(`/api/memberships/${id}`);
 }
 
 type RequiredFields = {
