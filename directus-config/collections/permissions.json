@@ -1252,7 +1252,8 @@
       "survey_languages_additional",
       "use_pronouns_on_card",
       "email_notifications",
-      "buddy_details"
+      "buddy_details",
+      "username_last"
     ],
     "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
     "_syncId": "cc075e8f-1648-463a-878e-44421be73f52"
