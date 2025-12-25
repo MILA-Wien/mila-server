@@ -953,6 +953,7 @@ async function onError(event: FormErrorEvent) {
             { label: 'French', value: 'Französisch' },
             { label: 'Turkish', value: 'Türkisch' },
             { label: 'BKMS', value: 'BKMS' },
+            { label: 'Romanian', value: 'Rumänisch' },
             { label: 'Ukrainian', value: 'Ukrainisch' },
             { label: 'Russian', value: 'Russisch' },
             { label: 'Arabic', value: 'Arabisch' },
@@ -1113,6 +1114,7 @@ de:
   "French": "Französisch"
   "BKS": "BKS"
   "Ukrainian": "Ukrainisch"
+  "Romanian": "Rumänisch"
   "Russian": "Russisch"
   "Password": "Passwort"
   "Repeat password": "Passwort wiederholen"
