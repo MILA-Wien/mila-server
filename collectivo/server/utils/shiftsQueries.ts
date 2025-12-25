@@ -145,6 +145,35 @@ export async function getShiftPublicHolidays(from: Date, to: Date) {
   );
 }
 
+export async function getFutureHolidayRrule() {
+  const now = getCurrentDate();
+  const directus = useDirectusAdmin();
+  const publicHolidays = (await directus.request(
+    readItems("shifts_holidays_public", {
+      filter: {
+        date: {
+          // @ts-expect-error directus date filter bug
+          _and: [{ _gte: now }],
+        },
+      },
+      limit: -1,
+      fields: ["date"],
+    }),
+  )) as ShiftsPublicHoliday[];
+
+  const publicHolidaRruleSet = new RRuleSet();
+  publicHolidays.forEach((holiday) => {
+    publicHolidaRruleSet.rrule(
+      new RRule({
+        dtstart: new Date(holiday.date),
+        count: 1,
+      }),
+    );
+  });
+
+  return publicHolidaRruleSet;
+}
+
 // Create a RRule object for a shift
 // Shifts without end date run forever
 // Shifts without repetition run once
@@ -222,6 +251,7 @@ export const getAssignmentRrules = (
   shiftRule: RRule,
   assignments: ShiftsAssignmentsQuery,
   absences: ShiftsAbsence[],
+  holidayRrule?: RRule,
 ): AssignmentRrule[] => {
   const assignmentRules: AssignmentRrule[] = [];
 
@@ -263,9 +293,10 @@ export const getAssignmentRrules = (
         absence: absence as ShiftsAbsence,
         rrule: absenceRule,
       });
-      // Removed as it overwrites absence and is not needed anywhere?
-      // absence.shifts_assignment = assignment;
       assRruleWithAbs.exrule(absenceRule);
+      if (holidayRrule) {
+        assRruleWithAbs.exrule(holidayRrule);
+      }
     }
 
     assignmentRules.push({
