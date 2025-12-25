@@ -4,104 +4,60 @@ networks:
     external: true
 
 services:
-  collectivo:
-    container_name: collectivo
-    image: node:18-alpine
-    profiles: [production]
-    command: "node app/.output/server/index.mjs"
-    volumes:
-      - ./collectivo:/app
-    restart: unless-stopped
-    depends_on:
-      - directus
-      - keycloak
-    networks:
-      - default
-      - proxiable
-    environment:
-      NUXT_API_TOKEN: ${COLLECTIVO_API_TOKEN}
-      NUXT_CHECKIN_TOKEN: ${COLLECTIVO_CHECKIN_TOKEN}
-
-      NUXT_DIRECTUS_ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
-      NUXT_KEYCLOAK_ADMIN_CLIENT: ${KEYCLOAK_ADMIN_CLIENT}
-      NUXT_KEYCLOAK_ADMIN_SECRET: ${KEYCLOAK_ADMIN_SECRET}
-      NUXT_PUBLIC_COLLECTIVO_URL: ${COLLECTIVO_URL}
-      NUXT_PUBLIC_CONTACT_EMAIL: ${COLLECTIVO_CONTACT_EMAIL}
-      NUXT_PUBLIC_DIRECTUS_URL: ${DIRECTUS_URL}
-      NUXT_PUBLIC_KEYCLOAK_URL: ${KEYCLOAK_URL}
-      NUXT_PUBLIC_KEYCLOAK_REALM: ${KEYCLOAK_REALM}
-      NUXT_PUBLIC_USE_KEYCLOAK: "true"
-
-      NUXT_EMAIL_FROM: ${EMAIL_FROM}
-      NUXT_EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST}
-      NUXT_EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT}
-      NUXT_EMAIL_SMTP_USER: ${EMAIL_SMTP_USER}
-      NUXT_EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
-
-      NUXT_LOTZAPP_MANDANT: ${LOTZAPP_MANDANT}
-      NUXT_LOTZAPP_SEPA_ID: ${LOTZAPP_SEPA_ID}
-      NUXT_LOTZAPP_TRANSFER_ID: ${LOTZAPP_TRANSFER_ID}
-      NUXT_LOTZAPP_USER: ${LOTZAPP_USER}
-      NUXT_LOTZAPP_PASSWORD: ${LOTZAPP_PASSWORD}
-      NUXT_LOTZAPP_ACCOUNT_IDS: ${LOTZAPP_ACCOUNT_IDS}
-
-      NUXT_PUBLIC_LOTZAPP_SHOP_URL: ${LOTZAPP_SHOP_URL}
-      NUXT_PUBLIC_LOTZAPP_SORTIMENT_URL: ${LOTZAPP_SORTIMENT_URL}
-      NUXT_PUBLIC_ANNY_LOGIN_URL: ${ANNY_LOGIN_URL}
+  # Dev Services
 
   directus-dev:
     profiles: [dev]
     build:
       context: ./directus
       dockerfile: Dockerfile
-    container_name: ${DIRECTUS_CONTAINER_NAME}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
-      directus-db:
-        condition: service_started
-    expose:
-      - 8055
+      directus-db-dev:
+        condition: service_healthy
     ports:
       - 8055:8055
-    networks:
-      - proxiable
-      - default
     volumes:
       - ./directus/uploads:/directus/uploads
       - ./directus-config:/directus/directus-config
-    entrypoint: ["/entrypoint.sh"]
     restart: unless-stopped
     environment:
       PUBLIC_URL: ${DIRECTUS_URL}
-      KEY: ${DIRECTUS_KEY}
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "true"
       SECRET: ${DIRECTUS_SECRET}
-
       ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
       ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
       ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
-
       DB_CLIENT: "pg"
-      DB_HOST: "directus-db"
+      DB_HOST: "directus-db-dev"
       DB_PORT: "5432"
       DB_DATABASE: "directus"
       DB_USER: "directus"
       DB_PASSWORD: ${DIRECTUS_DB_PASSWORD}
-
-      SESSION_COOKIE_DOMAIN: "${DIRECTUS_SESSION_COOKIE_DOMAIN}"
-      SESSION_COOKIE_SECURE: "true"
-      SESSION_COOKIE_SAME_SITE: "lax"
-
-      CORS_ENABLED: "true"
-      CORS_ORIGIN: "true"
-
-      WEBSOCKETS_ENABLED: true
-
       COLLECTIVO_API_URL: ${COLLECTIVO_API_URL}
       COLLECTIVO_API_TOKEN: ${COLLECTIVO_API_TOKEN}
       FLOWS_ENV_ALLOW_LIST: "PUBLIC_URL,COLLECTIVO_API_URL,COLLECTIVO_API_TOKEN"
 
-      MARKETPLACE_TRUST: all
+  directus-db-dev:
+    profiles: [dev]
+    image: postgis/postgis:16-3.4-alpine
+    volumes:
+      - directus-db-data:/var/lib/postgresql/data
+      - ./directus-db-backups:/backups
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_DB: "directus"
+      POSTGRES_USER: "directus"
+      POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
+
+  # Production Services
 
   directus:
     profiles: [production]
@@ -171,6 +127,7 @@ services:
   directus-db:
     container_name: directus-db
     image: postgis/postgis:16-3.4-alpine
+    profiles: [production]
     volumes:
       - directus-db-data:/var/lib/postgresql/data
       - ./directus-db-backups:/backups
@@ -186,6 +143,50 @@ services:
       POSTGRES_DB: "directus"
     networks:
       - default
+  collectivo:
+    container_name: collectivo
+    image: node:18-alpine
+    profiles: [production]
+    command: "node app/.output/server/index.mjs"
+    volumes:
+      - ./collectivo:/app
+    restart: unless-stopped
+    depends_on:
+      - directus
+      - keycloak
+    networks:
+      - default
+      - proxiable
+    environment:
+      NUXT_API_TOKEN: ${COLLECTIVO_API_TOKEN}
+      NUXT_CHECKIN_TOKEN: ${COLLECTIVO_CHECKIN_TOKEN}
+
+      NUXT_DIRECTUS_ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
+      NUXT_KEYCLOAK_ADMIN_CLIENT: ${KEYCLOAK_ADMIN_CLIENT}
+      NUXT_KEYCLOAK_ADMIN_SECRET: ${KEYCLOAK_ADMIN_SECRET}
+      NUXT_PUBLIC_COLLECTIVO_URL: ${COLLECTIVO_URL}
+      NUXT_PUBLIC_CONTACT_EMAIL: ${COLLECTIVO_CONTACT_EMAIL}
+      NUXT_PUBLIC_DIRECTUS_URL: ${DIRECTUS_URL}
+      NUXT_PUBLIC_KEYCLOAK_URL: ${KEYCLOAK_URL}
+      NUXT_PUBLIC_KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      NUXT_PUBLIC_USE_KEYCLOAK: "true"
+
+      NUXT_EMAIL_FROM: ${EMAIL_FROM}
+      NUXT_EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST}
+      NUXT_EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT}
+      NUXT_EMAIL_SMTP_USER: ${EMAIL_SMTP_USER}
+      NUXT_EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
+
+      NUXT_LOTZAPP_MANDANT: ${LOTZAPP_MANDANT}
+      NUXT_LOTZAPP_SEPA_ID: ${LOTZAPP_SEPA_ID}
+      NUXT_LOTZAPP_TRANSFER_ID: ${LOTZAPP_TRANSFER_ID}
+      NUXT_LOTZAPP_USER: ${LOTZAPP_USER}
+      NUXT_LOTZAPP_PASSWORD: ${LOTZAPP_PASSWORD}
+      NUXT_LOTZAPP_ACCOUNT_IDS: ${LOTZAPP_ACCOUNT_IDS}
+
+      NUXT_PUBLIC_LOTZAPP_SHOP_URL: ${LOTZAPP_SHOP_URL}
+      NUXT_PUBLIC_LOTZAPP_SORTIMENT_URL: ${LOTZAPP_SORTIMENT_URL}
+      NUXT_PUBLIC_ANNY_LOGIN_URL: ${ANNY_LOGIN_URL}
 
   keycloak:
     build: ./keycloak

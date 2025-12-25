@@ -43,6 +43,7 @@
     },
     "readonly": false,
     "required": true,
+    "searchable": true,
     "sort": 2,
     "special": null,
     "translations": [

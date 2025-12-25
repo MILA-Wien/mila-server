@@ -26,6 +26,7 @@
     },
     "readonly": false,
     "required": true,
+    "searchable": true,
     "sort": 6,
     "special": null,
     "translations": null,
