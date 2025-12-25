@@ -13,7 +13,7 @@ services:
     volumes:
       - ./directus/uploads:/directus/uploads
       - ./directus-config:/directus/directus-config
-    entrypoint: ["/entrypoint.sh"]
+    # entrypoint: ["/entrypoint.sh"]
     restart: unless-stopped
     environment:
       PUBLIC_URL: ${DIRECTUS_URL}
