@@ -77,5 +77,7 @@ async function filterItem(item: CollectivoMenuItem) {
 de:
   "Home": "Startseite"
   "Shifts": "Schichten"
+  "Receipts": "Belege"
+  "Assortment": "Sortiment"
   "Help": "Hilfe"
 </i18n>
