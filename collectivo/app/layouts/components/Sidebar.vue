@@ -26,7 +26,7 @@ const publicMenuItems = menus.value.main_public;
       </router-link>
     </div>
     <div class="flex font-Avory text-lg justify-center items-center mb-6 p-2">
-      {{ t("Mitgliederbereich") }}
+      {{ t("Members Area") }}
     </div>
     <div class="flex-1">
       <div

@@ -152,4 +152,5 @@ de:
 en:
   "intro_belege": "Here you will find an overview of your purchases. Please note: Only purchases where you scan your membership card at the checkout will be assigned to your membership. For more information, see our "
   "Datenschutzerklärung": "Privacy Policy"
+  "Meine Belege": "My Receipts"
 </i18n>
