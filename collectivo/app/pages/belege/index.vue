@@ -128,7 +128,7 @@ const monthLabel = computed(() =>
       v-else-if="error"
       class="text-red-600 border-2 border-red-600 p-6 text-center font-bold"
     >
-      Fehler beim Laden der Belege
+      {{ t("Fehler beim Laden der Belege") }}
     </div>
 
     <div class="columns-1 xl:columns-2 gap-6 w-full max-w-6xl mx-auto">
@@ -141,7 +141,7 @@ const monthLabel = computed(() =>
       v-if="!pending && (!belege || belege.length === 0)"
       class="text-gray-400 text-center border-2 border-gray-300 p-6 font-bold"
     >
-      Keine Belege für diesen Monat
+      {{ t("Keine Belege für diesen Monat") }}
     </div>
   </div>
 </template>
@@ -153,4 +153,6 @@ en:
   "intro_belege": "Here you will find an overview of your purchases. Please note: Only purchases where you scan your membership card at the checkout will be assigned to your membership. For more information, see our "
   "Datenschutzerklärung": "Privacy Policy"
   "Meine Belege": "My Receipts"
+  "Fehler beim Laden der Belege": "Error while loading receipts"
+  "Keine Belege für diesen Monat": "No receipts for this month"
 </i18n>
