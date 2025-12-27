@@ -75,9 +75,7 @@ services:
   #     - default
 
   collectivo:
-    image: node:18-alpine
-    build:
-      context: ./collectivo
+    build: ./collectivo
     restart: unless-stopped
     # depends_on:
     #   - directus
