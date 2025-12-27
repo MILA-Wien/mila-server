@@ -27,6 +27,7 @@ keycloak/imported/imported.flag
 .nuxt
 .nitro
 .cache
+.claude
 dist
 
 # Node dependencies

@@ -75,7 +75,7 @@ services:
   #     - default
 
   collectivo:
-    build: ./collectivo
+    build: ./
     restart: unless-stopped
     # depends_on:
     #   - directus
