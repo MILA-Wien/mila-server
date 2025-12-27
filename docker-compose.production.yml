@@ -1,118 +1,117 @@
 services:
-  directus:
-    build:
-      context: ./directus
-      dockerfile: Dockerfile
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    depends_on:
-      directus-db:
-        condition: service_started
-      # keycloak:
-      #   condition: service_healthy
-    volumes:
-      - ./directus/uploads:/directus/uploads
-      - ./directus-config:/directus/directus-config
-    # entrypoint: ["/entrypoint.sh"]
-    restart: unless-stopped
-    networks:
-      - default
-    environment:
-      PUBLIC_URL: ${DIRECTUS_URL}
-      SECRET: ${DIRECTUS_SECRET}
-
-      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
-      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
-      # ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
-
-      DB_CLIENT: "pg"
-      DB_HOST: "directus-db"
-      DB_PORT: "5432"
-      DB_DATABASE: "directus"
-      DB_USER: "directus"
-      DB_PASSWORD: ${DIRECTUS_DB_PASSWORD}
-
-      # AUTH_PROVIDERS: "keycloak"
-      # AUTH_KEYCLOAK_DRIVER: "openid"
-      # AUTH_KEYCLOAK_CLIENT_ID: ${KEYCLOAK_DIRECTUS_CLIENT}
-      # AUTH_KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_DIRECTUS_SECRET}
-      # AUTH_KEYCLOAK_ISSUER_URL: "${KEYCLOAK_URL}/realms/collectivo/.well-known/openid-configuration"
-      # AUTH_KEYCLOAK_IDENTIFIER_KEY: "email"
-      # AUTH_KEYCLOAK_ALLOW_PUBLIC_REGISTRATION: "true"
-      # AUTH_KEYCLOAK_REDIRECT_ALLOW_LIST: ${COLLECTIVO_URL}
-
-      # SESSION_COOKIE_DOMAIN: "${DIRECTUS_SESSION_COOKIE_DOMAIN}"
-      SESSION_COOKIE_SECURE: "true"
-      SESSION_COOKIE_SAME_SITE: "lax"
-
-      CORS_ENABLED: "true"
-      CORS_ORIGIN: "true"
-
-      WEBSOCKETS_ENABLED: true
-
-      # COLLECTIVO_API_URL: ${COLLECTIVO_URL}
-      # COLLECTIVO_API_TOKEN: ${COLLECTIVO_API_TOKEN}
-      # FLOWS_ENV_ALLOW_LIST: "PUBLIC_URL,COLLECTIVO_API_URL,COLLECTIVO_API_TOKEN"
-
-      MARKETPLACE_TRUST: all
-
-  directus-db:
-    image: postgis/postgis:16-3.4-alpine
-    volumes:
-      - directus-db-data:/var/lib/postgresql/data
-      - ./directus-db-backups:/backups
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    environment:
-      POSTGRES_USER: "directus"
-      POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
-      POSTGRES_DB: "directus"
-    networks:
-      - default
-  # collectivo:
-  #   image: node:18-alpine
-
-  #   command: "node app/.output/server/index.mjs"
-  #   volumes:
-  #     - ./collectivo:/app
-  #   restart: unless-stopped
+  # directus:
+  #   build:
+  #     context: ./directus
+  #     dockerfile: Dockerfile
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
   #   depends_on:
-  #     - directus
-  #     - keycloak
+  #     directus-db:
+  #       condition: service_started
+  #     # keycloak:
+  #     #   condition: service_healthy
+  #   volumes:
+  #     - ./directus/uploads:/directus/uploads
+  #     - ./directus-config:/directus/directus-config
+  #   # entrypoint: ["/entrypoint.sh"]
+  #   restart: unless-stopped
+  #   networks:
+  #     - default
   #   environment:
-  #     NUXT_API_TOKEN: ${COLLECTIVO_API_TOKEN}
-  #     NUXT_CHECKIN_TOKEN: ${COLLECTIVO_CHECKIN_TOKEN}
+  #     PUBLIC_URL: ${DIRECTUS_URL}
+  #     SECRET: ${DIRECTUS_SECRET}
 
-  #     NUXT_DIRECTUS_ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
-  #     NUXT_KEYCLOAK_ADMIN_CLIENT: ${KEYCLOAK_ADMIN_CLIENT}
-  #     NUXT_KEYCLOAK_ADMIN_SECRET: ${KEYCLOAK_ADMIN_SECRET}
-  #     NUXT_PUBLIC_COLLECTIVO_URL: ${COLLECTIVO_URL}
-  #     NUXT_PUBLIC_CONTACT_EMAIL: ${COLLECTIVO_CONTACT_EMAIL}
-  #     NUXT_PUBLIC_DIRECTUS_URL: ${DIRECTUS_URL}
-  #     NUXT_PUBLIC_KEYCLOAK_URL: ${KEYCLOAK_URL}
-  #     NUXT_PUBLIC_KEYCLOAK_REALM: ${KEYCLOAK_REALM}
-  #     NUXT_PUBLIC_USE_KEYCLOAK: "true"
+  #     ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+  #     ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+  #     # ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
 
-  #     NUXT_EMAIL_FROM: ${EMAIL_FROM}
-  #     NUXT_EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST}
-  #     NUXT_EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT}
-  #     NUXT_EMAIL_SMTP_USER: ${EMAIL_SMTP_USER}
-  #     NUXT_EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
+  #     DB_CLIENT: "pg"
+  #     DB_HOST: "directus-db"
+  #     DB_PORT: "5432"
+  #     DB_DATABASE: "directus"
+  #     DB_USER: "directus"
+  #     DB_PASSWORD: ${DIRECTUS_DB_PASSWORD}
 
-  #     NUXT_LOTZAPP_MANDANT: ${LOTZAPP_MANDANT}
-  #     NUXT_LOTZAPP_SEPA_ID: ${LOTZAPP_SEPA_ID}
-  #     NUXT_LOTZAPP_TRANSFER_ID: ${LOTZAPP_TRANSFER_ID}
-  #     NUXT_LOTZAPP_USER: ${LOTZAPP_USER}
-  #     NUXT_LOTZAPP_PASSWORD: ${LOTZAPP_PASSWORD}
-  #     NUXT_LOTZAPP_ACCOUNT_IDS: ${LOTZAPP_ACCOUNT_IDS}
+  #     # AUTH_PROVIDERS: "keycloak"
+  #     # AUTH_KEYCLOAK_DRIVER: "openid"
+  #     # AUTH_KEYCLOAK_CLIENT_ID: ${KEYCLOAK_DIRECTUS_CLIENT}
+  #     # AUTH_KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_DIRECTUS_SECRET}
+  #     # AUTH_KEYCLOAK_ISSUER_URL: "${KEYCLOAK_URL}/realms/collectivo/.well-known/openid-configuration"
+  #     # AUTH_KEYCLOAK_IDENTIFIER_KEY: "email"
+  #     # AUTH_KEYCLOAK_ALLOW_PUBLIC_REGISTRATION: "true"
+  #     # AUTH_KEYCLOAK_REDIRECT_ALLOW_LIST: ${COLLECTIVO_URL}
 
-  #     NUXT_PUBLIC_LOTZAPP_SHOP_URL: ${LOTZAPP_SHOP_URL}
-  #     NUXT_PUBLIC_LOTZAPP_SORTIMENT_URL: ${LOTZAPP_SORTIMENT_URL}
-  #     NUXT_PUBLIC_ANNY_LOGIN_URL: ${ANNY_LOGIN_URL}
+  #     # SESSION_COOKIE_DOMAIN: "${DIRECTUS_SESSION_COOKIE_DOMAIN}"
+  #     SESSION_COOKIE_SECURE: "true"
+  #     SESSION_COOKIE_SAME_SITE: "lax"
+
+  #     CORS_ENABLED: "true"
+  #     CORS_ORIGIN: "true"
+
+  #     WEBSOCKETS_ENABLED: true
+
+  #     # COLLECTIVO_API_URL: ${COLLECTIVO_URL}
+  #     # COLLECTIVO_API_TOKEN: ${COLLECTIVO_API_TOKEN}
+  #     # FLOWS_ENV_ALLOW_LIST: "PUBLIC_URL,COLLECTIVO_API_URL,COLLECTIVO_API_TOKEN"
+
+  #     MARKETPLACE_TRUST: all
+
+  # directus-db:
+  #   image: postgis/postgis:16-3.4-alpine
+  #   volumes:
+  #     - directus-db-data:/var/lib/postgresql/data
+  #     - ./directus-db-backups:/backups
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   environment:
+  #     POSTGRES_USER: "directus"
+  #     POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
+  #     POSTGRES_DB: "directus"
+  #   networks:
+  #     - default
+
+  collectivo:
+    image: node:18-alpine
+    build:
+      context: ./collectivo
+    restart: unless-stopped
+    # depends_on:
+    #   - directus
+    #   - keycloak
+    environment:
+      NUXT_API_TOKEN: ${COLLECTIVO_API_TOKEN}
+      NUXT_CHECKIN_TOKEN: ${COLLECTIVO_CHECKIN_TOKEN}
+
+      NUXT_DIRECTUS_ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
+      NUXT_KEYCLOAK_ADMIN_CLIENT: ${KEYCLOAK_ADMIN_CLIENT}
+      NUXT_KEYCLOAK_ADMIN_SECRET: ${KEYCLOAK_ADMIN_SECRET}
+      NUXT_PUBLIC_COLLECTIVO_URL: ${COLLECTIVO_URL}
+      NUXT_PUBLIC_CONTACT_EMAIL: ${COLLECTIVO_CONTACT_EMAIL}
+      NUXT_PUBLIC_DIRECTUS_URL: ${DIRECTUS_URL}
+      NUXT_PUBLIC_KEYCLOAK_URL: ${KEYCLOAK_URL}
+      NUXT_PUBLIC_KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      NUXT_PUBLIC_USE_KEYCLOAK: "true"
+
+      NUXT_EMAIL_FROM: ${EMAIL_FROM}
+      NUXT_EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST}
+      NUXT_EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT}
+      NUXT_EMAIL_SMTP_USER: ${EMAIL_SMTP_USER}
+      NUXT_EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
+
+      NUXT_LOTZAPP_MANDANT: ${LOTZAPP_MANDANT}
+      NUXT_LOTZAPP_SEPA_ID: ${LOTZAPP_SEPA_ID}
+      NUXT_LOTZAPP_TRANSFER_ID: ${LOTZAPP_TRANSFER_ID}
+      NUXT_LOTZAPP_USER: ${LOTZAPP_USER}
+      NUXT_LOTZAPP_PASSWORD: ${LOTZAPP_PASSWORD}
+      NUXT_LOTZAPP_ACCOUNT_IDS: ${LOTZAPP_ACCOUNT_IDS}
+
+      NUXT_PUBLIC_LOTZAPP_SHOP_URL: ${LOTZAPP_SHOP_URL}
+      NUXT_PUBLIC_LOTZAPP_SORTIMENT_URL: ${LOTZAPP_SORTIMENT_URL}
+      NUXT_PUBLIC_ANNY_LOGIN_URL: ${ANNY_LOGIN_URL}
 
   # keycloak:
   #   build: ./keycloak
