@@ -59,12 +59,12 @@ export const useNavigationMenus = () =>
           },
         },
         {
-          label: "Belege",
+          label: "Receipts",
           icon: "i-heroicons-document-text",
           to: "/belege",
         },
         {
-          label: "Sortiment",
+          label: "Assortment",
           icon: "i-heroicons-shopping-bag",
           to: "/sortiment",
         },

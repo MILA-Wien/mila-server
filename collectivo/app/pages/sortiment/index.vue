@@ -55,7 +55,6 @@ setPageTitle(t("Sortiment"));
 
 <i18n lang="yaml">
 en:
-  en:
     "Sortiment": "Product range"
     "Sortiment mitbestimmen": "Help shape the product range"
     "Was kaufst du noch woanders? Was braucht unser Supermarkt? Wir sammeln alle Vorschläge und prüfen regelmäßig, welche davon wir umsetzen können.": "What do you still buy elsewhere? What does our supermarket need? We collect all suggestions and regularly assess which ones we can implement."
