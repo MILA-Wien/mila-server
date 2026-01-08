@@ -1,11 +1,7 @@
 <script setup lang="ts">
-import { createItem } from "@directus/sdk";
-import { DateTime, Duration } from "luxon";
-
 const MAX_DAYS_TO_SIGN_OUT_BEFORE = 2;
 
 const { t, locale } = useI18n();
-const directus = useDirectus();
 
 const signOutModalIsOpen = ref(false);
 
@@ -34,16 +30,17 @@ const user = useCurrentUser();
 const emit = defineEmits(["reload"]);
 
 async function createAbsence() {
-  await directus.request(
-    createItem("shifts_absences", {
+  await $fetch("/api/shifts/absences", {
+    method: "POST",
+    body: {
       shifts_membership: user.value.membership!.id,
       shifts_from: props.occ.date,
       shifts_to: props.occ.date,
       shifts_is_holiday: false,
       shifts_is_for_all_assignments: false,
       shifts_assignment: assignment.id,
-    }),
-  );
+    },
+  });
 
   emit("reload");
   signOutModalIsOpen.value = false;

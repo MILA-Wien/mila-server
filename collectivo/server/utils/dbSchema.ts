@@ -30,6 +30,7 @@ export interface UserProfile {
   buddy_status: "keine_angabe" | "is_buddy" | "need_buddy";
   buddy_details: string;
   lotzapp_id: string;
+  email: string;
 }
 
 export interface Tag {
@@ -144,7 +145,7 @@ export interface ShiftsLog {
   shifts_membership: Membership | number;
   shifts_type: string;
   shifts_note: string;
-  shifts_date: "datetime";
+  shifts_date: string;
   shifts_score: number;
   shifts_shift?: ShiftsShift | number;
 }

@@ -1,14 +1,6 @@
 # MILA Mitgliederplattform
 
-Mitgliederplattform des [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/).
-
-## Applikationen
-
-- Mitgliederplattform (nuxt, ehemalig collectivo)
-- Datenstudio (directus & directus-db)
-- Zugangsverwaltung (keycloak & keycloak-db)
-- Direktkreditverwaltung (habidat & habidat-db)
-- Backups (directus-db-backup & keycloak-db-backup)
+Member plattform of [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/).
 
 ## Local development setup
 
@@ -40,6 +32,10 @@ Test users for frontend and directus (after seeding):
   - Delete `.env` and `collectivo/.env`
   - To be super clean, also delete `node_modules`, `collectivo/node_modules`, and `collectivo/.nuxt`
   - Run `docker compose down -v`
+
+## Testing
+
+To run end-to-end tests, run `npx cypress open` or `npx cypress run`
 
 ## Database schemas
 
@@ -93,7 +89,7 @@ Notes:
 The dev setup runs without keycloak. To test keycloak integration:
 
 - In `collectivo/.env`, set `NUXT_PUBLIC_USE_KEYCLOAK = "true"`
-- In `.env`, set `COMPOSE_PROFILES = "production"`
+- In `.env`, set `COMPOSE_PROFILES = "dev,keycloak"`
 - In `.env`, set `DIRECTUS_AUTH_PROVIDERS`to `keycloak`
 - Add the following to your etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak`
 

@@ -1,5 +1,3 @@
-import { readItems } from "@directus/sdk";
-
 export const useDashboardTiles = () =>
   useState<DashboardTileStore>(
     "collectivo_tiles",
@@ -19,19 +17,9 @@ class DashboardTileStore {
 
   async load() {
     this.loading = true;
-    const directus = useDirectus();
 
     try {
-      const allTiles = await directus.request(
-        readItems("collectivo_tiles", {
-          fields: ["*", { tiles_buttons: ["*"] }],
-          filter: {
-            tiles_view_for: {
-              _neq: "hide",
-            },
-          },
-        }),
-      );
+      const allTiles = await $fetch<DashboardTile[]>("/api/tiles");
       this.data = filterTiles(allTiles);
     } catch (error) {
       this.error = error;

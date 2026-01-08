@@ -1,4 +1,11 @@
-import { readItems } from "@directus/sdk";
+import {
+  createItem,
+  deleteItem,
+  readItem,
+  readItems,
+  readSingleton,
+  updateItem,
+} from "@directus/sdk";
 import type { QueryFilter } from "@directus/sdk";
 import { RRule, RRuleSet } from "rrule";
 import { parseUtcMidnight } from "./dates";
@@ -36,6 +43,7 @@ export async function getShiftShifts(
     readItems("shifts_shifts", {
       filter: filter,
       limit: -1,
+      // @ts-expect-error shifts_category_2.* is a nested field syntax
       fields: loadCat ? ["*", "shifts_category_2.*"] : ["*"],
     }),
   );
@@ -310,3 +318,221 @@ export const getAssignmentRrules = (
 
   return assignmentRules;
 };
+
+// ============================================================================
+// SHIFT CATEGORIES
+// ============================================================================
+
+export async function getShiftCategories() {
+  return await directus.request(
+    readItems("shifts_categories", {
+      limit: -1,
+      fields: ["id", "name", "beschreibung", "for_all"],
+    }),
+  );
+}
+
+// ============================================================================
+// SHIFT LOGS
+// ============================================================================
+
+export async function getShiftLogsForShift(date: string, shiftID: number) {
+  return await directus.request(
+    readItems("shifts_logs", {
+      filter: {
+        shifts_shift: { _eq: shiftID },
+        shifts_date: { _eq: date },
+      },
+      fields: [
+        "id",
+        "shifts_type",
+        "shifts_note",
+        "shifts_score",
+        {
+          shifts_membership: [
+            "id",
+            { memberships_user: ["username", "username_last", "email"] },
+          ],
+        },
+      ],
+    }),
+  );
+}
+
+export async function updateShiftLog(
+  logID: number,
+  type: "attended" | "missed",
+) {
+  const payload: { shifts_type: string; shifts_score: number } = {
+    shifts_type: type,
+    shifts_score: type === "attended" ? 28 : 0,
+  };
+  return await directus.request(updateItem("shifts_logs", logID, payload));
+}
+
+export async function deleteShiftLog(logID: number) {
+  return await directus.request(deleteItem("shifts_logs", logID));
+}
+
+export async function createShiftLog(
+  type: string,
+  mshipID: number,
+  date: string,
+  shiftID?: number,
+  score?: number,
+  note?: string,
+) {
+  const finalScore = score ?? (type === "attended" ? 28 : 0);
+  return await directus.request(
+    createItem(
+      "shifts_logs",
+      {
+        shifts_membership: mshipID,
+        shifts_type: type,
+        shifts_date: date,
+        shifts_score: finalScore,
+        shifts_note: note,
+        shifts_shift: shiftID,
+      },
+      {
+        fields: [
+          "id",
+          "shifts_type",
+          "shifts_note",
+          "shifts_score",
+          {
+            shifts_membership: [
+              "id",
+              { memberships_user: ["username", "username_last", "email"] },
+            ],
+          },
+        ],
+      },
+    ),
+  );
+}
+
+export async function checkIfFirstShift(mshipId: number) {
+  const logs = await directus.request(
+    readItems("shifts_logs", {
+      filter: {
+        shifts_membership: {
+          _eq: mshipId,
+        },
+        shifts_type: {
+          _in: ["attended", "attended_draft"],
+        },
+      },
+      limit: 1,
+    }),
+  );
+  return logs.length === 0;
+}
+
+// ============================================================================
+// SHIFT ASSIGNMENTS CRUD
+// ============================================================================
+
+export async function createShiftAssignment(payload: {
+  shifts_membership: number;
+  shifts_shift: number;
+  shifts_from: string;
+  shifts_is_regular: boolean;
+  shifts_to?: string;
+}) {
+  return await directus.request(
+    createItem("shifts_assignments", payload, {
+      fields: [
+        "id",
+        "shifts_membership",
+        "shifts_is_regular",
+        "shifts_shift",
+        "shifts_from",
+        "shifts_to",
+        {
+          shifts_membership: [
+            "id",
+            {
+              memberships_user: ["username", "username_last", "email"],
+            },
+          ],
+        },
+      ],
+    }),
+  );
+}
+
+export async function updateShiftAssignment(
+  assignmentId: number,
+  payload: { shifts_to?: string },
+) {
+  return await directus.request(
+    updateItem("shifts_assignments", assignmentId, payload),
+  );
+}
+
+export async function deleteShiftAssignment(assignmentId: number) {
+  return await directus.request(deleteItem("shifts_assignments", assignmentId));
+}
+
+// ============================================================================
+// SHIFT ABSENCES CRUD
+// ============================================================================
+
+export async function createShiftAbsence(payload: {
+  shifts_membership: number;
+  shifts_from: string;
+  shifts_to: string;
+  shifts_is_holiday?: boolean;
+  shifts_is_for_all_assignments?: boolean;
+  shifts_assignment?: number;
+  shifts_status?: string;
+}) {
+  return await directus.request(createItem("shifts_absences", payload));
+}
+
+// ============================================================================
+// SETTINGS
+// ============================================================================
+
+export async function getSettings() {
+  return await directus.request(readSingleton("settings_hidden"));
+}
+
+// ============================================================================
+// MEMBERSHIPS
+// ============================================================================
+
+export async function getMembershipById(id: number) {
+  return await directus.request(
+    readItem("memberships", id, {
+      fields: [
+        "id",
+        { memberships_user: ["username", "username_last"] },
+        "memberships_type",
+        "memberships_status",
+        "shifts_categories_allowed",
+        "shifts_user_type",
+        "shifts_can_be_coordinator",
+      ],
+    }),
+  );
+}
+
+// ============================================================================
+// TILES
+// ============================================================================
+
+export async function getTiles() {
+  return await directus.request(
+    readItems("collectivo_tiles", {
+      // @ts-expect-error tiles_buttons is a nested field
+      fields: ["*", { tiles_buttons: ["*"] }],
+      filter: {
+        tiles_view_for: {
+          _neq: "hide",
+        },
+      },
+    }),
+  );
+}

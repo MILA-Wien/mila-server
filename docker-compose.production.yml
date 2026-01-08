@@ -1,87 +1,85 @@
 services:
-  directus:
-    build:
-      context: ./directus
-      dockerfile: Dockerfile
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    depends_on:
-      directus-db:
-        condition: service_started
-      keycloak:
-        condition: service_healthy
-    ports:
-      - 8055:8055
-    volumes:
-      - ./directus/uploads:/directus/uploads
-      - ./directus-config:/directus/directus-config
-    entrypoint: ["/entrypoint.sh"]
-    restart: unless-stopped
-    environment:
-      PUBLIC_URL: ${DIRECTUS_URL}
-      KEY: ${DIRECTUS_KEY}
-      SECRET: ${DIRECTUS_SECRET}
+  # directus:
+  #   build:
+  #     context: ./directus
+  #     dockerfile: Dockerfile
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+  #   depends_on:
+  #     directus-db:
+  #       condition: service_started
+  #     # keycloak:
+  #     #   condition: service_healthy
+  #   volumes:
+  #     - ./directus/uploads:/directus/uploads
+  #     - ./directus-config:/directus/directus-config
+  #   # entrypoint: ["/entrypoint.sh"]
+  #   restart: unless-stopped
+  #   networks:
+  #     - default
+  #   environment:
+  #     PUBLIC_URL: ${DIRECTUS_URL}
+  #     SECRET: ${DIRECTUS_SECRET}
 
-      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
-      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
-      ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
+  #     ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+  #     ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+  #     # ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
 
-      DB_CLIENT: "pg"
-      DB_HOST: "directus-db"
-      DB_PORT: "5432"
-      DB_DATABASE: "directus"
-      DB_USER: "directus"
-      DB_PASSWORD: ${DIRECTUS_DB_PASSWORD}
+  #     DB_CLIENT: "pg"
+  #     DB_HOST: "directus-db"
+  #     DB_PORT: "5432"
+  #     DB_DATABASE: "directus"
+  #     DB_USER: "directus"
+  #     DB_PASSWORD: ${DIRECTUS_DB_PASSWORD}
 
-      AUTH_PROVIDERS: "keycloak"
-      AUTH_KEYCLOAK_DRIVER: "openid"
-      AUTH_KEYCLOAK_CLIENT_ID: ${KEYCLOAK_DIRECTUS_CLIENT}
-      AUTH_KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_DIRECTUS_SECRET}
-      AUTH_KEYCLOAK_ISSUER_URL: "${KEYCLOAK_URL}/realms/collectivo/.well-known/openid-configuration"
-      AUTH_KEYCLOAK_IDENTIFIER_KEY: "email"
-      AUTH_KEYCLOAK_ALLOW_PUBLIC_REGISTRATION: "true"
-      AUTH_KEYCLOAK_REDIRECT_ALLOW_LIST: ${COLLECTIVO_URL}
+  #     # AUTH_PROVIDERS: "keycloak"
+  #     # AUTH_KEYCLOAK_DRIVER: "openid"
+  #     # AUTH_KEYCLOAK_CLIENT_ID: ${KEYCLOAK_DIRECTUS_CLIENT}
+  #     # AUTH_KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_DIRECTUS_SECRET}
+  #     # AUTH_KEYCLOAK_ISSUER_URL: "${KEYCLOAK_URL}/realms/collectivo/.well-known/openid-configuration"
+  #     # AUTH_KEYCLOAK_IDENTIFIER_KEY: "email"
+  #     # AUTH_KEYCLOAK_ALLOW_PUBLIC_REGISTRATION: "true"
+  #     # AUTH_KEYCLOAK_REDIRECT_ALLOW_LIST: ${COLLECTIVO_URL}
 
-      SESSION_COOKIE_DOMAIN: "${DIRECTUS_SESSION_COOKIE_DOMAIN}"
-      SESSION_COOKIE_SECURE: "true"
-      SESSION_COOKIE_SAME_SITE: "lax"
+  #     # SESSION_COOKIE_DOMAIN: "${DIRECTUS_SESSION_COOKIE_DOMAIN}"
+  #     SESSION_COOKIE_SECURE: "true"
+  #     SESSION_COOKIE_SAME_SITE: "lax"
 
-      CORS_ENABLED: "true"
-      CORS_ORIGIN: "true"
+  #     CORS_ENABLED: "true"
+  #     CORS_ORIGIN: "true"
 
-      WEBSOCKETS_ENABLED: true
+  #     WEBSOCKETS_ENABLED: true
 
-      COLLECTIVO_API_URL: ${COLLECTIVO_API_URL}
-      COLLECTIVO_API_TOKEN: ${COLLECTIVO_API_TOKEN}
-      FLOWS_ENV_ALLOW_LIST: "PUBLIC_URL,COLLECTIVO_API_URL,COLLECTIVO_API_TOKEN"
+  #     # COLLECTIVO_API_URL: ${COLLECTIVO_URL}
+  #     # COLLECTIVO_API_TOKEN: ${COLLECTIVO_API_TOKEN}
+  #     # FLOWS_ENV_ALLOW_LIST: "PUBLIC_URL,COLLECTIVO_API_URL,COLLECTIVO_API_TOKEN"
 
-      MARKETPLACE_TRUST: all
+  #     MARKETPLACE_TRUST: all
 
-  directus-db:
-    image: postgis/postgis:16-3.4-alpine
-    volumes:
-      - directus-db-data:/var/lib/postgresql/data
-      - ./directus-db-backups:/backups
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    environment:
-      POSTGRES_USER: "directus"
-      POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
-      POSTGRES_DB: "directus"
+  # directus-db:
+  #   image: postgis/postgis:16-3.4-alpine
+  #   volumes:
+  #     - directus-db-data:/var/lib/postgresql/data
+  #     - ./directus-db-backups:/backups
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   environment:
+  #     POSTGRES_USER: "directus"
+  #     POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
+  #     POSTGRES_DB: "directus"
+  #   networks:
+  #     - default
+
   collectivo:
-    image: node:18-alpine
-
-    command: "node app/.output/server/index.mjs"
-    volumes:
-      - ./collectivo:/app
+    build: ./
     restart: unless-stopped
-    depends_on:
-      - directus
-      - keycloak
+    # depends_on:
+    #   - directus
+    #   - keycloak
     environment:
       NUXT_API_TOKEN: ${COLLECTIVO_API_TOKEN}
       NUXT_CHECKIN_TOKEN: ${COLLECTIVO_CHECKIN_TOKEN}
@@ -113,161 +111,160 @@ services:
       NUXT_PUBLIC_LOTZAPP_SORTIMENT_URL: ${LOTZAPP_SORTIMENT_URL}
       NUXT_PUBLIC_ANNY_LOGIN_URL: ${ANNY_LOGIN_URL}
 
-  keycloak:
-    build: ./keycloak
+  # keycloak:
+  #   build: ./keycloak
 
-    environment:
-      COMPOSE_PROFILES: ${COMPOSE_PROFILES}
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-      KEYCLOAK_FRONTEND_URL: ${KEYCLOAK_URL}
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
-      KC_DB_SCHEMA: public
-      KC_DB_URL_DATABASE: "keycloak"
-      KC_DB_URL_HOST: "keycloak-db"
-      KC_DB_URL_PORT: 5432
-      KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
-    command: ${KEYCLOAK_COMMAND:-}
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
-      interval: 5s
-      timeout: 5s
-      retries: 20
-    volumes:
-      - ./keycloak/themes/collectivo:/opt/keycloak/themes/collectivo
-      - ./keycloak/import:/opt/keycloak/data/import:ro
-      - ./keycloak/export:/tmp/export
-    restart: unless-stopped
-    depends_on:
-      - keycloak-db
+  #   environment:
+  #     KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+  #     KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+  #     KEYCLOAK_FRONTEND_URL: ${KEYCLOAK_URL}
+  #     KC_DB_USERNAME: keycloak
+  #     KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+  #     KC_DB_SCHEMA: public
+  #     KC_DB_URL_DATABASE: "keycloak"
+  #     KC_DB_URL_HOST: "keycloak-db"
+  #     KC_DB_URL_PORT: 5432
+  #     KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
+  #   command: ${KEYCLOAK_COMMAND:-}
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 20
+  #   volumes:
+  #     - ./keycloak/themes/collectivo:/opt/keycloak/themes/collectivo
+  #     - ./keycloak/import:/opt/keycloak/data/import:ro
+  #     - ./keycloak/export:/tmp/export
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - keycloak-db
 
-  keycloak-db:
-    image: postgres:14-alpine
+  # keycloak-db:
+  #   image: postgres:14-alpine
 
-    volumes:
-      - keycloak-db-data:/var/lib/postgresql/data
-      - ./keycloak-db-backups:/backups
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+  #   volumes:
+  #     - keycloak-db-data:/var/lib/postgresql/data
+  #     - ./keycloak-db-backups:/backups
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_DB: keycloak
+  #     POSTGRES_USER: keycloak
+  #     POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
 
-  habidat:
-    image: habidat/direktkredit:1.5
+  # habidat:
+  #   image: habidat/direktkredit:1.5
 
-    restart: unless-stopped
-    volumes:
-      - ./docker/habidat/config/:/habidat/config/
-      - ./docker/habidat/files:/habidat/public/files
-      - ./docker/habidat/images:/habidat/public/images
-      - ./docker/habidat/upload:/habidat/upload
-    environment:
-      - HABIDAT_DK_PROJECT_ID=project
-      - HABIDAT_DK_PROJECT_NAME=${HABIDAT_PROJECT_NAME}
-      - HABIDAT_DK_PROJECT_EMAIL=${HABIDAT_PROJECT_EMAIL}
-      - HABIDAT_DK_PROJECT_LOGO=logo.gif
-      - HABIDAT_DK_ADMIN_EMAIL=${HABIDAT_ADMIN_EMAIL}
-      - HABIDAT_DK_ADMIN_USERNAME=${HABIDAT_ADMIN_USERNAME}
-      - HABIDAT_DK_ADMIN_PASSWORD=${HABIDAT_ADMIN_SECRET}
-      - HABIDAT_DK_SESSION_SECRET=${HABIDAT_JWT_SECRET}
-      - HABIDAT_DK_DB_URI=mysql://${HABIDAT_DB_USER}:${HABIDAT_DB_SECRET}@habidat-db/${HABIDAT_DB_DB}
-      - HABIDAT_DK_PORT_HTTP=80
-      - HABIDAT_DK_AUTH_ADMIN_METHOD=local,oidc
-      - HABIDAT_DK_AUTH_ADMIN_OIDC_LABEL=${HABIDAT_OIDC_ADMIN_LOGIN_BUTTON_LABEL}
-      - HABIDAT_DK_AUTH_ADMIN_OIDC_ISSUER=${KEYCLOAK_URL}/realms/collectivo
-      - HABIDAT_DK_AUTH_ADMIN_OIDC_CLIENT_ID=${HABIDAT_KEYCLOAK_CLIENT_ID}
-      - HABIDAT_DK_AUTH_ADMIN_OIDC_CLIENT_SECRET=${HABIDAT_KEYCLOAK_TOKEN}
-      - HABIDAT_DK_AUTH_ADMIN_OIDC_CALLBACK_URL=/login-oidc-cb-admin
-      - HABIDAT_DK_AUTH_ADMIN_OIDC_AUTH_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/auth
-      - HABIDAT_DK_AUTH_ADMIN_OIDC_TOKEN_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/token
-      - HABIDAT_DK_AUTH_ADMIN_OIDC_USERINFO_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/userinfo
-      - HABIDAT_DK_AUTH_USER_METHOD=oidc
-      - HABIDAT_DK_AUTH_USER_OIDC_LABEL=${HABIDAT_OIDC_USER_LOGIN_BUTTON_LABEL}
-      - HABIDAT_DK_AUTH_USER_OIDC_ISSUER=${KEYCLOAK_URL}/realms/collectivo
-      - HABIDAT_DK_AUTH_USER_OIDC_CLIENT_ID=${HABIDAT_KEYCLOAK_CLIENT_ID}
-      - HABIDAT_DK_AUTH_USER_OIDC_CLIENT_SECRET=${HABIDAT_KEYCLOAK_TOKEN}
-      - HABIDAT_DK_AUTH_USER_OIDC_CALLBACK_URL=/login-oidc-cb
-      - HABIDAT_DK_AUTH_USER_OIDC_AUTH_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/auth
-      - HABIDAT_DK_AUTH_USER_OIDC_TOKEN_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/token
-      - HABIDAT_DK_AUTH_USER_OIDC_USERINFO_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/userinfo
-      - HABIDAT_DK_INTEREST_RATE_TYPE=coupon
-    depends_on:
-      - habidat-db
-    links:
-      - habidat-db
-    logging:
-      options:
-        max-size: 50m
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./docker/habidat/config/:/habidat/config/
+  #     - ./docker/habidat/files:/habidat/public/files
+  #     - ./docker/habidat/images:/habidat/public/images
+  #     - ./docker/habidat/upload:/habidat/upload
+  #   environment:
+  #     - HABIDAT_DK_PROJECT_ID=project
+  #     - HABIDAT_DK_PROJECT_NAME=${HABIDAT_PROJECT_NAME}
+  #     - HABIDAT_DK_PROJECT_EMAIL=${HABIDAT_PROJECT_EMAIL}
+  #     - HABIDAT_DK_PROJECT_LOGO=logo.gif
+  #     - HABIDAT_DK_ADMIN_EMAIL=${HABIDAT_ADMIN_EMAIL}
+  #     - HABIDAT_DK_ADMIN_USERNAME=${HABIDAT_ADMIN_USERNAME}
+  #     - HABIDAT_DK_ADMIN_PASSWORD=${HABIDAT_ADMIN_SECRET}
+  #     - HABIDAT_DK_SESSION_SECRET=${HABIDAT_JWT_SECRET}
+  #     - HABIDAT_DK_DB_URI=mysql://${HABIDAT_DB_USER}:${HABIDAT_DB_SECRET}@habidat-db/${HABIDAT_DB_DB}
+  #     - HABIDAT_DK_PORT_HTTP=80
+  #     - HABIDAT_DK_AUTH_ADMIN_METHOD=local,oidc
+  #     - HABIDAT_DK_AUTH_ADMIN_OIDC_LABEL=${HABIDAT_OIDC_ADMIN_LOGIN_BUTTON_LABEL}
+  #     - HABIDAT_DK_AUTH_ADMIN_OIDC_ISSUER=${KEYCLOAK_URL}/realms/collectivo
+  #     - HABIDAT_DK_AUTH_ADMIN_OIDC_CLIENT_ID=${HABIDAT_KEYCLOAK_CLIENT_ID}
+  #     - HABIDAT_DK_AUTH_ADMIN_OIDC_CLIENT_SECRET=${HABIDAT_KEYCLOAK_TOKEN}
+  #     - HABIDAT_DK_AUTH_ADMIN_OIDC_CALLBACK_URL=/login-oidc-cb-admin
+  #     - HABIDAT_DK_AUTH_ADMIN_OIDC_AUTH_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/auth
+  #     - HABIDAT_DK_AUTH_ADMIN_OIDC_TOKEN_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/token
+  #     - HABIDAT_DK_AUTH_ADMIN_OIDC_USERINFO_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/userinfo
+  #     - HABIDAT_DK_AUTH_USER_METHOD=oidc
+  #     - HABIDAT_DK_AUTH_USER_OIDC_LABEL=${HABIDAT_OIDC_USER_LOGIN_BUTTON_LABEL}
+  #     - HABIDAT_DK_AUTH_USER_OIDC_ISSUER=${KEYCLOAK_URL}/realms/collectivo
+  #     - HABIDAT_DK_AUTH_USER_OIDC_CLIENT_ID=${HABIDAT_KEYCLOAK_CLIENT_ID}
+  #     - HABIDAT_DK_AUTH_USER_OIDC_CLIENT_SECRET=${HABIDAT_KEYCLOAK_TOKEN}
+  #     - HABIDAT_DK_AUTH_USER_OIDC_CALLBACK_URL=/login-oidc-cb
+  #     - HABIDAT_DK_AUTH_USER_OIDC_AUTH_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/auth
+  #     - HABIDAT_DK_AUTH_USER_OIDC_TOKEN_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/token
+  #     - HABIDAT_DK_AUTH_USER_OIDC_USERINFO_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/userinfo
+  #     - HABIDAT_DK_INTEREST_RATE_TYPE=coupon
+  #   depends_on:
+  #     - habidat-db
+  #   links:
+  #     - habidat-db
+  #   logging:
+  #     options:
+  #       max-size: 50m
 
-  habidat-db:
-    image: mariadb
+  # habidat-db:
+  #   image: mariadb
 
-    restart: unless-stopped
-    volumes:
-      - ./docker/habidat/db:/var/lib/mysql
-    environment:
-      - MARIADB_RANDOM_ROOT_PASSWORD=yes
-      - MYSQL_PASSWORD=${HABIDAT_DB_SECRET}
-      - MYSQL_DATABASE=${HABIDAT_DB_DB}
-      - MYSQL_USER=${HABIDAT_DB_USER}
-    logging:
-      options:
-        max-size: 50m
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./docker/habidat/db:/var/lib/mysql
+  #   environment:
+  #     - MARIADB_RANDOM_ROOT_PASSWORD=yes
+  #     - MYSQL_PASSWORD=${HABIDAT_DB_SECRET}
+  #     - MYSQL_DATABASE=${HABIDAT_DB_DB}
+  #     - MYSQL_USER=${HABIDAT_DB_USER}
+  #   logging:
+  #     options:
+  #       max-size: 50m
 
-  directus-db-backups:
-    image: prodrigestivill/postgres-backup-local
-    restart: unless-stopped
+  # directus-db-backups:
+  #   image: prodrigestivill/postgres-backup-local
+  #   restart: unless-stopped
 
-    volumes:
-      - ./directus-db-backups:/backups
-    links:
-      - directus-db
-    depends_on:
-      directus-db:
-        condition: service_healthy
-    environment:
-      POSTGRES_HOST: directus-db
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: directus
-      POSTGRES_USER: directus
-      POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
-      POSTGRES_EXTRA_OPTS: --clean -Z1
-      SCHEDULE: "@daily"
-      BACKUP_KEEP_DAYS: 7
-      BACKUP_KEEP_WEEKS: 4
-      BACKUP_KEEP_MONTHS: 6
-      HEALTHCHECK_PORT: 8080
+  #   volumes:
+  #     - ./directus-db-backups:/backups
+  #   links:
+  #     - directus-db
+  #   depends_on:
+  #     directus-db:
+  #       condition: service_healthy
+  #   environment:
+  #     POSTGRES_HOST: directus-db
+  #     POSTGRES_PORT: 5432
+  #     POSTGRES_DB: directus
+  #     POSTGRES_USER: directus
+  #     POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
+  #     POSTGRES_EXTRA_OPTS: --clean -Z1
+  #     SCHEDULE: "@daily"
+  #     BACKUP_KEEP_DAYS: 7
+  #     BACKUP_KEEP_WEEKS: 4
+  #     BACKUP_KEEP_MONTHS: 6
+  #     HEALTHCHECK_PORT: 8080
 
-  keycloak-db-backups:
-    image: prodrigestivill/postgres-backup-local
+  # keycloak-db-backups:
+  #   image: prodrigestivill/postgres-backup-local
 
-    volumes:
-      - ./keycloak-db-backups:/backups
-    restart: unless-stopped
-    links:
-      - keycloak-db
-    depends_on:
-      keycloak-db:
-        condition: service_healthy
-    environment:
-      POSTGRES_HOST: keycloak-db
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
-      POSTGRES_EXTRA_OPTS: --clean -Z1
-      SCHEDULE: "@daily"
-      BACKUP_KEEP_DAYS: 7
-      BACKUP_KEEP_WEEKS: 4
-      BACKUP_KEEP_MONTHS: 6
-      HEALTHCHECK_PORT: 8080
+  #   volumes:
+  #     - ./keycloak-db-backups:/backups
+  #   restart: unless-stopped
+  #   links:
+  #     - keycloak-db
+  #   depends_on:
+  #     keycloak-db:
+  #       condition: service_healthy
+  #   environment:
+  #     POSTGRES_HOST: keycloak-db
+  #     POSTGRES_PORT: 5432
+  #     POSTGRES_DB: keycloak
+  #     POSTGRES_USER: keycloak
+  #     POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+  #     POSTGRES_EXTRA_OPTS: --clean -Z1
+  #     SCHEDULE: "@daily"
+  #     BACKUP_KEEP_DAYS: 7
+  #     BACKUP_KEEP_WEEKS: 4
+  #     BACKUP_KEEP_MONTHS: 6
+  #     HEALTHCHECK_PORT: 8080
 
 volumes:
   directus-db-data:

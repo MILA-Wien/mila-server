@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { parse } from "marked";
-import { createItem, deleteItem, updateItem } from "@directus/sdk";
 import sanitizeHtml from "sanitize-html";
 import type { ShiftLogsAdmin } from "~/composables";
 
@@ -17,7 +16,6 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
-const directus = useDirectus();
 
 const occ = toRef(props.shiftOccurence);
 const shift = occ.value.shift;
@@ -144,16 +142,15 @@ async function removeAssignment(onetime: boolean) {
       removeAssignmentObject.value.assignment.shifts_from == startDateString)
   ) {
     // Remove one-time assignment or regular shift starting here
-    await directus.request(
-      deleteItem(
-        "shifts_assignments",
-        removeAssignmentObject.value.assignment.id!,
-      ),
+    await $fetch(
+      `/api/shifts/assignments/${removeAssignmentObject.value.assignment.id}`,
+      { method: "DELETE" },
     );
   } else if (onetime) {
     // Create one-time absence for a regular assignment
-    await directus.request(
-      createItem("shifts_absences", {
+    await $fetch("/api/shifts/absences", {
+      method: "POST",
+      body: {
         shifts_membership: (
           removeAssignmentObject.value.assignment
             .shifts_membership as MembershipsMembership
@@ -163,20 +160,20 @@ async function removeAssignment(onetime: boolean) {
         shifts_from: startDateString,
         shifts_to: startDateString,
         shifts_status: "accepted",
-      }),
-    );
+      },
+    });
   } else {
     // Stop regular assignment on the day before
     const startMinusOneDay = new Date();
     startMinusOneDay.setDate(start.getDate() - 1);
-    await directus.request(
-      updateItem(
-        "shifts_assignments",
-        removeAssignmentObject.value.assignment.id!,
-        {
+    await $fetch(
+      `/api/shifts/assignments/${removeAssignmentObject.value.assignment.id}`,
+      {
+        method: "PUT",
+        body: {
           shifts_to: startMinusOneDay.toISOString().split("T")[0],
         },
-      ),
+      },
     );
   }
 
@@ -228,33 +225,15 @@ async function createAssignment(onetime: boolean) {
     throw new Error(m);
   }
 
-  const payload: Partial<ShiftsAssignment> = {
-    shifts_membership: mshipID.value,
-    shifts_shift: shift.id!,
-    shifts_from: startDateString,
-    shifts_is_regular: !onetime,
-  };
-
-  const res = (await directus.request(
-    createItem("shifts_assignments", payload, {
-      fields: [
-        "id",
-        "shifts_membership",
-        "shifts_is_regular",
-        "shifts_shift",
-        "shifts_from",
-        "shifts_to",
-        {
-          shifts_membership: [
-            "id",
-            {
-              memberships_user: ["username", "username_last", "email"],
-            },
-          ],
-        },
-      ],
-    }),
-  )) as ShiftsAssignment;
+  const res = (await $fetch("/api/shifts/assignments", {
+    method: "POST",
+    body: {
+      shifts_membership: mshipID.value,
+      shifts_shift: shift.id!,
+      shifts_from: startDateString,
+      shifts_is_regular: !onetime,
+    },
+  })) as ShiftsAssignment;
 
   occ.value.assignments.push({
     assignment: res,

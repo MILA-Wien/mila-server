@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { createItem } from "@directus/sdk";
-
 const MIN_DAYS_BEFORE_HOLIDAY = 2;
 const isOpen = defineModel<boolean>();
 const absenceFromDate = ref<Date | undefined>(undefined);
 const absenceToDate = ref<Date | undefined>(undefined);
 const success: Ref<null | boolean> = ref(null);
 const { t } = useI18n();
-const directus = useDirectus();
 const emit = defineEmits(["reload"]);
 const props = defineProps<{
   mshipID: number;
@@ -55,15 +52,16 @@ async function postAbsenceInner() {
     return;
   }
 
-  const payload = {
-    shifts_membership: props.mshipID,
-    shifts_from: absenceFromDate.value?.toISOString(),
-    shifts_to: absenceToDate.value?.toISOString(),
-    shifts_is_holiday: true,
-    shifts_is_for_all_assignments: true,
-  } as Partial<ShiftsAbsence>;
-
-  await directus.request(createItem("shifts_absences", payload));
+  await $fetch("/api/shifts/absences", {
+    method: "POST",
+    body: {
+      shifts_membership: props.mshipID,
+      shifts_from: absenceFromDate.value?.toISOString(),
+      shifts_to: absenceToDate.value?.toISOString(),
+      shifts_is_holiday: true,
+      shifts_is_for_all_assignments: true,
+    },
+  });
 
   success.value = true;
   absenceFromDate.value = undefined;
