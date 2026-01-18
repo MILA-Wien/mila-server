@@ -126,9 +126,10 @@ Login credentials for keycloak admin UI:
 
 For deploying updates on the server:
 
-- Create a database backup (see below)
+- Create a database backup (see above)
 - Run `git pull`
 - Optional: Run `pnpm i`
 - Run `pnpm build`
-- Run `docker compose restart collectivo`
+- Run `docker compose up -d collectivo`
 - Optional: Apply database schema changes (see below)
+
