@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 const bodySchema = z.object({
-  shifts_membership: z.number(),
-  shifts_shift: z.number(),
+  shifts_membership: z.coerce.number(),
+  shifts_shift: z.coerce.number(),
   shifts_from: z.string(),
   shifts_is_regular: z.boolean(),
   shifts_to: z.string().optional(),
