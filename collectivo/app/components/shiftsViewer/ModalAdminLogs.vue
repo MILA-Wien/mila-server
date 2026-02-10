@@ -61,16 +61,28 @@ function openLogModal() {
 }
 
 async function createCustomLog() {
-  const log = await createShiftLog(
-    logEntryType.value!,
-    mshipID.value!,
-    startDateString,
-    shift.id,
-    logEntryScore.value,
-    logEntryNote.value ?? undefined,
-  );
-  writableLogs.value.push(log);
-  logModalIsOpen.value = false;
+  if (!mshipID.value) {
+    console.error("Membership ID is required");
+    return;
+  }
+  if (!logEntryType.value) {
+    console.error("Log type is required");
+    return;
+  }
+  try {
+    const log = await createShiftLog(
+      logEntryType.value,
+      Number(mshipID.value),
+      startDateString,
+      shift.id,
+      Number(logEntryScore.value),
+      logEntryNote.value ?? undefined,
+    );
+    writableLogs.value.push(log);
+    logModalIsOpen.value = false;
+  } catch (error) {
+    console.error("Failed to create log entry:", error);
+  }
 }
 </script>
 
