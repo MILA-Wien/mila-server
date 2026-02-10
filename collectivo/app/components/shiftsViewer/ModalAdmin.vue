@@ -479,9 +479,9 @@ function checkIfMshipInAssignments(mship: number) {
         <template #content>
           <div class="p-10 flex flex-col gap-4">
             <h2>{{ t("Create assignment") }}</h2>
-            <UFormGroup :label="t('Membership number')" name="membershipID">
+            <UFormField :label="t('Membership number')" name="membershipID">
               <UInput v-model="mshipID" />
-            </UFormGroup>
+            </UFormField>
             <UButton @click="loadMembership">{{
               t("Load membership")
             }}</UButton>
