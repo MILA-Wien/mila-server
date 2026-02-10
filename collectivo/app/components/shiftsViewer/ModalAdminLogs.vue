@@ -44,7 +44,7 @@ async function loadMembership() {
 const writableLogs = ref([...props.logs]);
 const logEntryOptions = ["attended", "missed", "other"];
 const logModalIsOpen = ref(false);
-const logEntryType = ref<string | null>(null);
+const logEntryType = ref<string | undefined>(undefined);
 const logEntryScore = ref(0);
 const logEntryNote = ref<string | null>(null);
 const occ = props.occurence;
@@ -102,9 +102,9 @@ async function createCustomLog() {
     <template #content>
       <div class="p-10 flex flex-col gap-4">
         <h2>{{ t("Create log entry") }}</h2>
-        <UFormGroup :label="t('Membership number')" name="membershipID">
+        <UFormField :label="t('Membership number')" name="membershipID">
           <UInput v-model="mshipID" />
-        </UFormGroup>
+        </UFormField>
         <UButton @click="loadMembership">{{ t("Load membership") }}</UButton>
 
         <div v-if="mshipData">
@@ -118,17 +118,17 @@ async function createCustomLog() {
 
           <p>Shift type: {{ mshipData.shifts_user_type }}</p>
 
-          <UFormGroup :label="t('Type')" name="logEntryType">
-            <USelect v-model="logEntryType" :options="logEntryOptions" />
-          </UFormGroup>
+          <UFormField :label="t('Log type')" name="logEntryType">
+            <USelect v-model="logEntryType" :items="logEntryOptions" />
+          </UFormField>
 
-          <UFormGroup :label="t('Score')" name="logEntryScore">
+          <UFormField :label="t('Score')" name="logEntryScore">
             <UInput v-model="logEntryScore" />
-          </UFormGroup>
+          </UFormField>
 
-          <UFormGroup :label="t('Note')" name="logEntryNote">
+          <UFormField :label="t('Note')" name="logEntryNote">
             <UInput v-model="logEntryNote" />
-          </UFormGroup>
+          </UFormField>
 
           <div class="flex flex-wrap gap-2 mt-3">
             <UButton @click="createCustomLog()">{{
@@ -145,7 +145,12 @@ async function createCustomLog() {
 </template>
 
 <i18n lang="yaml">
+en:
+  "Log type": "Log type"
 de:
+  "Log type": "Log-Typ"
+  "Score": "Schichtpunkte"
+  "Note": "Kommentar"
   "t:attended_draft": "Entwurf"
   "t:attended": "Absolviert"
   "t:missed": "Verpasst"
