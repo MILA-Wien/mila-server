@@ -159,6 +159,10 @@ async function createCustomLog() {
 <i18n lang="yaml">
 en:
   "Log type": "Log type"
+  "t:attended_draft": "Draft"
+  "t:attended": "Attended"
+  "t:missed": "Missed"
+  "t:other": "Other"
 de:
   "Log type": "Log-Typ"
   "Score": "Schichtpunkte"
