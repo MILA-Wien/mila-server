@@ -141,10 +141,11 @@ async function prepareEvents() {
         "]";
     }
 
-    // If any of the assignments memberships has shifts_can_be_coordinator set, show (K) after the name
+    // If any of the assignments memberships has shifts_can_be_coordinator set, show (*) after the shift name
     if (
       occurrence.assignments.some(
         (assignment: any) =>
+          assignment.isActive && // Only consider active assignments
           assignment.assignment.shifts_membership.shifts_can_be_coordinator,
       )
     ) {
