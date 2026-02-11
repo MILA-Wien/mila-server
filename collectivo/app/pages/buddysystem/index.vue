@@ -33,7 +33,7 @@ if (state.buddy_status === null) {
   state.buddy_status = "keine_angabe"
 };
 if (state.buddy_details === null) {
-  state.buddy_details = ""
+  state.buddy_details = undefined
 };
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
