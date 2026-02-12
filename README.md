@@ -130,6 +130,6 @@ For deploying updates on the server:
 - Run `git pull`
 - Optional: Run `pnpm i`
 - Run `pnpm build`
-- Run `docker compose up -d collectivo`
-- Optional: Apply database schema changes (see below)
-
+- Optional: If the environment configuration in .env or the docker compose file changed: Run `docker compose up -d collectivo`
+- Run `docker compose restart collectivo`
+- Optional: Apply database schema changes (see above)
