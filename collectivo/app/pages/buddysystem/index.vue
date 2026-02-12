@@ -27,11 +27,20 @@ const state = reactive({
   buddy_details: user.buddy_details,
 });
 
+// Directus can return null values
+// But zod wants undefined for optional fields
+if (state.buddy_status === null) {
+  state.buddy_status = "keine_angabe"
+};
+if (state.buddy_details === null) {
+  state.buddy_details = undefined
+};
+
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const res = await useFetch("/api/profile", {
-    method: "PUT",
-    body: event.data,
-  });
+      method: "PUT",
+      body: event.data,
+    });
   if (res.status.value === "success") {
     await userData.value.reload();
     toast.add({
@@ -45,6 +54,16 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       color: "error",
     });
   }
+}
+
+async function onError(event: any) {
+  console.log("onError called with event:", event);
+  console.log("Current state:", state);
+  toast.add({
+    title: t("Some fields are not filled in correctly"),
+    icon: "i-heroicons-exclamation-circle",
+    color: "error",
+  });
 }
 </script>
 
@@ -96,7 +115,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   <SectionDivider />
 
   <h2>{{ t("Mein Status") }}</h2>
-  <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+  <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit" @error="onError">
     <FormsFormGroup name="buddy_status">
       <URadioGroup
         variant="card"
@@ -182,4 +201,5 @@ en:
   "Offene Schichten mit Buddies anzeigen": "Show open shifts with buddies"
   "Im Schichtkalender findest du freie Schichten, in denen ein Buddy zur Verfügung steht.": "In the shift calendar you will find free shifts in which a buddy is available."
   "Zurück zur Startseite": "Back to the homepage"
+  "Erfolgreich aktualisiert.": "Successfully updated."
 </i18n>

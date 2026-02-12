@@ -28,7 +28,7 @@ export interface UserProfile {
   username_last: string;
   pronouns: string;
   buddy_status: "keine_angabe" | "is_buddy" | "need_buddy";
-  buddy_details: string;
+  buddy_details: string | undefined;
   lotzapp_id: string;
   email: string;
 }
