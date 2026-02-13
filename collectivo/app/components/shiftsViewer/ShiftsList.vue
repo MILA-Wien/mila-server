@@ -29,6 +29,7 @@ const props = defineProps({
 
 const emit = defineEmits(["openOccurrence"]);
 const allCats = props.category === -1;
+const buddyNeeded = props.status === "withbuddy";
 const unfilled = props.status === "unfilled";
 const isEmpty = ref(true);
 const { locale, t } = useI18n();
@@ -57,7 +58,7 @@ props.events.occurrences.forEach((occurrence) => {
   }
 
   // Apply filters
-  if (unfilled) {
+  if (unfilled || buddyNeeded) {
     if (!props.admin && occurrence.selfAssigned) {
       return;
     }
@@ -65,7 +66,21 @@ props.events.occurrences.forEach((occurrence) => {
     if (isPast) {
       return;
     }
-    if (occurrence.n_assigned >= occurrence.shift.shifts_slots) {
+    // Only check slots for "unfilled", not "withbuddy"
+    if (unfilled && !buddyNeeded && occurrence.n_assigned >= occurrence.shift.shifts_slots) {
+      return;
+    }
+  }
+
+  // Separate buddy check
+  if (buddyNeeded) {
+    if (
+      !occurrence.assignments.some(
+        (assignment: any) =>
+          assignment.assignment.shifts_membership.memberships_user
+            .buddy_status === "is_buddy"
+      )
+    ) {
       return;
     }
   }

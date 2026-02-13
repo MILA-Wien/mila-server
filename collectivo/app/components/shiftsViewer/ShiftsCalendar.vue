@@ -153,18 +153,22 @@ async function prepareEvents() {
     }
 
     // Apply filters
-    if (unfilled) {
+    if (unfilled || buddyNeeded) {
       if (!props.admin && occurrence.selfAssigned) {
         continue;
       }
       if (isPast) {
         continue;
       }
-      if (occurrence.n_assigned >= occurrence.shift.shifts_slots) {
+      // Only check if filled when using "unfilled" filter, NOT for "withbuddy"
+      if (unfilled && !buddyNeeded && occurrence.n_assigned >= occurrence.shift.shifts_slots) {
         continue;
       }
+    }
+
+    // Separate buddy check - runs even for full shifts
+    if (buddyNeeded) {
       if (
-        buddyNeeded &&
         !occurrence.assignments.some(
           (assignment: any) =>
             assignment.assignment.shifts_membership.memberships_user
