@@ -77,7 +77,7 @@ export const createAssignmentRrule = (
 export const getAssignmentRrules = (
   shift: ShiftsShift,
   shiftRule: RRule,
-  assignments: ShiftsAssignmentsQuery,
+  assignments: ShiftsAssignment[],
   absences: ShiftsAbsence[],
   holidayRrule?: RRule,
 ): AssignmentRrule[] => {

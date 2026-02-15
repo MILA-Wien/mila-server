@@ -1,4 +1,3 @@
-import { updateUser } from "@directus/sdk";
 import { z } from "zod";
 
 const schema = z.object({
@@ -14,16 +13,5 @@ const schema = z.object({
 export default defineEventHandler(async (event) => {
   const user = getMemberOrThrowError(event);
   const data = await readValidatedBody(event, schema.parse);
-  const directus = useDirectusAdmin();
-  await directus.request(
-    updateUser(user.user, {
-      username: data.username,
-      username_last: data.username_last,
-      pronouns: data.pronouns,
-      hide_name: data.hide_name,
-      send_notifications: data.send_notifications,
-      buddy_status: data.buddy_status,
-      buddy_details: data.buddy_details,
-    }),
-  );
+  await dbUpdateUser(user.user, data);
 });

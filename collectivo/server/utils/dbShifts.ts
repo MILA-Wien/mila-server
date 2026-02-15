@@ -5,6 +5,7 @@ import {
   readItems,
   readSingleton,
   updateItem,
+  updateSingleton,
 } from "@directus/sdk";
 import type { QueryFilter } from "@directus/sdk";
 import type { ShiftsShift } from "./dbSchema";
@@ -57,8 +58,27 @@ export async function dbGetShifts(
 // ASSIGNMENT QUERIES
 // ============================================================================
 
-/** Full assignment query for internal use (reminders, cronjobs) */
-export async function dbGetAssignments(
+function assignmentFilter(shiftIds: number[], from: Date, to: Date) {
+  return {
+    _or: [
+      {
+        shifts_is_regular: { _eq: false },
+        shifts_from: { _gte: from.toISOString(), _lte: to.toISOString() },
+      },
+      {
+        shifts_is_regular: { _eq: true },
+        shifts_to: {
+          _or: [{ _gte: from.toISOString() }, { _null: true }],
+        },
+        shifts_from: { _lte: to.toISOString() },
+      },
+    ],
+    shifts_shift: { _in: shiftIds },
+  };
+}
+
+/** Assignment query for reminders — includes notification/contact fields */
+export async function dbGetAssignmentsWithNotifications(
   shiftIds: number[],
   from: Date,
   to: Date,
@@ -70,24 +90,7 @@ export async function dbGetAssignments(
   return await directus.request(
     readItems("shifts_assignments", {
       limit: -1,
-      filter: {
-        _or: [
-          {
-            shifts_is_regular: { _eq: false },
-            shifts_from: { _gte: from.toISOString(), _lte: to.toISOString() },
-          },
-          {
-            shifts_is_regular: { _eq: true },
-            shifts_to: {
-              _or: [{ _gte: from.toISOString() }, { _null: true }],
-            },
-            shifts_from: { _lte: to.toISOString() },
-          },
-        ],
-        shifts_shift: {
-          _in: shiftIds,
-        },
-      },
+      filter: assignmentFilter(shiftIds, from, to),
       fields: [
         "id",
         "shifts_from",
@@ -141,24 +144,7 @@ export async function dbGetAssignmentsForApi(
   return await directus.request(
     readItems("shifts_assignments", {
       limit: -1,
-      filter: {
-        _or: [
-          {
-            shifts_is_regular: { _eq: false },
-            shifts_from: { _gte: from.toISOString(), _lte: to.toISOString() },
-          },
-          {
-            shifts_is_regular: { _eq: true },
-            shifts_to: {
-              _or: [{ _gte: from.toISOString() }, { _null: true }],
-            },
-            shifts_from: { _lte: to.toISOString() },
-          },
-        ],
-        shifts_shift: {
-          _in: shiftIds,
-        },
-      },
+      filter: assignmentFilter(shiftIds, from, to),
       // @ts-expect-error dynamic field selection
       fields: [
         "id",
@@ -415,6 +401,61 @@ export async function dbCreateAbsence(payload: {
 
 export async function dbGetSettings() {
   return await directus.request(readSingleton("settings_hidden"));
+}
+
+export async function dbUpdateSettings(data: Partial<SettingsHidden>) {
+  return await directus.request(updateSingleton("settings_hidden", data));
+}
+
+// ============================================================================
+// CRONJOB QUERIES
+// ============================================================================
+
+export async function dbGetActiveHolidayMemberships(date: Date) {
+  const holidays = await directus.request(
+    readItems("shifts_absences", {
+      filter: {
+        shifts_is_holiday: { _eq: true },
+        shifts_to: { _gte: date.toISOString() },
+        shifts_from: { _lte: date.toISOString() },
+      },
+      fields: ["id", "shifts_membership"],
+      limit: -1,
+    }),
+  );
+  return holidays.map((holiday) => holiday.shifts_membership as number);
+}
+
+export async function dbGetMembershipsForDecrement() {
+  return await directus.request(
+    readItems("memberships", {
+      filter: {
+        memberships_type: { _eq: "Aktiv" },
+        shifts_user_type: { _in: ["jumper", "regular"] },
+      },
+      fields: ["id", "shifts_counter"],
+      limit: -1,
+    }),
+  );
+}
+
+export async function dbDecrementMembershipCounter(id: number, counter: number) {
+  return await directus.request(
+    updateItem("memberships", id, { shifts_counter: counter - 1 }),
+  );
+}
+
+export async function dbGetShiftLogsByDate(date: Date) {
+  return await directus.request(
+    readItems("shifts_logs", {
+      filter: {
+        shifts_date: {
+          _gte: date.toISOString(),
+          _lte: date.toISOString(),
+        },
+      },
+    }),
+  );
 }
 
 // ============================================================================

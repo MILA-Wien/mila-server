@@ -1,4 +1,3 @@
-import { createItem } from "@directus/sdk";
 import { z } from "zod";
 
 const schema = z.object({
@@ -9,12 +8,9 @@ const schema = z.object({
 export default defineEventHandler(async (event) => {
   const user = getMemberOrThrowError(event);
   const data = await readValidatedBody(event, schema.parse);
-  const directus = useDirectusAdmin();
-  await directus.request(
-    createItem("bedarfsmeldung_solitopf", {
-      membership: user.mship,
-      auszahlung: data.auszahlung,
-      weitere_unterstuetzung: data.weitere_unterstuetzung,
-    }),
-  );
+  await dbCreateSolitopfRequest({
+    membership: user.mship,
+    auszahlung: data.auszahlung,
+    weitere_unterstuetzung: data.weitere_unterstuetzung,
+  });
 });

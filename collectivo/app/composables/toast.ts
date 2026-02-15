@@ -1,32 +1,11 @@
 type types = "error" | "success" | "warn" | "info";
 type colors = "red" | "green" | "yellow" | "blue";
 
-const defaultTitles = {
-  error: "Error",
-  success: "Success",
-  warn: "Warning",
-  info: "Info",
-};
-
-const defaultDescriptions = {
-  error: "An error occurred",
-  success: "Operation successful",
-  warn: "",
-  info: "",
-};
-
-const defaultColors: { [index: string]: colors } = {
-  error: "red",
-  success: "green",
-  warn: "yellow",
-  info: "blue",
-};
-
-const defaultIcons = {
-  error: "i-heroicons-exclamation-triangle",
-  success: "i-heroicons-check",
-  warn: "i-heroicons-exclamation-triangle",
-  info: "i-heroicons-information-circle",
+const toastDefaults: Record<types, { title: string; description: string; color: colors; icon: string }> = {
+  error:   { title: "Error",   description: "An error occurred",    color: "red",    icon: "i-heroicons-exclamation-triangle" },
+  success: { title: "Success", description: "Operation successful", color: "green",  icon: "i-heroicons-check" },
+  warn:    { title: "Warning", description: "",                     color: "yellow", icon: "i-heroicons-exclamation-triangle" },
+  info:    { title: "Info",    description: "",                     color: "blue",   icon: "i-heroicons-information-circle" },
 };
 
 export function showToast(options: {
@@ -38,11 +17,12 @@ export function showToast(options: {
 }) {
   const toast = useToast();
   const type = options.type ?? "info";
+  const defaults = toastDefaults[type];
 
   toast.add({
-    title: options.title ?? defaultTitles[type],
-    description: options.description ?? defaultDescriptions[type],
-    icon: options.icon ?? defaultIcons[type],
-    color: options.color ?? defaultColors[type],
+    title: options.title ?? defaults.title,
+    description: options.description ?? defaults.description,
+    icon: options.icon ?? defaults.icon,
+    color: options.color ?? defaults.color,
   });
 }

@@ -1,5 +1,3 @@
-import { createItem, readItem, readItems, deleteItem } from "@directus/sdk";
-
 const memberStatuses = ["approved", "in-exclusion", "in-cancellation"];
 const notMemberStatuses = ["draft", "applied", "ended"];
 
@@ -27,59 +25,30 @@ export default defineEventHandler(async (event) => {
 });
 
 async function assignTag(body: any, membership: string) {
-  const directus = await useDirectusAdmin();
-
-  const mship = await directus.request(
-    readItem("memberships", membership, { fields: ["memberships_user"] }),
-  );
-
+  const mship = await dbGetMembershipUser(membership);
   const userID = mship.memberships_user;
 
-  const mitgliedstagIDs = await directus.request(
-    readItems("collectivo_tags", {
-      filter: {
-        tags_name: {
-          _eq: "Mitglied",
-        },
-      },
-    }),
-  );
+  const mitgliedstag = await dbGetTagByName("Mitglied");
 
-  if (mitgliedstagIDs.length < 1) {
+  if (!mitgliedstag) {
     console.log("Mitglied tag not found");
     return;
   }
 
-  const mitgliedstagID = mitgliedstagIDs[0].id;
-
-  const existing_tag_assignments = await directus.request(
-    readItems("collectivo_tags_directus_users", {
-      filter: {
-        collectivo_tags_id: {
-          _eq: mitgliedstagID,
-        },
-        directus_users_id: {
-          _eq: userID,
-        },
-      },
-    }),
+  const mitgliedstagID = mitgliedstag.id;
+  const existing_tag_assignments = await dbGetUserTagAssignments(
+    userID,
+    mitgliedstagID,
   );
 
   if (
     memberStatuses.includes(body.payload.memberships_status) &&
     existing_tag_assignments.length == 0
   ) {
-    await directus.request(
-      createItem("collectivo_tags_directus_users", {
-        collectivo_tags_id: mitgliedstagID,
-        directus_users_id: userID,
-      }),
-    );
+    await dbAssignTag(userID, mitgliedstagID);
   } else if (notMemberStatuses.includes(body.payload.memberships_status)) {
     for (const tag of existing_tag_assignments) {
-      await directus.request(
-        deleteItem("collectivo_tags_directus_users", tag.id),
-      );
+      await dbRemoveTagAssignment(tag.id);
     }
   }
 }

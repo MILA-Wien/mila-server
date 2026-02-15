@@ -25,10 +25,15 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["openOccurrence"]);
-const allCats = props.category === -1;
-const unfilled = props.status === "unfilled";
 const isEmpty = ref(true);
 const { locale, t } = useI18n();
+
+const filterOpts = {
+  status: props.status,
+  category: props.category,
+  allowedCategories: props.allowedCategories,
+  admin: props.admin,
+};
 
 interface Events {
   [key: string]: {
@@ -41,8 +46,6 @@ interface Events {
 const groups: Events = {};
 props.events.occurrences.forEach((occurrence) => {
   const date = new Date(occurrence.start);
-  const start = new Date(occurrence.start);
-  const isPast = start < new Date();
   const dateString = date.toLocaleDateString(locale.value);
   if (!groups[dateString]) {
     groups[dateString] = {
@@ -53,40 +56,7 @@ props.events.occurrences.forEach((occurrence) => {
     };
   }
 
-  // Apply filters
-  if (unfilled) {
-    if (!props.admin && occurrence.selfAssigned) {
-      return;
-    }
-
-    if (isPast) {
-      return;
-    }
-    if (occurrence.n_assigned >= occurrence.shift.shifts_slots) {
-      return;
-    }
-  }
-
-  if (props.category == 0 && occurrence.shift.shifts_category_2 != null) {
-    return;
-  }
-
-  if (
-    !allCats &&
-    props.category != 0 &&
-    occurrence.shift.shifts_category_2 !== props.category
-  ) {
-    return;
-  }
-
-  if (
-    allCats &&
-    occurrence.shift.shifts_category_2 !== null &&
-    occurrence.shift.shifts_category_2 !== undefined &&
-    !props.allowedCategories.includes(occurrence.shift.shifts_category_2)
-  ) {
-    return;
-  }
+  if (!filterOccurrence(occurrence, filterOpts)) return;
 
   groups[dateString].occurrences.push(occurrence);
   isEmpty.value = false;

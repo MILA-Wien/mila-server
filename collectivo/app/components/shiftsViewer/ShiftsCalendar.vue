@@ -105,9 +105,6 @@ function getColor(slots: number, n_assigned: number, isPast: boolean) {
 async function prepareEvents() {
   // Prepare events array
   const events = [];
-  const allCats = props.category === -1;
-  const buddyNeeded = props.status === "withbuddy";
-  const unfilled = buddyNeeded || props.status === "unfilled";
 
   // Add public holidays
   for (const holiday of props.events.publicHolidays) {
@@ -119,8 +116,17 @@ async function prepareEvents() {
     });
   }
 
+  const filterOpts = {
+    status: props.status,
+    category: props.category,
+    allowedCategories: props.allowedCategories,
+    admin: props.admin,
+  };
+
   // Add shift occurrences
   for (const occurrence of props.events.occurrences) {
+    if (!filterOccurrence(occurrence, filterOpts)) continue;
+
     const start = new Date(occurrence.start);
     const isPast = start < new Date();
     let title = occurrence.shift.shifts_name;
@@ -150,48 +156,6 @@ async function prepareEvents() {
       )
     ) {
       title += "*";
-    }
-
-    // Apply filters
-    if (unfilled) {
-      if (!props.admin && occurrence.selfAssigned) {
-        continue;
-      }
-      if (isPast) {
-        continue;
-      }
-      if (occurrence.n_assigned >= occurrence.shift.shifts_slots) {
-        continue;
-      }
-      if (
-        buddyNeeded &&
-        !occurrence.assignments.some(
-          (assignment) =>
-            assignment.buddy_status === "is_buddy",
-        )
-      ) {
-        continue;
-      }
-    }
-
-    if (props.category == 0 && occurrence.shift.shifts_category_2 != null) {
-      continue;
-    }
-
-    if (
-      !allCats &&
-      props.category != 0 &&
-      occurrence.shift.shifts_category_2 !== props.category
-    ) {
-      continue;
-    }
-
-    if (
-      allCats &&
-      !(occurrence.shift.shifts_category_2 === null) &&
-      !props.allowedCategories.includes(occurrence.shift.shifts_category_2)
-    ) {
-      continue;
     }
 
     events.push({

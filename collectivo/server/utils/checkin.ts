@@ -1,6 +1,5 @@
 // SSE state management for the Checkin Card Scanner
 // Currently only supports single subscriber / client
-import { createItem, readItem, readItems } from "@directus/sdk";
 
 type Subscriber = NodeJS.WritableStream;
 
@@ -90,20 +89,9 @@ async function createNewCheckinState(cardID?: string, mshipId?: number) {
     return { error: "Diese Karte ist keiner Mitgliedschaft zugeordnet" };
   }
 
-  const directus = await useDirectusAdmin();
   const now = getCurrentDate();
   const nowStr = now.toISOString();
-  const absences = await directus.request(
-    readItems("shifts_absences", {
-      filter: {
-        shifts_membership: { id: { _eq: mship.id } },
-        shifts_is_holiday: { _eq: true },
-        shifts_to: { _gte: nowStr },
-        shifts_from: { _lte: nowStr },
-      },
-      fields: ["id"],
-    }),
-  );
+  const absences = await dbGetCheckinAbsences(mship.id, nowStr);
   const isOnHoliday = absences.length > 0;
   let canShop = true;
 
@@ -144,7 +132,7 @@ async function createNewCheckinState(cardID?: string, mshipId?: number) {
 
 async function getMship(cardID?: string, mshipId?: number) {
   if (mshipId) {
-    const mship = await getMshipById(mshipId);
+    const mship = await dbGetCheckinMembership(mshipId);
     return { mship, coshopper: undefined };
   }
 
@@ -160,38 +148,8 @@ async function getMship(cardID?: string, mshipId?: number) {
   return { mship: mship2, coshopper: coshopper };
 }
 
-async function getMshipById(mshipId: number) {
-  const directus = await useDirectusAdmin();
-  return await directus.request(
-    readItem("memberships", mshipId, {
-      fields: [
-        "id",
-        "memberships_card_id",
-        "memberships_type",
-        "shifts_counter",
-        "shifts_user_type",
-        { memberships_user: ["username", "username_last", "pronouns"] },
-      ],
-    }),
-  );
-}
-
 async function getMshipThroughMainCard(cardID: string) {
-  const directus = await useDirectusAdmin();
-  const memberships = (await directus.request(
-    readItems("memberships", {
-      filter: {
-        _or: [{ memberships_card_id: { _eq: cardID } }],
-      },
-      fields: [
-        "id",
-        "memberships_type",
-        "shifts_counter",
-        "shifts_user_type",
-        { memberships_user: ["username", "username_last", "pronouns"] },
-      ],
-    }),
-  )) as Membership[];
+  const memberships = await dbGetMembershipByCard(cardID);
   if (memberships.length > 1) {
     throw new Error("MULTIPLE_ENTRIES_FOUND_FOR_CARD_ID");
   }
@@ -202,38 +160,7 @@ async function getMshipThroughMainCard(cardID: string) {
 }
 
 async function getMshipThroughCoCard(cardID: string) {
-  const directus = await useDirectusAdmin();
-  const memberships = await directus.request(
-    readItems("memberships", {
-      filter: {
-        _or: [
-          {
-            coshoppers: {
-              memberships_coshoppers_id: {
-                membership_card_id: { _eq: cardID },
-              },
-            },
-          },
-          {
-            kids: {
-              memberships_coshoppers_id: {
-                membership_card_id: { _eq: cardID },
-              },
-            },
-          },
-        ],
-      },
-      fields: [
-        "id",
-        "memberships_type",
-        "shifts_counter",
-        "shifts_user_type",
-        { memberships_user: ["username", "pronouns"] },
-        { coshoppers: ["memberships_coshoppers_id.*"] },
-        { kids: ["memberships_coshoppers_id.*"] },
-      ],
-    }),
-  );
+  const memberships = await dbGetMembershipByCoCard(cardID);
   if (memberships.length > 1) {
     throw new Error("MULTIPLE_ENTRIES_FOUND_FOR_CARD_ID");
   }
@@ -260,25 +187,10 @@ async function getMshipThroughCoCard(cardID: string) {
 }
 
 async function createLog(state: CheckinData) {
-  const directus = await useDirectusAdmin();
   const now = getCurrentDate();
   const nowStr = now.toISOString();
-  const logs = await directus.request(
-    readItems("milaccess_log", {
-      filter: {
-        membership: { _eq: state.membership },
-        date: { _eq: nowStr },
-        coshopper: { _eq: state.coshopperId || null },
-      },
-    }),
-  );
+  const logs = await dbGetCheckinLog(state.membership, nowStr, state.coshopperId);
   if (logs.length == 0) {
-    await directus.request(
-      createItem("milaccess_log", {
-        membership: state.membership,
-        date: nowStr,
-        coshopper: state.coshopperId,
-      }),
-    );
+    await dbCreateCheckinLog(state.membership, nowStr, state.coshopperId);
   }
 }

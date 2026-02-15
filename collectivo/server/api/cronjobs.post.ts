@@ -1,14 +1,6 @@
 // Runs once a day at 03:00 in the morning, called by directus API
 // Only runs cronjob for past days since last successful cronjob
 
-import {
-  createItem,
-  readItems,
-  readSingleton,
-  updateItem,
-  updateSingleton,
-} from "@directus/sdk";
-import { getShiftOccurrences } from "../utils/shiftsOccurrences";
 import { sendShiftReminders } from "../utils/shiftsReminder";
 
 export default defineEventHandler(async (event) => {
@@ -25,8 +17,7 @@ export default defineEventHandler(async (event) => {
 });
 
 async function runCronjobs(force_yesterday: boolean) {
-  const directus = await useDirectusAdmin();
-  const settings = await directus.request(readSingleton("settings_hidden"));
+  const settings = await dbGetSettings();
 
   // Get days since last cronjob (including day of last cronjob, not including current day)
   const from = new Date(settings.last_cronjob + "Z");
@@ -44,7 +35,7 @@ async function runCronjobs(force_yesterday: boolean) {
 
   // Perform cronjobs
   for (const day of days_since_last_cronjob) {
-    const holidays = await getActiveHolidays(day);
+    const holidays = await dbGetActiveHolidayMemberships(day);
 
     // Job 1
     await create_shift_logs(day, holidays, settings);
@@ -63,28 +54,7 @@ async function runCronjobs(force_yesterday: boolean) {
   }
 
   // Update last cronjob timestamp
-  await directus.request(
-    updateSingleton("settings_hidden", {
-      last_cronjob: new Date().toISOString(),
-    }),
-  );
-}
-
-async function getActiveHolidays(date: Date): Promise<number[]> {
-  const directus = await useDirectusAdmin();
-  const holidays = await directus.request(
-    readItems("shifts_absences", {
-      filter: {
-        shifts_is_holiday: { _eq: true },
-        shifts_to: { _gte: date.toISOString() },
-        shifts_from: { _lte: date.toISOString() },
-      },
-      fields: ["id", "shifts_membership"],
-      limit: -1,
-    }),
-  );
-
-  return holidays.map((holiday) => holiday.shifts_membership as number);
+  await dbUpdateSettings({ last_cronjob: new Date().toISOString() });
 }
 
 // Decrement shifts counter for all users that
@@ -92,32 +62,14 @@ async function getActiveHolidays(date: Date): Promise<number[]> {
 // 2) are active as well as jumpers or regulars
 // 3) have a shifts counter > 0 (if counter hits zero, it remains at zero)
 async function decrement_shifts_counter(mshipIdsOnHoliday: number[]) {
-  const directus = await useDirectusAdmin();
-  const memberships = await directus.request(
-    readItems("memberships", {
-      filter: {
-        memberships_type: {
-          _eq: "Aktiv",
-        },
-        shifts_user_type: {
-          _in: ["jumper", "regular"],
-        },
-      },
-      fields: ["id", "shifts_counter"],
-      limit: -1,
-    }),
-  );
+  const memberships = await dbGetMembershipsForDecrement();
   const membershipsToUpdate = memberships.filter(
     (membership) => !mshipIdsOnHoliday.includes(membership.id),
   );
 
   for (const membership of membershipsToUpdate) {
     if (membership.shifts_counter < -28) continue;
-    await directus.request(
-      updateItem("memberships", membership.id, {
-        shifts_counter: membership.shifts_counter - 1,
-      }),
-    );
+    await dbDecrementMembershipCounter(membership.id, membership.shifts_counter);
   }
 }
 
@@ -128,49 +80,34 @@ async function create_shift_logs(
   mshipIdsOnHoliday: number[],
   settings: SettingsHidden,
 ) {
-  const directus = await useDirectusAdmin();
-
-  const { occurrences } = await getShiftOccurrences(day, day, true);
-
-  const logs = await directus.request(
-    readItems("shifts_logs", {
-      filter: {
-        shifts_date: {
-          _gte: day.toISOString(),
-          _lte: day.toISOString(),
-        },
-      },
-    }),
-  );
+  const { occurrences } = await getShiftOccurrencesForApi(day, day, true);
+  const logs = await dbGetShiftLogsByDate(day);
 
   for (const occurrence of occurrences) {
-    const occDate = occurrence.start.toISOString().split("T")[0];
+    const occDate = occurrence.start.split("T")[0];
     for (const ass of occurrence.assignments) {
-      const mship = ass.assignment.shifts_membership as Membership;
-
       // Skip if assignment inactive, user on holiday, or log already exists
       if (
         !ass.isActive ||
-        mshipIdsOnHoliday.includes(mship.id) ||
+        mshipIdsOnHoliday.includes(ass.membershipId) ||
         logs.some(
           (log) =>
-            mship.id === log.shifts_membership && occDate === log.shifts_date,
+            ass.membershipId === log.shifts_membership && occDate === log.shifts_date,
         )
       ) {
         continue;
       }
 
       // Create a log entry, assuming that shift has been attended
-      await directus.request(
-        createItem("shifts_logs", {
-          shifts_membership: mship.id,
-          shifts_date: occDate,
-          shifts_type: "attended",
-          shifts_score: settings.shift_point_system
-            ? occurrence.shift.shift_points
-            : 0,
-          shifts_shift: occurrence.shift.id,
-        }),
+      const score = settings.shift_point_system
+        ? (occurrence.shift as any).shift_points
+        : 0;
+      await dbCreateShiftLog(
+        "attended",
+        ass.membershipId,
+        occDate,
+        occurrence.shift.id,
+        score,
       );
     }
   }

@@ -1,15 +1,9 @@
-import { readItem } from "@directus/sdk";
 import { confirmCheckinUser } from "~~/server/utils/checkin";
 
 export default defineEventHandler(async (event) => {
   confirmCheckinUser(event);
   const mshipId = getRouterParam(event, "mshipId") as string;
-  const directus = useDirectusAdmin();
-  const mship = await directus.request(
-    readItem("memberships", mshipId, {
-      fields: [{ memberships_user: ["username", "username_last", "pronouns"] }],
-    }),
-  );
+  const mship = await dbGetCheckinMembershipProfile(mshipId);
   return {
     username:
       mship.memberships_user.username +

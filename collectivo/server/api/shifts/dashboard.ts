@@ -162,7 +162,7 @@ const getShiftTeam = async (
 ) => {
   const coworkers = [];
   const coordinators = [];
-  const occs = await getShiftOccurrences(
+  const occs = await getShiftOccurrencesForApi(
     nextOccurence,
     nextOccurence,
     false,
@@ -171,14 +171,12 @@ const getShiftTeam = async (
   );
 
   if (occs.occurrences.length > 0) {
-    const assignments = occs.occurrences[0].assignments;
-    for (const a of assignments) {
-      const u = a.assignment.shifts_membership.memberships_user;
+    for (const a of occs.occurrences[0].assignments) {
       if (!a.isActive) continue;
-      if (a.assignment.shifts_membership.shifts_can_be_coordinator) {
-        coordinators.push(u.username + " " + u.username_last);
+      if (a.shifts_can_be_coordinator) {
+        coordinators.push(a.username + " " + a.username_last);
       } else {
-        coworkers.push(u.username + " " + u.username_last);
+        coworkers.push(a.username + " " + a.username_last);
       }
     }
   }
