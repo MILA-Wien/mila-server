@@ -1,4 +1,4 @@
 export default defineEventHandler(async (event) => {
   getUserOrThrowError(event);
-  return await getTiles();
+  return await dbGetTiles();
 });

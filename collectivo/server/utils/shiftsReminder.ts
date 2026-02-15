@@ -5,7 +5,6 @@
  * Requires an active automation with the name "shifts_reminder".
  */
 import { createItem, readItems, updateItems } from "@directus/sdk";
-import { getFutureHolidayRrule } from "./shiftsQueries";
 
 export async function sendShiftReminders(date: Date) {
   const automation = await getAutomation("shifts_reminder");
@@ -14,11 +13,10 @@ export async function sendShiftReminders(date: Date) {
 }
 
 async function getAssignmentsInTwoDays(date: Date) {
-  const directus = useDirectusAdmin();
   const targetDate = new Date(date);
   targetDate.setDate(targetDate.getDate() + 3);
   console.log("Sending reminders for shifts on ", targetDate.toISOString());
-  const shifts: ShiftsShift[] = await getShiftShifts(
+  const shifts: ShiftsShift[] = await dbGetShifts(
     targetDate,
     targetDate,
     undefined,
@@ -28,7 +26,7 @@ async function getAssignmentsInTwoDays(date: Date) {
   const shiftIds = shifts.map((shift) => shift.id);
 
   // Get assignments two days ahead
-  const assignments = await getShiftAssignments(
+  const assignments = await dbGetAssignments(
     shiftIds,
     targetDate,
     targetDate,
@@ -38,7 +36,7 @@ async function getAssignmentsInTwoDays(date: Date) {
 
   const absences = [];
   if (assignmentIds.length) {
-    const absences_ = await getShiftAbsences(
+    const absences_ = await dbGetAbsences(
       assignmentIds,
       targetDate,
       targetDate,
@@ -46,17 +44,7 @@ async function getAssignmentsInTwoDays(date: Date) {
     absences.push(...absences_);
   }
 
-  const publicHolidays = (await directus.request(
-    readItems("shifts_holidays_public", {
-      filter: {
-        date: {
-          _and: [{ _gte: targetDate }, { _lte: targetDate }],
-        },
-      },
-      limit: -1,
-      fields: ["*"],
-    }),
-  )) as ShiftsPublicHoliday[];
+  const publicHolidays = await dbGetPublicHolidays(targetDate, targetDate);
 
   const holidayRrule = await getFutureHolidayRrule();
 

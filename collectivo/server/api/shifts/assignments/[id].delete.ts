@@ -16,5 +16,5 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return await deleteShiftAssignment(parseInt(assignmentId));
+  return await dbDeleteAssignment(parseInt(assignmentId));
 });

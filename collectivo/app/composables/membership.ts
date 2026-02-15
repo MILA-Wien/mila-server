@@ -1,5 +1,3 @@
-import type { OccurrenceAssignment } from "../../shared/types/shifts";
-
 export async function getMembership(id: number) {
   return await $fetch(`/api/memberships/${id}`);
 }

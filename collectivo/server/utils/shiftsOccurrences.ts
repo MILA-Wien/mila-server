@@ -181,11 +181,11 @@ export const getShiftOccurrences = async (
   mship?: number,
 ) => {
   // Get shifts within timeframe
-  const shifts = await getShiftShifts(from, to, shiftID);
+  const shifts = await dbGetShifts(from, to, shiftID);
   const shiftIds = shifts.map((shift) => shift.id);
 
   // Get assignments within timeframe
-  const assignments = await getShiftAssignments(shiftIds, from, to);
+  const assignments = await dbGetAssignments(shiftIds, from, to);
   const assignmentIds = assignments.map((assignment) => assignment.id);
 
   // Hide names if not admin
@@ -199,10 +199,10 @@ export const getShiftOccurrences = async (
   }
 
   // Get absences within timeframe
-  const absences = await getShiftAbsences(assignmentIds, from, to);
+  const absences = await dbGetAbsences(assignmentIds, from, to);
 
   // Get public holidays within timeframe
-  const publicHolidays = await getShiftPublicHolidays(from, to);
+  const publicHolidays = await dbGetPublicHolidays(from, to);
 
   // Get occurrences for each shift
   const occurrences = [];

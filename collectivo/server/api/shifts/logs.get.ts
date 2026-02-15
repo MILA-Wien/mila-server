@@ -16,5 +16,5 @@ export default defineEventHandler(async (event) => {
   }
 
   const params = await getValidatedQuery(event, querySchema.parse);
-  return await getShiftLogsForShift(params.date, params.shiftId);
+  return await dbGetShiftLogs(params.date, params.shiftId);
 });

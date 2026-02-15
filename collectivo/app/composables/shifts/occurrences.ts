@@ -1,5 +1,3 @@
-import type { OccurrencesApiResponse } from "../../../shared/types/shifts";
-
 export async function getOccurrences(
   startDate: string,
   endDate: string,

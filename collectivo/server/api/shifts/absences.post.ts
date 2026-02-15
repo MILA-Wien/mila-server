@@ -22,5 +22,5 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return await createShiftAbsence(body);
+  return await dbCreateAbsence(body);
 });

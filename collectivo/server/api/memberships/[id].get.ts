@@ -9,5 +9,5 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return await getMembershipById(parseInt(membershipId));
+  return await dbGetMembershipById(parseInt(membershipId));
 });

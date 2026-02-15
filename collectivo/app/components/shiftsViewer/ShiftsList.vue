@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { PropType } from "vue";
-import type { OccurrencesApiResponse, ShiftOccurrenceResponse } from "~/composables";
 
 const props = defineProps({
   admin: {

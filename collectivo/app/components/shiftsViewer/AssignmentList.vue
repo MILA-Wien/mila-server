@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { ShiftOccurrenceResponse } from "~/composables";
 const { t } = useI18n();
 const props = defineProps({
   occurrence: {

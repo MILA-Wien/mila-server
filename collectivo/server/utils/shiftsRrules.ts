@@ -1,6 +1,6 @@
 import { RRule, RRuleSet } from "rrule";
 import { parseUtcMidnight } from "./dates";
-import { ShiftsShift } from "./dbSchema";
+import type { ShiftsShift } from "./dbSchema";
 
 // Create a RRule object for a shift
 // Shifts without end date run forever

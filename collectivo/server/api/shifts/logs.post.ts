@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await readValidatedBody(event, bodySchema.parse);
-  return await createShiftLog(
+  return await dbCreateShiftLog(
     body.type,
     body.mshipId,
     body.date,

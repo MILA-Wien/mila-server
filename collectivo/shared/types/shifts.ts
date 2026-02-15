@@ -1,4 +1,3 @@
-/** Flattened assignment in occurrence response */
 export interface OccurrenceAssignment {
   assignmentId: number;
   membershipId: number;
@@ -22,7 +21,6 @@ export interface OccurrenceAssignment {
   } | null;
 }
 
-/** Shift info in occurrence response - only frontend-needed fields */
 export interface OccurrenceShift {
   id: number;
   shifts_name: string;
@@ -38,7 +36,6 @@ export interface OccurrenceShift {
   exclude_public_holidays?: boolean;
 }
 
-/** Single shift occurrence */
 export interface ShiftOccurrenceResponse {
   shift: OccurrenceShift;
   start: string;
@@ -48,7 +45,6 @@ export interface ShiftOccurrenceResponse {
   assignments: OccurrenceAssignment[];
 }
 
-/** Full occurrences API response */
 export interface OccurrencesApiResponse {
   occurrences: ShiftOccurrenceResponse[];
   publicHolidays: { date: string }[];

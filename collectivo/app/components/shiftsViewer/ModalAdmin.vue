@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { parse } from "marked";
 import sanitizeHtml from "sanitize-html";
-import type {
-  ShiftLogsAdmin,
-  ShiftOccurrenceResponse,
-  OccurrenceAssignment,
-} from "~/composables";
+import type { ShiftLogsAdmin } from "~/composables";
 
 type AdminAssignment = OccurrenceAssignment & {
   log?: ShiftLogsAdmin;

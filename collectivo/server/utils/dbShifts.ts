@@ -7,7 +7,7 @@ import {
   updateItem,
 } from "@directus/sdk";
 import type { QueryFilter } from "@directus/sdk";
-import { ShiftsShift } from "./dbSchema";
+import type { ShiftsShift } from "./dbSchema";
 
 const directus = useDirectusAdmin();
 
@@ -415,6 +415,77 @@ export async function dbCreateAbsence(payload: {
 
 export async function dbGetSettings() {
   return await directus.request(readSingleton("settings_hidden"));
+}
+
+// ============================================================================
+// DASHBOARD QUERIES
+// ============================================================================
+
+export async function dbGetDashboardAssignments(mship: number) {
+  const now = getCurrentDate();
+  return await directus.request(
+    readItems("shifts_assignments", {
+      filter: {
+        shifts_membership: { id: { _eq: mship } },
+        shifts_to: {
+          _or: [{ _gte: now.toISOString() }, { _null: true }],
+        },
+      },
+      limit: -1,
+      fields: [
+        "*",
+        { shifts_shift: ["*"] },
+        {
+          shifts_membership: [
+            {
+              memberships_user: ["username", "username_last", "hide_name"],
+            },
+            "shifts_can_be_coordinator",
+          ],
+        },
+      ],
+    }),
+  );
+}
+
+export async function dbGetDashboardAbsences(mship: number) {
+  const now = getCurrentDate();
+  return await directus.request(
+    readItems("shifts_absences", {
+      limit: -1,
+      filter: {
+        _or: [
+          { shifts_membership: { id: { _eq: mship } } },
+          {
+            shifts_assignment: { shifts_membership: { id: { _eq: mship } } },
+          },
+        ],
+        shifts_to: { _gte: now.toISOString() },
+      },
+      fields: [
+        "*",
+        { shifts_assignment: ["id", { shifts_shift: ["shifts_name"] }] },
+        {
+          shifts_membership: [
+            {
+              memberships_user: ["username", "username_last", "hide_name"],
+            },
+            "shifts_can_be_coordinator",
+          ],
+        },
+      ],
+    }),
+  );
+}
+
+export async function dbGetDashboardLogs(mship: number) {
+  return await directus.request(
+    readItems("shifts_logs", {
+      filter: { shifts_membership: mship },
+      sort: ["-shifts_date"],
+      limit: 5,
+    }),
+  );
 }
 
 // ============================================================================

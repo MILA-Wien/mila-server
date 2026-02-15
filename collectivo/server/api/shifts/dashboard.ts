@@ -2,28 +2,38 @@
 // Includes shifts, assignments, absences, holidays, logs
 
 import { RRule, RRuleSet } from "rrule";
-import { readItems } from "@directus/sdk";
 import {
   createAssignmentRrule,
   getFutureHolidayRrule,
-} from "../../utils/shiftsQueries";
+} from "../../utils/shiftsRrules";
 
 export default defineEventHandler(async (event) => {
   return await getShiftDataDashboard(event.context.auth.mship);
 });
 
 const getShiftDataDashboard = async (mship: number) => {
-  const [
-    assignments,
-    [absences, signouts, holidays, holidaysCurrent],
-    holidayRrule,
-    logs,
-  ] = await Promise.all([
-    getAssignments(mship),
-    getAbsences(mship),
+  const [assignments, absences, holidayRrule, logs] = await Promise.all([
+    dbGetDashboardAssignments(mship),
+    dbGetDashboardAbsences(mship),
     getFutureHolidayRrule(),
-    getLogs(mship),
+    dbGetDashboardLogs(mship),
   ]);
+
+  // Categorize absences
+  const now = getCurrentDate();
+  const holidays = [];
+  const signouts = [];
+  const holidaysCurrent = [];
+  for (const absence of absences) {
+    if (absence.shifts_is_holiday) {
+      holidays.push(absence);
+      if (new Date(absence.shifts_from) <= now) {
+        holidaysCurrent.push(absence);
+      }
+    } else {
+      signouts.push(absence);
+    }
+  }
 
   const assignmentInfos = await Promise.all(
     assignments.map(async (assignment) => {
@@ -52,101 +62,12 @@ const getShiftDataDashboard = async (mship: number) => {
 
   return {
     assignments: activeAssignments,
-    signouts: signouts,
-    holidays: holidays,
-    holidaysCurrent: holidaysCurrent,
-    logs: logs,
+    signouts,
+    holidays,
+    holidaysCurrent,
+    logs,
   };
 };
-
-async function getAssignments(mship: number) {
-  const now = getCurrentDate();
-  const nowStr = now.toISOString();
-  const directus = useDirectusAdmin();
-  return await directus.request(
-    readItems("shifts_assignments", {
-      filter: {
-        shifts_membership: { id: { _eq: mship } },
-        shifts_to: {
-          _or: [{ _gte: nowStr }, { _null: true }],
-        },
-      },
-      limit: -1,
-      fields: [
-        "*",
-        { shifts_shift: ["*"] },
-        {
-          shifts_membership: [
-            {
-              memberships_user: ["username", "username_last", "hide_name"],
-            },
-            "shifts_can_be_coordinator",
-          ],
-        },
-      ],
-    }),
-  );
-}
-
-async function getAbsences(mship: number) {
-  const directus = useDirectusAdmin();
-  const now = getCurrentDate();
-  const nowStr = now.toISOString();
-  const absences = await directus.request(
-    readItems("shifts_absences", {
-      limit: -1,
-      filter: {
-        _or: [
-          { shifts_membership: { id: { _eq: mship } } },
-          {
-            shifts_assignment: { shifts_membership: { id: { _eq: mship } } },
-          },
-        ],
-
-        shifts_to: { _gte: nowStr },
-      },
-      fields: [
-        "*",
-        { shifts_assignment: ["id", { shifts_shift: ["shifts_name"] }] },
-        {
-          shifts_membership: [
-            {
-              memberships_user: ["username", "username_last", "hide_name"],
-            },
-            "shifts_can_be_coordinator",
-          ],
-        },
-      ],
-    }),
-  );
-
-  const holidays = [];
-  const signouts = [];
-  const holidaysCurrent = [];
-  for (const absence of absences) {
-    if (absence.shifts_is_holiday) {
-      holidays.push(absence);
-      if (new Date(absence.shifts_from) <= new Date(nowStr)) {
-        holidaysCurrent.push(absence);
-      }
-    } else {
-      signouts.push(absence);
-    }
-  }
-
-  return [absences, signouts, holidays, holidaysCurrent];
-}
-
-async function getLogs(mship: number) {
-  const directus = useDirectusAdmin();
-  return await directus.request(
-    readItems("shifts_logs", {
-      filter: { shifts_membership: mship },
-      sort: ["-shifts_date"],
-      limit: 5,
-    }),
-  );
-}
 
 interface OccurrenceInfo {
   date: Date;
@@ -162,16 +83,16 @@ function getOccurrenceInfo(occ: Date, hr: RRule, oar: RRule, phr?: RRule) {
   const isOtherAbsence = oar.between(occ, occ, true).length > 0;
   return {
     date: new Date(occ),
-    isHoliday: isHoliday,
-    isPublicHoliday: isPublicHoliday,
-    isOtherAbsence: isOtherAbsence,
+    isHoliday,
+    isPublicHoliday,
+    isOtherAbsence,
     isActive: !(isHoliday || isPublicHoliday || isOtherAbsence),
   };
 }
 
 const getAssignmentInfos = async (
-  assignment: Awaited<ReturnType<typeof getAssignments>>[number],
-  absences: Awaited<ReturnType<typeof getAbsences>>[number][],
+  assignment: Awaited<ReturnType<typeof dbGetDashboardAssignments>>[number],
+  absences: Awaited<ReturnType<typeof dbGetDashboardAbsences>>,
   holidayRrule: RRuleSet,
   mship: number,
 ) => {
@@ -226,10 +147,10 @@ const getAssignmentInfos = async (
   }
 
   return {
-    assignment: assignment,
-    coworkers: coworkers,
-    coordinators: coordinators,
-    occurrences: occurrences,
+    assignment,
+    coworkers,
+    coordinators,
+    occurrences,
     isRegular: occurrences.length > 1,
   };
 };
