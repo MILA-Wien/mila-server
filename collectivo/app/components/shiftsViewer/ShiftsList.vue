@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { PropType } from "vue";
-
-type OccurrencesResponse = Awaited<ReturnType<typeof getOccurrencesAdmin>>;
-type Occurrence = OccurrencesResponse["occurrences"][number];
+import type { OccurrencesApiResponse, ShiftOccurrenceResponse } from "~/composables";
 
 const props = defineProps({
   admin: {
@@ -10,7 +8,7 @@ const props = defineProps({
     default: false,
   },
   events: {
-    type: Object as PropType<Awaited<ReturnType<typeof getOccurrencesAdmin>>>,
+    type: Object as PropType<OccurrencesApiResponse>,
     required: true,
   },
   status: {
@@ -38,7 +36,7 @@ interface Events {
     date: Date;
     dateString: string;
     isPublicHoliday: boolean;
-    occurrences: Occurrence[];
+    occurrences: ShiftOccurrenceResponse[];
   };
 }
 const groups: Events = {};
@@ -103,7 +101,7 @@ props.events.publicHolidays.forEach((holiday) => {
   }
 });
 
-function emitOcc(occ: Occurrence) {
+function emitOcc(occ: ShiftOccurrenceResponse) {
   emit("openOccurrence", occ);
 }
 </script>

@@ -10,8 +10,8 @@ const { locale, t } = useI18n();
 
 // Modal controls
 const modalIsOpen = ref(false);
-const modalOccurrence = ref<ShiftOccurrence | null>(null);
-function openModal(occ: ShiftOccurrence) {
+const modalOccurrence = ref<ShiftOccurrenceResponse | null>(null);
+function openModal(occ: ShiftOccurrenceResponse) {
   modalOccurrence.value = occ;
   modalIsOpen.value = true;
 }

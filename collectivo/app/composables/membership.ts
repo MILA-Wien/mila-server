@@ -1,3 +1,5 @@
+import type { OccurrenceAssignment } from "../../shared/types/shifts";
+
 export async function getMembership(id: number) {
   return await $fetch(`/api/memberships/${id}`);
 }
@@ -14,4 +16,8 @@ type RequiredFields = {
 export function displayMembership<T extends RequiredFields>(mship: T) {
   const user = mship.memberships_user;
   return `#${mship.id} ${user.username} ${user.username_last ?? ""} ${mship.shifts_can_be_coordinator ? "(Koordinator*in)" : ""}`;
+}
+
+export function displayAssignment(a: OccurrenceAssignment): string {
+  return `#${a.membershipId} ${a.username} ${a.username_last ?? ""} ${a.shifts_can_be_coordinator ? "(Koordinator*in)" : ""}`;
 }

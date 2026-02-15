@@ -1,10 +1,9 @@
 <script setup lang="ts">
-type OccurrencesResponse = Awaited<ReturnType<typeof getOccurrencesAdmin>>;
-type Occurrence = OccurrencesResponse["occurrences"][number];
+import type { ShiftOccurrenceResponse } from "~/composables";
 const { t } = useI18n();
 const props = defineProps({
   occurrence: {
-    type: Object as PropType<Occurrence>,
+    type: Object as PropType<ShiftOccurrenceResponse>,
     required: true,
   },
 });
@@ -20,23 +19,18 @@ const shift = occ.shift;
     <span v-if="occ.n_assigned > 0">: </span>
     <span
       v-for="(assignment, index) in occ.assignments"
-      :key="assignment.assignment.id"
+      :key="assignment.assignmentId"
     >
       <span v-if="assignment.isActive">
         {{
-          assignment.assignment.shifts_membership.memberships_user.username ===
-          ""
+          assignment.username === ""
             ? "Anonym"
-            : assignment.assignment.shifts_membership.memberships_user
-                .username +
+            : assignment.username +
               " " +
-              (assignment.assignment.shifts_membership.memberships_user
-                .username_last ?? "")
+              (assignment.username_last ?? "")
         }}
         <span
-          v-if="
-            assignment.assignment.shifts_membership.shifts_can_be_coordinator
-          "
+          v-if="assignment.shifts_can_be_coordinator"
         >
           ({{ t("Coordinator") }})</span
         ><span v-if="index < occ.n_assigned - 1">, </span>

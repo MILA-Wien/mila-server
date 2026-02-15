@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ShiftLogsAdmin } from "~/composables";
+import type { ShiftLogsAdmin, ShiftOccurrenceResponse } from "~/composables";
 
 const props = defineProps({
   logs: {
@@ -7,7 +7,7 @@ const props = defineProps({
     required: true,
   },
   occurence: {
-    type: Object as PropType<ShiftOccurrence>,
+    type: Object as PropType<ShiftOccurrenceResponse>,
     required: true,
   },
 });

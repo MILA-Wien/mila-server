@@ -144,9 +144,9 @@ async function prepareEvents() {
     // If any of the assignments memberships has shifts_can_be_coordinator set, show (*) after the shift name
     if (
       occurrence.assignments.some(
-        (assignment: any) =>
+        (assignment) =>
           assignment.isActive && // Only consider active assignments
-          assignment.assignment.shifts_membership.shifts_can_be_coordinator,
+          assignment.shifts_can_be_coordinator,
       )
     ) {
       title += "*";
@@ -166,9 +166,8 @@ async function prepareEvents() {
       if (
         buddyNeeded &&
         !occurrence.assignments.some(
-          (assignment: any) =>
-            assignment.assignment.shifts_membership.memberships_user
-              .buddy_status === "is_buddy",
+          (assignment) =>
+            assignment.buddy_status === "is_buddy",
         )
       ) {
         continue;
