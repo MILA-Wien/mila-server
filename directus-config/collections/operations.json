@@ -211,28 +211,6 @@
     "name": "postToNuxtAPI",
     "key": "post_to_nuxt_api",
     "type": "request",
-    "position_x": 19,
-    "position_y": 1,
-    "options": {
-      "url": "{{$env.COLLECTIVO_API_URL}}/api/user_create",
-      "method": "POST",
-      "body": "{{$trigger}}",
-      "headers": [
-        {
-          "header": "Authorization",
-          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
-        }
-      ]
-    },
-    "resolve": null,
-    "reject": null,
-    "flow": "5ea28856-7cb2-49a4-86b8-eacbd27ac54d",
-    "_syncId": "ad799be4-d215-4375-97d7-6308e05f46f4"
-  },
-  {
-    "name": "postToNuxtAPI",
-    "key": "post_to_nuxt_api",
-    "type": "request",
     "position_x": 37,
     "position_y": 1,
     "options": {
@@ -250,6 +228,28 @@
     "reject": null,
     "flow": "5719873c-0ef4-45e4-90e4-80b8b30ea4d1",
     "_syncId": "0c188aa8-7df4-4fea-bd78-23758e8a9013"
+  },
+  {
+    "name": "postToNuxtAPI",
+    "key": "post_to_nuxt_api",
+    "type": "request",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/user_create",
+      "method": "POST",
+      "body": "{{$trigger}}",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ]
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "5ea28856-7cb2-49a4-86b8-eacbd27ac54d",
+    "_syncId": "ad799be4-d215-4375-97d7-6308e05f46f4"
   },
   {
     "name": "postToNuxtAPI",

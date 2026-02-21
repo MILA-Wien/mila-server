@@ -73,14 +73,14 @@ type Query {
   messages_messages_by_id(id: ID!, version: String): messages_messages
   messages_messages_aggregated(groupBy: [String], filter: messages_messages_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [messages_messages_aggregated!]!
   messages_messages_by_version(version: String!, id: ID!): version_messages_messages
-  milaccess_log(filter: milaccess_log_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [milaccess_log!]!
-  milaccess_log_by_id(id: ID!, version: String): milaccess_log
-  milaccess_log_aggregated(groupBy: [String], filter: milaccess_log_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [milaccess_log_aggregated!]!
-  milaccess_log_by_version(version: String!, id: ID!): version_milaccess_log
   mila_automations(filter: mila_automations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [mila_automations!]!
   mila_automations_by_id(id: ID!, version: String): mila_automations
   mila_automations_aggregated(groupBy: [String], filter: mila_automations_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [mila_automations_aggregated!]!
   mila_automations_by_version(version: String!, id: ID!): version_mila_automations
+  milaccess_log(filter: milaccess_log_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [milaccess_log!]!
+  milaccess_log_by_id(id: ID!, version: String): milaccess_log
+  milaccess_log_aggregated(groupBy: [String], filter: milaccess_log_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [milaccess_log_aggregated!]!
+  milaccess_log_by_version(version: String!, id: ID!): version_milaccess_log
   payments_invoices_out(filter: payments_invoices_out_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [payments_invoices_out!]!
   payments_invoices_out_by_id(id: ID!, version: String): payments_invoices_out
   payments_invoices_out_aggregated(groupBy: [String], filter: payments_invoices_out_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [payments_invoices_out_aggregated!]!
@@ -113,6 +113,8 @@ type Query {
   shifts_logs_by_id(id: ID!, version: String): shifts_logs
   shifts_logs_aggregated(groupBy: [String], filter: shifts_logs_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [shifts_logs_aggregated!]!
   shifts_logs_by_version(version: String!, id: ID!): version_shifts_logs
+  solitopf(version: String): solitopf
+  solitopf_by_version(version: String!): version_solitopf
 }
 
 type Mutation {
@@ -152,10 +154,10 @@ type Mutation {
   create_messages_designs_item(data: create_messages_designs_input!): messages_designs
   create_messages_messages_items(filter: messages_messages_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_messages_messages_input!]): [messages_messages!]!
   create_messages_messages_item(data: create_messages_messages_input!): messages_messages
-  create_milaccess_log_items(filter: milaccess_log_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_milaccess_log_input!]): [milaccess_log!]!
-  create_milaccess_log_item(data: create_milaccess_log_input!): milaccess_log
   create_mila_automations_items(filter: mila_automations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_mila_automations_input!]): [mila_automations!]!
   create_mila_automations_item(data: create_mila_automations_input!): mila_automations
+  create_milaccess_log_items(filter: milaccess_log_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_milaccess_log_input!]): [milaccess_log!]!
+  create_milaccess_log_item(data: create_milaccess_log_input!): milaccess_log
   create_payments_invoices_out_items(filter: payments_invoices_out_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_payments_invoices_out_input!]): [payments_invoices_out!]!
   create_payments_invoices_out_item(data: create_payments_invoices_out_input!): payments_invoices_out
   create_payments_invoices_entries_items(filter: payments_invoices_entries_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_payments_invoices_entries_input!]): [payments_invoices_entries!]!
@@ -227,12 +229,12 @@ type Mutation {
   update_messages_messages_items(filter: messages_messages_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_messages_messages_input!): [messages_messages!]!
   update_messages_messages_batch(filter: messages_messages_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_messages_messages_input!]): [messages_messages!]!
   update_messages_messages_item(id: ID!, data: update_messages_messages_input!): messages_messages
-  update_milaccess_log_items(filter: milaccess_log_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_milaccess_log_input!): [milaccess_log!]!
-  update_milaccess_log_batch(filter: milaccess_log_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_milaccess_log_input!]): [milaccess_log!]!
-  update_milaccess_log_item(id: ID!, data: update_milaccess_log_input!): milaccess_log
   update_mila_automations_items(filter: mila_automations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_mila_automations_input!): [mila_automations!]!
   update_mila_automations_batch(filter: mila_automations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_mila_automations_input!]): [mila_automations!]!
   update_mila_automations_item(id: ID!, data: update_mila_automations_input!): mila_automations
+  update_milaccess_log_items(filter: milaccess_log_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_milaccess_log_input!): [milaccess_log!]!
+  update_milaccess_log_batch(filter: milaccess_log_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_milaccess_log_input!]): [milaccess_log!]!
+  update_milaccess_log_item(id: ID!, data: update_milaccess_log_input!): milaccess_log
   update_payments_invoices_out_items(filter: payments_invoices_out_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_payments_invoices_out_input!): [payments_invoices_out!]!
   update_payments_invoices_out_batch(filter: payments_invoices_out_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_payments_invoices_out_input!]): [payments_invoices_out!]!
   update_payments_invoices_out_item(id: ID!, data: update_payments_invoices_out_input!): payments_invoices_out
@@ -257,6 +259,7 @@ type Mutation {
   update_shifts_logs_items(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_shifts_logs_input!): [shifts_logs!]!
   update_shifts_logs_batch(filter: shifts_logs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_shifts_logs_input!]): [shifts_logs!]!
   update_shifts_logs_item(id: ID!, data: update_shifts_logs_input!): shifts_logs
+  update_solitopf(data: update_solitopf_input!): solitopf
   delete_directus_sync_id_map_items(ids: [ID]!): delete_many
   delete_directus_sync_id_map_item(id: ID!): delete_one
   delete_memberships_items(ids: [ID]!): delete_many
@@ -293,10 +296,10 @@ type Mutation {
   delete_messages_designs_item(id: ID!): delete_one
   delete_messages_messages_items(ids: [ID]!): delete_many
   delete_messages_messages_item(id: ID!): delete_one
-  delete_milaccess_log_items(ids: [ID]!): delete_many
-  delete_milaccess_log_item(id: ID!): delete_one
   delete_mila_automations_items(ids: [ID]!): delete_many
   delete_mila_automations_item(id: ID!): delete_one
+  delete_milaccess_log_items(ids: [ID]!): delete_many
+  delete_milaccess_log_item(id: ID!): delete_one
   delete_payments_invoices_out_items(ids: [ID]!): delete_many
   delete_payments_invoices_out_item(id: ID!): delete_one
   delete_payments_invoices_entries_items(ids: [ID]!): delete_many
@@ -332,11 +335,11 @@ type Subscription {
   directus_translations_mutated(event: EventEnum): directus_translations_mutated
   directus_comments_mutated(event: EventEnum): directus_comments_mutated
   directus_versions_mutated(event: EventEnum): directus_versions_mutated
+  directus_settings_mutated(event: EventEnum): directus_settings_mutated
   directus_webhooks_mutated(event: EventEnum): directus_webhooks_mutated
   directus_sync_id_map_mutated(event: EventEnum): directus_sync_id_map_mutated
   directus_policies_mutated(event: EventEnum): directus_policies_mutated
   directus_access_mutated(event: EventEnum): directus_access_mutated
-  directus_settings_mutated(event: EventEnum): directus_settings_mutated
   settings_hidden_mutated(event: EventEnum): settings_hidden_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
   memberships_mutated(event: EventEnum): memberships_mutated
@@ -356,8 +359,8 @@ type Subscription {
   messages_campaigns_directus_users_mutated(event: EventEnum): messages_campaigns_directus_users_mutated
   messages_designs_mutated(event: EventEnum): messages_designs_mutated
   messages_messages_mutated(event: EventEnum): messages_messages_mutated
-  milaccess_log_mutated(event: EventEnum): milaccess_log_mutated
   mila_automations_mutated(event: EventEnum): mila_automations_mutated
+  milaccess_log_mutated(event: EventEnum): milaccess_log_mutated
   payments_invoices_out_mutated(event: EventEnum): payments_invoices_out_mutated
   payments_invoices_entries_mutated(event: EventEnum): payments_invoices_entries_mutated
   product_requests_mutated(event: EventEnum): product_requests_mutated
@@ -366,6 +369,7 @@ type Subscription {
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_holidays_public_mutated(event: EventEnum): shifts_holidays_public_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
+  solitopf_mutated(event: EventEnum): solitopf_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -1228,6 +1232,7 @@ type directus_users {
   theme_light_overrides_func: count_functions
   theme_dark_overrides: JSON
   theme_dark_overrides_func: count_functions
+  text_direction: String
   buddy_details: String
   buddy_status: String
   hide_name: Boolean
@@ -1260,10 +1265,9 @@ type directus_users {
   send_notifications: Boolean
   survey_languages: String
   survey_languages_additional: String
+  use_pronouns_on_card: Boolean
   username: String
   username_last: String
-  use_pronouns_on_card: Boolean
-  text_direction: String
   collectivo_tags(filter: collectivo_tags_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_tags_directus_users]
   collectivo_tags_func: count_functions
   memberships(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships]
@@ -1369,6 +1373,7 @@ type memberships {
 
   """Diese Nummer identifiziert das Mitglied"""
   id: ID!
+  membership_approved_by_board: Boolean
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
@@ -1393,7 +1398,6 @@ type memberships {
   memberships_type: String
   memberships_user(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   memberships_user_search: String
-  membership_approved_by_board: Boolean
   shifts_can_be_coordinator: Boolean
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
@@ -1440,6 +1444,7 @@ type memberships_aggregated_count {
 
   """Diese Nummer identifiziert das Mitglied"""
   id: Int
+  membership_approved_by_board: Int
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: Int
@@ -1460,7 +1465,6 @@ type memberships_aggregated_count {
   """Verknüpfter Account"""
   memberships_user: Int
   memberships_user_search: Int
-  membership_approved_by_board: Int
   shifts_can_be_coordinator: Int
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
@@ -2518,6 +2522,11 @@ type shifts_shifts {
   exclude_public_holidays: Boolean
   id: ID!
 
+  """
+  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
+  """
+  shift_points: Int
+
   """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
   shifts_allow_self_assignment: Boolean
   shifts_category_2(filter: shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_categories
@@ -2544,11 +2553,6 @@ type shifts_shifts {
   shifts_to_func: date_functions
   shifts_to_time: Date
   shifts_to_time_func: time_functions
-
-  """
-  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
-  """
-  shift_points: Int
   user_created: ID
   user_updated: ID
 }
@@ -2574,6 +2578,11 @@ type shifts_shifts_aggregated_count {
   exclude_public_holidays: Int
   id: Int
 
+  """
+  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
+  """
+  shift_points: Int
+
   """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
   shifts_allow_self_assignment: Int
 
@@ -2598,11 +2607,6 @@ type shifts_shifts_aggregated_count {
   """Kann freigelassen werden für fortwährende Schicht"""
   shifts_to: Int
   shifts_to_time: Int
-
-  """
-  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
-  """
-  shift_points: Int
   user_created: Int
   user_updated: Int
 }
@@ -2610,23 +2614,45 @@ type shifts_shifts_aggregated_count {
 type shifts_shifts_aggregated_fields {
   id: Float
 
+  """
+  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
+  """
+  shift_points: Float
+
   """Frei lassen für normale Schichten"""
   shifts_category_2: Float
 
   """Wiederholungsfrequenz in Tagen"""
   shifts_repeats_every: Float
   shifts_slots: Float
-
-  """
-  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
-  """
-  shift_points: Float
 }
 
 type shifts_shifts_mutated {
   key: ID!
   event: EventEnum
   data: shifts_shifts
+}
+
+type solitopf {
+  id: ID!
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  date_updated: Date
+  date_updated_func: datetime_functions
+
+  """Verfügbares Geld im Soli-Topf"""
+  funds_available: Float
+
+  """Gesamtsumme bisher an den Soli-Topf gespendet"""
+  total_received: Float
+
+  """Gesamtsumme bisher vom Soli-Topf ausgezahlt"""
+  total_distributed: Float
+}
+
+type solitopf_mutated {
+  key: ID!
+  event: EventEnum
+  data: solitopf
 }
 
 type time_functions {
@@ -2722,6 +2748,7 @@ type version_memberships {
 
   """Diese Nummer identifiziert das Mitglied"""
   id: ID
+  membership_approved_by_board: Boolean
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
@@ -2740,7 +2767,6 @@ type version_memberships {
   memberships_type: String
   memberships_user: JSON
   memberships_user_search: String
-  membership_approved_by_board: Boolean
   shifts_can_be_coordinator: Boolean
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
@@ -3033,6 +3059,11 @@ type version_shifts_shifts {
   exclude_public_holidays: Boolean
   id: ID
 
+  """
+  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
+  """
+  shift_points: Int
+
   """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
   shifts_allow_self_assignment: Boolean
   shifts_category_2: JSON
@@ -3055,13 +3086,24 @@ type version_shifts_shifts {
   """Kann freigelassen werden für fortwährende Schicht"""
   shifts_to: Date
   shifts_to_time: Date
-
-  """
-  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
-  """
-  shift_points: Int
   user_created: ID
   user_updated: ID
+}
+
+""""""
+type version_solitopf {
+  id: ID
+  user_updated: JSON
+  date_updated: Date
+
+  """Verfügbares Geld im Soli-Topf"""
+  funds_available: Float
+
+  """Gesamtsumme bisher an den Soli-Topf gespendet"""
+  total_received: Float
+
+  """Gesamtsumme bisher vom Soli-Topf ausgezahlt"""
+  total_distributed: Float
 }
 
 input bedarfsmeldung_solitopf_filter {
@@ -3395,6 +3437,7 @@ input create_directus_users_input {
   theme_light: String
   theme_light_overrides: JSON
   theme_dark_overrides: JSON
+  text_direction: String
   buddy_details: String
   buddy_status: String
   hide_name: Boolean
@@ -3426,10 +3469,9 @@ input create_directus_users_input {
   send_notifications: Boolean
   survey_languages: String
   survey_languages_additional: String
+  use_pronouns_on_card: Boolean
   username: String
   username_last: String
-  use_pronouns_on_card: Boolean
-  text_direction: String
   collectivo_tags: [create_collectivo_tags_directus_users_input]
   memberships: [create_memberships_input]
   messages_campaigns: [create_messages_campaigns_directus_users_input]
@@ -3463,6 +3505,7 @@ input create_memberships_input {
 
   """Diese Nummer identifiziert das Mitglied"""
   id: ID
+  membership_approved_by_board: Boolean
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
@@ -3481,7 +3524,6 @@ input create_memberships_input {
   memberships_type: String
   memberships_user: create_directus_users_input
   memberships_user_search: String
-  membership_approved_by_board: Boolean
   shifts_can_be_coordinator: Boolean
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
@@ -3733,6 +3775,11 @@ input create_shifts_shifts_input {
   exclude_public_holidays: Boolean
   id: ID
 
+  """
+  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
+  """
+  shift_points: Int
+
   """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
   shifts_allow_self_assignment: Boolean
   shifts_category_2: create_shifts_categories_input
@@ -3755,11 +3802,6 @@ input create_shifts_shifts_input {
   """Kann freigelassen werden für fortwährende Schicht"""
   shifts_to: Date
   shifts_to_time: Date
-
-  """
-  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
-  """
-  shift_points: Int
   user_created: ID
   user_updated: ID
 }
@@ -4172,6 +4214,7 @@ input directus_users_filter {
   theme_light_overrides_func: count_function_filter_operators
   theme_dark_overrides: string_filter_operators
   theme_dark_overrides_func: count_function_filter_operators
+  text_direction: string_filter_operators
   buddy_details: string_filter_operators
   buddy_status: string_filter_operators
   hide_name: boolean_filter_operators
@@ -4204,10 +4247,9 @@ input directus_users_filter {
   send_notifications: boolean_filter_operators
   survey_languages: string_filter_operators
   survey_languages_additional: string_filter_operators
+  use_pronouns_on_card: boolean_filter_operators
   username: string_filter_operators
   username_last: string_filter_operators
-  use_pronouns_on_card: boolean_filter_operators
-  text_direction: string_filter_operators
   collectivo_tags: collectivo_tags_directus_users_quantifier_filter
   collectivo_tags_func: count_function_filter_operators
   memberships: memberships_quantifier_filter
@@ -4255,6 +4297,7 @@ input directus_users_quantifier_filter {
   theme_light_overrides_func: count_function_filter_operators
   theme_dark_overrides: string_filter_operators
   theme_dark_overrides_func: count_function_filter_operators
+  text_direction: string_filter_operators
   buddy_details: string_filter_operators
   buddy_status: string_filter_operators
   hide_name: boolean_filter_operators
@@ -4287,10 +4330,9 @@ input directus_users_quantifier_filter {
   send_notifications: boolean_filter_operators
   survey_languages: string_filter_operators
   survey_languages_additional: string_filter_operators
+  use_pronouns_on_card: boolean_filter_operators
   username: string_filter_operators
   username_last: string_filter_operators
-  use_pronouns_on_card: boolean_filter_operators
-  text_direction: string_filter_operators
   collectivo_tags: collectivo_tags_directus_users_quantifier_filter
   collectivo_tags_func: count_function_filter_operators
   memberships: memberships_quantifier_filter
@@ -4396,6 +4438,7 @@ input memberships_filter {
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
   id: number_filter_operators
+  membership_approved_by_board: boolean_filter_operators
   memberships_card_id: string_filter_operators
   memberships_date_applied: date_filter_operators
   memberships_date_applied_func: date_function_filter_operators
@@ -4414,7 +4457,6 @@ input memberships_filter {
   memberships_type: string_filter_operators
   memberships_user: directus_users_filter
   memberships_user_search: string_filter_operators
-  membership_approved_by_board: boolean_filter_operators
   shifts_can_be_coordinator: boolean_filter_operators
   shifts_counter: number_filter_operators
   shifts_orientation_date: date_filter_operators
@@ -4485,6 +4527,7 @@ input memberships_quantifier_filter {
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
   id: number_filter_operators
+  membership_approved_by_board: boolean_filter_operators
   memberships_card_id: string_filter_operators
   memberships_date_applied: date_filter_operators
   memberships_date_applied_func: date_function_filter_operators
@@ -4503,7 +4546,6 @@ input memberships_quantifier_filter {
   memberships_type: string_filter_operators
   memberships_user: directus_users_filter
   memberships_user_search: string_filter_operators
-  membership_approved_by_board: boolean_filter_operators
   shifts_can_be_coordinator: boolean_filter_operators
   shifts_counter: number_filter_operators
   shifts_orientation_date: date_filter_operators
@@ -4958,6 +5000,7 @@ input shifts_shifts_filter {
   date_updated_func: datetime_function_filter_operators
   exclude_public_holidays: boolean_filter_operators
   id: number_filter_operators
+  shift_points: number_filter_operators
   shifts_allow_self_assignment: boolean_filter_operators
   shifts_category_2: shifts_categories_filter
   shifts_description: string_filter_operators
@@ -4975,7 +5018,6 @@ input shifts_shifts_filter {
   shifts_to_func: date_function_filter_operators
   shifts_to_time: date_filter_operators
   shifts_to_time_func: time_function_filter_operators
-  shift_points: number_filter_operators
   user_created: id_filter_operators
   user_updated: id_filter_operators
   _and: [shifts_shifts_filter]
@@ -5185,6 +5227,7 @@ input update_directus_users_input {
   theme_light: String
   theme_light_overrides: JSON
   theme_dark_overrides: JSON
+  text_direction: String
   buddy_details: String
   buddy_status: String
   hide_name: Boolean
@@ -5216,10 +5259,9 @@ input update_directus_users_input {
   send_notifications: Boolean
   survey_languages: String
   survey_languages_additional: String
+  use_pronouns_on_card: Boolean
   username: String
   username_last: String
-  use_pronouns_on_card: Boolean
-  text_direction: String
   collectivo_tags: [update_collectivo_tags_directus_users_input]
   memberships: [update_memberships_input]
   messages_campaigns: [update_messages_campaigns_directus_users_input]
@@ -5253,6 +5295,7 @@ input update_memberships_input {
 
   """Diese Nummer identifiziert das Mitglied"""
   id: ID
+  membership_approved_by_board: Boolean
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
@@ -5271,7 +5314,6 @@ input update_memberships_input {
   memberships_type: String
   memberships_user: update_directus_users_input
   memberships_user_search: String
-  membership_approved_by_board: Boolean
   shifts_can_be_coordinator: Boolean
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
@@ -5529,6 +5571,11 @@ input update_shifts_shifts_input {
   exclude_public_holidays: Boolean
   id: ID
 
+  """
+  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
+  """
+  shift_points: Int
+
   """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
   shifts_allow_self_assignment: Boolean
   shifts_category_2: update_shifts_categories_input
@@ -5551,11 +5598,21 @@ input update_shifts_shifts_input {
   """Kann freigelassen werden für fortwährende Schicht"""
   shifts_to: Date
   shifts_to_time: Date
-
-  """
-  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
-  """
-  shift_points: Int
   user_created: ID
   user_updated: ID
+}
+
+input update_solitopf_input {
+  id: ID
+  user_updated: update_directus_users_input
+  date_updated: Date
+
+  """Verfügbares Geld im Soli-Topf"""
+  funds_available: Float
+
+  """Gesamtsumme bisher an den Soli-Topf gespendet"""
+  total_received: Float
+
+  """Gesamtsumme bisher vom Soli-Topf ausgezahlt"""
+  total_distributed: Float
 }
