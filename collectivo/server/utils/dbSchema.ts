@@ -13,6 +13,7 @@ export interface DbSchema {
   shifts_categories: ShiftsCategory[];
   shifts_holidays_public: ShiftsPublicHoliday[];
   settings_hidden: SettingsHidden;
+  solitopf: Solitopf;
   milaccess_log: CheckinLogEntry[];
   bedarfsmeldung_solitopf: BedarfsmeldungSolitopf[];
   product_requests: ProductRequests[];
@@ -93,6 +94,12 @@ export interface DashboardTileButton {
 export interface SettingsHidden {
   last_cronjob: string;
   shift_point_system: boolean;
+}
+
+export interface Solitopf {
+  funds_available: number;
+  total_received: number;
+  total_distributed: number;
 }
 
 export interface ShiftsShift {

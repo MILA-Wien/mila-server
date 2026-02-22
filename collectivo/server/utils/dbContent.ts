@@ -5,6 +5,7 @@ import {
   readItem,
   readItems,
   readRoles,
+  readSingleton,
   readUser,
   updateUser,
 } from "@directus/sdk";
@@ -67,6 +68,33 @@ export async function dbCreateSolitopfRequest(data: {
   weitere_unterstuetzung: boolean;
 }) {
   return await directus.request(createItem("bedarfsmeldung_solitopf", data));
+}
+
+export async function dbGetSolitopfStats() {
+  const [solitopf, receiving, waiting] = await Promise.all([
+    directus.request(
+      readSingleton("solitopf"),
+    ),
+    directus.request(
+      aggregate("bedarfsmeldung_solitopf", {
+        aggregate: { countDistinct: "membership" },
+        query: { filter: { status: { _eq: "angenommen" } } },
+      }),
+    ),
+    directus.request(
+      aggregate("bedarfsmeldung_solitopf", {
+        aggregate: { countDistinct: "membership" },
+        query: { filter: { status: { _eq: "warteliste" } } },
+      }),
+    ),
+  ]);
+  return {
+    funds_available: Number(solitopf?.funds_available ?? 0.0),
+    funds_received: Number(solitopf?.total_received ?? 0.0),
+    funds_distributed: Number(solitopf?.total_distributed ?? 0.0),
+    receiving: Number(receiving?.[0]?.countDistinct?.membership ?? 0),
+    waiting: Number(waiting?.[0]?.countDistinct?.membership ?? 0),
+  };
 }
 
 // ============================================================================

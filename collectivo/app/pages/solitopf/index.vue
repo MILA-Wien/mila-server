@@ -11,6 +11,7 @@ setPageTitle(t("Solidaritäts-Topf"), {
 });
 
 const { data: meldungen } = await useFetch("/api/solitopf/bedarf");
+const { data: stats } = await useFetch("/api/solitopf/stats");
 </script>
 
 <template>
@@ -89,6 +90,19 @@ const { data: meldungen } = await useFetch("/api/solitopf/bedarf");
     </h3>
     <div class="flex flex-col gap-3" v-html="marked(t('t_donate'))"></div>
   </CollectivoCard>
+
+  <CollectivoCard color="blue">
+    <h3>
+      {{ t("Gemeinsam erreicht") }}
+    </h3>
+  <div v-if="stats" class="flex flex-col gap-1 mt-3">
+    <p>{{ t("Verfügbares Geld im Soli-Topf") }}: <strong>{{ Number(stats.funds_available).toFixed(2) }} €</strong></p>
+    <p>{{ t("Bisher gespendet") }}: <strong>{{ Number(stats.funds_received).toFixed(2) }} €</strong></p>
+    <p>{{ t("Bisher ausbezahlt") }}: <strong>{{ Number(stats.funds_distributed).toFixed(2) }} €</strong></p>
+    <p>{{ t("Bisher haben") }} <strong>{{ stats.receiving }}</strong> {{ t("Mitglieder Unterstützung bekommen oder erhalten aktuell Unterstützung") }}.</p>
+    <p>{{ t("Auf der Warteliste") }}: <strong>{{ stats.waiting }}</strong> {{ t("Mitglied(er)") }}.</p>
+  </div>
+  </CollectivoCard>
 </template>
 
 <i18n lang="yaml">
@@ -146,6 +160,14 @@ en:
   "Solidaritäts-Topf": "Solidarity Fund"
   "Zurück zur Startseite": "Back to homepage"
   "Wie funktioniert der Soli-Topf?": "How does the solidarity fund work?"
+  "Verfügbares Geld im Soli-Topf": "Available funds"
+  "Bisher gespendet": "Donations so far"
+  "Bisher ausbezahlt": "Pay-outs so far"
+  "Gemeinsam erreicht": "Achieved Together"
+  "Bisher haben": "Up to now,"
+  "Mitglieder Unterstützung bekommen oder erhalten aktuell Unterstützung": "members have received or are receiving support"
+  "Auf der Warteliste": "On the waiting list"
+  "Mitglied(er)": "members"
   "Meine Soli-Topf Anfragen": "My solidarity fund requests"
   "Datum": "Date"
   "Anfrage": "Request"
