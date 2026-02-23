@@ -13,7 +13,6 @@ const userData = useCurrentUser();
 const user = userData.value.user!;
 const membership = userData.value.membership;
 const runtimeConfig = useRuntimeConfig();
-const useKeycloak = runtimeConfig.public.useKeycloak;
 const keycloakAccountUrl = `${runtimeConfig.public.keycloakUrl}/realms/${runtimeConfig.public.keycloakRealm}/account`;
 
 const mv = "Dieses Feld ist erforderlich";
@@ -98,7 +97,7 @@ async function onEmailSubmit() {
   }
 }
 
-// ── Password change (dev mode only) ──────────────────────────────────────────
+// ── Password change (directus syncs to keycloak) ──────────────────────────────────────────
 const passwordState = reactive({ password: "", password_confirm: "" });
 const passwordError = ref("");
 
@@ -244,21 +243,7 @@ function personTypeLabel(val: string | null | undefined) {
       <!-- Password change -->
       <div class="space-y-2">
         <h3 class="text-base font-semibold">{{ t("Passwort ändern") }}</h3>
-        <!-- Keycloak mode: link to account management -->
-        <template v-if="useKeycloak">
-          <p class="text-sm text-gray-500">
-            {{ t("Passwort über Keycloak verwalten") }}
-          </p>
-          <UButton
-            :href="keycloakAccountUrl"
-            target="_blank"
-            icon="i-heroicons-arrow-top-right-on-square"
-          >
-            {{ t("Konto verwalten") }}
-          </UButton>
-        </template>
-        <!-- Dev mode: inline form -->
-        <template v-else>
+        <template>
           <div class="space-y-2 max-w-sm">
             <div>
               <label class="block text-sm font-medium mb-1">
