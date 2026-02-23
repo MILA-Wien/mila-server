@@ -1,0 +1,41 @@
+{
+  "collection": "solitopf",
+  "meta": {
+    "accountability": "all",
+    "archive_app_filter": true,
+    "archive_field": null,
+    "archive_value": null,
+    "collapse": "open",
+    "collection": "solitopf",
+    "color": null,
+    "display_template": "{{funds_available}}{{total_received}}{{total_distributed}}",
+    "group": null,
+    "hidden": false,
+    "icon": "potted_plant",
+    "item_duplication_fields": null,
+    "note": "Informationen über den Solitopf",
+    "preview_url": null,
+    "singleton": true,
+    "sort": 12,
+    "sort_field": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "plural": "Solitöpfe",
+        "singular": "Solitopf",
+        "translation": "Solitopf"
+      },
+      {
+        "language": "en-US",
+        "plural": "Solidarity funds",
+        "singular": "Solidarity fund",
+        "translation": "Solidarity fund"
+      }
+    ],
+    "unarchive_value": null,
+    "versioning": true
+  },
+  "schema": {
+    "name": "solitopf"
+  }
+}

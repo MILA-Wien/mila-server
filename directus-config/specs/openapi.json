@@ -3,7 +3,7 @@
   "info": {
     "title": "Dynamic API Specification",
     "description": "This is a dynamically generated API specification for all endpoints existing on the current project.",
-    "version": "181f9126e1e6d4ba08baea1c696a128b4c816cdc"
+    "version": "19bebd881f2141b91ef3e65023f7a8a48359c61b"
   },
   "servers": [
     {
@@ -6290,6 +6290,93 @@
         ]
       }
     },
+    "/settings": {
+      "get": {
+        "summary": "Retrieve Settings",
+        "description": "List the settings.",
+        "operationId": "getSettings",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Settings"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "tags": [
+          "Settings"
+        ]
+      },
+      "patch": {
+        "summary": "Update Settings",
+        "description": "Update the settings",
+        "operationId": "updateSetting",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Settings"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "tags": [
+          "Settings"
+        ]
+      }
+    },
     "/extensions": {
       "get": {
         "summary": "List Extensions",
@@ -7239,93 +7326,6 @@
               ]
             }
           }
-        ]
-      }
-    },
-    "/settings": {
-      "get": {
-        "summary": "Retrieve Settings",
-        "description": "List the settings.",
-        "operationId": "getSettings",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Page"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Settings"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "tags": [
-          "Settings"
-        ]
-      },
-      "patch": {
-        "summary": "Update Settings",
-        "description": "Update the settings",
-        "operationId": "updateSetting",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Settings"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "tags": [
-          "Settings"
         ]
       }
     },
@@ -14898,395 +14898,6 @@
         ]
       }
     },
-    "/items/milaccess_log": {
-      "post": {
-        "summary": "Create an Item",
-        "description": "Create a new milaccess_log item.",
-        "tags": [
-          "Items",
-          "ItemsMilaccessLog"
-        ],
-        "operationId": "createItemsMilaccessLog",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Meta"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ItemsMilaccessLog"
-                    }
-                  },
-                  {
-                    "$ref": "#/components/schemas/ItemsMilaccessLog"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/ItemsMilaccessLog"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        }
-      },
-      "get": {
-        "summary": "List Items",
-        "description": "List the milaccess_log items.",
-        "tags": [
-          "Items",
-          "ItemsMilaccessLog"
-        ],
-        "operationId": "readItemsMilaccessLog",
-        "security": [
-          {
-            "Auth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          },
-          {
-            "$ref": "#/components/parameters/Filter"
-          },
-          {
-            "$ref": "#/components/parameters/Search"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "$ref": "#/components/schemas/ItemsMilaccessLog"
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/x-metadata"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update Multiple Items",
-        "description": "Update multiple milaccess_log items at the same time.",
-        "tags": [
-          "Items",
-          "ItemsMilaccessLog"
-        ],
-        "operationId": "updateItemsMilaccessLog",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Limit"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Offset"
-          },
-          {
-            "$ref": "#/components/parameters/Sort"
-          },
-          {
-            "$ref": "#/components/parameters/Filter"
-          },
-          {
-            "$ref": "#/components/parameters/Search"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ItemsMilaccessLog"
-                    }
-                  },
-                  {
-                    "$ref": "#/components/schemas/ItemsMilaccessLog"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/ItemsMilaccessLog"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete Multiple Items",
-        "description": "Delete multiple existing milaccess_log items.",
-        "tags": [
-          "Items",
-          "ItemsMilaccessLog"
-        ],
-        "operationId": "deleteItemsMilaccessLog",
-        "responses": {
-          "200": {
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          }
-        },
-        "parameters": []
-      }
-    },
-    "/items/milaccess_log/{id}": {
-      "get": {
-        "summary": "Retrieve an Item",
-        "description": "Retrieve a single milaccess_log item by unique identifier.",
-        "tags": [
-          "Items",
-          "ItemsMilaccessLog"
-        ],
-        "operationId": "readSingleItemsMilaccessLog",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "$ref": "#/components/parameters/Version"
-          },
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/ItemsMilaccessLog"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update an Item",
-        "description": "Update an existing milaccess_log item.",
-        "tags": [
-          "Items",
-          "ItemsMilaccessLog"
-        ],
-        "operationId": "updateSingleItemsMilaccessLog",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Meta"
-          },
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "$ref": "#/components/schemas/ItemsMilaccessLog"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/ItemsMilaccessLog"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete an Item",
-        "description": "Delete an existing milaccess_log item.",
-        "tags": [
-          "Items",
-          "ItemsMilaccessLog"
-        ],
-        "operationId": "deleteSingleItemsMilaccessLog",
-        "responses": {
-          "200": {
-            "description": "Successful request"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "description": "Index of the item.",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "description": "Incremental index of the item.",
-                  "example": 1
-                },
-                {
-                  "type": "string",
-                  "description": "Unique identifier of the item.",
-                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
     "/items/mila_automations": {
       "post": {
         "summary": "Create an Item",
@@ -15641,6 +15252,395 @@
           "ItemsMilaAutomations"
         ],
         "operationId": "deleteSingleItemsMilaAutomations",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "/items/milaccess_log": {
+      "post": {
+        "summary": "Create an Item",
+        "description": "Create a new milaccess_log item.",
+        "tags": [
+          "Items",
+          "ItemsMilaccessLog"
+        ],
+        "operationId": "createItemsMilaccessLog",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Meta"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ItemsMilaccessLog"
+                    }
+                  },
+                  {
+                    "$ref": "#/components/schemas/ItemsMilaccessLog"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ItemsMilaccessLog"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "get": {
+        "summary": "List Items",
+        "description": "List the milaccess_log items.",
+        "tags": [
+          "Items",
+          "ItemsMilaccessLog"
+        ],
+        "operationId": "readItemsMilaccessLog",
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/ItemsMilaccessLog"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/x-metadata"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Multiple Items",
+        "description": "Update multiple milaccess_log items at the same time.",
+        "tags": [
+          "Items",
+          "ItemsMilaccessLog"
+        ],
+        "operationId": "updateItemsMilaccessLog",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ItemsMilaccessLog"
+                    }
+                  },
+                  {
+                    "$ref": "#/components/schemas/ItemsMilaccessLog"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ItemsMilaccessLog"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Multiple Items",
+        "description": "Delete multiple existing milaccess_log items.",
+        "tags": [
+          "Items",
+          "ItemsMilaccessLog"
+        ],
+        "operationId": "deleteItemsMilaccessLog",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "parameters": []
+      }
+    },
+    "/items/milaccess_log/{id}": {
+      "get": {
+        "summary": "Retrieve an Item",
+        "description": "Retrieve a single milaccess_log item by unique identifier.",
+        "tags": [
+          "Items",
+          "ItemsMilaccessLog"
+        ],
+        "operationId": "readSingleItemsMilaccessLog",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Version"
+          },
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/ItemsMilaccessLog"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update an Item",
+        "description": "Update an existing milaccess_log item.",
+        "tags": [
+          "Items",
+          "ItemsMilaccessLog"
+        ],
+        "operationId": "updateSingleItemsMilaccessLog",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/ItemsMilaccessLog"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/ItemsMilaccessLog"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an Item",
+        "description": "Delete an existing milaccess_log item.",
+        "tags": [
+          "Items",
+          "ItemsMilaccessLog"
+        ],
+        "operationId": "deleteSingleItemsMilaccessLog",
         "responses": {
           "200": {
             "description": "Successful request"
@@ -18787,6 +18787,389 @@
           }
         ]
       }
+    },
+    "/items/solitopf": {
+      "post": {
+        "summary": "Create an Item",
+        "description": "Create a new solitopf item.",
+        "tags": [
+          "Items",
+          "ItemsSolitopf"
+        ],
+        "operationId": "createItemsSolitopf",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Meta"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ItemsSolitopf"
+                    }
+                  },
+                  {
+                    "$ref": "#/components/schemas/ItemsSolitopf"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ItemsSolitopf"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "get": {
+        "summary": "List Items",
+        "description": "List the solitopf items.",
+        "tags": [
+          "Items",
+          "ItemsSolitopf"
+        ],
+        "operationId": "readItemsSolitopf",
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      },
+                      "$ref": "#/components/schemas/ItemsSolitopf"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/x-metadata"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Multiple Items",
+        "description": "Update multiple solitopf items at the same time.",
+        "tags": [
+          "Items",
+          "ItemsSolitopf"
+        ],
+        "operationId": "updateItemsSolitopf",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Filter"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ItemsSolitopf"
+                    }
+                  },
+                  {
+                    "$ref": "#/components/schemas/ItemsSolitopf"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ItemsSolitopf"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Multiple Items",
+        "description": "Delete multiple existing solitopf items.",
+        "tags": [
+          "Items",
+          "ItemsSolitopf"
+        ],
+        "operationId": "deleteItemsSolitopf",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "parameters": []
+      }
+    },
+    "/items/solitopf/{id}": {
+      "get": {
+        "summary": "Retrieve an Item",
+        "description": "Retrieve a single solitopf item by unique identifier.",
+        "tags": [
+          "Items",
+          "ItemsSolitopf"
+        ],
+        "operationId": "readSingleItemsSolitopf",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "$ref": "#/components/parameters/Version"
+          },
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/ItemsSolitopf"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update an Item",
+        "description": "Update an existing solitopf item.",
+        "tags": [
+          "Items",
+          "ItemsSolitopf"
+        ],
+        "operationId": "updateSingleItemsSolitopf",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/Meta"
+          },
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/ItemsSolitopf"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/ItemsSolitopf"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an Item",
+        "description": "Delete an existing solitopf item.",
+        "tags": [
+          "Items",
+          "ItemsSolitopf"
+        ],
+        "operationId": "deleteSingleItemsSolitopf",
+        "responses": {
+          "200": {
+            "description": "Successful request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Index of the item.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "description": "Incremental index of the item.",
+                  "example": 1
+                },
+                {
+                  "type": "string",
+                  "description": "Unique identifier of the item.",
+                  "example": "8cbb43fe-4cdf-4991-8352-c461779cec02"
+                }
+              ]
+            }
+          }
+        ]
+      }
     }
   },
   "tags": [
@@ -18893,6 +19276,11 @@
       "x-collection": "directus_versions"
     },
     {
+      "name": "Settings",
+      "description": "Settings control the way the platform works and acts.",
+      "x-collection": "directus_settings"
+    },
+    {
       "name": "Extensions",
       "description": "Directus can easily be extended through the addition of several types of extensions, including layouts, interfaces, and modules.",
       "x-collection": "directus_extensions"
@@ -18905,11 +19293,6 @@
     {
       "name": "ItemsDirectusSyncIDMap",
       "x-collection": "directus_sync_id_map"
-    },
-    {
-      "name": "Settings",
-      "description": "Settings control the way the platform works and acts.",
-      "x-collection": "directus_settings"
     },
     {
       "name": "ItemsSettingsHidden",
@@ -18989,12 +19372,12 @@
       "x-collection": "messages_messages"
     },
     {
-      "name": "ItemsMilaccessLog",
-      "x-collection": "milaccess_log"
-    },
-    {
       "name": "ItemsMilaAutomations",
       "x-collection": "mila_automations"
+    },
+    {
+      "name": "ItemsMilaccessLog",
+      "x-collection": "milaccess_log"
     },
     {
       "name": "ItemsPaymentsInvoicesOut",
@@ -19027,6 +19410,11 @@
     {
       "name": "ItemsShiftsLogs",
       "x-collection": "shifts_logs"
+    },
+    {
+      "name": "ItemsSolitopf",
+      "x-collection": "solitopf",
+      "description": "Informationen über den Solitopf"
     }
   ],
   "components": {
@@ -19557,6 +19945,10 @@
           "theme_dark_overrides": {
             "nullable": true
           },
+          "text_direction": {
+            "nullable": false,
+            "type": "string"
+          },
           "buddy_details": {
             "nullable": true,
             "type": "string"
@@ -19682,20 +20074,16 @@
             "nullable": true,
             "type": "string"
           },
+          "use_pronouns_on_card": {
+            "nullable": true,
+            "type": "boolean"
+          },
           "username": {
             "nullable": true,
             "type": "string"
           },
           "username_last": {
             "nullable": true,
-            "type": "string"
-          },
-          "use_pronouns_on_card": {
-            "nullable": true,
-            "type": "boolean"
-          },
-          "text_direction": {
-            "nullable": false,
             "type": "string"
           },
           "collectivo_tags": {
@@ -20752,139 +21140,6 @@
         },
         "x-collection": "directus_versions"
       },
-      "Extensions": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "nullable": false,
-            "type": "boolean"
-          },
-          "id": {
-            "nullable": false,
-            "type": "string",
-            "format": "uuid"
-          },
-          "folder": {
-            "nullable": false,
-            "type": "string"
-          },
-          "source": {
-            "nullable": false,
-            "type": "string"
-          },
-          "bundle": {
-            "description": "Name of the bundle the extension is in.",
-            "example": "directus-extension-my-bundle",
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "x-collection": "directus_extensions"
-      },
-      "Webhooks": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "description": "The index of the webhook.",
-            "type": "integer",
-            "example": 1
-          },
-          "name": {
-            "description": "The name of the webhook.",
-            "type": "string",
-            "example": "create articles"
-          },
-          "method": {
-            "description": "Method used in the webhook.",
-            "type": "string",
-            "example": "POST"
-          },
-          "url": {
-            "description": "The url of the webhook.",
-            "type": "string",
-            "example": null,
-            "nullable": true
-          },
-          "status": {
-            "description": "The status of the webhook.",
-            "type": "string",
-            "example": "inactive"
-          },
-          "data": {
-            "description": "If yes, send the content of what was done",
-            "type": "boolean",
-            "example": true
-          },
-          "actions": {
-            "description": "The actions that triggers this webhook.",
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "example": null,
-            "nullable": true
-          },
-          "collections": {
-            "nullable": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "headers": {
-            "nullable": true
-          },
-          "was_active_before_deprecation": {
-            "nullable": false,
-            "type": "boolean"
-          },
-          "migrated_flow": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "$ref": "#/components/schemas/Flows"
-              }
-            ]
-          }
-        },
-        "x-collection": "directus_webhooks"
-      },
-      "ItemsDirectusSyncIDMap": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "nullable": false,
-            "type": "integer"
-          },
-          "table": {
-            "nullable": false,
-            "type": "string"
-          },
-          "sync_id": {
-            "nullable": false,
-            "type": "string"
-          },
-          "local_id": {
-            "nullable": false,
-            "type": "string"
-          },
-          "created_at": {
-            "nullable": true,
-            "type": "string",
-            "format": "timestamp"
-          }
-        },
-        "x-collection": "directus_sync_id_map",
-        "required": [
-          "table",
-          "sync_id",
-          "local_id"
-        ]
-      },
       "Settings": {
         "type": "object",
         "properties": {
@@ -21213,6 +21468,139 @@
         },
         "x-collection": "directus_settings"
       },
+      "Extensions": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "nullable": false,
+            "type": "boolean"
+          },
+          "id": {
+            "nullable": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          "folder": {
+            "nullable": false,
+            "type": "string"
+          },
+          "source": {
+            "nullable": false,
+            "type": "string"
+          },
+          "bundle": {
+            "description": "Name of the bundle the extension is in.",
+            "example": "directus-extension-my-bundle",
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "x-collection": "directus_extensions"
+      },
+      "Webhooks": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The index of the webhook.",
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "description": "The name of the webhook.",
+            "type": "string",
+            "example": "create articles"
+          },
+          "method": {
+            "description": "Method used in the webhook.",
+            "type": "string",
+            "example": "POST"
+          },
+          "url": {
+            "description": "The url of the webhook.",
+            "type": "string",
+            "example": null,
+            "nullable": true
+          },
+          "status": {
+            "description": "The status of the webhook.",
+            "type": "string",
+            "example": "inactive"
+          },
+          "data": {
+            "description": "If yes, send the content of what was done",
+            "type": "boolean",
+            "example": true
+          },
+          "actions": {
+            "description": "The actions that triggers this webhook.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": null,
+            "nullable": true
+          },
+          "collections": {
+            "nullable": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "headers": {
+            "nullable": true
+          },
+          "was_active_before_deprecation": {
+            "nullable": false,
+            "type": "boolean"
+          },
+          "migrated_flow": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "$ref": "#/components/schemas/Flows"
+              }
+            ]
+          }
+        },
+        "x-collection": "directus_webhooks"
+      },
+      "ItemsDirectusSyncIDMap": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "nullable": false,
+            "type": "integer"
+          },
+          "table": {
+            "nullable": false,
+            "type": "string"
+          },
+          "sync_id": {
+            "nullable": false,
+            "type": "string"
+          },
+          "local_id": {
+            "nullable": false,
+            "type": "string"
+          },
+          "created_at": {
+            "nullable": true,
+            "type": "string",
+            "format": "timestamp"
+          }
+        },
+        "x-collection": "directus_sync_id_map",
+        "required": [
+          "table",
+          "sync_id",
+          "local_id"
+        ]
+      },
       "ItemsSettingsHidden": {
         "type": "object",
         "properties": {
@@ -21249,6 +21637,10 @@
             "nullable": false,
             "description": "Diese Nummer identifiziert das Mitglied",
             "type": "integer"
+          },
+          "membership_approved_by_board": {
+            "nullable": true,
+            "type": "boolean"
           },
           "memberships_card_id": {
             "nullable": true,
@@ -21315,10 +21707,6 @@
           "memberships_user_search": {
             "nullable": true,
             "type": "string"
-          },
-          "membership_approved_by_board": {
-            "nullable": true,
-            "type": "boolean"
           },
           "shifts_can_be_coordinator": {
             "nullable": true,
@@ -22261,43 +22649,6 @@
         },
         "x-collection": "messages_messages"
       },
-      "ItemsMilaccessLog": {
-        "type": "object",
-        "properties": {
-          "coshopper": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "$ref": "#/components/schemas/ItemsMembershipsCoshoppers"
-              }
-            ]
-          },
-          "date": {
-            "nullable": true,
-            "type": "string",
-            "format": "date"
-          },
-          "id": {
-            "nullable": false,
-            "type": "integer"
-          },
-          "membership": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "$ref": "#/components/schemas/ItemsMemberships"
-              }
-            ]
-          }
-        },
-        "x-collection": "milaccess_log"
-      },
       "ItemsMilaAutomations": {
         "type": "object",
         "properties": {
@@ -22367,6 +22718,43 @@
         "required": [
           "mila_key"
         ]
+      },
+      "ItemsMilaccessLog": {
+        "type": "object",
+        "properties": {
+          "coshopper": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsMembershipsCoshoppers"
+              }
+            ]
+          },
+          "date": {
+            "nullable": true,
+            "type": "string",
+            "format": "date"
+          },
+          "id": {
+            "nullable": false,
+            "type": "integer"
+          },
+          "membership": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsMemberships"
+              }
+            ]
+          }
+        },
+        "x-collection": "milaccess_log"
       },
       "ItemsPaymentsInvoicesOut": {
         "type": "object",
@@ -22788,6 +23176,11 @@
             "nullable": false,
             "type": "integer"
           },
+          "shift_points": {
+            "nullable": true,
+            "description": "Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)",
+            "type": "integer"
+          },
           "shifts_allow_self_assignment": {
             "nullable": true,
             "description": "Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?",
@@ -22856,11 +23249,6 @@
             "nullable": true,
             "type": "string",
             "format": "time"
-          },
-          "shift_points": {
-            "nullable": true,
-            "description": "Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)",
-            "type": "integer"
           },
           "user_created": {
             "nullable": true,
@@ -23005,6 +23393,48 @@
           "shifts_membership",
           "shifts_type"
         ]
+      },
+      "ItemsSolitopf": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "nullable": false,
+            "type": "integer"
+          },
+          "user_updated": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "$ref": "#/components/schemas/Users"
+              }
+            ]
+          },
+          "date_updated": {
+            "nullable": true,
+            "type": "string",
+            "format": "timestamp"
+          },
+          "funds_available": {
+            "nullable": true,
+            "description": "Verfügbares Geld im Soli-Topf",
+            "type": "number"
+          },
+          "total_received": {
+            "nullable": true,
+            "description": "Gesamtsumme bisher an den Soli-Topf gespendet",
+            "type": "number"
+          },
+          "total_distributed": {
+            "nullable": true,
+            "description": "Gesamtsumme bisher vom Soli-Topf ausgezahlt",
+            "type": "number"
+          }
+        },
+        "x-collection": "solitopf"
       }
     },
     "parameters": {

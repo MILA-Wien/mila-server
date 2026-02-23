@@ -5,6 +5,7 @@ import {
   readItem,
   readItems,
   readRoles,
+  readSingleton,
   readUser,
   updateUser,
 } from "@directus/sdk";
@@ -69,6 +70,33 @@ export async function dbCreateSolitopfRequest(data: {
   return await directus.request(createItem("bedarfsmeldung_solitopf", data));
 }
 
+export async function dbGetSolitopfStats() {
+  const [solitopf, receiving, waiting] = await Promise.all([
+    directus.request(
+      readSingleton("solitopf"),
+    ),
+    directus.request(
+      aggregate("bedarfsmeldung_solitopf", {
+        aggregate: { countDistinct: "membership" },
+        query: { filter: { status: { _eq: "angenommen" } } },
+      }),
+    ),
+    directus.request(
+      aggregate("bedarfsmeldung_solitopf", {
+        aggregate: { countDistinct: "membership" },
+        query: { filter: { status: { _eq: "warteliste" } } },
+      }),
+    ),
+  ]);
+  return {
+    funds_available: Number(solitopf?.funds_available ?? 0.0),
+    funds_received: Number(solitopf?.total_received ?? 0.0),
+    funds_distributed: Number(solitopf?.total_distributed ?? 0.0),
+    receiving: Number(receiving?.[0]?.countDistinct?.membership ?? 0),
+    waiting: Number(waiting?.[0]?.countDistinct?.membership ?? 0),
+  };
+}
+
 // ============================================================================
 // USERS & PROFILES
 // ============================================================================
@@ -80,9 +108,11 @@ export async function dbGetUserProfile(userId: string) {
         "*",
         "role.name",
         "memberships.*",
+        "memberships.coshoppers.memberships_coshoppers_id.*",
+        "memberships.kids.memberships_coshoppers_id.*",
         "memberships.shifts_categories_allowed.shifts_categories_id",
         "collectivo_tags.collectivo_tags_id",
-      ],
+      ] as any[],
     }),
   );
 }

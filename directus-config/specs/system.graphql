@@ -65,6 +65,7 @@ type Query {
   versions(filter: directus_versions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_versions!]!
   versions_by_id(id: ID!, version: String): directus_versions
   versions_aggregated(groupBy: [String], filter: directus_versions_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_versions_aggregated!]!
+  settings(version: String): directus_settings
   webhooks(filter: directus_webhooks_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_webhooks!]!
   webhooks_by_id(id: ID!, version: String): directus_webhooks
   webhooks_aggregated(groupBy: [String], filter: directus_webhooks_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_webhooks_aggregated!]!
@@ -74,7 +75,6 @@ type Query {
   access(filter: directus_access_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_access!]!
   access_by_id(id: ID!, version: String): directus_access
   access_aggregated(groupBy: [String], filter: directus_access_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_access_aggregated!]!
-  settings(version: String): directus_settings
   users(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_users!]!
   users_by_id(id: ID!, version: String): directus_users
   users_aggregated(groupBy: [String], filter: directus_users_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_users_aggregated!]!
@@ -190,6 +190,7 @@ type Mutation {
   update_versions_items(filter: directus_versions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_versions_input!): [directus_versions!]!
   update_versions_batch(filter: directus_versions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_versions_input!]): [directus_versions!]!
   update_versions_item(id: ID!, data: update_directus_versions_input!): directus_versions
+  update_settings(data: update_directus_settings_input!): directus_settings
   update_webhooks_items(filter: directus_webhooks_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_webhooks_input!): [directus_webhooks!]!
   update_webhooks_batch(filter: directus_webhooks_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_webhooks_input!]): [directus_webhooks!]!
   update_webhooks_item(id: ID!, data: update_directus_webhooks_input!): directus_webhooks
@@ -199,7 +200,6 @@ type Mutation {
   update_access_items(filter: directus_access_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_access_input!): [directus_access!]!
   update_access_batch(filter: directus_access_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_access_input!]): [directus_access!]!
   update_access_item(id: ID!, data: update_directus_access_input!): directus_access
-  update_settings(data: update_directus_settings_input!): directus_settings
   update_users_items(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_users_input!): [directus_users!]!
   update_users_batch(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_users_input!]): [directus_users!]!
   update_users_item(id: ID!, data: update_directus_users_input!): directus_users
@@ -258,11 +258,11 @@ type Subscription {
   directus_translations_mutated(event: EventEnum): directus_translations_mutated
   directus_comments_mutated(event: EventEnum): directus_comments_mutated
   directus_versions_mutated(event: EventEnum): directus_versions_mutated
+  directus_settings_mutated(event: EventEnum): directus_settings_mutated
   directus_webhooks_mutated(event: EventEnum): directus_webhooks_mutated
   directus_sync_id_map_mutated(event: EventEnum): directus_sync_id_map_mutated
   directus_policies_mutated(event: EventEnum): directus_policies_mutated
   directus_access_mutated(event: EventEnum): directus_access_mutated
-  directus_settings_mutated(event: EventEnum): directus_settings_mutated
   settings_hidden_mutated(event: EventEnum): settings_hidden_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
   memberships_mutated(event: EventEnum): memberships_mutated
@@ -282,8 +282,8 @@ type Subscription {
   messages_campaigns_directus_users_mutated(event: EventEnum): messages_campaigns_directus_users_mutated
   messages_designs_mutated(event: EventEnum): messages_designs_mutated
   messages_messages_mutated(event: EventEnum): messages_messages_mutated
-  milaccess_log_mutated(event: EventEnum): milaccess_log_mutated
   mila_automations_mutated(event: EventEnum): mila_automations_mutated
+  milaccess_log_mutated(event: EventEnum): milaccess_log_mutated
   payments_invoices_out_mutated(event: EventEnum): payments_invoices_out_mutated
   payments_invoices_entries_mutated(event: EventEnum): payments_invoices_entries_mutated
   product_requests_mutated(event: EventEnum): product_requests_mutated
@@ -292,6 +292,7 @@ type Subscription {
   shifts_shifts_mutated(event: EventEnum): shifts_shifts_mutated
   shifts_holidays_public_mutated(event: EventEnum): shifts_holidays_public_mutated
   shifts_logs_mutated(event: EventEnum): shifts_logs_mutated
+  solitopf_mutated(event: EventEnum): solitopf_mutated
 }
 
 """The `Boolean` scalar type represents `true` or `false`."""
@@ -354,18 +355,6 @@ enum EventEnum {
 enum graphql_sdl_scope {
   items
   system
-}
-
-enum server_info_websocket_graphql_authentication {
-  public
-  handshake
-  strict
-}
-
-enum server_info_websocket_rest_authentication {
-  public
-  handshake
-  strict
 }
 
 type auth_tokens {
@@ -1627,6 +1616,7 @@ type directus_users {
   theme_light_overrides_func: count_functions
   theme_dark_overrides: JSON
   theme_dark_overrides_func: count_functions
+  text_direction: String
   buddy_details: String
   buddy_status: String
   hide_name: Boolean
@@ -1659,10 +1649,9 @@ type directus_users {
   send_notifications: Boolean
   survey_languages: String
   survey_languages_additional: String
+  use_pronouns_on_card: Boolean
   username: String
   username_last: String
-  use_pronouns_on_card: Boolean
-  text_direction: String
   collectivo_tags(filter: collectivo_tags_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_tags_directus_users]
   collectivo_tags_func: count_functions
   memberships(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships]
@@ -1709,6 +1698,7 @@ type directus_users_aggregated_count {
   theme_light: Int
   theme_light_overrides: Int
   theme_dark_overrides: Int
+  text_direction: Int
   buddy_details: Int
   buddy_status: Int
   hide_name: Int
@@ -1740,10 +1730,9 @@ type directus_users_aggregated_count {
   send_notifications: Int
   survey_languages: Int
   survey_languages_additional: Int
+  use_pronouns_on_card: Int
   username: Int
   username_last: Int
-  use_pronouns_on_card: Int
-  text_direction: Int
   collectivo_tags: Int
   memberships: Int
   messages_campaigns: Int
@@ -1873,6 +1862,7 @@ type memberships {
 
   """Diese Nummer identifiziert das Mitglied"""
   id: ID!
+  membership_approved_by_board: Boolean
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
@@ -1897,7 +1887,6 @@ type memberships {
   memberships_type: String
   memberships_user(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   memberships_user_search: String
-  membership_approved_by_board: Boolean
   shifts_can_be_coordinator: Boolean
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
@@ -2214,7 +2203,7 @@ type server_info {
   project: server_info_project
   rateLimit: Boolean
   rateLimitGlobal: Boolean
-  websocket: server_info_websocket
+  websocket: Boolean
   queryLimit: server_info_query_limit
 }
 
@@ -2235,22 +2224,6 @@ type server_info_project {
 type server_info_query_limit {
   default: Int
   max: Int
-}
-
-type server_info_websocket {
-  rest: server_info_websocket_rest
-  graphql: server_info_websocket_graphql
-  heartbeat: Int
-}
-
-type server_info_websocket_graphql {
-  authentication: server_info_websocket_graphql_authentication
-  path: String
-}
-
-type server_info_websocket_rest {
-  authentication: server_info_websocket_rest_authentication
-  path: String
 }
 
 type settings_hidden {
@@ -2395,6 +2368,11 @@ type shifts_shifts {
   exclude_public_holidays: Boolean
   id: ID!
 
+  """
+  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
+  """
+  shift_points: Int
+
   """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
   shifts_allow_self_assignment: Boolean
   shifts_category_2(filter: shifts_categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): shifts_categories
@@ -2421,11 +2399,6 @@ type shifts_shifts {
   shifts_to_func: date_functions
   shifts_to_time: Date
   shifts_to_time_func: time_functions
-
-  """
-  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
-  """
-  shift_points: Int
   user_created: ID
   user_updated: ID
 }
@@ -2434,6 +2407,28 @@ type shifts_shifts_mutated {
   key: ID!
   event: EventEnum
   data: shifts_shifts
+}
+
+type solitopf {
+  id: ID!
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  date_updated: Date
+  date_updated_func: datetime_functions
+
+  """Verfügbares Geld im Soli-Topf"""
+  funds_available: Float
+
+  """Gesamtsumme bisher an den Soli-Topf gespendet"""
+  total_received: Float
+
+  """Gesamtsumme bisher vom Soli-Topf ausgezahlt"""
+  total_distributed: Float
+}
+
+type solitopf_mutated {
+  key: ID!
+  event: EventEnum
+  data: solitopf
 }
 
 type time_functions {
@@ -2987,6 +2982,7 @@ input create_directus_users_input {
   theme_light: String
   theme_light_overrides: JSON
   theme_dark_overrides: JSON
+  text_direction: String
   buddy_details: String
   buddy_status: String
   hide_name: Boolean
@@ -3018,10 +3014,9 @@ input create_directus_users_input {
   send_notifications: Boolean
   survey_languages: String
   survey_languages_additional: String
+  use_pronouns_on_card: Boolean
   username: String
   username_last: String
-  use_pronouns_on_card: Boolean
-  text_direction: String
   collectivo_tags: [create_collectivo_tags_directus_users_input]
   memberships: [create_memberships_input]
   messages_campaigns: [create_messages_campaigns_directus_users_input]
@@ -3083,6 +3078,7 @@ input create_memberships_input {
 
   """Diese Nummer identifiziert das Mitglied"""
   id: ID
+  membership_approved_by_board: Boolean
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
@@ -3101,7 +3097,6 @@ input create_memberships_input {
   memberships_type: String
   memberships_user: create_directus_users_input
   memberships_user_search: String
-  membership_approved_by_board: Boolean
   shifts_can_be_coordinator: Boolean
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
@@ -3303,6 +3298,11 @@ input create_shifts_shifts_input {
   exclude_public_holidays: Boolean
   id: ID
 
+  """
+  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
+  """
+  shift_points: Int
+
   """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
   shifts_allow_self_assignment: Boolean
   shifts_category_2: create_shifts_categories_input
@@ -3325,11 +3325,6 @@ input create_shifts_shifts_input {
   """Kann freigelassen werden für fortwährende Schicht"""
   shifts_to: Date
   shifts_to_time: Date
-
-  """
-  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
-  """
-  shift_points: Int
   user_created: ID
   user_updated: ID
 }
@@ -3811,6 +3806,7 @@ input directus_users_filter {
   theme_light_overrides_func: count_function_filter_operators
   theme_dark_overrides: string_filter_operators
   theme_dark_overrides_func: count_function_filter_operators
+  text_direction: string_filter_operators
   buddy_details: string_filter_operators
   buddy_status: string_filter_operators
   hide_name: boolean_filter_operators
@@ -3843,10 +3839,9 @@ input directus_users_filter {
   send_notifications: boolean_filter_operators
   survey_languages: string_filter_operators
   survey_languages_additional: string_filter_operators
+  use_pronouns_on_card: boolean_filter_operators
   username: string_filter_operators
   username_last: string_filter_operators
-  use_pronouns_on_card: boolean_filter_operators
-  text_direction: string_filter_operators
   collectivo_tags: collectivo_tags_directus_users_quantifier_filter
   collectivo_tags_func: count_function_filter_operators
   memberships: memberships_quantifier_filter
@@ -3894,6 +3889,7 @@ input directus_users_quantifier_filter {
   theme_light_overrides_func: count_function_filter_operators
   theme_dark_overrides: string_filter_operators
   theme_dark_overrides_func: count_function_filter_operators
+  text_direction: string_filter_operators
   buddy_details: string_filter_operators
   buddy_status: string_filter_operators
   hide_name: boolean_filter_operators
@@ -3926,10 +3922,9 @@ input directus_users_quantifier_filter {
   send_notifications: boolean_filter_operators
   survey_languages: string_filter_operators
   survey_languages_additional: string_filter_operators
+  use_pronouns_on_card: boolean_filter_operators
   username: string_filter_operators
   username_last: string_filter_operators
-  use_pronouns_on_card: boolean_filter_operators
-  text_direction: string_filter_operators
   collectivo_tags: collectivo_tags_directus_users_quantifier_filter
   collectivo_tags_func: count_function_filter_operators
   memberships: memberships_quantifier_filter
@@ -4052,6 +4047,7 @@ input memberships_filter {
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
   id: number_filter_operators
+  membership_approved_by_board: boolean_filter_operators
   memberships_card_id: string_filter_operators
   memberships_date_applied: date_filter_operators
   memberships_date_applied_func: date_function_filter_operators
@@ -4070,7 +4066,6 @@ input memberships_filter {
   memberships_type: string_filter_operators
   memberships_user: directus_users_filter
   memberships_user_search: string_filter_operators
-  membership_approved_by_board: boolean_filter_operators
   shifts_can_be_coordinator: boolean_filter_operators
   shifts_counter: number_filter_operators
   shifts_orientation_date: date_filter_operators
@@ -4141,6 +4136,7 @@ input memberships_quantifier_filter {
   date_updated: date_filter_operators
   date_updated_func: datetime_function_filter_operators
   id: number_filter_operators
+  membership_approved_by_board: boolean_filter_operators
   memberships_card_id: string_filter_operators
   memberships_date_applied: date_filter_operators
   memberships_date_applied_func: date_function_filter_operators
@@ -4159,7 +4155,6 @@ input memberships_quantifier_filter {
   memberships_type: string_filter_operators
   memberships_user: directus_users_filter
   memberships_user_search: string_filter_operators
-  membership_approved_by_board: boolean_filter_operators
   shifts_can_be_coordinator: boolean_filter_operators
   shifts_counter: number_filter_operators
   shifts_orientation_date: date_filter_operators
@@ -4555,6 +4550,7 @@ input shifts_shifts_filter {
   date_updated_func: datetime_function_filter_operators
   exclude_public_holidays: boolean_filter_operators
   id: number_filter_operators
+  shift_points: number_filter_operators
   shifts_allow_self_assignment: boolean_filter_operators
   shifts_category_2: shifts_categories_filter
   shifts_description: string_filter_operators
@@ -4572,7 +4568,6 @@ input shifts_shifts_filter {
   shifts_to_func: date_function_filter_operators
   shifts_to_time: date_filter_operators
   shifts_to_time_func: time_function_filter_operators
-  shift_points: number_filter_operators
   user_created: id_filter_operators
   user_updated: id_filter_operators
   _and: [shifts_shifts_filter]
@@ -4954,6 +4949,7 @@ input update_directus_users_input {
   theme_light: String
   theme_light_overrides: JSON
   theme_dark_overrides: JSON
+  text_direction: String
   buddy_details: String
   buddy_status: String
   hide_name: Boolean
@@ -4985,10 +4981,9 @@ input update_directus_users_input {
   send_notifications: Boolean
   survey_languages: String
   survey_languages_additional: String
+  use_pronouns_on_card: Boolean
   username: String
   username_last: String
-  use_pronouns_on_card: Boolean
-  text_direction: String
   collectivo_tags: [update_collectivo_tags_directus_users_input]
   memberships: [update_memberships_input]
   messages_campaigns: [update_messages_campaigns_directus_users_input]
@@ -5050,6 +5045,7 @@ input update_memberships_input {
 
   """Diese Nummer identifiziert das Mitglied"""
   id: ID
+  membership_approved_by_board: Boolean
 
   """Bitte auch in Lotzapp eintragen um Guthaben-Funktion zu aktivieren."""
   memberships_card_id: String
@@ -5068,7 +5064,6 @@ input update_memberships_input {
   memberships_type: String
   memberships_user: update_directus_users_input
   memberships_user_search: String
-  membership_approved_by_board: Boolean
   shifts_can_be_coordinator: Boolean
 
   """Wenn negativ, dann müssen Schichten nachgeholt werden"""
@@ -5270,6 +5265,11 @@ input update_shifts_shifts_input {
   exclude_public_holidays: Boolean
   id: ID
 
+  """
+  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
+  """
+  shift_points: Int
+
   """Dürfen sich Mitglieder für diese Schicht selbstständig anmelden?"""
   shifts_allow_self_assignment: Boolean
   shifts_category_2: update_shifts_categories_input
@@ -5292,11 +5292,6 @@ input update_shifts_shifts_input {
   """Kann freigelassen werden für fortwährende Schicht"""
   shifts_to: Date
   shifts_to_time: Date
-
-  """
-  Wieviele Schichtpunkte man für diese Schicht bekommt (28 Punkte = 4 Wochen)
-  """
-  shift_points: Int
   user_created: ID
   user_updated: ID
 }

@@ -1,4 +1,3 @@
-import type { DirectusUser } from "@directus/sdk";
 
 export interface DbSchema {
   directus_users: UserProfile[];
@@ -13,24 +12,49 @@ export interface DbSchema {
   shifts_categories: ShiftsCategory[];
   shifts_holidays_public: ShiftsPublicHoliday[];
   settings_hidden: SettingsHidden;
+  solitopf: Solitopf;
   milaccess_log: CheckinLogEntry[];
   bedarfsmeldung_solitopf: BedarfsmeldungSolitopf[];
   product_requests: ProductRequests[];
 }
 
 export interface UserProfile {
+  id: string;
   collectivo_tags: { collectivo_tags_id: number }[];
   memberships: number[] | Membership[];
-  memberships_phone: string;
-  hide_name: boolean;
-  send_notifications: boolean;
+  role: { name: string };
+  email: string;
+  // Visible name
   username: string;
   username_last: string;
   pronouns: string;
+  hide_name: boolean;
+  send_notifications: boolean;
   buddy_status: "keine_angabe" | "is_buddy" | "need_buddy";
   buddy_details: string | undefined;
   lotzapp_id: string;
-  email: string;
+  // Personal data
+  memberships_person_type: "natural" | "legal";
+  memberships_gender: string;
+  memberships_phone: string;
+  memberships_birthday: string;
+  memberships_occupation: string;
+  // Organization
+  memberships_organization_name: string;
+  memberships_organization_type: string;
+  memberships_organization_id: string;
+  // Address
+  memberships_street: string;
+  memberships_streetnumber: string;
+  memberships_stair: string;
+  memberships_door: string;
+  memberships_postcode: string;
+  memberships_city: string;
+  memberships_country: string;
+  // Payment
+  payments_type: string;
+  payments_account_iban: string;
+  payments_account_owner: string;
 }
 
 export interface Tag {
@@ -93,6 +117,12 @@ export interface DashboardTileButton {
 export interface SettingsHidden {
   last_cronjob: string;
   shift_point_system: boolean;
+}
+
+export interface Solitopf {
+  funds_available: number;
+  total_received: number;
+  total_distributed: number;
 }
 
 export interface ShiftsShift {
