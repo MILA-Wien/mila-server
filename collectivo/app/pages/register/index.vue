@@ -26,12 +26,12 @@ const schema = object({
     "Dieses Feld ist erforderlich",
   ),
   directus_users__email: string()
-    .email()
+    .email(t("Email address is not valid"))
     .required("Dieses Feld ist erforderlich"),
   directus_users__password: string().required("Dieses Feld ist erforderlich"),
   _pw_confirm: string()
     .required("Dieses Feld ist erforderlich")
-    .oneOf([ref("directus_users__password")], "Passwords must match"),
+    .oneOf([ref("directus_users__password")], t("Passwords must match")),
   directus_users__memberships_organization_name: string().when(
     "directus_users__memberships_person_type",
     {
@@ -70,7 +70,7 @@ const schema = object({
     then: (schema) => schema.required("Dieses Feld ist erforderlich"),
   }),
   coshopper_email: string()
-    .email()
+    .email(t("Email address is not valid"))
     .when("add_coshopper", {
       is: true,
       then: (schema) => schema.required("Dieses Feld ist erforderlich"),
@@ -126,7 +126,7 @@ const schema = object({
       then: (schema) =>
         schema
           .required("Dieses Feld ist erforderlich")
-          .min(10, "Must be at least 10"),
+          .min(10, t("Must be at least 10 shares")),
     }),
   directus_users__payments_type: string().required(
     "Dieses Feld ist erforderlich",
@@ -1080,6 +1080,10 @@ async function onError(event: FormErrorEvent) {
 
 <i18n lang="yaml">
 de:
+  "Email address is not valid": "E-Mail Adresse ist nicht korrekt"
+  "Passwords must match": "Passwörter stimmen nicht überein"
+  "Must be at least 10 shares": "Muss mindestens 10 Anteile sein"
+
   "User Account": "Zugangsdaten"
   "E-Mail Address": "E-Mail Adresse"
   "Some fields are not filled in correctly": "Einige Felder sind nicht korrekt ausgefüllt"
@@ -1200,6 +1204,10 @@ de:
   "i_pronouns": "Die Angabe der Pronomen ist freiwillig. Sie soll uns helfen bei Mila einen respektvollen Umgang miteinander zu pflegen, indem wir so mit- und übereinander sprechen, wie die angesprochenen Personen es wünschen."
 
 en:
+  "Email address is not valid": "Email address is not valid"
+  "Passwords must match": "Passwords must match"
+  "Must be at least 10 shares": "Must be at least 10 shares"
+
   "Wie sollen wir dich ansprechen?": "How should we address you?"
   "Dieser Name kann sich von deinem amtlichen Namen unterscheiden.": "This name can differ from your legal name."
   "Mit welchen Pronomen möchtest du angesprochen werden?": "Which pronouns would you like to be addressed with?"
