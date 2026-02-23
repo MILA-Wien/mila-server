@@ -243,7 +243,6 @@ function personTypeLabel(val: string | null | undefined) {
       <!-- Password change -->
       <div class="space-y-2">
         <h3 class="text-base font-semibold">{{ t("Passwort ändern") }}</h3>
-        <template>
           <div class="space-y-2 max-w-sm">
             <div>
               <label class="block text-sm font-medium mb-1">
@@ -272,7 +271,6 @@ function personTypeLabel(val: string | null | undefined) {
               {{ t("Passwort ändern") }}
             </UButton>
           </div>
-        </template>
       </div>
     </div>
 
