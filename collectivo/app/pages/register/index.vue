@@ -215,6 +215,16 @@ const state: any = reactive({
   directus_users__mila_pr_approved: undefined,
 });
 
+onMounted(() => {
+  if (user.isAuthenticated && user.user) {
+    state.directus_users__email = user.user.email ?? "";
+    // Dummy values so yup required() passes for hidden credential fields.
+    // The API ignores email/password for authenticated users.
+    state.directus_users__password = "__authenticated__";
+    state._pw_confirm = "__authenticated__";
+  }
+});
+
 watch(
   () => state.memberships__memberships_type,
   () => {
@@ -298,7 +308,7 @@ async function onError(event: FormErrorEvent) {
 
 <template>
   <div
-    v-if="user.user && user.isAuthenticated"
+    v-if="user.user && user.isAuthenticated && user.membership"
     class="space-y-2 p-6 border-2 rounded-sm shadow-sm"
   >
     <p>{{ t("You are currently logged in as") }} {{ user.user?.username }}.</p>
@@ -349,48 +359,50 @@ async function onError(event: FormErrorEvent) {
       </URadioGroup>
     </FormsFormGroup>
 
-    <div class="pt-6">
-      <h2>{{ t("User Account") }}</h2>
-      <p>
-        {{ t("t:mila_form_account") }}
-      </p>
-    </div>
-
-    <div class="grid gap-4">
-      <FormsFormGroup
-        :label="t('E-Mail Address')"
-        name="directus_users__email"
-        required
-      >
-        <UInput variant="outline" v-model="state.directus_users__email" />
-      </FormsFormGroup>
-
-      <div class="grid md:grid-cols-2 gap-4">
-        <FormsFormGroup
-          :label="t('Password')"
-          name="directus_users__password"
-          required
-        >
-          <UInput
-            variant="outline"
-            v-model="state.directus_users__password"
-            type="password"
-          />
-        </FormsFormGroup>
-
-        <FormsFormGroup
-          :label="t('Repeat password')"
-          name="_pw_confirm"
-          required
-        >
-          <UInput
-            variant="outline"
-            v-model="state._pw_confirm"
-            type="password"
-          />
-        </FormsFormGroup>
+    <template v-if="!user.isAuthenticated">
+      <div class="pt-6">
+        <h2>{{ t("User Account") }}</h2>
+        <p>
+          {{ t("t:mila_form_account") }}
+        </p>
       </div>
-    </div>
+
+      <div class="grid gap-4">
+        <FormsFormGroup
+          :label="t('E-Mail Address')"
+          name="directus_users__email"
+          required
+        >
+          <UInput variant="outline" v-model="state.directus_users__email" />
+        </FormsFormGroup>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <FormsFormGroup
+            :label="t('Password')"
+            name="directus_users__password"
+            required
+          >
+            <UInput
+              variant="outline"
+              v-model="state.directus_users__password"
+              type="password"
+            />
+          </FormsFormGroup>
+
+          <FormsFormGroup
+            :label="t('Repeat password')"
+            name="_pw_confirm"
+            required
+          >
+            <UInput
+              variant="outline"
+              v-model="state._pw_confirm"
+              type="password"
+            />
+          </FormsFormGroup>
+        </div>
+      </div>
+    </template>
 
     <template v-if="!isNatural">
       <div class="pt-6">
