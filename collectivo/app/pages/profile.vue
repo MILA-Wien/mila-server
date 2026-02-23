@@ -134,8 +134,6 @@ function personTypeLabel(val: string | null | undefined) {
 
 <template>
   <div id="mila-profile" class="flex flex-col gap-8">
-    <MembershipsMembershipTile />
-
     <!-- ── Einstellungen ─────────────────────────────────────────────────── -->
     <div>
       <h2>{{ t("Einstellungen") }}</h2>
@@ -277,7 +275,56 @@ function personTypeLabel(val: string | null | undefined) {
     <!-- ── Persönliche Daten (read-only) ─────────────────────────────────── -->
     <div>
       <h2>{{ t("Persönliche Daten") }}</h2>
+
+      <div v-if="membership?.memberships_date_ended" class="mb-4">
+        <p class="text-sm text-red-600">
+          {{ t("Deine Mitgliedschaft wurde beendet.") }}
+        </p>
+      </div>
+      <div
+        v-else-if="membership?.memberships_status === 'applied'"
+        class="mb-4"
+      >
+        <p class="text-sm">
+          {{ t("Dein Beitrittsantrag wird gerade bearbeitet.") }}
+        </p>
+      </div>
+      <div v-else-if="!membership" class="mb-4">
+        <p class="text-sm">{{ t("Du bist noch kein Mitglied.") }}</p>
+        <UButton to="/register" class="mt-2">
+          {{ t("Jetzt Mitglied werden") }}
+        </UButton>
+      </div>
+
       <dl class="space-y-1">
+        <!-- Membership data -->
+        <template v-if="userData.isMember && membership">
+          <div v-if="membership.memberships_date_approved" class="flex gap-2">
+            <dt class="text-sm w-48 shrink-0">{{ t("Beitrittsdatum") }}</dt>
+            <dd class="text-sm font-medium">
+              {{ membership.memberships_date_approved }}
+            </dd>
+          </div>
+          <div class="flex gap-2">
+            <dt class="text-sm w-48 shrink-0">{{ t("Mitgliedsnummer") }}</dt>
+            <dd class="text-sm font-medium">{{ membership.id }}</dd>
+          </div>
+          <div v-if="membership.memberships_type" class="flex gap-2">
+            <dt class="text-sm w-48 shrink-0">{{ t("Mitgliedsart") }}</dt>
+            <dd class="text-sm font-medium">
+              {{ membership.memberships_type }}
+            </dd>
+          </div>
+          <div v-if="membership.memberships_shares" class="flex gap-2">
+            <dt class="text-sm w-48 shrink-0">
+              {{ t("Genossenschafts-Anteile") }}
+            </dt>
+            <dd class="text-sm font-medium">
+              {{ membership.memberships_shares }}
+            </dd>
+          </div>
+        </template>
+
         <div v-if="user.memberships_person_type" class="flex gap-2">
           <dt class="text-sm w-48 shrink-0">{{ t("Personenart") }}</dt>
           <dd class="text-sm font-medium">
@@ -462,6 +509,14 @@ de:
   "Kontoinhaber:in": "Kontoinhaber:in"
   "Miteinkäufer*in": "Miteinkäufer*in"
   "Karte": "Karte"
+  "Deine Mitgliedschaft wurde beendet.": "Deine Mitgliedschaft wurde beendet."
+  "Dein Beitrittsantrag wird gerade bearbeitet.": "Dein Beitrittsantrag wird gerade bearbeitet."
+  "Du bist noch kein Mitglied.": "Du bist noch kein Mitglied."
+  "Jetzt Mitglied werden": "Jetzt Mitglied werden"
+  "Beitrittsdatum": "Beitrittsdatum"
+  "Mitgliedsnummer": "Mitgliedsnummer"
+  "Mitgliedsart": "Mitgliedsart"
+  "Genossenschafts-Anteile": "Genossenschafts-Anteile"
 en:
   "Einstellungen": "Settings"
   "Änderungen speichern": "Save changes"
@@ -510,4 +565,12 @@ en:
   "Miteinkäufer*in": "Coshopper"
   "Karte": "Card"
   "Speichern": "Save"
+  "Deine Mitgliedschaft wurde beendet.": "Your membership has ended."
+  "Dein Beitrittsantrag wird gerade bearbeitet.": "Your membership application is being processed."
+  "Du bist noch kein Mitglied.": "You are not yet a member."
+  "Jetzt Mitglied werden": "Become a member now"
+  "Beitrittsdatum": "Approval date"
+  "Mitgliedsnummer": "Member ID"
+  "Mitgliedsart": "Membership type"
+  "Genossenschafts-Anteile": "Cooperative shares"
 </i18n>
