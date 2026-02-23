@@ -78,6 +78,10 @@ async function create_users() {
       password: `${userName.toLowerCase()}`,
       role: userRole,
       status: "active",
+      memberships_street: "Example Street",
+      memberships_city: "Example City",
+      memberships_street_number: "123",
+      memberships_postcode: "12345",
     };
 
     if (userName == "Admin") {
@@ -240,6 +244,12 @@ async function create_memberships() {
 
   // Clean up old data
   // might error because of not_null constraint in assignment relation
+  await directus.request(
+    deleteItems("memberships_memberships_coshoppers", { limit: 1000 }),
+  );
+  await directus.request(
+    deleteItems("memberships_coshoppers", { limit: 1000 }),
+  );
   await directus.request(deleteItems("memberships", { limit: 1000 }));
 
   console.info("Creating memberships 2");
@@ -265,7 +275,7 @@ async function create_memberships() {
     console.info("Creating memberships 4");
 
     // Create membership
-    await directus.request(
+    const membership = await directus.request(
       createItem("memberships", {
         memberships_user: user_id,
         memberships_type: "Aktiv",
@@ -273,6 +283,23 @@ async function create_memberships() {
         shifts_user_type: "regular",
       }),
     );
+
+    // Add a coshopper for "User Example"
+    if (mship[0] === "User") {
+      const coshopper = await directus.request(
+        createItem("memberships_coshoppers", {
+          first_name: "Co",
+          last_name: "Shopper",
+          email: "coshopper@example.com",
+        }),
+      );
+      await directus.request(
+        createItem("memberships_memberships_coshoppers", {
+          memberships_id: membership.id,
+          memberships_coshoppers_id: coshopper.id,
+        }),
+      );
+    }
   }
 
   console.info("Creating memberships 5");
