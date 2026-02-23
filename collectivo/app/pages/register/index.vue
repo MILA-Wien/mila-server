@@ -216,12 +216,19 @@ const state: any = reactive({
 });
 
 onMounted(() => {
-  if (user.isAuthenticated && user.user) {
-    state.directus_users__email = user.user.email ?? "";
+  if (user.value.isAuthenticated && user.value.user) {
+    state.directus_users__email = user.value.user.email ?? "";
     // Dummy values so yup required() passes for hidden credential fields.
     // The API ignores email/password for authenticated users.
     state.directus_users__password = "__authenticated__";
     state._pw_confirm = "__authenticated__";
+    console.log("user", user.value.user.first_name);
+    if (user.value.user.first_name) {
+      state.directus_users__first_name = user.value.user.first_name;
+    }
+    if (user.value.user.last_name) {
+      state.directus_users__last_name = user.value.user.last_name;
+    }
   }
 });
 
@@ -309,9 +316,9 @@ async function onError(event: FormErrorEvent) {
 <template>
   <div
     v-if="user.user && user.isAuthenticated && user.membership"
-    class="space-y-2 p-6 border-2 rounded-sm shadow-sm"
+    class="space-y-2 p-6 border-2"
   >
-    <p>{{ t("You are currently logged in as") }} {{ user.user?.username }}.</p>
+    <p>{{ t("You are currently logged in as") }} {{ user.user?.email }}.</p>
     <p>
       {{
         t(
@@ -329,6 +336,24 @@ async function onError(event: FormErrorEvent) {
     @submit="onSubmit"
     @error="onError"
   >
+    <div
+      v-if="user.isAuthenticated && user.user"
+      class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 border"
+    >
+      <div class="flex-1 space-y-1">
+        <p class="text-sm font-medium">
+          {{ t("You are currently logged in as") }}
+          {{ user.user.email }}.
+        </p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+          {{ t("To apply as a different person, please log out first.") }}
+        </p>
+      </div>
+      <UButton href="/logout" size="sm" variant="outline">{{
+        t("Log out")
+      }}</UButton>
+    </div>
+
     <div class="">
       <h2>{{ t("Welcome to MILA!") }}</h2>
 
@@ -1101,6 +1126,7 @@ de:
   "Some fields are not filled in correctly": "Einige Felder sind nicht korrekt ausgefüllt"
   "You are currently logged in as": "Du bist aktuell angemeldet als"
   "Log out to fill out a new membership application for a different person.": "Melde dich ab, um eine neue Beitrittserklärung für eine andere Person auszufüllen."
+  "To apply as a different person, please log out first.": "Um die Beitrittserklärung für eine andere Person auszufüllen, melde dich bitte zuerst ab."
   "Log out": "Abmelden"
   "This email address is already registered": "Diese E-Mail Adresse ist bereits registriert"
 
