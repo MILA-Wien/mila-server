@@ -16,6 +16,8 @@ export interface DbSchema {
   milaccess_log: CheckinLogEntry[];
   bedarfsmeldung_solitopf: BedarfsmeldungSolitopf[];
   product_requests: ProductRequests[];
+  mila_automations: MilaAutomation[];
+  messages_templates: MessageTemplate[];
 }
 
 export interface UserProfile {
@@ -221,4 +223,18 @@ export interface ProductRequests {
   antwort: string;
   date_created: string;
   status: "inarbeit" | "habensimilar" | "gehtnicht" | "bereitsda" | "erledigt";
+}
+
+export interface MilaAutomation {
+  id: number;
+  mila_label: string;
+  mila_key: string;
+  mila_active: boolean;
+  mila_template: MessageTemplate | number | null;
+}
+
+export interface MessageTemplate {
+  id: number;
+  messages_name: string;
+  messages_subject: string | null;
 }

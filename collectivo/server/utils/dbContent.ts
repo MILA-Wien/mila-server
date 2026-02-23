@@ -170,6 +170,26 @@ export async function dbGetMembershipUser(id: string) {
   );
 }
 
+export async function dbGetUserIdsByShiftcounter(counter: number) {
+  const memberships = await directus.request(
+    readItems("memberships", {
+      filter: { shifts_counter: { _eq: counter } },
+      fields: ["memberships_user.id"] as any[],
+    }),
+  );
+
+  const directus_users_ids: string[] = [];
+
+  for (const m of memberships) {
+    const user = (m as any).memberships_user;
+    if (user?.id) {
+      directus_users_ids.push(user.id);
+    }
+  }
+
+  return directus_users_ids;
+}
+
 // ============================================================================
 // ROLES
 // ============================================================================
