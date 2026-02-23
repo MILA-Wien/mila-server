@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { parseUtcMidnight } from "../../utils/dates";
-import { getShiftOccurrences } from "../../utils/shiftsOccurrences";
+import { getShiftOccurrencesForApi } from "../../utils/shiftsOccurrences";
+import type { OccurrencesApiResponse } from "../../../shared/types/shifts";
 
 const querySchema = z.object({
   from: z.coerce.date(),
@@ -12,7 +13,7 @@ const querySchema = z.object({
   shiftID: z.coerce.number().optional(),
 });
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event): Promise<OccurrencesApiResponse> => {
   const params = await getValidatedQuery(event, querySchema.parse);
   const user = getUserOrThrowError(event);
 
@@ -23,7 +24,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return await getShiftOccurrences(
+  return await getShiftOccurrencesForApi(
     parseUtcMidnight(params.from),
     parseUtcMidnight(params.to),
     params.admin,

@@ -1,154 +1,173 @@
-import type { RRule } from "rrule";
+import type {
+  OccurrencesApiResponse,
+  OccurrenceAssignment,
+  OccurrenceShift,
+} from "../../shared/types/shifts";
 
-export const getShiftOccurrences = async (
+function toOccurrenceShift(shift: ShiftsShift): OccurrenceShift {
+  return {
+    id: shift.id,
+    shifts_name: shift.shifts_name,
+    shifts_slots: shift.shifts_slots,
+    shifts_is_regular: shift.shifts_is_regular,
+    shifts_is_all_day: shift.shifts_is_all_day,
+    shifts_from_time: shift.shifts_from_time,
+    shifts_to_time: shift.shifts_to_time,
+    shifts_description: shift.shifts_description,
+    shifts_category_2: shift.shifts_category_2,
+    shifts_repeats_every: shift.shifts_repeats_every,
+    shifts_location: shift.shifts_location,
+    exclude_public_holidays: shift.exclude_public_holidays,
+  };
+}
+
+/**
+ * Get shift occurrences for the API endpoint.
+ * Returns explicitly structured flat response with only the data the frontend needs.
+ */
+export const getShiftOccurrencesForApi = async (
   from: Date,
   to: Date,
   admin: boolean = false,
   shiftID?: number,
   mship?: number,
-) => {
-  // Get shifts within timeframe
-  const shifts = await getShiftShifts(from, to, shiftID);
+): Promise<OccurrencesApiResponse> => {
+  const shifts = await dbGetShifts(from, to, shiftID);
   const shiftIds = shifts.map((shift) => shift.id);
 
-  // Get assignments within timeframe
-  const assignments = await getShiftAssignments(shiftIds, from, to);
-  const assignmentIds = assignments.map((assignment) => assignment.id);
+  const assignments = await dbGetAssignmentsForApi(shiftIds, from, to, admin);
+  const assignmentIds = assignments.map((a: any) => a.id);
 
   // Hide names if not admin
   if (!admin) {
     for (const assignment of assignments) {
-      if (assignment.shifts_membership.memberships_user.hide_name) {
-        assignment.shifts_membership.memberships_user.username = "";
-        assignment.shifts_membership.memberships_user.username_last = "";
+      const a = assignment as any;
+      if (a.shifts_membership.memberships_user.hide_name) {
+        a.shifts_membership.memberships_user.username = "";
+        a.shifts_membership.memberships_user.username_last = "";
       }
     }
   }
 
-  // Get absences within timeframe
-  const absences = await getShiftAbsences(assignmentIds, from, to);
+  const absences = await dbGetAbsences(assignmentIds, from, to);
+  const publicHolidays = await dbGetPublicHolidays(from, to);
 
-  // Get public holidays within timeframe
-  const publicHolidays = await getShiftPublicHolidays(from, to);
+  const occurrences: {
+    shift: ShiftsShift;
+    start: Date;
+    end: Date;
+    n_assigned: number;
+    selfAssigned: boolean;
+    assignments: OccurrenceAssignment[];
+  }[] = [];
 
-  // Get occurrences for each shift
-  const occurrences = [];
   for (const shift of shifts) {
-    const occ = await getSingleShiftOccurrences(
+    const shiftAssignments = assignments.filter(
+      (a: any) => a.shifts_shift === shift.id,
+    );
+
+    const shiftRule = getShiftRrule(shift, publicHolidays);
+    const assignmentRrules = getAssignmentRrules(
       shift,
-      assignments,
+      shiftRule,
+      shiftAssignments as any,
       absences as ShiftsAbsence[],
-      from,
-      to,
-      publicHolidays,
-      mship,
     );
-    occurrences.push(...occ);
-  }
 
-  occurrences.sort((a, b) => {
-    return a.start.getTime() - b.start.getTime();
-  });
+    const dates = shiftRule.between(from, to, true);
+    for (const date of dates) {
+      let n_assigned = 0;
+      let selfAssigned = false;
+      const flatAssignments: OccurrenceAssignment[] = [];
 
-  return { occurrences, publicHolidays };
-};
+      for (const ass of assignmentRrules) {
+        if (ass.rrule.between(date, date, true).length > 0) {
+          const rawAssignment = ass.assignment as any;
+          const membership = rawAssignment.shifts_membership;
+          const user = membership.memberships_user;
 
-// Get all occurrences for a shift in a given timeframe
-async function getSingleShiftOccurrences(
-  shift: ShiftsShift,
-  assignments: ShiftsAssignmentApi[],
-  absences: ShiftsAbsence[],
-  from: Date,
-  to: Date,
-  publicHolidays: Pick<ShiftsPublicHoliday, "date">[],
-  mship?: number,
-) {
-  const shiftRule = getShiftRrule(shift, publicHolidays);
-  const shiftAssignments = assignments.filter(
-    (assignment) => assignment.shifts_shift === shift.id,
-  );
+          const matchingAbsences: { id?: number; shifts_from: string; shifts_to: string }[] = [];
+          for (const abs of ass.absences) {
+            if (abs.rrule.between(date, date, true).length > 0) {
+              matchingAbsences.push({
+                id: abs.absence.id,
+                shifts_from: abs.absence.shifts_from,
+                shifts_to: abs.absence.shifts_to,
+              });
+            }
+          }
 
-  const assignmentRrules = getAssignmentRrules(
-    shift,
-    shiftRule,
-    shiftAssignments,
-    absences,
-  );
+          const isActive = matchingAbsences.length === 0;
+          const isSelf =
+            isActive &&
+            mship != null &&
+            membership.id === mship;
 
-  const dates = shiftRule.between(from, to, true);
-  const shiftOccurrences: ShiftsOccurrenceViewer[] = [];
-  for (const date of dates) {
-    shiftOccurrences.push(
-      createShiftOccurrence(shift, date, shiftRule, assignmentRrules, mship),
-    );
-  }
+          if (isActive) {
+            n_assigned += 1;
+          }
+          if (isSelf) {
+            selfAssigned = true;
+          }
 
-  return shiftOccurrences;
-}
-
-// Get occurence object for a shift on a given date
-// Includes information about shift, slots, and assignments
-// Time is always given in UTC - even if meant for other timezones
-const createShiftOccurrence = (
-  shift: ShiftsShift,
-  date: Date,
-  shiftRule: RRule,
-  assignmentRrules: AssignmentRrule[],
-  mship?: number,
-) => {
-  let n_assigned = 0;
-  let selfAssigned = false;
-
-  // Get all assignments for this shift
-  const assignments = [];
-  for (const ass of assignmentRrules ?? []) {
-    if (ass.rrule.between(date, date, true).length > 0) {
-      const occ: AssignmentOccurrence = {
-        assignment: ass.assignment,
-        isOneTime: !ass.assignment.shifts_is_regular,
-        isSelf: false,
-        absences: [],
-      };
-
-      for (const abs of ass.absences) {
-        if (abs.rrule.between(date, date, true).length > 0) {
-          occ.absences.push(abs.absence);
+          flatAssignments.push({
+            assignmentId: rawAssignment.id,
+            membershipId: membership.id,
+            username: user.username,
+            username_last: user.username_last,
+            hide_name: user.hide_name,
+            buddy_status: user.buddy_status,
+            shifts_can_be_coordinator: membership.shifts_can_be_coordinator,
+            shifts_from: rawAssignment.shifts_from,
+            shifts_to: rawAssignment.shifts_to,
+            shifts_shift: rawAssignment.shifts_shift,
+            shifts_is_regular: rawAssignment.shifts_is_regular,
+            isActive,
+            isOneTime: !rawAssignment.shifts_is_regular,
+            isSelf,
+            absences: matchingAbsences,
+            adminData: admin
+              ? {
+                  email: user.email,
+                  memberships_phone: user.memberships_phone,
+                  shifts_assignments_count: membership["shifts_logs_count"] ?? membership["count(shifts_logs)"] ?? 0,
+                }
+              : null,
+          });
         }
       }
 
-      // Assignment is active?
-      if (occ.absences.length == 0) {
-        occ.isActive = true;
-        n_assigned += 1;
-        if (
-          (mship &&
-            typeof occ.assignment.shifts_membership == "object" &&
-            occ.assignment.shifts_membership.id == mship) ||
-          occ.assignment.shifts_membership == mship
-        ) {
-          selfAssigned = true;
-          occ.isSelf = true;
-        }
-      }
-      assignments.push(occ);
+      const dateString = date.toISOString().split("T")[0];
+      const start = new Date(
+        `${dateString}T${shift.shifts_from_time || "00:00:00"}Z`,
+      );
+      const end = new Date(
+        `${dateString}T${shift.shifts_to_time || "00:00:00"}Z`,
+      );
+
+      occurrences.push({
+        shift,
+        start,
+        end,
+        n_assigned,
+        selfAssigned,
+        assignments: flatAssignments,
+      });
     }
   }
 
-  const dateString = date.toISOString().split("T")[0];
-
-  const start = new Date(
-    `${dateString}T${shift.shifts_from_time || "00:00:00"}Z`,
-  );
-
-  const end = new Date(`${dateString}T${shift.shifts_to_time || "00:00:00"}Z`);
+  occurrences.sort((a, b) => a.start.getTime() - b.start.getTime());
 
   return {
-    shift: shift,
-    start: start,
-    end: end,
-    shiftRule: shiftRule,
-    n_assigned: n_assigned,
-    assignments: assignments,
-    selfAssigned: selfAssigned,
+    occurrences: occurrences.map((o) => ({
+      shift: toOccurrenceShift(o.shift),
+      start: o.start.toISOString(),
+      end: o.end.toISOString(),
+      n_assigned: o.n_assigned,
+      selfAssigned: o.selfAssigned,
+      assignments: o.assignments,
+    })),
+    publicHolidays: publicHolidays.map((h) => ({ date: h.date })),
   };
 };
+

@@ -3,6 +3,11 @@ import { parse } from "marked";
 import sanitizeHtml from "sanitize-html";
 import type { ShiftLogsAdmin } from "~/composables";
 
+type AdminAssignment = OccurrenceAssignment & {
+  log?: ShiftLogsAdmin;
+  removed?: boolean;
+};
+
 function getTime(date: Date) {
   return `${String(date.getUTCHours()).padStart(2, "0")}:${String(date.getUTCMinutes()).padStart(2, "0")}`;
 }
@@ -10,7 +15,7 @@ function getTime(date: Date) {
 const emit = defineEmits(["data-has-changed"]);
 const props = defineProps({
   shiftOccurence: {
-    type: Object as PropType<ShiftOccurrence>,
+    type: Object as PropType<ShiftOccurrenceResponse>,
     required: true,
   },
 });
@@ -56,10 +61,8 @@ getShiftLogsAdmin(startDateString, shift.id).then((logs: ShiftLogsAdmin[]) => {
   for (const log of logs) {
     matched = false;
     for (const assignment of occ.value.assignments) {
-      if (
-        assignment.assignment.shifts_membership.id === log.shifts_membership.id
-      ) {
-        assignment.log = log;
+      if (assignment.membershipId === log.shifts_membership.id) {
+        (assignment as AdminAssignment).log = log;
         matched = true;
       }
     }
@@ -71,13 +74,13 @@ getShiftLogsAdmin(startDateString, shift.id).then((logs: ShiftLogsAdmin[]) => {
 });
 
 async function updateLog(
-  assignment: ShiftsAssignment,
+  assignment: AdminAssignment,
   type: "attended" | "missed",
 ) {
   if (!assignment.log) {
     const log = await createShiftLog(
       type,
-      assignment.assignment.shifts_membership.id,
+      assignment.membershipId,
       startDateString,
       shift.id,
       type === "attended" ? 28 : 0,
@@ -116,11 +119,11 @@ async function loadMembership() {
 
 // REMOVE ASSIGNMENT
 const removeAssignmentModalIsOpen = ref(false);
-const removeAssignmentObject = ref<AssignmentOccurrence | null>(null);
+const removeAssignmentObject = ref<AdminAssignment | null>(null);
 const removeAssignmentIndex = ref<number | null>(null);
 
 function startRemoveAssignmentFlow(
-  assignment: AssignmentOccurrence,
+  assignment: AdminAssignment,
   assignmentIndex: number,
 ) {
   removeAssignmentObject.value = assignment;
@@ -137,13 +140,13 @@ async function removeAssignment(onetime: boolean) {
   }
 
   if (
-    !removeAssignmentObject.value.assignment.shifts_is_regular ||
+    !removeAssignmentObject.value.shifts_is_regular ||
     (!onetime &&
-      removeAssignmentObject.value.assignment.shifts_from == startDateString)
+      removeAssignmentObject.value.shifts_from == startDateString)
   ) {
     // Remove one-time assignment or regular shift starting here
     await $fetch(
-      `/api/shifts/assignments/${removeAssignmentObject.value.assignment.id}`,
+      `/api/shifts/assignments/${removeAssignmentObject.value.assignmentId}`,
       { method: "DELETE" },
     );
   } else if (onetime) {
@@ -151,11 +154,8 @@ async function removeAssignment(onetime: boolean) {
     await $fetch("/api/shifts/absences", {
       method: "POST",
       body: {
-        shifts_membership: (
-          removeAssignmentObject.value.assignment
-            .shifts_membership as MembershipsMembership
-        ).id,
-        shifts_assignment: removeAssignmentObject.value.assignment.id,
+        shifts_membership: removeAssignmentObject.value.membershipId,
+        shifts_assignment: removeAssignmentObject.value.assignmentId,
         shifts_is_for_all_assignments: false,
         shifts_from: startDateString,
         shifts_to: startDateString,
@@ -167,7 +167,7 @@ async function removeAssignment(onetime: boolean) {
     const startMinusOneDay = new Date();
     startMinusOneDay.setDate(start.getDate() - 1);
     await $fetch(
-      `/api/shifts/assignments/${removeAssignmentObject.value.assignment.id}`,
+      `/api/shifts/assignments/${removeAssignmentObject.value.assignmentId}`,
       {
         method: "PUT",
         body: {
@@ -177,7 +177,7 @@ async function removeAssignment(onetime: boolean) {
     );
   }
 
-  removeAssignmentObject.value.removed = true;
+  (removeAssignmentObject.value as AdminAssignment).removed = true;
   removeAssignmentModalIsOpen.value = false;
   occ.value.n_assigned--;
   emit("data-has-changed");
@@ -198,7 +198,7 @@ async function fetchOccurrences(date: string, shiftID: number) {
       to: date,
       shiftID: shiftID,
     },
-  })) as { occurrences: ShiftOccurrence[] };
+  })) as { occurrences: ShiftOccurrenceResponse[] };
 }
 
 async function createAssignment(onetime: boolean) {
@@ -225,7 +225,7 @@ async function createAssignment(onetime: boolean) {
     throw new Error(m);
   }
 
-  const res = (await $fetch("/api/shifts/assignments", {
+  const res = await $fetch("/api/shifts/assignments", {
     method: "POST",
     body: {
       shifts_membership: mshipID.value,
@@ -233,14 +233,26 @@ async function createAssignment(onetime: boolean) {
       shifts_from: startDateString,
       shifts_is_regular: !onetime,
     },
-  })) as ShiftsAssignment;
+  });
 
   occ.value.assignments.push({
-    assignment: res,
+    assignmentId: (res as any).id,
+    membershipId: mshipID.value!,
+    username: mshipData.value?.memberships_user?.username ?? "",
+    username_last: mshipData.value?.memberships_user?.username_last ?? "",
+    hide_name: false,
+    buddy_status: "keine_angabe",
+    shifts_can_be_coordinator: (mshipData.value as any)?.shifts_can_be_coordinator ?? false,
+    shifts_from: startDateString,
+    shifts_to: onetime ? startDateString : undefined,
+    shifts_shift: shift.id!,
+    shifts_is_regular: !onetime,
     isActive: true,
     isOneTime: onetime,
+    isSelf: false,
     absences: [],
-  } as AssignmentOccurrence);
+    adminData: null,
+  } as OccurrenceAssignment);
 
   createAssignmentModalIsOpen.value = false;
 
@@ -248,7 +260,7 @@ async function createAssignment(onetime: boolean) {
   emit("data-has-changed");
 }
 
-function getAssignmentColor(assignment: AssignmentOccurrence) {
+function getAssignmentColor(assignment: AdminAssignment) {
   if (!assignment.isActive || assignment.removed) {
     return "bg-gray-100";
   }
@@ -266,11 +278,7 @@ function getAssignmentColor(assignment: AssignmentOccurrence) {
 
 function checkIfMshipInAssignments(mship: number) {
   for (const assignment of occ.value.assignments) {
-    if (
-      (assignment.assignment.shifts_membership as MembershipsMembership).id ===
-        mship &&
-      assignment.isActive
-    ) {
+    if (assignment.membershipId === mship && assignment.isActive) {
       return true;
     }
   }
@@ -369,24 +377,24 @@ function checkIfMshipInAssignments(mship: number) {
           <div v-if="logsLoaded" class="flex flex-col gap-3 my-2">
             <template
               v-for="(assignment, ai) of occ.assignments"
-              :key="assignment.assignment.id"
+              :key="assignment.assignmentId"
             >
               <ShiftsViewerModalAdminBox
-                :id="assignment.assignment.id!"
+                :id="assignment.assignmentId!"
                 :label="t('Assignment')"
-                :class="getAssignmentColor(assignment)"
+                :class="getAssignmentColor(assignment as AdminAssignment)"
                 collection="shifts_assignments"
               >
                 <template #header>
                   <span v-if="!assignment.isActive"> Abgemeldet: </span>
                   {{
-                    displayMembership(assignment.assignment.shifts_membership)
+                    displayAssignment(assignment)
                   }}
                 </template>
 
                 <template #bottom-right>
                   <div
-                    v-if="assignment.isActive && !assignment.removed"
+                    v-if="assignment.isActive && !(assignment as AdminAssignment).removed"
                     class="flex flex-col gap-2"
                   >
                     <UButton
@@ -394,7 +402,7 @@ function checkIfMshipInAssignments(mship: number) {
                       icon="i-heroicons-trash-16-solid"
                       size="sm"
                       :label="t('Remove assignment')"
-                      @click="startRemoveAssignmentFlow(assignment, ai)"
+                      @click="startRemoveAssignmentFlow(assignment as AdminAssignment, ai)"
                     />
                   </div>
                 </template>
@@ -405,22 +413,22 @@ function checkIfMshipInAssignments(mship: number) {
 
                 <span v-else>
                   {{ t("Regular shift") }}
-                  <span v-if="assignment.assignment.shifts_to">
+                  <span v-if="assignment.shifts_to">
                     {{ t("until") }}
-                    {{ assignment.assignment.shifts_to }}
+                    {{ assignment.shifts_to }}
                   </span>
                 </span>
 
                 <span
                   v-if="
-                    assignment.assignment.shifts_membership
-                      .shifts_assignments_count <= 1
+                    assignment.adminData &&
+                      assignment.adminData.shifts_assignments_count <= 1
                   "
                 >
                   {{ t("(first shift!)") }}
                 </span>
 
-                <span v-if="assignment.removed"> ({{ t("Removed") }}) </span>
+                <span v-if="(assignment as AdminAssignment).removed"> ({{ t("Removed") }}) </span>
 
                 <div v-for="absence of assignment.absences" :key="absence.id">
                   {{ t("Absent") }}: {{ absence.shifts_from }} {{ t("to") }}
@@ -428,18 +436,18 @@ function checkIfMshipInAssignments(mship: number) {
                 </div>
 
                 <div v-if="isPast">
-                  <!-- Wenn es einen non-attendance log gibt, wurde die Schicht verpasst. 
-                 Wenn es keinen log gibt, und die schicht wurde abgesagt, 
-                 dann ist die Person wie geplant nicht gekommen. 
-                 Wenn es keine absage gibt und keinen log, 
+                  <!-- Wenn es einen non-attendance log gibt, wurde die Schicht verpasst.
+                 Wenn es keinen log gibt, und die schicht wurde abgesagt,
+                 dann ist die Person wie geplant nicht gekommen.
+                 Wenn es keine absage gibt und keinen log,
                  gehen wir davon aus dass die schicht stattgefunden hat -
                  in diesem Fall wird automatisch ein Log vom Cronjob erstellt
                  (außer schichtdaten werden nachträglich für die vergangenheit geändert) -->
                   <div
                     v-if="
-                      (assignment.log &&
-                        assignment.log.shifts_type !== 'attended') ||
-                      (!assignment.isActive && !assignment.log)
+                      ((assignment as AdminAssignment).log &&
+                        (assignment as AdminAssignment).log!.shifts_type !== 'attended') ||
+                      (!assignment.isActive && !(assignment as AdminAssignment).log)
                     "
                     class="flex flex-wrap justify-between"
                   >
@@ -450,7 +458,7 @@ function checkIfMshipInAssignments(mship: number) {
                     <UButton
                       size="sm"
                       label="Log auf absolviert setzen"
-                      @click="updateLog(assignment, 'attended')"
+                      @click="updateLog(assignment as AdminAssignment, 'attended')"
                     />
                   </div>
                   <div v-else class="flex flex-wrap justify-between">
@@ -458,7 +466,7 @@ function checkIfMshipInAssignments(mship: number) {
                     <UButton
                       size="sm"
                       label="Log auf verpasst setzen"
-                      @click="updateLog(assignment, 'missed')"
+                      @click="updateLog(assignment as AdminAssignment, 'missed')"
                     />
                   </div>
                 </div>
@@ -549,21 +557,19 @@ function checkIfMshipInAssignments(mship: number) {
             <div>
               <p>
                 {{
-                  displayMembership(
-                    removeAssignmentObject.assignment.shifts_membership,
-                  )
+                  displayAssignment(removeAssignmentObject)
                 }}
               </p>
-              <p v-if="!removeAssignmentObject.assignment.shifts_is_regular">
-                {{ removeAssignmentObject.assignment.shifts_from }} ({{
+              <p v-if="!removeAssignmentObject.shifts_is_regular">
+                {{ removeAssignmentObject.shifts_from }} ({{
                   t("One-time shift")
                 }})
               </p>
               <p v-else>
-                {{ removeAssignmentObject.assignment.shifts_from }}
+                {{ removeAssignmentObject.shifts_from }}
                 {{ t("to") }}
                 {{
-                  removeAssignmentObject.assignment.shifts_to ||
+                  removeAssignmentObject.shifts_to ||
                   t("No end date")
                 }}
               </p>
@@ -573,7 +579,7 @@ function checkIfMshipInAssignments(mship: number) {
                 {{ t("Remove assignment for") }} {{ startDateString }}
               </UButton>
               <UButton
-                v-if="removeAssignmentObject.assignment.shifts_is_regular"
+                v-if="removeAssignmentObject.shifts_is_regular"
                 @click="removeAssignment(false)"
               >
                 {{ t("Remove for ") }} {{ startDateString }}

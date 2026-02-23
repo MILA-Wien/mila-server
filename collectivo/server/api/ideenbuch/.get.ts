@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { aggregate, readItems } from "@directus/sdk";
 
 function bool() {
   return z.enum(["true", "false"]).transform((val) => val === "true");
@@ -39,8 +38,8 @@ export default defineEventHandler(async (event) => {
   }
 
   const [productRequests, totalCount] = await Promise.all([
-    getProductRequests(filter, query.page),
-    getTotalCount(filter),
+    dbGetProductRequests(filter, query.page, PERPAGE),
+    dbGetProductRequestsCount(filter),
   ]);
 
   return {
@@ -52,26 +51,3 @@ export default defineEventHandler(async (event) => {
     },
   };
 });
-
-async function getProductRequests(filter: Record<string, any>, page: number) {
-  const directus = useDirectusAdmin();
-  return await directus.request(
-    readItems("product_requests", {
-      fields: ["id", "date_created", "name", "wunsch", "antwort", "status"],
-      filter: filter,
-      limit: PERPAGE,
-      page: page,
-      sort: ["-date_created"],
-    }),
-  );
-}
-
-async function getTotalCount(filter: Record<string, any>) {
-  const directus = useDirectusAdmin();
-  return await directus.request(
-    aggregate("product_requests", {
-      aggregate: { count: "*" },
-      query: { filter: filter },
-    }),
-  );
-}

@@ -1,4 +1,4 @@
-import { DirectusUser } from "@directus/sdk";
+import type { DirectusUser } from "@directus/sdk";
 
 export interface DbSchema {
   directus_users: UserProfile[];
@@ -128,6 +128,15 @@ export interface ShiftsAssignment {
   shifts_to?: "datetime" | string;
   shifts_shift: ShiftsShift | number;
   shifts_membership: Membership | number;
+}
+
+/** Assignment with computed RRule data for occurrence calculation */
+export interface AssignmentRrule {
+  shift: ShiftsShift;
+  assignment: ShiftsAssignment;
+  absences: { absence: ShiftsAbsence; rrule: import("rrule").RRule }[];
+  rrule: import("rrule").RRuleSet;
+  rruleWithAbsences: import("rrule").RRuleSet;
 }
 
 export interface ShiftsAbsence {

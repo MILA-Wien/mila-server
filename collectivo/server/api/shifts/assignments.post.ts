@@ -20,5 +20,5 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return await createShiftAssignment(body);
+  return await dbCreateAssignment(body);
 });

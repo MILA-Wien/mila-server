@@ -59,7 +59,7 @@ export function getDateSpanString(
 ) {
   const fromDate = DateTime.fromISO(from, { locale: locale });
   const fromWeekDay = fromDate.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
-  if (from == to || !to) {
+  if (from === to || !to) {
     return fromWeekDay;
   }
   const toDate = DateTime.fromISO(to, { locale: locale });

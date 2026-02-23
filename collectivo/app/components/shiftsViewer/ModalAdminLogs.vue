@@ -7,7 +7,7 @@ const props = defineProps({
     required: true,
   },
   occurence: {
-    type: Object as PropType<ShiftOccurrence>,
+    type: Object as PropType<ShiftOccurrenceResponse>,
     required: true,
   },
 });

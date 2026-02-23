@@ -4,21 +4,27 @@
  * It sends reminders to users for shifts that lie 2 days in the future.
  * Requires an active automation with the name "shifts_reminder".
  */
-import { createItem, readItems, updateItems } from "@directus/sdk";
-import { getFutureHolidayRrule } from "./shiftsQueries";
 
 export async function sendShiftReminders(date: Date) {
-  const automation = await getAutomation("shifts_reminder");
+  const automation = await dbGetAutomation("shifts_reminder");
+
+  if (!automation) {
+    throw new Error("Automation not found");
+  }
+
+  if (!automation.mila_active) {
+    throw new Error("Automation is not active");
+  }
+
   const assignments = await getAssignmentsInTwoDays(date);
   await sendRemindersInner(assignments, automation);
 }
 
 async function getAssignmentsInTwoDays(date: Date) {
-  const directus = useDirectusAdmin();
   const targetDate = new Date(date);
   targetDate.setDate(targetDate.getDate() + 3);
   console.log("Sending reminders for shifts on ", targetDate.toISOString());
-  const shifts: ShiftsShift[] = await getShiftShifts(
+  const shifts: ShiftsShift[] = await dbGetShifts(
     targetDate,
     targetDate,
     undefined,
@@ -28,7 +34,7 @@ async function getAssignmentsInTwoDays(date: Date) {
   const shiftIds = shifts.map((shift) => shift.id);
 
   // Get assignments two days ahead
-  const assignments = await getShiftAssignments(
+  const assignments = await dbGetAssignmentsWithNotifications(
     shiftIds,
     targetDate,
     targetDate,
@@ -38,7 +44,7 @@ async function getAssignmentsInTwoDays(date: Date) {
 
   const absences = [];
   if (assignmentIds.length) {
-    const absences_ = await getShiftAbsences(
+    const absences_ = await dbGetAbsences(
       assignmentIds,
       targetDate,
       targetDate,
@@ -46,17 +52,7 @@ async function getAssignmentsInTwoDays(date: Date) {
     absences.push(...absences_);
   }
 
-  const publicHolidays = (await directus.request(
-    readItems("shifts_holidays_public", {
-      filter: {
-        date: {
-          _and: [{ _gte: targetDate }, { _lte: targetDate }],
-        },
-      },
-      limit: -1,
-      fields: ["*"],
-    }),
-  )) as ShiftsPublicHoliday[];
+  const publicHolidays = await dbGetPublicHolidays(targetDate, targetDate);
 
   const holidayRrule = await getFutureHolidayRrule();
 
@@ -102,33 +98,7 @@ async function getAssignmentsInTwoDays(date: Date) {
   return occurrences;
 }
 
-async function getAutomation(name: string) {
-  const directus = await useDirectusAdmin();
-  const automations = await directus.request(
-    readItems("mila_automations", {
-      filter: {
-        mila_key: {
-          _eq: name,
-        },
-      },
-    }),
-  );
-
-  if (!automations.length) {
-    throw new Error("Automation not found");
-  }
-
-  const automation = automations[0];
-
-  if (!automation.mila_active) {
-    throw new Error("Automation is not active");
-  }
-
-  return automation;
-}
-
 async function sendRemindersInner(occurrences: any[], automation: any) {
-  const directus = await useDirectusAdmin();
   const payloads: any[] = [];
 
   for (const occ of occurrences) {
@@ -186,10 +156,7 @@ async function sendRemindersInner(occurrences: any[], automation: any) {
   console.log("Sending reminders", payloads.length);
 
   for (const payload of payloads) {
-    const campaign = await directus.request(
-      createItem("messages_campaigns", payload, { fields: ["id"] }),
-    );
-
+    const campaign = (await dbCreateCampaign(payload)) as any;
     campaign_ids.push(campaign[0].id);
     await new Promise((resolve) => setTimeout(resolve, 10));
   }
@@ -198,9 +165,5 @@ async function sendRemindersInner(occurrences: any[], automation: any) {
     return;
   }
 
-  await directus.request(
-    updateItems("messages_campaigns", campaign_ids, {
-      messages_campaign_status: "pending",
-    }),
-  );
+  await dbSetCampaignsPending(campaign_ids);
 }

@@ -1,4 +1,3 @@
-import { createItem, readItems, updateItem } from "@directus/sdk";
 import type { H3Event } from "h3";
 
 interface RequestBody {
@@ -42,23 +41,12 @@ async function createCampaignSingle(
   body: RequestBody,
   automation_name: string,
 ) {
-  const directus = await useDirectusAdmin();
-  const automations = await directus.request(
-    readItems("mila_automations", {
-      filter: {
-        mila_key: {
-          _eq: automation_name,
-        },
-      },
-    }),
-  );
+  const automation = await dbGetAutomation(automation_name);
 
-  if (!automations.length) {
+  if (!automation) {
     console.log(`Automation not found: ${automation_name}`);
     return;
   }
-
-  const automation = automations[0];
 
   if (!automation.mila_active) {
     console.log(`Automation not active: ${automation_name}`);
@@ -82,23 +70,17 @@ async function createCampaignSingle(
   delete body.automation_name;
 
   if (createList.length) {
-    const campaign = await directus.request(
-      createItem("messages_campaigns", {
-        messages_template: automation.mila_template,
-        messages_recipients: {
-          create: createList,
-        },
-        messages_context: body,
-      }),
-    );
+    const campaign = await dbCreateCampaign({
+      messages_template: automation.mila_template,
+      messages_recipients: {
+        create: createList,
+      },
+      messages_context: body,
+    });
 
     // Send campaign
     if (!body.draft) {
-      await directus.request(
-        updateItem("messages_campaigns", campaign.id, {
-          messages_campaign_status: "pending",
-        }),
-      );
+      await dbSetCampaignPending(campaign.id);
     }
   }
 }

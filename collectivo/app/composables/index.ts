@@ -12,3 +12,4 @@ export {
   getOccurrences as getOccurrencesAdmin,
   getShiftsDashboard as getOccurrencesUser,
 } from "./shifts/occurrences";
+export { filterOccurrence } from "./shifts/filter";
