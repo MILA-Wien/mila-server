@@ -60,25 +60,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       color: "error",
     });
   }
-
-  // submit email change if email changed in form:
-  if (emailState.email != user.email) {
-    const res = await useFetch("/api/profile/email", {
-      method: "PUT",
-      body: { email: emailState.email },
-    });
-    if (res.status.value === "success") {
-      await userData.value.reload();
-      emailState.email = "";
-      toast.add({ title: t("E-Mail erfolgreich geändert."), color: "success" });
-    } else {
-      toast.add({
-        title: t("Es ist ein Fehler aufgetreten."),
-        icon: "i-heroicons-exclamation-triangle",
-        color: "error",
-      });
-    }
-  }
 }
 
 async function onError(event: FormErrorEvent) {
@@ -95,7 +76,28 @@ async function onError(event: FormErrorEvent) {
 }
 
 // ── Email change ──────────────────────────────────────────────────────────────
+const emailSchema = object({
+  email: string().email(),
+});
+
+type EmailSchema = InferType<typeof emailSchema>;
 const emailState = reactive({ email: user.email });
+async function onEmailSubmit(event: FormSubmitEvent<EmailSchema>) {
+  const res = await useFetch("/api/profile/email", {
+    method: "PUT",
+    body: { email: emailState.email },
+  });
+  if (res.status.value === "success") {
+    await userData.value.reload();
+      toast.add({ title: t("E-Mail erfolgreich geändert."), color: "success" });
+  } else {
+    toast.add({
+      title: t("Es ist ein Fehler aufgetreten."),
+      icon: "i-heroicons-exclamation-triangle",
+      color: "error",
+    });
+  }
+}
 
 // ── Password change (directus syncs to keycloak) ──────────────────────────────────────────
 const passwordState = reactive({ password: "", password_confirm: "" });
@@ -208,13 +210,6 @@ function personTypeLabel(val: string | null | undefined) {
           </UCheckbox>
         </FormsFormGroup>
 
-        <FormsFormGroup name="email" :label="t('E-Mail-Adresse')" required>
-          <UInput
-            v-model="emailState.email"
-            type="email"
-          />
-        </FormsFormGroup>
-
         <div class="pt-2">
           <UButton type="submit">
             {{ t("Änderungen speichern") }}
@@ -223,11 +218,33 @@ function personTypeLabel(val: string | null | undefined) {
       </UForm>
     </div>
 
+    <!-- ── Email Address ─────────────────────────────────────────────── -->
+    <div>
+      <h2>{{ t("E-Mail-Adresse ändern") }}</h2>
+      <UForm
+        :schema="emailSchema"
+        :state="emailState"
+        class="space-y-4"
+        @submit="onEmailSubmit"
+        @error="onError"
+      >
+        <FormsFormGroup name="email" :label="t('E-Mail-Adresse')" required>
+          <UInput
+            v-model="emailState.email"
+            type="email"
+          />
+        </FormsFormGroup>
+        <div class="pt-2">
+          <UButton type="submit">
+            {{ t("E-Mail-Adresse ändern") }}
+          </UButton>
+        </div>
+      </UForm>
+    </div>
+
     <!-- ── Password ─────────────────────────────────────────────── -->
     <div>
       <h2>{{ t("Passwort ändern") }}</h2>
-
-
       <UForm
         :schema="schema"
         :state="state"
@@ -474,6 +491,7 @@ de:
   "E-Mail & Passwort": "E-Mail & Passwort"
   "Aktuelle E-Mail": "Aktuelle E-Mail"
   "E-Mail-Adresse": "E-Mail-Adresse"
+  "E-Mail-Adresse ändern": "E-Mail-Adresse ändern"
   "E-Mail erfolgreich geändert.": "E-Mail erfolgreich geändert."
   "Passwort ändern": "Passwort ändern"
   "Passwort über Keycloak verwalten": "Dein Passwort wird über Keycloak verwaltet."
@@ -528,6 +546,7 @@ en:
   "E-Mail & Passwort": "Email & Password"
   "Aktuelle E-Mail": "Current email"
   "E-Mail-Adresse": "Email address"
+  "E-Mail-Adresse ändern": "Change email address"
   "E-Mail erfolgreich geändert.": "Email updated successfully."
   "Passwort ändern": "Change password"
   "Passwort über Keycloak verwalten": "Your password is managed via Keycloak."
