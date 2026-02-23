@@ -78,6 +78,10 @@ async function create_users() {
       password: `${userName.toLowerCase()}`,
       role: userRole,
       status: "active",
+      memberships_street: "Example Street",
+      memberships_city: "Example City",
+      memberships_street_number: "123",
+      memberships_postcode: "12345",
     };
 
     if (userName == "Admin") {
@@ -240,8 +244,12 @@ async function create_memberships() {
 
   // Clean up old data
   // might error because of not_null constraint in assignment relation
-  await directus.request(deleteItems("memberships_memberships_coshoppers", { limit: 1000 }));
-  await directus.request(deleteItems("memberships_coshoppers", { limit: 1000 }));
+  await directus.request(
+    deleteItems("memberships_memberships_coshoppers", { limit: 1000 }),
+  );
+  await directus.request(
+    deleteItems("memberships_coshoppers", { limit: 1000 }),
+  );
   await directus.request(deleteItems("memberships", { limit: 1000 }));
 
   console.info("Creating memberships 2");
