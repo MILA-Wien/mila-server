@@ -242,35 +242,35 @@ function personTypeLabel(val: string | null | undefined) {
 
       <!-- Password change -->
       <div class="space-y-2">
-        <h3 class="text-base font-semibold">{{ t("Passwort ändern") }}</h3>
-          <div class="space-y-2 max-w-sm">
-            <div>
-              <label class="block text-sm font-medium mb-1">
-                {{ t("Neues Passwort") }}
-              </label>
-              <UInput
-                v-model="passwordState.password"
-                type="password"
-                autocomplete="new-password"
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium mb-1">
-                {{ t("Passwort bestätigen") }}
-              </label>
-              <UInput
-                v-model="passwordState.password_confirm"
-                type="password"
-                autocomplete="new-password"
-              />
-            </div>
-            <p v-if="passwordError" class="text-sm text-red-600">
-              {{ passwordError }}
-            </p>
-            <UButton @click="onPasswordSubmit">
-              {{ t("Passwort ändern") }}
-            </UButton>
+        <h3 class="text-base">{{ t("Passwort ändern") }}</h3>
+        <div class="space-y-2 max-w-sm">
+          <div>
+            <label class="block text-sm font-medium mb-1">
+              {{ t("Neues Passwort") }}
+            </label>
+            <UInput
+              v-model="passwordState.password"
+              type="password"
+              autocomplete="new-password"
+            />
           </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">
+              {{ t("Passwort bestätigen") }}
+            </label>
+            <UInput
+              v-model="passwordState.password_confirm"
+              type="password"
+              autocomplete="new-password"
+            />
+          </div>
+          <p v-if="passwordError" class="text-sm text-red-600">
+            {{ passwordError }}
+          </p>
+          <UButton @click="onPasswordSubmit">
+            {{ t("Passwort ändern") }}
+          </UButton>
+        </div>
       </div>
     </div>
 
@@ -279,39 +279,47 @@ function personTypeLabel(val: string | null | undefined) {
       <h2>{{ t("Persönliche Daten") }}</h2>
       <dl class="space-y-1">
         <div v-if="user.memberships_person_type" class="flex gap-2">
-          <dt class="text-sm text-gray-500 w-48 shrink-0">{{ t("Personenart") }}</dt>
-          <dd class="text-sm font-medium">{{ personTypeLabel(user.memberships_person_type) }}</dd>
+          <dt class="text-sm w-48 shrink-0">{{ t("Personenart") }}</dt>
+          <dd class="text-sm font-medium">
+            {{ personTypeLabel(user.memberships_person_type) }}
+          </dd>
         </div>
         <div v-if="user.memberships_gender" class="flex gap-2">
-          <dt class="text-sm text-gray-500 w-48 shrink-0">{{ t("Geschlecht") }}</dt>
+          <dt class="text-sm w-48 shrink-0">{{ t("Geschlecht") }}</dt>
           <dd class="text-sm font-medium">{{ user.memberships_gender }}</dd>
         </div>
         <div v-if="user.memberships_phone" class="flex gap-2">
-          <dt class="text-sm text-gray-500 w-48 shrink-0">{{ t("Telefon") }}</dt>
+          <dt class="text-sm w-48 shrink-0">{{ t("Telefon") }}</dt>
           <dd class="text-sm font-medium">{{ user.memberships_phone }}</dd>
         </div>
         <div v-if="user.memberships_birthday" class="flex gap-2">
-          <dt class="text-sm text-gray-500 w-48 shrink-0">{{ t("Geburtsdatum") }}</dt>
+          <dt class="text-sm w-48 shrink-0">{{ t("Geburtsdatum") }}</dt>
           <dd class="text-sm font-medium">{{ user.memberships_birthday }}</dd>
         </div>
         <div v-if="user.memberships_occupation" class="flex gap-2">
-          <dt class="text-sm text-gray-500 w-48 shrink-0">{{ t("Beruf") }}</dt>
+          <dt class="text-sm w-48 shrink-0">{{ t("Beruf") }}</dt>
           <dd class="text-sm font-medium">{{ user.memberships_occupation }}</dd>
         </div>
 
         <!-- Organization (only for legal entities) -->
         <template v-if="user.memberships_person_type === 'legal'">
           <div v-if="user.memberships_organization_name" class="flex gap-2">
-            <dt class="text-sm text-gray-500 w-48 shrink-0">{{ t("Organisationsname") }}</dt>
-            <dd class="text-sm font-medium">{{ user.memberships_organization_name }}</dd>
+            <dt class="text-sm w-48 shrink-0">{{ t("Organisationsname") }}</dt>
+            <dd class="text-sm font-medium">
+              {{ user.memberships_organization_name }}
+            </dd>
           </div>
           <div v-if="user.memberships_organization_type" class="flex gap-2">
-            <dt class="text-sm text-gray-500 w-48 shrink-0">{{ t("Organisationsart") }}</dt>
-            <dd class="text-sm font-medium">{{ user.memberships_organization_type }}</dd>
+            <dt class="text-sm w-48 shrink-0">{{ t("Organisationsart") }}</dt>
+            <dd class="text-sm font-medium">
+              {{ user.memberships_organization_type }}
+            </dd>
           </div>
           <div v-if="user.memberships_organization_id" class="flex gap-2">
-            <dt class="text-sm text-gray-500 w-48 shrink-0">{{ t("Organisations-ID") }}</dt>
-            <dd class="text-sm font-medium">{{ user.memberships_organization_id }}</dd>
+            <dt class="text-sm w-48 shrink-0">{{ t("Organisations-ID") }}</dt>
+            <dd class="text-sm font-medium">
+              {{ user.memberships_organization_id }}
+            </dd>
           </div>
         </template>
 
@@ -320,7 +328,7 @@ function personTypeLabel(val: string | null | undefined) {
           v-if="user.memberships_street || user.memberships_postcode"
           class="flex gap-2"
         >
-          <dt class="text-sm text-gray-500 w-48 shrink-0">{{ t("Adresse") }}</dt>
+          <dt class="text-sm w-48 shrink-0">{{ t("Adresse") }}</dt>
           <dd class="text-sm font-medium">
             <span v-if="user.memberships_street">
               {{ user.memberships_street }} {{ user.memberships_streetnumber }}
@@ -336,21 +344,29 @@ function personTypeLabel(val: string | null | undefined) {
               {{ user.memberships_postcode }} {{ user.memberships_city }}
             </span>
             <br v-if="user.memberships_country" />
-            <span v-if="user.memberships_country">{{ user.memberships_country }}</span>
+            <span v-if="user.memberships_country">{{
+              user.memberships_country
+            }}</span>
           </dd>
         </div>
 
         <!-- Payment -->
         <div v-if="user.payments_type" class="flex gap-2">
-          <dt class="text-sm text-gray-500 w-48 shrink-0">{{ t("Zahlungsart") }}</dt>
+          <dt class="text-sm w-48 shrink-0">
+            {{ t("Zahlungsart") }}
+          </dt>
           <dd class="text-sm font-medium">{{ t(user.payments_type) }}</dd>
         </div>
         <div v-if="user.payments_account_iban" class="flex gap-2">
-          <dt class="text-sm text-gray-500 w-48 shrink-0">{{ t("IBAN") }}</dt>
-          <dd class="text-sm font-medium font-mono">{{ user.payments_account_iban }}</dd>
+          <dt class="text-sm w-48 shrink-0">{{ t("IBAN") }}</dt>
+          <dd class="text-sm font-medium font-mono">
+            {{ user.payments_account_iban }}
+          </dd>
         </div>
         <div v-if="user.payments_account_owner" class="flex gap-2">
-          <dt class="text-sm text-gray-500 w-48 shrink-0">{{ t("Kontoinhaber:in") }}</dt>
+          <dt class="text-sm w-48 shrink-0">
+            {{ t("Kontoinhaber:in") }}
+          </dt>
           <dd class="text-sm font-medium">{{ user.payments_account_owner }}</dd>
         </div>
       </dl>
@@ -360,7 +376,7 @@ function personTypeLabel(val: string | null | undefined) {
         v-if="membership?.coshoppers && membership.coshoppers.length > 0"
         class="mt-4"
       >
-        <h3 class="text-base font-semibold mb-2">{{ t("Miteinkäufer*in") }}</h3>
+        <h3 class="text-base mb-2">{{ t("Miteinkäufer*in") }}</h3>
         <ul class="space-y-1">
           <li
             v-for="entry in membership.coshoppers"
