@@ -26,12 +26,12 @@ const schema = object({
     "Dieses Feld ist erforderlich",
   ),
   directus_users__email: string()
-    .email()
+    .email(t("Email address is not valid"))
     .required("Dieses Feld ist erforderlich"),
   directus_users__password: string().required("Dieses Feld ist erforderlich"),
   _pw_confirm: string()
     .required("Dieses Feld ist erforderlich")
-    .oneOf([ref("directus_users__password")], "Passwords must match"),
+    .oneOf([ref("directus_users__password")], t("Passwords are not the same")),
   directus_users__memberships_organization_name: string().when(
     "directus_users__memberships_person_type",
     {
@@ -70,7 +70,7 @@ const schema = object({
     then: (schema) => schema.required("Dieses Feld ist erforderlich"),
   }),
   coshopper_email: string()
-    .email()
+    .email(t("Email address is not valid"))
     .when("add_coshopper", {
       is: true,
       then: (schema) => schema.required("Dieses Feld ist erforderlich"),
@@ -126,7 +126,7 @@ const schema = object({
       then: (schema) =>
         schema
           .required("Dieses Feld ist erforderlich")
-          .min(10, "Must be at least 10"),
+          .min(10, t("Must be at least 10 shares")),
     }),
   directus_users__payments_type: string().required(
     "Dieses Feld ist erforderlich",
@@ -215,6 +215,23 @@ const state: any = reactive({
   directus_users__mila_pr_approved: undefined,
 });
 
+onMounted(() => {
+  if (user.value.isAuthenticated && user.value.user) {
+    state.directus_users__email = user.value.user.email ?? "";
+    // Dummy values so yup required() passes for hidden credential fields.
+    // The API ignores email/password for authenticated users.
+    state.directus_users__password = "__authenticated__";
+    state._pw_confirm = "__authenticated__";
+    console.log("user", user.value.user.first_name);
+    if (user.value.user.first_name) {
+      state.directus_users__first_name = user.value.user.first_name;
+    }
+    if (user.value.user.last_name) {
+      state.directus_users__last_name = user.value.user.last_name;
+    }
+  }
+});
+
 watch(
   () => state.memberships__memberships_type,
   () => {
@@ -298,10 +315,10 @@ async function onError(event: FormErrorEvent) {
 
 <template>
   <div
-    v-if="user.user && user.isAuthenticated"
-    class="space-y-2 p-6 border-2 rounded-sm shadow-sm"
+    v-if="user.user && user.isAuthenticated && user.membership"
+    class="space-y-2 p-6 border-2"
   >
-    <p>{{ t("You are currently logged in as") }} {{ user.user?.username }}.</p>
+    <p>{{ t("You are currently logged in as") }} {{ user.user?.email }}.</p>
     <p>
       {{
         t(
@@ -319,6 +336,24 @@ async function onError(event: FormErrorEvent) {
     @submit="onSubmit"
     @error="onError"
   >
+    <div
+      v-if="user.isAuthenticated && user.user"
+      class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 border"
+    >
+      <div class="flex-1 space-y-1">
+        <p class="text-sm font-medium">
+          {{ t("You are currently logged in as") }}
+          {{ user.user.email }}.
+        </p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+          {{ t("To apply as a different person, please log out first.") }}
+        </p>
+      </div>
+      <UButton href="/logout" size="sm" variant="outline">{{
+        t("Log out")
+      }}</UButton>
+    </div>
+
     <div class="">
       <h2>{{ t("Welcome to MILA!") }}</h2>
 
@@ -349,48 +384,50 @@ async function onError(event: FormErrorEvent) {
       </URadioGroup>
     </FormsFormGroup>
 
-    <div class="pt-6">
-      <h2>{{ t("User Account") }}</h2>
-      <p>
-        {{ t("t:mila_form_account") }}
-      </p>
-    </div>
-
-    <div class="grid gap-4">
-      <FormsFormGroup
-        :label="t('E-Mail Address')"
-        name="directus_users__email"
-        required
-      >
-        <UInput variant="outline" v-model="state.directus_users__email" />
-      </FormsFormGroup>
-
-      <div class="grid md:grid-cols-2 gap-4">
-        <FormsFormGroup
-          :label="t('Password')"
-          name="directus_users__password"
-          required
-        >
-          <UInput
-            variant="outline"
-            v-model="state.directus_users__password"
-            type="password"
-          />
-        </FormsFormGroup>
-
-        <FormsFormGroup
-          :label="t('Repeat password')"
-          name="_pw_confirm"
-          required
-        >
-          <UInput
-            variant="outline"
-            v-model="state._pw_confirm"
-            type="password"
-          />
-        </FormsFormGroup>
+    <template v-if="!user.isAuthenticated">
+      <div class="pt-6">
+        <h2>{{ t("User Account") }}</h2>
+        <p>
+          {{ t("t:mila_form_account") }}
+        </p>
       </div>
-    </div>
+
+      <div class="grid gap-4">
+        <FormsFormGroup
+          :label="t('E-Mail Address')"
+          name="directus_users__email"
+          required
+        >
+          <UInput variant="outline" v-model="state.directus_users__email" />
+        </FormsFormGroup>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <FormsFormGroup
+            :label="t('Password')"
+            name="directus_users__password"
+            required
+          >
+            <UInput
+              variant="outline"
+              v-model="state.directus_users__password"
+              type="password"
+            />
+          </FormsFormGroup>
+
+          <FormsFormGroup
+            :label="t('Repeat password')"
+            name="_pw_confirm"
+            required
+          >
+            <UInput
+              variant="outline"
+              v-model="state._pw_confirm"
+              type="password"
+            />
+          </FormsFormGroup>
+        </div>
+      </div>
+    </template>
 
     <template v-if="!isNatural">
       <div class="pt-6">
@@ -1080,11 +1117,16 @@ async function onError(event: FormErrorEvent) {
 
 <i18n lang="yaml">
 de:
+  "Email address is not valid": "E-Mail Adresse ist nicht korrekt"
+  "Passwords are not the same": "Passwörter stimmen nicht überein"
+  "Must be at least 10 shares": "Muss mindestens 10 Anteile sein"
+
   "User Account": "Zugangsdaten"
   "E-Mail Address": "E-Mail Adresse"
   "Some fields are not filled in correctly": "Einige Felder sind nicht korrekt ausgefüllt"
   "You are currently logged in as": "Du bist aktuell angemeldet als"
   "Log out to fill out a new membership application for a different person.": "Melde dich ab, um eine neue Beitrittserklärung für eine andere Person auszufüllen."
+  "To apply as a different person, please log out first.": "Um die Beitrittserklärung für eine andere Person auszufüllen, melde dich bitte zuerst ab."
   "Log out": "Abmelden"
   "This email address is already registered": "Diese E-Mail Adresse ist bereits registriert"
 
@@ -1200,6 +1242,10 @@ de:
   "i_pronouns": "Die Angabe der Pronomen ist freiwillig. Sie soll uns helfen bei Mila einen respektvollen Umgang miteinander zu pflegen, indem wir so mit- und übereinander sprechen, wie die angesprochenen Personen es wünschen."
 
 en:
+  "Email address is not valid": "Email address is not valid"
+  "Passwords are not the same": "Passwords are not the same"
+  "Must be at least 10 shares": "Must be at least 10 shares"
+
   "Wie sollen wir dich ansprechen?": "How should we address you?"
   "Dieser Name kann sich von deinem amtlichen Namen unterscheiden.": "This name can differ from your legal name."
   "Mit welchen Pronomen möchtest du angesprochen werden?": "Which pronouns would you like to be addressed with?"

@@ -49,10 +49,11 @@ class CurrentUserStore {
     }
 
     this.user = data.data as UserProfile;
+    const rolename = this.user.role ? this.user.role.name : "Unknown";
 
     // Check if admin
-    this.isShiftAdmin = SHIFT_ADMIN_ROLES.includes(this.user.role.name);
-    this.isStudioAdmin = STUDIO_ADMIN_ROLES.includes(this.user.role.name);
+    this.isShiftAdmin = SHIFT_ADMIN_ROLES.includes(rolename);
+    this.isStudioAdmin = STUDIO_ADMIN_ROLES.includes(rolename);
 
     // Process tags
     for (const field of this.user.collectivo_tags ?? []) {
