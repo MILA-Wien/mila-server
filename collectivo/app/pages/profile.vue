@@ -76,18 +76,20 @@ async function onError(event: FormErrorEvent) {
 }
 
 // ── Email change ──────────────────────────────────────────────────────────────
-const emailState = reactive({ email: "" });
+const emailSchema = object({
+  email: string().email(),
+});
 
-async function onEmailSubmit() {
-  if (!emailState.email) return;
+type EmailSchema = InferType<typeof emailSchema>;
+const emailState = reactive({ email: user.email });
+async function onEmailSubmit(event: FormSubmitEvent<EmailSchema>) {
   const res = await useFetch("/api/profile/email", {
     method: "PUT",
     body: { email: emailState.email },
   });
   if (res.status.value === "success") {
     await userData.value.reload();
-    emailState.email = "";
-    toast.add({ title: t("E-Mail erfolgreich geändert."), color: "success" });
+      toast.add({ title: t("E-Mail erfolgreich geändert."), color: "success" });
   } else {
     toast.add({
       title: t("Es ist ein Fehler aufgetreten."),
@@ -105,6 +107,11 @@ async function onPasswordSubmit() {
   passwordError.value = "";
   if (passwordState.password !== passwordState.password_confirm) {
     passwordError.value = t("Die Passwörter stimmen nicht überein.");
+    toast.add({
+      title: t("Die Passwörter stimmen nicht überein."),
+      icon: "i-heroicons-exclamation-triangle",
+      color: "error",
+    });
     return;
   }
   const res = await useFetch("/api/profile/password", {
@@ -211,65 +218,71 @@ function personTypeLabel(val: string | null | undefined) {
       </UForm>
     </div>
 
-    <!-- ── E-Mail & Passwort ─────────────────────────────────────────────── -->
+    <!-- ── Email Address ─────────────────────────────────────────────── -->
     <div>
-      <h2>{{ t("E-Mail & Passwort") }}</h2>
-
-      <!-- Email change -->
-      <div class="space-y-2 mb-6">
-        <p class="text-sm text-gray-500">
-          {{ t("Aktuelle E-Mail") }}:
-          <span class="font-medium text-gray-800">{{ user.email }}</span>
-        </p>
-        <div class="flex gap-2 items-end">
-          <div class="flex-1">
-            <label class="block text-sm font-medium mb-1">
-              {{ t("Neue E-Mail-Adresse") }}
-            </label>
-            <UInput
-              v-model="emailState.email"
-              type="email"
-              :placeholder="t('email_placeholder')"
-            />
-          </div>
-          <UButton @click="onEmailSubmit" :disabled="!emailState.email">
-            {{ t("Speichern") }}
+      <h2>{{ t("E-Mail-Adresse ändern") }}</h2>
+      <UForm
+        :schema="emailSchema"
+        :state="emailState"
+        class="space-y-4"
+        @submit="onEmailSubmit"
+        @error="onError"
+      >
+        <FormsFormGroup name="email" :label="t('E-Mail-Adresse')" required>
+          <UInput
+            v-model="emailState.email"
+            type="email"
+          />
+        </FormsFormGroup>
+        <div class="pt-2">
+          <UButton type="submit">
+            {{ t("E-Mail-Adresse ändern") }}
           </UButton>
         </div>
-      </div>
+      </UForm>
+    </div>
 
-      <!-- Password change -->
-      <div class="space-y-2">
-        <h3 class="text-base">{{ t("Passwort ändern") }}</h3>
-        <div class="space-y-2 max-w-sm">
-          <div>
-            <label class="block text-sm font-medium mb-1">
-              {{ t("Neues Passwort") }}
-            </label>
-            <UInput
-              v-model="passwordState.password"
-              type="password"
-              autocomplete="new-password"
-            />
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">
-              {{ t("Passwort bestätigen") }}
-            </label>
-            <UInput
-              v-model="passwordState.password_confirm"
-              type="password"
-              autocomplete="new-password"
-            />
-          </div>
-          <p v-if="passwordError" class="text-sm text-red-600">
-            {{ passwordError }}
-          </p>
-          <UButton @click="onPasswordSubmit">
+    <!-- ── Password ─────────────────────────────────────────────── -->
+    <div>
+      <h2>{{ t("Passwort ändern") }}</h2>
+      <UForm
+        :schema="schema"
+        :state="state"
+        class="space-y-4"
+        @submit="onPasswordSubmit"
+        @error="onError"
+      >
+        <FormsFormGroup
+          :label="t('Neues Passwort')"
+          name="password"
+          required
+        >
+          <UInput
+            v-model="passwordState.password"
+            type="password"
+            autocomplete="new-password"
+          />
+        </FormsFormGroup>
+        <FormsFormGroup
+          :label="t('Passwort bestätigen')"
+          name="password"
+          required
+        >
+          <UInput
+            v-model="passwordState.password_confirm"
+            type="password"
+            autocomplete="new-password"
+          />
+        </FormsFormGroup>
+        <p v-if="passwordError" class="text-sm text-red-600">
+          {{ passwordError }}
+        </p>
+        <div class="pt-2">
+          <UButton type="submit">
             {{ t("Passwort ändern") }}
           </UButton>
         </div>
-      </div>
+      </UForm>
     </div>
 
     <!-- ── Persönliche Daten (read-only) ─────────────────────────────────── -->
@@ -477,8 +490,8 @@ de:
   "i_pronouns": "Die Angabe der Pronomen ist freiwillig. Sie soll uns helfen bei Mila einen respektvollen Umgang miteinander zu pflegen, indem wir so mit- und übereinander sprechen, wie die angesprochenen Personen es wünschen."
   "E-Mail & Passwort": "E-Mail & Passwort"
   "Aktuelle E-Mail": "Aktuelle E-Mail"
-  "Neue E-Mail-Adresse": "Neue E-Mail-Adresse"
-  email_placeholder: "neue{'@'}email.at"
+  "E-Mail-Adresse": "E-Mail-Adresse"
+  "E-Mail-Adresse ändern": "E-Mail-Adresse ändern"
   "E-Mail erfolgreich geändert.": "E-Mail erfolgreich geändert."
   "Passwort ändern": "Passwort ändern"
   "Passwort über Keycloak verwalten": "Dein Passwort wird über Keycloak verwaltet."
@@ -532,8 +545,8 @@ en:
   "i_pronouns": "A declaration of pronouns is optional. They help us at MILA in creating an inclusive environment, by speaking to and about each other in a way, that respects everyones wishes."
   "E-Mail & Passwort": "Email & Password"
   "Aktuelle E-Mail": "Current email"
-  "Neue E-Mail-Adresse": "New email address"
-  email_placeholder: "new{'@'}email.com"
+  "E-Mail-Adresse": "Email address"
+  "E-Mail-Adresse ändern": "Change email address"
   "E-Mail erfolgreich geändert.": "Email updated successfully."
   "Passwort ändern": "Change password"
   "Passwort über Keycloak verwalten": "Your password is managed via Keycloak."
