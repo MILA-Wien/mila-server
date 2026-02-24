@@ -31,7 +31,7 @@ const schema = object({
   directus_users__password: string().required("Dieses Feld ist erforderlich"),
   _pw_confirm: string()
     .required("Dieses Feld ist erforderlich")
-    .oneOf([ref("directus_users__password")], t("Passwords must match")),
+    .oneOf([ref("directus_users__password")], t("Passwords are not the same")),
   directus_users__memberships_organization_name: string().when(
     "directus_users__memberships_person_type",
     {
@@ -1118,7 +1118,7 @@ async function onError(event: FormErrorEvent) {
 <i18n lang="yaml">
 de:
   "Email address is not valid": "E-Mail Adresse ist nicht korrekt"
-  "Passwords must match": "Passwörter stimmen nicht überein"
+  "Passwords are not the same": "Passwörter stimmen nicht überein"
   "Must be at least 10 shares": "Muss mindestens 10 Anteile sein"
 
   "User Account": "Zugangsdaten"
@@ -1243,7 +1243,7 @@ de:
 
 en:
   "Email address is not valid": "Email address is not valid"
-  "Passwords must match": "Passwords must match"
+  "Passwords are not the same": "Passwords are not the same"
   "Must be at least 10 shares": "Must be at least 10 shares"
 
   "Wie sollen wir dich ansprechen?": "How should we address you?"
