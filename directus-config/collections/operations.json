@@ -1370,20 +1370,6 @@
     "_syncId": "cfd6218a-7de5-4c15-9757-597a1312f9a6"
   },
   {
-    "name": "user ids",
-    "key": "user_ids",
-    "type": "exec",
-    "position_x": 22,
-    "position_y": 22,
-    "options": {
-      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    for (i in data.$last) {\n    \tuser_ids.push(data.$last[i].wunsch_von.memberships_user)\n    }\n    \n\treturn { user_ids };\n}"
-    },
-    "resolve": "a9c23e19-5e10-4ad6-90fd-4744f3b2fbb1",
-    "reject": null,
-    "flow": "c97d8437-3ee4-49d3-9e95-a1b0b147b9b7",
-    "_syncId": "501bf9c8-8fa6-47af-ad46-81aca3b727e7"
-  },
-  {
     "name": "User ids",
     "key": "user_ids",
     "type": "exec",
@@ -1396,6 +1382,20 @@
     "reject": null,
     "flow": "28c0f3c7-d900-4f6d-be60-da5a803be396",
     "_syncId": "4bb7b88f-e8cc-4b46-b7ed-a075b3cd334b"
+  },
+  {
+    "name": "user ids",
+    "key": "user_ids",
+    "type": "exec",
+    "position_x": 22,
+    "position_y": 22,
+    "options": {
+      "code": "module.exports = async function(data) {\n\t\n    const user_ids = []\n    let id = undefined\n    for (i in data.$last) {\n    \tuser_ids.push(data.$last[i].wunsch_von.memberships_user)\n    }\n    \n\treturn { user_ids };\n}"
+    },
+    "resolve": "a9c23e19-5e10-4ad6-90fd-4744f3b2fbb1",
+    "reject": null,
+    "flow": "c97d8437-3ee4-49d3-9e95-a1b0b147b9b7",
+    "_syncId": "501bf9c8-8fa6-47af-ad46-81aca3b727e7"
   },
   {
     "name": "User ids",
