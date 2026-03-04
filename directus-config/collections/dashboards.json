@@ -21,6 +21,13 @@
     "_syncId": "7c739717-16a2-4d1c-8a6a-94008bc21bab"
   },
   {
+    "name": "Schikos",
+    "icon": "space_dashboard",
+    "note": null,
+    "color": null,
+    "_syncId": "895fb0b5-42b9-46d1-8cc3-6458d9f7579d"
+  },
+  {
     "name": "Geno-Anteile",
     "icon": "space_dashboard",
     "note": null,
@@ -47,5 +54,12 @@
     "note": null,
     "color": null,
     "_syncId": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6"
+  },
+  {
+    "name": "Mitglieder Schichten",
+    "icon": "interactive_space",
+    "note": null,
+    "color": null,
+    "_syncId": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4"
   }
 ]

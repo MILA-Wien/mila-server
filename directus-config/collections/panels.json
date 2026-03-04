@@ -1,6 +1,55 @@
 [
   {
     "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": "Status: Beendet",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Beendet",
+    "type": "metric",
+    "position_x": 92,
+    "position_y": 8,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_status": {
+              "_eq": "ended"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "02ed87b9-7581-4df6-8893-5694282cebb7"
+  },
+  {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
     "name": "Anteile zu Stichtag",
     "icon": "switch_account",
     "color": "#6644FF",
@@ -109,6 +158,39 @@
       ]
     },
     "_syncId": "03d1d04f-7e97-43e1-8359-782df99bd46f"
+  },
+  {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Mitgliederzahl",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 15,
+    "position_y": 1,
+    "width": 20,
+    "height": 7,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_in": [
+                "approved",
+                "applied"
+              ]
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "080e8830-84a4-4e85-875b-018c2fd30907"
   },
   {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
@@ -292,6 +374,46 @@
     "_syncId": "0ee40e0d-7806-45ed-b092-0e96511fdc75"
   },
   {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Anzahl Schichten",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 29,
+    "width": 20,
+    "height": 9,
+    "options": {
+      "collection": "shifts_shifts",
+      "field": "shifts_name",
+      "function": "countDistinct",
+      "filter": {
+        "_and": [
+          {
+            "shifts_from": {
+              "_gt": "2025-10-05"
+            }
+          },
+          {
+            "shifts_is_regular": {
+              "_eq": true
+            }
+          },
+          {
+            "shifts_category_2": {
+              "name": {
+                "_contains": "Normal"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "_syncId": "0fd9079f-cd17-4c54-a946-e5b63f5ee1ae"
+  },
+  {
     "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
     "name": "Davon AKTIV UND SOZIAL",
     "icon": "switch_account",
@@ -346,6 +468,127 @@
     "_syncId": "11863c3d-cef7-4c06-9ef7-192c390f23a0"
   },
   {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": null,
+    "icon": null,
+    "color": null,
+    "show_header": false,
+    "note": null,
+    "type": "metric",
+    "position_x": 51,
+    "position_y": 59,
+    "width": 32,
+    "height": 13,
+    "options": {
+      "collection": "memberships",
+      "function": "sum",
+      "field": "memberships_shares",
+      "sortField": "id",
+      "filter": {
+        "_and": [
+          {
+            "memberships_invoices": {
+              "payments_date_paid": {
+                "_lt": "2025-02-01"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "_syncId": "15fb90ce-4e96-4f15-babd-7b1bbb059f20"
+  },
+  {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Mitglieder mit negativen Schichtzähler",
+    "icon": "switch_account",
+    "color": "#E35169",
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 73,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "shifts_counter",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_status": {
+              "_eq": "approved"
+            }
+          },
+          {
+            "shifts_user_type": {
+              "_in": [
+                "regular",
+                "jumper"
+              ]
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Aktiv"
+            }
+          },
+          {
+            "shifts_counter": {
+              "_lt": "0"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#E35169"
+        }
+      ]
+    },
+    "_syncId": "16cb5447-a702-475a-8617-77c5b6733390"
+  },
+  {
+    "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
+    "name": "Beitrittsanträge pro Monat",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "time-series",
+    "position_x": 52,
+    "position_y": 66,
+    "width": 38,
+    "height": 27,
+    "options": {
+      "collection": "memberships",
+      "function": "count",
+      "dateField": "memberships_date_applied",
+      "range": "auto",
+      "valueField": "id",
+      "precision": "week",
+      "filter": {
+        "_and": [
+          {
+            "memberships_date_applied": {
+              "_gt": "2024-10-01"
+            }
+          }
+        ]
+      }
+    },
+    "_syncId": "1d4bf079-aa8b-4ca7-b34c-753ec70ac3f1"
+  },
+  {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
     "name": "Beitrittsanträge pro Monat",
     "icon": null,
@@ -387,6 +630,65 @@
       "horizontal": true
     },
     "_syncId": "290ce816-3686-4781-916b-ab9aef6c3901"
+  },
+  {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Schichtkoordinator*innen",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 23,
+    "position_y": 29,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_status": {
+              "_eq": "approved"
+            }
+          },
+          {
+            "shifts_user_type": {
+              "_in": [
+                "regular",
+                "jumper"
+              ]
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Aktiv"
+            }
+          },
+          {
+            "shifts_can_be_coordinator": {
+              "_eq": true
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#FFDB00"
+        }
+      ]
+    },
+    "_syncId": "29996cd2-1c2a-4c4c-b6d9-1b178960cece"
   },
   {
     "dashboard": "8c98bc24-fcd4-4f7f-ba3d-654372c28b81",
@@ -475,6 +777,178 @@
     "_syncId": "2b98dc18-2864-4430-bc14-101419c53495"
   },
   {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Anmeldungen Februar Zyklus",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 23,
+    "position_y": 59,
+    "width": 20,
+    "height": 9,
+    "options": {
+      "collection": "shifts_assignments",
+      "field": "shifts_shift",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "shifts_from": {
+              "_between": [
+                "2026-01-25",
+                "2026-02-22"
+              ]
+            }
+          },
+          {
+            "shifts_shift": {
+              "shifts_is_regular": {
+                "_eq": true
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#2CB3A5"
+        }
+      ]
+    },
+    "_syncId": "2bb9d88a-a7bc-40ba-931f-4faf8dcca82d"
+  },
+  {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "In Schichten aktive Mitglieder 1120",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 23,
+    "position_y": 19,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "shifts_assignments",
+      "field": "shifts_membership",
+      "function": "countDistinct",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "shifts_membership": {
+              "memberships_date_approved": {
+                "_lte": "{{ stichtag }}"
+              }
+            }
+          },
+          {
+            "shifts_membership": {
+              "memberships_status": {
+                "_eq": "approved"
+              }
+            }
+          },
+          {
+            "shifts_membership": {
+              "shifts_user_type": {
+                "_eq": "regular"
+              }
+            }
+          },
+          {
+            "shifts_membership": {
+              "memberships_type": {
+                "_eq": "Aktiv"
+              }
+            }
+          },
+          {
+            "shifts_shift": {
+              "shifts_category_2": {
+                "name": {
+                  "_contains": "Normal"
+                }
+              }
+            }
+          },
+          {
+            "shifts_membership": {
+              "memberships_user": {
+                "memberships_postcode": {
+                  "_contains": "1120"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#E8007D"
+        }
+      ],
+      "column": "shifts_membership"
+    },
+    "_syncId": "2f12b445-69b1-48cc-a25f-f87101f467c1"
+  },
+  {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": "aufgenommene Mitglieder zu Stichtag",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Aufgenommen",
+    "type": "metric",
+    "position_x": 50,
+    "position_y": 8,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_status": {
+              "_eq": "approved"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "2f1cd54a-6029-4aba-b86e-3db62a0e9056"
+  },
+  {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
     "name": "Mittelwert Anteile Alle",
     "icon": null,
@@ -544,6 +1018,54 @@
       "conditionalFormatting": null
     },
     "_syncId": "309056fc-c633-4daa-b6d5-13eb90ddacd4"
+  },
+  {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Schichtverpflichtete NEUE Mitglieder",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 199,
+    "position_y": 4,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "memberships_date_approved": {
+              "_gt": "2025-10-05"
+            }
+          },
+          {
+            "memberships_status": {
+              "_eq": "approved"
+            }
+          },
+          {
+            "shifts_user_type": {
+              "_in": [
+                "regular",
+                "jumper"
+              ]
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Aktiv"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "38cd5838-935d-4293-b4db-f69be0113ec4"
   },
   {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
@@ -640,6 +1162,75 @@
     "_syncId": "3c69e3bc-c2ac-49b4-a779-a4731e19c3c1"
   },
   {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "In Schichten aktive ALTE Mitglieder",
+    "icon": "switch_account",
+    "color": "#E8007D",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 176,
+    "position_y": 15,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "shifts_assignments",
+      "field": "shifts_membership",
+      "function": "countDistinct",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "shifts_membership": {
+              "memberships_date_approved": {
+                "_lte": "2025-10-05"
+              }
+            }
+          },
+          {
+            "shifts_membership": {
+              "memberships_status": {
+                "_eq": "approved"
+              }
+            }
+          },
+          {
+            "shifts_membership": {
+              "shifts_user_type": {
+                "_eq": "regular"
+              }
+            }
+          },
+          {
+            "shifts_membership": {
+              "memberships_type": {
+                "_eq": "Aktiv"
+              }
+            }
+          },
+          {
+            "shifts_shift": {
+              "shifts_category_2": {
+                "name": {
+                  "_contains": "Normal"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#E8007D"
+        }
+      ],
+      "column": "shifts_membership"
+    },
+    "_syncId": "3e8c8a1b-5183-424b-9c6a-3c82de61f930"
+  },
+  {
     "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
     "name": "Beworbene Mitglieder: Nicht Bezahlt",
     "icon": null,
@@ -689,6 +1280,26 @@
     "_syncId": "3ead4401-6203-48a1-a9d7-0c85f736503d"
   },
   {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Stichtag",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "variable",
+    "position_x": 1,
+    "position_y": 1,
+    "width": 12,
+    "height": 6,
+    "options": {
+      "field": "stichtag",
+      "type": "date",
+      "inter": "datetime",
+      "defaultValue": "2025-06-10"
+    },
+    "_syncId": "3eb49932-ad8c-4261-8c75-c08bf26801b0"
+  },
+  {
     "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
     "name": "Nach 4.11",
     "icon": null,
@@ -732,6 +1343,95 @@
       ]
     },
     "_syncId": "3fb9d739-82bc-4c74-9cfe-546e893ccc28"
+  },
+  {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Anmeldungen Jänner Zyklus",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 59,
+    "width": 20,
+    "height": 9,
+    "options": {
+      "collection": "shifts_assignments",
+      "field": "shifts_shift",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "shifts_from": {
+              "_between": [
+                "2025-12-28",
+                "2026-01-25"
+              ]
+            }
+          },
+          {
+            "shifts_shift": {
+              "shifts_is_regular": {
+                "_eq": true
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#2CB3A5"
+        }
+      ]
+    },
+    "_syncId": "3fed205b-f9be-4d73-9da4-933389785c26"
+  },
+  {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": "Ausgestiegene",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 61,
+    "position_y": 1,
+    "width": 16,
+    "height": 6,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_type_changed": {
+              "_lte": "{{ stichtag }}"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "4018b970-e7b2-46f6-ad17-f1baa5d064fc"
   },
   {
     "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
@@ -783,6 +1483,285 @@
     "_syncId": "41293c64-9db2-4ffe-9230-0a8dd9afd341"
   },
   {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Anmeldungen Dezember Zyklus",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 45,
+    "position_y": 49,
+    "width": 20,
+    "height": 9,
+    "options": {
+      "collection": "shifts_assignments",
+      "field": "shifts_shift",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "shifts_from": {
+              "_between": [
+                "2025-12-01",
+                "2025-12-28"
+              ]
+            }
+          },
+          {
+            "shifts_shift": {
+              "shifts_is_regular": {
+                "_eq": true
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#2CB3A5"
+        }
+      ]
+    },
+    "_syncId": "49d67208-e769-4282-bb40-320ae8851a52"
+  },
+  {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": "Status: im Austritt/Ausschluss",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 71,
+    "position_y": 8,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_status": {
+              "_eq": "in-cancellation"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "49facf4c-159a-450b-966e-2cc8be0618fe"
+  },
+  {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Anmeldungen Oktober Zyklus",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 49,
+    "width": 20,
+    "height": 9,
+    "options": {
+      "collection": "shifts_assignments",
+      "field": "shifts_shift",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "shifts_from": {
+              "_between": [
+                "2025-10-06",
+                "2025-11-02"
+              ]
+            }
+          },
+          {
+            "shifts_shift": {
+              "shifts_is_regular": {
+                "_eq": true
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#2CB3A5"
+        }
+      ]
+    },
+    "_syncId": "54c89c25-8bcf-4b31-bab0-38ddb0f647e7"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": null,
+    "icon": null,
+    "color": null,
+    "show_header": false,
+    "note": null,
+    "type": "metric",
+    "position_x": 102,
+    "position_y": 19,
+    "width": 33,
+    "height": 13,
+    "options": {
+      "collection": "memberships",
+      "field": "memberships_shares",
+      "function": "sum",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_eq": "in-cancellation"
+            }
+          },
+          {
+            "memberships_date_cancelled": {
+              "_nnull": true
+            }
+          }
+        ]
+      }
+    },
+    "_syncId": "56b0d7e9-dd96-4665-b6bd-67b5a4d1da70"
+  },
+  {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Befreite Mitglieder: Meidling",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 66,
+    "position_y": 9,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_status": {
+              "_eq": "approved"
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Aktiv"
+            }
+          },
+          {
+            "shifts_user_type": {
+              "_eq": "exempt"
+            }
+          },
+          {
+            "memberships_user": {
+              "memberships_postcode": {
+                "_contains": "1120"
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "60384406-30f1-450d-92be-0f9174c70eef"
+  },
+  {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Schichtverpflichtete Mitglieder 1120",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 23,
+    "position_y": 9,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_status": {
+              "_eq": "approved"
+            }
+          },
+          {
+            "shifts_user_type": {
+              "_in": [
+                "regular",
+                "jumper"
+              ]
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Aktiv"
+            }
+          },
+          {
+            "memberships_user": {
+              "memberships_postcode": {
+                "_contains": "1120"
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "62232370-2c52-45f9-81f1-ee964ffb5592"
+  },
+  {
     "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
     "name": null,
     "icon": null,
@@ -809,6 +1788,46 @@
       }
     },
     "_syncId": "6507a393-fa8d-4b26-a9b9-941817b19413"
+  },
+  {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Anzahl Schichten:Personen",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 39,
+    "width": 20,
+    "height": 9,
+    "options": {
+      "collection": "shifts_shifts",
+      "field": "shifts_slots",
+      "function": "sum",
+      "filter": {
+        "_and": [
+          {
+            "shifts_from": {
+              "_gt": "2025-10-05"
+            }
+          },
+          {
+            "shifts_is_regular": {
+              "_eq": true
+            }
+          },
+          {
+            "shifts_category_2": {
+              "name": {
+                "_contains": "Normal"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "_syncId": "6be2a260-5890-4f60-bf43-615b7259fe88"
   },
   {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
@@ -1008,6 +2027,16 @@
           {
             "memberships_type": {
               "_eq": "Aktiv"
+            }
+          },
+          {
+            "memberships_status": {
+              "_eq": "approved"
+            }
+          },
+          {
+            "shifts_user_type": {
+              "_eq": "regular"
             }
           }
         ]
@@ -1212,6 +2241,46 @@
     "_syncId": "8747641b-cb63-4c8e-9261-e0fc867443dc"
   },
   {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": null,
+    "icon": null,
+    "color": null,
+    "show_header": false,
+    "note": null,
+    "type": "bar-chart",
+    "position_x": 2,
+    "position_y": 97,
+    "width": 53,
+    "height": 39,
+    "options": {
+      "collection": "memberships",
+      "xAxis": "memberships_shares",
+      "function": "count",
+      "yAxis": "memberships_shares",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_in": [
+                "approved",
+                "in-exclusion"
+              ]
+            }
+          },
+          {
+            "memberships_date_approved": {
+              "_lte": "{{stichtag}}"
+            }
+          }
+        ]
+      },
+      "decimals": 0,
+      "sortDirection": "asc",
+      "sortField": "memberships_shares"
+    },
+    "_syncId": "893a1b3c-5593-4fdc-95d7-0f2690018a51"
+  },
+  {
     "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
     "name": "Gekündigte Mitglieder",
     "icon": null,
@@ -1249,6 +2318,95 @@
       ]
     },
     "_syncId": "8a9ff1ad-61ac-4b22-b5ee-fea6d47aeeab"
+  },
+  {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Personen die zumindest eine Schicht gemacht haben",
+    "icon": "switch_account",
+    "color": "#E8007D",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 19,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "shifts_logs",
+      "field": "shifts_membership",
+      "function": "countDistinct",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "shifts_membership": {
+              "memberships_status": {
+                "_eq": "approved"
+              }
+            }
+          },
+          {
+            "shifts_membership": {
+              "shifts_user_type": {
+                "_eq": "regular"
+              }
+            }
+          },
+          {
+            "shifts_membership": {
+              "memberships_type": {
+                "_eq": "Aktiv"
+              }
+            }
+          },
+          {
+            "shifts_score": {
+              "_eq": "+28"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#E8007D"
+        }
+      ],
+      "column": "shifts_membership"
+    },
+    "_syncId": "8bd63612-0bf1-4d7c-8c72-e0f176949dd4"
+  },
+  {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": null,
+    "icon": null,
+    "color": null,
+    "show_header": false,
+    "note": null,
+    "type": "metric",
+    "position_x": 78,
+    "position_y": 3,
+    "width": 34,
+    "height": 10,
+    "options": {
+      "collection": "payments_invoices_entries",
+      "field": "payments_quantity",
+      "sortField": null,
+      "function": "sum",
+      "filter": {
+        "_and": [
+          {
+            "payments_invoice": {
+              "payments_status": {
+                "_eq": "paid"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "_syncId": "95137875-447d-450c-826a-d663954bf13a"
   },
   {
     "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
@@ -1351,6 +2509,54 @@
       "range": "auto"
     },
     "_syncId": "9884edda-7634-40a9-ad7a-6abe4fabdbdb"
+  },
+  {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Schichtverpflichtete Mitglieder",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 9,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_status": {
+              "_eq": "approved"
+            }
+          },
+          {
+            "shifts_user_type": {
+              "_in": [
+                "regular",
+                "jumper"
+              ]
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Aktiv"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "99495467-fd0c-4974-acee-bf475acf7b90"
   },
   {
     "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
@@ -1475,6 +2681,55 @@
       ]
     },
     "_syncId": "9f8caaeb-dff3-4a39-940a-a053c4fa3b33"
+  },
+  {
+    "dashboard": "c936b3bd-901b-41d3-97b3-ef8a83aee628",
+    "name": "Ausgestiegene",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 44,
+    "position_y": 1,
+    "width": 16,
+    "height": 6,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "_or": [
+              {
+                "memberships_date_ended": {
+                  "_gt": "{{ stichtag }}"
+                }
+              },
+              {
+                "memberships_date_ended": {
+                  "_null": true
+                }
+              }
+            ]
+          },
+          {
+            "memberships_date_cancelled": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_status": {
+              "_eq": "in-cancellation"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "9fa25386-0082-4c91-ae96-aaf387d93312"
   },
   {
     "dashboard": "8c98bc24-fcd4-4f7f-ba3d-654372c28b81",
@@ -1657,6 +2912,75 @@
     "_syncId": "a7f2ff3b-9587-4755-80b7-e766fe0fc99c"
   },
   {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "In Schichten aktive NEUE Mitglieder",
+    "icon": "switch_account",
+    "color": "#E8007D",
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 200,
+    "position_y": 15,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "shifts_assignments",
+      "field": "shifts_membership",
+      "function": "countDistinct",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "shifts_membership": {
+              "memberships_date_approved": {
+                "_gt": "2025-10-05"
+              }
+            }
+          },
+          {
+            "shifts_membership": {
+              "memberships_status": {
+                "_eq": "approved"
+              }
+            }
+          },
+          {
+            "shifts_membership": {
+              "shifts_user_type": {
+                "_eq": "regular"
+              }
+            }
+          },
+          {
+            "shifts_membership": {
+              "memberships_type": {
+                "_eq": "Aktiv"
+              }
+            }
+          },
+          {
+            "shifts_shift": {
+              "shifts_category_2": {
+                "name": {
+                  "_contains": "Normal"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#E8007D"
+        }
+      ],
+      "column": "shifts_membership"
+    },
+    "_syncId": "a90cbe9f-28db-47ef-87fa-5d1f8d845fe5"
+  },
+  {
     "dashboard": "a5061cae-2e64-4b77-ae26-38e683a60bbb",
     "name": "MG Aktiv",
     "icon": null,
@@ -1725,6 +3049,41 @@
     "_syncId": "adab6672-1944-43b8-9d4d-f73fa8ca755f"
   },
   {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Aktuelle Festschicht-Anmedlungen ",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 23,
+    "position_y": 39,
+    "width": 20,
+    "height": 9,
+    "options": {
+      "collection": "shifts_assignments",
+      "field": "shifts_shift",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "shifts_is_regular": {
+              "_eq": true
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#FFDB00"
+        }
+      ]
+    },
+    "_syncId": "ae8dec9c-088d-4d54-b0df-4bac75c08982"
+  },
+  {
     "dashboard": "a5061cae-2e64-4b77-ae26-38e683a60bbb",
     "name": "MG Investierend",
     "icon": null,
@@ -1771,6 +3130,42 @@
     "_syncId": "b0975ce2-27ab-4616-9e71-b70d9c667b8a"
   },
   {
+    "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
+    "name": null,
+    "icon": null,
+    "color": null,
+    "show_header": false,
+    "note": null,
+    "type": "metric",
+    "position_x": 113,
+    "position_y": 2,
+    "width": 33,
+    "height": 15,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "memberships_status": {
+              "_eq": "in-cancellation"
+            }
+          },
+          {
+            "memberships_date_cancelled": {
+              "_between": [
+                "2025-02-01",
+                "2026-02-01"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "_syncId": "b215fc8a-3dde-48c5-9034-563a70bb5c0a"
+  },
+  {
     "dashboard": "d0a60009-a2a3-4704-b8fb-e9783ccc90b6",
     "name": "Anteile Aufgenommen",
     "icon": "switch_account",
@@ -1813,6 +3208,118 @@
       "conditionalFormatting": null
     },
     "_syncId": "b47024e7-7b7e-4f56-8480-60f45946f976"
+  },
+  {
+    "dashboard": "895fb0b5-42b9-46d1-8cc3-6458d9f7579d",
+    "name": null,
+    "icon": null,
+    "color": null,
+    "show_header": false,
+    "note": null,
+    "type": "metric",
+    "position_x": 1,
+    "position_y": 1,
+    "width": 12,
+    "height": 6,
+    "options": {
+      "collection": "memberships",
+      "sortField": "shifts_can_be_coordinator",
+      "xAxis": "shifts_can_be_coordinator",
+      "limit": 128,
+      "function": "count",
+      "field": "shifts_can_be_coordinator"
+    },
+    "_syncId": "b6d577cf-6e4e-4ad2-a609-6f06f075a2a0"
+  },
+  {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Anmeldungen November Zyklus",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 23,
+    "position_y": 49,
+    "width": 20,
+    "height": 9,
+    "options": {
+      "collection": "shifts_assignments",
+      "field": "shifts_shift",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "shifts_from": {
+              "_between": [
+                "2025-11-01",
+                "2025-11-30"
+              ]
+            }
+          },
+          {
+            "shifts_shift": {
+              "shifts_is_regular": {
+                "_eq": true
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#2CB3A5"
+        }
+      ]
+    },
+    "_syncId": "bac2b998-e1ed-495b-b253-b86c65b12942"
+  },
+  {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Befreite Mitglieder ",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 45,
+    "position_y": 9,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_status": {
+              "_eq": "approved"
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Aktiv"
+            }
+          },
+          {
+            "shifts_user_type": {
+              "_eq": "exempt"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "bc20d4d2-4ac1-43bb-b40d-be858b1c0a66"
   },
   {
     "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
@@ -1897,6 +3404,14 @@
           {
             "memberships_date_applied": {
               "_lte": "{{stichtag}}"
+            }
+          },
+          {
+            "memberships_status": {
+              "_in": [
+                "applied",
+                "approved"
+              ]
             }
           }
         ]
@@ -2328,6 +3843,65 @@
     "_syncId": "eb9f7535-6aff-4859-afd9-e5a4b78ba769"
   },
   {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "gesperrte Mitglieder",
+    "icon": "switch_account",
+    "color": "#E35169",
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 22,
+    "position_y": 73,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "shifts_counter",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "memberships_date_approved": {
+              "_lte": "{{ stichtag }}"
+            }
+          },
+          {
+            "memberships_status": {
+              "_eq": "approved"
+            }
+          },
+          {
+            "shifts_user_type": {
+              "_in": [
+                "regular",
+                "jumper"
+              ]
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Aktiv"
+            }
+          },
+          {
+            "shifts_counter": {
+              "_lt": "-27"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#E35169"
+        }
+      ]
+    },
+    "_syncId": "f608e41c-87a8-409d-ba54-de8f8be24453"
+  },
+  {
     "dashboard": "54976105-ca62-4135-9d4d-1c5c12ed7e34",
     "name": "Stichtag",
     "icon": null,
@@ -2346,6 +3920,51 @@
       "defaultValue": null
     },
     "_syncId": "f941419e-a237-454f-a0ed-11f2b84f2b0d"
+  },
+  {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Anmeldungen März Zyklus",
+    "icon": null,
+    "color": null,
+    "show_header": true,
+    "note": null,
+    "type": "metric",
+    "position_x": 45,
+    "position_y": 59,
+    "width": 20,
+    "height": 9,
+    "options": {
+      "collection": "shifts_assignments",
+      "field": "shifts_shift",
+      "function": "count",
+      "filter": {
+        "_and": [
+          {
+            "shifts_from": {
+              "_between": [
+                "2026-02-22",
+                "2026-03-22"
+              ]
+            }
+          },
+          {
+            "shifts_shift": {
+              "shifts_is_regular": {
+                "_eq": true
+              }
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": [
+        {
+          "operator": ">=",
+          "value": 0,
+          "color": "#2CB3A5"
+        }
+      ]
+    },
+    "_syncId": "fb8b9f9b-38f5-4043-a876-40a49b4c151a"
   },
   {
     "dashboard": "65418522-461f-4ba4-a2bf-337f4198aa76",
@@ -2381,5 +4000,53 @@
       ]
     },
     "_syncId": "fc2c74f8-3d1f-4e47-94e7-55a0777bc06a"
+  },
+  {
+    "dashboard": "da0bfbdd-241d-4a53-9aa3-27855f1ac2b4",
+    "name": "Schichtverpflichtete ALTE Mitglieder",
+    "icon": "switch_account",
+    "color": null,
+    "show_header": true,
+    "note": "Status: Angenommen oder im Austritt/Ausschluss",
+    "type": "metric",
+    "position_x": 175,
+    "position_y": 6,
+    "width": 20,
+    "height": 8,
+    "options": {
+      "collection": "memberships",
+      "field": "id",
+      "function": "count",
+      "sortField": null,
+      "filter": {
+        "_and": [
+          {
+            "memberships_date_approved": {
+              "_lte": "2025-10-05"
+            }
+          },
+          {
+            "memberships_status": {
+              "_eq": "approved"
+            }
+          },
+          {
+            "shifts_user_type": {
+              "_in": [
+                "regular",
+                "jumper"
+              ]
+            }
+          },
+          {
+            "memberships_type": {
+              "_eq": "Aktiv"
+            }
+          }
+        ]
+      },
+      "conditionalFormatting": null
+    },
+    "_syncId": "fe462f36-f080-478c-9f9a-4fb120b9254c"
   }
 ]
