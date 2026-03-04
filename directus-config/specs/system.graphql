@@ -264,9 +264,9 @@ type Subscription {
   directus_policies_mutated(event: EventEnum): directus_policies_mutated
   directus_access_mutated(event: EventEnum): directus_access_mutated
   settings_hidden_mutated(event: EventEnum): settings_hidden_mutated
+  bedarfsmeldung_solitopf_mutated(event: EventEnum): bedarfsmeldung_solitopf_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
   memberships_mutated(event: EventEnum): memberships_mutated
-  bedarfsmeldung_solitopf_mutated(event: EventEnum): bedarfsmeldung_solitopf_mutated
   collectivo_tags_mutated(event: EventEnum): collectivo_tags_mutated
   collectivo_tags_directus_users_mutated(event: EventEnum): collectivo_tags_directus_users_mutated
   collectivo_tiles_mutated(event: EventEnum): collectivo_tiles_mutated
@@ -376,6 +376,10 @@ type bedarfsmeldung_solitopf {
   user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   weitere_unterstuetzung: Boolean!
+
+  """Tag der ersten Auszahlung"""
+  first_payout: Date
+  first_payout_func: date_functions
 }
 
 type bedarfsmeldung_solitopf_mutated {
@@ -2571,6 +2575,8 @@ input bedarfsmeldung_solitopf_filter {
   user_created: directus_users_filter
   user_updated: directus_users_filter
   weitere_unterstuetzung: boolean_filter_operators
+  first_payout: date_filter_operators
+  first_payout_func: date_function_filter_operators
   _and: [bedarfsmeldung_solitopf_filter]
   _or: [bedarfsmeldung_solitopf_filter]
 }
@@ -2589,6 +2595,8 @@ input bedarfsmeldung_solitopf_quantifier_filter {
   user_created: directus_users_filter
   user_updated: directus_users_filter
   weitere_unterstuetzung: boolean_filter_operators
+  first_payout: date_filter_operators
+  first_payout_func: date_function_filter_operators
   _and: [bedarfsmeldung_solitopf_filter]
   _or: [bedarfsmeldung_solitopf_filter]
   _some: bedarfsmeldung_solitopf_filter
@@ -2725,6 +2733,9 @@ input create_bedarfsmeldung_solitopf_input {
   user_created: create_directus_users_input
   user_updated: create_directus_users_input
   weitere_unterstuetzung: Boolean!
+
+  """Tag der ersten Auszahlung"""
+  first_payout: Date
 }
 
 input create_collectivo_tags_directus_users_input {
@@ -4613,6 +4624,9 @@ input update_bedarfsmeldung_solitopf_input {
   user_created: update_directus_users_input
   user_updated: update_directus_users_input
   weitere_unterstuetzung: Boolean
+
+  """Tag der ersten Auszahlung"""
+  first_payout: Date
 }
 
 input update_collectivo_tags_directus_users_input {

@@ -5,14 +5,14 @@ type Query {
   directus_sync_id_map_by_version(version: String!, id: ID!): version_directus_sync_id_map
   settings_hidden(version: String): settings_hidden
   settings_hidden_by_version(version: String!): version_settings_hidden
-  memberships(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships!]!
-  memberships_by_id(id: ID!, version: String): memberships
-  memberships_aggregated(groupBy: [String], filter: memberships_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_aggregated!]!
-  memberships_by_version(version: String!, id: ID!): version_memberships
   bedarfsmeldung_solitopf(filter: bedarfsmeldung_solitopf_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [bedarfsmeldung_solitopf!]!
   bedarfsmeldung_solitopf_by_id(id: ID!, version: String): bedarfsmeldung_solitopf
   bedarfsmeldung_solitopf_aggregated(groupBy: [String], filter: bedarfsmeldung_solitopf_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [bedarfsmeldung_solitopf_aggregated!]!
   bedarfsmeldung_solitopf_by_version(version: String!, id: ID!): version_bedarfsmeldung_solitopf
+  memberships(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [memberships!]!
+  memberships_by_id(id: ID!, version: String): memberships
+  memberships_aggregated(groupBy: [String], filter: memberships_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [memberships_aggregated!]!
+  memberships_by_version(version: String!, id: ID!): version_memberships
   collectivo_tags(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [collectivo_tags!]!
   collectivo_tags_by_id(id: ID!, version: String): collectivo_tags
   collectivo_tags_aggregated(groupBy: [String], filter: collectivo_tags_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [collectivo_tags_aggregated!]!
@@ -120,10 +120,10 @@ type Query {
 type Mutation {
   create_directus_sync_id_map_items(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_sync_id_map_input!]): [directus_sync_id_map!]!
   create_directus_sync_id_map_item(data: create_directus_sync_id_map_input!): directus_sync_id_map
-  create_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_input!]): [memberships!]!
-  create_memberships_item(data: create_memberships_input!): memberships
   create_bedarfsmeldung_solitopf_items(filter: bedarfsmeldung_solitopf_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_bedarfsmeldung_solitopf_input!]): [bedarfsmeldung_solitopf!]!
   create_bedarfsmeldung_solitopf_item(data: create_bedarfsmeldung_solitopf_input!): bedarfsmeldung_solitopf
+  create_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_memberships_input!]): [memberships!]!
+  create_memberships_item(data: create_memberships_input!): memberships
   create_collectivo_tags_items(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_collectivo_tags_input!]): [collectivo_tags!]!
   create_collectivo_tags_item(data: create_collectivo_tags_input!): collectivo_tags
   create_collectivo_tags_directus_users_items(filter: collectivo_tags_directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_collectivo_tags_directus_users_input!]): [collectivo_tags_directus_users!]!
@@ -178,12 +178,12 @@ type Mutation {
   update_directus_sync_id_map_batch(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_sync_id_map_input!]): [directus_sync_id_map!]!
   update_directus_sync_id_map_item(id: ID!, data: update_directus_sync_id_map_input!): directus_sync_id_map
   update_settings_hidden(data: update_settings_hidden_input!): settings_hidden
-  update_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_input!): [memberships!]!
-  update_memberships_batch(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_input!]): [memberships!]!
-  update_memberships_item(id: ID!, data: update_memberships_input!): memberships
   update_bedarfsmeldung_solitopf_items(filter: bedarfsmeldung_solitopf_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_bedarfsmeldung_solitopf_input!): [bedarfsmeldung_solitopf!]!
   update_bedarfsmeldung_solitopf_batch(filter: bedarfsmeldung_solitopf_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_bedarfsmeldung_solitopf_input!]): [bedarfsmeldung_solitopf!]!
   update_bedarfsmeldung_solitopf_item(id: ID!, data: update_bedarfsmeldung_solitopf_input!): bedarfsmeldung_solitopf
+  update_memberships_items(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_memberships_input!): [memberships!]!
+  update_memberships_batch(filter: memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_memberships_input!]): [memberships!]!
+  update_memberships_item(id: ID!, data: update_memberships_input!): memberships
   update_collectivo_tags_items(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_collectivo_tags_input!): [collectivo_tags!]!
   update_collectivo_tags_batch(filter: collectivo_tags_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_collectivo_tags_input!]): [collectivo_tags!]!
   update_collectivo_tags_item(id: ID!, data: update_collectivo_tags_input!): collectivo_tags
@@ -262,10 +262,10 @@ type Mutation {
   update_solitopf(data: update_solitopf_input!): solitopf
   delete_directus_sync_id_map_items(ids: [ID]!): delete_many
   delete_directus_sync_id_map_item(id: ID!): delete_one
-  delete_memberships_items(ids: [ID]!): delete_many
-  delete_memberships_item(id: ID!): delete_one
   delete_bedarfsmeldung_solitopf_items(ids: [ID]!): delete_many
   delete_bedarfsmeldung_solitopf_item(id: ID!): delete_one
+  delete_memberships_items(ids: [ID]!): delete_many
+  delete_memberships_item(id: ID!): delete_one
   delete_collectivo_tags_items(ids: [ID]!): delete_many
   delete_collectivo_tags_item(id: ID!): delete_one
   delete_collectivo_tags_directus_users_items(ids: [ID]!): delete_many
@@ -341,9 +341,9 @@ type Subscription {
   directus_policies_mutated(event: EventEnum): directus_policies_mutated
   directus_access_mutated(event: EventEnum): directus_access_mutated
   settings_hidden_mutated(event: EventEnum): settings_hidden_mutated
+  bedarfsmeldung_solitopf_mutated(event: EventEnum): bedarfsmeldung_solitopf_mutated
   directus_users_mutated(event: EventEnum): directus_users_mutated
   memberships_mutated(event: EventEnum): memberships_mutated
-  bedarfsmeldung_solitopf_mutated(event: EventEnum): bedarfsmeldung_solitopf_mutated
   collectivo_tags_mutated(event: EventEnum): collectivo_tags_mutated
   collectivo_tags_directus_users_mutated(event: EventEnum): collectivo_tags_directus_users_mutated
   collectivo_tiles_mutated(event: EventEnum): collectivo_tiles_mutated
@@ -431,6 +431,10 @@ type bedarfsmeldung_solitopf {
   user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   weitere_unterstuetzung: Boolean!
+
+  """Tag der ersten Auszahlung"""
+  first_payout: Date
+  first_payout_func: date_functions
 }
 
 type bedarfsmeldung_solitopf_aggregated {
@@ -457,6 +461,9 @@ type bedarfsmeldung_solitopf_aggregated_count {
   user_created: Int
   user_updated: Int
   weitere_unterstuetzung: Int
+
+  """Tag der ersten Auszahlung"""
+  first_payout: Int
 }
 
 type bedarfsmeldung_solitopf_aggregated_fields {
@@ -2673,6 +2680,9 @@ type version_bedarfsmeldung_solitopf {
   user_created: JSON
   user_updated: JSON
   weitere_unterstuetzung: Boolean
+
+  """Tag der ersten Auszahlung"""
+  first_payout: Date
 }
 
 """"""
@@ -3119,6 +3129,8 @@ input bedarfsmeldung_solitopf_filter {
   user_created: directus_users_filter
   user_updated: directus_users_filter
   weitere_unterstuetzung: boolean_filter_operators
+  first_payout: date_filter_operators
+  first_payout_func: date_function_filter_operators
   _and: [bedarfsmeldung_solitopf_filter]
   _or: [bedarfsmeldung_solitopf_filter]
 }
@@ -3137,6 +3149,8 @@ input bedarfsmeldung_solitopf_quantifier_filter {
   user_created: directus_users_filter
   user_updated: directus_users_filter
   weitere_unterstuetzung: boolean_filter_operators
+  first_payout: date_filter_operators
+  first_payout_func: date_function_filter_operators
   _and: [bedarfsmeldung_solitopf_filter]
   _or: [bedarfsmeldung_solitopf_filter]
   _some: bedarfsmeldung_solitopf_filter
@@ -3273,6 +3287,9 @@ input create_bedarfsmeldung_solitopf_input {
   user_created: create_directus_users_input
   user_updated: create_directus_users_input
   weitere_unterstuetzung: Boolean!
+
+  """Tag der ersten Auszahlung"""
+  first_payout: Date
 }
 
 input create_collectivo_tags_directus_users_input {
@@ -5063,6 +5080,9 @@ input update_bedarfsmeldung_solitopf_input {
   user_created: update_directus_users_input
   user_updated: update_directus_users_input
   weitere_unterstuetzung: Boolean
+
+  """Tag der ersten Auszahlung"""
+  first_payout: Date
 }
 
 input update_collectivo_tags_directus_users_input {

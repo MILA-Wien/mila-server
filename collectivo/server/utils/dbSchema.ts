@@ -211,6 +211,7 @@ export interface BedarfsmeldungSolitopf {
   date_created: string;
   status: "warteliste" | "angenommen" | "abgelehnt";
   anmerkung: string;
+  first_payout: string | null;
 }
 
 export interface ProductRequests {
