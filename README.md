@@ -44,7 +44,7 @@ Collectivo uses [directus-sync](https://github.com/tractr/directus-sync) to appl
 Updating the database schema
 
 - Make changes to the database schema on your local system
-- Run `npx directus-sync pull` to update the database schema in the repository
+- Run `npx directus-sync pull && node sort-directus-config.mjs` to update the database schema in the repository
 - Make a database backup of the production system (see below)
 - Run `npx directus-sync push` (credentials will be taken from .env)
 
