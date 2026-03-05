@@ -49,3 +49,6 @@ node_modules
 
 # ignore cache
 .eslintcache
+
+# directus-sync generated API specs (informational only, not used by push)
+directus-config/specs/

@@ -33,7 +33,7 @@ setPageTitle(t("Sortiment"));
         {{ t("Hier kannst du ausgewählte Produkte vorbestellen.") }}
       </p>
       <div class="flex flex-wrap gap-4">
-        <UButton color="green" to="/sortiment/vorbestellen">
+        <UButton color="green" to="/sortiment/vorbestellen" target="_blank">
           {{ t("Zum Webshop für Vorbestellung") }}
         </UButton>
       </div>
