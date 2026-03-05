@@ -99,7 +99,7 @@ const { data: stats } = await useFetch("/api/solitopf/stats");
     <p>{{ t("Verfügbares Geld im Soli-Topf") }}: <strong>{{ Number(stats.funds_available).toFixed(2) }} €</strong></p>
     <p>{{ t("Bisher gespendet") }}: <strong>{{ Number(stats.funds_received).toFixed(2) }} €</strong></p>
     <p>{{ t("Bisher ausbezahlt") }}: <strong>{{ Number(stats.funds_distributed).toFixed(2) }} €</strong></p>
-    <p>{{ t("Bisher haben") }} <strong>{{ stats.receiving }}</strong> {{ t("Mitglieder Unterstützung bekommen oder erhalten aktuell Unterstützung") }}.</p>
+    <p>{{ t("Aktuell erhalten") }} <strong>{{ stats.receiving }}</strong> {{ t("Mitglieder Unterstützung") }}.</p>
     <p>{{ t("Auf der Warteliste") }}: <strong>{{ stats.waiting }}</strong> {{ t("Mitglied(er)") }}.</p>
   </div>
   </CollectivoCard>
@@ -164,8 +164,8 @@ en:
   "Bisher gespendet": "Donations so far"
   "Bisher ausbezahlt": "Pay-outs so far"
   "Gemeinsam erreicht": "Achieved Together"
-  "Bisher haben": "Up to now,"
-  "Mitglieder Unterstützung bekommen oder erhalten aktuell Unterstützung": "members have received or are receiving support"
+  "Aktuell erhalten": "Currently"
+  "Mitglieder Unterstützung": "members are receiving support"
   "Auf der Warteliste": "On the waiting list"
   "Mitglied(er)": "members"
   "Meine Soli-Topf Anfragen": "My solidarity fund requests"

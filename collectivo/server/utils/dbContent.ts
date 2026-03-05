@@ -78,7 +78,15 @@ export async function dbGetSolitopfStats() {
     directus.request(
       aggregate("bedarfsmeldung_solitopf", {
         aggregate: { countDistinct: "membership" },
-        query: { filter: { status: { _eq: "angenommen" } } },
+        query: {
+          filter: {
+            _and: [
+              { status: { _eq: "angenommen" } },
+              { first_payout: { _nnull: true } },
+              { first_payout: { _gte: "$NOW(-6 months)" } },
+            ],
+          },
+        },
       }),
     ),
     directus.request(
