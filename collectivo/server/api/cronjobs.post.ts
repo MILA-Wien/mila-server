@@ -2,6 +2,7 @@
 // Only runs cronjob for past days since last successful cronjob
 
 import { sendShiftReminders } from "../utils/shiftsReminder";
+import { sendShoppingExpirationWarnings } from "../utils/shoppingExpirationWarning";
 
 export default defineEventHandler(async (event) => {
   verifyCollectivoApiToken(event);
@@ -51,6 +52,16 @@ async function runCronjobs(force_yesterday: boolean) {
     if (settings.shift_point_system) {
       await decrement_shifts_counter(holidays);
     }
+  }
+  var warning_shift_counter = -14; // send out shopping expiration warnings when shift counter is at -14
+  for (const day of days_since_last_cronjob) {
+    // Job 4
+    try {
+      await sendShoppingExpirationWarnings(warning_shift_counter);
+    } catch (e) {
+      console.error("Error in sendShoppingExpirationWarnings", e);
+    }
+    --warning_shift_counter;
   }
 
   // Update last cronjob timestamp
