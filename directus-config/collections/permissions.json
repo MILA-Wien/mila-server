@@ -2540,7 +2540,7 @@
     "_syncId": "9049198d-88bb-4f18-8ac0-fc98ef633a60"
   },
   {
-    "collection": "solitopf",
+    "collection": "collectivo_tags_directus_users",
     "action": "read",
     "permissions": null,
     "validation": null,
@@ -2549,11 +2549,11 @@
       "*"
     ],
     "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
-    "_syncId": "550a037d-72ee-46c8-88c3-9292dd0754e8"
+    "_syncId": "4ae47baf-cbaf-44a8-8f10-51af3cd8eee4"
   },
   {
-    "collection": "solitopf",
-    "action": "share",
+    "collection": "collectivo_tags",
+    "action": "read",
     "permissions": null,
     "validation": null,
     "presets": null,
@@ -2561,11 +2561,11 @@
       "*"
     ],
     "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
-    "_syncId": "5de76926-802e-4e37-8f7f-6514911239f6"
+    "_syncId": "bec7f41b-caf9-4684-b158-d8f5db7be120"
   },
   {
-    "collection": "solitopf",
-    "action": "update",
+    "collection": "directus_users",
+    "action": "read",
     "permissions": null,
     "validation": null,
     "presets": null,
@@ -2573,7 +2573,151 @@
       "*"
     ],
     "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
-    "_syncId": "4e012a6d-1e49-473a-bde5-13d1bf58f600"
+    "_syncId": "8014b174-c568-4d45-99d5-1605adb304b3"
+  },
+  {
+    "collection": "junction_directus_users_files",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "e86bafef-0796-4e01-962d-a5bd62c9e9c4"
+  },
+  {
+    "collection": "memberships_coshoppers",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "3cf45691-a68a-415f-9651-6022afe40704"
+  },
+  {
+    "collection": "memberships_memberships_coshoppers_1",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "48f525d4-d035-4bf4-a58a-697c58b1543e"
+  },
+  {
+    "collection": "memberships_memberships_coshoppers",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "f2a72329-254c-4280-b9f9-46bcd20e784d"
+  },
+  {
+    "collection": "memberships_shifts_categories",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "dc2c4389-054c-4e4b-b427-c9c12ff45486"
+  },
+  {
+    "collection": "memberships",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "0cc6456e-b6fd-4c38-94cd-9206ec1d0411"
+  },
+  {
+    "collection": "shifts_absences",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "846a97f7-b994-4d62-ab6d-08c4a183aa19"
+  },
+  {
+    "collection": "shifts_assignments",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "177995c0-c220-494b-814a-97ab1b53b146"
+  },
+  {
+    "collection": "shifts_categories",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "a870e668-aaa9-4579-97d2-4cd11dea2cee"
+  },
+  {
+    "collection": "shifts_holidays_public",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "bb9d2cbe-20ef-449c-96c3-63b874be452b"
+  },
+  {
+    "collection": "shifts_logs",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "b4f68808-e724-4637-8815-888eeef377b9"
+  },
+  {
+    "collection": "shifts_shifts",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
+    "_syncId": "9c6fd4c4-3e20-46ad-979c-7285ba8df139"
   },
   {
     "collection": "directus_comments",
@@ -3379,18 +3523,6 @@
     "_syncId": "a875138f-3fea-431d-a30a-01c3151750a3"
   },
   {
-    "collection": "solitopf",
-    "action": "read",
-    "permissions": null,
-    "validation": null,
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
-    "_syncId": "b28ecea8-ca04-48ca-a631-f7c3cb9e2e9d"
-  },
-  {
     "collection": "directus_activity",
     "action": "read",
     "permissions": null,
@@ -3415,6 +3547,42 @@
     "_syncId": "826f6c06-0322-4a7b-92d0-5737cc82bc48"
   },
   {
+    "collection": "memberships_coshoppers",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "9d7d208e-3a5b-4ab7-9ff7-6de1903fbde5",
+    "_syncId": "dc53c0d3-122b-4137-8579-51414bfe0e79"
+  },
+  {
+    "collection": "memberships_memberships_coshoppers_1",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "9d7d208e-3a5b-4ab7-9ff7-6de1903fbde5",
+    "_syncId": "ddfcd59b-c924-4a94-a237-de7bfd96045b"
+  },
+  {
+    "collection": "memberships_memberships_coshoppers",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "9d7d208e-3a5b-4ab7-9ff7-6de1903fbde5",
+    "_syncId": "7dc7083e-0eea-45cd-b9f4-33f2958a3a50"
+  },
+  {
     "collection": "memberships",
     "action": "read",
     "permissions": null,
@@ -3425,5 +3593,17 @@
     ],
     "policy": "9d7d208e-3a5b-4ab7-9ff7-6de1903fbde5",
     "_syncId": "1faa7417-7ebd-4819-b1dd-672410e1e941"
+  },
+  {
+    "collection": "shifts_absences",
+    "action": "read",
+    "permissions": null,
+    "validation": null,
+    "presets": null,
+    "fields": [
+      "*"
+    ],
+    "policy": "9d7d208e-3a5b-4ab7-9ff7-6de1903fbde5",
+    "_syncId": "f9b570fd-7281-4e64-a6ae-7af8e49c3947"
   }
 ]

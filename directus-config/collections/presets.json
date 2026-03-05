@@ -1,5 +1,621 @@
 [
   {
+    "bookmark": "Verpasste Schichten",
+    "role": null,
+    "collection": "shifts_logs",
+    "search": null,
+    "layout": null,
+    "layout_query": {
+      "tabular": {
+        "page": 1,
+        "sort": [
+          "-shifts_date"
+        ]
+      }
+    },
+    "layout_options": null,
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "shifts_score": {
+            "_eq": "0"
+          }
+        },
+        {
+          "shifts_shift": {
+            "shifts_category_2": {
+              "name": {
+                "_empty": true
+              }
+            }
+          }
+        },
+        {
+          "shifts_date": {
+            "_gt": "2025-10-05"
+          }
+        }
+      ]
+    },
+    "icon": "engineering",
+    "color": "#FF0000",
+    "_syncId": "21dd7b88-1da6-47cb-b021-45344cd5a0eb"
+  },
+  {
+    "bookmark": "Miteink. zu vergeben",
+    "role": null,
+    "collection": "memberships",
+    "search": "",
+    "layout": null,
+    "layout_query": {
+      "tabular": {
+        "page": 1,
+        "fields": [
+          "id",
+          "memberships_status",
+          "memberships_type",
+          "memberships_user",
+          "memberships_user.last_name"
+        ]
+      }
+    },
+    "layout_options": null,
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "coshoppers": {
+            "memberships_id": {
+              "coshoppers": {
+                "memberships_coshoppers_id": {
+                  "membership_card_id": {
+                    "_contains": "zu vergeben"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "icon": "exposure_plus_1",
+    "color": "#FFA439",
+    "_syncId": "46b72f92-ceaa-4b34-9543-2519e7079529"
+  },
+  {
+    "bookmark": "Festschicht",
+    "role": null,
+    "collection": "shifts_assignments",
+    "search": null,
+    "layout": null,
+    "layout_query": {
+      "tabular": {
+        "page": 1
+      }
+    },
+    "layout_options": {
+      "tabular": {
+        "widths": {
+          "shifts_from": 276.60003662109375,
+          "shifts_membership": 466
+        }
+      }
+    },
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "shifts_from": {
+            "_gt": "2025-10-05"
+          }
+        },
+        {
+          "shifts_is_regular": {
+            "_eq": true
+          }
+        },
+        {
+          "shifts_membership": {
+            "memberships_user": {
+              "last_name": {
+                "_contains": null
+              }
+            }
+          }
+        }
+      ]
+    },
+    "icon": "calendar_view_month",
+    "color": "#FF8080",
+    "_syncId": "60b79f9c-d1ef-4dc8-823f-d3fe1c2b84db"
+  },
+  {
+    "bookmark": "Käse",
+    "role": null,
+    "collection": "shifts_assignments",
+    "search": "",
+    "layout": null,
+    "layout_query": {
+      "tabular": {
+        "page": 1
+      }
+    },
+    "layout_options": null,
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "shifts_from": {
+            "_between": [
+              null
+            ]
+          }
+        },
+        {
+          "shifts_membership": {
+            "shifts_assignments": {
+              "shifts_shift": {
+                "shifts_name": {
+                  "_contains": "Käse"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "icon": "fastfood",
+    "color": "#FFC23B",
+    "_syncId": "86a54a4e-0260-4763-ad17-f9168256d581"
+  },
+  {
+    "bookmark": "Im Ausstieg",
+    "role": null,
+    "collection": "memberships",
+    "search": "",
+    "layout": null,
+    "layout_query": {
+      "tabular": {
+        "page": 1,
+        "limit": 25,
+        "fields": [
+          "id",
+          "memberships_status",
+          "memberships_user",
+          "memberships_shares",
+          "memberships_date_applied",
+          "memberships_date_cancelled"
+        ],
+        "sort": [
+          "-memberships_date_cancelled"
+        ]
+      }
+    },
+    "layout_options": {
+      "tabular": {
+        "widths": {
+          "memberships_user": 289,
+          "memberships_date_applied": 264
+        }
+      }
+    },
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "memberships_status": {
+            "_eq": "in-cancellation"
+          }
+        }
+      ]
+    },
+    "icon": "sports_score",
+    "color": "#FF0000",
+    "_syncId": "8a9995bd-8632-4ac4-bf35-c907ea565e8c"
+  },
+  {
+    "bookmark": "MG ohne Karte",
+    "role": null,
+    "collection": "memberships",
+    "search": null,
+    "layout": "tabular",
+    "layout_query": {
+      "tabular": {
+        "page": 1,
+        "sort": [
+          "-id"
+        ],
+        "fields": [
+          "id",
+          "memberships_user",
+          "memberships_user.last_name",
+          "memberships_user.email",
+          "memberships_card_id",
+          "memberships_user.pronouns",
+          "memberships_user.use_pronouns_on_card"
+        ],
+        "limit": 50
+      }
+    },
+    "layout_options": {
+      "tabular": {
+        "widths": {
+          "memberships_user": 288
+        }
+      }
+    },
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "memberships_card_id": {
+            "_empty": true
+          }
+        },
+        {
+          "memberships_status": {
+            "_eq": "approved"
+          }
+        },
+        {
+          "memberships_type": {
+            "_eq": "Aktiv"
+          }
+        }
+      ]
+    },
+    "icon": "credit_card_off",
+    "color": "#FF0080",
+    "_syncId": "8f2261e1-531c-424c-89fc-5f1747cad760"
+  },
+  {
+    "bookmark": "Aufzunehmen",
+    "role": null,
+    "collection": "memberships",
+    "search": null,
+    "layout": "tabular",
+    "layout_query": {
+      "tabular": {
+        "page": 1
+      }
+    },
+    "layout_options": null,
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "memberships_invoices": {
+            "payments_date_paid": {
+              "_nnull": true
+            }
+          }
+        },
+        {
+          "memberships_status": {
+            "_eq": "applied"
+          }
+        },
+        {
+          "membership_approved_by_board": {
+            "_eq": true
+          }
+        }
+      ]
+    },
+    "icon": "azm",
+    "color": "#FF00FF",
+    "_syncId": "99992596-a9e9-4f80-831d-1afd2bbed4d3"
+  },
+  {
+    "bookmark": "Urlaube",
+    "role": null,
+    "collection": "shifts_absences",
+    "search": "",
+    "layout": null,
+    "layout_query": {
+      "tabular": {
+        "page": 1,
+        "sort": [
+          "-shifts_from"
+        ],
+        "fields": [
+          "shifts_from",
+          "shifts_is_for_all_assignments",
+          "shifts_membership",
+          "shifts_to"
+        ]
+      }
+    },
+    "layout_options": {
+      "tabular": {
+        "widths": {
+          "shifts_from": 281,
+          "shifts_is_for_all_assignments": 367,
+          "shifts_to": 369
+        }
+      }
+    },
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "shifts_is_for_all_assignments": {
+            "_eq": true
+          }
+        }
+      ]
+    },
+    "icon": "sunny_snowing",
+    "color": "#00FF00",
+    "_syncId": "9fca689e-6c70-4bd0-a3c0-4fcff306afcb"
+  },
+  {
+    "bookmark": "Lastschriften ",
+    "role": null,
+    "collection": "payments_invoices_out",
+    "search": null,
+    "layout": null,
+    "layout_query": {
+      "tabular": {
+        "page": 1,
+        "sort": [
+          "-payments_date_issued"
+        ],
+        "fields": [
+          "payments_date_issued",
+          "payments_entries",
+          "payments_recipient_user",
+          "payments_status",
+          "memberships_membership.memberships_status",
+          "lotzapp_id",
+          "memberships_membership",
+          "payments_entries.payments_quantity",
+          "payments_entries.payments_description"
+        ],
+        "limit": 25
+      }
+    },
+    "layout_options": {
+      "tabular": {
+        "widths": {
+          "payments_date_issued": 278,
+          "payments_recipient_user": 352,
+          "lotzapp_id": 144,
+          "memberships_membership": 125
+        }
+      }
+    },
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "payments_status": {
+            "_eq": "pending"
+          }
+        },
+        {
+          "payments_recipient_user": {
+            "payments_type": {
+              "_eq": "sepa"
+            }
+          }
+        }
+      ]
+    },
+    "icon": "nest_clock_farsight_analog",
+    "color": "#FF8000",
+    "_syncId": "a7fee78e-5e82-4097-9c6a-1393c4f3e65f"
+  },
+  {
+    "bookmark": "Widerrufen",
+    "role": null,
+    "collection": "memberships",
+    "search": null,
+    "layout": "tabular",
+    "layout_query": {
+      "tabular": {
+        "page": 1,
+        "sort": [
+          "-id"
+        ],
+        "fields": [
+          "id",
+          "memberships_date_applied",
+          "memberships_user",
+          "memberships_shares",
+          "memberships_type",
+          "memberships_status",
+          "memberships_user.mila_survey_motivation"
+        ]
+      }
+    },
+    "layout_options": {
+      "tabular": {
+        "widths": {
+          "memberships_date_applied": 470,
+          "memberships_user": 310,
+          "memberships_user.mila_survey_motivation": 321.25
+        }
+      }
+    },
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "memberships_status": {
+            "_eq": "widerrufen"
+          }
+        }
+      ]
+    },
+    "icon": "error",
+    "color": "#FF0000",
+    "_syncId": "a88fc7c7-690f-47c0-b881-4c8d2450297b"
+  },
+  {
+    "bookmark": "Miteinkäuferinnen",
+    "role": null,
+    "collection": "memberships",
+    "search": null,
+    "layout": null,
+    "layout_query": {
+      "tabular": {
+        "page": 1,
+        "limit": 25,
+        "fields": [
+          "id",
+          "memberships_status",
+          "coshoppers.memberships_coshoppers_id.last_name",
+          "coshoppers.memberships_coshoppers_id.first_name"
+        ],
+        "sort": [
+          "memberships_user.last_name"
+        ]
+      }
+    },
+    "layout_options": {
+      "tabular": {
+        "widths": {}
+      }
+    },
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "coshoppers": {
+            "memberships_coshoppers_id": {
+              "_nnull": true
+            }
+          }
+        }
+      ]
+    },
+    "icon": "add_shopping_cart",
+    "color": null,
+    "_syncId": "b1be40e8-98e0-4b6a-916d-1852e1ab0fea"
+  },
+  {
+    "bookmark": "Miteinkäuferinnen zu Drucken",
+    "role": null,
+    "collection": "memberships",
+    "search": null,
+    "layout": "tabular",
+    "layout_query": {
+      "tabular": {
+        "page": 1,
+        "sort": [
+          "id"
+        ],
+        "fields": [
+          "id",
+          "coshoppers.memberships_coshoppers_id.first_name",
+          "coshoppers.memberships_coshoppers_id.last_name",
+          "coshoppers.memberships_coshoppers_id.email"
+        ],
+        "limit": 25
+      }
+    },
+    "layout_options": {
+      "tabular": {
+        "widths": {
+          "memberships_user.email": 246
+        }
+      }
+    },
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "coshoppers": {
+            "memberships_coshoppers_id": {
+              "first_name": {
+                "_nempty": true
+              }
+            }
+          }
+        },
+        {
+          "coshoppers": {
+            "memberships_coshoppers_id": {
+              "membership_card_id": {
+                "_empty": true
+              }
+            }
+          }
+        },
+        {
+          "memberships_status": {
+            "_eq": "approved"
+          }
+        }
+      ]
+    },
+    "icon": "bookmark",
+    "color": "#FF8040",
+    "_syncId": "cab8ed3a-caed-447c-9090-37b5310c4ab3"
+  },
+  {
+    "bookmark": "An LotzApp",
+    "role": null,
+    "collection": "payments_invoices_out",
+    "search": null,
+    "layout": null,
+    "layout_query": {
+      "tabular": {
+        "page": 1,
+        "sort": [
+          "-payments_date_issued"
+        ],
+        "fields": [
+          "payments_date_issued",
+          "payments_entries",
+          "payments_recipient_user",
+          "payments_status",
+          "lotzapp_id",
+          "memberships_membership",
+          "payments_entries.payments_quantity",
+          "payments_entries.payments_description"
+        ],
+        "limit": 1000
+      }
+    },
+    "layout_options": {
+      "tabular": {
+        "widths": {
+          "payments_date_issued": 278,
+          "lotzapp_id": 144,
+          "memberships_membership": 125
+        }
+      }
+    },
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "payments_status": {
+            "_eq": "pending"
+          }
+        },
+        {
+          "lotzapp_id": {
+            "_empty": true
+          }
+        },
+        {
+          "payments_entries": {
+            "payments_quantity": {
+              "_nnull": true
+            }
+          }
+        }
+      ]
+    },
+    "icon": "bookmark",
+    "color": null,
+    "_syncId": "cdc46a80-c663-410f-a504-31c1bc1a191d"
+  },
+  {
     "bookmark": "Mitglieder Beworben",
     "role": null,
     "collection": "memberships",
@@ -9,11 +625,12 @@
       "tabular": {
         "page": 1,
         "fields": [
+          "id",
           "memberships_date_applied",
-          "memberships_user",
+          "memberships_user.first_name",
+          "memberships_user.last_name",
           "memberships_shares",
-          "memberships_type",
-          "memberships_status"
+          "memberships_type"
         ],
         "limit": 100
       }
@@ -22,8 +639,8 @@
       "tabular": {
         "widths": {
           "memberships_date_applied": 205,
-          "memberships_type": 166,
-          "memberships_user": 222
+          "memberships_user": 222,
+          "memberships_type": 166
         }
       }
     },
@@ -36,15 +653,15 @@
           }
         },
         {
-          "memberships_date_approved": {
-            "_null": true
+          "membership_approved_by_board": {
+            "_eq": false
           }
         }
       ]
     },
-    "icon": "edit_square",
+    "icon": "signature",
     "color": "#6644FF",
-    "_syncId": "8ab0587d-6ff8-4385-a0eb-ad3837801abe"
+    "_syncId": "d9073828-de03-4870-9685-28dffe307e64"
   },
   {
     "bookmark": "Register",
@@ -102,5 +719,77 @@
     "icon": "app_registration",
     "color": "#FF8080",
     "_syncId": "eb7d0eee-a0ed-4601-b24b-5f6c4a9f7f0f"
+  },
+  {
+    "bookmark": "Beendet",
+    "role": null,
+    "collection": "memberships",
+    "search": null,
+    "layout": null,
+    "layout_query": {
+      "tabular": {
+        "page": 1,
+        "limit": 25,
+        "fields": [
+          "id",
+          "memberships_status",
+          "memberships_date_ended",
+          "memberships_user",
+          "memberships_user.email",
+          "memberships_user.first_name",
+          "memberships_user.last_name",
+          "memberships_date_applied",
+          "memberships_shares",
+          "memberships_user.mila_skills_2",
+          "memberships_user.mila_groups_interested_2",
+          "memberships_user.survey_languages",
+          "memberships_user.survey_languages_additional",
+          "memberships_invoices",
+          "memberships_invoices.payments_entries.payments_quantity"
+        ],
+        "sort": [
+          "memberships_user.last_name"
+        ]
+      }
+    },
+    "layout_options": {
+      "tabular": {
+        "widths": {
+          "memberships_user": 388,
+          "memberships_user.email": 358,
+          "memberships_date_applied": 189.77777099609375,
+          "memberships_shares": 138,
+          "memberships_user.survey_languages": 282,
+          "memberships_user.survey_languages_additional": 201
+        }
+      }
+    },
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "memberships_status": {
+            "_eq": "ended"
+          }
+        },
+        {
+          "memberships_user": {
+            "description": {
+              "_ncontains": "WIDERRUFEN"
+            }
+          }
+        },
+        {
+          "memberships_user": {
+            "description": {
+              "_ncontains": "Investierend mit einem Anteil"
+            }
+          }
+        }
+      ]
+    },
+    "icon": "battery_0_bar",
+    "color": "#FF0000",
+    "_syncId": "f74acc18-8a80-494e-880a-664ee9f811a1"
   }
 ]
