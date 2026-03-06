@@ -19,6 +19,8 @@ definePageMeta({
 });
 
 const linkStatutes = "https://wolke.mila.wien/s/BRKPrbzjssqkzbz";
+const contactPhone = "0670 202 6368";
+const contactEmail = "mitglied@mila.wien";
 const devMode = import.meta.dev;
 const user = useCurrentUser();
 const schema = object({
@@ -359,9 +361,9 @@ async function onError(event: FormErrorEvent) {
 
       <p>
         {{ t("t:mila_form_intro") }}
-        <a class="font-bold" href="mailto:mitglied@mila.wien"
-          >mitglied@mila.wien</a
-        >.
+        <a class="font-bold" :href="`tel:${contactPhone}`">{{ contactPhone }}</a>
+        {{ t("t:mila_form_intro_email") }}
+        <a class="font-bold" :href="`mailto:${contactEmail}`">{{ contactEmail }}</a>.
       </p>
     </div>
 
@@ -1219,7 +1221,8 @@ de:
   "t:memberships_form_mtype": "Welche Art der Mitgliedschaft wählst du?"
   "t:memberships_form_intro": "Bitte fülle das Formular aus, um Mitglied zu werden."
 
-  "t:mila_form_intro": "Um unserer Genossenschaft beitreten zu können, brauchen wir noch einige Informationen von dir. Bitte fülle die folgenden Fragen aus. Wenn etwas unklar ist, wende dich bitte an"
+  "t:mila_form_intro": "Um unserer Genossenschaft beitreten zu können, brauchen wir noch einige Informationen von dir. Bitte fülle die folgenden Fragen aus. Falls etwas unklar ist oder du Fragen hast, dann melde dich einfach unter"
+  "t:mila_form_intro_email": "oder schreib uns eine E-Mail an:"
   "t:mila_form_account": "Bitte lege hier eine E-Mail Adresse und Passwort für deinen MILA Zugang fest."
   "t:mila_form_mtype_orga": "Als Organisation bist du automatisch ein investierendes Mitglied. Als investierendes Mitglied unterstützt du uns finanziell, kannst jedoch nicht einkaufen."
   "t:mila_form_cshares_orga": "Deinen Genossenschaftsanteil zahlst du einmalig (nicht jährlich). Der Regeltarif sind € 180 (das sind 9 Anteile). Mehr als 9 kannst du frei wählen. Mehr dazu findest du unter"
@@ -1285,7 +1288,8 @@ en:
   "t:memberships_form_success": "Please log in in order to verify your E-Mail address."
   "t:memberships_form_already_member": "Your membership application has been submitted. Thank you for your application!"
 
-  "t:mila_form_intro": "In order to join our cooperative, we need some information from you. Please complete the following questions. If something is unclear, please contact "
+  "t:mila_form_intro": "In order to join our cooperative, we need some information from you. Please complete the following questions. If something is unclear or you have questions, feel free to reach us at"
+  "t:mila_form_intro_email": "or send us an email at:"
   "t:mila_form_account": "Please enter an E-Mail address and password for your MILA user account here."
   "t:mila_form_mtype_orga": "As an organization, you are automatically an investing member. As an investing member, you support us financially, but you cannot buy anything."
   "t:mila_form_cshares_orga": "You pay your cooperative share only once (not annually). The standard rate is € 180 (that's 9 shares). You can choose more than 9. You can find out more under"
