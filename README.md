@@ -128,15 +128,11 @@ For deploying updates on the server:
 
 - Create a database backup (see above)
 - Run `git pull`
+- Optional: if the directus version changed, perform the upgrade on the running server:
+  - Build the new version: `docker compose build directus`
+  - Run the new version: `docker compose up -d directus`
 - Optional: Run `pnpm i`
 - Run `pnpm build`
 - Optional: If the environment configuration in .env or the docker compose file changed: Run `docker compose up -d collectivo`
 - Run `docker compose restart collectivo`
 - Optional: Apply database schema changes (see above)
-
-### Directus upgrades
-
-When the directus version in the repository changes, the upgrade needs to be performed manually on the running server:
-
-- Build the new version: `docker compose build directus`
-- Run the new version: `docker compose up -d directus`
