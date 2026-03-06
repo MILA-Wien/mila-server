@@ -119,6 +119,7 @@ export async function dbGetUserProfile(userId: string) {
         "memberships.coshoppers.memberships_coshoppers_id.*",
         "memberships.kids.memberships_coshoppers_id.*",
         "memberships.shifts_categories_allowed.shifts_categories_id",
+        "memberships.shifts_skills.shifts_skills_id.*",
         "collectivo_tags.collectivo_tags_id",
       ] as any[],
     }),

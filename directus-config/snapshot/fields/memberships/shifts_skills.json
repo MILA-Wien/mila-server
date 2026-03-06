@@ -1,0 +1,38 @@
+{
+  "collection": "memberships",
+  "field": "shifts_skills",
+  "type": "alias",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": null,
+    "display_options": {
+      "template": "{{shifts_skills_id.icon}}"
+    },
+    "field": "shifts_skills",
+    "group": "shifts_group",
+    "hidden": false,
+    "interface": "list-m2m",
+    "note": "Fähigkeiten",
+    "options": {
+      "enableCreate": false,
+      "template": "{{shifts_skills_id.icon}}{{shifts_skills_id.name_de}}"
+    },
+    "readonly": false,
+    "required": false,
+    "searchable": true,
+    "sort": 6,
+    "special": [
+      "m2m"
+    ],
+    "translations": [
+      {
+        "language": "en-US",
+        "translation": "Skills"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}

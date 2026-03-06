@@ -102,7 +102,6 @@ export async function dbGetAssignmentsWithNotifications(
             "id",
             "shifts_counter",
             "count(shifts_logs)",
-            "shifts_can_be_coordinator",
             {
               memberships_user: [
                 "id",
@@ -137,9 +136,13 @@ export async function dbGetAssignmentsForApi(
     ? ["username", "username_last", "hide_name", "buddy_status", "email", "memberships_phone"]
     : ["username", "username_last", "hide_name", "buddy_status"];
 
+  const skillsFields = [
+    { shifts_skills_id: ["icon", "show_in_member_calendar", "show_in_occurrence_calendar"] },
+  ];
+
   const membershipFields = admin
-    ? ["id", "count(shifts_logs)", "shifts_can_be_coordinator", { memberships_user: userFields }]
-    : ["id", "shifts_can_be_coordinator", { memberships_user: userFields }];
+    ? ["id", { shifts_logs: ["id"] }, { shifts_skills: skillsFields }, { memberships_user: userFields }]
+    : ["id", { shifts_skills: skillsFields }, { memberships_user: userFields }];
 
   return await directus.request(
     readItems("shifts_assignments", {
@@ -152,7 +155,7 @@ export async function dbGetAssignmentsForApi(
         "shifts_to",
         "shifts_shift",
         "shifts_is_regular",
-        { shifts_membership: membershipFields },
+        { shifts_membership: membershipFields as any },
       ],
     }),
   );
@@ -481,7 +484,6 @@ export async function dbGetDashboardAssignments(mship: number) {
             {
               memberships_user: ["username", "username_last", "hide_name"],
             },
-            "shifts_can_be_coordinator",
           ],
         },
       ],
@@ -511,7 +513,6 @@ export async function dbGetDashboardAbsences(mship: number) {
             {
               memberships_user: ["username", "username_last", "hide_name"],
             },
-            "shifts_can_be_coordinator",
           ],
         },
       ],
@@ -543,7 +544,7 @@ export async function dbGetMembershipById(id: number) {
         "memberships_status",
         "shifts_categories_allowed",
         "shifts_user_type",
-        "shifts_can_be_coordinator",
+        { shifts_skills: [{ shifts_skills_id: ["icon", "show_in_member_calendar", "show_in_occurrence_calendar"] }] },
       ],
     }),
   );

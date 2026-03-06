@@ -1,44 +1,44 @@
 {
-  "collection": "memberships",
-  "field": "shifts_can_be_coordinator",
+  "collection": "shifts_skills",
+  "field": "show_in_member_calendar",
   "type": "boolean",
   "meta": {
-    "collection": "memberships",
+    "collection": "shifts_skills",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "shifts_can_be_coordinator",
-    "group": "shifts_group",
+    "field": "show_in_member_calendar",
+    "group": null,
     "hidden": false,
     "interface": "boolean",
-    "note": null,
+    "note": "Icon an Namen von Schichtler*in anfügen",
     "options": null,
     "readonly": false,
-    "required": false,
+    "required": true,
     "searchable": true,
-    "sort": 4,
+    "sort": 5,
     "special": [
       "cast-boolean"
     ],
     "translations": [
       {
-        "language": "de-DE",
-        "translation": "Schichtkoordinator*in"
+        "language": "en-US",
+        "translation": "Append icon to assignee's name"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "half"
+    "width": "full"
   },
   "schema": {
-    "name": "shifts_can_be_coordinator",
-    "table": "memberships",
+    "name": "show_in_member_calendar",
+    "table": "shifts_skills",
     "data_type": "boolean",
-    "default_value": false,
+    "default_value": null,
     "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
-    "is_nullable": true,
+    "is_nullable": false,
     "is_unique": false,
     "is_indexed": false,
     "is_primary_key": false,

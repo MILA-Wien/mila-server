@@ -24,6 +24,17 @@ const { t } = useI18n();
 
 const occ = toRef(props.shiftOccurence);
 const shift = occ.value.shift;
+
+const occurrenceIconsStr = computed(() => {
+  const icons = new Set<string>();
+  for (const assignment of occ.value.assignments) {
+    if (!assignment.isActive) continue;
+    for (const skill of assignment.skills) {
+      if (skill.show_in_occurrence_calendar) icons.add(skill.icon);
+    }
+  }
+  return [...icons].join("");
+});
 const start = new Date(occ.value.start);
 const end = new Date(occ.value.end);
 const startDateString = start.toISOString().split("T")[0];
@@ -242,7 +253,9 @@ async function createAssignment(onetime: boolean) {
     username_last: mshipData.value?.memberships_user?.username_last ?? "",
     hide_name: false,
     buddy_status: "keine_angabe",
-    shifts_can_be_coordinator: (mshipData.value as any)?.shifts_can_be_coordinator ?? false,
+    skills: ((mshipData.value as any)?.shifts_skills ?? [])
+      .map((s: any) => s.shifts_skills_id)
+      .filter(Boolean),
     shifts_from: startDateString,
     shifts_to: onetime ? startDateString : undefined,
     shifts_shift: shift.id!,
@@ -292,7 +305,8 @@ function checkIfMshipInAssignments(mship: number) {
       <div class="m-10">
         <div class="flex items-start justify-between">
           <h2>
-            {{ shift.shifts_name }} <span v-if="isPast">({{ t("past") }})</span>
+            {{ shift.shifts_name }}{{ occurrenceIconsStr }}
+            <span v-if="isPast">({{ t("past") }})</span>
           </h2>
           <a
             :href="`${runtimeConfig.public.directusUrl}/admin/content/shifts_shifts/${shift.id}`"

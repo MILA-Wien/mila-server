@@ -6,14 +6,14 @@ function displayMember(
   id: number,
   username: string,
   username_last: string | undefined,
-  isCoordinator: boolean,
+  skillIcons: string,
 ): string {
-  return `#${id} ${username} ${username_last ?? ""} ${isCoordinator ? "(Koordinator*in)" : ""}`;
+  return `#${id} ${username} ${username_last ?? ""} ${skillIcons}`.trimEnd();
 }
 
 type RequiredFields = {
   id: number;
-  shifts_can_be_coordinator: boolean;
+  shifts_skills?: { shifts_skills_id: { icon: string } | null }[];
   memberships_user: {
     username: string;
     username_last: string;
@@ -21,19 +21,18 @@ type RequiredFields = {
 };
 
 export function displayMembership<T extends RequiredFields>(mship: T) {
+  const icons = (mship.shifts_skills ?? [])
+    .map((s) => s.shifts_skills_id?.icon ?? "")
+    .join("");
   return displayMember(
     mship.id,
     mship.memberships_user.username,
     mship.memberships_user.username_last,
-    mship.shifts_can_be_coordinator,
+    icons,
   );
 }
 
 export function displayAssignment(a: OccurrenceAssignment): string {
-  return displayMember(
-    a.membershipId,
-    a.username,
-    a.username_last,
-    a.shifts_can_be_coordinator,
-  );
+  const icons = a.skills.map((s) => s.icon).join("");
+  return displayMember(a.membershipId, a.username, a.username_last, icons);
 }

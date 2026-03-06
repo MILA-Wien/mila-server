@@ -77,7 +77,7 @@ export interface Membership {
   shifts_user_type: ShiftsUserType;
   shifts_counter: number;
   shifts_logs: ShiftsLog[];
-  shifts_can_be_coordinator: boolean;
+  shifts_skills: { shifts_skills_id: { id: number; icon: string; name_de: string; name_en: string; show_in_member_calendar: boolean; show_in_occurrence_calendar: boolean } | null }[];
   shifts_categories_allowed: { shifts_categories_id: number }[];
   memberships_card_id: string;
   coshoppers: { memberships_coshoppers_id: MembershipsCoshopper }[];

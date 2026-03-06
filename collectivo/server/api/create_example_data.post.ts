@@ -42,6 +42,7 @@ async function create_examples() {
   await create_tiles();
   await create_emails();
   await create_shifts();
+  await create_skills();
   console.log("Seed successful");
 }
 
@@ -405,4 +406,63 @@ async function createAssignments() {
   }
 
   await directus.request(createItems("shifts_assignments", assignments));
+}
+
+async function create_skills() {
+  const directus = await useDirectusAdmin();
+  console.info("Creating skills");
+
+  await directus.request(
+    deleteItems("memberships_shifts_skills", { limit: 1000 }),
+  );
+  await directus.request(deleteItems("shifts_skills", { limit: 1000 }));
+
+  const coordinatorSkill = await directus.request(
+    createItem("shifts_skills", {
+      name_de: "Schichtkoordination",
+      name_en: "Shift coordinator",
+      icon: "⭐",
+      show_in_member_calendar: true,
+      show_in_occurrence_calendar: true,
+    }),
+  );
+
+  const cheeseSkill = await directus.request(
+    createItem("shifts_skills", {
+      name_de: "Käse schneiden",
+      name_en: "Cheese cutting",
+      icon: "🧀",
+      show_in_member_calendar: true,
+      show_in_occurrence_calendar: false,
+    }),
+  );
+
+  const mships = await directus.request(
+    readItems("memberships", {
+      fields: ["id", { memberships_user: ["username"] }] as any,
+      filter: {
+        memberships_user: { username: { _in: ["Alice", "Bob", "Charlie"] } },
+      },
+    }),
+  );
+
+  for (const mship of mships as any[]) {
+    const username = mship.memberships_user.username;
+    if (username === "Alice" || username === "Bob") {
+      await directus.request(
+        createItem("memberships_shifts_skills", {
+          memberships_id: mship.id,
+          shifts_skills_id: coordinatorSkill.id,
+        }),
+      );
+    }
+    if (username === "Alice" || username === "Charlie") {
+      await directus.request(
+        createItem("memberships_shifts_skills", {
+          memberships_id: mship.id,
+          shifts_skills_id: cheeseSkill.id,
+        }),
+      );
+    }
+  }
 }

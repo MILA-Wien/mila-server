@@ -133,23 +133,20 @@ const getAssignmentInfos = async (
     }
   }
 
-  const coworkers = [];
-  const coordinators = [];
+  const team: string[] = [];
 
   if (occurrences.length > 0) {
-    const [coworkers_, coordinators_] = await getShiftTeam(
+    const team_ = await getShiftTeam(
       assignment,
       occurrences[0].date,
       mship,
     );
-    coworkers.push(...coworkers_);
-    coordinators.push(...coordinators_);
+    team.push(...team_);
   }
 
   return {
     assignment,
-    coworkers,
-    coordinators,
+    team,
     occurrences,
     isRegular: occurrences.length > 1,
   };
@@ -159,9 +156,8 @@ const getShiftTeam = async (
   assignment: any,
   nextOccurence: Date,
   mship: number,
-) => {
-  const coworkers = [];
-  const coordinators = [];
+): Promise<string[]> => {
+  const team: string[] = [];
   const occs = await getShiftOccurrencesForApi(
     nextOccurence,
     nextOccurence,
@@ -173,15 +169,16 @@ const getShiftTeam = async (
   if (occs.occurrences.length > 0) {
     for (const a of occs.occurrences[0].assignments) {
       if (!a.isActive) continue;
-      if (a.shifts_can_be_coordinator) {
-        coordinators.push(a.username + " " + a.username_last);
-      } else {
-        coworkers.push(a.username + " " + a.username_last);
-      }
+      const name = a.username === "" ? "" : `${a.username} ${a.username_last}`;
+      const icons = a.skills
+        .filter((s) => s.show_in_member_calendar)
+        .map((s) => s.icon)
+        .join("");
+      team.push(name + icons);
     }
   }
 
-  return [coworkers, coordinators];
+  return team;
 };
 
 export const getRules = (assignment: any, absences?: ShiftsAbsence[]) => {

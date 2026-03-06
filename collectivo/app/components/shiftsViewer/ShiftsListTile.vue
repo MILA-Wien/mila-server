@@ -34,6 +34,15 @@ if (shift.shifts_from_time && shift.shifts_to_time) {
   shiftTitle = t("All day");
 }
 shiftTitle += " (" + shift.shifts_name + ")";
+
+const occurrenceIcons = new Set<string>();
+for (const assignment of occ.assignments) {
+  if (!assignment.isActive) continue;
+  for (const skill of assignment.skills) {
+    if (skill.show_in_occurrence_calendar) occurrenceIcons.add(skill.icon);
+  }
+}
+for (const icon of occurrenceIcons) shiftTitle += icon;
 </script>
 
 <template>
@@ -48,7 +57,7 @@ shiftTitle += " (" + shift.shifts_name + ")";
       </div>
 
       <!-- Assignments -->
-      <ShiftsViewerAssignmentList :occurrence="occ" />
+      <ShiftsViewerAssignmentList :occurrence="occ" :admin="admin" />
     </div>
     <!-- Space for buttons -->
     <div class="flex flex-wrap gap-2">

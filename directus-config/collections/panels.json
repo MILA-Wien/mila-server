@@ -672,11 +672,6 @@
             "memberships_type": {
               "_eq": "Aktiv"
             }
-          },
-          {
-            "shifts_can_be_coordinator": {
-              "_eq": true
-            }
           }
         ]
       },
@@ -3223,11 +3218,11 @@
     "height": 6,
     "options": {
       "collection": "memberships",
-      "sortField": "shifts_can_be_coordinator",
-      "xAxis": "shifts_can_be_coordinator",
+      "sortField": "id",
+      "xAxis": "id",
       "limit": 128,
       "function": "count",
-      "field": "shifts_can_be_coordinator"
+      "field": "id"
     },
     "_syncId": "b6d577cf-6e4e-4ad2-a609-6f06f075a2a0"
   },

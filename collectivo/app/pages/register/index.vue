@@ -1256,7 +1256,7 @@ en:
   "Erhalte E-Mail-Benachrichtigungen über bevorstehende Schichten.": "Receive email notifications about upcoming shifts."
   "Sichtbarer Name": "Visible name"
   "Dieser Name wird im Schichtplan und auf deiner Mitgliederkarte angezeigt. Er kann sich von deinem rechtlichen Namen unterscheiden.": "This name will be displayed in the shift schedule and on your membership card. It can differ from your legal name."
-  "Diese Daten brauchen wir rechtlich für das Mitgliederregister der Genossenschaft. Bitte gib hier deinen amtlichen Namen an. Diese Daten sind nur für das Mitgliederbüro einsehbar.": "We need this data legally for the cooperative's membership register. Please provide your legal name here. This data can only be viewed by the membership office."
+  "Diese Daten brauchen wir rechtlich für das Mitgliederregister der Genossenschaft. Bitte gib hier deinen amtlichen Namen an. Diese Daten sind nur für das Mitgliederbüro einsehbar.": "We need this data legally for the cooperative's membership register. Please provide your legal name here. This data can only be viewed by the members' office."
   "i_pronouns": "A declaration of pronouns is optional. They help us at MILA in creating an inclusive environment, by speaking to and about each other in a way, that respects everyones wishes."
   "Ich möchte eine*n Miteinkäufer*in angeben. Diese Person erhält ebenfalls eine Karte und kann einkaufen gehen, kann aber keine Mitmach-Schichten übernehmen.": "I would like to specify a co-shopper. This person will also receive a card and can go shopping, but cannot take on any participation shifts."
   "Miteinkäufer:in": "Co-shopper"

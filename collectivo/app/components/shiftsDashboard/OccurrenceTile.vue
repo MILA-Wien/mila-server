@@ -152,7 +152,7 @@ async function createAbsence() {
 
 <i18n lang="yaml">
 en:
-  "t:signout_regular": "You are only unsubscribed for this date – future events are not affected. For a permanent unsubscription, please contact the membership office."
+  "t:signout_regular": "You are only unsubscribed for this date – future events are not affected. For a permanent unsubscription, please contact the members' office."
 de:
   "SIGNED OUT": "ABGEMELDET"
   "SIGNED IN": "ANGEMELDET"

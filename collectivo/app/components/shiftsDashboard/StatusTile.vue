@@ -60,7 +60,7 @@ setColor();
           {{ t("Your membership is currently inactive.") }}<br />
           {{
             t(
-              "Please contact the membership office if you want to change your status.",
+              "Please contact the members' office if you want to change your status.",
             )
           }}
         </p>
@@ -98,7 +98,7 @@ setColor();
           {{ t("You are more than 4 weeks late to do your next shift.") }}
           <br />
           {{
-            t("Please sign up for a shift or contact the membership office.")
+            t("Please sign up for a shift or contact the members' office.")
           }}
         </p>
       </template>
@@ -123,7 +123,7 @@ de:
   "You are": "Du bist"
   "days late to do your next shift.": "Tage zu spät, um deine nächste Schicht zu machen."
   "You are more than 4 weeks late to do your next shift.": "Du bist mehr als 4 Wochen zu spät, um deine nächste Schicht zu machen."
-  "Please sign up for a shift or contact the membership office.": "Bitte melde dich für eine Schicht an oder kontaktiere das Mitgliederbüro."
+  "Please sign up for a shift or contact the members' office.": "Bitte melde dich für eine Schicht an oder kontaktiere das Mitgliederbüro."
   "You have a holiday registered at the moment.": "Du hast aktuell einen Urlaub eingetragen."
   "You cannot go shopping during this time.": "Du kannst in dieser Zeit nicht einkaufen gehen."
   "You are exempt from shift work.": "Du bist von der Schichtarbeit befreit."
@@ -131,7 +131,7 @@ de:
   "Your membership is active. Thank you for your contribution!": "Deine Mitgliedschaft ist aktiv. Danke für deinen Beitrag!"
   "You can nonetheless sign up for shifts if you want.": "Du kannst dich trotzdem für Schichten anmelden, wenn du möchtest."
   "Your membership is currently inactive.": "Deine Mitgliedschaft ist derzeit inaktiv."
-  "Please contact the membership office if you want to change your status.": "Bitte kontaktiere das Mitgliederbüro, wenn du deinen Status ändern möchtest."
+  "Please contact the members' office if you want to change your status.": "Bitte kontaktiere das Mitgliederbüro, wenn du deinen Status ändern möchtest."
   "days": "Tagen"
   "Timespan": "Zeitraum"
   "to": "bis"
