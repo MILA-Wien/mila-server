@@ -133,3 +133,10 @@ For deploying updates on the server:
 - Optional: If the environment configuration in .env or the docker compose file changed: Run `docker compose up -d collectivo`
 - Run `docker compose restart collectivo`
 - Optional: Apply database schema changes (see above)
+
+### Directus upgrades
+
+When the directus version in the repository changes, the upgrade needs to be performed manually on the running server:
+
+- Build the new version: `docker compose build directus`
+- Run the new version: `docker compose up -d directus`
