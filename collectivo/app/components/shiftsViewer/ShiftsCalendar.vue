@@ -182,14 +182,14 @@ prepareEvents();
     </div>
     <p class="">Stern (*): {{ t("This shift has a coordinator") }}</p>
     <p class="">
-      Buddy (BETA): {{ t("In dieser Schicht gibt es einen Buddy") }}
+      Buddy (BETA): {{ t("This shift has a buddy coordinator") }}
     </p>
     <p class="">
-      Rot: Diese Schicht ist stark unterbesetzt (mehr als 1 Platz frei) <br />
-      Orange: Diese Schicht ist leicht unterbesetzt (1 Platz frei) <br />
-      Grün: Diese Schicht ist voll besetzt <br />
-      Grau: Vergangene Schicht <br />
-      Blau: Feiertag <br />
+      {{ t("Red: Shift is heavily understaffed (2+ spots open)") }} <br />
+      {{ t("Orange: Shift is slightly understaffed (1 spot open)") }} <br />
+      {{ t("Green: Shift is fully staffed") }} <br />
+      {{ t("Grey: Past shift") }} <br />
+      {{ t("Blue: Public holiday") }} <br />
     </p>
   </div>
 </template>
@@ -211,4 +211,10 @@ de:
   "Public holiday": "Feiertag"
   "Legend": "Legende"
   "This shift has a coordinator": "Diese Schicht hat eine*n Koordinator*in"
+  "This shift has a buddy coordinator": "In dieser Schicht gibt es einen Buddy"
+  "Red: Shift is heavily understaffed (2+ spots open)": "Rot: Diese Schicht ist stark unterbesetzt (mehr als 1 Platz frei)"
+  "Orange: Shift is slightly understaffed (1 spot open)": "Orange: Diese Schicht ist leicht unterbesetzt (1 Platz frei)"
+  "Green: Shift is fully staffed": "Grün: Diese Schicht ist voll besetzt"
+  "Grey: Past shift": "Grau: Vergangene Schicht"
+  "Blue: Public holiday": "Blau: Feiertag"
 </i18n>
