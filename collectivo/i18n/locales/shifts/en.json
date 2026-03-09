@@ -6,7 +6,13 @@
   "t:exempt": "Exempt",
   "t:inactive": "Inactive",
 
-  "log:attended_draft": "Schicht done",
+  "t:shift_status_good": "Good!",
+  "t:shift_status_bad": "You need to make up for missed shifts",
+  "t:shift_status_exempt": "You are exempt from shifts",
+
+  "Absence must start at least {days} days from today.": "Holiday request must start at least {days} days from today.",
+
+  "log:attended_draft": "Shift done",
   "log:attended": "Shift done",
   "log:missed": "Shift missed",
   "log:cancelled": "Shift cancelled",

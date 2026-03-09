@@ -113,10 +113,6 @@ function getEndDate(endDate: string) {
 </template>
 
 <i18n lang="yaml">
-en:
-  "t:signout_regular": "You are only unsubscribed for this date – future events are not affected. For a permanent unsubscription, please contact the membership office."
-  "ics_preamble": "Warning: This calendar entry will not be automatically updated if your shift schedule changes. You can view your current shift schedule online in the member area. Please remember to delete old calendar entries and create a new one if your shift schedule changes."
-  "Calendar download": "Calendar export"
 de:
   "Next occurrences": "Nächste Termine"
   "Shift": "Schicht"
