@@ -19,6 +19,8 @@ definePageMeta({
 });
 
 const linkStatutes = "https://wolke.mila.wien/s/BRKPrbzjssqkzbz";
+const contactPhone = "0670 202 6368";
+const contactEmail = "mitglied@mila.wien";
 const devMode = import.meta.dev;
 const user = useCurrentUser();
 const schema = object({
@@ -359,9 +361,9 @@ async function onError(event: FormErrorEvent) {
 
       <p>
         {{ t("t:mila_form_intro") }}
-        <a class="font-bold" href="mailto:mitglied@mila.wien"
-          >mitglied@mila.wien</a
-        >.
+        <a class="font-bold" :href="`tel:${contactPhone}`">{{ contactPhone }}</a>
+        {{ t("t:mila_form_intro_email") }}
+        <a class="font-bold" :href="`mailto:${contactEmail}`">{{ contactEmail }}</a>.
       </p>
     </div>
 
@@ -1081,20 +1083,37 @@ async function onError(event: FormErrorEvent) {
 
         <div>
           <div class="font-bold mb-1">{{ t("Liability") }}</div>
-          <p class="">{{ t("t:mila_form_final1") }}</p>
+          <i18n-t keypath="t:mila_form_final1" tag="p">
+            <template #nachschusspflicht>
+              <a
+                href="https://www.mila.wien/ueber-uns/haeufige-fragen/#nachschusspflicht"
+                target="_blank"
+                class="font-bold"
+                >{{ t("Nachschusspflicht") }}</a
+              >
+            </template>
+          </i18n-t>
         </div>
 
         <div>
           <div class="font-bold mb-1">
             {{ t("Payout upon termination") }}
           </div>
-          <p class="">
-            {{ t("t:mila_form_final2") }}
-            <a :href="linkStatutes" target="_blank" class="font-bold">{{
-              t("Rules of Procedure")
-            }}</a
-            >.
-          </p>
+          <i18n-t keypath="t:mila_form_final2" tag="p">
+            <template #refund>
+              <a
+                href="https://www.mila.wien/ueber-uns/haeufige-fragen/#kuendigung-auszahlung"
+                target="_blank"
+                class="font-bold"
+                >{{ t("refunded") }}</a
+              >
+            </template>
+            <template #statutes>
+              <a :href="linkStatutes" target="_blank" class="font-bold">{{
+                t("Rules of Procedure")
+              }}</a>
+            </template>
+          </i18n-t>
         </div>
 
         <div>
@@ -1219,7 +1238,8 @@ de:
   "t:memberships_form_mtype": "Welche Art der Mitgliedschaft wählst du?"
   "t:memberships_form_intro": "Bitte fülle das Formular aus, um Mitglied zu werden."
 
-  "t:mila_form_intro": "Um unserer Genossenschaft beitreten zu können, brauchen wir noch einige Informationen von dir. Bitte fülle die folgenden Fragen aus. Wenn etwas unklar ist, wende dich bitte an"
+  "t:mila_form_intro": "Um unserer Genossenschaft beitreten zu können, brauchen wir noch einige Informationen von dir. Bitte fülle die folgenden Fragen aus. Falls etwas unklar ist oder du Fragen hast, dann melde dich einfach unter"
+  "t:mila_form_intro_email": "oder schreib uns eine E-Mail an:"
   "t:mila_form_account": "Bitte lege hier eine E-Mail Adresse und Passwort für deinen MILA Zugang fest."
   "t:mila_form_mtype_orga": "Als Organisation bist du automatisch ein investierendes Mitglied. Als investierendes Mitglied unterstützt du uns finanziell, kannst jedoch nicht einkaufen."
   "t:mila_form_cshares_orga": "Deinen Genossenschaftsanteil zahlst du einmalig (nicht jährlich). Der Regeltarif sind € 180 (das sind 9 Anteile). Mehr als 9 kannst du frei wählen. Mehr dazu findest du unter"
@@ -1235,8 +1255,9 @@ de:
   "t:mila_form_check1": "Ich unterstütze die Öffentlichkeitsarbeit und erlaube MILA, Bildmaterial, auf dem ich zu sehen bin, zu verwenden. Nähere Informationen zur Datenverarbeitung des Bildmaterials in der"
   "t:mila_form_check2": "Ich erkenne die Bestimmungen der Satzung und Beschlüsse der Generalversammlung in vollem Umfang an. Ich kann die Satzung unter folgendem Link einsehen:"
   "t:mila_form_check3": "Ich erkläre mich ausdrücklich einverstanden, dass meine personenbezogenen Daten für Zwecke der Mitgliedschaft gem. GenG verarbeitet werden. Weitere Infos in der"
-  "t:mila_form_final1": "Im Fall der Insolvenz und/oder Auflösung der Genossenschaft haften die Mitglieder der Genossenschaft deren Gläubigern mit ihren Geschäftsanteilen und zusätzlich mit einem Betrag in der Höhe ihrer Geschäftsanteile (Nachschusspflicht in der einfachen Höhe der Geschäftsanteile)."
-  "t:mila_form_final2": "Bei Kündigung wird dein eingezahlter Betrag am Ende des folgenden Geschäftsjahres zurückgezahlt, sofern es die wirtschaftliche Lage von MILA es zulässt. Mehr Infos in der"
+  "t:mila_form_final1": "Im Fall der Insolvenz und/oder Auflösung der Genossenschaft haften die Mitglieder der Genossenschaft deren Gläubigern mit ihren Geschäftsanteilen und zusätzlich mit einem Betrag in der Höhe ihrer Geschäftsanteile ({nachschusspflicht} in der einfachen Höhe der Geschäftsanteile)."
+  "t:mila_form_final2": "Bei Kündigung wird dein eingezahlter Betrag am Ende des folgenden Geschäftsjahres {refund}, sofern es die wirtschaftliche Lage von MILA es zulässt. Mehr Infos in der {statutes}."
+  "refunded": "zurückgezahlt"
   "t:mila_form_final3": "Du hast das Recht binnen 14 Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Frist beträgt 14 Tage ab der Zustellung der Annahme der Zeichnung durch den Vorstand der Genossenschaft."
 
   "i_pronouns": "Die Angabe der Pronomen ist freiwillig. Sie soll uns helfen bei Mila einen respektvollen Umgang miteinander zu pflegen, indem wir so mit- und übereinander sprechen, wie die angesprochenen Personen es wünschen."
@@ -1285,7 +1306,8 @@ en:
   "t:memberships_form_success": "Please log in in order to verify your E-Mail address."
   "t:memberships_form_already_member": "Your membership application has been submitted. Thank you for your application!"
 
-  "t:mila_form_intro": "In order to join our cooperative, we need some information from you. Please complete the following questions. If something is unclear, please contact "
+  "t:mila_form_intro": "In order to join our cooperative, we need some information from you. Please complete the following questions. If something is unclear or you have questions, feel free to reach us at"
+  "t:mila_form_intro_email": "or send us an email at:"
   "t:mila_form_account": "Please enter an E-Mail address and password for your MILA user account here."
   "t:mila_form_mtype_orga": "As an organization, you are automatically an investing member. As an investing member, you support us financially, but you cannot buy anything."
   "t:mila_form_cshares_orga": "You pay your cooperative share only once (not annually). The standard rate is € 180 (that's 9 shares). You can choose more than 9. You can find out more under"
@@ -1302,7 +1324,9 @@ en:
   "t:mila_form_check1": "I allow MILA to use images in which I can be seen. Further information on the data processing of the image material can be found at:"
   "t:mila_form_check2": "I fully acknowledge the provisions of the statutes and the resolutions of the general meeting. I can view the statutes at the following link."
   "t:mila_form_check3": "I agree that my personal data will be processed for membership purposes in accordance with GenG. Further information at:"
-  "t:mila_form_final1": "In the event of insolvency and/or dissolution of the cooperative, the members of the cooperative are liable to their creditors with their shares and additionally with an amount equal to the amount of their shares (obligation to make additional contributions in the simple amount of the shares)."
-  "t:mila_form_final2": "If you cancel your membership, your deposit will be refunded at the end of the following financial year, provided that MILA's financial situation allows it. More information in the "
+  "t:mila_form_final1": "In the event of insolvency and/or dissolution of the cooperative, the members of the cooperative are liable to their creditors with their shares and additionally with an amount equal to the amount of their shares ({nachschusspflicht} in the simple amount of the shares)."
+  "t:mila_form_final2": "If you cancel your membership, your deposit will be {refund} at the end of the following financial year, provided that MILA's financial situation allows it. More information in the {statutes}."
+  "Nachschusspflicht": "obligation to make additional contributions"
+  "refunded": "refunded"
   "t:mila_form_final3": "You have the right to cancel this contract within 14 days without giving reasons. The deadline is 14 days from the delivery of the acceptance of the membership by the board of the cooperative."
 </i18n>
