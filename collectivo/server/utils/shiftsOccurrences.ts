@@ -55,7 +55,7 @@ export const getShiftOccurrencesForApi = async (
   const directus = await useDirectusAdmin();
   const allSkills = await directus.request(
     readItems("shifts_skills", {
-      fields: ["icon", "name_de", "name_en", "show_in_member_calendar", "show_in_occurrence_calendar"],
+      fields: ["icon", "name_de", "name_en"],
     }),
   );
 

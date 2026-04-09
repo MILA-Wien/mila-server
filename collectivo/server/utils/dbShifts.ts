@@ -137,7 +137,7 @@ export async function dbGetAssignmentsForApi(
     : ["username", "username_last", "hide_name", "buddy_status"];
 
   const skillsFields = [
-    { shifts_skills_id: ["icon", "show_in_member_calendar", "show_in_occurrence_calendar"] },
+    { shifts_skills_id: ["icon"] },
   ];
 
   const membershipFields = admin
@@ -544,7 +544,7 @@ export async function dbGetMembershipById(id: number) {
         "memberships_status",
         "shifts_categories_allowed",
         "shifts_user_type",
-        { shifts_skills: [{ shifts_skills_id: ["icon", "show_in_member_calendar", "show_in_occurrence_calendar"] }] },
+        { shifts_skills: [{ shifts_skills_id: ["icon"] }] },
       ],
     }),
   );

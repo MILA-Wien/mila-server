@@ -33,7 +33,7 @@ const shift = occ.shift;
               (assignment.username_last ?? "")
         }}
         <span
-          v-for="skill in assignment.skills.filter((s: any) => s.show_in_member_calendar || admin)"
+          v-for="skill in assignment.skills"
           :key="skill.icon"
         >{{ skill.icon }}</span
         ><span v-if="index < occ.n_assigned - 1">, </span>

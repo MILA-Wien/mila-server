@@ -422,8 +422,6 @@ async function create_skills() {
       name_de: "Schichtkoordination",
       name_en: "Shift coordinator",
       icon: "⭐",
-      show_in_member_calendar: true,
-      show_in_occurrence_calendar: true,
     }),
   );
 
@@ -432,8 +430,6 @@ async function create_skills() {
       name_de: "Käse schneiden",
       name_en: "Cheese cutting",
       icon: "🧀",
-      show_in_member_calendar: true,
-      show_in_occurrence_calendar: false,
     }),
   );
 

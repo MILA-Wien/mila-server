@@ -171,7 +171,6 @@ const getShiftTeam = async (
       if (!a.isActive) continue;
       const name = a.username === "" ? "" : `${a.username} ${a.username_last}`;
       const icons = a.skills
-        .filter((s) => s.show_in_member_calendar)
         .map((s) => s.icon)
         .join("");
       team.push(name + icons);

@@ -316,7 +316,7 @@ describe("getShiftOccurrencesForApi", () => {
       shifts_is_regular: false,
       shifts_membership: {
         id: 10,
-        shifts_skills: [{ shifts_skills_id: { icon: "*", show_in_member_calendar: true, show_in_occurrence_calendar: true } }],
+        shifts_skills: [{ shifts_skills_id: { icon: "*" } }],
         memberships_user: {
           username: "Admin",
           username_last: "User",

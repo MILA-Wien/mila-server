@@ -9,6 +9,8 @@ export interface DbSchema {
   shifts_absences: ShiftsAbsence[];
   shifts_logs: ShiftsLog[];
   shifts_shifts: ShiftsShift[];
+  shifts_skills: ShiftsSkill[];
+  memberships_shifts_skills: { id: number; memberships_id: number; shifts_skills_id: number }[];
   shifts_categories: ShiftsCategory[];
   shifts_holidays_public: ShiftsPublicHoliday[];
   settings_hidden: SettingsHidden;
@@ -77,7 +79,7 @@ export interface Membership {
   shifts_user_type: ShiftsUserType;
   shifts_counter: number;
   shifts_logs: ShiftsLog[];
-  shifts_skills: { shifts_skills_id: { id: number; icon: string; name_de: string; name_en: string; show_in_member_calendar: boolean; show_in_occurrence_calendar: boolean } | null }[];
+  shifts_skills: { shifts_skills_id: ShiftsSkill | null }[];
   shifts_categories_allowed: { shifts_categories_id: number }[];
   memberships_card_id: string;
   coshoppers: { memberships_coshoppers_id: MembershipsCoshopper }[];
@@ -125,6 +127,13 @@ export interface Solitopf {
   funds_available: number;
   total_received: number;
   total_distributed: number;
+}
+
+export interface ShiftsSkill {
+  id: number;
+  icon: string;
+  name_de: string;
+  name_en: string;
 }
 
 export interface ShiftsShift {

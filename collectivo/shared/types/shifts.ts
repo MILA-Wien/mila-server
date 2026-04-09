@@ -1,15 +1,11 @@
 export interface AssignmentSkill {
   icon: string;
-  show_in_member_calendar: boolean;
-  show_in_occurrence_calendar: boolean;
 }
 
 export interface ShiftSkill {
   icon: string;
   name_de: string;
   name_en: string;
-  show_in_member_calendar: boolean;
-  show_in_occurrence_calendar: boolean;
 }
 
 export interface OccurrenceAssignment {

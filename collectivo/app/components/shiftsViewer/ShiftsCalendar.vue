@@ -147,16 +147,6 @@ async function prepareEvents() {
         "]";
     }
 
-    // Append skill icons for show_in_occurrence_calendar skills of active assignments
-    const occurrenceIcons = new Set<string>();
-    for (const assignment of occurrence.assignments) {
-      if (!assignment.isActive) continue;
-      for (const skill of assignment.skills) {
-        if (skill.show_in_occurrence_calendar) occurrenceIcons.add(skill.icon);
-      }
-    }
-    for (const icon of occurrenceIcons) title += icon;
-
     events.push({
       title: title,
       start: occurrence.start,
@@ -179,11 +169,11 @@ prepareEvents();
     <div class="font-bold">
       {{ t("Legend") }}
     </div>
-    <template v-if="events.skills.filter((s: any) => s.show_in_occurrence_calendar).length > 0">
+    <template v-if="events.skills.length > 0">
       <p>{{ t("skills_heading") }}</p>
       <ul class="ml-4 list-disc">
         <li
-          v-for="skill in events.skills.filter((s: any) => s.show_in_occurrence_calendar)"
+          v-for="skill in events.skills"
           :key="skill.icon"
         >
           {{ skill.icon }}: {{ locale.startsWith('de') ? skill.name_de : skill.name_en }}
