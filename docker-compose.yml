@@ -1,7 +1,6 @@
 networks:
   proxiable:
     name: proxiable
-    external: true
 
 services:
   # Dev Services
@@ -191,7 +190,7 @@ services:
   keycloak:
     build: ./keycloak
     container_name: keycloak
-    profiles: [production]
+    profiles: [production, keycloak]
     environment:
       COMPOSE_PROFILES: ${COMPOSE_PROFILES}
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
@@ -226,7 +225,7 @@ services:
   keycloak-db:
     image: postgres:14-alpine
     container_name: keycloak-db
-    profiles: [production]
+    profiles: [production, keycloak]
     volumes:
       - keycloak-db-data:/var/lib/postgresql/data
       - ./keycloak-db-backups:/backups
@@ -362,6 +361,44 @@ services:
       HEALTHCHECK_PORT: 8080
     networks:
       - default
+
+  # https://hub.docker.com/_/nextcloud
+  nextcloud:
+    profiles: [nextcloud]
+    image: nextcloud:32
+    restart: always
+    ports:
+      - 8081:80
+    environment:
+      MYSQL_HOST: nextcloud-db
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: nextcloudpass
+    volumes:
+      - ./nextcloud_data:/var/www/html
+    depends_on:
+      nextcloud-db:
+        condition: service_healthy
+
+  # https://hub.docker.com/_/mariadb
+  nextcloud-db:
+    profiles: [nextcloud]
+    image: mariadb:11 # lts
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: nextcloudpass
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 20s
+    volumes:
+      - ./nextcloud_db_data:/var/lib/mysql
 
 volumes:
   directus-db-data:
