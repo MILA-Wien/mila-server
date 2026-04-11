@@ -266,7 +266,7 @@ function replaceTemplateTags(
   context: { [key: string]: string },
 ): string {
   return template.replace(/{{\s*([^}]+)\s*}}/g, (match, p1) => {
-    const value = context[p1.trim()] || "";
+    const value = String(context[p1.trim()] ?? "");
     if (value.startsWith("markdown:")) {
       return parse(value.split("markdown:")[1]);
     }

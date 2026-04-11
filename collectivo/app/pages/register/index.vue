@@ -1083,20 +1083,37 @@ async function onError(event: FormErrorEvent) {
 
         <div>
           <div class="font-bold mb-1">{{ t("Liability") }}</div>
-          <p class="">{{ t("t:mila_form_final1") }}</p>
+          <i18n-t keypath="t:mila_form_final1" tag="p">
+            <template #nachschusspflicht>
+              <a
+                href="https://www.mila.wien/ueber-uns/haeufige-fragen/#nachschusspflicht"
+                target="_blank"
+                class="font-bold"
+                >{{ t("Nachschusspflicht") }}</a
+              >
+            </template>
+          </i18n-t>
         </div>
 
         <div>
           <div class="font-bold mb-1">
             {{ t("Payout upon termination") }}
           </div>
-          <p class="">
-            {{ t("t:mila_form_final2") }}
-            <a :href="linkStatutes" target="_blank" class="font-bold">{{
-              t("Rules of Procedure")
-            }}</a
-            >.
-          </p>
+          <i18n-t keypath="t:mila_form_final2" tag="p">
+            <template #refund>
+              <a
+                href="https://www.mila.wien/ueber-uns/haeufige-fragen/#kuendigung-auszahlung"
+                target="_blank"
+                class="font-bold"
+                >{{ t("refunded") }}</a
+              >
+            </template>
+            <template #statutes>
+              <a :href="linkStatutes" target="_blank" class="font-bold">{{
+                t("Rules of Procedure")
+              }}</a>
+            </template>
+          </i18n-t>
         </div>
 
         <div>
@@ -1238,8 +1255,9 @@ de:
   "t:mila_form_check1": "Ich unterstütze die Öffentlichkeitsarbeit und erlaube MILA, Bildmaterial, auf dem ich zu sehen bin, zu verwenden. Nähere Informationen zur Datenverarbeitung des Bildmaterials in der"
   "t:mila_form_check2": "Ich erkenne die Bestimmungen der Satzung und Beschlüsse der Generalversammlung in vollem Umfang an. Ich kann die Satzung unter folgendem Link einsehen:"
   "t:mila_form_check3": "Ich erkläre mich ausdrücklich einverstanden, dass meine personenbezogenen Daten für Zwecke der Mitgliedschaft gem. GenG verarbeitet werden. Weitere Infos in der"
-  "t:mila_form_final1": "Im Fall der Insolvenz und/oder Auflösung der Genossenschaft haften die Mitglieder der Genossenschaft deren Gläubigern mit ihren Geschäftsanteilen und zusätzlich mit einem Betrag in der Höhe ihrer Geschäftsanteile (Nachschusspflicht in der einfachen Höhe der Geschäftsanteile)."
-  "t:mila_form_final2": "Bei Kündigung wird dein eingezahlter Betrag am Ende des folgenden Geschäftsjahres zurückgezahlt, sofern es die wirtschaftliche Lage von MILA es zulässt. Mehr Infos in der"
+  "t:mila_form_final1": "Im Fall der Insolvenz und/oder Auflösung der Genossenschaft haften die Mitglieder der Genossenschaft deren Gläubigern mit ihren Geschäftsanteilen und zusätzlich mit einem Betrag in der Höhe ihrer Geschäftsanteile ({nachschusspflicht} in der einfachen Höhe der Geschäftsanteile)."
+  "t:mila_form_final2": "Bei Kündigung wird dein eingezahlter Betrag am Ende des folgenden Geschäftsjahres {refund}, sofern es die wirtschaftliche Lage von MILA es zulässt. Mehr Infos in der {statutes}."
+  "refunded": "zurückgezahlt"
   "t:mila_form_final3": "Du hast das Recht binnen 14 Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Frist beträgt 14 Tage ab der Zustellung der Annahme der Zeichnung durch den Vorstand der Genossenschaft."
 
   "i_pronouns": "Die Angabe der Pronomen ist freiwillig. Sie soll uns helfen bei Mila einen respektvollen Umgang miteinander zu pflegen, indem wir so mit- und übereinander sprechen, wie die angesprochenen Personen es wünschen."
@@ -1259,7 +1277,7 @@ en:
   "Erhalte E-Mail-Benachrichtigungen über bevorstehende Schichten.": "Receive email notifications about upcoming shifts."
   "Sichtbarer Name": "Visible name"
   "Dieser Name wird im Schichtplan und auf deiner Mitgliederkarte angezeigt. Er kann sich von deinem rechtlichen Namen unterscheiden.": "This name will be displayed in the shift schedule and on your membership card. It can differ from your legal name."
-  "Diese Daten brauchen wir rechtlich für das Mitgliederregister der Genossenschaft. Bitte gib hier deinen amtlichen Namen an. Diese Daten sind nur für das Mitgliederbüro einsehbar.": "We need this data legally for the cooperative's membership register. Please provide your legal name here. This data can only be viewed by the membership office."
+  "Diese Daten brauchen wir rechtlich für das Mitgliederregister der Genossenschaft. Bitte gib hier deinen amtlichen Namen an. Diese Daten sind nur für das Mitgliederbüro einsehbar.": "We need this data legally for the cooperative's membership register. Please provide your legal name here. This data can only be viewed by the members' office."
   "i_pronouns": "A declaration of pronouns is optional. They help us at MILA in creating an inclusive environment, by speaking to and about each other in a way, that respects everyones wishes."
   "Ich möchte eine*n Miteinkäufer*in angeben. Diese Person erhält ebenfalls eine Karte und kann einkaufen gehen, kann aber keine Mitmach-Schichten übernehmen.": "I would like to specify a co-shopper. This person will also receive a card and can go shopping, but cannot take on any participation shifts."
   "Miteinkäufer:in": "Co-shopper"
@@ -1306,7 +1324,9 @@ en:
   "t:mila_form_check1": "I allow MILA to use images in which I can be seen. Further information on the data processing of the image material can be found at:"
   "t:mila_form_check2": "I fully acknowledge the provisions of the statutes and the resolutions of the general meeting. I can view the statutes at the following link."
   "t:mila_form_check3": "I agree that my personal data will be processed for membership purposes in accordance with GenG. Further information at:"
-  "t:mila_form_final1": "In the event of insolvency and/or dissolution of the cooperative, the members of the cooperative are liable to their creditors with their shares and additionally with an amount equal to the amount of their shares (obligation to make additional contributions in the simple amount of the shares)."
-  "t:mila_form_final2": "If you cancel your membership, your deposit will be refunded at the end of the following financial year, provided that MILA's financial situation allows it. More information in the "
+  "t:mila_form_final1": "In the event of insolvency and/or dissolution of the cooperative, the members of the cooperative are liable to their creditors with their shares and additionally with an amount equal to the amount of their shares ({nachschusspflicht} in the simple amount of the shares)."
+  "t:mila_form_final2": "If you cancel your membership, your deposit will be {refund} at the end of the following financial year, provided that MILA's financial situation allows it. More information in the {statutes}."
+  "Nachschusspflicht": "obligation to make additional contributions"
+  "refunded": "refunded"
   "t:mila_form_final3": "You have the right to cancel this contract within 14 days without giving reasons. The deadline is 14 days from the delivery of the acceptance of the membership by the board of the cooperative."
 </i18n>

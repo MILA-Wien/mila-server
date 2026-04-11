@@ -1,3 +1,4 @@
+import { readItems } from "@directus/sdk";
 import type {
   OccurrencesApiResponse,
   OccurrenceAssignment,
@@ -51,6 +52,12 @@ export const getShiftOccurrencesForApi = async (
 
   const absences = await dbGetAbsences(assignmentIds, from, to);
   const publicHolidays = await dbGetPublicHolidays(from, to);
+  const directus = await useDirectusAdmin();
+  const allSkills = await directus.request(
+    readItems("shifts_skills", {
+      fields: ["icon", "name_de", "name_en"],
+    }),
+  );
 
   const occurrences: {
     shift: ShiftsShift;
@@ -117,7 +124,9 @@ export const getShiftOccurrencesForApi = async (
             username_last: user.username_last,
             hide_name: user.hide_name,
             buddy_status: user.buddy_status,
-            shifts_can_be_coordinator: membership.shifts_can_be_coordinator,
+            skills: (membership.shifts_skills ?? [])
+              .map((s: any) => s.shifts_skills_id)
+              .filter(Boolean),
             shifts_from: rawAssignment.shifts_from,
             shifts_to: rawAssignment.shifts_to,
             shifts_shift: rawAssignment.shifts_shift,
@@ -130,7 +139,7 @@ export const getShiftOccurrencesForApi = async (
               ? {
                   email: user.email,
                   memberships_phone: user.memberships_phone,
-                  shifts_assignments_count: membership["shifts_logs_count"] ?? membership["count(shifts_logs)"] ?? 0,
+                  shifts_assignments_count: membership.shifts_logs?.length ?? 0,
                 }
               : null,
           });
@@ -168,6 +177,7 @@ export const getShiftOccurrencesForApi = async (
       assignments: o.assignments,
     })),
     publicHolidays: publicHolidays.map((h) => ({ date: h.date })),
+    skills: allSkills as any,
   };
 };
 

@@ -5,6 +5,10 @@ const props = defineProps({
     type: Object as PropType<ShiftOccurrenceResponse>,
     required: true,
   },
+  admin: {
+    type: Boolean,
+    default: false,
+  },
 });
 const occ = props.occurrence;
 const shift = occ.shift;
@@ -29,9 +33,9 @@ const shift = occ.shift;
               (assignment.username_last ?? "")
         }}
         <span
-          v-if="assignment.shifts_can_be_coordinator"
-        >
-          ({{ t("Coordinator") }})</span
+          v-for="skill in assignment.skills"
+          :key="skill.icon"
+        >{{ skill.icon }}</span
         ><span v-if="index < occ.n_assigned - 1">, </span>
       </span>
     </span>
@@ -41,5 +45,4 @@ const shift = occ.shift;
 <i18n lang="yaml">
 de:
   assignments: Anmeldungen
-  Coordinator: Koordinator*in
 </i18n>

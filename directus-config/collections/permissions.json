@@ -237,7 +237,6 @@
       "shifts_skills",
       "shifts_orientation_date",
       "memberships_card_id",
-      "shifts_can_be_coordinator",
       "shifts_categories_allowed"
     ],
     "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",

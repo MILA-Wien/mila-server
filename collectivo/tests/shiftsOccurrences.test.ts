@@ -41,7 +41,7 @@ function mockAssignment(overrides: Record<string, any> = {}) {
     shifts_is_regular: true,
     shifts_membership: {
       id: 10,
-      shifts_can_be_coordinator: false,
+      shifts_skills: [],
       memberships_user: {
         username: "Alice",
         username_last: "Smith",
@@ -75,6 +75,11 @@ vi.stubGlobal("dbGetShifts", stubs.dbGetShifts);
 vi.stubGlobal("dbGetAssignmentsForApi", stubs.dbGetAssignmentsForApi);
 vi.stubGlobal("dbGetAbsences", stubs.dbGetAbsences);
 vi.stubGlobal("dbGetPublicHolidays", stubs.dbGetPublicHolidays);
+
+// Stub useDirectusAdmin for the skills query
+vi.stubGlobal("useDirectusAdmin", async () => ({
+  request: async () => [],
+}));
 
 // Expose real utility functions as globals (Nitro auto-imports them)
 import { parseUtcMidnight } from "~/server/utils/dates";
@@ -113,13 +118,15 @@ describe("getShiftOccurrencesForApi", () => {
 
   // ---- Basic response structure ----
 
-  it("returns { occurrences, publicHolidays } arrays", async () => {
+  it("returns { occurrences, publicHolidays, skills } arrays", async () => {
     setupDefaultMocks();
     const result = await getShiftOccurrencesForApi(utc("2025-03-01"), utc("2025-03-31"));
     expect(result).toHaveProperty("occurrences");
     expect(result).toHaveProperty("publicHolidays");
+    expect(result).toHaveProperty("skills");
     expect(Array.isArray(result.occurrences)).toBe(true);
     expect(Array.isArray(result.publicHolidays)).toBe(true);
+    expect(Array.isArray(result.skills)).toBe(true);
   });
 
   it("returns empty arrays when no shifts exist", async () => {
@@ -174,7 +181,8 @@ describe("getShiftOccurrencesForApi", () => {
     expect(a).toHaveProperty("username_last", "Smith");
     expect(a).toHaveProperty("hide_name", false);
     expect(a).toHaveProperty("buddy_status", "keine_angabe");
-    expect(a).toHaveProperty("shifts_can_be_coordinator", false);
+    expect(a).toHaveProperty("skills");
+    expect(Array.isArray(a.skills)).toBe(true);
     expect(a).toHaveProperty("isActive", true);
     expect(a).toHaveProperty("isOneTime", true);
     expect(a).toHaveProperty("isSelf", false);
@@ -218,7 +226,7 @@ describe("getShiftOccurrencesForApi", () => {
       shifts_is_regular: false,
       shifts_membership: {
         id: 10,
-        shifts_can_be_coordinator: false,
+        shifts_skills: [],
         memberships_user: {
           username: "Bob",
           username_last: "Jones",
@@ -241,7 +249,7 @@ describe("getShiftOccurrencesForApi", () => {
       shifts_is_regular: false,
       shifts_membership: {
         id: 10,
-        shifts_can_be_coordinator: false,
+        shifts_skills: [],
         memberships_user: {
           username: "SecretUser",
           username_last: "Hidden",
@@ -280,7 +288,7 @@ describe("getShiftOccurrencesForApi", () => {
       shifts_is_regular: false,
       shifts_membership: {
         id: 10,
-        shifts_can_be_coordinator: false,
+        shifts_skills: [],
         memberships_user: {
           username: "SecretAdmin",
           username_last: "Visible",
@@ -308,7 +316,7 @@ describe("getShiftOccurrencesForApi", () => {
       shifts_is_regular: false,
       shifts_membership: {
         id: 10,
-        shifts_can_be_coordinator: true,
+        shifts_skills: [{ shifts_skills_id: { icon: "*" } }],
         memberships_user: {
           username: "Admin",
           username_last: "User",
@@ -340,7 +348,7 @@ describe("getShiftOccurrencesForApi", () => {
       shifts_is_regular: false,
       shifts_membership: {
         id: 77,
-        shifts_can_be_coordinator: false,
+        shifts_skills: [],
         memberships_user: {
           username: "Me",
           username_last: "Myself",
@@ -380,7 +388,7 @@ describe("getShiftOccurrencesForApi", () => {
       shifts_is_regular: false,
       shifts_membership: {
         id: 10,
-        shifts_can_be_coordinator: false,
+        shifts_skills: [],
         memberships_user: {
           username: "Absent",
           username_last: "User",
@@ -461,7 +469,7 @@ describe("getShiftOccurrencesForApi", () => {
       id: 100, shifts_shift: 1, shifts_from: "2025-03-15", shifts_is_regular: false,
       shifts_membership: {
         id: 10,
-        shifts_can_be_coordinator: false,
+        shifts_skills: [],
         memberships_user: { username: "A", username_last: "A", hide_name: false, buddy_status: "keine_angabe" },
       },
     });
@@ -469,7 +477,7 @@ describe("getShiftOccurrencesForApi", () => {
       id: 101, shifts_shift: 1, shifts_from: "2025-03-15", shifts_is_regular: false,
       shifts_membership: {
         id: 11,
-        shifts_can_be_coordinator: false,
+        shifts_skills: [],
         memberships_user: { username: "B", username_last: "B", hide_name: false, buddy_status: "keine_angabe" },
       },
     });

@@ -147,17 +147,6 @@ async function prepareEvents() {
         "]";
     }
 
-    // If any of the assignments memberships has shifts_can_be_coordinator set, show (*) after the shift name
-    if (
-      occurrence.assignments.some(
-        (assignment) =>
-          assignment.isActive && // Only consider active assignments
-          assignment.shifts_can_be_coordinator,
-      )
-    ) {
-      title += "*";
-    }
-
     events.push({
       title: title,
       start: occurrence.start,
@@ -180,16 +169,26 @@ prepareEvents();
     <div class="font-bold">
       {{ t("Legend") }}
     </div>
-    <p class="">Stern (*): {{ t("This shift has a coordinator") }}</p>
+    <template v-if="events.skills.length > 0">
+      <p>{{ t("skills_heading") }}</p>
+      <ul class="ml-4 list-disc">
+        <li
+          v-for="skill in events.skills"
+          :key="skill.icon"
+        >
+          {{ skill.icon }}: {{ locale.startsWith('de') ? skill.name_de : skill.name_en }}
+        </li>
+      </ul>
+    </template>
     <p class="">
-      Buddy (BETA): {{ t("This shift has a buddy coordinator") }}
+      Buddy (BETA): {{ t("buddy_description") }}
     </p>
     <p class="">
-      {{ t("Red: Shift is heavily understaffed (2+ spots open)") }} <br />
-      {{ t("Orange: Shift is slightly understaffed (1 spot open)") }} <br />
-      {{ t("Green: Shift is fully staffed") }} <br />
-      {{ t("Grey: Past shift") }} <br />
-      {{ t("Blue: Public holiday") }} <br />
+      {{ t("color_red") }} <br />
+      {{ t("color_orange") }} <br />
+      {{ t("color_green") }} <br />
+      {{ t("color_gray") }} <br />
+      {{ t("color_blue") }} <br />
     </p>
   </div>
 </template>
@@ -207,14 +206,22 @@ prepareEvents();
 </style>
 
 <i18n lang="yaml">
+en:
+  "skills_heading": "Available skills:"
+  "buddy_description": "This shift has a buddy"
+  "color_red": "Red: This shift is severely understaffed (more than 1 slot open)"
+  "color_orange": "Orange: This shift is slightly understaffed (1 slot open)"
+  "color_green": "Green: This shift is fully staffed"
+  "color_gray": "Gray: Past shift"
+  "color_blue": "Blue: Public holiday"
 de:
+  "skills_heading": "Vorhandene Fähigkeiten:"
   "Public holiday": "Feiertag"
   "Legend": "Legende"
-  "This shift has a coordinator": "Diese Schicht hat eine*n Koordinator*in"
-  "This shift has a buddy coordinator": "In dieser Schicht gibt es einen Buddy"
-  "Red: Shift is heavily understaffed (2+ spots open)": "Rot: Diese Schicht ist stark unterbesetzt (mehr als 1 Platz frei)"
-  "Orange: Shift is slightly understaffed (1 spot open)": "Orange: Diese Schicht ist leicht unterbesetzt (1 Platz frei)"
-  "Green: Shift is fully staffed": "Grün: Diese Schicht ist voll besetzt"
-  "Grey: Past shift": "Grau: Vergangene Schicht"
-  "Blue: Public holiday": "Blau: Feiertag"
+  "buddy_description": "In dieser Schicht gibt es einen Buddy"
+  "color_red": "Rot: Diese Schicht ist stark unterbesetzt (mehr als 1 Platz frei)"
+  "color_orange": "Orange: Diese Schicht ist leicht unterbesetzt (1 Platz frei)"
+  "color_green": "Grün: Diese Schicht ist voll besetzt"
+  "color_gray": "Grau: Vergangene Schicht"
+  "color_blue": "Blau: Feiertag"
 </i18n>

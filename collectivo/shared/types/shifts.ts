@@ -1,3 +1,13 @@
+export interface AssignmentSkill {
+  icon: string;
+}
+
+export interface ShiftSkill {
+  icon: string;
+  name_de: string;
+  name_en: string;
+}
+
 export interface OccurrenceAssignment {
   assignmentId: number;
   membershipId: number;
@@ -5,7 +15,7 @@ export interface OccurrenceAssignment {
   username_last: string;
   hide_name: boolean;
   buddy_status: "keine_angabe" | "is_buddy" | "need_buddy";
-  shifts_can_be_coordinator: boolean;
+  skills: AssignmentSkill[];
   shifts_from: string;
   shifts_to?: string;
   shifts_shift: number;
@@ -48,4 +58,5 @@ export interface ShiftOccurrenceResponse {
 export interface OccurrencesApiResponse {
   occurrences: ShiftOccurrenceResponse[];
   publicHolidays: { date: string }[];
+  skills: ShiftSkill[];
 }
