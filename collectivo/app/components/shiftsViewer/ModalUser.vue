@@ -5,7 +5,7 @@ const { locale } = useI18n();
 
 const props = defineProps({
   shiftOccurence: {
-    type: Object,
+    type: Object as PropType<ShiftOccurrenceResponse>,
     required: true,
   },
 });
@@ -90,7 +90,7 @@ async function postAssignmentInner(regular: boolean) {
   if (occurrences.length != 1) {
     throw new Error("No or multiple occurrences found");
   }
-  const occ = occurrences[0];
+  const occ = (occurrences as any)[0];
 
   if (occ.n_assigned >= occ.shift.shifts_slots) {
     const m = "Somebody else has just signed up for this shift";

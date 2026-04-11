@@ -24,12 +24,12 @@ async function getAssignmentsInTwoDays(date: Date) {
   const targetDate = new Date(date);
   targetDate.setDate(targetDate.getDate() + 3);
   console.log("Sending reminders for shifts on ", targetDate.toISOString());
-  const shifts: ShiftsShift[] = await dbGetShifts(
+  const shifts = (await dbGetShifts(
     targetDate,
     targetDate,
     undefined,
     true,
-  );
+  )) as ShiftsShift[];
 
   const shiftIds = shifts.map((shift) => shift.id);
 
@@ -68,8 +68,8 @@ async function getAssignmentsInTwoDays(date: Date) {
     const rules = getAssignmentRrules(
       shift,
       shiftRule,
-      filteredAssignments,
-      absences,
+      filteredAssignments as ShiftsAssignment[],
+      absences as ShiftsAbsence[],
     );
 
     assignmentRules.push(...rules);

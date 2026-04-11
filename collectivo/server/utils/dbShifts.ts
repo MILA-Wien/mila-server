@@ -7,8 +7,6 @@ import {
   updateItem,
   updateSingleton,
 } from "@directus/sdk";
-import type { QueryFilter } from "@directus/sdk";
-import type { ShiftsShift } from "./dbSchema";
 
 const directus = useDirectusAdmin();
 
@@ -22,7 +20,7 @@ export async function dbGetShifts(
   shiftID?: number,
   loadCat?: boolean,
 ) {
-  const filter: QueryFilter<DbSchema, ShiftsShift> = {
+  const filter: Record<string, any> = {
     _or: [
       {
         shifts_is_regular: { _eq: false },
@@ -58,7 +56,7 @@ export async function dbGetShifts(
 // ASSIGNMENT QUERIES
 // ============================================================================
 
-function assignmentFilter(shiftIds: number[], from: Date, to: Date) {
+function assignmentFilter(shiftIds: number[], from: Date, to: Date): any {
   return {
     _or: [
       {
@@ -90,7 +88,7 @@ export async function dbGetAssignmentsWithNotifications(
   return await directus.request(
     readItems("shifts_assignments", {
       limit: -1,
-      filter: assignmentFilter(shiftIds, from, to),
+      filter: assignmentFilter(shiftIds, from, to) as any,
       fields: [
         "id",
         "shifts_from",
@@ -147,8 +145,7 @@ export async function dbGetAssignmentsForApi(
   return await directus.request(
     readItems("shifts_assignments", {
       limit: -1,
-      filter: assignmentFilter(shiftIds, from, to),
-      // @ts-expect-error dynamic field selection
+      filter: assignmentFilter(shiftIds, from, to) as any,
       fields: [
         "id",
         "shifts_from",
@@ -181,7 +178,7 @@ export async function dbGetAbsences(
           { shifts_to: { _gte: from.toISOString() } },
           { shifts_from: { _lte: to.toISOString() } },
         ],
-      },
+      } as any,
       fields: [
         "shifts_membership",
         "shifts_from",
@@ -203,7 +200,7 @@ export async function dbGetPublicHolidays(from: Date, to: Date) {
         date: {
           _and: [{ _gte: from.toISOString() }, { _lte: to.toISOString() }],
         },
-      },
+      } as any,
       limit: -1,
       fields: ["date"],
     }),
@@ -421,7 +418,7 @@ export async function dbGetActiveHolidayMemberships(date: Date) {
         shifts_is_holiday: { _eq: true },
         shifts_to: { _gte: date.toISOString() },
         shifts_from: { _lte: date.toISOString() },
-      },
+      } as any,
       fields: ["id", "shifts_membership"],
       limit: -1,
     }),
@@ -456,7 +453,7 @@ export async function dbGetShiftLogsByDate(date: Date) {
           _gte: date.toISOString(),
           _lte: date.toISOString(),
         },
-      },
+      } as any,
     }),
   );
 }
@@ -474,7 +471,7 @@ export async function dbGetDashboardAssignments(mship: number) {
         shifts_to: {
           _or: [{ _gte: now.toISOString() }, { _null: true }],
         },
-      },
+      } as any,
       limit: -1,
       fields: [
         "*",
@@ -504,7 +501,7 @@ export async function dbGetDashboardAbsences(mship: number) {
           },
         ],
         shifts_to: { _gte: now.toISOString() },
-      },
+      } as any,
       fields: [
         "*",
         { shifts_assignment: ["id", { shifts_shift: ["shifts_name"] }] },
@@ -545,7 +542,7 @@ export async function dbGetMembershipById(id: number) {
         "shifts_categories_allowed",
         "shifts_user_type",
         { shifts_skills: [{ shifts_skills_id: ["icon"] }] },
-      ],
+      ] as any,
     }),
   );
 }
@@ -557,8 +554,7 @@ export async function dbGetMembershipById(id: number) {
 export async function dbGetTiles() {
   return await directus.request(
     readItems("collectivo_tiles", {
-      // @ts-expect-error tiles_buttons is a nested field
-      fields: ["*", { tiles_buttons: ["*"] }],
+      fields: ["*", { tiles_buttons: ["*"] }] as any,
       filter: {
         tiles_view_for: {
           _neq: "hide",

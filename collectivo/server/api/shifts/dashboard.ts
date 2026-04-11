@@ -101,15 +101,15 @@ const getAssignmentInfos = async (
   const filteredAbsences = absences.filter(
     (absence) =>
       absence.shifts_assignment == null ||
-      absence.shifts_assignment.id == assignment.id,
+      (absence.shifts_assignment as any).id == assignment.id,
   );
 
   const { assignmentRule, holidayRule, otherAbsencesRule } = getRules(
     assignment,
-    filteredAbsences,
+    filteredAbsences as ShiftsAbsence[],
   );
 
-  const excludePublicHolidays = assignment.shifts_shift.exclude_public_holidays;
+  const excludePublicHolidays = (assignment.shifts_shift as any).exclude_public_holidays;
 
   // Get the next 4 occurrences
   const occurrences: OccurrenceInfo[] = [];
@@ -138,7 +138,7 @@ const getAssignmentInfos = async (
   if (occurrences.length > 0) {
     const team_ = await getShiftTeam(
       assignment,
-      occurrences[0].date,
+      occurrences[0]!.date,
       mship,
     );
     team.push(...team_);
@@ -167,7 +167,7 @@ const getShiftTeam = async (
   );
 
   if (occs.occurrences.length > 0) {
-    for (const a of occs.occurrences[0].assignments) {
+    for (const a of occs.occurrences[0]!.assignments) {
       if (!a.isActive) continue;
       const name = a.username === "" ? "" : `${a.username} ${a.username_last}`;
       const icons = a.skills

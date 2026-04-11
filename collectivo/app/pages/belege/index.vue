@@ -8,6 +8,7 @@ definePageMeta({
 interface Beleg {
   timestamp: string;
   id: string;
+  external_number: string;
   customer_id: string;
   name: string;
   vat: number;
@@ -20,6 +21,7 @@ interface Position {
   product_id: string;
   product_name: string;
   net: number;
+  amount: number;
   gross: number;
   vat: number;
 }

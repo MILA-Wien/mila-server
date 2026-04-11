@@ -1,11 +1,11 @@
 type types = "error" | "success" | "warn" | "info";
-type colors = "red" | "green" | "yellow" | "blue";
+type colors = "error" | "success" | "warning" | "info";
 
 const toastDefaults: Record<types, { title: string; description: string; color: colors; icon: string }> = {
-  error:   { title: "Error",   description: "An error occurred",    color: "red",    icon: "i-heroicons-exclamation-triangle" },
-  success: { title: "Success", description: "Operation successful", color: "green",  icon: "i-heroicons-check" },
-  warn:    { title: "Warning", description: "",                     color: "yellow", icon: "i-heroicons-exclamation-triangle" },
-  info:    { title: "Info",    description: "",                     color: "blue",   icon: "i-heroicons-information-circle" },
+  error:   { title: "Error",   description: "An error occurred",    color: "error",   icon: "i-heroicons-exclamation-triangle" },
+  success: { title: "Success", description: "Operation successful", color: "success", icon: "i-heroicons-check" },
+  warn:    { title: "Warning", description: "",                     color: "warning", icon: "i-heroicons-exclamation-triangle" },
+  info:    { title: "Info",    description: "",                     color: "info",    icon: "i-heroicons-information-circle" },
 };
 
 export function showToast(options: {

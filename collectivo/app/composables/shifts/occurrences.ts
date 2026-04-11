@@ -3,7 +3,7 @@ export async function getOccurrences(
   endDate: string,
   admin: boolean,
 ): Promise<OccurrencesApiResponse> {
-  return await $fetch("/api/shifts/occurrences", {
+  return await $fetch<OccurrencesApiResponse>("/api/shifts/occurrences", {
     query: {
       from: startDate,
       to: endDate,
@@ -12,6 +12,6 @@ export async function getOccurrences(
   });
 }
 
-export async function getShiftsDashboard() {
+export async function getShiftsDashboard(): Promise<any> {
   return await $fetch("/api/shifts/dashboard");
 }

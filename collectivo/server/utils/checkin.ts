@@ -7,6 +7,8 @@ interface CheckinData {
   cardId?: string | null;
   membership?: number;
   username?: string;
+  username_last?: string;
+  pronouns?: string;
   shiftsType?: string;
   shiftScore?: number;
   isOnHoliday?: boolean;
@@ -114,13 +116,18 @@ async function createNewCheckinState(cardID?: string, mshipId?: number) {
     coshopper_name = coshopper?.first_name + " " + coshopper?.last_name;
   }
 
+  const mshipUser = mship.memberships_user as {
+    username: string;
+    username_last: string;
+    pronouns: string;
+  };
   return {
     cardId: cardID || mship.memberships_card_id || "Keine Karte",
     membership: mship.id,
     membershipsType: mship.memberships_type,
-    username: mship.memberships_user.username,
-    username_last: mship.memberships_user.username_last,
-    pronouns: mship.memberships_user.pronouns,
+    username: mshipUser.username,
+    username_last: mshipUser.username_last,
+    pronouns: mshipUser.pronouns,
     shiftScore: mship.shifts_counter,
     shiftsType: mship.shifts_user_type,
     isOnHoliday: isOnHoliday,
@@ -169,13 +176,14 @@ async function getMshipThroughCoCard(cardID: string) {
     return { mship2: null, coshopper: null };
   }
 
-  let coshopper = memberships[0].coshoppers?.find(
-    (c) => c.memberships_coshoppers_id.membership_card_id === cardID,
+  const m0 = memberships[0] as any;
+  let coshopper = m0?.coshoppers?.find(
+    (c: any) => c.memberships_coshoppers_id.membership_card_id === cardID,
   )?.memberships_coshoppers_id;
 
   if (!coshopper) {
-    coshopper = memberships[0].kids?.find(
-      (k) => k.memberships_coshoppers_id.membership_card_id === cardID,
+    coshopper = m0?.kids?.find(
+      (k: any) => k.memberships_coshoppers_id.membership_card_id === cardID,
     )?.memberships_coshoppers_id;
   }
 
@@ -183,7 +191,7 @@ async function getMshipThroughCoCard(cardID: string) {
     throw new Error("NO_COSHOPPER_FOUND_FOR_CARD_ID");
   }
 
-  return { mship: memberships[0], coshopper };
+  return { mship: memberships[0]!, coshopper };
 }
 
 async function createLog(state: CheckinData) {

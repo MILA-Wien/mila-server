@@ -62,7 +62,7 @@ export async function dbGetMembershipByCoCard(cardId: string) {
             },
           },
         ],
-      },
+      } as any,
       fields: [
         "id",
         "memberships_type",
@@ -71,7 +71,7 @@ export async function dbGetMembershipByCoCard(cardId: string) {
         { memberships_user: ["username", "pronouns"] },
         { coshoppers: ["memberships_coshoppers_id.*"] },
         { kids: ["memberships_coshoppers_id.*"] },
-      ],
+      ] as any,
     }),
   );
 }
@@ -84,7 +84,7 @@ export async function dbGetCheckinAbsences(mshipId: number, dateStr: string) {
         shifts_is_holiday: { _eq: true },
         shifts_to: { _gte: dateStr },
         shifts_from: { _lte: dateStr },
-      },
+      } as any,
       fields: ["id"],
     }),
   );
@@ -115,7 +115,7 @@ export async function dbCreateCheckinLog(
     createItem("milaccess_log", {
       membership: mshipId,
       date: dateStr,
-      coshopper: coshopperId,
+      coshopper: coshopperId as any,
     }),
   );
 }

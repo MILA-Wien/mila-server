@@ -27,7 +27,7 @@ const shift = occ.value.shift;
 
 const start = new Date(occ.value.start);
 const end = new Date(occ.value.end);
-const startDateString = start.toISOString().split("T")[0];
+const startDateString = start.toISOString().split("T")[0]!;
 
 const repeats = shift.shifts_repeats_every ?? 0;
 const isWeeks = repeats % 7 === 0;
@@ -88,7 +88,7 @@ async function updateLog(
     );
     assignment.log = log;
   } else {
-    await updateShiftLogsAdmin(assignment.log.id, type);
+    await updateShiftLogsAdmin(assignment.log.id!, type);
     assignment.log.shifts_type = type;
   }
 }
@@ -193,13 +193,13 @@ function startCreateAssignmentFlow() {
 }
 
 async function fetchOccurrences(date: string, shiftID: number) {
-  return (await $fetch("/api/shifts/occurrences", {
+  return (await $fetch<{ occurrences: ShiftOccurrenceResponse[] }>("/api/shifts/occurrences", {
     query: {
       from: date,
       to: date,
       shiftID: shiftID,
     },
-  })) as { occurrences: ShiftOccurrenceResponse[] };
+  }));
 }
 
 async function createAssignment(onetime: boolean) {
@@ -215,7 +215,7 @@ async function createAssignment(onetime: boolean) {
   if (occurrences.length != 1) {
     throw new Error("No or multiple occurrences found");
   }
-  const occl = occurrences[0];
+  const occl = occurrences[0]!;
   if (occl.n_assigned >= occl.shift.shifts_slots) {
     const m = "Somebody else has just signed up for this shift";
     showToast({
@@ -239,8 +239,8 @@ async function createAssignment(onetime: boolean) {
   occ.value.assignments.push({
     assignmentId: (res as any).id,
     membershipId: mshipID.value!,
-    username: mshipData.value?.memberships_user?.username ?? "",
-    username_last: mshipData.value?.memberships_user?.username_last ?? "",
+    username: (mshipData.value?.memberships_user as any)?.username ?? "",
+    username_last: (mshipData.value?.memberships_user as any)?.username_last ?? "",
     hide_name: false,
     buddy_status: "keine_angabe",
     skills: ((mshipData.value as any)?.shifts_skills ?? [])
@@ -290,7 +290,7 @@ function checkIfMshipInAssignments(mship: number) {
 </script>
 
 <template>
-  <UModal v-model:open="mainModalIsOpen" :ui="{ width: 'sm:max-w-[1000px]' }">
+  <UModal v-model:open="mainModalIsOpen" :ui="({ width: 'sm:max-w-[1000px]' } as any)">
     <template #content>
       <div class="m-10">
         <div class="flex items-start justify-between">
@@ -500,8 +500,8 @@ function checkIfMshipInAssignments(mship: number) {
 
             <div v-if="mshipData">
               <p class="font-bold">
-                {{ mshipData.memberships_user.username }}
-                {{ mshipData.memberships_user.username_last ?? "" }}
+                {{ (mshipData.memberships_user as any)?.username }}
+                {{ (mshipData.memberships_user as any)?.username_last ?? "" }}
               </p>
               <p>
                 {{ t("Membership type") }}: {{ mshipData.memberships_type }}

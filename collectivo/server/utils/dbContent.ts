@@ -67,7 +67,7 @@ export async function dbCreateSolitopfRequest(data: {
   auszahlung: string;
   weitere_unterstuetzung: boolean;
 }) {
-  return await directus.request(createItem("bedarfsmeldung_solitopf", data));
+  return await directus.request(createItem("bedarfsmeldung_solitopf", data as any));
 }
 
 export async function dbGetSolitopfStats() {
@@ -85,7 +85,7 @@ export async function dbGetSolitopfStats() {
               { first_payout: { _nnull: true } },
               { first_payout: { _gte: "$NOW(-6 months)" } },
             ],
-          },
+          } as any,
         },
       }),
     ),
@@ -100,8 +100,8 @@ export async function dbGetSolitopfStats() {
     funds_available: Number(solitopf?.funds_available ?? 0.0),
     funds_received: Number(solitopf?.total_received ?? 0.0),
     funds_distributed: Number(solitopf?.total_distributed ?? 0.0),
-    receiving: Number(receiving?.[0]?.countDistinct?.membership ?? 0),
-    waiting: Number(waiting?.[0]?.countDistinct?.membership ?? 0),
+    receiving: Number((receiving as any)?.[0]?.countDistinct?.membership ?? 0),
+    waiting: Number((waiting as any)?.[0]?.countDistinct?.membership ?? 0),
   };
 }
 
@@ -214,5 +214,5 @@ export async function dbGetRoleByName(name: string) {
     throw new Error(name + " role not found");
   }
 
-  return roles[0].id;
+  return roles[0]!.id;
 }

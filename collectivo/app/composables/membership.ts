@@ -1,4 +1,4 @@
-export async function getMembership(id: number) {
+export async function getMembership(id: number): Promise<any> {
   return await $fetch(`/api/memberships/${id}`);
 }
 

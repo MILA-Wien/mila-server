@@ -8,7 +8,7 @@ let timeoutId: NodeJS.Timeout | null = null;
 
 const fetchData = async () => {
   try {
-    checkinState.value = await $fetch("/api/checkin/current_state");
+    checkinState.value = await $fetch<any>("/api/checkin/current_state");
   } catch (err) {
     console.error("Fetch error:", err);
   } finally {

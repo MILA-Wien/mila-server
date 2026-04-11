@@ -1,6 +1,7 @@
 {
   "name": "mila-server",
   "scripts": {
+    "typecheck": "pnpm --filter mila-nuxt typecheck",
     "dev": "pnpm run -r --parallel dev",
     "test": "pnpm run -r --parallel test",
     "test:ci": "concurrently --raw --kill-others \"pnpm preview\" \"sleep 5 && pnpm seed && pnpm run -r --parallel test\"",

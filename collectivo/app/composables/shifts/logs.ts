@@ -17,14 +17,14 @@ export async function updateShiftLogsAdmin(
   type: "attended" | "missed",
 ) {
   return await $fetch(`/api/shifts/logs/${logID}`, {
-    method: "PUT",
+    method: "PUT" as any,
     body: { type },
   });
 }
 
 export async function deleteShiftLogsAdmin(logID: number) {
   return await $fetch(`/api/shifts/logs/${logID}`, {
-    method: "DELETE",
+    method: "DELETE" as any,
   });
 }
 

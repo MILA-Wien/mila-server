@@ -45,7 +45,7 @@ profileMenuItems.value.push({
 
 // Language switcher
 const switchLanguage = (lang: string) => {
-  setLocale(lang);
+  setLocale(lang as "en" | "de");
   isOpen.value = false;
 };
 </script>

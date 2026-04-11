@@ -39,7 +39,7 @@ const viewOptions = [
   { label: "Week", value: "week" },
   { label: "Month", value: "month" },
 ];
-const selectedView = ref(viewOptions[2]);
+const selectedView = ref(viewOptions[2]!);
 
 const filterOptions = [
   { label: "All shifts", value: "all" },
@@ -50,7 +50,7 @@ const filterOptions = [
 const route = useRoute();
 const router = useRouter();
 
-const selectedFilter = ref(filterOptions[0]);
+const selectedFilter = ref(filterOptions[0]!);
 
 if (route.query.filter) {
   const filter = filterOptions.find(
@@ -62,6 +62,7 @@ if (route.query.filter) {
 }
 
 watch(selectedFilter, (newVal) => {
+  if (!newVal) return;
   router.replace({
     query: {
       ...route.query,
@@ -79,11 +80,12 @@ const categories = ref<ShiftsCategory[]>([
   },
 ]);
 
-const selectedCategory = ref(categories.value[0]);
+const selectedCategory = ref(categories.value[0]!);
 const allowedCategoryIds = ref<number[]>([]);
 
 // Update URL when ref changes
 watch(selectedCategory, (newVal) => {
+  if (!newVal) return;
   router.replace({
     query: {
       ...route.query,
