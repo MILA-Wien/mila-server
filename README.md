@@ -4,7 +4,7 @@ Member plattform of [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/).
 
 ## Local development setup
 
-- Install Docker and PNPM
+- Install Docker, nodejs, and PNPM
 - Clone this repository
 
 - Create .env file with `cp .env.example .env`
