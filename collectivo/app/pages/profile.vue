@@ -5,7 +5,7 @@ import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
 definePageMeta({
   middleware: ["auth"],
 });
-const { t } = useI18n();
+const { t, locale } = useI18n();
 setPageTitle(t("Profile"));
 
 const toast = useToast();
@@ -448,6 +448,34 @@ function personTypeLabel(val: string | null | undefined) {
           </li>
         </ul>
       </div>
+
+      <!-- Skills -->
+      <div
+        v-if="membership?.shifts_skills && membership.shifts_skills.length > 0"
+        class="mt-4"
+      >
+        <h3 class="text-base mb-2">{{ t("Skills") }}</h3>
+        <ul class="space-y-1">
+          <li
+            v-for="entry in membership.shifts_skills"
+            :key="entry.shifts_skills_id?.id"
+            class="text-sm"
+          >
+            {{ entry.shifts_skills_id?.icon }}
+            {{
+              locale.startsWith("de")
+                ? entry.shifts_skills_id?.name_de
+                : entry.shifts_skills_id?.name_en
+            }}
+          </li>
+        </ul>
+        <p class="mt-2">
+          {{ t("skills_managed_by_office") }}
+          <NuxtLink to="/help" class="underline">{{
+            t("members_office")
+          }}</NuxtLink>{{ t("skills_managed_suffix") }}
+        </p>
+      </div>
     </div>
 
     <!-- ── Direktkredite ─────────────────────────────────────────────────── -->
@@ -521,6 +549,10 @@ de:
   "IBAN": "IBAN"
   "Kontoinhaber:in": "Kontoinhaber:in"
   "Miteinkäufer*in": "Miteinkäufer*in"
+  "Skills": "Fähigkeiten"
+  "skills_managed_by_office": "Deine Fähigkeiten werden vom"
+  "members_office": "Mitgliederbüro"
+  "skills_managed_suffix": " verwaltet."
   "Karte": "Karte"
   "Deine Mitgliedschaft wurde beendet.": "Deine Mitgliedschaft wurde beendet."
   "Dein Beitrittsantrag wird gerade bearbeitet.": "Dein Beitrittsantrag wird gerade bearbeitet."
@@ -576,6 +608,10 @@ en:
   "IBAN": "IBAN"
   "Kontoinhaber:in": "Account holder"
   "Miteinkäufer*in": "Coshopper"
+  "Skills": "Skills"
+  "skills_managed_by_office": "Your skills are managed by the"
+  "members_office": "members' office"
+  "skills_managed_suffix": "."
   "Karte": "Card"
   "Speichern": "Save"
   "Deine Mitgliedschaft wurde beendet.": "Your membership has ended."

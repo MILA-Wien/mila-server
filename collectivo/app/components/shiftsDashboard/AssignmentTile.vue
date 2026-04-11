@@ -16,8 +16,7 @@ const props = defineProps({
 const data = props.shiftAssignment;
 const occurrences = data.occurrences;
 const assignment = data.assignment;
-const coworkers = data.coworkers;
-const coordinators = data.coordinators || [];
+const team = data.team || [];
 const shift = data.assignment.shifts_shift;
 const cats = useShiftsCategories();
 const emit = defineEmits(["reload"]);
@@ -46,21 +45,12 @@ function getEndDate(endDate: string) {
           </p>
         </template>
 
-        <!-- Shift coordinators -->
-        <p v-if="coordinators.length > 0">
-          {{ t("Coordination") }}:
-          <span v-for="(item, index) in coordinators" :key="index">
-            {{ item === "" ? t("Anonymous") : item
-            }}<span v-if="index < coordinators.length - 1">, </span>
-          </span>
-        </p>
-
-        <!-- Shift coworkers -->
-        <p v-if="coworkers.length > 0">
+        <!-- Shift team -->
+        <p v-if="team.length > 0">
           {{ t("Team") }}:
-          <span v-for="(item, index) in coworkers" :key="index">
+          <span v-for="(item, index) in team" :key="index">
             {{ item === "" ? t("Anonymous") : item
-            }}<span v-if="index < coworkers.length - 1">, </span>
+            }}<span v-if="index < team.length - 1">, </span>
           </span>
         </p>
 
@@ -114,7 +104,7 @@ function getEndDate(endDate: string) {
 
 <i18n lang="yaml">
 en:
-  "t:signout_regular": "You are only unsubscribed for this date – future events are not affected. For a permanent unsubscription, please contact the membership office."
+  "t:signout_regular": "You are only unsubscribed for this date – future events are not affected. For a permanent unsubscription, please contact the members' office."
   "ics_preamble": "Warning: This calendar entry will not be automatically updated if your shift schedule changes. You can view your current shift schedule online in the member area. Please remember to delete old calendar entries and create a new one if your shift schedule changes."
   "Calendar download": "Calendar export"
 de:
@@ -129,8 +119,6 @@ de:
   "to": "bis"
   "until": "bis"
   "You": "Du"
-  "Coordinator": "Koordinator*in"
-  "Coordination": "Koordination"
   "Sign out from the following shift": "Von folgender Schicht abmelden"
   "You are signed out for this shift": "Du bist von dieser Schicht abgemeldet"
   "Assigned people": "Angemeldete Personen"

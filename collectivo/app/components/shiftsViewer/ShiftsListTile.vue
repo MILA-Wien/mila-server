@@ -34,6 +34,7 @@ if (shift.shifts_from_time && shift.shifts_to_time) {
   shiftTitle = t("All day");
 }
 shiftTitle += " (" + shift.shifts_name + ")";
+
 </script>
 
 <template>
@@ -48,7 +49,7 @@ shiftTitle += " (" + shift.shifts_name + ")";
       </div>
 
       <!-- Assignments -->
-      <ShiftsViewerAssignmentList :occurrence="occ" />
+      <ShiftsViewerAssignmentList :occurrence="occ" :admin="admin" />
     </div>
     <!-- Space for buttons -->
     <div class="flex flex-wrap gap-2">

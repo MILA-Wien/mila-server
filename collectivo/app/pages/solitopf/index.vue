@@ -110,7 +110,7 @@ de:
   Here you can find guides and information about our cooperative.: Hier findest du Anleitungen und Informationen über unsere Genossenschaft.
   Otherwise you can also come talk to us in Person every Tuesday from 16:00 - 19:00 at the MILA Minimarkt (Krichbaumgasse 25, Innenhof, 1120 Wien).: Ansonsten kannst du uns auch jeden Dienstag von 16:00 - 19:00 im MILA Minimarkt (Krichbaumgasse 25, Innenhof, 1120 Wien) persönlich erreichen.
   Open handbook: Handbuch öffnen
-  Membership office: Mitgliederbüro
+  "Members' office": Mitgliederbüro
   You can reach us via email under: Du erreichst uns per E-Mail unter
   or via phone under: oder telefonisch unter
   Write an email: E-Mail schreiben
