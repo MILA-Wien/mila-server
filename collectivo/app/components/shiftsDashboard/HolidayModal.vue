@@ -37,7 +37,8 @@ async function postAbsenceInner() {
       type: "error",
       title: "Error",
       description: t(
-        `Absence must start at least ${MIN_DAYS_BEFORE_HOLIDAY} days from today.`,
+        "Absence must start at least {days} days from today.",
+        { days: MIN_DAYS_BEFORE_HOLIDAY },
       ),
     });
     return;

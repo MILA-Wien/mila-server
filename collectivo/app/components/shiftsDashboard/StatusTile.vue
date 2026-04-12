@@ -132,6 +132,7 @@ de:
   "You can nonetheless sign up for shifts if you want.": "Du kannst dich trotzdem für Schichten anmelden, wenn du möchtest."
   "Your membership is currently inactive.": "Deine Mitgliedschaft ist derzeit inaktiv."
   "Please contact the members' office if you want to change your status.": "Bitte kontaktiere das Mitgliederbüro, wenn du deinen Status ändern möchtest."
+  "day": "Tag"
   "days": "Tagen"
   "Timespan": "Zeitraum"
   "to": "bis"

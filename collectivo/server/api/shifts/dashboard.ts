@@ -173,7 +173,7 @@ const getShiftTeam = async (
       const icons = a.skills
         .map((s) => s.icon)
         .join("");
-      team.push(name + icons);
+      team.push([name, icons].filter(Boolean).join(" "));
     }
   }
 
