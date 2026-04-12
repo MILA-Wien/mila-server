@@ -22,7 +22,7 @@
     ```
     - Go to Admin settings > OpenID Connect > Register
       - Identifier: anything descriptive, e.g. `Keycloak`
-      - Client ID: `nextcloud` (as defined in the [collectivo realm](keycloak/import/collectivo-realm.json))
+      - Client ID: `nextcloud` (as defined in the [collectivo realm](../keycloak/import/collectivo-realm.json))
       - Client Secret: empty
       - Discovery endpoint: `http://keycloak:8080/realms/collectivo/.well-known/openid-configuration`
     - You can now login with the test users as for directus
