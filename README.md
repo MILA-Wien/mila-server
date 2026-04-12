@@ -103,53 +103,18 @@ Login credentials for [keycloak admin UI](http://keycloak:8080):
 - Username `admin@example.com`
 - Password `admin`
 
-[Keycloak docs](https://www.keycloak.org/docs/latest/server_admin/index.html#keycloak-features-and-concepts)
+For more details see the [Keycloak readme](keycloak/README.md).
 
 ## Local setup with Nextcloud
 
-### Setup
-
 - In `.env`, set `COMPOSE_PROFILES = "dev,keycloak,nextcloud"`
 - Open the [Nextcloud GUI](http://localhost:8081) and create an admin user to finish the installation.
-- Install apps:
-  - in production
-    - [OpenID Connect user backend](https://github.com/nextcloud/user_oidc)
-    - [Calendar](https://github.com/nextcloud/calendar/)
-    - [Forms](https://github.com/nextcloud/forms)
-    - [Nextcloud Office](https://collaboraoffice.com/)
-  - testing
-    - [Deck](https://github.com/nextcloud/deck)
-    - [Talk](https://github.com/nextcloud/spreed) ([documentation](https://nextcloud-talk.readthedocs.io/en/latest/quick-install/))
-    - [Two-factor authentication](https://github.com/nextcloud/twofactor_totp)
-- Configure OpenID Connect app
-    - Allow Nextcloud to [make requests to servers on the LAN](https://docs.nextcloud.com/server/stable/admin_manual/configuration_server/config_sample_php_parameters.html#allow-local-remote-servers)
-    ```
-    docker exec -u www-data mila-server-nextcloud-1 php /var/www/html/occ config:system:set allow_local_remote_servers --value=true --type=boolean
-    ```
-    - Allow the OIDC app to  [send secrets over http in plain text](https://github.com/nextcloud/user_oidc#allow-login-over-unencrypted-http)
-    ```
-    docker exec -u www-data mila-server-nextcloud-1 php /var/www/html/occ config:app:set --value=1 --type=boolean user_oidc allow_insecure_http
-    ```
-    - Go to Admin settings > OpenID Connect > Register
-      - Identifier: anything descriptive, e.g. `keycloak`
-      - Client ID: `nextcloud` (as defined in the [collectivo realm](keycloak/import/collectivo-realm.json))
-      - Client Secret: empty
-      - Discovery endpoint: `http://keycloak:8080/realms/collectivo/.well-known/openid-configuration`
-    - You can now login with the test users as for directus
+- Allow Nextcloud to [make requests to servers on the LAN](https://docs.nextcloud.com/server/stable/admin_manual/configuration_server/config_sample_php_parameters.html#allow-local-remote-servers) so it can reach Keycloak.
+  ```
+  docker exec -u www-data mila-server-nextcloud-1 php /var/www/html/occ config:system:set allow_local_remote_servers --value=true --type=boolean
+  ```
 
-### Troubleshooting
-- Watch the logs
-  ```
-  docker exec -u www-data mila-server-nextcloud-1 php /var/www/html/occ log:watch
-  ```
-- Check whether Nextcloud can reach Keycloak
-  ```
-  docker compose exec nextcloud curl http://keycloak:8080/realms/collectivo/.well-known/openid-configuration
-  ```
-- Check settings in `config.php`, e.g. trusted_domains
-  ```
-  docker exec nextcloud-nextcloud-1 cat /var/www/html/config/config.php
-  ```
+For more details see the [Nextcloud readme](nextcloud/README.md).
 
 ## Production setup
 
