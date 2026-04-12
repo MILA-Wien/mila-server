@@ -31,12 +31,10 @@ const shift = occ.shift;
             : assignment.username +
               " " +
               (assignment.username_last ?? "")
-        }}
-        <span
+        }}<span v-if="assignment.skills?.length">{{ ' ' }}<span
           v-for="skill in assignment.skills"
           :key="skill.icon"
-        >{{ skill.icon }}</span
-        ><span v-if="index < occ.n_assigned - 1">, </span>
+        >{{ skill.icon }}</span></span><span v-if="index < occ.n_assigned - 1">, </span>
       </span>
     </span>
   </div>
