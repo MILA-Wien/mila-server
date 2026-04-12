@@ -116,11 +116,10 @@ async function createNewCheckinState(cardID?: string, mshipId?: number) {
     coshopper_name = coshopper?.first_name + " " + coshopper?.last_name;
   }
 
-  const mshipUser = mship.memberships_user as {
-    username: string;
-    username_last: string;
-    pronouns: string;
-  };
+  if (!isUserProfile(mship.memberships_user)) {
+    throw new Error("memberships_user was not expanded");
+  }
+  const mshipUser = mship.memberships_user;
   return {
     cardId: cardID || mship.memberships_card_id || "Keine Karte",
     membership: mship.id,
@@ -176,14 +175,14 @@ async function getMshipThroughCoCard(cardID: string) {
     return { mship2: null, coshopper: null };
   }
 
-  const m0 = memberships[0] as any;
+  const m0 = memberships[0];
   let coshopper = m0?.coshoppers?.find(
-    (c: any) => c.memberships_coshoppers_id.membership_card_id === cardID,
+    (c) => c.memberships_coshoppers_id.membership_card_id === cardID,
   )?.memberships_coshoppers_id;
 
   if (!coshopper) {
     coshopper = m0?.kids?.find(
-      (k: any) => k.memberships_coshoppers_id.membership_card_id === cardID,
+      (k) => k.memberships_coshoppers_id.membership_card_id === cardID,
     )?.memberships_coshoppers_id;
   }
 

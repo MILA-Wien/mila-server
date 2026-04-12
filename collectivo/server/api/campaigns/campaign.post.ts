@@ -80,7 +80,7 @@ async function createCampaignSingle(
 
     // Send campaign
     if (!body.draft) {
-      await dbSetCampaignPending((campaign as any).id);
+      await dbSetCampaignPending(campaign.id);
     }
   }
 }

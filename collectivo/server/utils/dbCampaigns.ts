@@ -13,10 +13,10 @@ export async function dbGetAutomation(name: string) {
   return automations[0] ?? null;
 }
 
-export async function dbCreateCampaign(payload: any) {
+export async function dbCreateCampaign(payload: any): Promise<{ id: number }> {
   return await directus.request(
     createItem("messages_campaigns", payload, { fields: ["id"] }),
-  );
+  ) as unknown as { id: number };
 }
 
 export async function dbSetCampaignsPending(ids: number[]) {

@@ -2,7 +2,7 @@ import { createItem, readItem, readItems } from "@directus/sdk";
 
 const directus = useDirectusAdmin();
 
-export async function dbGetCheckinMembership(mshipId: number) {
+export async function dbGetCheckinMembership(mshipId: number): Promise<Membership> {
   return await directus.request(
     readItem("memberships", mshipId, {
       fields: [
@@ -14,7 +14,7 @@ export async function dbGetCheckinMembership(mshipId: number) {
         { memberships_user: ["username", "username_last", "pronouns"] },
       ],
     }),
-  );
+  ) as unknown as Membership;
 }
 
 export async function dbGetCheckinMembershipProfile(mshipId: string) {
@@ -42,7 +42,7 @@ export async function dbGetMembershipByCard(cardId: string) {
   )) as Membership[];
 }
 
-export async function dbGetMembershipByCoCard(cardId: string) {
+export async function dbGetMembershipByCoCard(cardId: string): Promise<Membership[]> {
   return await directus.request(
     readItems("memberships", {
       filter: {
@@ -73,7 +73,7 @@ export async function dbGetMembershipByCoCard(cardId: string) {
         { kids: ["memberships_coshoppers_id.*"] },
       ] as any,
     }),
-  );
+  ) as unknown as Membership[];
 }
 
 export async function dbGetCheckinAbsences(mshipId: number, dateStr: string) {

@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
 
 async function assignTag(body: any, membership: string) {
   const mship = await dbGetMembershipUser(membership);
-  const userID = mship.memberships_user as any as string;
+  const userID = mship.memberships_user;
 
   const mitgliedstag = await dbGetTagByName("Mitglied");
 

@@ -226,7 +226,7 @@ async function createAssignment(onetime: boolean) {
     throw new Error(m);
   }
 
-  const res = await $fetch("/api/shifts/assignments", {
+  const res = await $fetch<{ id: number }>("/api/shifts/assignments", {
     method: "POST",
     body: {
       shifts_membership: mshipID.value,
@@ -237,15 +237,15 @@ async function createAssignment(onetime: boolean) {
   });
 
   occ.value.assignments.push({
-    assignmentId: (res as any).id,
+    assignmentId: res.id,
     membershipId: mshipID.value!,
-    username: (mshipData.value?.memberships_user as any)?.username ?? "",
-    username_last: (mshipData.value?.memberships_user as any)?.username_last ?? "",
+    username: mshipData.value?.memberships_user.username ?? "",
+    username_last: mshipData.value?.memberships_user.username_last ?? "",
     hide_name: false,
     buddy_status: "keine_angabe",
-    skills: ((mshipData.value as any)?.shifts_skills ?? [])
-      .map((s: any) => s.shifts_skills_id)
-      .filter(Boolean),
+    skills: (mshipData.value?.shifts_skills ?? [])
+      .map((s) => s.shifts_skills_id)
+      .filter((s): s is { id: number; icon: string } => s !== null),
     shifts_from: startDateString,
     shifts_to: onetime ? startDateString : undefined,
     shifts_shift: shift.id!,
@@ -500,8 +500,8 @@ function checkIfMshipInAssignments(mship: number) {
 
             <div v-if="mshipData">
               <p class="font-bold">
-                {{ (mshipData.memberships_user as any)?.username }}
-                {{ (mshipData.memberships_user as any)?.username_last ?? "" }}
+                {{ mshipData.memberships_user.username }}
+                {{ mshipData.memberships_user.username_last }}
               </p>
               <p>
                 {{ t("Membership type") }}: {{ mshipData.memberships_type }}

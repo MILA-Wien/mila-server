@@ -11,7 +11,7 @@ const toastDefaults: Record<types, { title: string; description: string; color: 
 export function showToast(options: {
   type?: types;
   title?: string;
-  description?: any;
+  description?: string;
   icon?: string;
   color?: colors;
 }) {

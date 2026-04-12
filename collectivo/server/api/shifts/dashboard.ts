@@ -6,6 +6,7 @@ import {
   createAssignmentRrule,
   getFutureHolidayRrule,
 } from "../../utils/shiftsRrules";
+import type { DashboardAssignment } from "../../utils/dbShifts";
 
 export default defineEventHandler(async (event) => {
   return await getShiftDataDashboard(event.context.auth.mship);
@@ -101,15 +102,16 @@ const getAssignmentInfos = async (
   const filteredAbsences = absences.filter(
     (absence) =>
       absence.shifts_assignment == null ||
-      (absence.shifts_assignment as any).id == assignment.id,
+      (isShiftsAssignment(absence.shifts_assignment) &&
+        absence.shifts_assignment.id === assignment.id),
   );
 
   const { assignmentRule, holidayRule, otherAbsencesRule } = getRules(
     assignment,
-    filteredAbsences as ShiftsAbsence[],
+    filteredAbsences,
   );
 
-  const excludePublicHolidays = (assignment.shifts_shift as any).exclude_public_holidays;
+  const excludePublicHolidays = assignment.shifts_shift.exclude_public_holidays;
 
   // Get the next 4 occurrences
   const occurrences: OccurrenceInfo[] = [];
@@ -153,7 +155,7 @@ const getAssignmentInfos = async (
 };
 
 const getShiftTeam = async (
-  assignment: any,
+  assignment: DashboardAssignment,
   nextOccurence: Date,
   mship: number,
 ): Promise<string[]> => {
@@ -180,7 +182,7 @@ const getShiftTeam = async (
   return team;
 };
 
-export const getRules = (assignment: any, absences?: ShiftsAbsence[]) => {
+export const getRules = (assignment: DashboardAssignment, absences?: ShiftsAbsence[]) => {
   const shift = assignment.shifts_shift;
   const shiftRule = getShiftRrule(shift);
 

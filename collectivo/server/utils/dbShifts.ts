@@ -7,6 +7,16 @@ import {
   updateItem,
   updateSingleton,
 } from "@directus/sdk";
+import type { MembershipDetails } from "../../shared/types/membership";
+
+/**
+ * A ShiftsAssignment where shifts_shift has been fully expanded (always an
+ * object, never a raw FK). Returned by dashboard queries that use
+ * `fields: ["*", { shifts_shift: ["*"] }]`.
+ */
+export type DashboardAssignment = Omit<ShiftsAssignment, "shifts_shift"> & {
+  shifts_shift: ShiftsShift;
+};
 
 const directus = useDirectusAdmin();
 
@@ -462,7 +472,9 @@ export async function dbGetShiftLogsByDate(date: Date) {
 // DASHBOARD QUERIES
 // ============================================================================
 
-export async function dbGetDashboardAssignments(mship: number) {
+export async function dbGetDashboardAssignments(
+  mship: number,
+): Promise<DashboardAssignment[]> {
   const now = getCurrentDate();
   return await directus.request(
     readItems("shifts_assignments", {
@@ -485,10 +497,10 @@ export async function dbGetDashboardAssignments(mship: number) {
         },
       ],
     }),
-  );
+  ) as unknown as DashboardAssignment[];
 }
 
-export async function dbGetDashboardAbsences(mship: number) {
+export async function dbGetDashboardAbsences(mship: number): Promise<ShiftsAbsence[]> {
   const now = getCurrentDate();
   return await directus.request(
     readItems("shifts_absences", {
@@ -514,7 +526,7 @@ export async function dbGetDashboardAbsences(mship: number) {
         },
       ],
     }),
-  );
+  ) as unknown as ShiftsAbsence[];
 }
 
 export async function dbGetDashboardLogs(mship: number) {
@@ -531,7 +543,7 @@ export async function dbGetDashboardLogs(mship: number) {
 // MEMBERSHIPS
 // ============================================================================
 
-export async function dbGetMembershipById(id: number) {
+export async function dbGetMembershipById(id: number): Promise<MembershipDetails> {
   return await directus.request(
     readItem("memberships", id, {
       fields: [
@@ -544,7 +556,7 @@ export async function dbGetMembershipById(id: number) {
         { shifts_skills: [{ shifts_skills_id: ["icon"] }] },
       ] as any,
     }),
-  );
+  ) as unknown as MembershipDetails;
 }
 
 // ============================================================================

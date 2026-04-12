@@ -287,3 +287,37 @@ export interface PaymentInvoiceOut {
   id: number;
   [key: string]: unknown;
 }
+
+// ============================================================================
+// TYPE GUARDS
+// ============================================================================
+
+/** Narrows a Directus relation field from `UserProfile | number` to `UserProfile`. */
+export function isUserProfile(v: UserProfile | number): v is UserProfile {
+  return typeof v === "object";
+}
+
+/** Narrows a Directus relation field from `ShiftsShift | number` to `ShiftsShift`. */
+export function isShiftsShift(v: ShiftsShift | number): v is ShiftsShift {
+  return typeof v === "object";
+}
+
+/** Narrows a Directus relation field from `ShiftsAssignment | number` to `ShiftsAssignment`. */
+export function isShiftsAssignment(
+  v: ShiftsAssignment | number | undefined,
+): v is ShiftsAssignment {
+  return typeof v === "object";
+}
+
+// ============================================================================
+// UTILITY TYPES
+// ============================================================================
+
+/**
+ * Directus aggregate query response shape for countDistinct operations.
+ * Example: aggregate("table", { aggregate: { countDistinct: "field" } })
+ * returns Array<{ countDistinct: Record<"field", number> }>
+ */
+export type AggregateResult<T extends string> = Array<{
+  countDistinct: Record<T, number>;
+}>;
