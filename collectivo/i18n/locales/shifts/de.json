@@ -50,7 +50,7 @@
   "Shopping is allowed": "Einkaufen ist erlaubt",
   "Shopping is not allowed": "Einkaufen ist nicht erlaubt",
   "Please fill out every field.": "Bitte fülle jedes Feld aus.",
-  "Absence must start in the future.": "Abwesenheit muss in der Zukunft beginnen.",
+  "Absence must start at least {days} days from today.": "Die Abwesenheit muss mindestens {days} Tage in der Zukunft beginnen.",
   "Absence must end after it starts.": "Abwesenheit muss nach dem Start enden.",
   "Please select a valid date range.": "Bitte wähle einen validen Datumsbereich aus.",
   "Absence has been requested": "Abwesenheit wurde beantragt",
