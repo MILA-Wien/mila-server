@@ -88,17 +88,16 @@ const colors = {
 };
 
 function getColor(slots: number, n_assigned: number, isPast: boolean) {
-  const n_missing = slots - n_assigned;
   if (isPast) {
     return colors.gray;
   }
-  if (n_missing > 1) {
+  if (n_assigned >= slots) {
+    return colors.green;
+  }
+  if (n_assigned < slots / 2) {
     return colors.red;
   }
-  if (n_missing === 1) {
-    return colors.orange;
-  }
-  return colors.green;
+  return colors.orange;
 }
 
 // Fetch events based on given timespan
