@@ -5,7 +5,7 @@
  * Requires an active automation with the name "shopping_expiration_warning".
  */
 
-import { dbGetUserIdsByShiftcounter } from "./dbContent";
+import { dbGetActiveUserIdsByShiftcounter } from "./dbContent";
 
 export async function sendShoppingExpirationWarnings(shift_counter: number) {
   const automation = await dbGetAutomation("shopping_expiration_warning");
