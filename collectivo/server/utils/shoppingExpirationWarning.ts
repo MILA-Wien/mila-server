@@ -24,7 +24,7 @@ export async function sendShoppingExpirationWarnings(shift_counter: number) {
 async function sendWarningsInner(shift_counter: number, automation: any) {
   const payloads: any[] = [];
 
-  for (const user_id of await dbGetUserIdsByShiftcounter(shift_counter)) {
+  for (const user_id of await dbGetActiveUserIdsByShiftcounter(shift_counter)) {
     payloads.push([
       {
         messages_recipients: {
