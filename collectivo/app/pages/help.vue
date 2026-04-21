@@ -43,7 +43,7 @@ setPageTitle(t("You have questions?"));
         {{ t("or via phone under") }}
         <a :href="supportNumberLink" class="font-bold"> {{ supportNumber }} </a
         >.<br />
-        {{ t("Öffnungszeiten: Dienstag 16 - 19 Uhr und Freitag 13 - 16 Uhr.")
+        {{ t("Öffnungszeiten: Dienstag 16 - 19 Uhr.")
         }}<br />
         Vivenotgasse 29, 1120 Wien.
       </p>
@@ -73,5 +73,5 @@ de:
   Guides and information: Anleitungen und Informationen
   You have questions?: Du hast Fragen?
 en:
-  "Öffnungszeiten: Dienstag 16 - 19 Uhr und Freitag 13 - 16 Uhr.": "Opening hours: Tuesday 4 - 7 pm and Friday 1 - 4 pm."
+  "Öffnungszeiten: Dienstag 16 - 19 Uhr.": "Opening hours: Tuesday 4 - 7 pm."
 </i18n>
