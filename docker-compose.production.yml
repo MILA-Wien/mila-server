@@ -6,13 +6,10 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
-      directus-db:
-        condition: service_started
       # keycloak:
       #   condition: service_healthy
     volumes:
-      - ./directus/uploads:/directus/uploads
-      - ./directus-config:/directus/directus-config
+      - directus-uploads:/directus/uploads
     # entrypoint: ["/entrypoint.sh"]
     restart: unless-stopped
     networks:
@@ -26,7 +23,7 @@ services:
       # ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
 
       DB_CLIENT: "pg"
-      DB_HOST: "directus-db"
+      DB_HOST: ${DIRECTUS_DB_HOST}
       DB_PORT: "5432"
       DB_DATABASE: "directus"
       DB_USER: "directus"
@@ -55,24 +52,6 @@ services:
       # FLOWS_ENV_ALLOW_LIST: "PUBLIC_URL,COLLECTIVO_API_URL,COLLECTIVO_API_TOKEN"
 
       MARKETPLACE_TRUST: all
-
-  directus-db:
-    image: postgis/postgis:16-3.4-alpine
-    volumes:
-      - directus-db-data:/var/lib/postgresql/data
-      - ./directus-db-backups:/backups
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    environment:
-      POSTGRES_USER: "directus"
-      POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
-      POSTGRES_DB: "directus"
-    networks:
-      - default
 
   collectivo:
     build: ./
@@ -268,4 +247,5 @@ services:
 
 volumes:
   directus-db-data:
+  directus-uploads:
   keycloak-db-data:
