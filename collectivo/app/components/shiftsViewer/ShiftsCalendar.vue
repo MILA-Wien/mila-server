@@ -88,17 +88,16 @@ const colors = {
 };
 
 function getColor(slots: number, n_assigned: number, isPast: boolean) {
-  const n_missing = slots - n_assigned;
   if (isPast) {
     return colors.gray;
   }
-  if (n_missing > 1) {
+  if (n_assigned >= slots) {
+    return colors.green;
+  }
+  if (n_assigned < slots / 2) {
     return colors.red;
   }
-  if (n_missing === 1) {
-    return colors.orange;
-  }
-  return colors.green;
+  return colors.orange;
 }
 
 // Fetch events based on given timespan
@@ -209,8 +208,8 @@ prepareEvents();
 en:
   "skills_heading": "Available skills:"
   "buddy_description": "This shift has a buddy"
-  "color_red": "Red: This shift is severely understaffed (more than 1 slot open)"
-  "color_orange": "Orange: This shift is slightly understaffed (1 slot open)"
+  "color_red": "Red: This shift is severely understaffed (more than half the slots open)"
+  "color_orange": "Orange: This shift is understaffed"
   "color_green": "Green: This shift is fully staffed"
   "color_gray": "Gray: Past shift"
   "color_blue": "Blue: Public holiday"
@@ -219,8 +218,8 @@ de:
   "Public holiday": "Feiertag"
   "Legend": "Legende"
   "buddy_description": "In dieser Schicht gibt es einen Buddy"
-  "color_red": "Rot: Diese Schicht ist stark unterbesetzt (mehr als 1 Platz frei)"
-  "color_orange": "Orange: Diese Schicht ist leicht unterbesetzt (1 Platz frei)"
+  "color_red": "Rot: Diese Schicht ist stark unterbesetzt (mehr als die Hälfte der Plätze frei)"
+  "color_orange": "Orange: Diese Schicht ist unterbesetzt"
   "color_green": "Grün: Diese Schicht ist voll besetzt"
   "color_gray": "Grau: Vergangene Schicht"
   "color_blue": "Blau: Feiertag"
