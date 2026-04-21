@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    depends_on:
+ #   depends_on:
       # keycloak:
       #   condition: service_healthy
     volumes:
