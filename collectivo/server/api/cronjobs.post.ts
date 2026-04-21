@@ -95,7 +95,7 @@ async function create_shift_logs(
   const logs = await dbGetShiftLogsByDate(day);
 
   for (const occurrence of occurrences) {
-    const occDate = occurrence.start.split("T")[0];
+    const occDate = occurrence.start.split("T")[0]!;
     for (const ass of occurrence.assignments) {
       // Skip if assignment inactive, user on holiday, or log already exists
       if (

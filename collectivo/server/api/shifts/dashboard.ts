@@ -6,6 +6,7 @@ import {
   createAssignmentRrule,
   getFutureHolidayRrule,
 } from "../../utils/shiftsRrules";
+import type { DashboardAssignment } from "../../utils/dbShifts";
 
 export default defineEventHandler(async (event) => {
   return await getShiftDataDashboard(event.context.auth.mship);
@@ -101,7 +102,8 @@ const getAssignmentInfos = async (
   const filteredAbsences = absences.filter(
     (absence) =>
       absence.shifts_assignment == null ||
-      absence.shifts_assignment.id == assignment.id,
+      (isShiftsAssignment(absence.shifts_assignment) &&
+        absence.shifts_assignment.id === assignment.id),
   );
 
   const { assignmentRule, holidayRule, otherAbsencesRule } = getRules(
@@ -138,7 +140,7 @@ const getAssignmentInfos = async (
   if (occurrences.length > 0) {
     const team_ = await getShiftTeam(
       assignment,
-      occurrences[0].date,
+      occurrences[0]!.date,
       mship,
     );
     team.push(...team_);
@@ -153,7 +155,7 @@ const getAssignmentInfos = async (
 };
 
 const getShiftTeam = async (
-  assignment: any,
+  assignment: DashboardAssignment,
   nextOccurence: Date,
   mship: number,
 ): Promise<string[]> => {
@@ -167,7 +169,7 @@ const getShiftTeam = async (
   );
 
   if (occs.occurrences.length > 0) {
-    for (const a of occs.occurrences[0].assignments) {
+    for (const a of occs.occurrences[0]!.assignments) {
       if (!a.isActive) continue;
       const name = a.username === "" ? "" : `${a.username} ${a.username_last}`;
       const icons = a.skills
@@ -180,7 +182,7 @@ const getShiftTeam = async (
   return team;
 };
 
-export const getRules = (assignment: any, absences?: ShiftsAbsence[]) => {
+export const getRules = (assignment: DashboardAssignment, absences?: ShiftsAbsence[]) => {
   const shift = assignment.shifts_shift;
   const shiftRule = getShiftRrule(shift);
 

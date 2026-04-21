@@ -2,7 +2,7 @@ import { createItem, readItem, readItems } from "@directus/sdk";
 
 const directus = useDirectusAdmin();
 
-export async function dbGetCheckinMembership(mshipId: number) {
+export async function dbGetCheckinMembership(mshipId: number): Promise<Membership> {
   return await directus.request(
     readItem("memberships", mshipId, {
       fields: [
@@ -14,7 +14,7 @@ export async function dbGetCheckinMembership(mshipId: number) {
         { memberships_user: ["username", "username_last", "pronouns"] },
       ],
     }),
-  );
+  ) as unknown as Membership;
 }
 
 export async function dbGetCheckinMembershipProfile(mshipId: string) {
@@ -42,7 +42,7 @@ export async function dbGetMembershipByCard(cardId: string) {
   )) as Membership[];
 }
 
-export async function dbGetMembershipByCoCard(cardId: string) {
+export async function dbGetMembershipByCoCard(cardId: string): Promise<Membership[]> {
   return await directus.request(
     readItems("memberships", {
       filter: {
@@ -62,7 +62,7 @@ export async function dbGetMembershipByCoCard(cardId: string) {
             },
           },
         ],
-      },
+      } as any,
       fields: [
         "id",
         "memberships_type",
@@ -71,9 +71,9 @@ export async function dbGetMembershipByCoCard(cardId: string) {
         { memberships_user: ["username", "pronouns"] },
         { coshoppers: ["memberships_coshoppers_id.*"] },
         { kids: ["memberships_coshoppers_id.*"] },
-      ],
+      ] as any,
     }),
-  );
+  ) as unknown as Membership[];
 }
 
 export async function dbGetCheckinAbsences(mshipId: number, dateStr: string) {
@@ -84,7 +84,7 @@ export async function dbGetCheckinAbsences(mshipId: number, dateStr: string) {
         shifts_is_holiday: { _eq: true },
         shifts_to: { _gte: dateStr },
         shifts_from: { _lte: dateStr },
-      },
+      } as any,
       fields: ["id"],
     }),
   );
@@ -115,7 +115,7 @@ export async function dbCreateCheckinLog(
     createItem("milaccess_log", {
       membership: mshipId,
       date: dateStr,
-      coshopper: coshopperId,
+      coshopper: coshopperId as any,
     }),
   );
 }

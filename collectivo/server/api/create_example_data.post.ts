@@ -30,7 +30,7 @@ async function getRole(name: string) {
     throw new Error(name + " role not found");
   }
 
-  return membersRoles[0].id;
+  return membersRoles[0]!.id;
 }
 
 async function create_examples() {
@@ -106,7 +106,7 @@ async function create_users() {
     let userID;
 
     if (usersDB.length > 0) {
-      userID = usersDB[0].id;
+      userID = usersDB[0]!.id;
       // tslint:disable-next-line:no-console
       // console.info("Updating user " + user.email + " with ID " + userID);
       await directus.request(updateUser(userID, user));
@@ -219,7 +219,7 @@ async function create_tiles() {
     );
 
     for (const tile of tilesRes) {
-      tileButton.tiles_tile = tile.id;
+      tileButton.tiles_tile = String(tile.id);
 
       await directus.request(
         createItem("collectivo_tiles_buttons", tileButton),
@@ -270,17 +270,17 @@ async function create_memberships() {
     console.info("Creating memberships 3", mship);
     // Get user id
     const user_id = (
-      await directus.request(readUsers({ filter: { first_name: mship[0] } }))
-    )[0].id;
+      await directus.request(readUsers({ filter: { first_name: mship[0]! } as any }))
+    )[0]!.id;
 
     console.info("Creating memberships 4");
 
     // Create membership
     const membership = await directus.request(
       createItem("memberships", {
-        memberships_user: user_id,
+        memberships_user: user_id as any,
         memberships_type: "Aktiv",
-        memberships_status: mship[1],
+        memberships_status: mship[1]!,
         shifts_user_type: "regular",
       }),
     );
@@ -329,7 +329,7 @@ async function cleanShiftsData() {
 
   for (const schema of schemas) {
     console.log(`    deleting 1000 items in schema ${schema} ...`);
-    await directus.request(deleteItems(schema, { limit: 1000 }));
+    await directus.request(deleteItems(schema as any, { limit: 1000 }));
   }
 }
 
@@ -341,7 +341,7 @@ async function createShifts() {
   const directus = await useDirectusAdmin();
 
   const monday = SHIFT_CYCLE_START;
-  const shiftsRequests: ShiftsShift[] = [];
+  const shiftsRequests: any[] = [];
 
   const nb_weeks = SHIFT_CYCLE_DURATION_WEEKS;
 
@@ -352,9 +352,9 @@ async function createShifts() {
       for (const time_of_day of SHIFT_TIMES_OF_DAY) {
         shiftsRequests.push({
           shifts_name:
-            ["A", "B", "C", "D"][week] +
+            ["A", "B", "C", "D"][week]! +
             "-" +
-            day.weekdayShort +
+            (day.weekdayShort ?? "") +
             "-" +
             time_of_day,
           shifts_from: day.set({ hour: time_of_day }).toString(),

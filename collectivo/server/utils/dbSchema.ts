@@ -4,7 +4,13 @@ export interface DbSchema {
   collectivo_tags: Tag[];
   memberships: Membership[];
   collectivo_tiles: DashboardTile[];
+  collectivo_tiles_buttons: DashboardTileButton[];
   memberships_coshoppers: MembershipsCoshopper[];
+  memberships_memberships_coshoppers: {
+    id: number;
+    memberships_id: number;
+    memberships_coshoppers_id: number;
+  }[];
   shifts_assignments: ShiftsAssignment[];
   shifts_absences: ShiftsAbsence[];
   shifts_logs: ShiftsLog[];
@@ -20,12 +26,20 @@ export interface DbSchema {
   product_requests: ProductRequests[];
   mila_automations: MilaAutomation[];
   messages_templates: MessageTemplate[];
+  messages_campaigns: MessageCampaign[];
+  messages_messages: MessageMessage[];
+  collectivo_tags_directus_users: {
+    id: number;
+    collectivo_tags_id: number;
+    directus_users_id: string;
+  }[];
+  payments_invoices_out: PaymentInvoiceOut[];
 }
 
 export interface UserProfile {
   id: string;
-  collectivo_tags: { collectivo_tags_id: number }[];
-  memberships: number[] | Membership[];
+  collectivo_tags?: { collectivo_tags_id: number }[];
+  memberships?: number[] | Membership[];
   role: { name: string };
   email: string;
   // Visible name
@@ -37,6 +51,11 @@ export interface UserProfile {
   buddy_status: "keine_angabe" | "is_buddy" | "need_buddy";
   buddy_details: string | undefined;
   lotzapp_id: string;
+  // Directus auth fields
+  first_name?: string;
+  last_name?: string;
+  provider?: string;
+  external_identifier?: string;
   // Personal data
   memberships_person_type: "natural" | "legal";
   memberships_gender: string;
@@ -76,9 +95,12 @@ export interface Membership {
   memberships_status: string;
   memberships_type: string;
   memberships_shares: number;
+  memberships_date_ended?: string;
+  memberships_date_approved?: string;
   shifts_user_type: ShiftsUserType;
   shifts_counter: number;
   shifts_logs: ShiftsLog[];
+  shifts_logs_count?: number;
   shifts_skills: { shifts_skills_id: ShiftsSkill | null }[];
   shifts_categories_allowed: { shifts_categories_id: number }[];
   memberships_card_id: string;
@@ -91,6 +113,7 @@ export interface MembershipsCoshopper {
   first_name: string;
   last_name: string;
   membership_card_id: string;
+  email?: string;
 }
 
 export interface DashboardTile {
@@ -203,8 +226,8 @@ export interface ShiftsLog {
 export interface ShiftsCategory {
   id: number;
   name: string;
-  for_all: boolean;
-  beschreibung: string;
+  for_all?: boolean;
+  beschreibung?: string;
 }
 
 export interface CheckinLogEntry {
@@ -248,3 +271,53 @@ export interface MessageTemplate {
   messages_name: string;
   messages_subject: string | null;
 }
+
+export interface MessageCampaign {
+  id: number;
+  messages_campaign_status?: string;
+  [key: string]: unknown;
+}
+
+export interface MessageMessage {
+  id: number;
+  [key: string]: unknown;
+}
+
+export interface PaymentInvoiceOut {
+  id: number;
+  [key: string]: unknown;
+}
+
+// ============================================================================
+// TYPE GUARDS
+// ============================================================================
+
+/** Narrows a Directus relation field from `UserProfile | number` to `UserProfile`. */
+export function isUserProfile(v: UserProfile | number): v is UserProfile {
+  return typeof v === "object";
+}
+
+/** Narrows a Directus relation field from `ShiftsShift | number` to `ShiftsShift`. */
+export function isShiftsShift(v: ShiftsShift | number): v is ShiftsShift {
+  return typeof v === "object";
+}
+
+/** Narrows a Directus relation field from `ShiftsAssignment | number` to `ShiftsAssignment`. */
+export function isShiftsAssignment(
+  v: ShiftsAssignment | number | undefined,
+): v is ShiftsAssignment {
+  return typeof v === "object";
+}
+
+// ============================================================================
+// UTILITY TYPES
+// ============================================================================
+
+/**
+ * Directus aggregate query response shape for countDistinct operations.
+ * Example: aggregate("table", { aggregate: { countDistinct: "field" } })
+ * returns Array<{ countDistinct: Record<"field", number> }>
+ */
+export type AggregateResult<T extends string> = Array<{
+  countDistinct: Record<T, number>;
+}>;

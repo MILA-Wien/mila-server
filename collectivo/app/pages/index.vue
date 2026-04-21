@@ -12,7 +12,7 @@ tiles.value.load();
 
 // TODO: More general solution
 const user = useCurrentUser();
-if (user.value?.user.email === "checkin@mila.wien") {
+if (user.value?.user?.email === "checkin@mila.wien") {
   navigateTo("/checkin");
 }
 </script>
@@ -39,7 +39,7 @@ if (user.value?.user.email === "checkin@mila.wien") {
           >
             <UButton
               :label="button.tiles_label"
-              :color="tile.tiles_color"
+              :color="(tile.tiles_color as any)"
               size="sm"
               icon="i-heroicons-arrow-top-right-on-square-16-solid"
               trailing
@@ -48,7 +48,7 @@ if (user.value?.user.email === "checkin@mila.wien") {
           <NuxtLink v-else :to="button.tiles_path">
             <UButton
               :label="button.tiles_label"
-              :color="tile.tiles_color"
+              :color="(tile.tiles_color as any)"
               size="sm"
             />
           </NuxtLink>

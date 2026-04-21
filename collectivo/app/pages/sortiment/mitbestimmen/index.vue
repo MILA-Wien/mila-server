@@ -139,7 +139,7 @@ fetchData();
     <UPagination
       v-model:page="page"
       :page-count="10"
-      :total="data.meta.totalCount"
+      :total="Number(data.meta.totalCount)"
     />
   </div>
   <div v-else>

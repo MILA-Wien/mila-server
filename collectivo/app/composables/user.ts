@@ -48,7 +48,7 @@ class CurrentUserStore {
       return;
     }
 
-    this.user = data.data as UserProfile;
+    this.user = data.data as unknown as UserProfile;
     const rolename = this.user.role ? this.user.role.name : "Unknown";
 
     // Check if admin
@@ -63,9 +63,12 @@ class CurrentUserStore {
 
     // Process membership
     if (this.user.memberships && this.user.memberships.length > 0) {
-      this.membership = this.user.memberships[0];
-      if (ISMEMBER_STATUS_LIST.includes(this.membership.memberships_status)) {
-        this.isMember = true;
+      const m = this.user.memberships[0];
+      if (m && typeof m !== "number") {
+        this.membership = m;
+        if (ISMEMBER_STATUS_LIST.includes(m.memberships_status)) {
+          this.isMember = true;
+        }
       }
     }
     delete this.user.memberships;

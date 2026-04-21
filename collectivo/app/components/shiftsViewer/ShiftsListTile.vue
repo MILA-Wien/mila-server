@@ -20,7 +20,7 @@ const catName = allcats.find(
   (cat) => cat.id === occ.shift.shifts_category_2,
 )?.name;
 const shift = occ.shift;
-const isPast = new Date() > new Date(occ.start.split("T")[0]);
+const isPast = new Date() > new Date(occ.start.split("T")[0]!);
 const isOpen =
   props.occurrence.n_assigned < props.occurrence.shift.shifts_slots;
 

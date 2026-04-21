@@ -37,8 +37,9 @@ const state = reactive({
 // Directus can return null values
 // But zod and yup want undefined
 Object.keys(state).forEach((key) => {
-  if (state[key] === null) {
-    state[key] = undefined;
+  const s = state as Record<string, any>;
+  if (s[key] === null) {
+    s[key] = undefined;
   }
 });
 

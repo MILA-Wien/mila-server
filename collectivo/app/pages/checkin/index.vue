@@ -4,7 +4,7 @@ definePageMeta({
   middleware: ["auth"],
 });
 const user = useCurrentUser();
-if (user.value?.user.email !== "checkin@mila.wien") {
+if (user.value?.user?.email !== "checkin@mila.wien") {
   throw createError({
     statusCode: 403,
     statusMessage: "Forbidden",

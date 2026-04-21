@@ -1,4 +1,4 @@
-interface CheckinState {
+export interface CheckinState {
   cardId?: string;
   membership?: string;
   membershipsType?: string;

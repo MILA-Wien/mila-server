@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from "vue";
+import type { CheckinState } from "~/composables/checkin";
 
 const checkinState = useCheckinState();
 const POLL_INTERVAL = 1000; // ms
@@ -8,7 +9,7 @@ let timeoutId: NodeJS.Timeout | null = null;
 
 const fetchData = async () => {
   try {
-    checkinState.value = await $fetch("/api/checkin/current_state");
+    checkinState.value = await $fetch<CheckinState>("/api/checkin/current_state");
   } catch (err) {
     console.error("Fetch error:", err);
   } finally {

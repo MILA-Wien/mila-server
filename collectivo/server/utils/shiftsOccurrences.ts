@@ -68,7 +68,7 @@ export const getShiftOccurrencesForApi = async (
     assignments: OccurrenceAssignment[];
   }[] = [];
 
-  for (const shift of shifts) {
+  for (const shift of shifts as ShiftsShift[]) {
     const shiftAssignments = assignments.filter(
       (a: any) => a.shifts_shift === shift.id,
     );

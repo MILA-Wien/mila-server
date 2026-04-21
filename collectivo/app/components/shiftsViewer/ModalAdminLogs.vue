@@ -50,7 +50,7 @@ const logEntryNote = ref<string | null>(null);
 const occ = props.occurence;
 const shift = occ.shift;
 const start = new Date(occ.start);
-const startDateString = start.toISOString().split("T")[0];
+const startDateString = start.toISOString().split("T")[0]!;
 const { t } = useI18n();
 
 function openLogModal() {
@@ -100,7 +100,7 @@ async function createCustomLog() {
       <p>{{ t("t:" + log.shifts_type) }} ({{ log.shifts_score }})</p>
       <p v-if="log.shifts_note">Notes: {{ log.shifts_note }}</p>
       <template #bottom-right>
-        <UButton size="sm" color="gray" @click="removeLog(log.id)">
+        <UButton size="sm" color="gray" @click="removeLog(log.id!)">
           {{ t("Remove") }}
         </UButton>
       </template>
@@ -121,8 +121,8 @@ async function createCustomLog() {
 
         <div v-if="mshipData">
           <p class="font-bold">
-            {{ mshipData.memberships_user.username }}
-            {{ mshipData.memberships_user.username_last ?? "" }}
+            {{ (mshipData.memberships_user as any)?.username }}
+            {{ (mshipData.memberships_user as any)?.username_last ?? "" }}
           </p>
           <p>Membership type: {{ mshipData.memberships_type }}</p>
 

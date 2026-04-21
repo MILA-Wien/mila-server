@@ -1,5 +1,5 @@
-export async function getMembership(id: number) {
-  return await $fetch(`/api/memberships/${id}`);
+export async function getMembership(id: number): Promise<MembershipDetails> {
+  return await $fetch<MembershipDetails>(`/api/memberships/${id}`);
 }
 
 function displayMember(

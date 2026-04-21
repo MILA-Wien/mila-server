@@ -17,14 +17,17 @@ export async function updateShiftLogsAdmin(
   type: "attended" | "missed",
 ) {
   return await $fetch(`/api/shifts/logs/${logID}`, {
-    method: "PUT",
+    // Nuxt's route-typed $fetch infers GET/POST only for dynamic paths;
+    // as any is required until PUT/DELETE handlers are registered for this route.
+    method: "PUT" as any,
     body: { type },
   });
 }
 
 export async function deleteShiftLogsAdmin(logID: number) {
   return await $fetch(`/api/shifts/logs/${logID}`, {
-    method: "DELETE",
+    // Same as PUT above — Nuxt route-typed $fetch limitation.
+    method: "DELETE" as any,
   });
 }
 

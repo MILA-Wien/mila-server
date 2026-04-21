@@ -63,7 +63,7 @@ async function syncKeycloakUser(event: H3Event) {
         readUser(key, {
           fields: ["id", "email", "provider", "external_identifier"],
         }),
-      );
+      ) as any;
       if (!user || !user.email) {
         if (isDelete) {
           return;
@@ -108,11 +108,11 @@ async function syncKeycloakUser(event: H3Event) {
       });
 
       if (kc_users && kc_users.length > 0) {
-        kc_user_id = kc_users[0].id;
+        kc_user_id = kc_users[0]!.id;
       }
 
       if (kc_user_id && isDelete) {
-        await keycloak.users.del({ id: kc_user_id });
+        await keycloak.users.del({ id: kc_user_id! });
       }
     }
 
@@ -125,11 +125,11 @@ async function syncKeycloakUser(event: H3Event) {
       });
 
       if (kc_users && kc_users.length > 0) {
-        kc_user_id = kc_users[0].id;
+        kc_user_id = kc_users[0]!.id;
       }
 
       if (kc_user_id && isDelete) {
-        await keycloak.users.del({ id: kc_user_id });
+        await keycloak.users.del({ id: kc_user_id! });
       }
     }
 

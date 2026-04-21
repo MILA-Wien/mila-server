@@ -67,7 +67,9 @@ export async function dbCreateSolitopfRequest(data: {
   auszahlung: string;
   weitere_unterstuetzung: boolean;
 }) {
-  return await directus.request(createItem("bedarfsmeldung_solitopf", data));
+  return await directus.request(
+    createItem("bedarfsmeldung_solitopf", data as Partial<BedarfsmeldungSolitopf>),
+  );
 }
 
 export async function dbGetSolitopfStats() {
@@ -85,7 +87,7 @@ export async function dbGetSolitopfStats() {
               { first_payout: { _nnull: true } },
               { first_payout: { _gte: "$NOW(-6 months)" } },
             ],
-          },
+          } as any,
         },
       }),
     ),
@@ -100,8 +102,12 @@ export async function dbGetSolitopfStats() {
     funds_available: Number(solitopf?.funds_available ?? 0.0),
     funds_received: Number(solitopf?.total_received ?? 0.0),
     funds_distributed: Number(solitopf?.total_distributed ?? 0.0),
-    receiving: Number(receiving?.[0]?.countDistinct?.membership ?? 0),
-    waiting: Number(waiting?.[0]?.countDistinct?.membership ?? 0),
+    receiving: Number(
+      (receiving as AggregateResult<"membership">)[0]?.countDistinct?.membership ?? 0,
+    ),
+    waiting: Number(
+      (waiting as AggregateResult<"membership">)[0]?.countDistinct?.membership ?? 0,
+    ),
   };
 }
 
@@ -173,24 +179,24 @@ export async function dbRemoveTagAssignment(assignmentId: number) {
 // MEMBERSHIPS (SIMPLE)
 // ============================================================================
 
-export async function dbGetMembershipUser(id: string) {
+export async function dbGetMembershipUser(id: string): Promise<{ memberships_user: string }> {
   return await directus.request(
     readItem("memberships", id, { fields: ["memberships_user"] }),
-  );
+  ) as unknown as { memberships_user: string };
 }
 
 export async function dbGetUserIdsByShiftcounter(counter: number) {
-  const memberships = await directus.request(
+  const memberships = (await directus.request(
     readItems("memberships", {
       filter: { shifts_counter: { _eq: counter } },
       fields: ["memberships_user.id"] as any[],
     }),
-  );
+  )) as unknown as { memberships_user: { id: string } }[];
 
   const directus_users_ids: string[] = [];
 
   for (const m of memberships) {
-    const user = (m as any).memberships_user;
+    const user = m.memberships_user;
     if (user?.id) {
       directus_users_ids.push(user.id);
     }
@@ -214,5 +220,5 @@ export async function dbGetRoleByName(name: string) {
     throw new Error(name + " role not found");
   }
 
-  return roles[0].id;
+  return roles[0]!.id;
 }
