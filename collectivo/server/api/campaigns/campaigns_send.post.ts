@@ -11,6 +11,16 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// Timestamp of the last sent email, used to enforce a global delay across campaigns
+let lastEmailSentAt: number = 0;
+
+async function enforceEmailDelay(delayMs: number) {
+  const elapsed = Date.now() - lastEmailSentAt;
+  if (elapsed < delayMs) {
+    await sleep(delayMs - elapsed);
+  }
+}
+
 // Handle endpoint calls
 export default defineEventHandler(async (event) => {
   try {
@@ -38,7 +48,7 @@ async function handleCampaignUpdate(event: any) {
   let i = 0;
 
   // Wait for maximum 1h if other campaign is currently sending
-  while (campaignEndpoint.isActive || i > 3600) {
+  while (campaignEndpoint.isActive && i < 3600) {
     i++;
     await sleep(1000);
   }
@@ -106,16 +116,17 @@ async function executeCampaign(campaignKey: number): Promise<string> {
           campaignData.campaignContext,
         );
 
+        const config = useRuntimeConfig();
+        await enforceEmailDelay(Number(config.emailSmtpDelayMs));
+
         const sendMailOutcome = await mailSender.sendMail({
           to: recipientData.email,
           subject: campaignData.templateSubject,
           htmlBody: emailBody,
         });
 
+        lastEmailSentAt = Date.now();
         await updateMessageStatus(pendingMessage, sendMailOutcome);
-
-        // Wait half a second before sending next message
-        sleep(500);
 
         if (sendMailOutcome == "success") {
           anySucceeded = true;

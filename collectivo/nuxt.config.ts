@@ -33,6 +33,7 @@ export default defineNuxtConfig({
     emailSmtpPort: process.env.EMAIL_SMTP_PORT || "",
     emailSmtpUser: process.env.EMAIL_SMTP_USER || "",
     emailSmtpPassword: process.env.EMAIL_SMTP_PASSWORD || "",
+    emailSmtpDelayMs: process.env.EMAIL_SMTP_DELAY_MS || "500",
 
     lotzappMandant: process.env.LOTZAPP_MANDANT || "",
     lotzappAccountIds: process.env.LOTZAPP_ACCOUNT_IDS || "",
