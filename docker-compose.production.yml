@@ -104,7 +104,7 @@ services:
       KC_DB_URL_HOST: ${KEYCLOAK_DB_HOST}
       KC_DB_URL_PORT: 5432
       KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
-    command: ${KEYCLOAK_COMMAND:-}
+    command: ${KEYCLOAK_COMMAND:-start --optimized}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
       interval: 5s
