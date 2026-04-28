@@ -246,6 +246,5 @@ services:
   #     HEALTHCHECK_PORT: 8080
 
 volumes:
-  directus-db-data:
   directus-uploads:
   keycloak-db-data:
