@@ -139,10 +139,10 @@ services:
     image: habidat/direktkredit:1.5
     restart: unless-stopped
     volumes:
-      - ./docker/habidat/config/:/habidat/config/
-      - ./docker/habidat/files:/habidat/public/files
-      - ./docker/habidat/images:/habidat/public/images
-      - ./docker/habidat/upload:/habidat/upload
+      - habidat-config:/habidat/config/
+      - habidat-files:/habidat/public/files
+      - habidat-images:/habidat/public/images
+      - habidat-upload:/habidat/upload
     environment:
       - HABIDAT_DK_PROJECT_ID=project
       - HABIDAT_DK_PROJECT_NAME=${HABIDAT_PROJECT_NAME}
@@ -179,3 +179,7 @@ services:
 
 volumes:
   directus-uploads:
+  habidat-config:
+  habidat-files:
+  habidat-images:
+  habidat-upload:
