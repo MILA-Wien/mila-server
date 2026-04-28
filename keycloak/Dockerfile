@@ -14,6 +14,10 @@ ENV KC_METRICS_ENABLED=true
 # Configure a database vendor
 ENV KC_DB=postgres
 
+# Run behind a TLS-terminating reverse proxy
+ENV KC_PROXY=edge
+ENV KC_HTTP_ENABLED=true
+
 WORKDIR /opt/keycloak
 
 # Install start script
