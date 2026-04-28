@@ -84,8 +84,10 @@ The dev setup runs without keycloak. To test keycloak integration, run both comp
 
 - In `collectivo/.env`, set `NUXT_PUBLIC_USE_KEYCLOAK = "true"`
 - In `.env`, set `DIRECTUS_AUTH_PROVIDERS` to `keycloak`
+- In `.env`, set `KEYCLOAK_DB_HOST = "keycloak-db"`
 - Add the following to your etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak`
-- Run `docker compose -f docker-compose.production.yml up -d keycloak keycloak-db`
+- Run `docker compose up -d keycloak-db`
+- Run `docker compose -f docker-compose.production.yml up -d keycloak`
 
 Login credentials for directus admin without keycloak:
 
@@ -103,11 +105,13 @@ Login credentials for keycloak admin UI:
 - Create a sync lock file `"/directus/uploads/sync.lock"`
 - Provision an external PostgreSQL database (with PostGIS extension) for Directus
 - Provision an external MariaDB database for Habidat
+- Provision an external PostgreSQL database for Keycloak
 - Set .env vars
   - Generate secure secrets, keys, and passwords
   - Set `DIRECTUS_DB_HOST` to the hostname of the external Directus database
   - Set `HABIDAT_DB_HOST` to the hostname of the external Habidat database
-  - Remove variable `KEYCLOAK_COMMAND`
+  - Set `KEYCLOAK_DB_HOST` to the hostname of the external Keycloak database
+  - Remove variable `KEYCLOAK_COMMAND` (absence triggers production mode)
 - [Set up a reverse proxy](https://www.linode.com/docs/guides/using-nginx-proxy-manager/) with a docker network called `proxiable`
 - Set the following [custom Nginx configuration](https://stackoverflow.com/questions/56126864) for Keycloak
   ```

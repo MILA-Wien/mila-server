@@ -49,5 +49,21 @@ services:
       POSTGRES_USER: "directus"
       POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
 
+  keycloak-db:
+    image: postgres:14-alpine
+    volumes:
+      - keycloak-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+
 volumes:
   directus-db-data:
+  keycloak-db-data:

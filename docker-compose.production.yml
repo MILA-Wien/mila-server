@@ -5,12 +5,12 @@ services:
       dockerfile: Dockerfile
     extra_hosts:
       - "host.docker.internal:host-gateway"
- #   depends_on:
-      # keycloak:
-      #   condition: service_healthy
+    depends_on:
+      keycloak:
+        condition: service_healthy
     volumes:
       - directus-uploads:/directus/uploads
-    # entrypoint: ["/entrypoint.sh"]
+    entrypoint: ["/entrypoint.sh"]
     restart: unless-stopped
     networks:
       - default
@@ -21,7 +21,7 @@ services:
 
       ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
       ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
-      # ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
+      ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
 
       DB_CLIENT: "pg"
       DB_HOST: ${DIRECTUS_DB_HOST}
@@ -30,16 +30,16 @@ services:
       DB_USER: "directus"
       DB_PASSWORD: ${DIRECTUS_DB_PASSWORD}
 
-      # AUTH_PROVIDERS: "keycloak"
-      # AUTH_KEYCLOAK_DRIVER: "openid"
-      # AUTH_KEYCLOAK_CLIENT_ID: ${KEYCLOAK_DIRECTUS_CLIENT}
-      # AUTH_KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_DIRECTUS_SECRET}
-      # AUTH_KEYCLOAK_ISSUER_URL: "${KEYCLOAK_URL}/realms/collectivo/.well-known/openid-configuration"
-      # AUTH_KEYCLOAK_IDENTIFIER_KEY: "email"
-      # AUTH_KEYCLOAK_ALLOW_PUBLIC_REGISTRATION: "true"
-      # AUTH_KEYCLOAK_REDIRECT_ALLOW_LIST: ${COLLECTIVO_URL}
+      AUTH_PROVIDERS: "keycloak"
+      AUTH_KEYCLOAK_DRIVER: "openid"
+      AUTH_KEYCLOAK_CLIENT_ID: ${KEYCLOAK_DIRECTUS_CLIENT}
+      AUTH_KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_DIRECTUS_SECRET}
+      AUTH_KEYCLOAK_ISSUER_URL: "${KEYCLOAK_URL}/realms/collectivo/.well-known/openid-configuration"
+      AUTH_KEYCLOAK_IDENTIFIER_KEY: "email"
+      AUTH_KEYCLOAK_ALLOW_PUBLIC_REGISTRATION: "true"
+      AUTH_KEYCLOAK_REDIRECT_ALLOW_LIST: ${COLLECTIVO_URL}
 
-      # SESSION_COOKIE_DOMAIN: "${DIRECTUS_SESSION_COOKIE_DOMAIN}"
+      SESSION_COOKIE_DOMAIN: "${DIRECTUS_SESSION_COOKIE_DOMAIN}"
       SESSION_COOKIE_SECURE: "true"
       SESSION_COOKIE_SAME_SITE: "lax"
 
@@ -57,9 +57,9 @@ services:
   collectivo:
     build: ./
     restart: unless-stopped
-    # depends_on:
-    #   - directus
-    #   - keycloak
+    depends_on:
+      - directus
+      - keycloak
     environment:
       NUXT_API_TOKEN: ${COLLECTIVO_API_TOKEN}
       NUXT_CHECKIN_TOKEN: ${COLLECTIVO_CHECKIN_TOKEN}
@@ -91,54 +91,38 @@ services:
       NUXT_PUBLIC_LOTZAPP_SORTIMENT_URL: ${LOTZAPP_SORTIMENT_URL}
       NUXT_PUBLIC_ANNY_LOGIN_URL: ${ANNY_LOGIN_URL}
 
-  # keycloak:
-  #   build: ./keycloak
-
-  #   environment:
-  #     KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
-  #     KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-  #     KEYCLOAK_FRONTEND_URL: ${KEYCLOAK_URL}
-  #     KC_DB_USERNAME: keycloak
-  #     KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
-  #     KC_DB_SCHEMA: public
-  #     KC_DB_URL_DATABASE: "keycloak"
-  #     KC_DB_URL_HOST: "keycloak-db"
-  #     KC_DB_URL_PORT: 5432
-  #     KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
-  #   command: ${KEYCLOAK_COMMAND:-}
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
-  #     interval: 5s
-  #     timeout: 5s
-  #     retries: 20
-  #   volumes:
-  #     - ./keycloak/themes/collectivo:/opt/keycloak/themes/collectivo
-  #     - ./keycloak/import:/opt/keycloak/data/import:ro
-  #     - ./keycloak/export:/tmp/export
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - keycloak-db
-
-  # keycloak-db:
-  #   image: postgres:14-alpine
-
-  #   volumes:
-  #     - keycloak-db-data:/var/lib/postgresql/data
-  #     - ./keycloak-db-backups:/backups
-  #   restart: unless-stopped
-  #   environment:
-  #     POSTGRES_DB: keycloak
-  #     POSTGRES_USER: keycloak
-  #     POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "pg_isready"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
+  keycloak:
+    build: ./keycloak
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KEYCLOAK_FRONTEND_URL: ${KEYCLOAK_URL}
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      KC_DB_SCHEMA: public
+      KC_DB_URL_DATABASE: "keycloak"
+      KC_DB_URL_HOST: ${KEYCLOAK_DB_HOST}
+      KC_DB_URL_PORT: 5432
+      KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
+    command: ${KEYCLOAK_COMMAND:-}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - ./keycloak/themes/collectivo:/opt/keycloak/themes/collectivo
+    restart: unless-stopped
+    networks:
+      - default
+      - dokploy-network
 
   habidat:
     image: habidat/direktkredit:1.5
     restart: unless-stopped
+    depends_on:
+      keycloak:
+        condition: service_healthy
     volumes:
       - habidat-config:/habidat/config/
       - habidat-files:/habidat/public/files
