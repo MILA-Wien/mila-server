@@ -14,6 +14,7 @@ services:
     restart: unless-stopped
     networks:
       - default
+      - dokploy-network
     environment:
       PUBLIC_URL: ${DIRECTUS_URL}
       SECRET: ${DIRECTUS_SECRET}
@@ -143,6 +144,9 @@ services:
       - habidat-files:/habidat/public/files
       - habidat-images:/habidat/public/images
       - habidat-upload:/habidat/upload
+    networks:
+      - default
+      - dokploy-network
     environment:
       - HABIDAT_DK_PROJECT_ID=project
       - HABIDAT_DK_PROJECT_NAME=${HABIDAT_PROJECT_NAME}
@@ -183,3 +187,7 @@ volumes:
   habidat-files:
   habidat-images:
   habidat-upload:
+
+networks:
+  dokploy-network:
+    external: true
