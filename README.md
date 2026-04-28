@@ -56,42 +56,36 @@ Troubleshooting
 
 ## Database backups
 
-Backups are created automatically for `directus-db` and `keycloak-db`, using [`postgres-backup-local`](https://github.com/prodrigestivill/docker-postgres-backup-local?tab=readme-ov-file#how-the-backups-folder-works). The backups can be found in the directories `directus-db-backups` and `keycloak-db-backups`.
+Database backups are not managed by Docker Compose. The Directus database is an external PostgreSQL instance; backups must be handled by the database host provider or a separate backup tool.
 
-To run a manual backup, go to `\collectivo-mila` and run:
-
-```sh
-docker compose exec directus-db-backups /backup.sh
-```
-
-A new backup will be saved in `directus-db-backups/last/directus-XXXXXXXX-XXXXXX.sql.gz`.
-
-To restore a backup, [decompress the backup file](https://www.wikihow.com/Extract-a-Gz-File) and then run:
+For local development, you can create a manual backup of `directus-db-dev`:
 
 ```sh
-docker compose exec directus-db psql -U directus -d directus -f backups/last/directus-XXXXXXXX-XXXXXX.sql
+docker compose exec directus-db-dev pg_dump --clean -U directus directus > my-backup.sql
 ```
 
-Notes:
+To restore it:
 
-- For local development, use `docker compose -f docker-compose.dev.yml ...`
-- Alternatively to using `postgres-backup-local`, you can also create a backup as follows:
-  - Run `docker compose exec directus-db sh`
-  - Then run `pg_dump --clean -U directus directus > backups/my-manual-backup.sql`
-- To reset the database before restoring a backup (this will delete the data!)
-  - Delete the container & volume and then start the container agein
-  - To remove the volume, you need to use `docker volume rm`, as `docker compose rm -v` does not work.
-  - Do not start directus before restoring the backup as it will start migrations on an empty db.
-- Backups are run with `--clean` so that they can be applied to an existing database.
+```sh
+docker compose exec -T directus-db-dev psql -U directus -d directus < my-backup.sql
+```
+
+To reset the dev database before restoring (this will delete all data):
+
+```sh
+docker compose down -v
+docker compose up -d directus-db-dev
+# wait for healthy, then restore
+```
 
 ## Local setup with Keycloak
 
-The dev setup runs without keycloak. To test keycloak integration:
+The dev setup runs without keycloak. To test keycloak integration, run both compose files:
 
 - In `collectivo/.env`, set `NUXT_PUBLIC_USE_KEYCLOAK = "true"`
-- In `.env`, set `COMPOSE_PROFILES = "dev,keycloak"`
-- In `.env`, set `DIRECTUS_AUTH_PROVIDERS`to `keycloak`
+- In `.env`, set `DIRECTUS_AUTH_PROVIDERS` to `keycloak`
 - Add the following to your etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak`
+- Run `docker compose -f docker-compose.production.yml up -d keycloak keycloak-db`
 
 Login credentials for directus admin without keycloak:
 
@@ -107,9 +101,10 @@ Login credentials for keycloak admin UI:
 
 - Install Docker and PNPM
 - Create a sync lock file `"/directus/uploads/sync.lock"`
+- Provision an external PostgreSQL database (with PostGIS extension) for Directus
 - Set .env vars
   - Generate secure secrets, keys, and passwords
-  - Set `COMPOSE_PROFILES="production"`
+  - Set `DIRECTUS_DB_HOST` to the hostname of the external Directus database
   - Remove variable `KEYCLOAK_COMMAND`
 - [Set up a reverse proxy](https://www.linode.com/docs/guides/using-nginx-proxy-manager/) with a docker network called `proxiable`
 - Set the following [custom Nginx configuration](https://stackoverflow.com/questions/56126864) for Keycloak
@@ -120,7 +115,7 @@ Login credentials for keycloak admin UI:
   ```
 - Clone this repository
 - Run `pnpm i` and `pnpm build`
-- Run `docker compose up -d`
+- Run `docker compose -f docker-compose.production.yml up -d`
 
 ## Server updates
 
@@ -129,10 +124,10 @@ For deploying updates on the server:
 - Create a database backup (see above)
 - Run `git pull`
 - Optional: if the directus version changed, perform the upgrade on the running server:
-  - Build the new version: `docker compose build directus`
-  - Run the new version: `docker compose up -d directus`
+  - Build the new version: `docker compose -f docker-compose.production.yml build directus`
+  - Run the new version: `docker compose -f docker-compose.production.yml up -d directus`
 - Optional: Run `pnpm i`
 - Run `pnpm build`
-- Optional: If the environment configuration in .env or the docker compose file changed: Run `docker compose up -d collectivo`
-- Run `docker compose restart collectivo`
+- Optional: If the environment configuration in .env or the docker compose file changed: Run `docker compose -f docker-compose.production.yml up -d collectivo`
+- Run `docker compose -f docker-compose.production.yml restart collectivo`
 - Optional: Apply database schema changes (see above)
