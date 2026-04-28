@@ -178,6 +178,4 @@ services:
         max-size: 50m
 
 volumes:
-  directus-db-data:
   directus-uploads:
-  keycloak-db-data:
