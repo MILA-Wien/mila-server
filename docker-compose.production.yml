@@ -135,116 +135,47 @@ services:
   #     timeout: 5s
   #     retries: 5
 
-  # habidat:
-  #   image: habidat/direktkredit:1.5
-
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./docker/habidat/config/:/habidat/config/
-  #     - ./docker/habidat/files:/habidat/public/files
-  #     - ./docker/habidat/images:/habidat/public/images
-  #     - ./docker/habidat/upload:/habidat/upload
-  #   environment:
-  #     - HABIDAT_DK_PROJECT_ID=project
-  #     - HABIDAT_DK_PROJECT_NAME=${HABIDAT_PROJECT_NAME}
-  #     - HABIDAT_DK_PROJECT_EMAIL=${HABIDAT_PROJECT_EMAIL}
-  #     - HABIDAT_DK_PROJECT_LOGO=logo.gif
-  #     - HABIDAT_DK_ADMIN_EMAIL=${HABIDAT_ADMIN_EMAIL}
-  #     - HABIDAT_DK_ADMIN_USERNAME=${HABIDAT_ADMIN_USERNAME}
-  #     - HABIDAT_DK_ADMIN_PASSWORD=${HABIDAT_ADMIN_SECRET}
-  #     - HABIDAT_DK_SESSION_SECRET=${HABIDAT_JWT_SECRET}
-  #     - HABIDAT_DK_DB_URI=mysql://${HABIDAT_DB_USER}:${HABIDAT_DB_SECRET}@habidat-db/${HABIDAT_DB_DB}
-  #     - HABIDAT_DK_PORT_HTTP=80
-  #     - HABIDAT_DK_AUTH_ADMIN_METHOD=local,oidc
-  #     - HABIDAT_DK_AUTH_ADMIN_OIDC_LABEL=${HABIDAT_OIDC_ADMIN_LOGIN_BUTTON_LABEL}
-  #     - HABIDAT_DK_AUTH_ADMIN_OIDC_ISSUER=${KEYCLOAK_URL}/realms/collectivo
-  #     - HABIDAT_DK_AUTH_ADMIN_OIDC_CLIENT_ID=${HABIDAT_KEYCLOAK_CLIENT_ID}
-  #     - HABIDAT_DK_AUTH_ADMIN_OIDC_CLIENT_SECRET=${HABIDAT_KEYCLOAK_TOKEN}
-  #     - HABIDAT_DK_AUTH_ADMIN_OIDC_CALLBACK_URL=/login-oidc-cb-admin
-  #     - HABIDAT_DK_AUTH_ADMIN_OIDC_AUTH_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/auth
-  #     - HABIDAT_DK_AUTH_ADMIN_OIDC_TOKEN_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/token
-  #     - HABIDAT_DK_AUTH_ADMIN_OIDC_USERINFO_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/userinfo
-  #     - HABIDAT_DK_AUTH_USER_METHOD=oidc
-  #     - HABIDAT_DK_AUTH_USER_OIDC_LABEL=${HABIDAT_OIDC_USER_LOGIN_BUTTON_LABEL}
-  #     - HABIDAT_DK_AUTH_USER_OIDC_ISSUER=${KEYCLOAK_URL}/realms/collectivo
-  #     - HABIDAT_DK_AUTH_USER_OIDC_CLIENT_ID=${HABIDAT_KEYCLOAK_CLIENT_ID}
-  #     - HABIDAT_DK_AUTH_USER_OIDC_CLIENT_SECRET=${HABIDAT_KEYCLOAK_TOKEN}
-  #     - HABIDAT_DK_AUTH_USER_OIDC_CALLBACK_URL=/login-oidc-cb
-  #     - HABIDAT_DK_AUTH_USER_OIDC_AUTH_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/auth
-  #     - HABIDAT_DK_AUTH_USER_OIDC_TOKEN_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/token
-  #     - HABIDAT_DK_AUTH_USER_OIDC_USERINFO_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/userinfo
-  #     - HABIDAT_DK_INTEREST_RATE_TYPE=coupon
-  #   depends_on:
-  #     - habidat-db
-  #   links:
-  #     - habidat-db
-  #   logging:
-  #     options:
-  #       max-size: 50m
-
-  # habidat-db:
-  #   image: mariadb
-
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./docker/habidat/db:/var/lib/mysql
-  #   environment:
-  #     - MARIADB_RANDOM_ROOT_PASSWORD=yes
-  #     - MYSQL_PASSWORD=${HABIDAT_DB_SECRET}
-  #     - MYSQL_DATABASE=${HABIDAT_DB_DB}
-  #     - MYSQL_USER=${HABIDAT_DB_USER}
-  #   logging:
-  #     options:
-  #       max-size: 50m
-
-  # directus-db-backups:
-  #   image: prodrigestivill/postgres-backup-local
-  #   restart: unless-stopped
-
-  #   volumes:
-  #     - ./directus-db-backups:/backups
-  #   links:
-  #     - directus-db
-  #   depends_on:
-  #     directus-db:
-  #       condition: service_healthy
-  #   environment:
-  #     POSTGRES_HOST: directus-db
-  #     POSTGRES_PORT: 5432
-  #     POSTGRES_DB: directus
-  #     POSTGRES_USER: directus
-  #     POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
-  #     POSTGRES_EXTRA_OPTS: --clean -Z1
-  #     SCHEDULE: "@daily"
-  #     BACKUP_KEEP_DAYS: 7
-  #     BACKUP_KEEP_WEEKS: 4
-  #     BACKUP_KEEP_MONTHS: 6
-  #     HEALTHCHECK_PORT: 8080
-
-  # keycloak-db-backups:
-  #   image: prodrigestivill/postgres-backup-local
-
-  #   volumes:
-  #     - ./keycloak-db-backups:/backups
-  #   restart: unless-stopped
-  #   links:
-  #     - keycloak-db
-  #   depends_on:
-  #     keycloak-db:
-  #       condition: service_healthy
-  #   environment:
-  #     POSTGRES_HOST: keycloak-db
-  #     POSTGRES_PORT: 5432
-  #     POSTGRES_DB: keycloak
-  #     POSTGRES_USER: keycloak
-  #     POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
-  #     POSTGRES_EXTRA_OPTS: --clean -Z1
-  #     SCHEDULE: "@daily"
-  #     BACKUP_KEEP_DAYS: 7
-  #     BACKUP_KEEP_WEEKS: 4
-  #     BACKUP_KEEP_MONTHS: 6
-  #     HEALTHCHECK_PORT: 8080
+  habidat:
+    image: habidat/direktkredit:1.5
+    restart: unless-stopped
+    volumes:
+      - ./docker/habidat/config/:/habidat/config/
+      - ./docker/habidat/files:/habidat/public/files
+      - ./docker/habidat/images:/habidat/public/images
+      - ./docker/habidat/upload:/habidat/upload
+    environment:
+      - HABIDAT_DK_PROJECT_ID=project
+      - HABIDAT_DK_PROJECT_NAME=${HABIDAT_PROJECT_NAME}
+      - HABIDAT_DK_PROJECT_EMAIL=${HABIDAT_PROJECT_EMAIL}
+      - HABIDAT_DK_PROJECT_LOGO=logo.gif
+      - HABIDAT_DK_ADMIN_EMAIL=${HABIDAT_ADMIN_EMAIL}
+      - HABIDAT_DK_ADMIN_USERNAME=${HABIDAT_ADMIN_USERNAME}
+      - HABIDAT_DK_ADMIN_PASSWORD=${HABIDAT_ADMIN_SECRET}
+      - HABIDAT_DK_SESSION_SECRET=${HABIDAT_JWT_SECRET}
+      - HABIDAT_DK_DB_URI=mysql://${HABIDAT_DB_USER}:${HABIDAT_DB_SECRET}@${HABIDAT_DB_HOST}/${HABIDAT_DB_DB}
+      - HABIDAT_DK_PORT_HTTP=80
+      - HABIDAT_DK_AUTH_ADMIN_METHOD=local,oidc
+      - HABIDAT_DK_AUTH_ADMIN_OIDC_LABEL=${HABIDAT_OIDC_ADMIN_LOGIN_BUTTON_LABEL}
+      - HABIDAT_DK_AUTH_ADMIN_OIDC_ISSUER=${KEYCLOAK_URL}/realms/collectivo
+      - HABIDAT_DK_AUTH_ADMIN_OIDC_CLIENT_ID=${HABIDAT_KEYCLOAK_CLIENT_ID}
+      - HABIDAT_DK_AUTH_ADMIN_OIDC_CLIENT_SECRET=${HABIDAT_KEYCLOAK_TOKEN}
+      - HABIDAT_DK_AUTH_ADMIN_OIDC_CALLBACK_URL=/login-oidc-cb-admin
+      - HABIDAT_DK_AUTH_ADMIN_OIDC_AUTH_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/auth
+      - HABIDAT_DK_AUTH_ADMIN_OIDC_TOKEN_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/token
+      - HABIDAT_DK_AUTH_ADMIN_OIDC_USERINFO_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/userinfo
+      - HABIDAT_DK_AUTH_USER_METHOD=oidc
+      - HABIDAT_DK_AUTH_USER_OIDC_LABEL=${HABIDAT_OIDC_USER_LOGIN_BUTTON_LABEL}
+      - HABIDAT_DK_AUTH_USER_OIDC_ISSUER=${KEYCLOAK_URL}/realms/collectivo
+      - HABIDAT_DK_AUTH_USER_OIDC_CLIENT_ID=${HABIDAT_KEYCLOAK_CLIENT_ID}
+      - HABIDAT_DK_AUTH_USER_OIDC_CLIENT_SECRET=${HABIDAT_KEYCLOAK_TOKEN}
+      - HABIDAT_DK_AUTH_USER_OIDC_CALLBACK_URL=/login-oidc-cb
+      - HABIDAT_DK_AUTH_USER_OIDC_AUTH_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/auth
+      - HABIDAT_DK_AUTH_USER_OIDC_TOKEN_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/token
+      - HABIDAT_DK_AUTH_USER_OIDC_USERINFO_URL=${KEYCLOAK_URL}/realms/collectivo/protocol/openid-connect/userinfo
+      - HABIDAT_DK_INTEREST_RATE_TYPE=coupon
+    logging:
+      options:
+        max-size: 50m
 
 volumes:
   directus-uploads:
-  keycloak-db-data:
