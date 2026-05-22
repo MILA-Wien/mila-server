@@ -13,7 +13,17 @@ const userData = useCurrentUser();
 const user = userData.value.user!;
 const membership = userData.value.membership;
 const runtimeConfig = useRuntimeConfig();
-const keycloakAccountUrl = `${runtimeConfig.public.keycloakUrl}/realms/${runtimeConfig.public.keycloakRealm}/account`;
+const useKeycloak = runtimeConfig.public.useKeycloak;
+const keycloakUpdatePasswordUrl = (() => {
+  const params = new URLSearchParams({
+    client_id: runtimeConfig.public.keycloakClient,
+    redirect_uri: `${runtimeConfig.public.collectivoUrl}/profile`,
+    response_type: "code",
+    scope: "openid",
+    kc_action: "UPDATE_PASSWORD",
+  });
+  return `${runtimeConfig.public.keycloakUrl}/realms/${runtimeConfig.public.keycloakRealm}/protocol/openid-connect/auth?${params.toString()}`;
+})();
 
 const mv = "Dieses Feld ist erforderlich";
 const schema = object({
@@ -246,7 +256,19 @@ function personTypeLabel(val: string | null | undefined) {
     <!-- ── Password ─────────────────────────────────────────────── -->
     <div>
       <h2>{{ t("Passwort ändern") }}</h2>
+
+      <div v-if="useKeycloak" class="space-y-4">
+        <p>{{ t("Passwort_redirect_explanation") }}</p>
+        <UButton
+          :href="keycloakUpdatePasswordUrl"
+          icon="i-heroicons-arrow-right"
+        >
+          {{ t("Passwort jetzt ändern") }}
+        </UButton>
+      </div>
+
       <UForm
+        v-else
         :schema="schema"
         :state="state"
         class="space-y-4"
@@ -523,8 +545,8 @@ de:
   "E-Mail-Adresse ändern": "E-Mail-Adresse ändern"
   "E-Mail erfolgreich geändert.": "E-Mail erfolgreich geändert."
   "Passwort ändern": "Passwort ändern"
-  "Passwort über Keycloak verwalten": "Dein Passwort wird über Keycloak verwaltet."
-  "Konto verwalten": "Konto verwalten"
+  "Passwort_redirect_explanation": "Aus Sicherheitsgründen wirst du zur Änderung deines Passworts auf unsere geschützte Anmeldeseite weitergeleitet. Du musst dort dein aktuelles Passwort und das neue Passwort eingeben. Anschließend kehrst du automatisch hierher zurück."
+  "Passwort jetzt ändern": "Passwort jetzt ändern"
   "Neues Passwort": "Neues Passwort"
   "Passwort bestätigen": "Passwort bestätigen"
   "Das Passwort muss mindestens 8 Zeichen lang sein.": "Das Passwort muss mindestens 8 Zeichen lang sein."
@@ -582,8 +604,8 @@ en:
   "E-Mail-Adresse ändern": "Change email address"
   "E-Mail erfolgreich geändert.": "Email updated successfully."
   "Passwort ändern": "Change password"
-  "Passwort über Keycloak verwalten": "Your password is managed via Keycloak."
-  "Konto verwalten": "Manage account"
+  "Passwort_redirect_explanation": "For security, you will be redirected to our secured login page to change your password. You will need to enter your current password and the new password there, then you will be returned here automatically."
+  "Passwort jetzt ändern": "Change password now"
   "Neues Passwort": "New password"
   "Passwort bestätigen": "Confirm password"
   "Das Passwort muss mindestens 8 Zeichen lang sein.": "Password must be at least 8 characters."
