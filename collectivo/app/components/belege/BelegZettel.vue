@@ -30,11 +30,20 @@ const formatCurrency = (amount: number) => `${amount.toFixed(2)} EUR`;
 const formatDate = (timestamp: string) =>
   new Date(timestamp).toLocaleString("de-DE", { dateStyle: "short" });
 
-const vatCode = (vat: number) => {
-  if (vat === 10) return "A";
-  if (vat === 20) return "B";
-  if (vat === 0) return "D";
-  return "";
+const VAT_CODES = [
+  { code: "A", rate: 10 },
+  { code: "B", rate: 20 },
+  { code: "C", rate: 4.9 },
+  { code: "D", rate: 13 },
+  { code: "E", rate: 0 },
+] as const;
+
+const vatCode = (rate: number) =>
+  VAT_CODES.find((v) => v.rate === rate)?.code ?? "";
+
+const vatLabel = (rate: number) => {
+  const code = vatCode(rate);
+  return code ? `${code}: ${rate}%` : `${rate}%`;
 };
 
 // --- VAT summary calculation ---
@@ -58,8 +67,7 @@ const vatSummary = computed(() => {
     summary[key].vat = round2(summary[key].vat + vat);
   }
 
-  // Sort in order
-  const order = [10, 20, 13, 0];
+  const order: number[] = VAT_CODES.map((v) => v.rate);
   return Object.values(summary).sort(
     (a, b) => order.indexOf(a.rate) - order.indexOf(b.rate),
   );
@@ -176,17 +184,7 @@ function downloadPDF() {
           </thead>
           <tbody>
             <tr v-for="vals in vatSummary" :key="vals.rate">
-              <td>
-                {{
-                  vals.rate === 10
-                    ? "A: 10%"
-                    : vals.rate === 20
-                      ? "B: 20%"
-                      : vals.rate === 13
-                        ? "C: 13%"
-                        : "D: 0%"
-                }}
-              </td>
+              <td>{{ vatLabel(vals.rate) }}</td>
               <td class="text-right">{{ vals.net.toFixed(2) }}</td>
               <td class="text-right">{{ vals.vat.toFixed(2) }}</td>
               <td class="text-right">{{ vals.gross.toFixed(2) }}</td>
