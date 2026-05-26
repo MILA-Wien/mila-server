@@ -185,10 +185,15 @@ export async function dbGetMembershipUser(id: string): Promise<{ memberships_use
   ) as unknown as { memberships_user: string };
 }
 
-export async function dbGetUserIdsByShiftcounter(counter: number) {
+export async function dbGetActiveUserIdsByShiftcounter(counter: number) {
   const memberships = (await directus.request(
     readItems("memberships", {
-      filter: { shifts_counter: { _eq: counter } },
+      filter: {
+        shifts_counter: { _eq: counter },
+        memberships_status: { _eq: "approved" },
+        memberships_type: { _eq: "Aktiv" },
+        shifts_user_type: { _nin: ["exempt", "inactive"] },
+      },
       fields: ["memberships_user.id"] as any[],
     }),
   )) as unknown as { memberships_user: { id: string } }[];
