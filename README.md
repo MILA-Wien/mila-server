@@ -7,12 +7,27 @@ Member plattform of [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/).
 - Install Docker, nodejs, and PNPM
 - Clone this repository
 
-- Create .env file with `cp .env.example .env`
-- Run `docker compose up -d` and wait for directus to be ready
-- Run `docker compose exec -u root directus-dev chown -R node:node /directus/extensions /directus/uploads`
-- Run `npx directus-sync push` to apply data schema
-- Install packages with `pnpm i`
-- Start dev server with `pnpm dev`
+- Create .env file:
+  ```sh
+  cp .env.example .env
+  ```
+- Start the containers and wait for directus to be ready:
+  ```sh
+  docker compose up -d
+  ```
+- Give directus access to directories (runs as user `node`):
+  ```sh
+  docker compose exec -u root directus-dev chown -R node:node /directus/extensions /directus/uploads
+  ```
+- Apply data schema:
+  ```sh
+  npx directus-sync push
+  ```
+- Install packages and start collectivo:
+  ```sh
+  pnpm i
+  pnpm dev
+  ```
 - Go to http://localhost:3000 and click on "Seed example data" or run `pnpm seed`
 
 The following services will then be available:
@@ -44,9 +59,16 @@ Collectivo uses [directus-sync](https://github.com/tractr/directus-sync) to appl
 Updating the database schema
 
 - Make changes to the database schema on your local system
-- Run `npx directus-sync pull && node sort-directus-config.mjs` to update the database schema in the repository
+- Update the database schema in the repository
+  ```sh
+  npx directus-sync pull && node sort-directus-config.mjs
+  ```
 - Make a database backup of the production system (see below)
-- Run `npx directus-sync push` (credentials will be taken from .env)
+- Run
+  ```sh
+  npx directus-sync push
+  ```
+  (credentials will be taken from .env)
 
 Troubleshooting
 
@@ -80,14 +102,19 @@ docker compose up -d directus-db-dev
 
 ## Local setup with Keycloak
 
-The dev setup runs without keycloak. To test keycloak integration, run both compose files:
+The dev setup runs without keycloak. To test keycloak integration:
 
-- In `collectivo/.env`, set `NUXT_PUBLIC_USE_KEYCLOAK = "true"`
-- In `.env`, set `DIRECTUS_AUTH_PROVIDERS` to `keycloak`
-- In `.env`, set `KEYCLOAK_DB_HOST = "keycloak-db"`
-- Add the following to your etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak`
-- Run `docker compose up -d keycloak-db`
-- Run `docker compose -f docker-compose.production.yml up -d keycloak`
+- In `.env`, set
+  ```
+  COMPOSE_PROFILES = "dev,keycloak"
+  KEYCLOAK_DB_HOST = "keycloak-db"
+  DIRECTUS_AUTH_PROVIDERS = "keycloak"
+  ```
+- In `collectivo/.env`, set
+  ```
+  NUXT_PUBLIC_USE_KEYCLOAK = "true"
+  ```
+- Add the following to your /etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak`
 
 Login credentials for directus admin without keycloak:
 
@@ -96,8 +123,17 @@ Login credentials for directus admin without keycloak:
 
 Login credentials for keycloak admin UI:
 
-- Username `keycloak-admin@example.com`
+- Username `admin@example.com`
 - Password `admin`
+
+For more details see the [Keycloak readme](keycloak/README.md).
+
+## Local setup with Nextcloud
+
+- In `.env`, set `COMPOSE_PROFILES = "dev,keycloak,nextcloud"`
+- Open the [Nextcloud GUI](http://localhost:8081) and create an admin user to finish the installation.
+
+For setup of the integration with keycloak see the [Nextcloud readme](nextcloud/README.md).
 
 ## Production setup
 
