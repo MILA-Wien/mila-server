@@ -1,6 +1,4 @@
 <script setup lang="ts">
-const { t } = useI18n();
-
 interface Choice {
   label: string;
   value: string;
@@ -44,7 +42,7 @@ watch(
       :key="choice.value"
       :id="choice.value"
       v-model="choice_values[choice.value]"
-      :label="t(choice.label)"
+      :label="choice.label"
     />
   </div>
 </template>
