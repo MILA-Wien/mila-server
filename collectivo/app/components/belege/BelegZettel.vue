@@ -33,9 +33,9 @@ const formatDate = (timestamp: string) =>
 const VAT_CODES = [
   { code: "A", rate: 10 },
   { code: "B", rate: 20 },
-  { code: "C", rate: 4.9 },
-  { code: "D", rate: 13 },
-  { code: "E", rate: 0 },
+  { code: "C", rate: 13 },
+  { code: "D", rate: 0 },
+  { code: "E", rate: 4.9 },
 ] as const;
 
 const vatCode = (rate: number) =>
