@@ -66,6 +66,10 @@ async function runCronjobs(force_yesterday: boolean) {
 
   // Update last cronjob timestamp
   await dbUpdateSettings({ last_cronjob: new Date().toISOString() });
+
+  // Safety net: resume any campaigns still left pending (e.g. stranded by a
+  // restart). No-op if a drain is already running or nothing is pending.
+  kickEmailDrain();
 }
 
 // Decrement shifts counter for all users that
@@ -80,7 +84,10 @@ async function decrement_shifts_counter(mshipIdsOnHoliday: number[]) {
 
   for (const membership of membershipsToUpdate) {
     if (membership.shifts_counter < -28) continue;
-    await dbDecrementMembershipCounter(membership.id, membership.shifts_counter);
+    await dbDecrementMembershipCounter(
+      membership.id,
+      membership.shifts_counter,
+    );
   }
 }
 
@@ -103,7 +110,8 @@ async function create_shift_logs(
         mshipIdsOnHoliday.includes(ass.membershipId) ||
         logs.some(
           (log) =>
-            ass.membershipId === log.shifts_membership && occDate === log.shifts_date,
+            ass.membershipId === log.shifts_membership &&
+            occDate === log.shifts_date,
         )
       ) {
         continue;
