@@ -41,6 +41,11 @@ Test users for frontend and directus (after seeding):
 - `editor@example.com` / `editor`
 - `user@example.com` / `user`
 
+Login credentials for directus admin without keycloak:
+
+- Username `directus-admin@example.com`
+- Password `admin`
+
 ## Troubleshooting
 
 - Resetting everything
@@ -114,24 +119,18 @@ The dev setup runs without keycloak. To test keycloak integration:
   ```
   NUXT_PUBLIC_USE_KEYCLOAK = "true"
   ```
-- Add the following to your /etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak`
-
-Login credentials for directus admin without keycloak:
-
-- Username `directus-admin@example.com`
-- Password `admin`
-
-Login credentials for keycloak admin UI:
-
-- Username `admin@example.com`
-- Password `admin`
+- Add the following to your /etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak` (required so your browser uses the same hostname as Docker internally, which must match the issuer embedded in Keycloak's tokens)
+- Open the Keycloak admin UI at [keycloak:8080](http://keycloak:8080).
+- Login with
+  - Username `admin@example.com`
+  - Password `admin`
 
 For more details see the [Keycloak readme](keycloak/README.md).
 
 ## Local setup with Nextcloud
 
 - In `.env`, set `COMPOSE_PROFILES = "dev,keycloak,nextcloud"`
-- Open the [Nextcloud GUI](http://localhost:8081) and create an admin user to finish the installation.
+- Open the Nextcloud GUI at [localhost:8081](http://localhost:8081) and create an admin user to finish the installation.
 
 For setup of the integration with keycloak see the [Nextcloud readme](nextcloud/README.md).
 

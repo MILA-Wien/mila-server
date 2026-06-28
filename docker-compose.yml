@@ -107,14 +107,14 @@ services:
     container_name: nextcloud
     profiles: [nextcloud]
     image: nextcloud:stable
-    restart: always
+    restart: unless-stopped
     ports:
       - 8081:80
     environment:
       MYSQL_HOST: nextcloud-db
       MYSQL_DATABASE: nextcloud
       MYSQL_USER: nextcloud
-      MYSQL_PASSWORD: nextcloudpass
+      MYSQL_PASSWORD: ${NEXTCLOUD_DB_PASSWORD}
     volumes:
       - ./nextcloud_data:/var/www/html
     depends_on:
@@ -128,15 +128,15 @@ services:
     restart: always
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_ROOT_PASSWORD: ${NEXTCLOUD_DB_ROOT_PASSWORD}
       MYSQL_DATABASE: nextcloud
       MYSQL_USER: nextcloud
-      MYSQL_PASSWORD: nextcloudpass
+      MYSQL_PASSWORD: ${NEXTCLOUD_DB_PASSWORD}
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 5s
       timeout: 5s
-      retries: 2
+      retries: 10
       start_period: 20s
     volumes:
       - ./nextcloud_db_data:/var/lib/mysql
