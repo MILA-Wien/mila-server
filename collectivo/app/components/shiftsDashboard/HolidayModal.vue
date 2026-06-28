@@ -1,14 +1,21 @@
 <script setup lang="ts">
 const MIN_DAYS_BEFORE_HOLIDAY = 2;
+const DEFAULT_HOLIDAY_MIN_DAYS = 14;
 const isOpen = defineModel<boolean>();
 const absenceFromDate = ref<Date | undefined>(undefined);
 const absenceToDate = ref<Date | undefined>(undefined);
 const success: Ref<null | boolean> = ref(null);
 const { t } = useI18n();
+const { settingsState, fetchSettings } = useSettings();
 const emit = defineEmits(["reload"]);
 const props = defineProps<{
   mshipID: number;
 }>();
+
+// Non-blocking: the parent page already fetches settings into shared state.
+// Reading settingsState at submit time falls back to DEFAULT_HOLIDAY_MIN_DAYS
+// if it has not loaded yet, so there is no need to make setup() async here.
+fetchSettings();
 
 async function postAbsence() {
   try {
@@ -36,10 +43,9 @@ async function postAbsenceInner() {
     showToast({
       type: "error",
       title: "Error",
-      description: t(
-        "Absence must start at least {days} days from today.",
-        { days: MIN_DAYS_BEFORE_HOLIDAY },
-      ),
+      description: t("Absence must start at least {days} days from today.", {
+        days: MIN_DAYS_BEFORE_HOLIDAY,
+      }),
     });
     return;
   }
@@ -49,6 +55,24 @@ async function postAbsenceInner() {
       type: "error",
       title: "Error",
       description: t("Absence must end after it starts."),
+    });
+    return;
+  }
+
+  const minDays =
+    settingsState.value?.shift_holiday_min_days ?? DEFAULT_HOLIDAY_MIN_DAYS;
+  const durationDays = inclusiveDaysBetween(
+    absenceFromDate.value,
+    absenceToDate.value,
+  );
+
+  if (durationDays < minDays) {
+    showToast({
+      type: "error",
+      title: "Error",
+      description: t("Holiday must be at least {days} days long.", {
+        days: minDays,
+      }),
     });
     return;
   }
