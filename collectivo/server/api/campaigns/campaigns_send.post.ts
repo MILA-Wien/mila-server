@@ -47,10 +47,21 @@ async function handleCampaignUpdate(event: any) {
 
   let i = 0;
 
-  // Wait for maximum 1h if other campaign is currently sending
-  while (campaignEndpoint.isActive && i < 3600) {
+  // Wait for maximum 12h if other campaign is currently sending
+  while (campaignEndpoint.isActive && i < 43200) {
     i++;
     await sleep(1000);
+  }
+
+  // If the lock is still held, we timed out waiting. Do NOT fall through and
+  // start sending concurrently with the campaign that still holds the lock,
+  // as that would create a parallel sending stream and overload SMTP.
+  if (campaignEndpoint.isActive) {
+    throw createError({
+      statusCode: 503,
+      statusMessage:
+        "Another campaign is still sending after waiting; try again later.",
+    });
   }
 
   campaignEndpoint.isActive = true;

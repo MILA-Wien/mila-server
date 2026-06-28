@@ -25,113 +25,113 @@ const devMode = import.meta.dev;
 const user = useCurrentUser();
 const schema = object({
   directus_users__memberships_person_type: string().required(
-    "Dieses Feld ist erforderlich",
+    () => t("This field is required"),
   ),
   directus_users__email: string()
-    .email(t("Email address is not valid"))
-    .required("Dieses Feld ist erforderlich"),
-  directus_users__password: string().required("Dieses Feld ist erforderlich"),
+    .email(() => t("Email address is not valid"))
+    .required(() => t("This field is required")),
+  directus_users__password: string().required(() => t("This field is required")),
   _pw_confirm: string()
-    .required("Dieses Feld ist erforderlich")
-    .oneOf([ref("directus_users__password")], t("Passwords are not the same")),
+    .required(() => t("This field is required"))
+    .oneOf([ref("directus_users__password")], () => t("Passwords are not the same")),
   directus_users__memberships_organization_name: string().when(
     "directus_users__memberships_person_type",
     {
       is: "legal",
-      then: (schema) => schema.required("Dieses Feld ist erforderlich"),
+      then: (schema) => schema.required(() => t("This field is required")),
     },
   ),
   directus_users__memberships_organization_type: string().when(
     "directus_users__memberships_person_type",
     {
       is: "legal",
-      then: (schema) => schema.required("Dieses Feld ist erforderlich"),
+      then: (schema) => schema.required(() => t("This field is required")),
     },
   ),
   directus_users__memberships_organization_id: string().when(
     "directus_users__memberships_person_type",
     {
       is: "legal",
-      then: (schema) => schema.required("Dieses Feld ist erforderlich"),
+      then: (schema) => schema.required(() => t("This field is required")),
     },
   ),
   directus_users__username: string().when("use_custom_username", {
     is: true,
-    then: (schema) => schema.required("Dieses Feld ist erforderlich"),
+    then: (schema) => schema.required(() => t("This field is required")),
   }),
   directus_users__username_last: string().when("use_custom_username", {
     is: true,
-    then: (schema) => schema.required("Dieses Feld ist erforderlich"),
+    then: (schema) => schema.required(() => t("This field is required")),
   }),
   coshopper_firstname: string().when("add_coshopper", {
     is: true,
-    then: (schema) => schema.required("Dieses Feld ist erforderlich"),
+    then: (schema) => schema.required(() => t("This field is required")),
   }),
   coshopper_lastname: string().when("add_coshopper", {
     is: true,
-    then: (schema) => schema.required("Dieses Feld ist erforderlich"),
+    then: (schema) => schema.required(() => t("This field is required")),
   }),
   coshopper_email: string()
-    .email(t("Email address is not valid"))
+    .email(() => t("Email address is not valid"))
     .when("add_coshopper", {
       is: true,
-      then: (schema) => schema.required("Dieses Feld ist erforderlich"),
+      then: (schema) => schema.required(() => t("This field is required")),
     }),
   directus_users__pronouns: string(),
   directus_users__use_pronouns_on_card: boolean(),
   directus_users__hide_name: boolean(),
-  directus_users__first_name: string().required("Dieses Feld ist erforderlich"),
-  directus_users__last_name: string().required("Dieses Feld ist erforderlich"),
+  directus_users__first_name: string().required(() => t("This field is required")),
+  directus_users__last_name: string().required(() => t("This field is required")),
   directus_users__memberships_gender: string().required(
-    "Dieses Feld ist erforderlich",
+    () => t("This field is required"),
   ),
   directus_users__memberships_phone: string(),
   directus_users__memberships_birthday: date().when(
     "directus_users__memberships_person_type",
     {
       is: "natural",
-      then: (schema) => schema.required("Dieses Feld ist erforderlich"),
+      then: (schema) => schema.required(() => t("This field is required")),
     },
   ),
   directus_users__memberships_occupation: string().when(
     "directus_users__memberships_person_type",
     {
       is: "natural",
-      then: (schema) => schema.required("Dieses Feld ist erforderlich"),
+      then: (schema) => schema.required(() => t("This field is required")),
     },
   ),
   directus_users__memberships_street: string().required(
-    "Dieses Feld ist erforderlich",
+    () => t("This field is required"),
   ),
   directus_users__memberships_streetnumber: string().required(
-    "Dieses Feld ist erforderlich",
+    () => t("This field is required"),
   ),
   directus_users__memberships_stair: string(),
   directus_users__memberships_door: string(),
   directus_users__memberships_postcode: string().required(
-    "Dieses Feld ist erforderlich",
+    () => t("This field is required"),
   ),
   directus_users__memberships_city: string().required(
-    "Dieses Feld ist erforderlich",
+    () => t("This field is required"),
   ),
   directus_users__memberships_country: string().required(
-    "Dieses Feld ist erforderlich",
+    () => t("This field is required"),
   ),
   memberships__memberships_type: string().required(
-    "Dieses Feld ist erforderlich",
+    () => t("This field is required"),
   ),
-  shares_options: string().required("Dieses Feld ist erforderlich"),
+  shares_options: string().required(() => t("This field is required")),
   memberships__memberships_shares: number()
     .integer()
     .when("shares_options", {
       is: "more",
       then: (schema) =>
         schema
-          .required("Dieses Feld ist erforderlich")
-          .min(10, t("Must be at least 10 shares")),
+          .required(() => t("This field is required"))
+          .min(10, () => t("Must be at least 10 shares")),
     }),
   directus_users__payments_type: string().required(
-    "Dieses Feld ist erforderlich",
+    () => t("This field is required"),
   ),
   directus_users__payments_account_iban: string().when(
     "directus_users__payments_type",
@@ -139,8 +139,8 @@ const schema = object({
       is: "sepa",
       then: (schema) =>
         schema
-          .required("Dieses Feld ist erforderlich")
-          .test("iban", "IBAN nicht gültig", (value, context) => {
+          .required(() => t("This field is required"))
+          .test("iban", () => t("IBAN is not valid"), (value, context) => {
             return validateIban(value, context, state);
           }),
     },
@@ -149,7 +149,7 @@ const schema = object({
     "directus_users__payments_type",
     {
       is: "sepa",
-      then: (schema) => schema.required("Dieses Feld ist erforderlich"),
+      then: (schema) => schema.required(() => t("This field is required")),
     },
   ),
   directus_users__mila_survey_contact: string(),
@@ -159,11 +159,11 @@ const schema = object({
   directus_users__survey_languages: array(string()),
   directus_users__survey_languages_additional: string(),
   _statutes_approval: boolean()
-    .required("Dieses Feld muss akzeptiert werden")
-    .oneOf([true], "Dieses Feld muss akzeptiert werden"),
+    .required(() => t("This field must be accepted"))
+    .oneOf([true], () => t("This field must be accepted")),
   _data_approval: boolean()
-    .required("Dieses Feld muss akzeptiert werden")
-    .oneOf([true], "Dieses Feld muss akzeptiert werden"),
+    .required(() => t("This field must be accepted"))
+    .oneOf([true], () => t("This field must be accepted")),
   directus_users__mila_pr_approved: boolean(),
 });
 
@@ -724,15 +724,16 @@ async function onError(event: FormErrorEvent) {
       <p v-if="isNatural">
         {{ t("t:mila_form_mtype_natural") }}
         <br /><br />
-        Mehr Informationen zu den Mitmachschichten findest du
-        <a
-          class="font-bold"
-          href="https://www.mila.wien/mitmachen/mitmach-schicht/"
-          >hier</a
-        >. Eine Befreiungen von Mitmach-Schichten sind unter bestimmten
-        Voraussetzungen (über 70 Jahre, Krankheit, Behinderung, Mutterschutz
-        etc.) möglich. Bitte nach erfolgtem Beitritt bei mitglied@mila.wien
-        melden.
+        <i18n-t keypath="t:mila_form_mtype_natural_info" tag="span">
+          <template #link>
+            <a
+              class="font-bold"
+              href="https://www.mila.wien/mitmachen/mitmach-schicht/"
+              target="_blank"
+              >{{ t("here") }}</a
+            >
+          </template>
+        </i18n-t>
       </p>
       <p v-else>
         {{ t("t:mila_form_mtype_orga") }}
@@ -777,20 +778,20 @@ async function onError(event: FormErrorEvent) {
       </FormsFormGroup>
       <div class="grid md:grid-cols-2 gap-4 pt-3" v-if="state.add_coshopper">
         <FormsFormGroup
-          :label="t('Vorname')"
+          :label="t('First name')"
           name="coshopper_firstname"
           required
         >
           <UInput variant="outline" v-model="state.coshopper_firstname" />
         </FormsFormGroup>
         <FormsFormGroup
-          :label="t('Nachname')"
+          :label="t('Last name')"
           name="coshopper_lastname"
           required
         >
           <UInput variant="outline" v-model="state.coshopper_lastname" />
         </FormsFormGroup>
-        <FormsFormGroup :label="t('Email')" name="coshopper_email" required>
+        <FormsFormGroup :label="t('E-Mail Address')" name="coshopper_email" required>
           <UInput variant="outline" v-model="state.coshopper_email" />
         </FormsFormGroup>
       </div>
@@ -944,15 +945,15 @@ async function onError(event: FormErrorEvent) {
         <FormsCheckboxGroup
           v-model="state.directus_users__mila_groups_interested_2"
           :choices="[
-            { label: 'Sortiment', value: 'Sortiment' },
-            { label: 'Öffentlichkeitsarbeit', value: 'Öffentlichkeitsarbeit' },
-            { label: 'Finanzen', value: 'Finanzen' },
-            { label: 'Genossenschaft', value: 'Genossenschaft' },
-            { label: 'Standort', value: 'Standort' },
-            { label: 'IT und Digitales', value: 'ITundDigitales' },
-            { label: 'Diversität', value: 'Diversität' },
-            { label: 'Events/Infogespräche', value: 'EventsInfogespräche' },
-            { label: 'Mitgliederbüro', value: 'Mitgliederbüro' },
+            { label: t('Sortiment'), value: 'Sortiment' },
+            { label: t('Öffentlichkeitsarbeit'), value: 'Öffentlichkeitsarbeit' },
+            { label: t('Finanzen'), value: 'Finanzen' },
+            { label: t('Genossenschaft'), value: 'Genossenschaft' },
+            { label: t('Standort'), value: 'Standort' },
+            { label: t('IT und Digitales'), value: 'ITundDigitales' },
+            { label: t('Diversität'), value: 'Diversität' },
+            { label: t('Events/Infogespräche'), value: 'EventsInfogespräche' },
+            { label: t('Mitgliederbüro'), value: 'Mitgliederbüro' },
           ]"
         />
       </FormsFormGroup>
@@ -964,17 +965,20 @@ async function onError(event: FormErrorEvent) {
         <FormsCheckboxGroup
           v-model="state.directus_users__mila_skills_2"
           :choices="[
-            { label: 'Handwerk (Elektrik, Tischlerei, …)', value: 'handwerk' },
-            { label: 'Einzelhandel', value: 'handel' },
+            { label: t('Handwerk (Elektrik, Tischlerei, …)'), value: 'handwerk' },
+            { label: t('Einzelhandel'), value: 'handel' },
             {
-              label: 'Organisationsentwicklung',
+              label: t('Organisationsentwicklung'),
               value: 'geno',
             },
-            { label: 'Finanzen (BWL, Buchhaltung,…)', value: 'finanzen' },
-            { label: 'Immobilien/Architektur/Planung/Bau', value: 'immo' },
+            { label: t('Finanzen (BWL, Buchhaltung,…)'), value: 'finanzen' },
             {
-              label: 'Personalmanagement',
+              label: t('Personalmanagement'),
               value: 'personal',
+            },
+            {
+              label: t('Öffentlichkeitsarbeit/ Social Media/ Website'),
+              value: 'oeffentlichkeit',
             },
           ]"
         />
@@ -987,15 +991,15 @@ async function onError(event: FormErrorEvent) {
         <FormsCheckboxGroup
           v-model="state.directus_users__survey_languages"
           :choices="[
-            { label: 'German', value: 'Deutsch' },
-            { label: 'English', value: 'Englisch' },
-            { label: 'French', value: 'Französisch' },
-            { label: 'Turkish', value: 'Türkisch' },
-            { label: 'BKMS', value: 'BKMS' },
-            { label: 'Romanian', value: 'Rumänisch' },
-            { label: 'Ukrainian', value: 'Ukrainisch' },
-            { label: 'Russian', value: 'Russisch' },
-            { label: 'Arabic', value: 'Arabisch' },
+            { label: t('German'), value: 'Deutsch' },
+            { label: t('English'), value: 'Englisch' },
+            { label: t('French'), value: 'Französisch' },
+            { label: t('Turkish'), value: 'Türkisch' },
+            { label: t('BKMS'), value: 'BKMS' },
+            { label: t('Romanian'), value: 'Rumänisch' },
+            { label: t('Ukrainian'), value: 'Ukrainisch' },
+            { label: t('Russian'), value: 'Russisch' },
+            { label: t('Arabic'), value: 'Arabisch' },
           ]"
         />
       </FormsFormGroup>
@@ -1139,6 +1143,10 @@ de:
   "Email address is not valid": "E-Mail Adresse ist nicht korrekt"
   "Passwords are not the same": "Passwörter stimmen nicht überein"
   "Must be at least 10 shares": "Muss mindestens 10 Anteile sein"
+  "This field is required": "Dieses Feld ist erforderlich"
+  "This field must be accepted": "Dieses Feld muss akzeptiert werden"
+  "IBAN is not valid": "IBAN nicht gültig"
+  "There was an error": "Es ist ein Fehler aufgetreten"
 
   "User Account": "Zugangsdaten"
   "E-Mail Address": "E-Mail Adresse"
@@ -1161,7 +1169,6 @@ de:
   "How did you hear about us?": "Woher kennst du MILA?"
   "What convinced you to join MILA?": "Was hat dich von MILA überzeugt?"
   "Do you want to participate in a working group?": "Möchtest du  in einer Arbeitsgruppe (AG) mitmachen?"
-  "You can find more information about the working groups": "Mehr informationen über die Arbeitsgruppen findest du"
   "here": "hier"
   "What are your skills?": "Welche Fähigkeiten bringst du mit?"
   "PR Work": "Öffentlichkeitsarbeit"
@@ -1173,10 +1180,11 @@ de:
   "English": "Englisch"
   "Turkish": "Türkisch"
   "French": "Französisch"
-  "BKS": "BKS"
+  "BKMS": "BKMS"
   "Ukrainian": "Ukrainisch"
   "Romanian": "Rumänisch"
   "Russian": "Russisch"
+  "Arabic": "Arabisch"
   "Password": "Passwort"
   "Repeat password": "Passwort wiederholen"
   "Additional languages": "Weitere Sprachen"
@@ -1262,10 +1270,34 @@ de:
 
   "i_pronouns": "Die Angabe der Pronomen ist freiwillig. Sie soll uns helfen bei Mila einen respektvollen Umgang miteinander zu pflegen, indem wir so mit- und übereinander sprechen, wie die angesprochenen Personen es wünschen."
 
+  "t:mila_form_mtype_natural_info": "Mehr Informationen zu den Mitmachschichten findest du {link}. Eine Befreiung von Mitmach-Schichten ist unter bestimmten Voraussetzungen (über 70 Jahre, Krankheit, Behinderung, Mutterschutz etc.) möglich. Bitte nach erfolgtem Beitritt bei mitglied{'@'}mila.wien melden."
+
+  # Working group labels
+  "Sortiment": "Sortiment"
+  "Öffentlichkeitsarbeit": "Öffentlichkeitsarbeit"
+  "Finanzen": "Finanzen"
+  "Genossenschaft": "Genossenschaft"
+  "Standort": "Standort"
+  "IT und Digitales": "IT und Digitales"
+  "Diversität": "Diversität"
+  "Events/Infogespräche": "Events/Infogespräche"
+  "Mitgliederbüro": "Mitgliederbüro"
+
+  # Skill labels
+  "Handwerk (Elektrik, Tischlerei, …)": "Handwerk (Elektrik, Tischlerei, …)"
+  "Einzelhandel": "Einzelhandel"
+  "Organisationsentwicklung": "Organisationsentwicklung"
+  "Finanzen (BWL, Buchhaltung,…)": "Finanzen (BWL, Buchhaltung,…)"
+  "Personalmanagement": "Personalmanagement"
+  "Öffentlichkeitsarbeit/ Social Media/ Website": "Öffentlichkeitsarbeit/ Social Media/ Website"
+
 en:
   "Email address is not valid": "Email address is not valid"
   "Passwords are not the same": "Passwords are not the same"
   "Must be at least 10 shares": "Must be at least 10 shares"
+  "This field is required": "This field is required"
+  "This field must be accepted": "This field must be accepted"
+  "IBAN is not valid": "IBAN is not valid"
 
   "Wie sollen wir dich ansprechen?": "How should we address you?"
   "Dieser Name kann sich von deinem amtlichen Namen unterscheiden.": "This name can differ from your legal name."
@@ -1282,6 +1314,8 @@ en:
   "Ich möchte eine*n Miteinkäufer*in angeben. Diese Person erhält ebenfalls eine Karte und kann einkaufen gehen, kann aber keine Mitmach-Schichten übernehmen.": "I would like to specify a co-shopper. This person will also receive a card and can go shopping, but cannot take on any participation shifts."
   "Miteinkäufer:in": "Co-shopper"
   "Ich möchte mit einem selbstgewählten Namen angesprochen werden, der von meinem amtlichen Namen abweicht (z.b. für Emails, Mitgliederkarte, Schichtplan).": "I would like to be addressed with a self-chosen name that differs from my legal name (e.g. for emails, membership card, shift schedule)."
+  "Selbstgewählter Name": "Self-chosen name"
+  "Pronomen auf Mitgliederkarte": "Pronouns on membership card"
 
   "l:natural": "Individual"
   "l:legal": "Organisation"
@@ -1329,4 +1363,27 @@ en:
   "Nachschusspflicht": "obligation to make additional contributions"
   "refunded": "refunded"
   "t:mila_form_final3": "You have the right to cancel this contract within 14 days without giving reasons. The deadline is 14 days from the delivery of the acceptance of the membership by the board of the cooperative."
+
+  "t:mila_form_mtype_natural_info": "You can find more information about the participation shifts {link}. Exemptions from participation shifts are possible under certain conditions (over 70 years of age, illness, disability, maternity protection, etc.). Please contact mitglied{'@'}mila.wien after joining."
+
+  "here": "here"
+
+  # Working group labels
+  "Sortiment": "Product range"
+  "Öffentlichkeitsarbeit": "Public relations"
+  "Finanzen": "Finance"
+  "Genossenschaft": "Cooperative"
+  "Standort": "Location"
+  "IT und Digitales": "IT & Digital"
+  "Diversität": "Diversity"
+  "Events/Infogespräche": "Events/Info talks"
+  "Mitgliederbüro": "Members' office"
+
+  # Skill labels
+  "Handwerk (Elektrik, Tischlerei, …)": "Craftsmanship (electrics, carpentry, …)"
+  "Einzelhandel": "Retail"
+  "Organisationsentwicklung": "Organizational development"
+  "Finanzen (BWL, Buchhaltung,…)": "Finance (business admin, accounting, …)"
+  "Personalmanagement": "Human resources"
+  "Öffentlichkeitsarbeit/ Social Media/ Website": "Public relations / social media / website"
 </i18n>

@@ -13,7 +13,17 @@ const userData = useCurrentUser();
 const user = userData.value.user!;
 const membership = userData.value.membership;
 const runtimeConfig = useRuntimeConfig();
-const keycloakAccountUrl = `${runtimeConfig.public.keycloakUrl}/realms/${runtimeConfig.public.keycloakRealm}/account`;
+const useKeycloak = runtimeConfig.public.useKeycloak;
+const keycloakUpdatePasswordUrl = (() => {
+  const params = new URLSearchParams({
+    client_id: runtimeConfig.public.keycloakClient,
+    redirect_uri: `${runtimeConfig.public.collectivoUrl}/profile`,
+    response_type: "code",
+    scope: "openid",
+    kc_action: "UPDATE_PASSWORD",
+  });
+  return `${runtimeConfig.public.keycloakUrl}/realms/${runtimeConfig.public.keycloakRealm}/protocol/openid-connect/auth?${params.toString()}`;
+})();
 
 const mv = "Dieses Feld ist erforderlich";
 const schema = object({
@@ -91,38 +101,6 @@ async function onEmailSubmit(event: FormSubmitEvent<EmailSchema>) {
   if (res.status.value === "success") {
     await userData.value.reload();
       toast.add({ title: t("E-Mail erfolgreich geändert."), color: "success" });
-  } else {
-    toast.add({
-      title: t("Es ist ein Fehler aufgetreten."),
-      icon: "i-heroicons-exclamation-triangle",
-      color: "error",
-    });
-  }
-}
-
-// ── Password change (directus syncs to keycloak) ──────────────────────────────────────────
-const passwordState = reactive({ password: "", password_confirm: "" });
-const passwordError = ref("");
-
-async function onPasswordSubmit() {
-  passwordError.value = "";
-  if (passwordState.password !== passwordState.password_confirm) {
-    passwordError.value = t("Die Passwörter stimmen nicht überein.");
-    toast.add({
-      title: t("Die Passwörter stimmen nicht überein."),
-      icon: "i-heroicons-exclamation-triangle",
-      color: "error",
-    });
-    return;
-  }
-  const res = await useFetch("/api/profile/password", {
-    method: "PUT",
-    body: { password: passwordState.password },
-  });
-  if (res.status.value === "success") {
-    passwordState.password = "";
-    passwordState.password_confirm = "";
-    toast.add({ title: t("Passwort erfolgreich geändert."), color: "success" });
   } else {
     toast.add({
       title: t("Es ist ein Fehler aufgetreten."),
@@ -244,46 +222,17 @@ function personTypeLabel(val: string | null | undefined) {
     </div>
 
     <!-- ── Password ─────────────────────────────────────────────── -->
-    <div>
+    <div v-if="useKeycloak">
       <h2>{{ t("Passwort ändern") }}</h2>
-      <UForm
-        :schema="schema"
-        :state="state"
-        class="space-y-4"
-        @submit="onPasswordSubmit"
-        @error="onError"
-      >
-        <FormsFormGroup
-          :label="t('Neues Passwort')"
-          name="password"
-          required
+      <div class="space-y-4">
+        <p>{{ t("Passwort_redirect_explanation") }}</p>
+        <UButton
+          :href="keycloakUpdatePasswordUrl"
+          icon="i-heroicons-arrow-right"
         >
-          <UInput
-            v-model="passwordState.password"
-            type="password"
-            autocomplete="new-password"
-          />
-        </FormsFormGroup>
-        <FormsFormGroup
-          :label="t('Passwort bestätigen')"
-          name="password"
-          required
-        >
-          <UInput
-            v-model="passwordState.password_confirm"
-            type="password"
-            autocomplete="new-password"
-          />
-        </FormsFormGroup>
-        <p v-if="passwordError" class="text-sm text-red-600">
-          {{ passwordError }}
-        </p>
-        <div class="pt-2">
-          <UButton type="submit">
-            {{ t("Passwort ändern") }}
-          </UButton>
-        </div>
-      </UForm>
+          {{ t("Passwort jetzt ändern") }}
+        </UButton>
+      </div>
     </div>
 
     <!-- ── Persönliche Daten (read-only) ─────────────────────────────────── -->
@@ -523,13 +472,8 @@ de:
   "E-Mail-Adresse ändern": "E-Mail-Adresse ändern"
   "E-Mail erfolgreich geändert.": "E-Mail erfolgreich geändert."
   "Passwort ändern": "Passwort ändern"
-  "Passwort über Keycloak verwalten": "Dein Passwort wird über Keycloak verwaltet."
-  "Konto verwalten": "Konto verwalten"
-  "Neues Passwort": "Neues Passwort"
-  "Passwort bestätigen": "Passwort bestätigen"
-  "Das Passwort muss mindestens 8 Zeichen lang sein.": "Das Passwort muss mindestens 8 Zeichen lang sein."
-  "Die Passwörter stimmen nicht überein.": "Die Passwörter stimmen nicht überein."
-  "Passwort erfolgreich geändert.": "Passwort erfolgreich geändert."
+  "Passwort_redirect_explanation": "Aus Sicherheitsgründen wirst du zur Änderung deines Passworts auf unsere geschützte Anmeldeseite weitergeleitet. Du musst dort dein aktuelles Passwort und das neue Passwort eingeben. Anschließend kehrst du automatisch hierher zurück."
+  "Passwort jetzt ändern": "Passwort jetzt ändern"
   "Persönliche Daten": "Persönliche Daten"
   "Personenart": "Personenart"
   "Natürliche Person": "Natürliche Person"
@@ -582,13 +526,8 @@ en:
   "E-Mail-Adresse ändern": "Change email address"
   "E-Mail erfolgreich geändert.": "Email updated successfully."
   "Passwort ändern": "Change password"
-  "Passwort über Keycloak verwalten": "Your password is managed via Keycloak."
-  "Konto verwalten": "Manage account"
-  "Neues Passwort": "New password"
-  "Passwort bestätigen": "Confirm password"
-  "Das Passwort muss mindestens 8 Zeichen lang sein.": "Password must be at least 8 characters."
-  "Die Passwörter stimmen nicht überein.": "Passwords do not match."
-  "Passwort erfolgreich geändert.": "Password changed successfully."
+  "Passwort_redirect_explanation": "For security, you will be redirected to our secured login page to change your password. You will need to enter your current password and the new password there, then you will be returned here automatically."
+  "Passwort jetzt ändern": "Change password now"
   "Persönliche Daten": "Personal data"
   "Personenart": "Person type"
   "Natürliche Person": "Natural person"

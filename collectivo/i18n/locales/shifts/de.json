@@ -52,6 +52,7 @@
   "Please fill out every field.": "Bitte fülle jedes Feld aus.",
   "Absence must start at least {days} days from today.": "Die Abwesenheit muss mindestens {days} Tage in der Zukunft beginnen.",
   "Absence must end after it starts.": "Abwesenheit muss nach dem Start enden.",
+  "Holiday must be at least {days} days long.": "Ein Urlaub muss mindestens {days} Tage lang sein.",
   "Please select a valid date range.": "Bitte wähle einen validen Datumsbereich aus.",
   "Absence has been requested": "Abwesenheit wurde beantragt",
   "Success": "Erfolg",
