@@ -46,7 +46,7 @@ Updating the database schema
 - Make changes to the database schema on your local system
 - Run `npx directus-sync pull && node sort-directus-config.mjs` to update the database schema in the repository
 - Make a database backup of the production system (see below)
-- Run `npx directus-sync push` (credentials will be taken from .env)
+- Run `npx directus-sync push` (credentials will be taken from .env, or explicitly pass the options `-u https://directus.example.com -e admin@example.com -p yourpassword`)
 
 Troubleshooting
 
