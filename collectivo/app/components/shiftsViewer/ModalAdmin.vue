@@ -44,6 +44,12 @@ const tomorrow = new Date(
   ),
 );
 const isPast = start.getTime() < tomorrow.getTime();
+const todayStart = new Date(
+  Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0),
+);
+const isToday =
+  start.getTime() >= todayStart.getTime() &&
+  start.getTime() < tomorrow.getTime();
 const runtimeConfig = useRuntimeConfig();
 
 const categories = useShiftsCategories();
@@ -402,7 +408,7 @@ function checkIfMshipInAssignments(mship: number) {
                     class="flex flex-col gap-2"
                   >
                     <UButton
-                      v-if="!isPast"
+                      v-if="!isPast || isToday"
                       icon="i-heroicons-trash-16-solid"
                       size="sm"
                       :label="t('Remove assignment')"
