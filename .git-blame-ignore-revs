@@ -1,0 +1,6 @@
+# Bulk/whitespace-only revisions to skip in `git blame`.
+# Enable locally with:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# Normalize line endings (CRLF->LF) in HolidayModal.vue and dates.ts
+8af47cec476918cb2220c8cc0681a1acf6bdddfd

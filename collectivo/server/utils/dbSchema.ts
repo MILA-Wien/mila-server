@@ -1,4 +1,3 @@
-
 export interface DbSchema {
   directus_users: UserProfile[];
   collectivo_tags: Tag[];
@@ -16,7 +15,11 @@ export interface DbSchema {
   shifts_logs: ShiftsLog[];
   shifts_shifts: ShiftsShift[];
   shifts_skills: ShiftsSkill[];
-  memberships_shifts_skills: { id: number; memberships_id: number; shifts_skills_id: number }[];
+  memberships_shifts_skills: {
+    id: number;
+    memberships_id: number;
+    shifts_skills_id: number;
+  }[];
   shifts_categories: ShiftsCategory[];
   shifts_holidays_public: ShiftsPublicHoliday[];
   settings_hidden: SettingsHidden;
@@ -144,6 +147,7 @@ export interface DashboardTileButton {
 export interface SettingsHidden {
   last_cronjob: string;
   shift_point_system: boolean;
+  shift_holiday_min_days: number;
 }
 
 export interface Solitopf {

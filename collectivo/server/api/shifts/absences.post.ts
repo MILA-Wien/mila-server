@@ -22,5 +22,24 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  // Holidays must reach a configurable minimum duration to prevent misuse.
+  // This applies to everyone using this endpoint (the /shifts self-service
+  // modal); admins enter holidays for other members directly in Directus.
+  if (body.shifts_is_holiday) {
+    const settings = await dbGetSettings();
+    const minDays = settings.shift_holiday_min_days ?? 14;
+    const durationDays = inclusiveDaysBetween(
+      new Date(body.shifts_from),
+      new Date(body.shifts_to),
+    );
+
+    if (durationDays < minDays) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: `Holiday must be at least ${minDays} days long`,
+      });
+    }
+  }
+
   return await dbCreateAbsence(body);
 });

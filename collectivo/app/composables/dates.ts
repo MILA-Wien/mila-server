@@ -27,6 +27,25 @@ export function getFutureDate(days: number) {
   return new Date(currentDate.setDate(currentDate.getDate() + days));
 }
 
+// Number of calendar days a date range spans, inclusive of both the start
+// and end day. E.g. 01.07.–14.07. counts as 14 days (not 13).
+// Uses the UTC date parts so the result matches the server-side check, which
+// receives the dates as ISO strings (see server/utils/dates.ts).
+export function inclusiveDaysBetween(from: Date, to: Date) {
+  const fromUtc = Date.UTC(
+    from.getUTCFullYear(),
+    from.getUTCMonth(),
+    from.getUTCDate(),
+  );
+  const toUtc = Date.UTC(
+    to.getUTCFullYear(),
+    to.getUTCMonth(),
+    to.getUTCDate(),
+  );
+  const diffDays = Math.round((toUtc - fromUtc) / (24 * 60 * 60 * 1000));
+  return diffDays + 1;
+}
+
 export function getDateString(occurence: string, locale: string) {
   const occ = DateTime.fromISO(occurence, { locale: locale });
   return occ.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
