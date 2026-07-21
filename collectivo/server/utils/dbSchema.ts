@@ -102,6 +102,8 @@ export interface Membership {
   memberships_date_approved?: string;
   shifts_user_type: ShiftsUserType;
   shifts_counter: number;
+  activation_last_shop?: string | null;
+  activation_frozen_since?: string | null;
   shifts_logs: ShiftsLog[];
   shifts_logs_count?: number;
   shifts_skills: { shifts_skills_id: ShiftsSkill | null }[];

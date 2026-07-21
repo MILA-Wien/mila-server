@@ -199,5 +199,10 @@ async function createLog(state: CheckinData) {
   const logs = await dbGetCheckinLog(state.membership, nowStr, state.coshopperId);
   if (logs.length == 0) {
     await dbCreateCheckinLog(state.membership, nowStr, state.coshopperId);
+    // Record the household's last shop date on the main membership.
+    // For coshopper scans, state.membership is still the main membership id.
+    if (state.membership) {
+      await dbUpdateMembershipLastShop(state.membership, nowStr);
+    }
   }
 }
