@@ -52,3 +52,7 @@ node_modules
 
 # directus-sync generated API specs (informational only, not used by push)
 directus-config/specs/
+
+# Nextcloud
+nextcloud_data/
+nextcloud_db_data/
