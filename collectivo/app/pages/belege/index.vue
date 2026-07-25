@@ -74,6 +74,10 @@ watch(
   { immediate: true },
 );
 
+const isUpstreamDown = computed(
+  () => (error.value as any)?.statusCode === 502,
+);
+
 function prevMonth() {
   const d = currentMonth.value;
   currentMonth.value = new Date(d.getFullYear(), d.getMonth() - 1, 1);
@@ -93,7 +97,6 @@ const monthLabel = computed(() =>
 </script>
 
 <template>
-  <BetaMessage />
   <div class="space-y-4">
     <div class="border-2 w-full p-3">
       {{ t("intro_belege") }}
@@ -127,6 +130,12 @@ const monthLabel = computed(() =>
       <USkeleton class="w-full mb-4 h-28" />
     </div>
     <div
+      v-else-if="isUpstreamDown"
+      class="text-red-600 border-2 border-red-600 p-6 text-center font-bold"
+    >
+      {{ t("Beleg-Dienst nicht erreichbar") }}
+    </div>
+    <div
       v-else-if="error"
       class="text-red-600 border-2 border-red-600 p-6 text-center font-bold"
     >
@@ -140,7 +149,7 @@ const monthLabel = computed(() =>
     </div>
 
     <div
-      v-if="!pending && (!belege || belege.length === 0)"
+      v-if="!pending && !error && (!belege || belege.length === 0)"
       class="text-gray-400 text-center border-2 border-gray-300 p-6 font-bold"
     >
       {{ t("Keine Belege für diesen Monat") }}
@@ -151,10 +160,12 @@ const monthLabel = computed(() =>
 <i18n lang="yaml">
 de:
   "intro_belege": "Hier findest du eine Übersicht deiner Einkäufe. Bitte beachte: Nur Einkäufe, bei denen du deine Mitgliedskarte an der Kassa scannst, werden deiner Mitgliedschaft zugeordnet. Für mehr Infos, siehe unsere "
+  "Beleg-Dienst nicht erreichbar": "Der externe Belege-Dienst ist aktuell nicht erreichbar. Bitte versuche es später erneut."
 en:
   "intro_belege": "Here you will find an overview of your purchases. Please note: Only purchases where you scan your membership card at the checkout will be assigned to your membership. For more information, see our "
   "Datenschutzerklärung": "Privacy Policy"
   "Meine Belege": "My Receipts"
   "Fehler beim Laden der Belege": "Error while loading receipts"
   "Keine Belege für diesen Monat": "No receipts for this month"
+  "Beleg-Dienst nicht erreichbar": "The external receipts service is currently unavailable. Please report try again later."
 </i18n>

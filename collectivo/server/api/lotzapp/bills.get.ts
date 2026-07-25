@@ -50,6 +50,28 @@ export default defineEventHandler(async (event) => {
     }),
   );
 
+  const allFailed =
+    results.length > 0 && results.every((r) => r.status === "rejected");
+
+  if (allFailed) {
+    console.error(
+      "lotzapp bills: all account requests failed",
+      results.map((r: any) => r.reason),
+    );
+    throw createError({
+      statusCode: 502,
+      statusMessage: "LOTZAPP_UNAVAILABLE",
+    });
+  }
+
+  const rejected = results.filter((r) => r.status === "rejected");
+  if (rejected.length > 0) {
+    console.warn(
+      "lotzapp bills: some account requests failed",
+      rejected.map((r: any) => r.reason),
+    );tv
+  }
+
   const data = results
     .filter((r) => r.status === "fulfilled")
     .map((r: any) => r.value)
