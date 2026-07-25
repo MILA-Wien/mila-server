@@ -4,7 +4,7 @@ Member plattform of [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/).
 
 ## Local development setup
 
-- Install Docker, nodejs, and PNPM
+- Install Docker, nodejs, and PNPM. To do so, it is advisable to install Docker and nvm from your operating system's package repository and then: `nvm install node` and `npm install -g pnpm`
 - Clone this repository
 
 - Create .env file with `cp .env.example .env`
