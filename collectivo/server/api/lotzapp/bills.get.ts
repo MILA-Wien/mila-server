@@ -69,7 +69,7 @@ export default defineEventHandler(async (event) => {
     console.warn(
       "lotzapp bills: some account requests failed",
       rejected.map((r: any) => r.reason),
-    );tv
+    );
   }
 
   const data = results
