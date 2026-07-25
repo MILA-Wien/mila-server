@@ -53,7 +53,7 @@ loadData();
         class="flex-1"
         block
         icon="i-heroicons-pause-circle"
-        @click="absencePostModalOpen = true"
+        @click="() => { absencePostModalOpen = true }"
       >
         {{ t("Submit holiday") }}
       </UButton>
