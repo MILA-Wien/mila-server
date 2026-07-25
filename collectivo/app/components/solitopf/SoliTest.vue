@@ -24,13 +24,13 @@ const state = reactive({
       <div class="flex gap-3">
         <UButton
           :color="state.q1 === true ? 'purple' : 'gray'"
-          @click="state.q1 = true"
+          @click="() => { state.q1 = true }"
         >
           {{ t("Ja") }}
         </UButton>
         <UButton
           :color="state.q1 === false ? 'purple' : 'gray'"
-          @click="state.q1 = false"
+          @click="() => { state.q1 = false }"
         >
           {{ t("Weiß nicht") }}
         </UButton>
@@ -47,13 +47,13 @@ const state = reactive({
       <div class="flex gap-3">
         <UButton
           :color="state.q2 === false ? 'purple' : 'gray'"
-          @click="state.q2 = false"
+          @click="() => { state.q2 = false }"
         >
           {{ t("Ja") }}
         </UButton>
         <UButton
           :color="state.q2 === true ? 'purple' : 'gray'"
-          @click="state.q2 = true"
+          @click="() => { state.q2 = true }"
         >
           {{ t("Nein") }}
         </UButton>
@@ -69,13 +69,13 @@ const state = reactive({
       <div class="flex gap-3">
         <UButton
           :color="state.q3 === true ? 'purple' : 'gray'"
-          @click="state.q3 = true"
+          @click="() => { state.q3 = true }"
         >
           {{ t("Ja") }}
         </UButton>
         <UButton
           :color="state.q3 === false ? 'purple' : 'gray'"
-          @click="state.q3 = false"
+          @click="() => { state.q3 = false }"
         >
           {{ t("Nein") }}
         </UButton>
@@ -91,13 +91,13 @@ const state = reactive({
       <div class="flex gap-3">
         <UButton
           :color="state.q4 === true ? 'purple' : 'gray'"
-          @click="state.q4 = true"
+          @click="() => { state.q4 = true }"
         >
           {{ t("Ja") }}
         </UButton>
         <UButton
           :color="state.q4 === false ? 'purple' : 'gray'"
-          @click="state.q4 = false"
+          @click="() => { state.q4 = false }"
         >
           {{ t("Nein") }}
         </UButton>
@@ -118,13 +118,13 @@ const state = reactive({
       <div class="flex gap-2">
         <UButton
           :color="state.q5 === true ? 'purple' : 'gray'"
-          @click="state.q5 = true"
+          @click="() => { state.q5 = true }"
         >
           {{ t("Ja") }}
         </UButton>
         <UButton
           :color="state.q5 === false ? 'purple' : 'gray'"
-          @click="state.q5 = false"
+          @click="() => { state.q5 = false }"
         >
           {{ t("Nein") }}
         </UButton>

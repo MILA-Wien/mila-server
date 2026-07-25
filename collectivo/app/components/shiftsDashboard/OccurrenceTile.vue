@@ -95,7 +95,10 @@ async function createAbsence() {
       </div>
     </div>
     <div class="flex flex-warp items-start gap-2" v-if="occ.isActive">
-      <UButton size="xs" variant="outline" @click="signOutModalIsOpen = true"
+      <UButton
+        size="xs"
+        variant="outline"
+        @click="() => { signOutModalIsOpen = true }"
         >{{ t("Sign out") }}
       </UButton>
       <ShiftsDashboardDownloadIcsButton
@@ -131,7 +134,10 @@ async function createAbsence() {
           {{ t("t:signout_regular") }}
         </p>
         <div class="flex flex-wrap gap-2 mt-4 justify-end">
-          <UButton color="gray" @click="signOutModalIsOpen = false">
+          <UButton
+            color="gray"
+            @click="() => { signOutModalIsOpen = false }"
+          >
             {{ t("Cancel") }}
           </UButton>
           <UButton @click="createAbsence">{{ t("Sign out") }}</UButton>
