@@ -49,131 +49,181 @@ function shuffled<T>(arr: T[]): T[] {
 }
 
 function pickN<T>(arr: T[], n: number): T[] {
-  return shuffled(arr).slice(0, n);
+  return shuffled(arr).slice(0, Math.max(0, n));
 }
 
 function randomInt(min: number, max: number): number {
   return min + Math.floor(rng() * (max - min + 1));
 }
 
+/** Weighted random pick without consuming a variable number of rng() calls -
+ * always exactly one, so the overall rng sequence stays predictable. */
+function pickWeighted<T>(items: { weight: number; value: T }[]): T {
+  const total = items.reduce((sum, i) => sum + i.weight, 0);
+  let r = rng() * total;
+  for (const item of items) {
+    if (r < item.weight) return item.value;
+    r -= item.weight;
+  }
+  return items[items.length - 1]!.value;
+}
+
+/** Bernoulli draw: true with probability p. */
+function chance(p: number): boolean {
+  return rng() < p;
+}
+
+/** Splits an array into fixed-size chunks and awaits fn(chunk) for each in
+ * sequence, flattening the results - keeps individual Directus requests to a
+ * sane size when creating thousands of rows. */
+async function inChunks<T, R>(
+  items: T[],
+  chunkSize: number,
+  fn: (chunk: T[]) => Promise<R[]>,
+): Promise<R[]> {
+  const results: R[] = [];
+  for (let i = 0; i < items.length; i += chunkSize) {
+    const chunk = items.slice(i, i + chunkSize);
+    if (chunk.length === 0) continue;
+    results.push(...(await fn(chunk)));
+  }
+  return results;
+}
+
+const BULK_CHUNK_SIZE = 500;
+// GET-request _in filters hit request-header/URL size limits well before
+// BULK_CHUNK_SIZE (confirmed: 500 emails in one filter -> HTTP 431) since
+// they're serialized into the URL, unlike bulk-create's POST body.
+const EMAIL_LOOKUP_CHUNK_SIZE = 150;
+
 // ============================================================================
-// VIENNA EXAMPLE USERS
+// VIENNA EXAMPLE IDENTITIES
 // ============================================================================
 
 // Roughly representative of Vienna's population mix: majority
 // German/Austrian names, plus realistic shares of the city's largest
 // migrant-background communities (ex-Yugoslavia, Turkey, Poland, Romania,
-// Hungary, Middle East/Afghanistan, Czechia/Slovakia).
-const VIENNA_USERS: [string, string][] = [
-  // German / Austrian (~60)
-  ["Lukas", "Gruber"],
-  ["Sophie", "Huber"],
-  ["Maximilian", "Bauer"],
-  ["Anna", "Wagner"],
-  ["Felix", "Pichler"],
-  ["Laura", "Steiner"],
-  ["Jakob", "Moser"],
-  ["Emma", "Mayer"],
-  ["David", "Berger"],
-  ["Lena", "Fuchs"],
-  ["Paul", "Winkler"],
-  ["Marie", "Schmid"],
-  ["Simon", "Wolf"],
-  ["Julia", "Eder"],
-  ["Tobias", "Fischer"],
-  ["Sarah", "Weber"],
-  ["Florian", "Schneider"],
-  ["Lisa", "Maier"],
-  ["Daniel", "Hofer"],
-  ["Nina", "Leitner"],
-  ["Michael", "Wimmer"],
-  ["Katharina", "Auer"],
-  ["Sebastian", "Brunner"],
-  ["Sabrina", "Binder"],
-  ["Christoph", "Egger"],
-  ["Vanessa", "Wallner"],
-  ["Andreas", "Reiter"],
-  ["Jasmin", "Aigner"],
-  ["Thomas", "Baumgartner"],
-  ["Melanie", "Lang"],
-  ["Stefan", "Grabner"],
-  ["Carina", "Hummel"],
-  ["Markus", "Wieser"],
-  ["Michaela", "Neumann"],
-  ["Christian", "Schwarz"],
-  ["Petra", "Riegler"],
-  ["Martin", "Wurm"],
-  ["Elisabeth", "Schuster"],
-  ["Bernhard", "Haas"],
-  ["Barbara", "Fellner"],
-  ["Alexander", "Lechner"],
-  ["Nicole", "Fuerst"],
-  ["Patrick", "Zach"],
-  ["Verena", "Holzer"],
-  ["Manuel", "Kogler"],
-  ["Theresa", "Perner"],
-  ["Georg", "Standler"],
-  ["Julia", "Kastner"],
-  ["Philipp", "Aichinger"],
-  ["Kathrin", "Schaller"],
-  ["Matthias", "Preining"],
-  ["Sandra", "Hutter"],
-  ["Robert", "Kern"],
-  ["Claudia", "Fink"],
-  ["Wolfgang", "Sailer"],
-  ["Andrea", "Wiesinger"],
-  ["Peter", "Riedl"],
-  ["Ursula", "Gansch"],
-  ["Franz", "Steinbauer"],
-  ["Gabriele", "Haider"],
-  // Ex-Yugoslavia: Serbian / Bosnian / Croatian (~12)
-  ["Marko", "Jovanović"],
-  ["Ana", "Petrović"],
-  ["Stefan", "Nikolić"],
-  ["Jovana", "Marković"],
-  ["Nikola", "Popović"],
-  ["Milica", "Ilić"],
-  ["Aleksandar", "Kovačević"],
-  ["Ivana", "Horvat"],
-  ["Goran", "Babić"],
-  ["Snežana", "Đorđević"],
-  ["Dejan", "Stanković"],
-  ["Tijana", "Radić"],
-  // Turkish (~8)
-  ["Emre", "Yılmaz"],
-  ["Elif", "Kaya"],
-  ["Mustafa", "Demir"],
-  ["Zeynep", "Şahin"],
-  ["Burak", "Çelik"],
-  ["Aylin", "Yıldız"],
-  ["Hakan", "Aydın"],
-  ["Merve", "Arslan"],
-  // Polish (~6)
-  ["Piotr", "Kowalski"],
-  ["Katarzyna", "Nowak"],
-  ["Tomasz", "Wiśniewski"],
-  ["Agnieszka", "Wójcik"],
-  ["Marcin", "Kamiński"],
-  ["Magdalena", "Zielińska"],
-  // Romanian (~4)
-  ["Andrei", "Popescu"],
-  ["Elena", "Ionescu"],
-  ["Mihai", "Popa"],
-  ["Ioana", "Dumitru"],
-  // Hungarian (~3)
-  ["Gábor", "Nagy"],
-  ["Zsófia", "Kovács"],
-  ["László", "Tóth"],
-  // Middle East / Afghanistan (~4)
-  ["Ahmad", "Ahmadi"],
-  ["Layla", "Hussaini"],
-  ["Omar", "Khalil"],
-  ["Fatima", "Al-Sayed"],
-  // Czech / Slovak (~3)
-  ["Jan", "Novák"],
-  ["Petra", "Svobodová"],
-  ["Martin", "Dvořák"],
+// Hungary, Middle East/Afghanistan, Czechia/Slovakia). Names are drawn
+// independently from first/last-name pools per group (with repeats allowed
+// across the population - realistic at this scale, and email uniqueness is
+// handled separately), rather than a fixed list of pairs, so the generator
+// scales to any population size.
+interface NameGroup {
+  weight: number;
+  firstNames: string[];
+  lastNames: string[];
+}
+
+const NAME_GROUPS: NameGroup[] = [
+  {
+    weight: 0.6,
+    firstNames: [
+      "Lukas", "Sophie", "Maximilian", "Anna", "Felix", "Laura", "Jakob", "Emma",
+      "David", "Lena", "Paul", "Marie", "Simon", "Julia", "Tobias", "Sarah",
+      "Florian", "Lisa", "Daniel", "Nina", "Michael", "Katharina", "Sebastian",
+      "Sabrina", "Christoph", "Vanessa", "Andreas", "Jasmin", "Thomas", "Melanie",
+      "Stefan", "Carina", "Markus", "Michaela", "Christian", "Petra", "Martin",
+      "Elisabeth", "Bernhard", "Barbara", "Alexander", "Nicole", "Patrick",
+      "Verena", "Manuel", "Theresa", "Georg", "Philipp", "Kathrin", "Matthias",
+      "Sandra", "Robert", "Claudia", "Wolfgang", "Andrea", "Peter", "Ursula",
+      "Franz", "Gabriele",
+    ],
+    lastNames: [
+      "Gruber", "Huber", "Bauer", "Wagner", "Pichler", "Steiner", "Moser", "Mayer",
+      "Berger", "Fuchs", "Winkler", "Schmid", "Wolf", "Eder", "Fischer", "Weber",
+      "Schneider", "Maier", "Hofer", "Leitner", "Wimmer", "Auer", "Brunner",
+      "Binder", "Egger", "Wallner", "Reiter", "Aigner", "Baumgartner", "Lang",
+      "Grabner", "Hummel", "Wieser", "Neumann", "Schwarz", "Riegler", "Wurm",
+      "Schuster", "Haas", "Fellner", "Lechner", "Fuerst", "Zach", "Holzer",
+      "Kogler", "Perner", "Standler", "Kastner", "Aichinger", "Schaller",
+      "Preining", "Hutter", "Kern", "Fink", "Sailer", "Wiesinger", "Riedl",
+      "Gansch", "Steinbauer", "Haider",
+    ],
+  },
+  {
+    // Ex-Yugoslavia: Serbian / Bosnian / Croatian
+    weight: 0.12,
+    firstNames: [
+      "Marko", "Ana", "Stefan", "Jovana", "Nikola", "Milica", "Aleksandar",
+      "Ivana", "Goran", "Snežana", "Dejan", "Tijana", "Miloš", "Jelena",
+      "Vladimir", "Marija", "Draženka", "Zoran", "Nemanja", "Tamara",
+    ],
+    lastNames: [
+      "Jovanović", "Petrović", "Nikolić", "Marković", "Popović", "Ilić",
+      "Kovačević", "Horvat", "Babić", "Đorđević", "Stanković", "Radić",
+      "Pavlović", "Kovač", "Simić", "Todorović", "Knežević", "Perić",
+      "Maksimović", "Vuković",
+    ],
+  },
+  {
+    weight: 0.08,
+    firstNames: [
+      "Emre", "Elif", "Mustafa", "Zeynep", "Burak", "Aylin", "Hakan", "Merve",
+      "Emir", "Selin", "Yusuf", "Deniz", "Kerem", "Ebru", "Ozan", "Gül",
+    ],
+    lastNames: [
+      "Yılmaz", "Kaya", "Demir", "Şahin", "Çelik", "Yıldız", "Aydın", "Arslan",
+      "Doğan", "Öztürk", "Aksoy", "Güneş", "Yıldırım", "Şimşek", "Çetin", "Polat",
+    ],
+  },
+  {
+    weight: 0.06,
+    firstNames: [
+      "Piotr", "Katarzyna", "Tomasz", "Agnieszka", "Marcin", "Magdalena",
+      "Paweł", "Anna", "Krzysztof", "Aleksandra", "Michał", "Ewa", "Grzegorz",
+      "Joanna",
+    ],
+    lastNames: [
+      "Kowalski", "Nowak", "Wiśniewski", "Wójcik", "Kamiński", "Zielińska",
+      "Lewandowski", "Dąbrowski", "Kaczmarek", "Piotrowski", "Grabowski",
+      "Zając", "Krawczyk", "Szymański",
+    ],
+  },
+  {
+    weight: 0.04,
+    firstNames: [
+      "Andrei", "Elena", "Mihai", "Ioana", "Adrian", "Cristina", "Alexandru",
+      "Diana",
+    ],
+    lastNames: [
+      "Popescu", "Ionescu", "Popa", "Dumitru", "Stoica", "Rusu", "Munteanu",
+      "Constantin",
+    ],
+  },
+  {
+    weight: 0.03,
+    firstNames: ["Gábor", "Zsófia", "László", "Bence", "Eszter", "Zoltán"],
+    lastNames: ["Nagy", "Kovács", "Tóth", "Horváth", "Varga", "Szabó"],
+  },
+  {
+    // Middle East / Afghanistan
+    weight: 0.04,
+    firstNames: [
+      "Ahmad", "Layla", "Omar", "Fatima", "Amir", "Sara", "Hamid", "Zahra",
+    ],
+    lastNames: [
+      "Ahmadi", "Hussaini", "Khalil", "Al-Sayed", "Rahimi", "Karimi",
+      "Rostami", "Yousafzai",
+    ],
+  },
+  {
+    weight: 0.03,
+    firstNames: ["Jan", "Petra", "Martin", "Tomáš", "Eva", "Pavel"],
+    lastNames: ["Novák", "Svobodová", "Dvořák", "Procházka", "Horák", "Novotná"],
+  },
 ];
+
+function generateIdentities(n: number): [string, string][] {
+  const groupItems = NAME_GROUPS.map((g) => ({ weight: g.weight, value: g }));
+  const result: [string, string][] = [];
+  for (let i = 0; i < n; i++) {
+    const group = pickWeighted(groupItems);
+    const first = group.firstNames[Math.floor(rng() * group.firstNames.length)]!;
+    const last = group.lastNames[Math.floor(rng() * group.lastNames.length)]!;
+    result.push([first, last]);
+  }
+  return result;
+}
 
 const DIACRITIC_MAP: Record<string, string> = {
   ł: "l",
@@ -198,51 +248,404 @@ function slugifyForEmail(name: string): string {
     .replace(/[^a-z]/g, "");
 }
 
-// ============================================================================
-// FAKE USER SHIFT/SKILL/HOLIDAY PLAN
-// ============================================================================
-
-const N_REGULAR = 30;
-const N_ONETIME = 50;
-const N_ONETIME_FROM_REGULAR = 4;
-const N_COORDINATOR = 5;
-const N_CHEESE = 8;
-const N_HOLIDAY = 5;
-const N_UNSUBSCRIBE_OCCURRENCE = 4;
-const N_CANCEL_ONETIME = 4;
-
-interface FakePlan {
-  regularIdx: number[];
-  oneTimeIdx: number[];
-  coordinatorIdx: number[];
-  cheeseIdx: number[];
-  holidayIdx: number[];
+/** Assigns deterministic, unique emails to a (possibly-duplicate-containing)
+ * identity list, appending a numeric suffix on collision. Order-dependent,
+ * so it's stable across reruns as long as the identity list itself is. */
+function assignUniqueEmails(identities: [string, string][]): string[] {
+  const counts = new Map<string, number>();
+  return identities.map(([first, last]) => {
+    const base = `${slugifyForEmail(first)}.${slugifyForEmail(last)}`;
+    const n = (counts.get(base) ?? 0) + 1;
+    counts.set(base, n);
+    return `${base}${n > 1 ? n : ""}@example.com`;
+  });
 }
 
-// Decides, per fake user index, who gets a regular shift, who gets one or
-// two one-time registrations (with deliberate overlap so a few regular
-// assignees also pick up a one-time shift), who gets a skill, and who is
-// on holiday. Computed once so create_fake_memberships and
-// create_fake_shift_data agree on the same assignment.
-function buildFakePlan(n: number): FakePlan {
-  const allIdx = Array.from({ length: n }, (_, i) => i);
+// ============================================================================
+// CALIBRATION CONSTANTS
+// Loosely and approximately calibrated from a production export (see scripts/export-shift-stats.ts). Comments name which stat a figure is
+// loosely based on, not its precise real value. Constants that are the
+// author's own assumption rather than a measured stat (noted individually)
+// were left untouched, since there's no real figure to protect.
+// ============================================================================
 
-  const regularIdx = pickN(allIdx, N_REGULAR);
-  const regularSet = new Set(regularIdx);
-  const nonRegularIdx = allIdx.filter((i) => !regularSet.has(i));
+// loosely: memberships.total_count
+const TARGET_TOTAL_MEMBERSHIPS = 1700;
 
-  const oneTimeFromRegular = pickN(regularIdx, N_ONETIME_FROM_REGULAR);
-  const oneTimeFromRest = pickN(
-    nonRegularIdx,
-    N_ONETIME - N_ONETIME_FROM_REGULAR,
+// loosely: memberships.status_type_crosstab
+const MEMBERSHIP_STATUS_WEIGHTS: { type: string; status: string; weight: number }[] = [
+  { type: "Aktiv", status: "approved", weight: 1276.9 },
+  { type: "Aktiv", status: "applied", weight: 57.7 },
+  { type: "Aktiv", status: "widerrufen", weight: 28.7 },
+  { type: "Aktiv", status: "in-cancellation", weight: 38.7 },
+  { type: "Aktiv", status: "ended", weight: 17.2 },
+  { type: "Investierend", status: "approved", weight: 161.7 },
+  { type: "Investierend", status: "ended", weight: 4.0 },
+  { type: "Investierend", status: "in-cancellation", weight: 1.0 },
+  { type: "Investierend", status: "applied", weight: 3.9 },
+];
+
+// loosely: memberships.shifts_user_type_mix
+const USER_TYPE_WEIGHTS: { userType: string; weight: number }[] = [
+  { userType: "regular", weight: 1182.4 },
+  { userType: "inactive", weight: 228.2 },
+  { userType: "exempt", weight: 140.6 },
+];
+
+// "Active" = memberships_type Aktiv AND memberships_status approved, matching
+// the filter dbGetMembershipsForDecrement uses for the weekly counter cronjob.
+function isActive(status: string, type: string): boolean {
+  return type === "Aktiv" && status === "approved";
+}
+
+// loosely: currently-active regular assignee count (shifts_assignments).
+const REGULAR_ASSIGNEE_TARGET = 244;
+// loosely: shifts_assignments.future_onetime_lead_time_days.count -
+// currently-future one-time bookings. Distributed across ~1.5 tickets/person
+// on average.
+const ONE_TIME_TARGET_TICKETS = 344;
+const ONE_TIME_TARGET_PEOPLE = Math.round(ONE_TIME_TARGET_TICKETS / 1.5);
+// No real joint stat for this overlap; kept modest and deliberate.
+const ONE_TIME_FROM_REGULAR_RATE = 0.1;
+
+// loosely: skills[].member_count relative to the active membership count
+const COORDINATOR_RATE = 0.06053;
+const CHEESE_RATE = 0.04767;
+
+// loosely: shifts_absences.percent_active_members_on_holiday_today
+const HOLIDAY_RATE = 0.05938;
+// loosely: shifts_absences.holiday_duration_days.histogram, as
+// [minDays, maxDays, weight]
+const HOLIDAY_DURATION_BUCKETS: [number, number, number][] = [
+  [1, 6, 77.8],
+  [7, 13, 121.9],
+  [14, 20, 150.5],
+  [21, 29, 73.9],
+  [30, 59, 80.0],
+  [60, 120, 57.0],
+];
+
+// loosely: shifts_absences.single_occurrence_cancellations.onetime_cancellations
+// relative to the total one-time assignments ever made - applied per
+// one-time ticket independently.
+const ONE_TIME_CANCEL_RATE = 0.13859;
+// regular_occurrence_unsubscribes averaged a few skips per ever-regular
+// assignment in production, but there's no per-member distribution
+// available, so: half of regular assignees get 1-4 skips logged, a
+// reasonable approximation of that aggregate average (not a production
+// stat itself, so not perturbed).
+const REGULAR_UNSUBSCRIBE_CHANCE = 0.5;
+
+// loosely: shifts_logs.type_mix / .score - attendance history for regular
+// assignees
+const SHIFT_LOG_TYPE_WEIGHTS: { type: string; weight: number }[] = [
+  { type: "attended", weight: 7183.2 },
+  { type: "attended_draft", weight: 229.6 },
+  { type: "cancelled", weight: 2.1 },
+  { type: "missed", weight: 244.4 },
+  { type: "other", weight: 61.3 },
+];
+// How much history to generate.
+const SHIFT_LOG_HISTORY_MONTHS = 3;
+
+// loosely: buddy_status mix (directus_users, role NutzerInnen)
+const BUDDY_STATUS_WEIGHTS: { status: string; weight: number }[] = [
+  { status: "keine_angabe", weight: 1727.5 },
+  { status: "is_buddy", weight: 6.8 },
+  { status: "need_buddy", weight: 2.1 },
+];
+
+// shifts_categories.categories
+const CATEGORY_DEFINITIONS: {
+  oldId: number;
+  name: string;
+  beschreibung: string | null;
+  for_all: boolean;
+  adoptionPercent: number;
+}[] = [
+  { oldId: 1, name: "IT Support", beschreibung: null, for_all: false, adoptionPercent: 0.19 },
+  { oldId: 2, name: "Angestellte", beschreibung: null, for_all: false, adoptionPercent: 3.11 },
+  { oldId: 3, name: "Mitgliederbüro", beschreibung: null, for_all: false, adoptionPercent: 1.58 },
+  { oldId: 4, name: "Schichtkoordination", beschreibung: null, for_all: false, adoptionPercent: 2.84 },
+  { oldId: 5, name: "AG 5", beschreibung: null, for_all: false, adoptionPercent: 0.2 },
+  { oldId: 6, name: "Öffentlichkeitsarbeit", beschreibung: null, for_all: false, adoptionPercent: 1.26 },
+  { oldId: 7, name: "Schulungen", beschreibung: null, for_all: true, adoptionPercent: 98.01 },
+  { oldId: 8, name: "Veranstaltungen", beschreibung: null, for_all: true, adoptionPercent: 1.26 },
+  {
+    oldId: 9,
+    name: "Normal",
+    beschreibung:
+      "Vor Schicht-Beginn ziehe dir bitte eine Schürze an, stecke dein Namens-Schild an und wasche dir die Hände. Zu Schicht-Beginn treffen wir uns zum Check-In am Schicht-Board, wo wir alles Weitere besprechen.",
+    for_all: true,
+    adoptionPercent: 0,
+  },
+  {
+    oldId: 10,
+    name: "Inventur",
+    beschreibung:
+      "Diese Schicht ist ideal für alle, die nicht so gerne kassieren. Einmal gemeinsam alles durchzählen, was wir im Supermarkt auf Lager haben, that's it.",
+    for_all: true,
+    adoptionPercent: 0,
+  },
+  {
+    oldId: 11,
+    name: "Mistplatz Fahren",
+    beschreibung:
+      "Alle 2-3 Wochen müssen hölzerne Einwegpaletten und einiges an Einwegkisten zum Mistplatz gebracht werden, mit einem eigenen Auto.",
+    for_all: true,
+    adoptionPercent: 0,
+  },
+  { oldId: 12, name: "Website", beschreibung: null, for_all: false, adoptionPercent: 0.2 },
+  { oldId: 14, name: "Möbelbau", beschreibung: null, for_all: false, adoptionPercent: 0 },
+];
+
+// loosely: shifts.category_mix (shifts_category_2 distribution across all
+// shifts; null = uncategorized)
+const SHIFT_CATEGORY_MIX: { oldId: number | null; weight: number }[] = [
+  { oldId: 1, weight: 5.2 },
+  { oldId: 2, weight: 24.3 },
+  { oldId: 3, weight: 9.9 },
+  { oldId: 4, weight: 2.9 },
+  { oldId: 6, weight: 4.0 },
+  { oldId: 7, weight: 51.8 },
+  { oldId: 8, weight: 19.5 },
+  { oldId: 9, weight: 263.4 },
+  { oldId: 10, weight: 6.2 },
+  { oldId: 11, weight: 2.0 },
+  { oldId: 12, weight: 1.0 },
+  { oldId: 14, weight: 2.0 },
+  { oldId: null, weight: 53.5 },
+];
+
+// loosely: shifts.status_mix
+const SHIFT_STATUS_WEIGHTS: { status: string; weight: number }[] = [
+  { status: "published", weight: 392.6 },
+  { status: "archived", weight: 60.0 },
+  { status: "draft", weight: 7.2 },
+];
+
+// loosely: shifts.other_shifts_summary + active_recurring_ongoing.length -
+// real shape mix across all shifts
+const SHIFT_SHAPE_TARGETS = {
+  activeRecurringOngoing: 152,
+  regularWithPastEndDate: 94,
+  oneTimeDefinitions: 178,
+};
+
+// Distinct (slots, from_time, to_time, repeats_every, category, points,
+// self-assignment, exclude-holidays, all-day) combinations, with their
+// frequency - used as a weighted template pool instead of a single fixed
+// pattern, so generated shifts match the real slot/time/category shape.
+interface ShiftArchetype {
+  slots: number;
+  fromTime: string | null;
+  toTime: string | null;
+  repeatsEvery: number;
+  categoryOldId: number | null;
+  points: number;
+  allowSelfAssignment: boolean;
+  excludeHolidays: boolean;
+  isAllDay: boolean;
+  weight: number;
+}
+
+const SHIFT_ARCHETYPES: ShiftArchetype[] = [
+  { slots: 7, fromTime: "18:00:00", toTime: "20:30:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 16 },
+  { slots: 6, fromTime: "06:00:00", toTime: "08:30:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 12 },
+  { slots: 5, fromTime: "08:15:00", toTime: "11:00:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 8 },
+  { slots: 5, fromTime: "10:45:00", toTime: "13:30:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 8 },
+  { slots: 5, fromTime: "15:45:00", toTime: "18:30:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 8 },
+  { slots: 5, fromTime: "13:15:00", toTime: "16:00:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 8 },
+  { slots: 7, fromTime: "08:15:00", toTime: "11:00:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 8 },
+  { slots: 7, fromTime: "10:45:00", toTime: "13:30:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 8 },
+  { slots: 6, fromTime: "15:45:00", toTime: "18:30:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 8 },
+  { slots: 6, fromTime: "13:15:00", toTime: "16:00:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 8 },
+  { slots: 7, fromTime: "13:15:00", toTime: "16:00:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 4 },
+  { slots: 7, fromTime: "06:00:00", toTime: "08:30:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 4 },
+  { slots: 7, fromTime: "15:45:00", toTime: "18:30:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 4 },
+  { slots: 5, fromTime: "06:30:00", toTime: "09:00:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 4 },
+  { slots: 5, fromTime: "08:45:00", toTime: "11:30:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 4 },
+  { slots: 7, fromTime: "11:15:00", toTime: "14:00:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 4 },
+  { slots: 6, fromTime: "13:45:00", toTime: "16:30:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 4 },
+  { slots: 7, fromTime: "16:15:00", toTime: "18:45:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 4 },
+  { slots: 1, fromTime: "06:00:00", toTime: "13:30:00", repeatsEvery: 7, categoryOldId: 2, points: 5, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 4 },
+  { slots: 1, fromTime: "13:00:00", toTime: "20:30:00", repeatsEvery: 7, categoryOldId: 2, points: 5, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 4 },
+  { slots: 1, fromTime: null, toTime: null, repeatsEvery: 28, categoryOldId: 3, points: 28, allowSelfAssignment: true, excludeHolidays: false, isAllDay: true, weight: 4 },
+  { slots: 2, fromTime: "16:00:00", toTime: "19:00:00", repeatsEvery: 28, categoryOldId: 3, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 4 },
+  { slots: 2, fromTime: "12:45:00", toTime: "15:30:00", repeatsEvery: 28, categoryOldId: 9, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 4 },
+  { slots: 2, fromTime: null, toTime: null, repeatsEvery: 28, categoryOldId: 6, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: true, weight: 3 },
+  { slots: 2, fromTime: null, toTime: null, repeatsEvery: 28, categoryOldId: 6, points: 28, allowSelfAssignment: true, excludeHolidays: false, isAllDay: true, weight: 1 },
+  { slots: 1, fromTime: "13:00:00", toTime: "18:30:00", repeatsEvery: 7, categoryOldId: 2, points: 5, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 1 },
+  { slots: 1, fromTime: "06:30:00", toTime: "13:00:00", repeatsEvery: 7, categoryOldId: 2, points: 5, allowSelfAssignment: true, excludeHolidays: false, isAllDay: false, weight: 1 },
+  { slots: 1, fromTime: "12:30:00", toTime: "18:45:00", repeatsEvery: 7, categoryOldId: 2, points: 5, allowSelfAssignment: true, excludeHolidays: false, isAllDay: false, weight: 1 },
+  { slots: 1, fromTime: null, toTime: null, repeatsEvery: 28, categoryOldId: 1, points: 28, allowSelfAssignment: false, excludeHolidays: false, isAllDay: true, weight: 1 },
+  { slots: 1, fromTime: "12:00:00", toTime: "14:00:00", repeatsEvery: 21, categoryOldId: 11, points: 28, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 1 },
+  { slots: 30, fromTime: "17:30:00", toTime: "19:00:00", repeatsEvery: 14, categoryOldId: 7, points: 0, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 1 },
+  { slots: 3, fromTime: "00:00:00", toTime: null, repeatsEvery: 28, categoryOldId: 12, points: 28, allowSelfAssignment: true, excludeHolidays: false, isAllDay: true, weight: 1 },
+  { slots: 4, fromTime: "16:00:00", toTime: "18:00:00", repeatsEvery: 7, categoryOldId: 7, points: 14, allowSelfAssignment: true, excludeHolidays: true, isAllDay: false, weight: 1 },
+];
+
+function pickArchetype(): ShiftArchetype {
+  return pickWeighted(SHIFT_ARCHETYPES.map((a) => ({ weight: a.weight, value: a })));
+}
+
+// shifts.active_recurring_ongoing filtered to shifts_category_2 === 9
+// ("Normal", the day-to-day supermarket shifts)
+const NORMAL_CATEGORY_OLD_ID = 9;
+const NORMAL_CATEGORY_SHIFTS: { name: string; slots: number; fromTime: string; toTime: string }[] = [
+  { name: "ADi-06:00", slots: 6, fromTime: "06:00:00", toTime: "08:30:00" },
+  { name: "ADi-08:15", slots: 5, fromTime: "08:15:00", toTime: "11:00:00" },
+  { name: "ADi-10:45", slots: 5, fromTime: "10:45:00", toTime: "13:30:00" },
+  { name: "ADi-13:15", slots: 5, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "ADi-15:45", slots: 5, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "ADi-18:00", slots: 7, fromTime: "18:00:00", toTime: "20:30:00" },
+  { name: "ADo-06:00 English-speaking shift", slots: 6, fromTime: "06:00:00", toTime: "08:30:00" },
+  { name: "ADo-08:15", slots: 7, fromTime: "08:15:00", toTime: "11:00:00" },
+  { name: "ADo-10:45", slots: 7, fromTime: "10:45:00", toTime: "13:30:00" },
+  { name: "ADo-13:15", slots: 7, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "ADo-15:45", slots: 6, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "ADo-18:00", slots: 7, fromTime: "18:00:00", toTime: "20:30:00" },
+  { name: "AFr-06:00", slots: 7, fromTime: "06:00:00", toTime: "08:30:00" },
+  { name: "AFr-08:15", slots: 7, fromTime: "08:15:00", toTime: "11:00:00" },
+  { name: "AFr-10:45", slots: 7, fromTime: "10:45:00", toTime: "13:30:00" },
+  { name: "AFr-13:15", slots: 6, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "AFr-15:45", slots: 7, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "AFr-18:00", slots: 7, fromTime: "18:00:00", toTime: "20:30:00" },
+  { name: "AMi-12:45 Detektiv Inventur", slots: 2, fromTime: "12:45:00", toTime: "15:30:00" },
+  { name: "AMi-13:15", slots: 6, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "AMi-15:45", slots: 6, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "AMo-06:00", slots: 6, fromTime: "06:00:00", toTime: "08:30:00" },
+  { name: "AMo-08:15", slots: 5, fromTime: "08:15:00", toTime: "11:00:00" },
+  { name: "AMo-10:45", slots: 5, fromTime: "10:45:00", toTime: "13:30:00" },
+  { name: "AMo-13:15", slots: 5, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "AMo-15:45", slots: 5, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "AMo-18:00", slots: 7, fromTime: "18:00:00", toTime: "20:30:00" },
+  { name: "ASa-06:30", slots: 5, fromTime: "06:30:00", toTime: "09:00:00" },
+  { name: "ASa-08:45", slots: 5, fromTime: "08:45:00", toTime: "11:30:00" },
+  { name: "ASa-11:15", slots: 7, fromTime: "11:15:00", toTime: "14:00:00" },
+  { name: "ASa-13:45", slots: 6, fromTime: "13:45:00", toTime: "16:30:00" },
+  { name: "ASa-16:15", slots: 7, fromTime: "16:15:00", toTime: "18:45:00" },
+  { name: "BDi-06:00", slots: 6, fromTime: "06:00:00", toTime: "08:30:00" },
+  { name: "BDi-08:15", slots: 5, fromTime: "08:15:00", toTime: "11:00:00" },
+  { name: "BDi-10:45", slots: 5, fromTime: "10:45:00", toTime: "13:30:00" },
+  { name: "BDi-13:15", slots: 5, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "BDi-15:45", slots: 5, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "BDi-18:00", slots: 7, fromTime: "18:00:00", toTime: "20:30:00" },
+  { name: "BDo-06:00", slots: 6, fromTime: "06:00:00", toTime: "08:30:00" },
+  { name: "BDo-08:15", slots: 7, fromTime: "08:15:00", toTime: "11:00:00" },
+  { name: "BDo-10:45", slots: 7, fromTime: "10:45:00", toTime: "13:30:00" },
+  { name: "BDo-13:15", slots: 7, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "BDo-15:45", slots: 6, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "BDo-18:00", slots: 7, fromTime: "18:00:00", toTime: "20:30:00" },
+  { name: "BFr-06:00", slots: 7, fromTime: "06:00:00", toTime: "08:30:00" },
+  { name: "BFr-08:15", slots: 7, fromTime: "08:15:00", toTime: "11:00:00" },
+  { name: "BFr-10:45", slots: 7, fromTime: "10:45:00", toTime: "13:30:00" },
+  { name: "BFr-13:15 English-speaking shift", slots: 6, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "BFr-15:45", slots: 7, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "BFr-18:00", slots: 7, fromTime: "18:00:00", toTime: "20:30:00" },
+  { name: "BMi-12:45 Detektiv Inventur", slots: 2, fromTime: "12:45:00", toTime: "15:30:00" },
+  { name: "BMi-13:15", slots: 6, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "BMi-15:45", slots: 6, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "BMo-06:00", slots: 6, fromTime: "06:00:00", toTime: "08:30:00" },
+  { name: "BMo-08:15", slots: 5, fromTime: "08:15:00", toTime: "11:00:00" },
+  { name: "BMo-10:45", slots: 5, fromTime: "10:45:00", toTime: "13:30:00" },
+  { name: "BMo-13:15", slots: 5, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "BMo-15:45", slots: 5, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "BMo-18:00", slots: 7, fromTime: "18:00:00", toTime: "20:30:00" },
+  { name: "BSa-06:30", slots: 5, fromTime: "06:30:00", toTime: "09:00:00" },
+  { name: "BSa-08:45", slots: 5, fromTime: "08:45:00", toTime: "11:30:00" },
+  { name: "BSa-11:15", slots: 7, fromTime: "11:15:00", toTime: "14:00:00" },
+  { name: "BSa-13:45", slots: 6, fromTime: "13:45:00", toTime: "16:30:00" },
+  { name: "BSa-16:15", slots: 7, fromTime: "16:15:00", toTime: "18:45:00" },
+  { name: "CDi-06:00", slots: 6, fromTime: "06:00:00", toTime: "08:30:00" },
+  { name: "CDi-08:15", slots: 5, fromTime: "08:15:00", toTime: "11:00:00" },
+  { name: "CDi-10:45", slots: 5, fromTime: "10:45:00", toTime: "13:30:00" },
+  { name: "CDi-13:15", slots: 5, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "CDi-15:45", slots: 5, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "CDi-18:00", slots: 7, fromTime: "18:00:00", toTime: "20:30:00" },
+  { name: "CDo-06:00", slots: 6, fromTime: "06:00:00", toTime: "08:30:00" },
+  { name: "CDo-08:15", slots: 7, fromTime: "08:15:00", toTime: "11:00:00" },
+  { name: "CDo-10:45", slots: 7, fromTime: "10:45:00", toTime: "13:30:00" },
+  { name: "CDo-13:15", slots: 7, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "CDo-15:45", slots: 6, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "CDo-18:00", slots: 7, fromTime: "18:00:00", toTime: "20:30:00" },
+  { name: "CFr-06:00", slots: 7, fromTime: "06:00:00", toTime: "08:30:00" },
+  { name: "CFr-08:15", slots: 7, fromTime: "08:15:00", toTime: "11:00:00" },
+  { name: "CFr-10:45", slots: 7, fromTime: "10:45:00", toTime: "13:30:00" },
+  { name: "CFr-13:15", slots: 6, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "CFr-15:45", slots: 7, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "CFr-18:00", slots: 7, fromTime: "18:00:00", toTime: "20:30:00" },
+  { name: "CMi-12:45 Detektiv Inventur", slots: 2, fromTime: "12:45:00", toTime: "15:30:00" },
+  { name: "CMi-13:15", slots: 6, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "CMi-15:45", slots: 6, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "CMo-06:00", slots: 6, fromTime: "06:00:00", toTime: "08:30:00" },
+  { name: "CMo-08:15", slots: 5, fromTime: "08:15:00", toTime: "11:00:00" },
+  { name: "CMo-10:45", slots: 5, fromTime: "10:45:00", toTime: "13:30:00" },
+  { name: "CMo-13:15", slots: 5, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "CMo-15:45", slots: 5, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "CMo-18:00 English-speaking shift", slots: 7, fromTime: "18:00:00", toTime: "20:30:00" },
+  { name: "CSa-06:30", slots: 5, fromTime: "06:30:00", toTime: "09:00:00" },
+  { name: "CSa-08:45", slots: 5, fromTime: "08:45:00", toTime: "11:30:00" },
+  { name: "CSa-11:15", slots: 7, fromTime: "11:15:00", toTime: "14:00:00" },
+  { name: "CSa-13:45", slots: 6, fromTime: "13:45:00", toTime: "16:30:00" },
+  { name: "CSa-16:15", slots: 7, fromTime: "16:15:00", toTime: "18:45:00" },
+  { name: "DDi-06:00", slots: 6, fromTime: "06:00:00", toTime: "08:30:00" },
+  { name: "DDi-08:15", slots: 5, fromTime: "08:15:00", toTime: "11:00:00" },
+  { name: "DDi-10:45", slots: 5, fromTime: "10:45:00", toTime: "13:30:00" },
+  { name: "DDi-13:15", slots: 5, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "DDi-15:45", slots: 5, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "DDi-18:00", slots: 7, fromTime: "18:00:00", toTime: "20:30:00" },
+  { name: "DDo-06:00", slots: 6, fromTime: "06:00:00", toTime: "08:30:00" },
+  { name: "DDo-08:15", slots: 7, fromTime: "08:15:00", toTime: "11:00:00" },
+  { name: "DDo-10:45", slots: 7, fromTime: "10:45:00", toTime: "13:30:00" },
+  { name: "DDo-13:15", slots: 7, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "DDo-15:45", slots: 6, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "DDo-18:00", slots: 7, fromTime: "18:00:00", toTime: "20:30:00" },
+  { name: "DFr-06:00", slots: 7, fromTime: "06:00:00", toTime: "08:30:00" },
+  { name: "DFr-08:15", slots: 7, fromTime: "08:15:00", toTime: "11:00:00" },
+  { name: "DFr-10:45", slots: 7, fromTime: "10:45:00", toTime: "13:30:00" },
+  { name: "DFr-13:15", slots: 6, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "DFr-15:45", slots: 7, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "DFr-18:00", slots: 7, fromTime: "18:00:00", toTime: "20:30:00" },
+  { name: "DMi-12:45 Detektiv Inventur", slots: 2, fromTime: "12:45:00", toTime: "15:30:00" },
+  { name: "DMi-13:15", slots: 6, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "DMi-15:45", slots: 6, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "DMo-06:00", slots: 6, fromTime: "06:00:00", toTime: "08:30:00" },
+  { name: "DMo-08:15", slots: 5, fromTime: "08:15:00", toTime: "11:00:00" },
+  { name: "DMo-10:45", slots: 5, fromTime: "10:45:00", toTime: "13:30:00" },
+  { name: "DMo-13:15", slots: 5, fromTime: "13:15:00", toTime: "16:00:00" },
+  { name: "DMo-15:45", slots: 5, fromTime: "15:45:00", toTime: "18:30:00" },
+  { name: "DMo-18:00", slots: 7, fromTime: "18:00:00", toTime: "20:30:00" },
+  { name: "DSa-06:30", slots: 5, fromTime: "06:30:00", toTime: "09:00:00" },
+  { name: "DSa-08:45", slots: 5, fromTime: "08:45:00", toTime: "11:30:00" },
+  { name: "DSa-11:15", slots: 7, fromTime: "11:15:00", toTime: "14:00:00" },
+  { name: "DSa-13:45 English-speaking shift", slots: 6, fromTime: "13:45:00", toTime: "16:30:00" },
+  { name: "DSa-16:15", slots: 7, fromTime: "16:15:00", toTime: "18:45:00" },
+];
+
+const WEEK_TYPE_OFFSET: Record<string, number> = { A: 0, B: 1, C: 2, D: 3 };
+const WEEKDAY_OFFSET: Record<string, number> = { Mo: 0, Di: 1, Mi: 2, Do: 3, Fr: 4, Sa: 5, So: 6 };
+const NORMAL_SHIFT_NAME_PATTERN = /^([A-D])(Mo|Di|Mi|Do|Fr|Sa|So)-/;
+
+function parseNormalShiftName(name: string): { weekType: string; weekday: string } {
+  const match = NORMAL_SHIFT_NAME_PATTERN.exec(name);
+  if (!match) throw new Error(`Cannot parse weekType/weekday out of shift name: ${name}`);
+  return { weekType: match[1]!, weekday: match[2]! };
+}
+
+function pickShiftStatus(): string {
+  return pickWeighted(SHIFT_STATUS_WEIGHTS.map((s) => ({ weight: s.weight, value: s.status })));
+}
+
+function pickShiftCategoryOldId(): number | null {
+  return pickWeighted(SHIFT_CATEGORY_MIX.map((c) => ({ weight: c.weight, value: c.oldId })));
+}
+
+function pickHolidayDurationDays(): number {
+  const bucket = pickWeighted(
+    HOLIDAY_DURATION_BUCKETS.map(([min, max, weight]) => ({ weight, value: [min, max] as const })),
   );
-  const oneTimeIdx = [...oneTimeFromRegular, ...oneTimeFromRest];
-
-  const coordinatorIdx = pickN(allIdx, N_COORDINATOR);
-  const cheeseIdx = pickN(allIdx, N_CHEESE);
-  const holidayIdx = pickN(allIdx, N_HOLIDAY);
-
-  return { regularIdx, oneTimeIdx, coordinatorIdx, cheeseIdx, holidayIdx };
+  return randomInt(bucket[0], bucket[1]);
 }
 
 async function getRole(name: string) {
@@ -274,10 +677,11 @@ async function create_examples() {
   await create_tags();
   await create_tiles();
   await create_emails();
-  await create_shifts();
+  const categoryMap = await create_fake_categories();
+  await create_shifts(categoryMap);
   const skills = await create_skills();
   const fakeMemberships = await create_fake_memberships(fakeUsers, plan);
-  await create_fake_shift_data(fakeMemberships, plan, skills);
+  await create_fake_shift_data(fakeMemberships, plan, skills, categoryMap);
   console.log("Seed successful");
 }
 
@@ -362,59 +766,61 @@ interface FakeUser {
   email: string;
 }
 
-function fakeUserEmail(first: string, last: string): string {
-  return `${slugifyForEmail(first)}.${slugifyForEmail(last)}@example.com`;
-}
-
 async function create_fake_users(): Promise<FakeUser[]> {
   const directus = await useDirectusAdmin();
   const userRole = await getRole("NutzerInnen");
 
-  console.info("Creating fake Vienna users");
+  console.info(`Creating ${TARGET_TOTAL_MEMBERSHIPS} fake Vienna users`);
 
-  const emails = VIENNA_USERS.map(([first, last]) => fakeUserEmail(first, last));
-
-  const existing = await directus.request(
-    readUsers({
-      filter: { email: { _in: emails } },
-      fields: ["id", "email"],
-      limit: -1,
-    }),
+  const identities = generateIdentities(TARGET_TOTAL_MEMBERSHIPS);
+  const emails = assignUniqueEmails(identities);
+  const buddyStatuses = identities.map(() =>
+    pickWeighted(BUDDY_STATUS_WEIGHTS.map((b) => ({ weight: b.weight, value: b.status }))),
   );
 
-  const existingByEmail = new Map(
-    existing.map((u) => [u.email as string, u.id as string]),
+  // GET-based lookup - keep the _in filter small enough to stay under
+  // request header/URL size limits (500 emails in one filter causes a 431).
+  const existing = await inChunks(emails, EMAIL_LOOKUP_CHUNK_SIZE, (chunk) =>
+    directus.request(
+      readUsers({
+        filter: { email: { _in: chunk } },
+        fields: ["id", "email"],
+        limit: -1,
+      }),
+    ) as Promise<{ id: string; email: string }[]>,
   );
+  const existingByEmail = new Map(existing.map((u) => [u.email, u.id]));
 
-  const toCreate = VIENNA_USERS.filter(
-    ([first, last]) => !existingByEmail.has(fakeUserEmail(first, last)),
-  ).map(([first, last]) => ({
-    first_name: first,
-    last_name: last,
-    username: first,
-    username_last: last,
-    email: fakeUserEmail(first, last),
-    password: slugifyForEmail(first),
-    role: userRole,
-    status: "active",
-    memberships_street: "Example Street",
-    memberships_city: "Example City",
-    memberships_street_number: "123",
-    memberships_postcode: "12345",
-  }));
+  const toCreate: any[] = [];
+  identities.forEach(([first, last], i) => {
+    const email = emails[i]!;
+    if (existingByEmail.has(email)) return;
+    toCreate.push({
+      first_name: first,
+      last_name: last,
+      username: first,
+      username_last: last,
+      email,
+      password: slugifyForEmail(first),
+      role: userRole,
+      status: "active",
+      buddy_status: buddyStatuses[i],
+      memberships_street: "Example Street",
+      memberships_city: "Example City",
+      memberships_street_number: "123",
+      memberships_postcode: "12345",
+    });
+  });
 
-  let created: { id: string; email: string }[] = [];
-
-  if (toCreate.length > 0) {
-    created = (await directus.request(
-      createUsers(toCreate, { fields: ["id", "email"] } as any),
-    )) as any;
-  }
-
+  const created = await inChunks(toCreate, BULK_CHUNK_SIZE, (chunk) =>
+    directus.request(
+      createUsers(chunk, { fields: ["id", "email"] } as any),
+    ) as unknown as Promise<{ id: string; email: string }[]>,
+  );
   const createdByEmail = new Map(created.map((u) => [u.email, u.id]));
 
-  return VIENNA_USERS.map(([first, last]) => {
-    const email = fakeUserEmail(first, last);
+  return identities.map(([first, last], i) => {
+    const email = emails[i]!;
     const id = existingByEmail.get(email) ?? createdByEmail.get(email)!;
     return { id, first_name: first, last_name: last, email };
   });
@@ -530,12 +936,21 @@ async function create_tiles() {
   }
 }
 
+// Must run before create_memberships() purges memberships: shifts_logs and
+// shifts_absences both have a required (not-null) shifts_membership column,
+// so deleting a membership while those still reference it violates the
+// not-null constraint on the FK's nullify-on-delete behavior.
 async function purge_assignments() {
   const directus = await useDirectusAdmin();
 
   console.info("Purging shift assignments");
 
-  await directus.request(deleteItems("shifts_assignments", { limit: 1000 }));
+  // limit well above realistic volume at TARGET_TOTAL_MEMBERSHIPS scale -
+  // deleteItems only removes up to `limit` rows per call, and these tables
+  // can run into the thousands now.
+  await directus.request(deleteItems("shifts_logs", { limit: 5000 }));
+  await directus.request(deleteItems("shifts_absences", { limit: 5000 }));
+  await directus.request(deleteItems("shifts_assignments", { limit: 5000 }));
 }
 
 async function create_memberships() {
@@ -546,12 +961,12 @@ async function create_memberships() {
   // Clean up old data
   // might error because of not_null constraint in assignment relation
   await directus.request(
-    deleteItems("memberships_memberships_coshoppers", { limit: 1000 }),
+    deleteItems("memberships_memberships_coshoppers", { limit: 5000 }),
   );
   await directus.request(
-    deleteItems("memberships_coshoppers", { limit: 1000 }),
+    deleteItems("memberships_coshoppers", { limit: 5000 }),
   );
-  await directus.request(deleteItems("memberships", { limit: 1000 }));
+  await directus.request(deleteItems("memberships", { limit: 5000 }));
 
   console.info("Creating memberships 2");
 
@@ -606,6 +1021,83 @@ async function create_memberships() {
   console.info("Creating memberships 5");
 }
 
+interface FakePlan {
+  statusByIdx: string[];
+  typeByIdx: string[];
+  userTypeByIdx: string[];
+  activeIdx: number[];
+  regularIdx: number[];
+  oneTimeIdx: number[];
+  coordinatorIdx: number[];
+  cheeseIdx: number[];
+  holidayIdx: number[];
+  categoryAllowedByIdx: Map<number, number[]>; // idx -> old category ids
+}
+
+// Decides, per fake membership index, its status/type/shifts_user_type, who
+// actually holds a regular assignment, who gets one or two one-time
+// bookings, who gets a skill, who is on holiday, and which shift categories
+// each is allowed into. Computed once so create_fake_memberships and
+// create_fake_shift_data agree on the same plan.
+function buildFakePlan(n: number): FakePlan {
+  const statusByIdx: string[] = [];
+  const typeByIdx: string[] = [];
+  const userTypeByIdx: string[] = [];
+
+  const statusItems = MEMBERSHIP_STATUS_WEIGHTS.map((w) => ({ weight: w.weight, value: w }));
+  const userTypeItems = USER_TYPE_WEIGHTS.map((w) => ({ weight: w.weight, value: w.userType }));
+
+  for (let i = 0; i < n; i++) {
+    const draw = pickWeighted(statusItems);
+    statusByIdx.push(draw.status);
+    typeByIdx.push(draw.type);
+    userTypeByIdx.push(pickWeighted(userTypeItems));
+  }
+
+  const allIdx = Array.from({ length: n }, (_, i) => i);
+  const activeIdx = allIdx.filter((i) => isActive(statusByIdx[i]!, typeByIdx[i]!));
+
+  const regularCandidates = activeIdx.filter((i) => userTypeByIdx[i] === "regular");
+  const regularIdx = pickN(regularCandidates, Math.min(REGULAR_ASSIGNEE_TARGET, regularCandidates.length));
+  const regularSet = new Set(regularIdx);
+
+  const oneTimeFromRegular = pickN(regularIdx, Math.round(regularIdx.length * ONE_TIME_FROM_REGULAR_RATE));
+  const nonRegularActive = activeIdx.filter((i) => !regularSet.has(i));
+  const oneTimeFromRest = pickN(
+    nonRegularActive,
+    Math.max(0, ONE_TIME_TARGET_PEOPLE - oneTimeFromRegular.length),
+  );
+  const oneTimeIdx = [...oneTimeFromRegular, ...oneTimeFromRest];
+
+  const coordinatorIdx = pickN(activeIdx, Math.round(activeIdx.length * COORDINATOR_RATE));
+  const cheeseIdx = pickN(activeIdx, Math.round(activeIdx.length * CHEESE_RATE));
+  const holidayIdx = pickN(activeIdx, Math.round(activeIdx.length * HOLIDAY_RATE));
+
+  const categoryAllowedByIdx = new Map<number, number[]>();
+  for (const i of activeIdx) {
+    const allowed: number[] = [];
+    for (const cat of CATEGORY_DEFINITIONS) {
+      if (cat.adoptionPercent > 0 && chance(cat.adoptionPercent / 100)) {
+        allowed.push(cat.oldId);
+      }
+    }
+    if (allowed.length > 0) categoryAllowedByIdx.set(i, allowed);
+  }
+
+  return {
+    statusByIdx,
+    typeByIdx,
+    userTypeByIdx,
+    activeIdx,
+    regularIdx,
+    oneTimeIdx,
+    coordinatorIdx,
+    cheeseIdx,
+    holidayIdx,
+    categoryAllowedByIdx,
+  };
+}
+
 interface FakeMembership {
   membershipId: number;
   userId: string;
@@ -625,21 +1117,19 @@ async function create_fake_memberships(
   const directus = await useDirectusAdmin();
   console.info("Creating fake memberships");
 
-  const regularSet = new Set(plan.regularIdx);
-
   const payload = fakeUsers.map((user, idx) => ({
     memberships_user: user.id,
-    memberships_type: "Aktiv",
-    memberships_status: "approved",
-    shifts_user_type: regularSet.has(idx) ? "regular" : "jumper",
+    memberships_type: plan.typeByIdx[idx],
+    memberships_status: plan.statusByIdx[idx],
+    shifts_user_type: plan.userTypeByIdx[idx],
   }));
 
-  const createdMemberships = await directus.request(
-    createItems("memberships", payload as any),
+  const createdMemberships = await inChunks(payload, BULK_CHUNK_SIZE, (chunk) =>
+    directus.request(createItems("memberships", chunk as any)) as Promise<any[]>,
   );
 
   return fakeUsers.map((user, idx) => ({
-    membershipId: (createdMemberships[idx] as any).id,
+    membershipId: createdMemberships[idx].id,
     userId: user.id,
     first_name: user.first_name,
     last_name: user.last_name,
@@ -647,71 +1137,182 @@ async function create_fake_memberships(
   }));
 }
 
-async function create_shifts() {
+interface CategoryMap {
+  oldToNewId: Map<number, number>;
+}
+
+async function create_fake_categories(): Promise<CategoryMap> {
+  const directus = await useDirectusAdmin();
+  console.info("Creating shift categories");
+
+  // Must clear the junction before shifts_categories itself, for the same
+  // not-null-FK-on-delete reason as purge_assignments() above.
+  await directus.request(
+    deleteItems("memberships_shifts_categories" as any, { limit: 5000 }),
+  );
+  await directus.request(deleteItems("shifts_categories", { limit: 1000 }));
+
+  const payload = CATEGORY_DEFINITIONS.map((c) => ({
+    name: c.name,
+    beschreibung: c.beschreibung,
+    for_all: c.for_all,
+  }));
+  const created = await directus.request(createItems("shifts_categories", payload as any));
+
+  const oldToNewId = new Map<number, number>();
+  CATEGORY_DEFINITIONS.forEach((c, i) => {
+    oldToNewId.set(c.oldId, (created[i] as any).id);
+  });
+
+  return { oldToNewId };
+}
+
+async function create_shifts(categoryMap: CategoryMap) {
   console.log("Creating shifts");
   console.log("  claning shifts...");
   await cleanShiftsData();
   console.log("  creating shifts...");
-  await createShifts();
+  await createShifts(categoryMap);
   console.log("  creating assignments...");
   await createAssignments();
-  // await createLogs();
 }
 
 async function cleanShiftsData() {
   const directus = await useDirectusAdmin();
 
+  // Children (FK to shifts_shifts) first, shifts_shifts itself last -
+  // purge_assignments() already clears these earlier in the run, but this
+  // function should be safe to call on its own too.
   const schemas = [
-    "shifts_shifts",
     "shifts_assignments",
     "shifts_absences",
     "shifts_logs",
+    "shifts_shifts",
   ];
 
   for (const schema of schemas) {
-    console.log(`    deleting 1000 items in schema ${schema} ...`);
-    await directus.request(deleteItems(schema as any, { limit: 1000 }));
+    console.log(`    deleting up to 5000 items in schema ${schema} ...`);
+    await directus.request(deleteItems(schema as any, { limit: 5000 }));
   }
 }
 
-const SHIFT_TIMES_OF_DAY = [8, 11, 14, 17];
-const SHIFT_CYCLE_START = DateTime.now().minus({ weeks: 4 }).startOf("week");
-const SHIFT_CYCLE_DURATION_WEEKS = 4;
-
-async function createShifts() {
+// Generates the real mix of shift shapes seen in production: currently
+// active/ongoing recurring shifts (the bulk of what the shift-assignment
+// system actually operates on), regular shifts that already ended, and
+// one-time shift definitions - using the real archetype/category/status
+// distributions rather than a single fixed pattern.
+async function createShifts(categoryMap: CategoryMap) {
   const directus = await useDirectusAdmin();
-
-  const monday = SHIFT_CYCLE_START;
+  const now = getCurrentDate();
   const shiftsRequests: any[] = [];
 
-  const nb_weeks = SHIFT_CYCLE_DURATION_WEEKS;
-
-  for (let week = 0; week < nb_weeks; week++) {
-    for (let weekday = 0; weekday < 5; weekday++) {
-      const day = monday.plus({ days: weekday, week: week });
-
-      for (const time_of_day of SHIFT_TIMES_OF_DAY) {
-        shiftsRequests.push({
-          shifts_name:
-            ["A", "B", "C", "D"][week]! +
-            "-" +
-            (day.weekdayShort ?? "") +
-            "-" +
-            time_of_day,
-          shifts_from: day.set({ hour: time_of_day }).toString(),
-          shifts_from_time: String(time_of_day) + ":00",
-          shifts_to_time: String(time_of_day + 3) + ":00",
-          shifts_is_regular: true,
-          shifts_repeats_every: nb_weeks * 7,
-          shifts_status: "published",
-          shifts_slots: 2,
-          shifts_allow_self_assignment: true,
-        });
-      }
-    }
+  function resolveCategory(oldId: number | null): number | null {
+    if (oldId === null) return null;
+    return categoryMap.oldToNewId.get(oldId) ?? null;
   }
 
-  await directus.request(createItems("shifts_shifts", shiftsRequests));
+  function fromArchetype(archetype: ShiftArchetype) {
+    return {
+      shifts_slots: archetype.slots,
+      shifts_from_time: archetype.fromTime,
+      shifts_to_time: archetype.toTime,
+      shifts_repeats_every: archetype.repeatsEvery,
+      shifts_category_2: resolveCategory(pickShiftCategoryOldId() ?? archetype.categoryOldId),
+      shift_points: archetype.points,
+      shifts_allow_self_assignment: archetype.allowSelfAssignment,
+      exclude_public_holidays: archetype.excludeHolidays,
+      shifts_is_all_day: archetype.isAllDay,
+    };
+  }
+
+  function addDays(date: Date, days: number): Date {
+    return new Date(date.getTime() + days * 24 * 60 * 60 * 1000);
+  }
+
+  // Active, ongoing recurring shifts of category "Normal": copied exactly
+  // from production (name + slots), not sampled - only the start date is
+  // computed, anchored to a Monday 4 weeks ago (always in the past) plus
+  // the shift's own weekType/weekday offset.
+  const cycleAnchor = DateTime.now().minus({ weeks: 4 }).startOf("week");
+  const normalCategoryNewId = resolveCategory(NORMAL_CATEGORY_OLD_ID);
+  for (const def of NORMAL_CATEGORY_SHIFTS) {
+    const { weekType, weekday } = parseNormalShiftName(def.name);
+    const date = cycleAnchor.plus({
+      weeks: WEEK_TYPE_OFFSET[weekType],
+      days: WEEKDAY_OFFSET[weekday],
+    });
+    shiftsRequests.push({
+      shifts_name: def.name,
+      shifts_from: date.toISODate(),
+      shifts_to: null,
+      shifts_is_regular: true,
+      shifts_status: "published",
+      shifts_slots: def.slots,
+      shifts_from_time: def.fromTime,
+      shifts_to_time: def.toTime,
+      shifts_repeats_every: 28,
+      shifts_category_2: normalCategoryNewId,
+      shift_points: 28,
+      shifts_allow_self_assignment: true,
+      exclude_public_holidays: true,
+      shifts_is_all_day: false,
+    });
+  }
+
+  // Remaining active, ongoing recurring shifts (other categories), sampled
+  // from real archetypes - "Normal" is excluded here since it's handled
+  // exactly above.
+  const nonNormalArchetypeItems = SHIFT_ARCHETYPES.filter(
+    (a) => a.categoryOldId !== NORMAL_CATEGORY_OLD_ID,
+  ).map((a) => ({ weight: a.weight, value: a }));
+  const remainingActiveOngoing = Math.max(
+    0,
+    SHIFT_SHAPE_TARGETS.activeRecurringOngoing - NORMAL_CATEGORY_SHIFTS.length,
+  );
+  for (let i = 0; i < remainingActiveOngoing; i++) {
+    const archetype = pickWeighted(nonNormalArchetypeItems);
+    shiftsRequests.push({
+      shifts_name: `Regular-${i + 1}`,
+      shifts_from: addDays(now, -randomInt(0, 27)).toISOString(),
+      shifts_to: null,
+      shifts_is_regular: true,
+      shifts_status: "published",
+      ...fromArchetype(archetype),
+    });
+  }
+
+  // Regular shifts that have already ended.
+  for (let i = 0; i < SHIFT_SHAPE_TARGETS.regularWithPastEndDate; i++) {
+    const archetype = pickArchetype();
+    const from = addDays(now, -randomInt(180, 730));
+    const to = addDays(from, randomInt(30, 300));
+    const cappedTo = to.getTime() > now.getTime() ? addDays(now, -1) : to;
+    shiftsRequests.push({
+      shifts_name: `Ended-${i + 1}`,
+      shifts_from: from.toISOString(),
+      shifts_to: cappedTo.toISOString(),
+      shifts_is_regular: true,
+      shifts_status: pickShiftStatus(),
+      ...fromArchetype(archetype),
+    });
+  }
+
+  // One-time shift definitions (a single occurrence, not a recurring shift).
+  for (let i = 0; i < SHIFT_SHAPE_TARGETS.oneTimeDefinitions; i++) {
+    const archetype = pickArchetype();
+    shiftsRequests.push({
+      shifts_name: `OneTime-${i + 1}`,
+      shifts_from: addDays(now, randomInt(-180, 60)).toISOString(),
+      shifts_to: null,
+      shifts_is_regular: false,
+      shifts_status: pickShiftStatus(),
+      ...fromArchetype(archetype),
+    });
+  }
+
+  await inChunks(shiftsRequests, BULK_CHUNK_SIZE, (chunk) =>
+    directus.request(createItems("shifts_shifts", chunk)) as Promise<any[]>,
+  );
 }
 
 async function createAssignments() {
@@ -720,6 +1321,7 @@ async function createAssignments() {
   const shifts = await directus.request(
     readItems("shifts_shifts", {
       fields: ["id"],
+      filter: { shifts_is_regular: { _eq: true }, shifts_to: { _null: true } } as any,
       limit: -1,
     }),
   );
@@ -731,10 +1333,11 @@ async function createAssignments() {
     }),
   );
 
+  const shuffledShifts = shuffled(shifts);
   const assignments = [];
 
   for (const mship of mships) {
-    const shift = shifts.pop();
+    const shift = shuffledShifts.pop();
 
     if (!shift) {
       break;
@@ -759,7 +1362,7 @@ async function create_skills(): Promise<{
   console.info("Creating skills");
 
   await directus.request(
-    deleteItems("memberships_shifts_skills", { limit: 1000 }),
+    deleteItems("memberships_shifts_skills", { limit: 5000 }),
   );
   await directus.request(deleteItems("shifts_skills", { limit: 1000 }));
 
@@ -815,7 +1418,7 @@ async function create_skills(): Promise<{
 }
 
 // ============================================================================
-// FAKE USER SHIFT DATA
+// FAKE MEMBERSHIP SHIFT DATA
 // ============================================================================
 
 const ONE_TIME_HORIZON_DAYS = 90;
@@ -825,6 +1428,7 @@ async function create_fake_shift_data(
   fakeMemberships: FakeMembership[],
   plan: FakePlan,
   skills: { coordinatorSkillId: number; cheeseSkillId: number },
+  categoryMap: CategoryMap,
 ) {
   const directus = await useDirectusAdmin();
   console.info("Creating fake shift data");
@@ -840,9 +1444,14 @@ async function create_fake_shift_data(
         "shifts_repeats_every",
         "shifts_slots",
         "exclude_public_holidays",
-      ],
+        "shift_points",
+      ] as any,
     }),
-  )) as unknown as ShiftsShift[];
+  )) as unknown as (ShiftsShift & { shift_points?: number })[];
+  // Only currently-active recurring shifts (no end date) are eligible for
+  // new regular/one-time assignments - ended or one-time-definition shifts
+  // aren't valid targets for a fresh booking.
+  const bookableShifts = allShifts.filter((s) => s.shifts_is_regular && !s.shifts_to);
 
   const existingRegularAssignments = await directus.request(
     readItems("shifts_assignments", {
@@ -866,15 +1475,15 @@ async function create_fake_shift_data(
   // --- Regular assignments for the fake "regular" group ---
   // Ticket pool: each shift appears once per still-free slot, so drawing
   // without replacement can never exceed shifts_slots.
-  const regularSlotPool: ShiftsShift[] = [];
-  for (const shift of allShifts) {
+  const regularSlotPool: typeof bookableShifts = [];
+  for (const shift of bookableShifts) {
     const free = shift.shifts_slots - (regularCounts.get(shift.id) ?? 0);
     for (let i = 0; i < free; i++) regularSlotPool.push(shift);
   }
   const shuffledRegularPool = shuffled(regularSlotPool);
 
   const regularPayloads = plan.regularIdx.map((idx, k) => {
-    const shift = shuffledRegularPool[k]!;
+    const shift = shuffledRegularPool[k % shuffledRegularPool.length]!;
     regularCounts.set(shift.id, (regularCounts.get(shift.id) ?? 0) + 1);
     return {
       shifts_membership: fakeMemberships[idx]!.membershipId,
@@ -884,12 +1493,9 @@ async function create_fake_shift_data(
     };
   });
 
-  const createdRegular =
-    regularPayloads.length > 0
-      ? await directus.request(
-          createItems("shifts_assignments", regularPayloads as any),
-        )
-      : [];
+  const createdRegular = await inChunks(regularPayloads, BULK_CHUNK_SIZE, (chunk) =>
+    directus.request(createItems("shifts_assignments", chunk as any)) as Promise<any[]>,
+  );
 
   const regularAssignmentByIdx = new Map<
     number,
@@ -897,7 +1503,7 @@ async function create_fake_shift_data(
   >();
   plan.regularIdx.forEach((idx, k) => {
     regularAssignmentByIdx.set(idx, {
-      assignmentId: (createdRegular[k] as any).id,
+      assignmentId: createdRegular[k].id,
       shiftId: regularPayloads[k]!.shifts_shift,
     });
   });
@@ -906,8 +1512,8 @@ async function create_fake_shift_data(
   // Regular assignees (existing + the ones just created above) consume
   // capacity on every future occurrence, so subtract them first; the
   // remaining per-occurrence capacity becomes the one-time ticket pool.
-  const oneTimePool: { shift: ShiftsShift; date: Date }[] = [];
-  for (const shift of allShifts) {
+  const oneTimePool: { shift: (typeof bookableShifts)[number]; date: Date }[] = [];
+  for (const shift of bookableShifts) {
     const cap = shift.shifts_slots - (regularCounts.get(shift.id) ?? 0);
     if (cap <= 0) continue;
     const rrule = getShiftRrule(shift);
@@ -921,15 +1527,21 @@ async function create_fake_shift_data(
   }
   const shuffledOneTimePool = shuffled(oneTimePool);
 
-  const oneTimeTickets: { idx: number; shift: ShiftsShift; date: Date }[] = [];
+  const oneTimeTickets: { idx: number; shift: (typeof bookableShifts)[number]; date: Date }[] = [];
   let poolPos = 0;
   for (const idx of plan.oneTimeIdx) {
     const wantCount = rng() < 0.5 ? 1 : 2;
     const usedShiftIds = new Set<number>();
     let assignedCount = 0;
-    while (assignedCount < wantCount && poolPos < shuffledOneTimePool.length) {
-      const candidate = shuffledOneTimePool[poolPos]!;
+    let attempts = 0;
+    while (
+      assignedCount < wantCount &&
+      poolPos < shuffledOneTimePool.length &&
+      attempts < shuffledOneTimePool.length
+    ) {
+      const candidate = shuffledOneTimePool[poolPos % shuffledOneTimePool.length]!;
       poolPos++;
+      attempts++;
       // Never double-book the same person on the same shift.
       if (usedShiftIds.has(candidate.shift.id)) continue;
       usedShiftIds.add(candidate.shift.id);
@@ -950,12 +1562,9 @@ async function create_fake_shift_data(
     shifts_is_regular: false,
   }));
 
-  const createdOneTime =
-    oneTimePayloads.length > 0
-      ? await directus.request(
-          createItems("shifts_assignments", oneTimePayloads as any),
-        )
-      : [];
+  const createdOneTime = await inChunks(oneTimePayloads, BULK_CHUNK_SIZE, (chunk) =>
+    directus.request(createItems("shifts_assignments", chunk as any)) as Promise<any[]>,
+  );
 
   const oneTimeByIdx = new Map<
     number,
@@ -964,15 +1573,14 @@ async function create_fake_shift_data(
   oneTimeTickets.forEach((t, k) => {
     const list = oneTimeByIdx.get(t.idx) ?? [];
     list.push({
-      assignmentId: (createdOneTime[k] as any).id,
+      assignmentId: createdOneTime[k].id,
       date: oneTimePayloads[k]!.shifts_from,
     });
     oneTimeByIdx.set(t.idx, list);
   });
 
-  // --- Skills: coordinator (5%) and cheese-cutting (8%) ---
-  const skillPayloads: { memberships_id: number; shifts_skills_id: number }[] =
-    [];
+  // --- Skills: coordinator and cheese-cutting ---
+  const skillPayloads: { memberships_id: number; shifts_skills_id: number }[] = [];
   for (const idx of plan.coordinatorIdx) {
     skillPayloads.push({
       memberships_id: fakeMemberships[idx]!.membershipId,
@@ -985,20 +1593,32 @@ async function create_fake_shift_data(
       shifts_skills_id: skills.cheeseSkillId,
     });
   }
-  if (skillPayloads.length > 0) {
-    await directus.request(
-      createItems("memberships_shifts_skills", skillPayloads as any),
-    );
-  }
+  await inChunks(skillPayloads, BULK_CHUNK_SIZE, (chunk) =>
+    directus.request(createItems("memberships_shifts_skills", chunk as any)) as Promise<any[]>,
+  );
 
-  // --- Holidays (5%), within the next 3 months ---
+  // --- Shift categories allowed per membership ---
+  const categoryAllowedPayloads: { memberships_id: number; shifts_categories_id: number }[] = [];
+  for (const [idx, oldCategoryIds] of plan.categoryAllowedByIdx) {
+    for (const oldId of oldCategoryIds) {
+      const newId = categoryMap.oldToNewId.get(oldId);
+      if (newId == null) continue;
+      categoryAllowedPayloads.push({
+        memberships_id: fakeMemberships[idx]!.membershipId,
+        shifts_categories_id: newId,
+      });
+    }
+  }
+  await inChunks(categoryAllowedPayloads, BULK_CHUNK_SIZE, (chunk) =>
+    directus.request(createItems("memberships_shifts_categories" as any, chunk as any)) as Promise<any[]>,
+  );
+
+  // --- Holidays, within the next 3 months, real duration distribution ---
   const holidayPayloads = plan.holidayIdx.map((idx) => {
     const startOffset = randomInt(0, 75);
-    const duration = 14 + randomInt(0, 7);
+    const duration = pickHolidayDurationDays();
     const start = new Date(now.getTime() + startOffset * 24 * 60 * 60 * 1000);
-    const end = new Date(
-      start.getTime() + (duration - 1) * 24 * 60 * 60 * 1000,
-    );
+    const end = new Date(start.getTime() + (duration - 1) * 24 * 60 * 60 * 1000);
     return {
       shifts_membership: fakeMemberships[idx]!.membershipId,
       shifts_from: start.toISOString(),
@@ -1007,67 +1627,85 @@ async function create_fake_shift_data(
       shifts_is_for_all_assignments: true,
     };
   });
-  if (holidayPayloads.length > 0) {
-    await directus.request(
-      createItems("shifts_absences", holidayPayloads as any),
-    );
-  }
-
-  // --- A few regular shift occurrences one-time unsubscribed ---
-  const unsubscribeIdx = pickN(
-    [...regularAssignmentByIdx.keys()],
-    Math.min(N_UNSUBSCRIBE_OCCURRENCE, regularAssignmentByIdx.size),
+  await inChunks(holidayPayloads, BULK_CHUNK_SIZE, (chunk) =>
+    directus.request(createItems("shifts_absences", chunk as any)) as Promise<any[]>,
   );
+
+  // --- Regular shift occurrences one-time unsubscribed ---
   const unsubscribePayloads: object[] = [];
-  for (const idx of unsubscribeIdx) {
+  for (const idx of regularAssignmentByIdx.keys()) {
+    if (!chance(REGULAR_UNSUBSCRIBE_CHANCE)) continue;
     const info = regularAssignmentByIdx.get(idx)!;
     const shift = allShifts.find((s) => s.id === info.shiftId);
     if (!shift) continue;
     const dates = getShiftRrule(shift).between(now, horizon, true);
     if (dates.length === 0) continue;
-    const date = dates[randomInt(0, dates.length - 1)]!;
-    unsubscribePayloads.push({
-      shifts_membership: fakeMemberships[idx]!.membershipId,
-      shifts_assignment: info.assignmentId,
-      shifts_from: date.toISOString(),
-      shifts_to: date.toISOString(),
-      shifts_is_holiday: false,
-      shifts_is_for_all_assignments: false,
-    });
-  }
-  if (unsubscribePayloads.length > 0) {
-    await directus.request(
-      createItems("shifts_absences", unsubscribePayloads as any),
-    );
-  }
-
-  // --- A few one-time registrations canceled by the user ---
-  const flatOneTime: { idx: number; assignmentId: number; date: string }[] =
-    [];
-  for (const [idx, list] of oneTimeByIdx) {
-    for (const item of list) {
-      flatOneTime.push({
-        idx,
-        assignmentId: item.assignmentId,
-        date: item.date,
+    const skipCount = randomInt(1, 4);
+    const chosenDates = pickN(dates, Math.min(skipCount, dates.length));
+    for (const date of chosenDates) {
+      unsubscribePayloads.push({
+        shifts_membership: fakeMemberships[idx]!.membershipId,
+        shifts_assignment: info.assignmentId,
+        shifts_from: date.toISOString(),
+        shifts_to: date.toISOString(),
+        shifts_is_holiday: false,
+        shifts_is_for_all_assignments: false,
       });
     }
   }
-  const cancelPicks = pickN(
-    flatOneTime,
-    Math.min(N_CANCEL_ONETIME, flatOneTime.length),
+  await inChunks(unsubscribePayloads, BULK_CHUNK_SIZE, (chunk) =>
+    directus.request(createItems("shifts_absences", chunk as any)) as Promise<any[]>,
   );
-  const cancelPayloads = cancelPicks.map((c) => ({
-    shifts_membership: fakeMemberships[c.idx]!.membershipId,
-    shifts_assignment: c.assignmentId,
-    shifts_from: c.date,
-    shifts_to: c.date,
-    shifts_is_holiday: false,
-    shifts_is_for_all_assignments: false,
-  }));
-  if (cancelPayloads.length > 0) {
-    await directus.request(
-      createItems("shifts_absences", cancelPayloads as any),
-    );
+
+  // --- One-time registrations canceled by the user ---
+  const cancelPayloads: object[] = [];
+  for (const [idx, list] of oneTimeByIdx) {
+    for (const item of list) {
+      if (!chance(ONE_TIME_CANCEL_RATE)) continue;
+      cancelPayloads.push({
+        shifts_membership: fakeMemberships[idx]!.membershipId,
+        shifts_assignment: item.assignmentId,
+        shifts_from: item.date,
+        shifts_to: item.date,
+        shifts_is_holiday: false,
+        shifts_is_for_all_assignments: false,
+      });
+    }
   }
+  await inChunks(cancelPayloads, BULK_CHUNK_SIZE, (chunk) =>
+    directus.request(createItems("shifts_absences", chunk as any)) as Promise<any[]>,
+  );
+
+  // --- Attendance history (shifts_logs) for regular assignees ---
+  // Recent history only (last few months, one entry per real occurrence of
+  // their shift's recurrence cycle), matching the real attended/missed/other
+  // type mix and using the shift's own point value as the log score.
+  const logTypeItems = SHIFT_LOG_TYPE_WEIGHTS.map((t) => ({ weight: t.weight, value: t.type }));
+  const logPayloads: object[] = [];
+  const historyStart = new Date(now.getTime() - SHIFT_LOG_HISTORY_MONTHS * 30 * 24 * 60 * 60 * 1000);
+
+  for (const [idx, info] of regularAssignmentByIdx) {
+    const shift = allShifts.find((s) => s.id === info.shiftId);
+    if (!shift) continue;
+    const cycleDays = shift.shifts_repeats_every ?? 28;
+    const points = shift.shift_points ?? 28;
+    for (
+      let occurrence = new Date(now.getTime() - cycleDays * 24 * 60 * 60 * 1000);
+      occurrence.getTime() >= historyStart.getTime();
+      occurrence = new Date(occurrence.getTime() - cycleDays * 24 * 60 * 60 * 1000)
+    ) {
+      const type = pickWeighted(logTypeItems);
+      const score = type === "attended" || type === "attended_draft" ? points : 0;
+      logPayloads.push({
+        shifts_membership: fakeMemberships[idx]!.membershipId,
+        shifts_shift: shift.id,
+        shifts_type: type,
+        shifts_date: occurrence.toISOString().split("T")[0],
+        shifts_score: score,
+      });
+    }
+  }
+  await inChunks(logPayloads, BULK_CHUNK_SIZE, (chunk) =>
+    directus.request(createItems("shifts_logs", chunk as any)) as Promise<any[]>,
+  );
 }
