@@ -1,37 +1,39 @@
 {
   "collection": "memberships",
-  "field": "activation_notes",
-  "type": "text",
+  "field": "activation_last_call_successfull",
+  "type": "boolean",
   "meta": {
     "collection": "memberships",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "activation_notes",
+    "field": "activation_last_call_successfull",
     "group": "Activation",
     "hidden": false,
-    "interface": "input-multiline",
-    "note": "Hier bitte eintragen, was bei den Aktivierungsanrufen gelernt wurde",
+    "interface": "boolean",
+    "note": "Ob der letzte Anruf des MG Büro zur Aktivierung erfolgreich war",
     "options": null,
     "readonly": false,
     "required": false,
     "searchable": true,
-    "sort": 7,
-    "special": null,
+    "sort": 4,
+    "special": [
+      "cast-boolean"
+    ],
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Aktivierung Notizen"
+        "translation": "Letzter Anruf erfolgreich"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
-    "name": "activation_notes",
+    "name": "activation_last_call_successfull",
     "table": "memberships",
-    "data_type": "text",
+    "data_type": "boolean",
     "default_value": null,
     "max_length": null,
     "numeric_precision": null,

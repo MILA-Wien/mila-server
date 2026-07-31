@@ -11,17 +11,22 @@
     "group": "Activation",
     "hidden": false,
     "interface": "datetime",
-    "note": null,
+    "note": "Datum, an dem das MG Büro das letze Mal zwecks Aktivierung angerufen hat",
     "options": null,
     "readonly": false,
     "required": false,
     "searchable": true,
     "sort": 3,
     "special": null,
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Datum letzter Anruf"
+      }
+    ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
     "name": "activation_last_call",

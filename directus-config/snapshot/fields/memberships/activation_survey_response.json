@@ -1,35 +1,35 @@
 {
   "collection": "memberships",
-  "field": "activation_notes",
+  "field": "activation_survey_response",
   "type": "text",
   "meta": {
     "collection": "memberships",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "activation_notes",
+    "field": "activation_survey_response",
     "group": "Activation",
     "hidden": false,
-    "interface": "input-multiline",
-    "note": "Hier bitte eintragen, was bei den Aktivierungsanrufen gelernt wurde",
+    "interface": "input",
+    "note": "Dieses Feld wird automatisch ausgefüllt, wenn das MG im automatischen Aktivierungsmail eine Antwortmöglichkeit anklickt",
     "options": null,
-    "readonly": false,
+    "readonly": true,
     "required": false,
     "searchable": true,
-    "sort": 7,
+    "sort": 6,
     "special": null,
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Aktivierung Notizen"
+        "translation": "Grund für Inaktivität"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
-    "name": "activation_notes",
+    "name": "activation_survey_response",
     "table": "memberships",
     "data_type": "text",
     "default_value": null,
