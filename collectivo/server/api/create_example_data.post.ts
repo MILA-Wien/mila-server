@@ -35,6 +35,7 @@ function resolveSeedTotalMemberships(event: any): number {
 }
 
 export default defineEventHandler(async (event) => {
+  verifyCollectivoApiToken(event);
   await create_examples(resolveSeedTotalMemberships(event));
 });
 
