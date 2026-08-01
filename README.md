@@ -28,7 +28,8 @@ Member plattform of [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/).
   pnpm i
   pnpm dev
   ```
-- Go to http://localhost:3000 and click on "Seed example data" or run `pnpm seed`
+- Go to http://localhost:3000 and click on "Seed Example Data" (fast, small dataset) or run `pnpm seed`
+  - For a production-scale dataset, click "Seed Full Dataset" instead - this takes a few minutes
 
 The following services will then be available:
 
