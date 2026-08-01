@@ -1,0 +1,49 @@
+{
+  "collection": "memberships",
+  "field": "activation_frozen_since",
+  "type": "date",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "activation_frozen_since",
+    "group": "Activation",
+    "hidden": false,
+    "interface": "datetime",
+    "note": "Datum, seitdem der Schichtzähler eingefroren ist",
+    "options": null,
+    "readonly": true,
+    "required": false,
+    "searchable": true,
+    "sort": 1,
+    "special": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Eingefroren seit"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "activation_frozen_since",
+    "table": "memberships",
+    "data_type": "date",
+    "default_value": null,
+    "max_length": null,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_indexed": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

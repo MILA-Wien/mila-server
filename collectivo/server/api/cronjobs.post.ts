@@ -50,7 +50,7 @@ async function runCronjobs(force_yesterday: boolean) {
 
     // Job 3
     if (settings.shift_point_system) {
-      await decrement_shifts_counter(holidays);
+      await decrement_shifts_counter(holidays, day);
     }
   }
   var warning_shift_counter = -14; // send out shopping expiration warnings when shift counter is at -14
@@ -72,15 +72,35 @@ async function runCronjobs(force_yesterday: boolean) {
 // 1) are not on holiday
 // 2) are active as well as jumpers or regulars
 // 3) have a shifts counter > 0 (if counter hits zero, it remains at zero)
-async function decrement_shifts_counter(mshipIdsOnHoliday: number[]) {
+//
+// A membership is considered "frozen" once its shift counter reaches the -28
+// limit (shopping is blocked at checkin at the same threshold). We record the
+// date the freeze started in activation_frozen_since: set once on the transition into
+// frozen state, left untouched while it stays frozen (so the daily cronjob does
+// not keep moving the date), and cleared when the membership becomes un-frozen.
+async function decrement_shifts_counter(mshipIdsOnHoliday: number[], day: Date) {
   const memberships = await dbGetMembershipsForDecrement();
   const membershipsToUpdate = memberships.filter(
     (membership) => !mshipIdsOnHoliday.includes(membership.id),
   );
 
+  const dayStr = day.toISOString().split("T")[0]!;
+
   for (const membership of membershipsToUpdate) {
-    if (membership.shifts_counter < -28) continue;
-    await dbDecrementMembershipCounter(membership.id, membership.shifts_counter);
+    // Decrement (existing behaviour: floor once below -28, i.e. settles at -29)
+    let newCounter = membership.shifts_counter;
+    if (membership.shifts_counter >= -28) {
+      await dbDecrementMembershipCounter(membership.id, membership.shifts_counter);
+      newCounter = membership.shifts_counter - 1;
+    }
+
+    // Manage activation_frozen_since based on the resulting counter (frozen <= -28)
+    const isFrozen = newCounter <= -28;
+    if (isFrozen && !membership.activation_frozen_since) {
+      await dbSetMembershipFrozenSince(membership.id, dayStr);
+    } else if (!isFrozen && membership.activation_frozen_since) {
+      await dbSetMembershipFrozenSince(membership.id, null);
+    }
   }
 }
 

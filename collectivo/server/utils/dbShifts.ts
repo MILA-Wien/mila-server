@@ -443,7 +443,7 @@ export async function dbGetMembershipsForDecrement() {
         memberships_type: { _eq: "Aktiv" },
         shifts_user_type: { _in: ["jumper", "regular"] },
       },
-      fields: ["id", "shifts_counter"],
+      fields: ["id", "shifts_counter", "activation_frozen_since"],
       limit: -1,
     }),
   );
@@ -452,6 +452,12 @@ export async function dbGetMembershipsForDecrement() {
 export async function dbDecrementMembershipCounter(id: number, counter: number) {
   return await directus.request(
     updateItem("memberships", id, { shifts_counter: counter - 1 }),
+  );
+}
+
+export async function dbSetMembershipFrozenSince(id: number, value: string | null) {
+  return await directus.request(
+    updateItem("memberships", id, { activation_frozen_since: value }),
   );
 }
 
