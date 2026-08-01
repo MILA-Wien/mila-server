@@ -31,8 +31,7 @@ function resolveSeedTotalMemberships(event: any): number {
   // last occurrence instead.
   const scaleParam = query.scale;
   const rawScale = Array.isArray(scaleParam) ? scaleParam[scaleParam.length - 1] : scaleParam;
-  const raw = (rawScale as string | undefined) ?? process.env.COLLECTIVO_SEED_SCALE;
-  return raw === "large" ? TARGET_TOTAL_MEMBERSHIPS : SEED_SCALE_SMALL_TOTAL_MEMBERSHIPS;
+  return rawScale === "large" ? TARGET_TOTAL_MEMBERSHIPS : SEED_SCALE_SMALL_TOTAL_MEMBERSHIPS;
 }
 
 export default defineEventHandler(async (event) => {
