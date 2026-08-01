@@ -186,3 +186,19 @@ h5 {
   font-family: var(--font-OpenSans);
   font-weight: theme(fontWeight.extrabold);
 }
+
+.markdown-content ul {
+  list-style: disc;
+  padding-left: theme(spacing.6);
+  margin: theme(spacing.2) 0;
+}
+
+.markdown-content ol {
+  list-style: decimal;
+  padding-left: theme(spacing.6);
+  margin: theme(spacing.2) 0;
+}
+
+.markdown-content li {
+  margin: theme(spacing.1) 0;
+}
