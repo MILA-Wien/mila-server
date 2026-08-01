@@ -47,6 +47,10 @@ function checkAssignmentPossible() {
 
 const assignmentPossible = checkAssignmentPossible();
 
+function closeModal() {
+  isOpen.value = false;
+}
+
 async function postAssignment(regular = false) {
   console.log("postAssignment");
   try {
@@ -160,37 +164,43 @@ async function postAssignmentInner(regular: boolean) {
         />
         <!-- eslint-enable -->
 
-        <div v-if="assignmentPossible" class="flex flex-col gap-2">
-          <UButton
-            class="w-full"
-            size="lg"
-            color="green"
-            icon="i-heroicons-pencil-square"
-            :loading="submitLoading"
-            @click="postAssignment()"
-          >
-            {{ t("Sign up one-time for") }}
-            {{ shiftOccurence.start.split("T")[0] }}
-          </UButton>
-          <UButton
-            v-if="isRegular"
-            class="w-full"
-            size="lg"
-            icon="i-heroicons-arrow-path"
-            :loading="submitLoading"
-            @click="postAssignment(true)"
-          >
-            {{ t("Sign up regularly, every 4 weeks") }}
-          </UButton>
-        </div>
-        <div v-else-if="shiftOccurence.selfAssigned">
-          <UButton class="w-full" size="lg" color="gray" disabled>
-            {{ t("Already signed up") }}
-          </UButton>
-        </div>
-        <div v-else>
-          <UButton class="w-full" size="lg" color="gray" disabled>
-            {{ t("Assignment not possible") }}
+        <div class="flex flex-col gap-2">
+          <div v-if="assignmentPossible" class="flex flex-col gap-2">
+            <UButton
+              class="w-full"
+              size="lg"
+              color="green"
+              icon="i-heroicons-pencil-square"
+              :loading="submitLoading"
+              @click="postAssignment()"
+            >
+              {{ t("Sign up one-time for") }}
+              {{ shiftOccurence.start.split("T")[0] }}
+            </UButton>
+            <UButton
+              v-if="isRegular"
+              class="w-full"
+              size="lg"
+              icon="i-heroicons-arrow-path"
+              :loading="submitLoading"
+              @click="postAssignment(true)"
+            >
+              {{ t("Sign up regularly, every 4 weeks") }}
+            </UButton>
+          </div>
+          <div v-else-if="shiftOccurence.selfAssigned">
+            <UButton class="w-full" size="lg" color="gray" disabled>
+              {{ t("Already signed up") }}
+            </UButton>
+          </div>
+          <div v-else>
+            <UButton class="w-full" size="lg" color="gray" disabled>
+              {{ t("Assignment not possible") }}
+            </UButton>
+          </div>
+
+          <UButton class="w-full" size="lg" icon="i-heroicons-x-mark" color="gray" @click="closeModal">
+            {{ t("Cancel") }}
           </UButton>
         </div>
       </div>
@@ -213,6 +223,7 @@ de:
   Assignment not possible: "Anmeldung nicht möglich"
   Already signed up: "Bereits angemeldet"
   "Sign up one-time for": "Einmalig anmelden für"
+  Cancel: "Abbrechen"
   "Sign up regularly, every 4 weeks": "Regelmäßig anmelden, alle 4 Wochen"
   "Shift repeats every four weeks": "Schicht wiederholt sich alle vier Wochen"
 </i18n>
