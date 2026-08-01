@@ -28,6 +28,7 @@ if (user.value?.user?.email === "checkin@mila.wien") {
     >
       <div
         v-if="tile.tiles_content"
+        class="markdown-content"
         v-html="markdownToHtml(tile.tiles_content)"
       />
       <div v-if="tile.tiles_buttons" class="flex flex-wrap gap-2 pt-3">

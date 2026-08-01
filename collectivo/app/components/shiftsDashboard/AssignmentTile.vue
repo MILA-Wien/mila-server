@@ -56,11 +56,11 @@ function getEndDate(endDate: string) {
 
         <!-- Shift infos -->
         <!-- eslint-disable vue/no-v-html -->
-        <p
+        <div
           v-if="shift.shifts_description"
-          class="pt-4"
+          class="markdown-content pt-4"
           v-html="parse(shift.shifts_description)"
-        ></p>
+        ></div>
 
         <div
           v-if="
@@ -74,13 +74,14 @@ function getEndDate(endDate: string) {
             <strong>{{ t("Category") }}:</strong>
             {{ cats.dict.value[shift.shifts_category_2]?.name }}
           </p>
-          <p
+          <div
+            class="markdown-content"
             v-html="
               parse(
                 cats.dict.value[shift.shifts_category_2]?.beschreibung ?? '',
               )
             "
-          ></p>
+          ></div>
         </div>
 
         <!-- v-html="parse(shift.shifts_category_2)" -->

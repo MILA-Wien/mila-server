@@ -157,9 +157,9 @@ async function postAssignmentInner(regular: boolean) {
 
         <!-- Shift infos -->
         <!-- eslint-disable vue/no-v-html -->
-        <p
+        <div
           v-if="shift.shifts_description"
-          class="mb-5"
+          class="markdown-content mb-5"
           v-html="parse(shift.shifts_description)"
         />
         <!-- eslint-enable -->
