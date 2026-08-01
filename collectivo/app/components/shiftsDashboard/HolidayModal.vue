@@ -152,6 +152,9 @@ function closeModal() {
         >
           {{ t("Request holiday") }}
         </UButton>
+        <UButton class="w-full mt-2" size="lg" icon="i-heroicons-x-mark" color="gray" @click="closeModal">
+          {{ t("Cancel") }}
+        </UButton>
       </div>
     </template>
   </UModal>
@@ -160,4 +163,5 @@ function closeModal() {
 <i18n lang="yaml">
 de:
   "Holiday submitted successfully.": "Urlaub erfolgreich eingereicht."
+  Cancel: "Abbrechen"
 </i18n>
