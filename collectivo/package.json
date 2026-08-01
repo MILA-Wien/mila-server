@@ -10,7 +10,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "typecheck": "nuxi typecheck",
+    "typecheck": "nuxi typecheck && tsc -p scripts/tsconfig.json",
     "format": "prettier --cache --check .",
     "format:fix": "prettier --cache --check . --write",
     "lint": "eslint --cache .",

@@ -41,10 +41,9 @@
  *
  * Prefer a read-only, aggregate-scoped Directus token over the full admin
  * token if you can create one for this one-off job - none of these queries
- * need write access. schemaSnapshot() (used below to resolve the
- * shifts_categories junction table name and detect optional date_created
- * fields) does require an admin-scoped token; the script falls back to
- * probing collection/field existence directly if it's unavailable.
+ * need write access. schemaSnapshot() (used below to detect optional
+ * date_created fields) does require an admin-scoped token; the script falls
+ * back to probing field existence directly if it's unavailable.
  */
 
 import { writeFileSync } from "node:fs";
@@ -197,11 +196,18 @@ function numericSummary(values: number[]) {
   if (values.length === 0) {
     return { count: 0, min: null, max: null, avg: null };
   }
-  const sum = values.reduce((a, b) => a + b, 0);
+  let sum = 0;
+  let min = values[0]!;
+  let max = values[0]!;
+  for (const v of values) {
+    sum += v;
+    if (v < min) min = v;
+    if (v > max) max = v;
+  }
   return {
     count: values.length,
-    min: Math.min(...values),
-    max: Math.max(...values),
+    min,
+    max,
     avg: Number((sum / values.length).toFixed(2)),
   };
 }
@@ -237,44 +243,30 @@ async function getSchemaSnapshot(): Promise<any> {
   return snapshot;
 }
 
-/** Resolves the M2M junction collection between `memberships` and
- * `shifts_categories` (the shifts_categories_allowed alias field on
- * Membership doesn't tell us the junction collection's name). */
+// Fixed by the schema (see
+// directus-config/snapshot/collections/memberships_shifts_categories.json)
+// and already hardcoded the same way in the seed script
+// (server/api/create_example_data.post.ts) - no relation-graph walk needed.
+const MEMBERSHIPS_SHIFTS_CATEGORIES_JUNCTION = "memberships_shifts_categories";
+
+/** Confirms the M2M junction collection between `memberships` and
+ * `shifts_categories` is readable (the shifts_categories_allowed alias field
+ * on Membership doesn't expose it directly). */
 async function resolveCategoriesJunction(): Promise<string | null> {
-  const snap = await getSchemaSnapshot();
-  if (snap) {
-    const relatedByCollection = new Map<string, Set<string>>();
-    for (const relation of snap.relations as any[]) {
-      const set = relatedByCollection.get(relation.collection) ?? new Set<string>();
-      if (relation.related_collection) set.add(relation.related_collection);
-      relatedByCollection.set(relation.collection, set);
-    }
-    for (const [collection, related] of relatedByCollection) {
-      if (related.has("memberships") && related.has("shifts_categories")) {
-        return collection;
-      }
-    }
+  try {
+    await directus.request(
+      readItems(MEMBERSHIPS_SHIFTS_CATEGORIES_JUNCTION as any, {
+        fields: ["memberships_id", "shifts_categories_id"],
+        limit: 1,
+      }),
+    );
+    return MEMBERSHIPS_SHIFTS_CATEGORIES_JUNCTION;
+  } catch {
+    console.error(
+      `Warning: could not read the memberships<->shifts_categories junction collection "${MEMBERSHIPS_SHIFTS_CATEGORIES_JUNCTION}". shifts_categories_allowed adoption rates will be omitted.`,
+    );
     return null;
   }
-  // Fallback: probe the conventional name (same pattern as the existing
-  // memberships_shifts_skills junction).
-  for (const guess of ["memberships_shifts_categories", "shifts_categories_memberships"]) {
-    try {
-      await directus.request(
-        readItems(guess as any, {
-          fields: ["memberships_id", "shifts_categories_id"],
-          limit: 1,
-        }),
-      );
-      return guess;
-    } catch {
-      // try next guess
-    }
-  }
-  console.error(
-    `Warning: could not resolve the memberships<->shifts_categories junction collection. shifts_categories_allowed adoption rates will be omitted.`,
-  );
-  return null;
 }
 
 async function hasField(collection: string, field: string): Promise<boolean> {
@@ -633,9 +625,7 @@ async function getBuddyStatusStats() {
 // SHIFT ABSENCES (holidays + single-occurrence cancellations)
 // ============================================================================
 
-async function getAbsenceStats(activeMemberships: number, hasAbsenceDateCreated: boolean) {
-  void hasAbsenceDateCreated; // reserved: could add real request->holiday lead time later
-
+async function getAbsenceStats(activeMemberships: number) {
   const holidayCountAgg = await directus.request(
     aggregate("shifts_absences", {
       aggregate: { count: "*" },
@@ -727,7 +717,6 @@ async function main() {
   console.error("Resolving schema (categories junction, date_created fields)...");
   const junctionCollection = await resolveCategoriesJunction();
   const assignmentsHaveDateCreated = await hasField("shifts_assignments", "date_created");
-  const absencesHaveDateCreated = await hasField("shifts_absences", "date_created");
 
   console.error("Querying memberships...");
   const membershipStats = await getMembershipStats();
@@ -755,7 +744,7 @@ async function main() {
   const buddyStatusStats = await getBuddyStatusStats();
 
   console.error("Querying shift absences...");
-  const absenceStats = await getAbsenceStats(activeMemberships, absencesHaveDateCreated);
+  const absenceStats = await getAbsenceStats(activeMemberships);
 
   console.error("Querying settings...");
   const settingsStats = await getSettingsStats();
