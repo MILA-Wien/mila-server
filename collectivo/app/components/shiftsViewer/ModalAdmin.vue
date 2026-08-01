@@ -355,9 +355,9 @@ function checkIfMshipInAssignments(mship: number) {
         </div>
 
         <!-- eslint-disable vue/no-v-html -->
-        <p
+        <div
           v-if="shift.shifts_description"
-          class="mb-5"
+          class="markdown-content mb-5"
           v-html="sanitizeHtml(parse(shift.shifts_description) as string)"
         />
         <!-- eslint-enable -->

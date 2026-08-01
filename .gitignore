@@ -52,3 +52,10 @@ node_modules
 
 # directus-sync generated API specs (informational only, not used by push)
 directus-config/specs/
+
+# scripts/export-shift-stats.ts output
+stats.json
+
+# Nextcloud
+nextcloud_data/
+nextcloud_db_data/

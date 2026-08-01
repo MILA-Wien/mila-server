@@ -37,11 +37,17 @@ async function handleLogin() {
   await loginDevMode(email.value, password.value);
 }
 
-async function seedData() {
-  seeding.value = true;
+async function seedData(scale?: "large") {
+  const isLarge = scale === "large";
+  if (isLarge) {
+    seedingLarge.value = true;
+  } else {
+    seeding.value = true;
+  }
   try {
     await $fetch("/api/create_example_data", {
       method: "POST",
+      query: isLarge ? { scale: "large" } : undefined,
       headers: {
         Authorization: "badToken",
       },
@@ -50,7 +56,11 @@ async function seedData() {
   } catch (error) {
     alert("Error seeding data: " + error);
   } finally {
-    seeding.value = false;
+    if (isLarge) {
+      seedingLarge.value = false;
+    } else {
+      seeding.value = false;
+    }
   }
 }
 
@@ -63,6 +73,7 @@ const TEST_USERS: [string, string][] = [
 
 const loading = ref(false);
 const seeding = ref(false);
+const seedingLarge = ref(false);
 const email = ref("admin@example.com");
 const password = ref("admin");
 const errorMessage = ref("");
@@ -122,10 +133,22 @@ const errorMessage = ref("");
         </div>
       </div>
 
-      <div class="border-t border-gray-300 pt-4">
-        <UButton :loading="seeding" @click="seedData" color="green" block>
+      <div class="border-t border-gray-300 pt-4 flex flex-col gap-2">
+        <UButton :loading="seeding" @click="seedData()" color="green" block>
           Seed Example Data
         </UButton>
+        <UButton
+          :loading="seedingLarge"
+          @click="seedData('large')"
+          color="green"
+          variant="outline"
+          block
+        >
+          Seed Full Dataset
+        </UButton>
+        <p class="text-xs text-gray-500 text-center">
+          Seeding the full dataset takes a few minutes.
+        </p>
       </div>
     </div>
   </div>

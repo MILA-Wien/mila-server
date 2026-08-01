@@ -33,7 +33,7 @@ definePageMeta({
       <UButton
         icon="i-heroicons-arrow-right-end-on-rectangle-16-solid"
         size="md"
-        @click="user.login()"
+        @click="() => { user.login() }"
         >{{ t("Login") }}</UButton
       >
     </div>
