@@ -10,13 +10,14 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "typecheck": "nuxi typecheck",
+    "typecheck": "nuxi typecheck && tsc -p scripts/tsconfig.json",
     "format": "prettier --cache --check .",
     "format:fix": "prettier --cache --check . --write",
     "lint": "eslint --cache .",
     "lint:fix": "eslint --cache . --fix",
     "e2e:dev": "npx cypress open",
-    "e2e:test": "npx cypress run"
+    "e2e:test": "npx cypress run",
+    "export-shift-stats": "tsx scripts/export-shift-stats.ts"
   },
   "dependencies": {
     "@directus/sdk": "^19.1.0",
@@ -47,6 +48,7 @@
     "@nuxt/ui": "^3.3.5",
     "@nuxtjs/i18n": "^9.5.4",
     "@types/luxon": "^3.6.2",
+    "@types/node": "^22.10.2",
     "@types/nodemailer": "^6.4.17",
     "@types/sanitize-html": "^2.16.0",
     "cypress": "^14.4.0",
@@ -54,6 +56,7 @@
     "nuxt": "^4.1.2",
     "prettier": "3.5.3",
     "sass": "^1.89.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.9.3",
     "unhead": "2.0.10",
     "vitest": "^3.1.4",

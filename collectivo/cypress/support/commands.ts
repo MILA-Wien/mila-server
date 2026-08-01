@@ -41,6 +41,9 @@ Cypress.Commands.add("resetDatabase", () => {
   cy.request({
     method: "POST",
     url: "http://localhost:3000/api/create_example_data",
+    headers: {
+      Authorization: "badToken",
+    },
     timeout: 30000, // 30 seconds timeout for database reset
   }).then((response) => {
     expect(response.status).to.eq(200);
