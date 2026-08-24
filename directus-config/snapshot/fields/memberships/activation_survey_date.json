@@ -1,37 +1,37 @@
 {
   "collection": "memberships",
-  "field": "activation_notes",
-  "type": "text",
+  "field": "activation_survey_date",
+  "type": "timestamp",
   "meta": {
     "collection": "memberships",
     "conditions": null,
     "display": null,
     "display_options": null,
-    "field": "activation_notes",
+    "field": "activation_survey_date",
     "group": "Activation",
     "hidden": false,
-    "interface": "input-multiline",
-    "note": "Hier bitte eintragen, was bei den Aktivierungsanrufen gelernt wurde",
+    "interface": "datetime",
+    "note": "Zeitpunkt der letzten Antwort auf die Aktivierungs-Umfrage",
     "options": null,
-    "readonly": false,
+    "readonly": true,
     "required": false,
     "searchable": true,
-    "sort": 10,
+    "sort": 8,
     "special": null,
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Aktivierung Notizen"
+        "translation": "Umfrage beantwortet am"
       }
     ],
     "validation": null,
     "validation_message": null,
-    "width": "full"
+    "width": "half"
   },
   "schema": {
-    "name": "activation_notes",
+    "name": "activation_survey_date",
     "table": "memberships",
-    "data_type": "text",
+    "data_type": "timestamp with time zone",
     "default_value": null,
     "max_length": null,
     "numeric_precision": null,

@@ -7,6 +7,7 @@ import {
   readRoles,
   readSingleton,
   readUser,
+  updateItem,
   updateUser,
 } from "@directus/sdk";
 
@@ -128,6 +129,24 @@ export async function dbGetUserProfile(userId: string) {
         "memberships.shifts_skills.shifts_skills_id.*",
         "collectivo_tags.collectivo_tags_id",
       ] as any[],
+    }),
+  );
+}
+
+// Saves the activation survey answer onto the membership.
+//
+// One answer per member: a new answer overwrites the previous one, by design - the
+// Activation Team wants the current reason, not a history.
+export async function dbSaveActivationSurvey(
+  membershipId: number,
+  choice: string,
+  response: string | null,
+) {
+  return await directus.request(
+    updateItem("memberships", membershipId, {
+      activation_survey_choice: choice,
+      activation_survey_response: response,
+      activation_survey_date: new Date().toISOString(),
     }),
   );
 }

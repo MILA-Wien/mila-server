@@ -2977,6 +2977,9 @@
     "fields": [
       "activation_last_call",
       "activation_notes",
+      "activation_do_not_call",
+      "activation_last_call_successfull",
+      "activation_do_not_survey",
       "Activation"
     ],
     "policy": "a6c7efe3-072a-4481-ba75-928bd8ce7279",
@@ -3900,7 +3903,6 @@
       "activation_last_shop",
       "activation_last_call",
       "activation_notes",
-      "Activation",
       "id",
       "memberships_user",
       "memberships_status",
@@ -3914,7 +3916,14 @@
       "memberships_date_ended",
       "memberships_date_type_changed",
       "membership_approved_by_board",
-      "membership_group"
+      "membership_group",
+      "activation_survey_response",
+      "activation_survey_choice",
+      "activation_survey_date",
+      "activation_do_not_survey",
+      "activation_do_not_call",
+      "activation_last_call_successfull",
+      "Activation"
     ],
     "policy": "a6c7efe3-072a-4481-ba75-928bd8ce7279",
     "_syncId": "fc7f7a63-0dec-4f96-a91e-9604d154f979"

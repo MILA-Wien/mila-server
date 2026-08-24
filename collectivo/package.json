@@ -17,7 +17,8 @@
     "lint:fix": "eslint --cache . --fix",
     "e2e:dev": "npx cypress open",
     "e2e:test": "npx cypress run",
-    "export-shift-stats": "tsx scripts/export-shift-stats.ts"
+    "export-shift-stats": "tsx scripts/export-shift-stats.ts",
+    "test": "vitest run"
   },
   "dependencies": {
     "@directus/sdk": "^19.1.0",

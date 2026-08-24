@@ -11,17 +11,17 @@
     "group": "Activation",
     "hidden": false,
     "interface": "input",
-    "note": "Dieses Feld wird automatisch ausgefüllt, wenn das MG im automatischen Aktivierungsmail eine Antwortmöglichkeit anklickt",
+    "note": "Freitext-Antwort aus der Aktivierungs-Umfrage (Seite /profile/activation-survey)",
     "options": null,
     "readonly": true,
     "required": false,
     "searchable": true,
-    "sort": 6,
+    "sort": 7,
     "special": null,
     "translations": [
       {
         "language": "de-DE",
-        "translation": "Grund für Inaktivität"
+        "translation": "Antwort-Freitext"
       }
     ],
     "validation": null,

@@ -428,6 +428,19 @@ function personTypeLabel(val: string | null | undefined) {
       </div>
     </div>
 
+    <!-- ── Mitmach-Schicht Check-in ──────────────────────────────────────── -->
+    <div>
+      <h2>{{ t("Mitmach-Schicht") }}</h2>
+      <p>{{ t("t_activation_survey_intro") }}</p>
+      <UButton
+        to="/profile/activation-survey"
+        class="mt-4"
+        icon="i-heroicons-chat-bubble-left-right"
+      >
+        {{ t("Zum Check-in") }}
+      </UButton>
+    </div>
+
     <!-- ── Direktkredite ─────────────────────────────────────────────────── -->
     <div>
       <h2>{{ t("Direktkredite") }}</h2>
@@ -463,6 +476,7 @@ function personTypeLabel(val: string | null | undefined) {
 
 <i18n lang="yaml">
 de:
+  "t_activation_survey_intro": "Erzähl uns kurz, wie es dir mit deiner Mitmach-Schicht geht – das hilft uns, dich besser zu unterstützen."
   "Profile": "Profil"
   "Some fields are not filled in correctly": "Einige Felder sind nicht korrekt ausgefüllt."
   "i_pronouns": "Die Angabe der Pronomen ist freiwillig. Sie soll uns helfen bei Mila einen respektvollen Umgang miteinander zu pflegen, indem wir so mit- und übereinander sprechen, wie die angesprochenen Personen es wünschen."
@@ -508,6 +522,9 @@ de:
   "Mitgliedsart": "Mitgliedsart"
   "Genossenschafts-Anteile": "Genossenschafts-Anteile"
 en:
+  "Mitmach-Schicht": "Participation shift"
+  "t_activation_survey_intro": "Tell us briefly how you are getting on with your participation shift - it helps us support you better."
+  "Zum Check-in": "Go to the check-in"
   "Einstellungen": "Settings"
   "Änderungen speichern": "Save changes"
   "Es ist ein Fehler aufgetreten.": "An error occurred."

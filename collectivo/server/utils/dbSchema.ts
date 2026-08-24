@@ -104,6 +104,10 @@ export interface Membership {
   shifts_counter: number;
   activation_last_shop?: string | null;
   activation_frozen_since?: string | null;
+  activation_survey_choice?: string | null;
+  activation_survey_response?: string | null;
+  activation_survey_date?: string | null;
+  activation_do_not_survey?: boolean | null;
   shifts_logs: ShiftsLog[];
   shifts_logs_count?: number;
   shifts_skills: { shifts_skills_id: ShiftsSkill | null }[];
