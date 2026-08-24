@@ -3971,18 +3971,6 @@
     "_syncId": "fe698c04-e657-4ae6-96af-af458628055b"
   },
   {
-    "collection": "directus_translations",
-    "action": "read",
-    "permissions": {},
-    "validation": null,
-    "presets": null,
-    "fields": [
-      "*"
-    ],
-    "policy": "a6c7efe3-072a-4481-ba75-928bd8ce7279",
-    "_syncId": "ff8510f7-5bf3-4919-99e5-9682a72d77d3"
-  },
-  {
     "collection": "bedarfsmeldung_solitopf",
     "action": "share",
     "permissions": null,
