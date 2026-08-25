@@ -69,14 +69,25 @@ async function persist(
   value: ActivationSurveyChoice,
   body: string,
 ): Promise<boolean> {
-  const res = await useFetch("/api/profile/activation_survey", {
-    method: "POST",
-    body: JSON.stringify({ choice: value, text: body }),
-  });
-  if (res.status.value !== "success") return false;
+  // $fetch, not useFetch: useFetch caches by request key, so saving the same answer twice
+  // would silently skip the second request.
+  try {
+    await $fetch("/api/profile/activation_survey", {
+      method: "POST",
+      body: { choice: value, text: body },
+    });
+  } catch {
+    return false;
+  }
+
   await userData.value.reload();
-  savedChoice.value = value;
-  savedAt.value = new Date().toISOString();
+
+  // Re-read from the store rather than assuming: the server nulls the free text for the
+  // two link-out choices, and this keeps the "answered on" date the one actually stored.
+  const saved = userData.value.membership;
+  savedChoice.value = saved?.activation_survey_choice ?? value;
+  savedAt.value = saved?.activation_survey_date ?? new Date().toISOString();
+  text.value = saved?.activation_survey_response ?? "";
   return true;
 }
 
