@@ -11,7 +11,7 @@
     "group": null,
     "hidden": false,
     "interface": "group-detail",
-    "note": null,
+    "note": "Felder für die Mitglieder-Aktivierung: Anruf-Workflow und Umfrage",
     "options": null,
     "readonly": false,
     "required": false,
@@ -22,7 +22,16 @@
       "no-data",
       "group"
     ],
-    "translations": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Aktivierung"
+      },
+      {
+        "language": "en-US",
+        "translation": "Activation"
+      }
+    ],
     "validation": null,
     "validation_message": null,
     "width": "full"

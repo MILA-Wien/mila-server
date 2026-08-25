@@ -22,6 +22,10 @@
       {
         "language": "de-DE",
         "translation": "Eingefroren seit"
+      },
+      {
+        "language": "en-US",
+        "translation": "Frozen since"
       }
     ],
     "validation": null,

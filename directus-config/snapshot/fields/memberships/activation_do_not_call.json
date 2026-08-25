@@ -24,6 +24,10 @@
       {
         "language": "de-DE",
         "translation": "Bitte nicht anrufen"
+      },
+      {
+        "language": "en-US",
+        "translation": "Do not call"
       }
     ],
     "validation": null,

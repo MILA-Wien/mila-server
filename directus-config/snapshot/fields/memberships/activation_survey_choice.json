@@ -84,6 +84,10 @@
       {
         "language": "de-DE",
         "translation": "Antwort Aktivierungs-Umfrage"
+      },
+      {
+        "language": "en-US",
+        "translation": "Activation survey answer"
       }
     ],
     "validation": null,

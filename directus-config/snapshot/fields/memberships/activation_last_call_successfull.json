@@ -24,6 +24,10 @@
       {
         "language": "de-DE",
         "translation": "Letzter Anruf erfolgreich"
+      },
+      {
+        "language": "en-US",
+        "translation": "Last call successful"
       }
     ],
     "validation": null,

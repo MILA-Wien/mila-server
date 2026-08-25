@@ -22,6 +22,10 @@
       {
         "language": "de-DE",
         "translation": "Antwort-Freitext"
+      },
+      {
+        "language": "en-US",
+        "translation": "Answer free text"
       }
     ],
     "validation": null,

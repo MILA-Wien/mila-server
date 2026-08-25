@@ -22,6 +22,10 @@
       {
         "language": "de-DE",
         "translation": "Datum letzter Anruf"
+      },
+      {
+        "language": "en-US",
+        "translation": "Date of last call"
       }
     ],
     "validation": null,

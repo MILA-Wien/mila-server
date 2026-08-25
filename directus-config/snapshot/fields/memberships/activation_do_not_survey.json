@@ -24,6 +24,10 @@
       {
         "language": "de-DE",
         "translation": "Keine Umfrage senden"
+      },
+      {
+        "language": "en-US",
+        "translation": "Do not send survey"
       }
     ],
     "validation": null,
