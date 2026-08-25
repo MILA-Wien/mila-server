@@ -12,10 +12,13 @@ definePageMeta({
 });
 
 const { t, locale } = useI18n();
-setPageTitle(t("Wie geht's weiter mit deiner Mitmach-Schicht?"), {
-  backLink: "/profile",
-  backLinkLabel: t("Zurück zum Profil"),
-});
+setPageTitle(
+  t("Was würde dir aktuell am meisten helfen, wieder bei MILA mitzumachen?"),
+  {
+    backLink: "/profile",
+    backLinkLabel: t("Zurück zum Profil"),
+  },
+);
 
 const toast = useToast();
 const route = useRoute();
@@ -204,7 +207,7 @@ onMounted(async () => {
 
 <i18n lang="yaml">
 de:
-  t_intro: "Wähl die Zeile, die gerade am besten passt. Je nachdem geht's direkt weiter zu den Infos oder du schreibst uns kurz, was du brauchst — dauert unter einer Minute."
+  t_intro: "Wähl die Zeile, die gerade am besten passt. Je nachdem geht's direkt weiter zu den Infos oder du schreibst uns kurz, was du brauchst - dauert unter einer Minute."
   Wähl eine Option: "Wähl eine Option"
   Du hast am {date} geantwortet.: "Du hast am {date} geantwortet."
   choice_restart: "Ich möchte jetzt wieder loslegen"
@@ -222,9 +225,9 @@ de:
   placeholder_other: "Schreib uns kurz …"
 
 en:
-  Wie geht's weiter mit deiner Mitmach-Schicht?: "How do you want to continue with your participation shift?"
+  Was würde dir aktuell am meisten helfen, wieder bei MILA mitzumachen?: "What would help you the most right now to participate in MILA again?"
   Zurück zum Profil: "Back to the profile"
-  t_intro: "Pick the line that fits best right now. Depending on your answer you will either go straight to the information or briefly tell us what you need — it takes less than a minute."
+  t_intro: "Pick the line that fits best right now. Depending on your answer you will either go straight to the information or briefly tell us what you need - it takes less than a minute."
   Wähl eine Option: "Choose an option"
   Du hast am {date} geantwortet.: "You answered on {date}."
   choice_restart: "I would like to get going again"
