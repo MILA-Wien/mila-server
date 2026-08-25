@@ -44,7 +44,7 @@ Test users for frontend and directus (after seeding):
 
 Login credentials for directus admin without keycloak:
 
-- Username `directus-admin@example.com`
+- Username `admin@example.com`
 - Password `admin`
 
 ## Troubleshooting
