@@ -7,6 +7,7 @@ import {
   sendActivationFrozenMails,
   sendActivationSurveyMails,
 } from "../utils/activationMails";
+import { classifyFreezeTransition } from "../../shared/activationFreeze";
 
 export default defineEventHandler(async (event) => {
   verifyCollectivoApiToken(event);
@@ -149,12 +150,20 @@ async function decrement_shifts_counter(
       newCounter = membership.shifts_counter - 1;
     }
 
-    // Manage activation_frozen_since based on the resulting counter (frozen <= -28)
-    const isFrozen = newCounter <= -28;
-    if (isFrozen && !membership.activation_frozen_since) {
+    // Manage activation_frozen_since based on the resulting counter (frozen <= -28).
+    // "record" means the membership was already frozen before this run and merely had no
+    // date yet - it gets one, but it is not a freeze event and triggers no mail.
+    const transition = classifyFreezeTransition({
+      previousCounter: membership.shifts_counter,
+      newCounter,
+      hasFrozenSince: Boolean(membership.activation_frozen_since),
+    });
+    if (transition === "freeze") {
       await dbSetMembershipFrozenSince(membership.id, dayStr);
       justFrozen.push(membership.id);
-    } else if (!isFrozen && membership.activation_frozen_since) {
+    } else if (transition === "record") {
+      await dbSetMembershipFrozenSince(membership.id, dayStr);
+    } else if (transition === "clear") {
       await dbSetMembershipFrozenSince(membership.id, null);
     }
   }
