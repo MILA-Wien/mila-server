@@ -42,13 +42,22 @@ class CurrentUserStore {
   }
 
   async init(directus: RestClient<DbSchema>) {
-    const data = await useFetch("/api/profile");
-    if (data.error.value) {
-      this.error = data.error.value;
+    // $fetch, not useFetch: useFetch caches by URL key, so reload() would hand back the
+    // payload from the first call and never see changes saved since.
+    let data: unknown;
+    try {
+      data = await $fetch("/api/profile");
+    } catch (error) {
+      this.error = error;
       return;
     }
 
-    this.user = data.data as unknown as UserProfile;
+    // Reset derived state - init() runs again on every reload().
+    this.tags = [];
+    this.membership = null;
+    this.isMember = false;
+
+    this.user = data as UserProfile;
     const rolename = this.user.role ? this.user.role.name : "Unknown";
 
     // Check if admin

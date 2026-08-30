@@ -1,0 +1,39 @@
+{
+  "collection": "memberships",
+  "field": "Activation",
+  "type": "alias",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "Activation",
+    "group": null,
+    "hidden": false,
+    "interface": "group-detail",
+    "note": "Felder für die Mitglieder-Aktivierung: Anruf-Workflow und Umfrage",
+    "options": null,
+    "readonly": false,
+    "required": false,
+    "searchable": true,
+    "sort": 14,
+    "special": [
+      "alias",
+      "no-data",
+      "group"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Aktivierung"
+      },
+      {
+        "language": "en-US",
+        "translation": "Activation"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}
