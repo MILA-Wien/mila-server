@@ -428,6 +428,19 @@ function personTypeLabel(val: string | null | undefined) {
       </div>
     </div>
 
+    <!-- ── Umfrage Aktivierung zu Mitmach-Schichten ──────────────────────────────────────── -->
+    <div>
+      <h2>{{ t("Umfrage Aktivität") }}</h2>
+      <p>{{ t("t_activation_survey_intro") }}</p>
+      <UButton
+        to="/profile/activation-survey"
+        class="mt-4"
+        icon="i-heroicons-chat-bubble-left-right"
+      >
+        {{ t("Zu deiner Mitmach-Umfrage") }}
+      </UButton>
+    </div>
+
     <!-- ── Direktkredite ─────────────────────────────────────────────────── -->
     <div>
       <h2>{{ t("Direktkredite") }}</h2>
@@ -463,6 +476,7 @@ function personTypeLabel(val: string | null | undefined) {
 
 <i18n lang="yaml">
 de:
+  "t_activation_survey_intro": "Wenn du schon längere Zeit nicht mehr bei MILA mitgemacht hast, erzähl uns kurz, wie es dir geht - das hilft uns, dich besser zu unterstützen."
   "Profile": "Profil"
   "Some fields are not filled in correctly": "Einige Felder sind nicht korrekt ausgefüllt."
   "i_pronouns": "Die Angabe der Pronomen ist freiwillig. Sie soll uns helfen bei Mila einen respektvollen Umgang miteinander zu pflegen, indem wir so mit- und übereinander sprechen, wie die angesprochenen Personen es wünschen."
@@ -508,6 +522,9 @@ de:
   "Mitgliedsart": "Mitgliedsart"
   "Genossenschafts-Anteile": "Genossenschafts-Anteile"
 en:
+  "Umfrage Aktivität": "Participation survey"
+  "t_activation_survey_intro": "If you haven't participated in MILA for a while, please tell us briefly how you are doing - it helps us support you better."
+  "Zu deiner Mitmach-Umfrage": "Fill in your survey"
   "Einstellungen": "Settings"
   "Änderungen speichern": "Save changes"
   "Es ist ein Fehler aufgetreten.": "An error occurred."

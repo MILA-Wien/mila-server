@@ -443,7 +443,7 @@ export async function dbGetMembershipsForDecrement() {
         memberships_type: { _eq: "Aktiv" },
         shifts_user_type: { _in: ["jumper", "regular"] },
       },
-      fields: ["id", "shifts_counter"],
+      fields: ["id", "shifts_counter", "activation_frozen_since"],
       limit: -1,
     }),
   );
@@ -452,6 +452,83 @@ export async function dbGetMembershipsForDecrement() {
 export async function dbDecrementMembershipCounter(id: number, counter: number) {
   return await directus.request(
     updateItem("memberships", id, { shifts_counter: counter - 1 }),
+  );
+}
+
+// Memberships whose activation_frozen_since is set but that are no longer frozen.
+//
+// The nightly decrement only iterates memberships in the decrement set (Aktiv +
+// jumper/regular, not on holiday), so it cannot clear the date for anyone who has left
+// that set — most importantly a frozen member switched to `exempt`, which is exactly what
+// follows a "gesundheitliche Gruende" survey answer. Holiday is deliberately NOT a
+// condition here: those members are temporarily absent but still genuinely frozen.
+export async function dbGetMembershipsWithStaleFrozenSince() {
+  return await directus.request(
+    readItems("memberships", {
+      filter: {
+        _and: [
+          { activation_frozen_since: { _nnull: true } },
+          {
+            _or: [
+              { shifts_counter: { _gt: -28 } },
+              { shifts_user_type: { _in: ["exempt", "inactive"] } },
+              { memberships_type: { _neq: "Aktiv" } },
+            ],
+          },
+        ],
+      } as any,
+      fields: ["id"],
+      limit: -1,
+    }),
+  );
+}
+
+// Activation recipient shape for a known set of memberships.
+export async function dbGetActivationRecipientsByIds(ids: number[]) {
+  if (!ids.length) return [] as ActivationRecipient[];
+  return (await directus.request(
+    readItems("memberships", {
+      filter: {
+        id: { _in: ids },
+        memberships_status: { _eq: "approved" },
+      } as any,
+      fields: ["id", "activation_frozen_since", "memberships_user.id"] as any[],
+      limit: -1,
+    }),
+  )) as unknown as ActivationRecipient[];
+}
+
+// Memberships frozen on or before the cutoff (YYYY-MM-DD) that have not opted out of the
+// survey. Uses _lte rather than an exact date match so a night the mail job fails is
+// retried the next night instead of dropping that cohort permanently.
+export async function dbGetMembershipsDueForSurvey(cutoffStr: string) {
+  return (await directus.request(
+    readItems("memberships", {
+      filter: {
+        activation_frozen_since: { _nnull: true, _lte: cutoffStr },
+        // NOT `_neq: true`: that compiles to `col != true`, which is NULL - and therefore
+        // false - for rows where the flag was never set, silently suppressing them.
+        _or: [
+          { activation_do_not_survey: { _eq: false } },
+          { activation_do_not_survey: { _null: true } },
+        ],
+        memberships_status: { _eq: "approved" },
+      } as any,
+      fields: ["id", "activation_frozen_since", "memberships_user.id"] as any[],
+      limit: -1,
+    }),
+  )) as unknown as ActivationRecipient[];
+}
+
+export interface ActivationRecipient {
+  id: number;
+  activation_frozen_since: string;
+  memberships_user: { id: string } | null;
+}
+
+export async function dbSetMembershipFrozenSince(id: number, value: string | null) {
+  return await directus.request(
+    updateItem("memberships", id, { activation_frozen_since: value }),
   );
 }
 

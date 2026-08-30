@@ -1,4 +1,4 @@
-import { createItem, readItem, readItems } from "@directus/sdk";
+import { createItem, readItem, readItems, updateItem } from "@directus/sdk";
 
 const directus = useDirectusAdmin();
 
@@ -117,5 +117,11 @@ export async function dbCreateCheckinLog(
       date: dateStr,
       coshopper: coshopperId as any,
     }),
+  );
+}
+
+export async function dbUpdateMembershipLastShop(mshipId: number, dateStr: string) {
+  return await directus.request(
+    updateItem("memberships", mshipId, { activation_last_shop: dateStr }),
   );
 }

@@ -778,6 +778,7 @@ async function create_examples(totalMemberships: number) {
   await create_tags();
   await create_tiles();
   await create_emails();
+  await create_automations();
   await create_settings();
   const categoryMap = await create_fake_categories();
   await create_shifts(categoryMap);
@@ -1021,6 +1022,54 @@ async function create_emails() {
     console.info(error);
   }
 }
+// The two activation automations.
+//
+// Created inactive and with no template attached: the copy lives in messages_templates,
+// which the Activation Team authors in Directus, and which create_emails() above purges
+// on every seed - so linking one here would only leave a dangling FK.
+//
+// Rows are created only when missing (and mila_automations is never purged), so
+// automations set up by hand in a dev instance survive a re-seed. Without this the daily
+// cronjob would throw every night on a fresh checkout, because the send jobs treat a
+// missing automation row as a misconfiguration.
+async function create_automations() {
+  const directus = await useDirectusAdmin();
+  console.info("Creating activation automations");
+
+  const wanted = [
+    {
+      mila_key: "activation_frozen",
+      mila_label: "Aktivierung: Schichtzähler eingefroren",
+    },
+    {
+      mila_key: "activation_survey",
+      mila_label: "Aktivierung: Umfrage 28 Tage nach dem Einfrieren",
+    },
+  ];
+
+  try {
+    const existing = (await directus.request(
+      readItems("mila_automations", {
+        filter: { mila_key: { _in: wanted.map((a) => a.mila_key) } },
+        fields: ["mila_key"],
+      }),
+    )) as unknown as { mila_key: string }[];
+
+    const present = new Set(existing.map((a) => a.mila_key));
+    const missing = wanted.filter((a) => !present.has(a.mila_key));
+    if (!missing.length) return;
+
+    await directus.request(
+      createItems(
+        "mila_automations",
+        missing.map((a) => ({ ...a, mila_active: false })),
+      ),
+    );
+  } catch (error) {
+    console.info(error);
+  }
+}
+
 async function create_tiles() {
   const directus = await useDirectusAdmin();
   // Create some tiles

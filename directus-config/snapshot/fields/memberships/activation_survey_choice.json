@@ -1,0 +1,115 @@
+{
+  "collection": "memberships",
+  "field": "activation_survey_choice",
+  "type": "string",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": "labels",
+    "display_options": {
+      "choices": [
+        {
+          "color": "#2ECDA7",
+          "text": "Möchte wieder loslegen",
+          "value": "restart"
+        },
+        {
+          "color": "#3399FF",
+          "text": "Wünscht mehr Unterstützung",
+          "value": "more-support"
+        },
+        {
+          "color": "#3399FF",
+          "text": "Braucht andere Form",
+          "value": "different-form"
+        },
+        {
+          "color": "#FFA439",
+          "text": "Gesundheitliche Gründe",
+          "value": "health"
+        },
+        {
+          "color": "#A2B5CD",
+          "text": "Etwas anderes",
+          "value": "other"
+        }
+      ],
+      "format": false
+    },
+    "field": "activation_survey_choice",
+    "group": "Activation",
+    "hidden": false,
+    "interface": "select-dropdown",
+    "note": "Wird automatisch gesetzt, wenn das MG die Aktivierungs-Umfrage beantwortet",
+    "options": {
+      "choices": [
+        {
+          "color": "#2ECDA7",
+          "icon": "play_arrow",
+          "text": "Möchte wieder loslegen",
+          "value": "restart"
+        },
+        {
+          "color": "#3399FF",
+          "icon": "volunteer_activism",
+          "text": "Wünscht mehr Unterstützung",
+          "value": "more-support"
+        },
+        {
+          "color": "#3399FF",
+          "icon": "extension",
+          "text": "Braucht andere Form",
+          "value": "different-form"
+        },
+        {
+          "color": "#FFA439",
+          "icon": "health_and_safety",
+          "text": "Gesundheitliche Gründe",
+          "value": "health"
+        },
+        {
+          "color": "#A2B5CD",
+          "icon": "more_horiz",
+          "text": "Etwas anderes",
+          "value": "other"
+        }
+      ]
+    },
+    "readonly": true,
+    "required": false,
+    "searchable": true,
+    "sort": 6,
+    "special": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Antwort Aktivierungs-Umfrage"
+      },
+      {
+        "language": "en-US",
+        "translation": "Activation survey answer"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "activation_survey_choice",
+    "table": "memberships",
+    "data_type": "character varying",
+    "default_value": null,
+    "max_length": 255,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_indexed": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}
