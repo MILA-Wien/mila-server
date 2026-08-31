@@ -4,7 +4,7 @@ RUN mkdir -p /mnt/rootfs
 RUN dnf install --installroot /mnt/rootfs curl --releasever 9 --setopt install_weak_deps=false --nodocs -y; dnf --installroot /mnt/rootfs clean all
 
 # Install keycloak
-FROM quay.io/keycloak/keycloak:23.0
+FROM quay.io/keycloak/keycloak:26.7
 COPY --from=ubi-micro-build /mnt/rootfs /
 
 # Enable health and metrics support
@@ -15,7 +15,7 @@ ENV KC_METRICS_ENABLED=true
 ENV KC_DB=postgres
 
 # Run behind a TLS-terminating reverse proxy
-ENV KC_PROXY=edge
+ENV KC_PROXY_HEADERS=xforwarded
 ENV KC_HTTP_ENABLED=true
 
 WORKDIR /opt/keycloak
