@@ -72,8 +72,8 @@ services:
       KC_HOSTNAME: ${KEYCLOAK_DOMAIN}
       # dev settings
       KC_HOSTNAME_STRICT: "false"
-      KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
-      KC_PROXY: ${KEYCLOAK_PROXY:-none}
+      # unset by default (local dev has no reverse proxy in front); export KC_PROXY_HEADERS to override
+      KC_PROXY_HEADERS:
     command: ${KEYCLOAK_COMMAND:-start --optimized}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
