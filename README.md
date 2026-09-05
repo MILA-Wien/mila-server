@@ -130,7 +130,7 @@ For more details see the [Keycloak readme](keycloak/README.md).
 
 ## Local setup with Nextcloud
 
-- In `.env`, set `COMPOSE_PROFILES = "dev,keycloak,nextcloud"`
+- In `.env`, set `COMPOSE_PROFILES = "dev,keycloak,nextcloud"`. Nextcloud depends on the keycloak profile.
 - Open the Nextcloud GUI at [localhost:8081](http://localhost:8081) and create an admin user to finish the installation.
 
 For setup of the integration with keycloak see the [Nextcloud readme](nextcloud/README.md).
