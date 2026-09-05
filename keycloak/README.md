@@ -23,16 +23,12 @@ Steps to test new version:
    ```
 ## [Exporting and importing a realm](https://www.keycloak.org/server/importExport)
 
-Export collectivo realm with separate user file.
+Export collectivo realm with separate user file, copy file into repo folder `keycloak/export`, and own exported files.
 ```
 docker exec -it keycloak /opt/keycloak/bin/kc.sh export \
   --dir /opt/keycloak/data/export \
   --realm collectivo \
   --users different_files
-```
-
-Copy file into repo folder `keycloak/export` and own exported files.
-```
 sudo docker cp keycloak:/opt/keycloak/data/export keycloak
 sudo chown -R my_user:users keycloak/export
 ```

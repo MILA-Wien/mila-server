@@ -25,13 +25,19 @@
   docker exec -u www-data nextcloud php /var/www/html/occ config:app:set --value=1 --type=boolean user_oidc allow_insecure_http
   ```
   - Go to Admin settings > OpenID Connect > Register
-    - Identifier: anything descriptive, e.g. `Keycloak`
-    - Client ID: `nextcloud` (as defined in the [collectivo realm](../keycloak/import/collectivo-realm.json))
-    - Client Secret: empty
-    - Discovery endpoint:
-    ```
-    http://keycloak:8080/realms/collectivo/.well-known/openid-configuration
-    ```
+
+    | Field | Value |
+    | --- | --- |
+    | Identifier | anything descriptive, e.g. `Keycloak` |
+    | Client ID | `nextcloud` (as defined in the [collectivo realm](../keycloak/import/collectivo-realm.json)) |
+    | Client Secret | empty |
+    | Discovery endpoint | `http://keycloak:8080/realms/collectivo/.well-known/openid-configuration` |
+    | Custom end session endpoint | empty |
+    | Post logout URI | empty |
+    | Scope | `openid` |
+    | Extra claims | empty |
+
+    Emails and groups are currently not mapped.
   - You can now login with the test users as for directus
 
 ## [Redirect to keycloak login](https://github.com/nextcloud/user_oidc?tab=readme-ov-file#disable-other-login-methods)
