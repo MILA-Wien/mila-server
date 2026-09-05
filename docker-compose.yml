@@ -79,7 +79,7 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:9000/health/ready"]
       interval: 5s
       timeout: 5s
-      retries: 20
+      retries: 10
     volumes:
       - ./keycloak/themes/collectivo:/opt/keycloak/themes/collectivo
     restart: unless-stopped
@@ -119,6 +119,8 @@ services:
       - ./nextcloud_data:/var/www/html
     depends_on:
       nextcloud-db:
+        condition: service_healthy
+      keycloak:
         condition: service_healthy
 
   nextcloud-db:
