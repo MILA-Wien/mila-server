@@ -13,7 +13,15 @@ Steps to test new version:
    ```
    docker compose --profile keycloak build keycloak
    ```
-1. Restart the container and check version
+1. Start the container with `--wait` to wait for it be healthy (assuming you have `keycloak` in `COMPOSE_PROFILES` in your `.env`)
+   ```
+   docker compose up --wait
+   ```
+   or just keycloak and its DB
+   ```
+   docker compose up --wait keycloak
+   ```
+1. Check running version
    ```
    docker exec keycloak /opt/keycloak/bin/kc.sh --version
    ```
@@ -21,6 +29,7 @@ Steps to test new version:
    ```
    docker compose logs keycloak
    ```
+
 ## [Exporting and importing a realm](https://www.keycloak.org/server/importExport)
 
 Export collectivo realm with separate user file.
