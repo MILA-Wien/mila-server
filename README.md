@@ -7,9 +7,10 @@ Member plattform of [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/).
 - Install Docker, nodejs, and PNPM. To do so, it is advisable to install Docker and nvm from your operating system's package repository and then: `nvm install node` and `npm install -g pnpm`
 - Clone this repository
 
-- Create .env file:
+- Create .env files:
   ```sh
   cp .env.example .env
+  cp collectivo/.env.example collectivo/.env
   ```
 - Start the containers and wait for directus to be ready:
   ```sh
