@@ -61,8 +61,8 @@ services:
     ports:
       - 8080:8080
     environment:
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
       KC_DB_SCHEMA: public
@@ -82,6 +82,7 @@ services:
       retries: 10
     volumes:
       - ./keycloak/themes/collectivo:/opt/keycloak/themes/collectivo
+      - ./keycloak/import:/opt/keycloak/data/import:ro
     restart: unless-stopped
     networks:
       - default

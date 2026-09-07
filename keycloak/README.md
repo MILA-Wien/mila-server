@@ -32,6 +32,8 @@ Steps to test new version:
 
 ## [Exporting and importing a realm](https://www.keycloak.org/server/importExport)
 
+### Export
+
 Export collectivo realm with separate user file, copy file into repo folder `keycloak/export`, and own exported files.
 ```
 docker exec -it keycloak /opt/keycloak/bin/kc.sh export \
@@ -42,10 +44,19 @@ sudo docker cp keycloak:/opt/keycloak/data/export keycloak
 sudo chown -R my_user:users keycloak/export
 ```
 
-Move to files to `keycloak/import`, delete collectivo realm from keycloak admin console, and restart the container to check whether the realm imports correctly.
+### Import
 
 With
 ```
 KEYCLOAK_COMMAND = 'start-dev --import-realm --health-enabled true'
 ```
-in `.env`, the contents of `keycloak/import` are imported at startup.
+in `.env`, the contents of `keycloak/import` are imported at startup. Existing realms are not overwritten by default so they have to be removed if keycloak has been started before.
+
+Steps to import new realms:
+
+- Move the exported json files to `keycloak/import`.
+- If realm already exists in database, delete it in the keycloak admin console or remove the entire db volume with:
+  ```
+  docker volume rm mila-server_keycloak-db-data
+  ```
+- Start the container to check in the logs. Exports from older keycloak versions throw errors but are usually still imported successfully.
