@@ -14,7 +14,7 @@ Member plattform of [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/).
   ```
 - Start the containers and wait for directus to be ready:
   ```sh
-  docker compose up -d
+  docker compose up --wait
   ```
 - Give directus access to directories (runs as user `node`):
   ```sh
@@ -103,7 +103,7 @@ To reset the dev database before restoring (this will delete all data):
 
 ```sh
 docker compose down -v
-docker compose up -d directus-db-dev
+docker compose up --wait directus-db-dev
 # wait for healthy, then restore
 ```
 

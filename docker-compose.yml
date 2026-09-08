@@ -16,6 +16,11 @@ services:
       - ./directus/uploads:/directus/uploads
       - ./directus-config:/directus/directus-config
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8055/server/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     environment:
       PUBLIC_URL: ${DIRECTUS_URL}
       CORS_ENABLED: "true"
@@ -89,6 +94,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 20
+      start_period: 30s
     volumes:
       - ./keycloak/themes/collectivo:/opt/keycloak/themes/collectivo
       - ./keycloak/import:/opt/keycloak/data/import:ro
@@ -127,6 +133,11 @@ services:
       MYSQL_PASSWORD: ${NEXTCLOUD_DB_PASSWORD}
     volumes:
       - ./nextcloud_data:/var/www/html
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/status.php"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     depends_on:
       nextcloud-db:
         condition: service_healthy
