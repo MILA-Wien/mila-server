@@ -33,6 +33,15 @@ services:
       COLLECTIVO_API_URL: ${COLLECTIVO_API_URL}
       COLLECTIVO_API_TOKEN: ${COLLECTIVO_API_TOKEN}
       FLOWS_ENV_ALLOW_LIST: "PUBLIC_URL,COLLECTIVO_API_URL,COLLECTIVO_API_TOKEN"
+      AUTH_PROVIDERS: ${DIRECTUS_AUTH_PROVIDERS}
+      AUTH_KEYCLOAK_DRIVER: "openid"
+      AUTH_KEYCLOAK_CLIENT_ID: ${KEYCLOAK_DIRECTUS_CLIENT}
+      AUTH_KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_DIRECTUS_SECRET}
+      AUTH_KEYCLOAK_ISSUER_URL: "${KEYCLOAK_URL}/realms/collectivo/.well-known/openid-configuration"
+      AUTH_KEYCLOAK_IDENTIFIER_KEY: "email"
+      AUTH_KEYCLOAK_ALLOW_PUBLIC_REGISTRATION: "true"
+      AUTH_KEYCLOAK_REDIRECT_ALLOW_LIST: ${COLLECTIVO_URL}
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
 
   directus-db-dev:
     container_name: directus-db
@@ -77,9 +86,9 @@ services:
     command: ${KEYCLOAK_COMMAND:-start --optimized}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/health/ready"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 20
     volumes:
       - ./keycloak/themes/collectivo:/opt/keycloak/themes/collectivo
       - ./keycloak/import:/opt/keycloak/data/import:ro

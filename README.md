@@ -114,7 +114,6 @@ The dev setup runs without keycloak. To test keycloak integration:
 - In `.env`, set
   ```
   COMPOSE_PROFILES = "dev,keycloak"
-  KEYCLOAK_DB_HOST = "keycloak-db"
   DIRECTUS_AUTH_PROVIDERS = "keycloak"
   ```
 - In `collectivo/.env`, set
@@ -122,10 +121,19 @@ The dev setup runs without keycloak. To test keycloak integration:
   NUXT_PUBLIC_USE_KEYCLOAK = "true"
   ```
 - Add the following to your /etc/hosts file ([here is a guide](https://www.howtogeek.com/27350/beginner-geek-how-to-edit-your-hosts-file/)): `127.0.0.1 keycloak` (required so your browser uses the same hostname as Docker internally, which must match the issuer embedded in Keycloak's tokens)
-- Open the Keycloak admin UI at [keycloak:8080](http://keycloak:8080).
-- Login with
-  - Username `admin@example.com`
-  - Password `admin`
+- Open the Keycloak admin UI at [keycloak:8080/admin](http://keycloak:8080/admin).
+- Login  with `kc-master-admin@example.com` / `admin` (user in the "master" realm provisioned by `KC_BOOTSTRAP_ADMIN_USERNAME/PASSWORD`)
+- To use directus with keycloak
+  - Make sure collectivo is running (`pnpm dev`)
+  - Login with `kc-admin@example.com` / `admin` (user in the collectivo realm). Directus provisions a user but denies access to admin interface.
+  - Click "Change user" and log in to `admin@example.com` / `admin` (not through keycloak).
+  - From the user directory on the sidebar, find kc-admin@example.com and set role > admin.
+
+The collectivo realm contains users with kc prefix to avoid conflicts with the users already seeded in directus:
+
+- `kc-admin@example.com` / `admin`
+- `kc-editor@example.com` / `editor`
+- `kc-user@example.com` / `user`
 
 For more details see the [Keycloak readme](keycloak/README.md).
 
