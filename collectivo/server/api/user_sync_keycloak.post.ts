@@ -157,20 +157,20 @@ async function syncKeycloakUser(event: H3Event) {
       );
     }
 
-    if ("first_name" in body.payload) {
+    if ("username" in body.payload) {
       await keycloak.users.update(
         { id: kc_user_id },
         {
-          firstName: body.payload.first_name,
+          firstName: body.payload.username,
         },
       );
     }
 
-    if ("last_name" in body.payload) {
+    if ("username_last" in body.payload) {
       await keycloak.users.update(
         { id: kc_user_id },
         {
-          lastName: body.payload.last_name,
+          lastName: body.payload.username_last,
         },
       );
     }
