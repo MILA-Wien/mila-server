@@ -16,6 +16,11 @@ services:
       - ./directus/uploads:/directus/uploads
       - ./directus-config:/directus/directus-config
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8055/server/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     environment:
       PUBLIC_URL: ${DIRECTUS_URL}
       CORS_ENABLED: "true"
@@ -33,6 +38,15 @@ services:
       COLLECTIVO_API_URL: ${COLLECTIVO_API_URL}
       COLLECTIVO_API_TOKEN: ${COLLECTIVO_API_TOKEN}
       FLOWS_ENV_ALLOW_LIST: "PUBLIC_URL,COLLECTIVO_API_URL,COLLECTIVO_API_TOKEN"
+      AUTH_PROVIDERS: ${DIRECTUS_AUTH_PROVIDERS}
+      AUTH_KEYCLOAK_DRIVER: "openid"
+      AUTH_KEYCLOAK_CLIENT_ID: ${KEYCLOAK_DIRECTUS_CLIENT}
+      AUTH_KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_DIRECTUS_SECRET}
+      AUTH_KEYCLOAK_ISSUER_URL: "${KEYCLOAK_URL}/realms/collectivo/.well-known/openid-configuration"
+      AUTH_KEYCLOAK_IDENTIFIER_KEY: "email"
+      AUTH_KEYCLOAK_ALLOW_PUBLIC_REGISTRATION: "true"
+      AUTH_KEYCLOAK_REDIRECT_ALLOW_LIST: ${COLLECTIVO_URL}
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
 
   directus-db-dev:
     container_name: directus-db
@@ -61,8 +75,8 @@ services:
     ports:
       - 8080:8080
     environment:
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
       KC_DB_SCHEMA: public
@@ -77,11 +91,13 @@ services:
     command: ${KEYCLOAK_COMMAND:-start --optimized}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/health/ready"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 20
+      start_period: 30s
     volumes:
       - ./keycloak/themes/collectivo:/opt/keycloak/themes/collectivo
+      - ./keycloak/import:/opt/keycloak/data/import:ro
     restart: unless-stopped
     networks:
       - default
@@ -117,8 +133,15 @@ services:
       MYSQL_PASSWORD: ${NEXTCLOUD_DB_PASSWORD}
     volumes:
       - ./nextcloud_data:/var/www/html
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/status.php"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     depends_on:
       nextcloud-db:
+        condition: service_healthy
+      keycloak:
         condition: service_healthy
 
   nextcloud-db:
