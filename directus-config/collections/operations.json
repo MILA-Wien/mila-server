@@ -1404,7 +1404,7 @@
     "position_x": 19,
     "position_y": 1,
     "options": {
-      "code": "module.exports = async function(data) {    \n    const attrs = [\"email\", \"password\", \"first_name\", \"last_name\"];\n    if (data[\"$trigger\"][\"event\"]==\"users.delete\"){       \n        return {\n            \"true\": true \n        };\n    }\n    else if (!attrs.some(attr => attr in data[\"$trigger\"].payload)){        \n        throw new Error(\"No important change\");   \n    };\n    return {    \t\n        \"true\": true    \n    };\n}"
+      "code": "module.exports = async function(data) {    \n    const attrs = [\"email\", \"password\", \"username\", \"username_last\"];\n    if (data[\"$trigger\"][\"event\"]==\"users.delete\"){       \n        return {\n            \"true\": true \n        };\n    }\n    else if (!attrs.some(attr => attr in data[\"$trigger\"].payload)){        \n        throw new Error(\"No important change\");   \n    };\n    return {    \t\n        \"true\": true    \n    };\n}"
     },
     "resolve": "0c188aa8-7df4-4fea-bd78-23758e8a9013",
     "reject": "c5485f09-f7da-4912-a005-c505ea996de6",
