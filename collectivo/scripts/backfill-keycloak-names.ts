@@ -1,14 +1,14 @@
 /**
- * One-off backfill: overwrite firstName/lastName in Keycloak for every
- * Directus user (provider = "keycloak") from that user's current
- * username/username_last fields.
+ * One-off backfill: overwrite firstName/lastName/pronouns in Keycloak for
+ * every Directus user (provider = "keycloak") from that user's current
+ * username/username_last/pronouns fields.
  *
  * The regular sync (server/api/user_sync_keycloak.post.ts) only fires on
  * Directus items.update events where the payload actually contains
- * username/username_last - it never touches existing users unless they're
- * edited again. This script does a one-time bulk push for everyone already
- * in Directus, matching the same username -> firstName / username_last ->
- * lastName mapping.
+ * username/username_last/pronouns - it never touches existing users unless
+ * they're edited again. This script does a one-time bulk push for everyone
+ * already in Directus, matching the same username -> firstName /
+ * username_last -> lastName / pronouns -> attributes.pronouns mapping.
  *
  * Usage:
  *   BACKFILL_DIRECTUS_URL=https://studio.mila.wien \
@@ -20,7 +20,8 @@
  *   npx tsx scripts/backfill-keycloak-names.ts [--dry-run]
  *
  * Dry run against the local dev stack:
- *   BACKFILL_DIRECTUS_URL=http://localhost:8055 BACKFILL_DIRECTUS_TOKEN=my_directus_token \
+ *   cd collectivo
+ *   BACKFILL_DIRECTUS_URL=http://localhost:8055 BACKFILL_DIRECTUS_TOKEN=badToken123 \
  *   BACKFILL_KEYCLOAK_URL=http://keycloak:8080 BACKFILL_KEYCLOAK_REALM=collectivo \
  *   BACKFILL_KEYCLOAK_ADMIN_CLIENT=admin-cli BACKFILL_KEYCLOAK_ADMIN_SECRET=********** \
  *   npx tsx scripts/backfill-keycloak-names.ts --dry-run
@@ -74,7 +75,7 @@ async function main() {
   const users = await directus.request(
     readUsers({
       filter: { provider: { _eq: "keycloak" } } as any,
-      fields: ["id", "email", "username", "username_last"],
+      fields: ["id", "email", "username", "username_last", "pronouns"],
       limit: -1,
     }),
   );
@@ -106,13 +107,18 @@ async function main() {
     }
 
     console.error(
-      `${dryRun ? "[dry-run] " : ""}${user.email}: firstName=${JSON.stringify(user.username)}, lastName=${JSON.stringify(user.username_last)}`,
+      `${dryRun ? "[dry-run] " : ""}${user.email}: firstName=${JSON.stringify(user.username)}, lastName=${JSON.stringify(user.username_last)}, pronouns=${JSON.stringify(user.pronouns)}`,
     );
 
     if (!dryRun) {
       await keycloak.users.update(
         { id: kcUserId },
-        { firstName: user.username ?? "", lastName: user.username_last ?? "" },
+        {
+          email: user.email,
+          firstName: user.username ?? "",
+          lastName: user.username_last ?? "",
+          attributes: { pronouns: [user.pronouns ?? ""] },
+        },
       );
     }
     updated++;

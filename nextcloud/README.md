@@ -36,8 +36,8 @@
     | Post logout URI | empty |
     | Scope | `openid` |
     | Extra claims | empty |
+    | Extra attributes mapping | Token Claim Name defined in [keycloak mapper](keycloak/README.md), e.g. `pronouns` |
 
-    Emails and groups are currently not mapped.
   - You can now login with the test users as for directus
 
 ## [Redirect to keycloak login](https://github.com/nextcloud/user_oidc?tab=readme-ov-file#disable-other-login-methods)

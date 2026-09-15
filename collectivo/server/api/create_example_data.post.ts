@@ -469,6 +469,15 @@ const BUDDY_STATUS_WEIGHTS: { status: string; weight: number }[] = [
   { status: "need_buddy", weight: 2.1 },
 ];
 
+// No production stat available for this - a reasonable assumption, not a
+// calibrated figure.
+const PRONOUNS_WEIGHTS: { pronouns: string; weight: number }[] = [
+  { pronouns: "", weight: 100 },
+  { pronouns: "she/her", weight: 45 },
+  { pronouns: "he/him", weight: 45 },
+  { pronouns: "they/them", weight: 10 },
+];
+
 // shifts_categories.categories
 const CATEGORY_DEFINITIONS: {
   oldId: number;
@@ -877,6 +886,9 @@ async function create_fake_users(totalMemberships: number): Promise<FakeUser[]> 
   const buddyStatuses = identities.map(() =>
     pickWeighted(BUDDY_STATUS_WEIGHTS.map((b) => ({ weight: b.weight, value: b.status }))),
   );
+  const pronouns = identities.map(() =>
+    pickWeighted(PRONOUNS_WEIGHTS.map((p) => ({ weight: p.weight, value: p.pronouns }))),
+  );
 
   // GET-based lookup - keep the _in filter small enough to stay under
   // request header/URL size limits (500 emails in one filter causes a 431).
@@ -905,6 +917,7 @@ async function create_fake_users(totalMemberships: number): Promise<FakeUser[]> 
       role: userRole,
       status: "active",
       buddy_status: buddyStatuses[i],
+      pronouns: pronouns[i],
       memberships_street: "Example Street",
       memberships_city: "Example City",
       memberships_streetnumber: "123",
