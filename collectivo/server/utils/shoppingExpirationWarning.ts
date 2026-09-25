@@ -1,13 +1,14 @@
 /*
  * This function handles sending warnings before shopping privileges expire.
- * It is called by a directus cron job.
- * It sends warnings to users with a shift counter matching the given parameter.
+ * It is called by the daily cronjob with the memberships whose shift counter just
+ * reached the warning point (-14).
  * Requires an active automation with the name "shopping_expiration_warning".
  */
 
-import { dbGetActiveUserIdsByShiftcounter } from "./dbContent";
+import { dbGetShoppingWarningRecipients } from "./dbContent";
+import { FREEZE_THRESHOLD } from "../../shared/activationFreeze";
 
-export async function sendShoppingExpirationWarnings(shift_counter: number) {
+export async function sendShoppingExpirationWarnings(membershipIds: number[]) {
   const automation = await dbGetAutomation("shopping_expiration_warning");
 
   if (!automation) {
@@ -18,27 +19,36 @@ export async function sendShoppingExpirationWarnings(shift_counter: number) {
     throw new Error("Automation is not active");
   }
 
-  await sendWarningsInner(shift_counter, automation);
+  await sendWarningsInner(membershipIds, automation);
 }
 
-async function sendWarningsInner(shift_counter: number, automation: any) {
+async function sendWarningsInner(membershipIds: number[], automation: any) {
   const payloads: any[] = [];
 
-  for (const user_id of await dbGetActiveUserIdsByShiftcounter(shift_counter)) {
+  for (const { userId, shiftsCounter } of await dbGetShoppingWarningRecipients(
+    membershipIds,
+  )) {
+    // Days left counted from the current counter, so a catch-up run over several days
+    // (or a holiday since the warning point) still states the right number.
+    const remaining_days = shiftsCounter - FREEZE_THRESHOLD;
+    if (remaining_days <= 0) {
+      continue; // already frozen; the activation_frozen mail covers that
+    }
+
     payloads.push([
       {
         messages_recipients: {
           create: [
             {
               directus_users_id: {
-                id: user_id,
+                id: userId,
               },
               messages_campaigns_id: "+",
             },
           ],
         },
         messages_context: {
-          remaining_days: shift_counter + 28,
+          remaining_days,
         },
         messages_template: automation.mila_template,
       },
