@@ -29,7 +29,13 @@
  * --dry-run prints what would be changed without calling the Keycloak admin API.
  */
 
-import { createDirectus, readUsers, rest, staticToken } from "@directus/sdk";
+import {
+  createDirectus,
+  readUsers,
+  rest,
+  staticToken,
+  updateUser,
+} from "@directus/sdk";
 import KcAdminClient from "@keycloak/keycloak-admin-client";
 import type { DbSchema } from "../server/utils/dbSchema";
 
@@ -75,7 +81,14 @@ async function main() {
   const users = await directus.request(
     readUsers({
       filter: { provider: { _eq: "keycloak" } } as any,
-      fields: ["id", "email", "username", "username_last", "pronouns"],
+      fields: [
+        "id",
+        "email",
+        "external_identifier",
+        "username",
+        "username_last",
+        "pronouns",
+      ],
       limit: -1,
     }),
   );
@@ -87,30 +100,64 @@ async function main() {
   let updated = 0;
   let skippedNoEmail = 0;
   let skippedNoKcUser = 0;
+  let emailExtidMismatch = 0;
 
   for (const user of users as any[]) {
+
+    // skip if no email in directus
     if (!user.email) {
       skippedNoEmail++;
       continue;
     }
 
-    const kcUsers = await keycloak.users.find({
-      first: 0,
-      max: 1,
-      email: user.email,
-    });
+    // count users whose directus email has drifted from their external id
+    if (user.external_identifier !== user.email) {
+      emailExtidMismatch++;
+    }
+
+    // try to match keycloak user by external id (skip if unset - an empty
+    // filter would match an arbitrary user instead of none)
+    let kcUsers = user.external_identifier
+      ? await keycloak.users.find({
+          first: 0,
+          max: 1,
+          email: user.external_identifier,
+          exact: true,
+        })
+      : [];
+
+    // if none found, try to match by email
+    if (!kcUsers || kcUsers.length === 0) {
+      kcUsers = await keycloak.users.find({
+        first: 0,
+        max: 1,
+        email: user.email,
+        exact: true,
+      });
+    }
+
+    // get keycloak user id
     const kcUserId = kcUsers?.[0]?.id;
+
+    // skip if no kc user found
     if (!kcUserId) {
-      console.error(`No Keycloak user found for ${user.email}, skipping`);
+      console.error(
+        `No Keycloak user found for ${user.external_identifier} (${user.email}), skipping`,
+      );
       skippedNoKcUser++;
       continue;
     }
 
     console.error(
-      `${dryRun ? "[dry-run] " : ""}${user.email}: firstName=${JSON.stringify(user.username)}, lastName=${JSON.stringify(user.username_last)}, pronouns=${JSON.stringify(user.pronouns)}`,
+      `${dryRun ? "[dry-run] " : ""}${user.email}: firstName=${JSON.stringify(user.username)}, lastName=${JSON.stringify(user.username_last)}, pronouns=${JSON.stringify(user.pronouns)}` +
+        (user.external_identifier !== user.email
+          ? `, external_identifier: ${JSON.stringify(user.external_identifier)} -> ${JSON.stringify(user.email)}`
+          : ""),
     );
 
     if (!dryRun) {
+
+      // write data into keycloak
       await keycloak.users.update(
         { id: kcUserId },
         {
@@ -120,12 +167,23 @@ async function main() {
           attributes: { pronouns: [user.pronouns ?? ""] },
         },
       );
+
+      // Keep external_identifier (Directus's SSO-matching key) in sync with
+      // the email we just wrote to Keycloak, resolving any prior drift.
+      if (user.external_identifier !== user.email) {
+        await directus.request(
+          updateUser(user.id, { external_identifier: user.email }),
+        );
+        console.error(
+          `Updated external_identifier from ${user.external_identifier} to ${user.email}.`,
+        );
+      }
     }
     updated++;
   }
 
   console.error(
-    `Done. updated=${updated} skipped_no_email=${skippedNoEmail} skipped_no_keycloak_user=${skippedNoKcUser}`,
+    `Done. updated=${updated} skipped_no_email=${skippedNoEmail} skipped_no_keycloak_user=${skippedNoKcUser} email_extid_mismatch=${emailExtidMismatch}`,
   );
 }
 
