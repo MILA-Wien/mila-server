@@ -20,7 +20,7 @@ services:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8055/server/health"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 20
     environment:
       PUBLIC_URL: ${DIRECTUS_URL}
       CORS_ENABLED: "true"

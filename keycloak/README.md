@@ -60,3 +60,27 @@ Steps to import new realms:
   docker volume rm mila-server_keycloak-db-data
   ```
 - Start the container to check in the logs. Exports from older keycloak versions throw errors but are usually still imported successfully.
+
+## [Creating a new user attribute](https://www.keycloak.org/docs/latest/server_admin/index.html#managing-attributes)
+
+Add the attribute to the user profile
+
+- Manage realms > collectivo
+- Realm settings > User profile > Create Attribute
+- Enter attribute name and display name > Create
+
+Add a mapper to the client scope so keycloak includes the new attribute in the token (eg pronouns attribute to nextcloud client)
+
+- Clients > nextcloud > Client scopes > nextcloud-dedicated
+- Add mapper > by configuration > user attribute
+
+   | Field | Value | Explanation |
+   | --- | --- | --- |
+   | Name | a descriptive name | Identifies the mapper in the client scope config |
+   | User attribute | `pronouns` | The Keycloak user attribute to read the value from |
+   | Token claim name | `pronouns` | The claim name the value is exposed as in the issued token -> add in the client |
+
+A client's dedicated scope is included in every token issued to that client, regardless of what's in the scope parameter of the authorization request.
+This means it does not need to be explicitly added to the scopes on the client side.
+
+Empty fields are omitted from the token, meaning values are not deleted on the client side. They have to be manually deleted in the client, eg nextcloud.
