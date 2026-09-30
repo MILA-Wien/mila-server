@@ -204,29 +204,34 @@ export async function dbGetMembershipUser(id: string): Promise<{ memberships_use
   ) as unknown as { memberships_user: string };
 }
 
-export async function dbGetActiveUserIdsByShiftcounter(counter: number) {
+// Users to warn about expiring shopping privileges, out of the given memberships.
+// Returns each membership's current counter so the mail can state the days left.
+export async function dbGetShoppingWarningRecipients(membershipIds: number[]) {
+  if (!membershipIds.length) return [];
+
   const memberships = (await directus.request(
     readItems("memberships", {
       filter: {
-        shifts_counter: { _eq: counter },
+        id: { _in: membershipIds },
         memberships_status: { _eq: "approved" },
         memberships_type: { _eq: "Aktiv" },
         shifts_user_type: { _nin: ["exempt", "inactive"] },
       },
-      fields: ["memberships_user.id"] as any[],
+      fields: ["shifts_counter", "memberships_user.id"] as any[],
+      limit: -1,
     }),
-  )) as unknown as { memberships_user: { id: string } }[];
+  )) as unknown as { shifts_counter: number; memberships_user: { id: string } | null }[];
 
-  const directus_users_ids: string[] = [];
+  const recipients: { userId: string; shiftsCounter: number }[] = [];
 
   for (const m of memberships) {
     const user = m.memberships_user;
     if (user?.id) {
-      directus_users_ids.push(user.id);
+      recipients.push({ userId: user.id, shiftsCounter: m.shifts_counter });
     }
   }
 
-  return directus_users_ids;
+  return recipients;
 }
 
 // ============================================================================

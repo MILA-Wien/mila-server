@@ -28,3 +28,25 @@ export function classifyFreezeTransition({
   if (!isFrozen && hasFrozenSince) return "clear";
   return "none";
 }
+
+/** Shift counter at which members are warned that shopping expires in 14 days. */
+export const SHOPPING_WARNING_COUNTER = FREEZE_THRESHOLD + 14;
+
+/**
+ * Whether the nightly decrement just moved a membership onto the warning counter.
+ *
+ * Deliberately a transition rather than "counter equals -14": a membership whose counter
+ * does not move (on holiday, or the point system switched off) would otherwise match on
+ * every run and be sent the same warning night after night.
+ */
+export function reachesShoppingWarning({
+  previousCounter,
+  newCounter,
+}: {
+  previousCounter: number;
+  newCounter: number;
+}): boolean {
+  return (
+    previousCounter > SHOPPING_WARNING_COUNTER && newCounter <= SHOPPING_WARNING_COUNTER
+  );
+}
