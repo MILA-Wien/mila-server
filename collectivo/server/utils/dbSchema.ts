@@ -113,7 +113,10 @@ export interface Membership {
   shifts_skills: { shifts_skills_id: ShiftsSkill | null }[];
   shifts_categories_allowed: { shifts_categories_id: number }[];
   memberships_card_id: string;
-  coshoppers: { memberships_coshoppers_id: MembershipsCoshopper }[];
+  memberships_card_id_lotzapp?: string | null;
+  memberships_card_check_status?: string | null;
+  memberships_card_checked_at?: string | null;
+  coshoppers:{ memberships_coshoppers_id: MembershipsCoshopper }[];
   kids: { memberships_coshoppers_id: MembershipsCoshopper }[];
 }
 

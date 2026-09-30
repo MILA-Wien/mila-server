@@ -664,6 +664,51 @@
     "_syncId": "d9073828-de03-4870-9685-28dffe307e64"
   },
   {
+    "bookmark": "RFID-Abweichungen",
+    "role": null,
+    "collection": "memberships",
+    "search": null,
+    "layout": "tabular",
+    "layout_query": {
+      "tabular": {
+        "page": 1,
+        "limit": 50,
+        "sort": [
+          "memberships_card_check_status"
+        ],
+        "fields": [
+          "id",
+          "memberships_user",
+          "memberships_status",
+          "memberships_card_id",
+          "memberships_card_id_lotzapp",
+          "memberships_card_check_status",
+          "memberships_card_checked_at"
+        ]
+      }
+    },
+    "layout_options": null,
+    "refresh_interval": null,
+    "filter": {
+      "_and": [
+        {
+          "memberships_card_check_status": {
+            "_in": [
+              "mismatch",
+              "missing_lotzapp",
+              "missing_studio",
+              "lotzapp_id_unknown",
+              "no_lotzapp_id"
+            ]
+          }
+        }
+      ]
+    },
+    "icon": "credit_card",
+    "color": "#E35169",
+    "_syncId": "e7b1b4b8-7c8e-41c3-88f6-6ff493caa5ec"
+  },
+  {
     "bookmark": "Register",
     "role": null,
     "collection": "memberships",

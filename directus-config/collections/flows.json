@@ -247,6 +247,26 @@
     "_syncId": "6179bf54-3ad8-4def-834d-b0cccf33c0dc"
   },
   {
+    "name": "RFID mit Lotzapp prüfen",
+    "icon": "credit_card",
+    "color": "#8000FF",
+    "description": null,
+    "status": "active",
+    "trigger": "manual",
+    "accountability": "all",
+    "options": {
+      "collections": [
+        "memberships"
+      ],
+      "location": "both",
+      "requireSelection": false,
+      "requireConfirmation": true,
+      "confirmationDescription": "RFID-Nummern mit Lotzapp vergleichen? Ohne Auswahl werden alle aktuellen Mitgliedschaften geprüft. Es wird nichts geändert, nur das Ergebnis im Bereich „Karten“ eingetragen."
+    },
+    "operation": "d9511bad-f90e-49c2-97a6-95aaf8090995",
+    "_syncId": "85c0eb0a-163f-47e5-9fde-d5e00d494851"
+  },
+  {
     "name": "Kampagne senden",
     "icon": "send",
     "color": "#FFA439",
