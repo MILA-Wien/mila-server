@@ -61,7 +61,15 @@ async function syncKeycloakUser(event: H3Event) {
     if (!isCreate) {
       user = await directus.request(
         readUser(key, {
-          fields: ["id", "email", "provider", "external_identifier"],
+          fields: [
+            "id",
+            "email",
+            "provider",
+            "external_identifier",
+            "username",
+            "username_last",
+            "pronouns",
+          ],
         }),
       ) as any;
       if (!user || !user.email) {
@@ -146,33 +154,41 @@ async function syncKeycloakUser(event: H3Event) {
     }
 
     // Update keycloak user
-    if ("email" in body.payload && body.payload.email !== user.email) {
-      await keycloak.users.update(
-        { id: kc_user_id },
-        {
-          username: body.payload.email,
-          email: body.payload.email,
-          emailVerified: true,
+    // With the declarative user profile enabled, an update that includes
+    // `attributes` rebuilds the whole managed-attribute set from that one
+    // call - fields left out (e.g. firstName/lastName) get wiped, not left
+    // alone. So whenever any of these fields changes, all of them are sent
+    // together, falling back to the current Directus values for the rest.
+    if (
+      ["email", "username", "username_last", "pronouns"].some(
+        (attr) => attr in body.payload,
+      )
+    ) {
+      const kc_update: Record<string, any> = {
+        username: email,
+        email,
+        firstName:
+          "username" in body.payload
+            ? (body.payload.username ?? "")
+            : user.username,
+        lastName:
+          "username_last" in body.payload
+            ? (body.payload.username_last ?? "")
+            : user.username_last,
+        attributes: {
+          pronouns: [
+            "pronouns" in body.payload
+              ? (body.payload.pronouns ?? "")
+              : (user.pronouns ?? ""),
+          ],
         },
-      );
-    }
+      };
 
-    if ("first_name" in body.payload) {
-      await keycloak.users.update(
-        { id: kc_user_id },
-        {
-          firstName: body.payload.first_name,
-        },
-      );
-    }
+      if ("email" in body.payload && body.payload.email !== user.email) {
+        kc_update.emailVerified = true;
+      }
 
-    if ("last_name" in body.payload) {
-      await keycloak.users.update(
-        { id: kc_user_id },
-        {
-          lastName: body.payload.last_name,
-        },
-      );
+      await keycloak.users.update({ id: kc_user_id }, kc_update);
     }
 
     // Update keycloak user password

@@ -1276,6 +1276,28 @@
     "_syncId": "d8876f06-ea68-4be5-aee8-d4ef6b57404f"
   },
   {
+    "name": "An Collectivo senden",
+    "key": "request_rfid_check",
+    "type": "request",
+    "position_x": 19,
+    "position_y": 1,
+    "options": {
+      "method": "POST",
+      "url": "{{$env.COLLECTIVO_API_URL}}/api/lotzapp/rfid_check",
+      "headers": [
+        {
+          "header": "Authorization",
+          "value": "Bearer {{$env.COLLECTIVO_API_TOKEN}}"
+        }
+      ],
+      "body": "{{$trigger.body}}"
+    },
+    "resolve": null,
+    "reject": null,
+    "flow": "85c0eb0a-163f-47e5-9fde-d5e00d494851",
+    "_syncId": "d9511bad-f90e-49c2-97a6-95aaf8090995"
+  },
+  {
     "name": "Skript ausführen",
     "key": "exec_1lss7",
     "type": "exec",
@@ -1404,7 +1426,7 @@
     "position_x": 19,
     "position_y": 1,
     "options": {
-      "code": "module.exports = async function(data) {    \n    const attrs = [\"email\", \"password\", \"first_name\", \"last_name\"];\n    if (data[\"$trigger\"][\"event\"]==\"users.delete\"){       \n        return {\n            \"true\": true \n        };\n    }\n    else if (!attrs.some(attr => attr in data[\"$trigger\"].payload)){        \n        throw new Error(\"No important change\");   \n    };\n    return {    \t\n        \"true\": true    \n    };\n}"
+      "code": "module.exports = async function(data) {    \n    const attrs = [\"email\", \"password\", \"username\", \"username_last\", \"pronouns\"];\n    if (data[\"$trigger\"][\"event\"]==\"users.delete\"){       \n        return {\n            \"true\": true \n        };\n    }\n    else if (!attrs.some(attr => attr in data[\"$trigger\"].payload)){        \n        throw new Error(\"No important change\");   \n    };\n    return {    \t\n        \"true\": true    \n    };\n}"
     },
     "resolve": "0c188aa8-7df4-4fea-bd78-23758e8a9013",
     "reject": "c5485f09-f7da-4912-a005-c505ea996de6",

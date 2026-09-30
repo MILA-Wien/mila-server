@@ -7,7 +7,10 @@ import {
   sendActivationFrozenMails,
   sendActivationSurveyMails,
 } from "../utils/activationMails";
-import { classifyFreezeTransition } from "../../shared/activationFreeze";
+import {
+  classifyFreezeTransition,
+  reachesShoppingWarning,
+} from "../../shared/activationFreeze";
 
 export default defineEventHandler(async (event) => {
   verifyCollectivoApiToken(event);
@@ -43,6 +46,8 @@ async function runCronjobs(force_yesterday: boolean) {
   // than re-queried by date so the freeze mail only ever reaches genuine transitions -
   // a backfilled activation_frozen_since must never trigger a "you just froze" notice.
   const frozenByDay = new Map<string, number[]>();
+  // Likewise for memberships that reached the shopping expiration warning point.
+  const warnedByDay = new Map<string, number[]>();
 
   // Perform cronjobs
   for (const day of days_since_last_cronjob) {
@@ -60,9 +65,13 @@ async function runCronjobs(force_yesterday: boolean) {
 
     // Job 3
     if (settings.shift_point_system) {
-      const justFrozen = await decrement_shifts_counter(holidays, day);
+      const dayStr = day.toISOString().split("T")[0]!;
+      const { justFrozen, justWarned } = await decrement_shifts_counter(holidays, day);
       if (justFrozen.length) {
-        frozenByDay.set(day.toISOString().split("T")[0]!, justFrozen);
+        frozenByDay.set(dayStr, justFrozen);
+      }
+      if (justWarned.length) {
+        warnedByDay.set(dayStr, justWarned);
       }
     }
   }
@@ -75,15 +84,15 @@ async function runCronjobs(force_yesterday: boolean) {
     console.error("Error in clear_stale_frozen_since", e);
   }
 
-  var warning_shift_counter = -14; // send out shopping expiration warnings when shift counter is at -14
-  for (const day of days_since_last_cronjob) {
-    // Job 4
+  // Job 4: one shopping expiration warning per membership that reached -14, driven by
+  // the transitions job 3 observed. Matching on the counter value instead would re-mail
+  // everyone whose counter did not move, e.g. members on holiday.
+  for (const membershipIds of warnedByDay.values()) {
     try {
-      await sendShoppingExpirationWarnings(warning_shift_counter);
+      await sendShoppingExpirationWarnings(membershipIds);
     } catch (e) {
       console.error("Error in sendShoppingExpirationWarnings", e);
     }
-    --warning_shift_counter;
   }
 
   // Job 5: one mail per membership that froze, on the day it froze. Driven by the
@@ -133,7 +142,7 @@ async function clear_stale_frozen_since() {
 async function decrement_shifts_counter(
   mshipIdsOnHoliday: number[],
   day: Date,
-): Promise<number[]> {
+): Promise<{ justFrozen: number[]; justWarned: number[] }> {
   const memberships = await dbGetMembershipsForDecrement();
   const membershipsToUpdate = memberships.filter(
     (membership) => !mshipIdsOnHoliday.includes(membership.id),
@@ -141,6 +150,7 @@ async function decrement_shifts_counter(
 
   const dayStr = day.toISOString().split("T")[0]!;
   const justFrozen: number[] = [];
+  const justWarned: number[] = [];
 
   for (const membership of membershipsToUpdate) {
     // Decrement (existing behaviour: floor once below -28, i.e. settles at -29)
@@ -148,6 +158,10 @@ async function decrement_shifts_counter(
     if (membership.shifts_counter >= -28) {
       await dbDecrementMembershipCounter(membership.id, membership.shifts_counter);
       newCounter = membership.shifts_counter - 1;
+    }
+
+    if (reachesShoppingWarning({ previousCounter: membership.shifts_counter, newCounter })) {
+      justWarned.push(membership.id);
     }
 
     // Manage activation_frozen_since based on the resulting counter (frozen <= -28).
@@ -168,7 +182,7 @@ async function decrement_shifts_counter(
     }
   }
 
-  return justFrozen;
+  return { justFrozen, justWarned };
 }
 
 // Create shift logs for a specific day

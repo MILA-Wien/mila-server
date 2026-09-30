@@ -18,6 +18,7 @@
     "e2e:dev": "npx cypress open",
     "e2e:test": "npx cypress run",
     "export-shift-stats": "tsx scripts/export-shift-stats.ts",
+    "backfill-keycloak-names": "tsx scripts/backfill-keycloak-names.ts",
     "test": "vitest run"
   },
   "dependencies": {
