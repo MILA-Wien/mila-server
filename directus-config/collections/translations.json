@@ -1,9 +1,33 @@
 [
   {
     "language": "en-US",
+    "key": "rfid-check-missing-studio",
+    "value": "Missing in Studio",
+    "_syncId": "1222e926-9d5d-470c-bebc-8def692abd75"
+  },
+  {
+    "language": "en-US",
     "key": "sepa",
     "value": "SEPA Debit",
     "_syncId": "19289c09-05f0-407f-8c95-f0d39eb0a3c4"
+  },
+  {
+    "language": "en-US",
+    "key": "rfid-check-no-card",
+    "value": "No card",
+    "_syncId": "1deafcdc-cf22-4d39-94eb-9c3fd8a603bd"
+  },
+  {
+    "language": "en-US",
+    "key": "rfid-check-missing-lotzapp",
+    "value": "Missing in LotzApp",
+    "_syncId": "2337fa41-0906-41cd-9266-d3886f68f5bf"
+  },
+  {
+    "language": "en-US",
+    "key": "rfid-check-note-lotzapp-cards",
+    "value": "All cards LotzApp has for this address. Set by the flow “RFID mit Lotzapp prüfen”.",
+    "_syncId": "23def1e1-f44b-4de0-9734-69f0b7191c74"
   },
   {
     "language": "en-US",
@@ -31,9 +55,39 @@
   },
   {
     "language": "de-DE",
+    "key": "rfid-check-note-status",
+    "value": "Ergebnis des Abgleichs der Karten-Nummer mit Lotzapp. Wird von der Aktion „RFID mit Lotzapp prüfen“ gesetzt.",
+    "_syncId": "2e6123fe-0da3-4a18-9d71-cf9adec796fd"
+  },
+  {
+    "language": "de-DE",
     "key": "denied",
     "value": "Abgelehnt",
     "_syncId": "2fb63205-c84b-4fce-a03a-ccab52a75ba9"
+  },
+  {
+    "language": "de-DE",
+    "key": "rfid-check-mismatch",
+    "value": "Abweichung",
+    "_syncId": "3c1b3928-4212-4f3b-aef0-44b35e54d256"
+  },
+  {
+    "language": "de-DE",
+    "key": "rfid-check-missing-studio",
+    "value": "Fehlt im Studio",
+    "_syncId": "3c4906ea-f7f9-4268-97bb-25ec39ff5a65"
+  },
+  {
+    "language": "de-DE",
+    "key": "rfid-check-note-checked-at",
+    "value": "Zeitpunkt des letzten Abgleichs mit Lotzapp.",
+    "_syncId": "3e1f6880-bdbc-40c1-9a03-a70249e3862f"
+  },
+  {
+    "language": "de-DE",
+    "key": "rfid-check-no-card",
+    "value": "Keine Karte",
+    "_syncId": "3fedc1da-46a0-499a-8d08-e2158c2fd37f"
   },
   {
     "language": "de-DE",
@@ -58,6 +112,18 @@
     "key": "in-cancellation",
     "value": "Im Ausstieg",
     "_syncId": "477a95d0-42ae-4915-96f9-ab6ee72c364f"
+  },
+  {
+    "language": "de-DE",
+    "key": "rfid-check-no-lotzapp-id",
+    "value": "Keine Lotzapp-ID",
+    "_syncId": "4c19f031-6203-4180-8a13-65aaaff47bd3"
+  },
+  {
+    "language": "de-DE",
+    "key": "rfid-check-missing-lotzapp",
+    "value": "Fehlt in Lotzapp",
+    "_syncId": "4e74ed1d-3b13-459a-80c5-12953ca9a5df"
   },
   {
     "language": "en-US",
@@ -96,6 +162,12 @@
     "_syncId": "6fad38a3-29ee-4fa3-9974-d5980eebe7bb"
   },
   {
+    "language": "en-US",
+    "key": "rfid-check-mismatch",
+    "value": "Mismatch",
+    "_syncId": "72eedfa6-591c-4bba-a2b6-a6addbe1c4a5"
+  },
+  {
     "language": "de-DE",
     "key": "requested",
     "value": "Angefragt",
@@ -115,6 +187,18 @@
   },
   {
     "language": "de-DE",
+    "key": "rfid-check-ok",
+    "value": "Stimmt überein",
+    "_syncId": "7ab39721-9361-4774-acc7-fc9eafa7d079"
+  },
+  {
+    "language": "en-US",
+    "key": "rfid-check-ok",
+    "value": "Matches",
+    "_syncId": "9114b0bb-942d-406c-9e42-e08411fba68b"
+  },
+  {
+    "language": "de-DE",
     "key": "ended",
     "value": "Beendet",
     "_syncId": "91ee93b2-77ed-4f3c-a806-f5bb51a4333f"
@@ -126,16 +210,34 @@
     "_syncId": "98828f55-a975-4f5c-b7ff-ea8e8975b85a"
   },
   {
+    "language": "en-US",
+    "key": "rfid-check-lotzapp-id-unknown",
+    "value": "LotzApp ID unknown",
+    "_syncId": "a26ea859-ac61-4d17-af10-3d31e2d58f83"
+  },
+  {
     "language": "de-DE",
     "key": "sepa",
     "value": "SEPA Einzug",
     "_syncId": "a53dd2b3-9f87-439a-819a-0a8463f5287b"
   },
   {
+    "language": "en-US",
+    "key": "rfid-check-note-status",
+    "value": "Result of comparing the card number with LotzApp. Set by the flow “RFID mit Lotzapp prüfen”.",
+    "_syncId": "a64c283d-6f48-483f-a52b-9bb2b2bdaf4b"
+  },
+  {
     "language": "de-DE",
     "key": "sent",
     "value": "Gesendet",
     "_syncId": "aba83a72-63f7-4cf4-86ba-62c7195607a9"
+  },
+  {
+    "language": "de-DE",
+    "key": "rfid-check-note-lotzapp-cards",
+    "value": "Alle Karten, die Lotzapp für diese Adresse kennt. Wird von der Aktion „RFID mit Lotzapp prüfen“ gesetzt.",
+    "_syncId": "afa87a3b-8fc2-4424-9be2-14d11804f0c4"
   },
   {
     "language": "de-DE",
@@ -162,6 +264,18 @@
     "_syncId": "c01114aa-fb22-4f9a-b03b-0f87e95178c8"
   },
   {
+    "language": "en-US",
+    "key": "rfid-check-note-checked-at",
+    "value": "Time of the last check against LotzApp.",
+    "_syncId": "c16bf406-e87e-44cd-b01c-428b559ca3c3"
+  },
+  {
+    "language": "en-US",
+    "key": "rfid-check-no-lotzapp-id",
+    "value": "No LotzApp ID",
+    "_syncId": "c30dbf81-b822-469d-b74b-2d1ba8239c5c"
+  },
+  {
     "language": "de-DE",
     "key": "cancelled",
     "value": "Abgebrochen",
@@ -178,6 +292,12 @@
     "key": "cancelled",
     "value": "Cancelled",
     "_syncId": "e169c735-41a7-4b2d-87bc-609a2bba714c"
+  },
+  {
+    "language": "de-DE",
+    "key": "rfid-check-lotzapp-id-unknown",
+    "value": "Lotzapp-ID unbekannt",
+    "_syncId": "e5618fff-17e2-424c-a417-5393167023b4"
   },
   {
     "language": "en-US",

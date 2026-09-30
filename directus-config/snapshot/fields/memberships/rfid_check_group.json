@@ -1,0 +1,42 @@
+{
+  "collection": "memberships",
+  "field": "rfid_check_group",
+  "type": "alias",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "rfid_check_group",
+    "group": "cards_group",
+    "hidden": false,
+    "interface": "group-detail",
+    "note": null,
+    "options": {
+      "headerIcon": "fact_check",
+      "start": "closed"
+    },
+    "readonly": false,
+    "required": false,
+    "searchable": true,
+    "sort": 4,
+    "special": [
+      "alias",
+      "group",
+      "no-data"
+    ],
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "RFID-Abgleich mit Lotzapp"
+      },
+      {
+        "language": "en-US",
+        "translation": "RFID check against LotzApp"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  }
+}

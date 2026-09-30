@@ -1,0 +1,55 @@
+{
+  "collection": "memberships",
+  "field": "memberships_card_checked_at",
+  "type": "timestamp",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": "datetime",
+    "display_options": {
+      "relative": true
+    },
+    "field": "memberships_card_checked_at",
+    "group": "rfid_check_group",
+    "hidden": false,
+    "interface": "datetime",
+    "note": "$t:rfid-check-note-checked-at",
+    "options": null,
+    "readonly": true,
+    "required": false,
+    "searchable": true,
+    "sort": 2,
+    "special": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "RFID zuletzt geprüft"
+      },
+      {
+        "language": "en-US",
+        "translation": "RFID last checked"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "memberships_card_checked_at",
+    "table": "memberships",
+    "default_value": null,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_indexed": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null,
+    "data_type": "timestamp with time zone",
+    "max_length": null
+  }
+}

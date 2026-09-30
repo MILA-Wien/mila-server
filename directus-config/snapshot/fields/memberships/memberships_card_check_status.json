@@ -1,0 +1,137 @@
+{
+  "collection": "memberships",
+  "field": "memberships_card_check_status",
+  "type": "string",
+  "meta": {
+    "collection": "memberships",
+    "conditions": null,
+    "display": "labels",
+    "display_options": {
+      "choices": [
+        {
+          "color": "#2ECDA7",
+          "text": "$t:rfid-check-ok",
+          "value": "ok"
+        },
+        {
+          "color": "#E35169",
+          "text": "$t:rfid-check-mismatch",
+          "value": "mismatch"
+        },
+        {
+          "color": "#FFA439",
+          "text": "$t:rfid-check-missing-lotzapp",
+          "value": "missing_lotzapp"
+        },
+        {
+          "color": "#FFA439",
+          "text": "$t:rfid-check-missing-studio",
+          "value": "missing_studio"
+        },
+        {
+          "color": "#FFA439",
+          "text": "$t:rfid-check-lotzapp-id-unknown",
+          "value": "lotzapp_id_unknown"
+        },
+        {
+          "color": "#A2B5CD",
+          "text": "$t:rfid-check-no-lotzapp-id",
+          "value": "no_lotzapp_id"
+        },
+        {
+          "color": "#A2B5CD",
+          "text": "$t:rfid-check-no-card",
+          "value": "no_card"
+        }
+      ],
+      "format": false
+    },
+    "field": "memberships_card_check_status",
+    "group": "rfid_check_group",
+    "hidden": false,
+    "interface": "select-dropdown",
+    "note": "$t:rfid-check-note-status",
+    "options": {
+      "choices": [
+        {
+          "color": "#2ECDA7",
+          "icon": "check_circle",
+          "text": "$t:rfid-check-ok",
+          "value": "ok"
+        },
+        {
+          "color": "#E35169",
+          "icon": "error",
+          "text": "$t:rfid-check-mismatch",
+          "value": "mismatch"
+        },
+        {
+          "color": "#FFA439",
+          "icon": "cloud_off",
+          "text": "$t:rfid-check-missing-lotzapp",
+          "value": "missing_lotzapp"
+        },
+        {
+          "color": "#FFA439",
+          "icon": "credit_card_off",
+          "text": "$t:rfid-check-missing-studio",
+          "value": "missing_studio"
+        },
+        {
+          "color": "#FFA439",
+          "icon": "help",
+          "text": "$t:rfid-check-lotzapp-id-unknown",
+          "value": "lotzapp_id_unknown"
+        },
+        {
+          "color": "#A2B5CD",
+          "icon": "link_off",
+          "text": "$t:rfid-check-no-lotzapp-id",
+          "value": "no_lotzapp_id"
+        },
+        {
+          "color": "#A2B5CD",
+          "icon": "remove",
+          "text": "$t:rfid-check-no-card",
+          "value": "no_card"
+        }
+      ]
+    },
+    "readonly": true,
+    "required": false,
+    "searchable": true,
+    "sort": 1,
+    "special": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Ergebnis"
+      },
+      {
+        "language": "en-US",
+        "translation": "Result"
+      }
+    ],
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "memberships_card_check_status",
+    "table": "memberships",
+    "default_value": null,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_indexed": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null,
+    "data_type": "character varying",
+    "max_length": 255
+  }
+}
