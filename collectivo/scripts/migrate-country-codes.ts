@@ -61,6 +61,13 @@ const directusUrl = process.env.BACKFILL_DIRECTUS_URL;
 const directusToken = process.env.BACKFILL_DIRECTUS_TOKEN;
 const dryRun = process.argv.includes("--dry-run");
 
+if (!directusUrl || !directusToken) {
+  console.error(
+    "Set BACKFILL_DIRECTUS_URL and BACKFILL_DIRECTUS_TOKEN (see the comment at the top of this file) before running.",
+  );
+  process.exit(1);
+}
+
 const directus = createDirectus<DbSchema>(directusUrl)
   .with(staticToken(directusToken))
   .with(rest());
