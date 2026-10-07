@@ -12,31 +12,14 @@ import {
   PERSON_NAME_MAX_LENGTH,
 } from "../../shared/personName";
 import {
-  isValidAddressPart,
-  isValidCity,
-  isValidPostcode,
-  isValidStreet,
-  isValidViennaCity,
-  startsWithDigit,
-} from "../../shared/address";
-import { COUNTRY_NAMES_DE } from "../../shared/countries";
-import { isNotBlank } from "../../shared/text";
+  addressCrossFieldIssues,
+  addressFieldSchemas as address,
+  notBlank,
+} from "../../shared/addressSchema";
 
 // ============================================================================
 // Validation schema - aligned with frontend Yup schema
 // ============================================================================
-
-// Rejects input consisting only of spaces.
-const notBlank = <T extends z.ZodType<string>>(schema: T) =>
-  schema.refine(isNotBlank, "Must not consist of spaces only");
-
-// House number, stair and door must be entered separately - see shared/address.ts.
-const addressPart = (schema: z.ZodString) =>
-  schema.refine(isValidAddressPart, 'Must not contain "/" or "top"');
-
-// House number only - stair and door can be letters (e.g. "A", "EG").
-const houseNumber = (schema: z.ZodString) =>
-  addressPart(schema).refine(startsWithDigit, "Must start with a digit");
 
 export const registerSchema = z
   .object({
@@ -58,26 +41,20 @@ export const registerSchema = z
 
     // Visible name
     use_custom_username: z.boolean().optional(),
-    directus_users__username: z.string().optional(),
-    directus_users__username_last: z.string().optional(),
+    directus_users__username: notBlank(z.string()).optional(),
+    directus_users__username_last: notBlank(z.string()).optional(),
     directus_users__pronouns: notBlank(z.string()).optional(),
     directus_users__use_pronouns_on_card: z.boolean().optional(),
     directus_users__hide_name: z.boolean().optional(),
 
     // Address
-    directus_users__memberships_street: notBlank(
-      z.string().min(1).refine(isValidStreet, "Street must not end in a house number"),
-    ),
-    directus_users__memberships_streetnumber: notBlank(houseNumber(z.string().min(1))),
-    directus_users__memberships_stair: notBlank(addressPart(z.string())).optional(),
-    directus_users__memberships_door: notBlank(addressPart(z.string())).optional(),
-    directus_users__memberships_postcode: notBlank(z.string().min(1)),
-    directus_users__memberships_city: notBlank(
-      z.string().min(1).refine(isValidCity, "City must not contain digits"),
-    ),
-    directus_users__memberships_country: z
-      .string()
-      .refine((value) => COUNTRY_NAMES_DE.has(value), "Unknown country"),
+    directus_users__memberships_street: address.street,
+    directus_users__memberships_streetnumber: address.streetnumber,
+    directus_users__memberships_stair: address.stair,
+    directus_users__memberships_door: address.door,
+    directus_users__memberships_postcode: address.postcode,
+    directus_users__memberships_city: address.city,
+    directus_users__memberships_country: address.country,
 
     // Membership
     memberships__memberships_type: z.string().min(1),
@@ -140,29 +117,20 @@ export const registerSchema = z
       path: ["coshopper_firstname"],
     },
   )
-  .refine(
-    (data) =>
-      isValidPostcode(
-        data.directus_users__memberships_postcode,
-        data.directus_users__memberships_country,
-      ),
-    {
-      message: "Austrian postcodes have 4 digits",
-      path: ["directus_users__memberships_postcode"],
-    },
-  )
-  .refine(
-    (data) =>
-      isValidViennaCity(
-        data.directus_users__memberships_city,
-        data.directus_users__memberships_postcode,
-        data.directus_users__memberships_country,
-      ),
-    {
-      message: 'City must be "Wien" for Austrian postcodes starting with 1',
-      path: ["directus_users__memberships_city"],
-    },
-  )
+  .superRefine((data, ctx) => {
+    const issues = addressCrossFieldIssues({
+      postcode: data.directus_users__memberships_postcode,
+      city: data.directus_users__memberships_city,
+      country: data.directus_users__memberships_country,
+    });
+    for (const { field, message } of issues) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message,
+        path: [`directus_users__memberships_${field}`],
+      });
+    }
+  })
   .superRefine((data, ctx) => {
     // The visible name is synced to Keycloak firstName/lastName, which only
     // accepts valid person names - see shared/personName.ts.

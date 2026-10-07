@@ -6,7 +6,7 @@
  * stored separately, so those inputs are rejected with a hint to split them up.
  */
 
-import { COUNTRIES_DE } from "./countries";
+import { AUSTRIA } from "./countries";
 
 /**
  * The street must not end in a house number, including suffixes like "5a", "5-7",
@@ -32,7 +32,7 @@ export function isValidViennaCity(
 ): boolean {
   return (
     !city ||
-    country !== COUNTRIES_DE.AT ||
+    country !== AUSTRIA ||
     !postcode?.startsWith("1") ||
     city.trim() === "Wien"
   );
@@ -43,7 +43,7 @@ export function isValidPostcode(
   postcode?: string | null,
   country?: string | null,
 ): boolean {
-  return !postcode || country !== COUNTRIES_DE.AT || /^\d{4}$/.test(postcode);
+  return !postcode || country !== AUSTRIA || /^\d{4}$/.test(postcode);
 }
 
 /** House number, stair and door must not contain "/" or "top" (any case). */

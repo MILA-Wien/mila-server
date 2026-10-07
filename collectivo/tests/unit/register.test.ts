@@ -29,7 +29,7 @@ function validBody(overrides: Record<string, any> = {}) {
     directus_users__memberships_streetnumber: "1",
     directus_users__memberships_postcode: "1010",
     directus_users__memberships_city: "Wien",
-    directus_users__memberships_country: "Österreich",
+    directus_users__memberships_country: "AT",
     memberships__memberships_type: "active",
     shares_options: "normal" as const,
     directus_users__payments_type: "sepa",
@@ -170,13 +170,13 @@ describe("registerSchema", () => {
   });
 
   it("only accepts countries from the dropdown list", () => {
-    for (const country of ["Deutschland", "Vereinigte Staaten"]) {
+    for (const country of ["DE", "US"]) {
       expect(
         registerSchema.safeParse(validBody({ directus_users__memberships_country: country }))
           .success,
       ).toBe(true);
     }
-    for (const country of ["AT", "Austria", "Oesterreich", ""]) {
+    for (const country of ["Österreich", "Austria", "at", "AUT", ""]) {
       expect(
         registerSchema.safeParse(validBody({ directus_users__memberships_country: country }))
           .success,
@@ -192,11 +192,11 @@ describe("registerSchema", () => {
           directus_users__memberships_country: country,
         }),
       ).success;
-    expect(parse("1010", "Österreich")).toBe(true);
-    expect(parse("101", "Österreich")).toBe(false);
-    expect(parse("10100", "Österreich")).toBe(false);
-    expect(parse("A-1010", "Österreich")).toBe(false);
-    expect(parse("10115", "Deutschland")).toBe(true);
+    expect(parse("1010", "AT")).toBe(true);
+    expect(parse("101", "AT")).toBe(false);
+    expect(parse("10100", "AT")).toBe(false);
+    expect(parse("A-1010", "AT")).toBe(false);
+    expect(parse("10115", "DE")).toBe(true);
   });
 
   it("rejects spaces-only input in text fields", () => {
@@ -224,7 +224,7 @@ describe("registerSchema", () => {
         validBody({
           directus_users__memberships_city: city,
           directus_users__memberships_postcode: postcode,
-          directus_users__memberships_country: "Österreich",
+          directus_users__memberships_country: "AT",
         }),
       ).success;
     expect(parse("Wien", "1010")).toBe(true);
@@ -283,6 +283,17 @@ describe("registerSchema", () => {
         }),
       ).success,
     ).toBe(true);
+  });
+
+  it("rejects a spaces-only custom visible name", () => {
+    const result = registerSchema.safeParse(
+      validBody({
+        use_custom_username: true,
+        directus_users__username: "   ",
+        directus_users__username_last: "M.",
+      }),
+    );
+    expect(result.success).toBe(false);
   });
 
   it("checks the custom visible name instead of first/last name", () => {

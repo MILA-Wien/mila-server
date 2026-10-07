@@ -23,39 +23,39 @@ describe("isValidCity", () => {
 
 describe("isValidViennaCity", () => {
   it("requires Wien for Austrian postcodes starting with 1", () => {
-    expect(isValidViennaCity("Wien", "1010", "Österreich")).toBe(true);
-    expect(isValidViennaCity("Wien ", "1010", "Österreich")).toBe(true);
-    expect(isValidViennaCity("Vienna", "1010", "Österreich")).toBe(false);
-    expect(isValidViennaCity("wien", "1010", "Österreich")).toBe(false);
-    expect(isValidViennaCity("Schwechat", "1300", "Österreich")).toBe(false);
+    expect(isValidViennaCity("Wien", "1010", "AT")).toBe(true);
+    expect(isValidViennaCity("Wien ", "1010", "AT")).toBe(true);
+    expect(isValidViennaCity("Vienna", "1010", "AT")).toBe(false);
+    expect(isValidViennaCity("wien", "1010", "AT")).toBe(false);
+    expect(isValidViennaCity("Schwechat", "1300", "AT")).toBe(false);
   });
 
   it("does not check other postcodes or countries", () => {
-    expect(isValidViennaCity("Graz", "8020", "Österreich")).toBe(true);
-    expect(isValidViennaCity("Berlin", "10115", "Deutschland")).toBe(true);
+    expect(isValidViennaCity("Graz", "8020", "AT")).toBe(true);
+    expect(isValidViennaCity("Berlin", "10115", "DE")).toBe(true);
   });
 });
 
 describe("isValidPostcode", () => {
   it.each(["1010", "8020", "9992"])("accepts %j in Austria", (postcode) => {
-    expect(isValidPostcode(postcode, "Österreich")).toBe(true);
+    expect(isValidPostcode(postcode, "AT")).toBe(true);
   });
 
   it.each(["101", "10100", "A-1010", "1010 ", "1O10"])(
     "rejects %j in Austria",
     (postcode) => {
-      expect(isValidPostcode(postcode, "Österreich")).toBe(false);
+      expect(isValidPostcode(postcode, "AT")).toBe(false);
     },
   );
 
   it("does not check other countries", () => {
-    expect(isValidPostcode("10115", "Deutschland")).toBe(true);
-    expect(isValidPostcode("SW1A 1AA", "Vereinigtes Königreich")).toBe(true);
+    expect(isValidPostcode("10115", "DE")).toBe(true);
+    expect(isValidPostcode("SW1A 1AA", "GB")).toBe(true);
   });
 
   it("lets empty values through", () => {
-    expect(isValidPostcode("", "Österreich")).toBe(true);
-    expect(isValidPostcode(undefined, "Österreich")).toBe(true);
+    expect(isValidPostcode("", "AT")).toBe(true);
+    expect(isValidPostcode(undefined, "AT")).toBe(true);
   });
 });
 
