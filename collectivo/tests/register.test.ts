@@ -29,7 +29,7 @@ function validBody(overrides: Record<string, any> = {}) {
     directus_users__memberships_streetnumber: "1",
     directus_users__memberships_postcode: "1010",
     directus_users__memberships_city: "Wien",
-    directus_users__memberships_country: "AT",
+    directus_users__memberships_country: "Österreich",
     memberships__memberships_type: "active",
     shares_options: "normal" as const,
     directus_users__payments_type: "sepa",
@@ -150,6 +150,154 @@ describe("registerSchema", () => {
       }),
     );
     expect(result.success).toBe(true);
+  });
+
+  it("rejects prohibited characters in first/last name used as visible name", () => {
+    for (const field of ["directus_users__first_name", "directus_users__last_name"]) {
+      const result = registerSchema.safeParse(validBody({ [field]: "Max (Moritz)" }));
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.issues[0]!.path).toEqual([field]);
+      }
+    }
+  });
+
+  it("rejects visible names longer than 255 characters", () => {
+    const result = registerSchema.safeParse(
+      validBody({ directus_users__first_name: "a".repeat(256) }),
+    );
+    expect(result.success).toBe(false);
+  });
+
+  it("only accepts countries from the dropdown list", () => {
+    for (const country of ["Deutschland", "Vereinigte Staaten"]) {
+      expect(
+        registerSchema.safeParse(validBody({ directus_users__memberships_country: country }))
+          .success,
+      ).toBe(true);
+    }
+    for (const country of ["AT", "Austria", "Oesterreich", ""]) {
+      expect(
+        registerSchema.safeParse(validBody({ directus_users__memberships_country: country }))
+          .success,
+      ).toBe(false);
+    }
+  });
+
+  it("requires 4-digit postcodes for Austria only", () => {
+    const parse = (postcode: string, country: string) =>
+      registerSchema.safeParse(
+        validBody({
+          directus_users__memberships_postcode: postcode,
+          directus_users__memberships_country: country,
+        }),
+      ).success;
+    expect(parse("1010", "Österreich")).toBe(true);
+    expect(parse("101", "Österreich")).toBe(false);
+    expect(parse("10100", "Österreich")).toBe(false);
+    expect(parse("A-1010", "Österreich")).toBe(false);
+    expect(parse("10115", "Deutschland")).toBe(true);
+  });
+
+  it("rejects spaces-only input in text fields", () => {
+    for (const field of [
+      "directus_users__first_name",
+      "directus_users__last_name",
+      "directus_users__memberships_phone",
+      "directus_users__memberships_occupation",
+      "directus_users__pronouns",
+      "directus_users__memberships_street",
+      "directus_users__memberships_streetnumber",
+      "directus_users__memberships_stair",
+      "directus_users__memberships_door",
+      "directus_users__memberships_postcode",
+      "directus_users__memberships_city",
+    ]) {
+      const result = registerSchema.safeParse(validBody({ [field]: "   " }));
+      expect(result.success, field).toBe(false);
+    }
+  });
+
+  it("requires Wien as city for Austrian postcodes starting with 1", () => {
+    const parse = (city: string, postcode: string) =>
+      registerSchema.safeParse(
+        validBody({
+          directus_users__memberships_city: city,
+          directus_users__memberships_postcode: postcode,
+          directus_users__memberships_country: "Österreich",
+        }),
+      ).success;
+    expect(parse("Wien", "1010")).toBe(true);
+    expect(parse("Vienna", "1010")).toBe(false);
+    expect(parse("Graz", "8020")).toBe(true);
+  });
+
+  it("rejects digits in the city", () => {
+    expect(
+      registerSchema.safeParse(validBody({ directus_users__memberships_city: "1010 Wien" }))
+        .success,
+    ).toBe(false);
+    expect(
+      registerSchema.safeParse(
+        validBody({
+          directus_users__memberships_city: "St. Pölten",
+          directus_users__memberships_postcode: "3100",
+        }),
+      ).success,
+    ).toBe(true);
+  });
+
+  it("rejects a house number in the street field", () => {
+    for (const street of ["Hauptstr. 1", "Hauptstr. 5a"]) {
+      const result = registerSchema.safeParse(
+        validBody({ directus_users__memberships_street: street }),
+      );
+      expect(result.success).toBe(false);
+    }
+  });
+
+  it("rejects \"/\" and \"top\" in house number, stair and door", () => {
+    for (const field of [
+      "directus_users__memberships_streetnumber",
+      "directus_users__memberships_stair",
+      "directus_users__memberships_door",
+    ]) {
+      for (const value of ["1/2", "Top 3"]) {
+        const result = registerSchema.safeParse(validBody({ [field]: value }));
+        expect(result.success).toBe(false);
+      }
+    }
+  });
+
+  it("requires the house number to start with a digit, but not stair or door", () => {
+    expect(
+      registerSchema.safeParse(validBody({ directus_users__memberships_streetnumber: "A" }))
+        .success,
+    ).toBe(false);
+    expect(
+      registerSchema.safeParse(
+        validBody({
+          directus_users__memberships_streetnumber: "1a",
+          directus_users__memberships_stair: "A",
+          directus_users__memberships_door: "EG",
+        }),
+      ).success,
+    ).toBe(true);
+  });
+
+  it("checks the custom visible name instead of first/last name", () => {
+    const custom = {
+      use_custom_username: true,
+      directus_users__first_name: "Max (Moritz)",
+      directus_users__username: "Maxi",
+      directus_users__username_last: "M.",
+    };
+    expect(registerSchema.safeParse(validBody(custom)).success).toBe(true);
+    expect(
+      registerSchema.safeParse(
+        validBody({ ...custom, directus_users__username_last: "M!" }),
+      ).success,
+    ).toBe(false);
   });
 });
 

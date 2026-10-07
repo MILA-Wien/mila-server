@@ -7,23 +7,49 @@ import {
 } from "@directus/sdk";
 import KcAdminClient from "@keycloak/keycloak-admin-client";
 import { z } from "zod";
+import {
+  isValidPersonName,
+  PERSON_NAME_MAX_LENGTH,
+} from "../../shared/personName";
+import {
+  isValidAddressPart,
+  isValidCity,
+  isValidPostcode,
+  isValidStreet,
+  isValidViennaCity,
+  startsWithDigit,
+} from "../../shared/address";
+import { COUNTRY_NAMES_DE } from "../../shared/countries";
+import { isNotBlank } from "../../shared/text";
 
 // ============================================================================
 // Validation schema - aligned with frontend Yup schema
 // ============================================================================
+
+// Rejects input consisting only of spaces.
+const notBlank = <T extends z.ZodType<string>>(schema: T) =>
+  schema.refine(isNotBlank, "Must not consist of spaces only");
+
+// House number, stair and door must be entered separately - see shared/address.ts.
+const addressPart = (schema: z.ZodString) =>
+  schema.refine(isValidAddressPart, 'Must not contain "/" or "top"');
+
+// House number only - stair and door can be letters (e.g. "A", "EG").
+const houseNumber = (schema: z.ZodString) =>
+  addressPart(schema).refine(startsWithDigit, "Must start with a digit");
 
 export const registerSchema = z
   .object({
     // User account
     directus_users__email: z.string().email(),
     directus_users__password: z.string().min(1),
-    directus_users__first_name: z.string().min(1),
-    directus_users__last_name: z.string().min(1),
+    directus_users__first_name: notBlank(z.string().min(1)),
+    directus_users__last_name: notBlank(z.string().min(1)),
     directus_users__memberships_person_type: z.enum(["natural", "legal"]),
     directus_users__memberships_gender: z.string().min(1),
-    directus_users__memberships_phone: z.string().optional(),
+    directus_users__memberships_phone: notBlank(z.string()).optional(),
     directus_users__memberships_birthday: z.string().optional(),
-    directus_users__memberships_occupation: z.string().optional(),
+    directus_users__memberships_occupation: notBlank(z.string()).optional(),
 
     // Organization (legal entity)
     directus_users__memberships_organization_name: z.string().optional(),
@@ -34,18 +60,24 @@ export const registerSchema = z
     use_custom_username: z.boolean().optional(),
     directus_users__username: z.string().optional(),
     directus_users__username_last: z.string().optional(),
-    directus_users__pronouns: z.string().optional(),
+    directus_users__pronouns: notBlank(z.string()).optional(),
     directus_users__use_pronouns_on_card: z.boolean().optional(),
     directus_users__hide_name: z.boolean().optional(),
 
     // Address
-    directus_users__memberships_street: z.string().min(1),
-    directus_users__memberships_streetnumber: z.string().min(1),
-    directus_users__memberships_stair: z.string().optional(),
-    directus_users__memberships_door: z.string().optional(),
-    directus_users__memberships_postcode: z.string().min(1),
-    directus_users__memberships_city: z.string().min(1),
-    directus_users__memberships_country: z.string().min(1),
+    directus_users__memberships_street: notBlank(
+      z.string().min(1).refine(isValidStreet, "Street must not end in a house number"),
+    ),
+    directus_users__memberships_streetnumber: notBlank(houseNumber(z.string().min(1))),
+    directus_users__memberships_stair: notBlank(addressPart(z.string())).optional(),
+    directus_users__memberships_door: notBlank(addressPart(z.string())).optional(),
+    directus_users__memberships_postcode: notBlank(z.string().min(1)),
+    directus_users__memberships_city: notBlank(
+      z.string().min(1).refine(isValidCity, "City must not contain digits"),
+    ),
+    directus_users__memberships_country: z
+      .string()
+      .refine((value) => COUNTRY_NAMES_DE.has(value), "Unknown country"),
 
     // Membership
     memberships__memberships_type: z.string().min(1),
@@ -107,7 +139,55 @@ export const registerSchema = z
       message: "Co-shopper details are required",
       path: ["coshopper_firstname"],
     },
-  );
+  )
+  .refine(
+    (data) =>
+      isValidPostcode(
+        data.directus_users__memberships_postcode,
+        data.directus_users__memberships_country,
+      ),
+    {
+      message: "Austrian postcodes have 4 digits",
+      path: ["directus_users__memberships_postcode"],
+    },
+  )
+  .refine(
+    (data) =>
+      isValidViennaCity(
+        data.directus_users__memberships_city,
+        data.directus_users__memberships_postcode,
+        data.directus_users__memberships_country,
+      ),
+    {
+      message: 'City must be "Wien" for Austrian postcodes starting with 1',
+      path: ["directus_users__memberships_city"],
+    },
+  )
+  .superRefine((data, ctx) => {
+    // The visible name is synced to Keycloak firstName/lastName, which only
+    // accepts valid person names - see shared/personName.ts.
+    const visibleName = data.use_custom_username
+      ? {
+          directus_users__username: data.directus_users__username,
+          directus_users__username_last: data.directus_users__username_last,
+        }
+      : {
+          directus_users__first_name: data.directus_users__first_name,
+          directus_users__last_name: data.directus_users__last_name,
+        };
+    for (const [key, value] of Object.entries(visibleName)) {
+      if (
+        !isValidPersonName(value) ||
+        (value?.length ?? 0) > PERSON_NAME_MAX_LENGTH
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Name contains characters that are not allowed or is too long",
+          path: [key],
+        });
+      }
+    }
+  });
 
 // ============================================================================
 // Handler

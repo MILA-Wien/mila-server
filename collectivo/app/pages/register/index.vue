@@ -8,9 +8,26 @@ import {
   array,
   boolean,
   date,
+  type StringSchema,
 } from "yup";
+import { z } from "zod";
 import type { FormErrorEvent, FormSubmitEvent } from "@nuxt/ui";
-const { t } = useI18n();
+import {
+  isValidPersonName,
+  PERSON_NAME_MAX_LENGTH,
+  PERSON_NAME_PROHIBITED_CHARACTERS,
+} from "../../../shared/personName";
+import {
+  isValidAddressPart,
+  isValidCity,
+  isValidPostcode,
+  isValidStreet,
+  isValidViennaCity,
+  startsWithDigit,
+} from "../../../shared/address";
+import { isNotBlank } from "../../../shared/text";
+import { COUNTRIES_DE, DEFAULT_COUNTRY_CODE } from "../../../shared/countries";
+const { t, locale } = useI18n();
 
 setPageTitle(t("Membership Application"));
 
@@ -23,12 +40,52 @@ const contactPhone = "0670 202 6368";
 const contactEmail = "mitglied@mila.wien";
 const devMode = import.meta.dev;
 const user = useCurrentUser();
+
+// Yup's email check accepts addresses without a TLD (e.g. "admin@example"),
+// but the API validates with zod, which rejects them. Use zod here for parity.
+const isValidEmail = (value?: string) =>
+  !value || z.string().email().safeParse(value).success;
+
+// The visible name (username / username_last) is synced to Keycloak, which
+// rejects some characters - see shared/personName.ts.
+const personNameRules = <S extends StringSchema<string | undefined>>(schema: S) =>
+  schema
+    .max(PERSON_NAME_MAX_LENGTH, () =>
+      t("Must be at most {max} characters", { max: PERSON_NAME_MAX_LENGTH }),
+    )
+    .test(
+      "person-name",
+      () =>
+        t("Contains characters that are not allowed: {chars}", {
+          chars: PERSON_NAME_PROHIBITED_CHARACTERS,
+        }),
+      isValidPersonName,
+    );
+
+// A string field that rejects input consisting only of spaces.
+const text = () =>
+  string().test("not-blank", () => t("Must not consist of spaces only"), isNotBlank);
+
+// House number, stair and door - see shared/address.ts.
+const addressPartRules = <S extends StringSchema<string | undefined>>(schema: S) =>
+  schema.test("address-part", () => t("t:address_part_invalid"), isValidAddressPart);
+
+// House number only - stair and door can be letters (e.g. "A", "EG").
+const houseNumberRules = <S extends StringSchema<string | undefined>>(
+  schema: S,
+) =>
+  addressPartRules(schema).test(
+    "starts-with-digit",
+    () => t("Must start with a number, e.g. 1 or 1a"),
+    startsWithDigit,
+  );
+
 const schema = object({
   directus_users__memberships_person_type: string().required(
     () => t("This field is required"),
   ),
   directus_users__email: string()
-    .email(() => t("Email address is not valid"))
+    .test("email", () => t("Email address is not valid"), isValidEmail)
     .required(() => t("This field is required")),
   directus_users__password: string().required(() => t("This field is required")),
   _pw_confirm: string()
@@ -57,11 +114,13 @@ const schema = object({
   ),
   directus_users__username: string().when("use_custom_username", {
     is: true,
-    then: (schema) => schema.required(() => t("This field is required")),
+    then: (schema) =>
+      personNameRules(schema.required(() => t("This field is required"))),
   }),
   directus_users__username_last: string().when("use_custom_username", {
     is: true,
-    then: (schema) => schema.required(() => t("This field is required")),
+    then: (schema) =>
+      personNameRules(schema.required(() => t("This field is required"))),
   }),
   coshopper_firstname: string().when("add_coshopper", {
     is: true,
@@ -72,20 +131,31 @@ const schema = object({
     then: (schema) => schema.required(() => t("This field is required")),
   }),
   coshopper_email: string()
-    .email(() => t("Email address is not valid"))
+    .test("email", () => t("Email address is not valid"), isValidEmail)
     .when("add_coshopper", {
       is: true,
       then: (schema) => schema.required(() => t("This field is required")),
     }),
-  directus_users__pronouns: string(),
+  directus_users__pronouns: text(),
   directus_users__use_pronouns_on_card: boolean(),
   directus_users__hide_name: boolean(),
-  directus_users__first_name: string().required(() => t("This field is required")),
-  directus_users__last_name: string().required(() => t("This field is required")),
+  // Without a custom visible name, first/last name become username(_last).
+  directus_users__first_name: text()
+    .required(() => t("This field is required"))
+    .when("use_custom_username", {
+      is: (value?: boolean) => !value,
+      then: personNameRules,
+    }),
+  directus_users__last_name: text()
+    .required(() => t("This field is required"))
+    .when("use_custom_username", {
+      is: (value?: boolean) => !value,
+      then: personNameRules,
+    }),
   directus_users__memberships_gender: string().required(
     () => t("This field is required"),
   ),
-  directus_users__memberships_phone: string(),
+  directus_users__memberships_phone: text(),
   directus_users__memberships_birthday: date().when(
     "directus_users__memberships_person_type",
     {
@@ -93,27 +163,44 @@ const schema = object({
       then: (schema) => schema.required(() => t("This field is required")),
     },
   ),
-  directus_users__memberships_occupation: string().when(
+  directus_users__memberships_occupation: text().when(
     "directus_users__memberships_person_type",
     {
       is: "natural",
       then: (schema) => schema.required(() => t("This field is required")),
     },
   ),
-  directus_users__memberships_street: string().required(
-    () => t("This field is required"),
+  directus_users__memberships_street: text()
+    .required(() => t("This field is required"))
+    .test(
+      "street",
+      () => t("Please enter the house number in its own field"),
+      isValidStreet,
+    ),
+  directus_users__memberships_streetnumber: houseNumberRules(
+    text().required(() => t("This field is required")),
   ),
-  directus_users__memberships_streetnumber: string().required(
-    () => t("This field is required"),
-  ),
-  directus_users__memberships_stair: string(),
-  directus_users__memberships_door: string(),
-  directus_users__memberships_postcode: string().required(
-    () => t("This field is required"),
-  ),
-  directus_users__memberships_city: string().required(
-    () => t("This field is required"),
-  ),
+  directus_users__memberships_stair: addressPartRules(text()),
+  directus_users__memberships_door: addressPartRules(text()),
+  directus_users__memberships_postcode: text()
+    .required(() => t("This field is required"))
+    .test("postcode", () => t("Austrian postcodes have 4 digits"), (value, context) =>
+      isValidPostcode(value, context.parent.directus_users__memberships_country),
+    ),
+  directus_users__memberships_city: text()
+    .required(() => t("This field is required"))
+    .test(
+      "city",
+      () => t("Please enter the postcode in its own field"),
+      isValidCity,
+    )
+    .test("vienna", () => t("t:city_must_be_wien"), (value, context) =>
+      isValidViennaCity(
+        value,
+        context.parent.directus_users__memberships_postcode,
+        context.parent.directus_users__memberships_country,
+      ),
+    ),
   directus_users__memberships_country: string().required(
     () => t("This field is required"),
   ),
@@ -265,6 +352,23 @@ function fillTestData() {
   state._statutes_approval = true;
   state._data_approval = true;
 }
+
+// The German name is stored; the label follows the UI language.
+const countryOptions = computed(() => {
+  const names = new Intl.DisplayNames([locale.value], { type: "region" });
+  const options = Object.entries(COUNTRIES_DE).map(([code, nameDe]) => ({
+    label: names.of(code) ?? nameDe,
+    value: nameDe,
+    code,
+  }));
+  const isDefault = (o: { code: string }) => o.code === DEFAULT_COUNTRY_CODE;
+  return [
+    ...options.filter(isDefault),
+    ...options
+      .filter((o) => !isDefault(o))
+      .sort((a, b) => a.label.localeCompare(b.label, locale.value)),
+  ];
+});
 
 const isNatural = computed(
   () => state.directus_users__memberships_person_type === "natural",
@@ -650,6 +754,22 @@ async function onError(event: FormErrorEvent) {
 
     <div class="grid md:grid-cols-2 gap-4">
       <FormsFormGroup
+        :label="t('Country')"
+        name="directus_users__memberships_country"
+        required
+      >
+        <USelectMenu
+          variant="outline"
+          class="w-full"
+          v-model="state.directus_users__memberships_country"
+          :items="countryOptions"
+          value-key="value"
+          :placeholder="t('Select country')"
+        />
+      </FormsFormGroup>
+      <!-- Keeps the second column of the country row empty -->
+      <div class="hidden md:block" />
+      <FormsFormGroup
         :label="t('Street')"
         name="directus_users__memberships_street"
         required
@@ -705,16 +825,6 @@ async function onError(event: FormErrorEvent) {
         <UInput
           variant="outline"
           v-model="state.directus_users__memberships_city"
-        />
-      </FormsFormGroup>
-      <FormsFormGroup
-        :label="t('Country')"
-        name="directus_users__memberships_country"
-        required
-      >
-        <UInput
-          variant="outline"
-          v-model="state.directus_users__memberships_country"
         />
       </FormsFormGroup>
     </div>
@@ -1142,6 +1252,15 @@ async function onError(event: FormErrorEvent) {
 de:
   "Email address is not valid": "E-Mail Adresse ist nicht korrekt"
   "Passwords are not the same": "Passwörter stimmen nicht überein"
+  "Must be at most {max} characters": "Darf höchstens {max} Zeichen lang sein"
+  "Contains characters that are not allowed: {chars}": "Enthält nicht erlaubte Zeichen: {chars}"
+  "Please enter the house number in its own field": "Bitte gib die Hausnummer im eigenen Feld ein"
+  "Austrian postcodes have 4 digits": "Österreichische Postleitzahlen haben 4 Ziffern"
+  "Please enter the postcode in its own field": "Bitte gib die Postleitzahl im eigenen Feld ein"
+  "t:city_must_be_wien": "Bei Postleitzahlen, die mit 1 beginnen, lautet der Ort \"Wien\""
+  "Must not consist of spaces only": "Darf nicht nur aus Leerzeichen bestehen"
+  "t:address_part_invalid": "Bitte gib Hausnummer, Stiege und Tür in den jeweiligen Feldern ein, ohne \"/\" oder \"Top\""
+  "Must start with a number, e.g. 1 or 1a": "Muss mit einer Zahl beginnen, z.B. 1 oder 1a"
   "Must be at least 10 shares": "Muss mindestens 10 Anteile sein"
   "This field is required": "Dieses Feld ist erforderlich"
   "This field must be accepted": "Dieses Feld muss akzeptiert werden"
@@ -1206,6 +1325,7 @@ de:
   "Postcode": "Postleitzahl"
   "City": "Stadt"
   "Country": "Land"
+  "Select country": "Land auswählen"
   "Frequently Asked Questions": "Häufige Fragen"
   "Survey": "Umfrage"
   "Conditions": "Bedingungen"
@@ -1294,6 +1414,16 @@ de:
 en:
   "Email address is not valid": "Email address is not valid"
   "Passwords are not the same": "Passwords are not the same"
+  "Must be at most {max} characters": "Must be at most {max} characters"
+  "Contains characters that are not allowed: {chars}": "Contains characters that are not allowed: {chars}"
+  "Please enter the house number in its own field": "Please enter the house number in its own field"
+  "Austrian postcodes have 4 digits": "Austrian postcodes have 4 digits"
+  "Please enter the postcode in its own field": "Please enter the postcode in its own field"
+  "t:city_must_be_wien": "For postcodes starting with 1, the city is \"Wien\""
+  "Must not consist of spaces only": "Must not consist of spaces only"
+  "t:address_part_invalid": "Please enter house number, stair and door in their own fields, without \"/\" or \"Top\""
+  "Must start with a number, e.g. 1 or 1a": "Must start with a number, e.g. 1 or 1a"
+  "Select country": "Select country"
   "Must be at least 10 shares": "Must be at least 10 shares"
   "This field is required": "This field is required"
   "This field must be accepted": "This field must be accepted"

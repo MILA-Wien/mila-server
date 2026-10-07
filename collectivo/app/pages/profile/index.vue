@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { object, string, bool, type InferType } from "yup";
 import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
+import {
+  isValidPersonName,
+  PERSON_NAME_MAX_LENGTH,
+  PERSON_NAME_PROHIBITED_CHARACTERS,
+} from "../../../shared/personName";
 
 definePageMeta({
   middleware: ["auth"],
@@ -26,9 +31,25 @@ const keycloakUpdatePasswordUrl = (() => {
 })();
 
 const mv = "Dieses Feld ist erforderlich";
+// Synced to Keycloak firstName/lastName - see shared/personName.ts.
+const personName = () =>
+  string()
+    .min(1, t(mv))
+    .required(t(mv))
+    .max(
+      PERSON_NAME_MAX_LENGTH,
+      t("Darf höchstens {max} Zeichen lang sein", { max: PERSON_NAME_MAX_LENGTH }),
+    )
+    .test(
+      "person-name",
+      t("Enthält nicht erlaubte Zeichen: {chars}", {
+        chars: PERSON_NAME_PROHIBITED_CHARACTERS,
+      }),
+      isValidPersonName,
+    );
 const schema = object({
-  username: string().min(1, t(mv)).required(t(mv)),
-  username_last: string().min(1, t(mv)).required(t(mv)),
+  username: personName(),
+  username_last: personName(),
   pronouns: string().optional(),
   hide_name: bool().optional(),
   send_notifications: bool().optional(),
@@ -529,6 +550,8 @@ en:
   "Änderungen speichern": "Save changes"
   "Es ist ein Fehler aufgetreten.": "An error occurred."
   "Dein Profil wurde erfolgreich aktualisiert.": "Your profile has been updated successfully."
+  "Darf höchstens {max} Zeichen lang sein": "Must be at most {max} characters"
+  "Enthält nicht erlaubte Zeichen: {chars}": "Contains characters that are not allowed: {chars}"
   "Wie sollen wir dich ansprechen?": "How should we address you?"
   "Dieser Name kann sich von deinem amtlichen Namen unterscheiden.": "This name can differ from your legal name."
   "Mit welchen Pronomen möchtest du angesprochen werden?": "Which pronouns would you like to be addressed with?"
