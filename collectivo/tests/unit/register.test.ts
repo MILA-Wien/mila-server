@@ -62,6 +62,21 @@ describe("registerSchema", () => {
     expect(result.success).toBe(false);
   });
 
+  it.each(["+43 664 1234567", "0664 1234567"])("accepts phone number %j", (phone) => {
+    const result = registerSchema.safeParse(validBody({ directus_users__memberships_phone: phone }));
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects a phone number with + not at the start", () => {
+    const result = registerSchema.safeParse(validBody({ directus_users__memberships_phone: "43 +664 1234567" }));
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects a phone number with other characters", () => {
+    const result = registerSchema.safeParse(validBody({ directus_users__memberships_phone: "+43 664/1234567" }));
+    expect(result.success).toBe(false);
+  });
+
   it("rejects invalid person type", () => {
     const result = registerSchema.safeParse(validBody({ directus_users__memberships_person_type: "robot" }));
     expect(result.success).toBe(false);
@@ -150,6 +165,212 @@ describe("registerSchema", () => {
       }),
     );
     expect(result.success).toBe(true);
+  });
+
+  it("rejects prohibited characters in first/last name used as visible name", () => {
+    for (const field of ["directus_users__first_name", "directus_users__last_name"]) {
+      const result = registerSchema.safeParse(validBody({ [field]: "Max (Moritz)" }));
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.issues[0]!.path).toEqual([field]);
+      }
+    }
+  });
+
+  it("rejects visible names longer than 255 characters", () => {
+    const result = registerSchema.safeParse(
+      validBody({ directus_users__first_name: "a".repeat(256) }),
+    );
+    expect(result.success).toBe(false);
+  });
+
+  it("only accepts countries from the dropdown list", () => {
+    for (const country of ["DE", "US"]) {
+      expect(
+        registerSchema.safeParse(validBody({ directus_users__memberships_country: country }))
+          .success,
+      ).toBe(true);
+    }
+    for (const country of ["Österreich", "Austria", "at", "AUT", ""]) {
+      expect(
+        registerSchema.safeParse(validBody({ directus_users__memberships_country: country }))
+          .success,
+      ).toBe(false);
+    }
+  });
+
+  it("requires 4-digit postcodes for Austria only", () => {
+    const parse = (postcode: string, country: string) =>
+      registerSchema.safeParse(
+        validBody({
+          directus_users__memberships_postcode: postcode,
+          directus_users__memberships_country: country,
+        }),
+      ).success;
+    expect(parse("1010", "AT")).toBe(true);
+    expect(parse("101", "AT")).toBe(false);
+    expect(parse("10100", "AT")).toBe(false);
+    expect(parse("A-1010", "AT")).toBe(false);
+    expect(parse("10115", "DE")).toBe(true);
+  });
+
+  it("rejects spaces-only input in required text fields", () => {
+    for (const field of [
+      "directus_users__first_name",
+      "directus_users__last_name",
+      "directus_users__memberships_street",
+      "directus_users__memberships_streetnumber",
+      "directus_users__memberships_postcode",
+      "directus_users__memberships_city",
+    ]) {
+      const result = registerSchema.safeParse(validBody({ [field]: "   " }));
+      expect(result.success, field).toBe(false);
+    }
+  });
+
+  it("trims spaces-only input in optional text fields to empty", () => {
+    const result = registerSchema.parse(
+      validBody({
+        directus_users__memberships_occupation: "   ",
+        directus_users__pronouns: "   ",
+        directus_users__memberships_stair: "   ",
+        directus_users__memberships_door: "   ",
+        directus_users__memberships_phone: "   ",
+      }),
+    );
+    expect(result.directus_users__memberships_occupation).toBe("");
+    expect(result.directus_users__pronouns).toBe("");
+    expect(result.directus_users__memberships_stair).toBe("");
+    expect(result.directus_users__memberships_door).toBe("");
+    expect(result.directus_users__memberships_phone).toBeNull();
+  });
+
+  it("trims leading and trailing whitespace from free-text fields", () => {
+    const result = registerSchema.parse(
+      validBody({
+        directus_users__email: "  max@example.com ",
+        directus_users__first_name: " Max ",
+        directus_users__last_name: "Muster\t",
+        directus_users__memberships_phone: " +43 664 1234567 ",
+        directus_users__memberships_street: " Hauptstraße ",
+        directus_users__memberships_city: " Wien\n",
+        directus_users__mila_survey_motivation: "\n  Weil ich will.  \n",
+        add_coshopper: true,
+        coshopper_firstname: " Erika ",
+        coshopper_lastname: " Muster ",
+        coshopper_email: " erika@example.com ",
+      }),
+    );
+    expect(result.directus_users__email).toBe("max@example.com");
+    expect(result.directus_users__first_name).toBe("Max");
+    expect(result.directus_users__last_name).toBe("Muster");
+    expect(result.directus_users__memberships_phone).toBe("+43 664 1234567");
+    expect(result.directus_users__memberships_street).toBe("Hauptstraße");
+    expect(result.directus_users__memberships_city).toBe("Wien");
+    expect(result.directus_users__mila_survey_motivation).toBe("Weil ich will.");
+    expect(result.coshopper_firstname).toBe("Erika");
+    expect(result.coshopper_lastname).toBe("Muster");
+    expect(result.coshopper_email).toBe("erika@example.com");
+  });
+
+  it("does not trim the password", () => {
+    const result = registerSchema.parse(
+      validBody({ directus_users__password: " secret " }),
+    );
+    expect(result.directus_users__password).toBe(" secret ");
+  });
+
+  it("requires Wien as city for Austrian postcodes starting with 1", () => {
+    const parse = (city: string, postcode: string) =>
+      registerSchema.safeParse(
+        validBody({
+          directus_users__memberships_city: city,
+          directus_users__memberships_postcode: postcode,
+          directus_users__memberships_country: "AT",
+        }),
+      ).success;
+    expect(parse("Wien", "1010")).toBe(true);
+    expect(parse("Vienna", "1010")).toBe(false);
+    expect(parse("Graz", "8020")).toBe(true);
+  });
+
+  it("rejects digits in the city", () => {
+    expect(
+      registerSchema.safeParse(validBody({ directus_users__memberships_city: "1010 Wien" }))
+        .success,
+    ).toBe(false);
+    expect(
+      registerSchema.safeParse(
+        validBody({
+          directus_users__memberships_city: "St. Pölten",
+          directus_users__memberships_postcode: "3100",
+        }),
+      ).success,
+    ).toBe(true);
+  });
+
+  it("rejects a house number in the street field", () => {
+    for (const street of ["Hauptstr. 1", "Hauptstr. 5a"]) {
+      const result = registerSchema.safeParse(
+        validBody({ directus_users__memberships_street: street }),
+      );
+      expect(result.success).toBe(false);
+    }
+  });
+
+  it("rejects \"/\" and \"top\" in house number, stair and door", () => {
+    for (const field of [
+      "directus_users__memberships_streetnumber",
+      "directus_users__memberships_stair",
+      "directus_users__memberships_door",
+    ]) {
+      for (const value of ["1/2", "Top 3"]) {
+        const result = registerSchema.safeParse(validBody({ [field]: value }));
+        expect(result.success).toBe(false);
+      }
+    }
+  });
+
+  it("requires the house number to start with a digit, but not stair or door", () => {
+    expect(
+      registerSchema.safeParse(validBody({ directus_users__memberships_streetnumber: "A" }))
+        .success,
+    ).toBe(false);
+    expect(
+      registerSchema.safeParse(
+        validBody({
+          directus_users__memberships_streetnumber: "1a",
+          directus_users__memberships_stair: "A",
+          directus_users__memberships_door: "EG",
+        }),
+      ).success,
+    ).toBe(true);
+  });
+
+  it("rejects a spaces-only custom visible name", () => {
+    const result = registerSchema.safeParse(
+      validBody({
+        use_custom_username: true,
+        directus_users__username: "   ",
+        directus_users__username_last: "M.",
+      }),
+    );
+    expect(result.success).toBe(false);
+  });
+
+  it("checks the custom visible name instead of first/last name", () => {
+    const custom = {
+      use_custom_username: true,
+      directus_users__first_name: "Max (Moritz)",
+      directus_users__username: "Maxi",
+      directus_users__username_last: "M.",
+    };
+    expect(registerSchema.safeParse(validBody(custom)).success).toBe(true);
+    expect(
+      registerSchema.safeParse(
+        validBody({ ...custom, directus_users__username_last: "M!" }),
+      ).success,
+    ).toBe(false);
   });
 });
 

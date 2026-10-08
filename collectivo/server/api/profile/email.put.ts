@@ -1,8 +1,9 @@
 import { updateUser } from "@directus/sdk";
 import { z } from "zod";
+import { text } from "../../../shared/addressSchema";
 
 const schema = z.object({
-  email: z.string().email(),
+  email: text().email(),
 });
 
 export default defineEventHandler(async (event) => {
