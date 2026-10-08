@@ -25,6 +25,9 @@ describe("profileSchema", () => {
     // The email notification checkbox saves on its own when toggled
     expect(parse({ send_notifications: false })).toBe(true);
     expect(parse({ username: "Max", username_last: "Muster" })).toBe(true);
+    // The phone number has its own form on the profile page
+    expect(parse({ memberships_phone: "+43 1 234567" })).toBe(true);
+    expect(parse({ memberships_phone: "" })).toBe(true);
   });
 
   it.each([
@@ -32,9 +35,49 @@ describe("profileSchema", () => {
     ["username", ""],
     ["username", "Max (Moritz)"],
     ["username_last", "a".repeat(256)],
-    ["pronouns", "   "],
+    ["memberships_phone", "43 +664 1234567"],
+    ["memberships_phone", "+43 664/1234567"],
+    ["memberships_phone", "12"],
+    ["memberships_phone", "1".repeat(41)],
   ])("rejects %s = %j", (field, value) => {
     expect(parse({ [field]: value })).toBe(false);
+  });
+
+  it("accepts phone numbers of 3 to 40 characters", () => {
+    expect(parse({ memberships_phone: "123" })).toBe(true);
+    expect(parse({ memberships_phone: "1".repeat(40) })).toBe(true);
+  });
+
+  it("trims leading and trailing whitespace", () => {
+    expect(
+      profileSchema.parse({
+        username: " Max ",
+        username_last: "Muster\t",
+        pronouns: "  sie/ihr ",
+        memberships_phone: " +43 664 1234567 ",
+        ...address,
+        memberships_street: " Hauptstraße ",
+      }),
+    ).toMatchObject({
+      username: "Max",
+      username_last: "Muster",
+      pronouns: "sie/ihr",
+      memberships_phone: "+43 664 1234567",
+      memberships_street: "Hauptstraße",
+    });
+  });
+
+  it("trims spaces-only optional fields to empty", () => {
+    expect(profileSchema.parse({ pronouns: "   ", memberships_phone: "   " })).toEqual({
+      pronouns: "",
+      memberships_phone: null,
+    });
+  });
+
+  it("stores a cleared phone number as null", () => {
+    expect(profileSchema.parse({ memberships_phone: "" })).toEqual({
+      memberships_phone: null,
+    });
   });
 
   it("accepts valid visible names and pronouns", () => {

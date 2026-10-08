@@ -6,17 +6,15 @@ import {
 import {
   addressCrossFieldIssues,
   addressFieldSchemas as address,
-  notBlank,
+  phone,
+  text,
 } from "../../../shared/addressSchema";
 
 // Synced to Keycloak firstName/lastName - see shared/personName.ts.
-const personName = notBlank(
-  z
-    .string()
-    .min(1)
-    .max(PERSON_NAME_MAX_LENGTH)
-    .refine(isValidPersonName, "Name contains characters that are not allowed"),
-);
+const personName = text()
+  .min(1)
+  .max(PERSON_NAME_MAX_LENGTH)
+  .refine(isValidPersonName, "Name contains characters that are not allowed");
 
 const REQUIRED_ADDRESS_FIELDS = [
   "memberships_street",
@@ -26,6 +24,12 @@ const REQUIRED_ADDRESS_FIELDS = [
   "memberships_country",
 ] as const;
 
+const ADDRESS_FIELDS = [
+  ...REQUIRED_ADDRESS_FIELDS,
+  "memberships_stair",
+  "memberships_door",
+] as const;
+
 // All fields are optional because callers update different parts of the profile
 // (e.g. the buddy system page only sends buddy_*). The address is all-or-nothing,
 // so the rules between postcode, city and country can be checked.
@@ -33,7 +37,7 @@ export const profileSchema = z
   .object({
     username: personName.optional(),
     username_last: personName.optional(),
-    pronouns: notBlank(z.string()).optional(),
+    pronouns: text().optional(),
     hide_name: z.boolean().optional(),
     send_notifications: z.boolean().optional(),
     buddy_status: z.enum(["need_buddy", "is_buddy", "keine_angabe"]).optional(),
@@ -45,11 +49,10 @@ export const profileSchema = z
     memberships_postcode: address.postcode.optional(),
     memberships_city: address.city.optional(),
     memberships_country: address.country.optional(),
+    memberships_phone: phone.optional(),
   })
   .superRefine((data, ctx) => {
-    const hasAddress = Object.keys(data).some((key) =>
-      key.startsWith("memberships_"),
-    );
+    const hasAddress = ADDRESS_FIELDS.some((field) => field in data);
     if (!hasAddress) return;
     for (const field of REQUIRED_ADDRESS_FIELDS) {
       if (data[field] === undefined) {

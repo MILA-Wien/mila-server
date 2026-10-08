@@ -62,6 +62,21 @@ describe("registerSchema", () => {
     expect(result.success).toBe(false);
   });
 
+  it.each(["+43 664 1234567", "0664 1234567"])("accepts phone number %j", (phone) => {
+    const result = registerSchema.safeParse(validBody({ directus_users__memberships_phone: phone }));
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects a phone number with + not at the start", () => {
+    const result = registerSchema.safeParse(validBody({ directus_users__memberships_phone: "43 +664 1234567" }));
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects a phone number with other characters", () => {
+    const result = registerSchema.safeParse(validBody({ directus_users__memberships_phone: "+43 664/1234567" }));
+    expect(result.success).toBe(false);
+  });
+
   it("rejects invalid person type", () => {
     const result = registerSchema.safeParse(validBody({ directus_users__memberships_person_type: "robot" }));
     expect(result.success).toBe(false);
@@ -199,23 +214,70 @@ describe("registerSchema", () => {
     expect(parse("10115", "DE")).toBe(true);
   });
 
-  it("rejects spaces-only input in text fields", () => {
+  it("rejects spaces-only input in required text fields", () => {
     for (const field of [
       "directus_users__first_name",
       "directus_users__last_name",
-      "directus_users__memberships_phone",
-      "directus_users__memberships_occupation",
-      "directus_users__pronouns",
       "directus_users__memberships_street",
       "directus_users__memberships_streetnumber",
-      "directus_users__memberships_stair",
-      "directus_users__memberships_door",
       "directus_users__memberships_postcode",
       "directus_users__memberships_city",
     ]) {
       const result = registerSchema.safeParse(validBody({ [field]: "   " }));
       expect(result.success, field).toBe(false);
     }
+  });
+
+  it("trims spaces-only input in optional text fields to empty", () => {
+    const result = registerSchema.parse(
+      validBody({
+        directus_users__memberships_occupation: "   ",
+        directus_users__pronouns: "   ",
+        directus_users__memberships_stair: "   ",
+        directus_users__memberships_door: "   ",
+        directus_users__memberships_phone: "   ",
+      }),
+    );
+    expect(result.directus_users__memberships_occupation).toBe("");
+    expect(result.directus_users__pronouns).toBe("");
+    expect(result.directus_users__memberships_stair).toBe("");
+    expect(result.directus_users__memberships_door).toBe("");
+    expect(result.directus_users__memberships_phone).toBeNull();
+  });
+
+  it("trims leading and trailing whitespace from free-text fields", () => {
+    const result = registerSchema.parse(
+      validBody({
+        directus_users__email: "  max@example.com ",
+        directus_users__first_name: " Max ",
+        directus_users__last_name: "Muster\t",
+        directus_users__memberships_phone: " +43 664 1234567 ",
+        directus_users__memberships_street: " Hauptstraße ",
+        directus_users__memberships_city: " Wien\n",
+        directus_users__mila_survey_motivation: "\n  Weil ich will.  \n",
+        add_coshopper: true,
+        coshopper_firstname: " Erika ",
+        coshopper_lastname: " Muster ",
+        coshopper_email: " erika@example.com ",
+      }),
+    );
+    expect(result.directus_users__email).toBe("max@example.com");
+    expect(result.directus_users__first_name).toBe("Max");
+    expect(result.directus_users__last_name).toBe("Muster");
+    expect(result.directus_users__memberships_phone).toBe("+43 664 1234567");
+    expect(result.directus_users__memberships_street).toBe("Hauptstraße");
+    expect(result.directus_users__memberships_city).toBe("Wien");
+    expect(result.directus_users__mila_survey_motivation).toBe("Weil ich will.");
+    expect(result.coshopper_firstname).toBe("Erika");
+    expect(result.coshopper_lastname).toBe("Muster");
+    expect(result.coshopper_email).toBe("erika@example.com");
+  });
+
+  it("does not trim the password", () => {
+    const result = registerSchema.parse(
+      validBody({ directus_users__password: " secret " }),
+    );
+    expect(result.directus_users__password).toBe(" secret ");
   });
 
   it("requires Wien as city for Austrian postcodes starting with 1", () => {

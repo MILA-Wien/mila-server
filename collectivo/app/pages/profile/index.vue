@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { object, string, bool, type InferType } from "yup";
+import { object, bool, type InferType } from "yup";
 import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
 
 definePageMeta({
@@ -29,12 +29,12 @@ const keycloakUpdatePasswordUrl = (() => {
 const visibleName = () =>
   personNameRules(
     t,
-    notBlankString(t).required(() => t("This field is required")),
+    trimmedString().required(() => t("This field is required")),
   );
 const schema = object({
   username: visibleName(),
   username_last: visibleName(),
-  pronouns: notBlankString(t),
+  pronouns: trimmedString(),
   hide_name: bool().optional(),
 });
 
@@ -60,9 +60,17 @@ const addressState = reactive({
   memberships_city: user.memberships_city,
 });
 
+// ── Phone number (belongs to the membership) ──────────────────────────────────
+const phoneSchema = object({
+  memberships_phone: phoneRules(t, trimmedString()),
+});
+
+type PhoneSchema = InferType<typeof phoneSchema>;
+const phoneState = reactive({ memberships_phone: user.memberships_phone });
+
 // Directus can return null values
 // But zod and yup want undefined
-for (const s of [state, addressState] as Record<string, any>[]) {
+for (const s of [state, addressState, phoneState] as Record<string, any>[]) {
   for (const key of Object.keys(s)) {
     if (s[key] === null) {
       s[key] = undefined;
@@ -102,6 +110,10 @@ async function onAddressSubmit(event: FormSubmitEvent<Record<string, unknown>>) 
   await saveProfile(event.data);
 }
 
+async function onPhoneSubmit(event: FormSubmitEvent<PhoneSchema>) {
+  await saveProfile(event.data);
+}
+
 async function onError(event: FormErrorEvent) {
   toast.add({
     title: t("Some fields are not filled in correctly"),
@@ -117,7 +129,10 @@ async function onError(event: FormErrorEvent) {
 
 // ── Email change ──────────────────────────────────────────────────────────────
 const emailSchema = object({
-  email: emailRules(t, string().required(() => t("This field is required"))),
+  email: emailRules(
+    t,
+    trimmedString().required(() => t("This field is required")),
+  ),
 });
 
 type EmailSchema = InferType<typeof emailSchema>;
@@ -306,6 +321,26 @@ function personTypeLabel(val: string | null | undefined) {
             </UButton>
           </div>
         </CollapsibleSection>
+
+        <!-- Telefonnummer (belongs to the membership) -->
+        <CollapsibleSection v-if="membership" :title="t('Telefonnummer')">
+          <UForm
+            :schema="phoneSchema"
+            :state="phoneState"
+            class="space-y-4"
+            @submit="onPhoneSubmit"
+            @error="onError"
+          >
+            <FormsFormGroup name="memberships_phone" :label="t('Telefonnummer')">
+              <UInput v-model="phoneState.memberships_phone" type="tel" />
+            </FormsFormGroup>
+            <div class="pt-2">
+              <UButton type="submit" icon="i-heroicons-check">
+                {{ t("Speichern") }}
+              </UButton>
+            </div>
+          </UForm>
+        </CollapsibleSection>
       </div>
     </div>
 
@@ -371,10 +406,6 @@ function personTypeLabel(val: string | null | undefined) {
         <div v-if="user.memberships_gender" class="flex gap-2">
           <dt class="text-sm w-48 shrink-0">{{ t("Geschlecht") }}</dt>
           <dd class="text-sm font-medium">{{ user.memberships_gender }}</dd>
-        </div>
-        <div v-if="user.memberships_phone" class="flex gap-2">
-          <dt class="text-sm w-48 shrink-0">{{ t("Telefon") }}</dt>
-          <dd class="text-sm font-medium">{{ user.memberships_phone }}</dd>
         </div>
         <div v-if="user.memberships_birthday" class="flex gap-2">
           <dt class="text-sm w-48 shrink-0">{{ t("Geburtsdatum") }}</dt>
@@ -541,7 +572,9 @@ de:
   "Natürliche Person": "Natürliche Person"
   "Juristische Person": "Juristische Person"
   "Geschlecht": "Geschlecht"
-  "Telefon": "Telefon"
+  "Telefonnummer": "Telefonnummer"
+  "Must be at least {min} characters": "Muss mindestens {min} Zeichen lang sein"
+  "t:phone_invalid": "Nur Ziffern und Leerzeichen sind erlaubt, + nur am Anfang"
   "Geburtsdatum": "Geburtsdatum"
   "Beruf": "Beruf"
   "Organisationsname": "Organisationsname"
@@ -552,7 +585,6 @@ de:
   "Must be at most {max} characters": "Darf höchstens {max} Zeichen lang sein"
   "Contains characters that are not allowed: {chars}": "Enthält nicht erlaubte Zeichen: {chars}"
   "Email address is not valid": "E-Mail Adresse ist nicht korrekt"
-  "Must not consist of spaces only": "Darf nicht nur aus Leerzeichen bestehen"
   "Please select a country from the list": "Bitte wähle ein Land aus der Liste"
   "Please enter the house number in its own field": "Bitte gib die Hausnummer im eigenen Feld ein"
   "Must start with a number, e.g. 1 or 1a": "Muss mit einer Zahl beginnen, z.B. 1 oder 1a"
@@ -615,7 +647,9 @@ en:
   "Natürliche Person": "Natural person"
   "Juristische Person": "Legal entity"
   "Geschlecht": "Gender"
-  "Telefon": "Phone"
+  "Telefonnummer": "Phone number"
+  "Must be at least {min} characters": "Must be at least {min} characters"
+  "t:phone_invalid": "Only digits and spaces are allowed, + only at the start"
   "Geburtsdatum": "Date of birth"
   "Beruf": "Occupation"
   "Organisationsname": "Organization name"
@@ -623,7 +657,6 @@ en:
   "Organisations-ID": "Organization ID"
   "Adresse": "Address"
   "This field is required": "This field is required"
-  "Must not consist of spaces only": "Must not consist of spaces only"
   "Please select a country from the list": "Please select a country from the list"
   "Please enter the house number in its own field": "Please enter the house number in its own field"
   "Must start with a number, e.g. 1 or 1a": "Must start with a number, e.g. 1 or 1a"

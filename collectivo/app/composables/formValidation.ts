@@ -14,20 +14,24 @@ import {
   PERSON_NAME_MAX_LENGTH,
   PERSON_NAME_PROHIBITED_CHARACTERS,
 } from "../../shared/personName";
-import { isNotBlank } from "../../shared/text";
+import {
+  isValidPhone,
+  PHONE_MAX_LENGTH,
+  PHONE_MIN_LENGTH,
+} from "../../shared/phone";
 
 // Yup rules shared by the registration and profile forms. The messages are looked up
 // with the caller's `t`, so each page needs translations for them.
 
 type Translate = (key: string, params?: Record<string, unknown>) => string;
 
-/** A string field that rejects input consisting only of spaces. */
-export function notBlankString(t: Translate) {
-  return string().test(
-    "not-blank",
-    () => t("Must not consist of spaces only"),
-    isNotBlank,
-  );
+/**
+ * A free-text field: leading and trailing whitespace is trimmed before validation
+ * (and written back to the form state on submit), so input consisting only of
+ * spaces counts as empty.
+ */
+export function trimmedString() {
+  return string().trim();
 }
 
 /**
@@ -69,6 +73,28 @@ export function personNameRules<S extends StringSchema<string | undefined>>(
 }
 
 /**
+ * Adds the phone number checks (digits and spaces, optional leading "+", length) to a
+ * string schema. Empty values pass, like on the server - see shared/phone.ts.
+ */
+export function phoneRules<S extends StringSchema<string | undefined>>(
+  t: Translate,
+  schema: S,
+) {
+  return schema
+    .test(
+      "phone-min",
+      () => t("Must be at least {min} characters", { min: PHONE_MIN_LENGTH }),
+      (value) => !value || value.length >= PHONE_MIN_LENGTH,
+    )
+    .test(
+      "phone-max",
+      () => t("Must be at most {max} characters", { max: PHONE_MAX_LENGTH }),
+      (value) => !value || value.length <= PHONE_MAX_LENGTH,
+    )
+    .test("phone", () => t("t:phone_invalid"), isValidPhone);
+}
+
+/**
  * Yup rules for the address fields (see shared/address.ts), used by the registration
  * and profile forms together with <FormsAddressFields>. `prefix` is prepended to the
  * field names, e.g. "directus_users__" on the registration form.
@@ -79,7 +105,7 @@ export function addressSchemaFields(
 ): Record<string, AnySchema> {
   const key = (name: string) => `${prefix}${name}`;
   const required = () => t("This field is required");
-  const text = () => notBlankString(t);
+  const text = () => trimmedString();
   const addressPart = <S extends StringSchema<string | undefined>>(schema: S) =>
     schema.test("address-part", () => t("t:address_part_invalid"), isValidAddressPart);
 

@@ -14,7 +14,8 @@ import {
 import {
   addressCrossFieldIssues,
   addressFieldSchemas as address,
-  notBlank,
+  phone,
+  text,
 } from "../../shared/addressSchema";
 
 // ============================================================================
@@ -24,26 +25,26 @@ import {
 export const registerSchema = z
   .object({
     // User account
-    directus_users__email: z.string().email(),
+    directus_users__email: text().email(),
     directus_users__password: z.string().min(1),
-    directus_users__first_name: notBlank(z.string().min(1)),
-    directus_users__last_name: notBlank(z.string().min(1)),
+    directus_users__first_name: text().min(1),
+    directus_users__last_name: text().min(1),
     directus_users__memberships_person_type: z.enum(["natural", "legal"]),
     directus_users__memberships_gender: z.string().min(1),
-    directus_users__memberships_phone: notBlank(z.string()).optional(),
+    directus_users__memberships_phone: phone.optional(),
     directus_users__memberships_birthday: z.string().optional(),
-    directus_users__memberships_occupation: notBlank(z.string()).optional(),
+    directus_users__memberships_occupation: text().optional(),
 
     // Organization (legal entity)
-    directus_users__memberships_organization_name: z.string().optional(),
-    directus_users__memberships_organization_type: z.string().optional(),
-    directus_users__memberships_organization_id: z.string().optional(),
+    directus_users__memberships_organization_name: text().optional(),
+    directus_users__memberships_organization_type: text().optional(),
+    directus_users__memberships_organization_id: text().optional(),
 
     // Visible name
     use_custom_username: z.boolean().optional(),
-    directus_users__username: notBlank(z.string()).optional(),
-    directus_users__username_last: notBlank(z.string()).optional(),
-    directus_users__pronouns: notBlank(z.string()).optional(),
+    directus_users__username: text().optional(),
+    directus_users__username_last: text().optional(),
+    directus_users__pronouns: text().optional(),
     directus_users__use_pronouns_on_card: z.boolean().optional(),
     directus_users__hide_name: z.boolean().optional(),
 
@@ -63,22 +64,22 @@ export const registerSchema = z
 
     // Payment
     directus_users__payments_type: z.string().min(1),
-    directus_users__payments_account_iban: z.string().optional(),
-    directus_users__payments_account_owner: z.string().optional(),
+    directus_users__payments_account_iban: text().optional(),
+    directus_users__payments_account_owner: text().optional(),
 
     // Co-shopper
     add_coshopper: z.boolean().optional(),
-    coshopper_firstname: z.string().optional(),
-    coshopper_lastname: z.string().optional(),
-    coshopper_email: z.string().email().optional().or(z.literal("")),
+    coshopper_firstname: text().optional(),
+    coshopper_lastname: text().optional(),
+    coshopper_email: text().pipe(z.literal("").or(z.string().email())).optional(),
 
     // Survey
-    directus_users__mila_survey_contact: z.string().optional(),
-    directus_users__mila_survey_motivation: z.string().optional(),
+    directus_users__mila_survey_contact: text().optional(),
+    directus_users__mila_survey_motivation: text().optional(),
     directus_users__mila_groups_interested_2: z.array(z.string()).optional(),
     directus_users__mila_skills_2: z.array(z.string()).optional(),
     directus_users__survey_languages: z.array(z.string()).optional(),
-    directus_users__survey_languages_additional: z.string().optional(),
+    directus_users__survey_languages_additional: text().optional(),
     directus_users__mila_pr_approved: z.boolean().optional(),
 
     // Frontend-only fields (validated but not used on backend)
@@ -144,6 +145,15 @@ export const registerSchema = z
           directus_users__last_name: data.directus_users__last_name,
         };
     for (const [key, value] of Object.entries(visibleName)) {
+      // Input is trimmed, so a spaces-only name arrives here as "".
+      if (!value) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Required",
+          path: [key],
+        });
+        continue;
+      }
       if (
         !isValidPersonName(value) ||
         (value?.length ?? 0) > PERSON_NAME_MAX_LENGTH
