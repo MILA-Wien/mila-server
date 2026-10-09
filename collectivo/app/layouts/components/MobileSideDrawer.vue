@@ -22,7 +22,7 @@ const profileMenuItems = ref<any[]>([
 
 if (user.value.isStudioAdmin) {
   profileMenuItems.value.push({
-    label: "Datenstudio",
+    label: "Data Studio",
     icon: "i-heroicons-chart-bar-square",
     to: runtimeConfig.public.directusUrl,
     target: "_blank",
@@ -31,11 +31,19 @@ if (user.value.isStudioAdmin) {
 }
 if (user.value.isShiftAdmin) {
   profileMenuItems.value.push({
-    label: "Schichtverwaltung",
+    label: "Shift Management",
     icon: "i-heroicons-calendar-days-solid",
     to: "/shifts/admin",
   });
 }
+
+profileMenuItems.value.push({
+  label: "System Status",
+  icon: "i-heroicons-signal",
+  to: "https://status.mila.wien/status/default",
+  target: "_blank",
+  external: true,
+});
 
 profileMenuItems.value.push({
   label: "Logout",
