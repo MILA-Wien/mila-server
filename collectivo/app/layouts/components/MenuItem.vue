@@ -80,4 +80,9 @@ de:
   "Receipts": "Belege"
   "Assortment": "Sortiment"
   "Help": "Hilfe"
+  "Profile": "Profil"
+  "Logout": "Abmelden"
+  "Data Studio": "Datenstudio"
+  "Shift Management": "Schichtverwaltung"
+  "System Status": "Systemstatus"
 </i18n>
