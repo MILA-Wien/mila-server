@@ -234,11 +234,11 @@ docker compose up --wait directus-db-dev
 - Install Docker and PNPM
 - Create a sync lock file `"/directus/uploads/sync.lock"`
 - Provision an external PostgreSQL database (with PostGIS extension) for Directus
+- Provision an external MariaDB database for Habidat
 - Provision an external PostgreSQL database for Keycloak
 - Set .env vars
   - Generate secure secrets, keys, and passwords
-  - Set `DIRECTUS_DB_HOST` to the hostname of the external Directus database
-  - Set `KEYCLOAK_DB_HOST` to the hostname of the external Keycloak database
+  - Set `DIRECTUS_DB_HOST`, `HABIDAT_DB_HOST`, and `KEYCLOAK_DB_HOST` to the hostname of the respective external database
   - Remove variable `KEYCLOAK_COMMAND` (absence triggers production mode)
 - [Set up a reverse proxy](https://www.linode.com/docs/guides/using-nginx-proxy-manager/) with a docker network called `proxiable`
 - Set the following [custom Nginx configuration](https://stackoverflow.com/questions/56126864) for Keycloak
