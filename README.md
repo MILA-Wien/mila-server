@@ -16,7 +16,7 @@ The software implements the following features needed for running a cooperative 
 - **Solidarity fund**: members can request money from the solidarity fund and see its current status.
 - **Buddy system**: members can offer or ask for a buddy to help them get started.
 - **Administration**: admins can manage members, shifts, and content in the Directus admin interface.
-- **Single sign-on**: one account for the member platform and other services.
+- **Single sign-on**: one account for the member platform and other services, including the direct loan platform [habiDAT](https://github.com/soudis/habidat-direktkredit) and [Nextcloud](https://nextcloud.com/).
 
 ## Architecture
 
@@ -24,10 +24,9 @@ The main components are:
 
 - **Collectivo**: web app built with the JavaScript framework [Nuxt](https://nuxt.com/) that uses [Vue.js](https://vuejs.org/) for the user interface.
 - [**Directus**](https://directus.com/): headless content management system (CMS) that provides the API and admin interface for the member database, containing user and membership, shifts, messages, and other data.
-- [**Nextcloud**](https://nextcloud.com/): file storage and groupware.
-- [**Keycloak**](https://www.keycloak.org/): identity provider that serves as single-sign on using the OpenID Connect (OIDC) protocol.
+- [**Keycloak**](https://www.keycloak.org/): identity provider that serves as single-sign on (SSO) using the OpenID Connect (OIDC) protocol.
 
-The diagram shows the local development setup from `docker-compose.yml` with nodes representing Docker services and boxes [Docker Compose profiles](https://docs.docker.com/compose/how-tos/profiles/). Arrows point from the caller to the service it calls.
+The diagram shows the local development setup from [`docker-compose.yml`](docker-compose.yml) with nodes representing Docker services and boxes [Docker Compose profiles](https://docs.docker.com/compose/how-tos/profiles/). Arrows point from the caller to the service it calls. In [`docker-compose.production.yml`](docker-compose.production.yml), habiDAT is additionally included but not Nextcloud which is externally hosted.
 
 ```mermaid
 flowchart TD
@@ -64,6 +63,13 @@ flowchart TD
 ## Repository structure
 
 - `collectivo/`: Nuxt app (frontend + server routes)
+  - `app/pages/`: routes of the frontend, e.g. `profile/`, `shifts/`, `register/`, `checkin/`
+  - `app/components/`, `app/composables/`, `app/layouts/`: Vue components, shared logic, and page layouts
+  - `server/api/`: API endpoints called by the frontend, Directus flows, and the check-in card reader
+  - `server/utils/`: server-side helpers, e.g. Directus client, mail sender, shift reminders
+  - `shared/`: code and types used by both frontend and server
+  - `i18n/`: translations
+  - `tests/`, `cypress/`: unit tests (Vitest) and end-to-end tests (Cypress)
 - `directus/`: Dockerfile/entrypoint for the Directus image
 - `directus-config/`: Directus schema/collections, synced via `directus-sync`
 - `keycloak/`: Keycloak Dockerfile, themes, realm import/export
