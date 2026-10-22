@@ -1,12 +1,90 @@
 # MILA Mitgliederplattform
 
-Member plattform of [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/).
+Member platform of [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/).
+
+## Functionality
+
+The software implements the following features needed for running a cooperative supermarket:
+
+- **Registration and membership**: online membership application, processing of applications, user-editable member profiles, co-shoppers.
+- **Shifts**: shift calendar, sign-up for regular and one-time shifts, absences, shift skills and categories, a shift log, and email reminders before upcoming shifts.
+- **Shopping eligibility**: shift counter to determine members' shopping entitlement with notices before and when it expires.
+- **Check-in**: API that a card reader at the store entrance calls to check whether a member may shop.
+- **Messages**: email campaigns, templates, and automated emails to members.
+- **Assortment**: members can suggest products and see responses, and can pre-order products in the shop of the ERP system [LotzApp](https://lotzapp.at/).
+- **Receipts**: members can view their purchase receipts from LotzApp.
+- **Solidarity fund**: members can request money from the solidarity fund and see its current status.
+- **Buddy system**: members can offer or ask for a buddy to help them get started.
+- **Administration**: admins can manage members, shifts, and content in the Directus admin interface.
+- **Single sign-on**: one account for the member platform and other services, including the direct loan platform [habiDAT](https://github.com/soudis/habidat-direktkredit) and [Nextcloud](https://nextcloud.com/).
+
+## Architecture
+
+The main components are:
+
+- **Collectivo**: web app built with the JavaScript framework [Nuxt](https://nuxt.com/) that uses [Vue.js](https://vuejs.org/) for the user interface.
+- [**Directus**](https://directus.com/): headless content management system (CMS) that provides the API and admin interface for the member database, containing user and membership, shifts, messages, and other data.
+- [**Keycloak**](https://www.keycloak.org/): identity provider that serves as single-sign on (SSO) using the OpenID Connect (OIDC) protocol.
+
+The diagram shows the local development setup from [`docker-compose.yml`](docker-compose.yml) with nodes representing Docker services and boxes [Docker Compose profiles](https://docs.docker.com/compose/how-tos/profiles/). Arrows point from the caller to the service it calls. In [`docker-compose.production.yml`](docker-compose.production.yml), habiDAT is additionally included but not Nextcloud which is externally hosted.
+
+```mermaid
+flowchart TD
+    collectivo["collectivo"]
+
+    subgraph dev_profile["profile: dev"]
+        directus["directus-dev"]
+        directus_db[("directus-db-dev<br/>(PostGIS)")]
+    end
+
+    subgraph keycloak_profile["profile: keycloak"]
+        keycloak[keycloak]
+        keycloak_db[("keycloak-db<br/>(Postgres)")]
+    end
+
+    subgraph nextcloud_profile["profile: nextcloud"]
+        nextcloud[nextcloud]
+        nextcloud_db[("nextcloud-db<br/>(MariaDB)")]
+    end
+
+    collectivo -->|"browser: login, session cookie"| directus
+    collectivo -->|"server routes: read/write with admin token"| directus
+    directus -->|"flow webhooks: user sync, user create, campaigns, cronjobs, LotzApp sync, RFID check"| collectivo
+    directus -->|"OIDC login"| keycloak
+    collectivo -->|"admin API: registration, user sync"| keycloak
+    collectivo -->|"browser: logout, password change"| keycloak
+    nextcloud -->|"OIDC login with user_oidc"| keycloak
+
+    directus -->|reads/writes| directus_db
+    keycloak -->|reads/writes| keycloak_db
+    nextcloud -->|reads/writes| nextcloud_db
+```
+
+## Repository structure
+
+- `collectivo/`: Nuxt app (frontend + server routes)
+  - `app/pages/`: routes of the frontend, e.g. `profile/`, `shifts/`, `register/`, `checkin/`
+  - `app/components/`, `app/composables/`, `app/layouts/`: Vue components, shared logic, and page layouts
+  - `server/api/`: API endpoints called by the frontend, Directus flows, and the check-in card reader
+  - `server/utils/`: server-side helpers, e.g. Directus client, mail sender, shift reminders
+  - `shared/`: code and types used by both frontend and server
+  - `i18n/`: translations
+  - `tests/`, `cypress/`: unit tests (Vitest) and end-to-end tests (Cypress)
+- `directus/`: Dockerfile/entrypoint for the Directus image
+- `directus-config/`: Directus schema/collections, synced via `directus-sync`
+- `keycloak/`: Keycloak Dockerfile, themes, realm import/export
+- `nextcloud/`: Keycloak integration notes for Nextcloud
 
 ## Local development setup
 
-- Install Docker, nodejs, and PNPM. To do so, it is advisable to install Docker and nvm from your operating system's package repository and then: `nvm install node` and `npm install -g pnpm`
-- Clone this repository
+By default, the setup runs with just Collectivo and Directus using the `dev` Docker Compose profile. Keycloak and Nextcloud can be enabled via additional profiles.
 
+### Collectivo and Directus
+
+#### Installation
+
+- Install Docker, nodejs, and PNPM and make sure the Docker daemon is running.
+- Clone this repository.
 - Create .env files:
   ```sh
   cp .env.example .env
@@ -24,9 +102,12 @@ Member plattform of [MILA Mitmach-Supermarkt e.G.](https://www.mila.wien/).
   ```sh
   npx directus-sync push
   ```
-- Install packages and start collectivo:
+- Install JavaScript packages:
   ```sh
   pnpm i
+  ```
+- Start collectivo:
+  ```sh
   pnpm dev
   ```
 - Go to http://localhost:3000 and click on "Seed Example Data" (fast, small dataset) or run `pnpm seed`
@@ -48,68 +129,17 @@ Login credentials for directus admin without keycloak:
 - Username `admin@example.com`
 - Password `admin`
 
-## Troubleshooting
+#### Troubleshooting
 
-- Resetting everything
-  - Delete `.env` and `collectivo/.env`
-  - To be super clean, also delete `node_modules`, `collectivo/node_modules`, and `collectivo/.nuxt`
-  - Run `docker compose down -v`
+To reset everything:
 
-## Testing
+- Overwrite `.env` and `collectivo/.env` with the examples.
+- To be super clean, also delete `node_modules`, `collectivo/node_modules`, and `collectivo/.nuxt`
+- Run `docker compose down -v`
 
-To run end-to-end tests, run `npx cypress open` or `npx cypress run`
+### Keycloak
 
-## Database schemas
-
-Collectivo uses [directus-sync](https://github.com/tractr/directus-sync) to apply the database schema.
-
-Updating the database schema
-
-- Make changes to the database schema on your local system
-- Update the database schema in the repository
-  ```sh
-  npx directus-sync pull && node sort-directus-config.mjs
-  ```
-- Make a database backup of the production system (see below)
-- Run
-  ```sh
-  npx directus-sync push
-  ```
-  (credentials will be taken from .env)
-
-Troubleshooting
-
-- Changing the directus version also changes the schema. Pull the schema after changing the version and starting the container.
-- Changing flows often creates errors on push, this can be solved by deleting the changed flows manually before pushing.
-- When changing the directus version, push the schema first, then change the directus version, and then pull the schema again.
-
-## Database backups
-
-Database backups are not managed by Docker Compose. The Directus database is an external PostgreSQL instance; backups must be handled by the database host provider or a separate backup tool.
-
-For local development, you can create a manual backup of `directus-db-dev`:
-
-```sh
-docker compose exec directus-db-dev pg_dump --clean -U directus directus > my-backup.sql
-```
-
-To restore it:
-
-```sh
-docker compose exec -T directus-db-dev psql -U directus -d directus < my-backup.sql
-```
-
-To reset the dev database before restoring (this will delete all data):
-
-```sh
-docker compose down -v
-docker compose up --wait directus-db-dev
-# wait for healthy, then restore
-```
-
-## Local setup with Keycloak
-
-The dev setup runs without keycloak. To test keycloak integration:
+To test keycloak integration:
 
 - In `.env`, set
   ```
@@ -137,14 +167,75 @@ The collectivo realm contains users with kc prefix to avoid conflicts with the u
 
 For more details see the [Keycloak readme](keycloak/README.md).
 
-## Local setup with Nextcloud
+### Nextcloud
 
 - In `.env`, set `COMPOSE_PROFILES = "dev,keycloak,nextcloud"`. Nextcloud depends on the keycloak profile.
 - Open the Nextcloud GUI at [localhost:8081](http://localhost:8081) and create an admin user to finish the installation.
 
 For setup of the integration with keycloak see the [Nextcloud readme](nextcloud/README.md).
 
-## Production setup
+## Development
+
+### Checks and Continuous Integration (CI)
+
+- Lint: `pnpm lint` (fix with `pnpm lint:fix`)
+- Format: `pnpm format` (fix with `pnpm format:fix`)
+- Type check: `pnpm typecheck`
+- Unit tests: `pnpm test` (Vitest, `collectivo/tests/unit/`)
+- End-to-end tests: with Collectivo running on http://localhost:3000, run `npx cypress open` (interactive) or `npx cypress run` in `collectivo/` (Cypress, `collectivo/cypress/e2e/`)
+- CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs the type check on every push and pull request. Run the other checks locally before pushing.
+
+### Database schema
+
+Collectivo uses [directus-sync](https://github.com/tractr/directus-sync) to apply the database schema and other directus configuration.
+
+#### Updates
+
+- Make changes to the database schema on your local system.
+- Update the database schema in the repository and sort json entries to avoid spurious diffs:
+  ```sh
+  npx directus-sync pull && node sort-directus-config.mjs
+  ```
+- Create a database [backup](#backups).
+- Run
+  ```sh
+  npx directus-sync push
+  ```
+  (credentials will be taken from .env)
+
+#### Troubleshooting
+
+- Changing the directus version also changes the schema. Pull the schema after changing the version and starting the container.
+- Changing flows often creates errors on push, this can be solved by deleting the changed flows manually before pushing.
+- When changing the directus version, push the schema first, then change the directus version, and then pull the schema again.
+
+#### Backups
+
+Database backups are not managed by Docker Compose. The Directus database is an external PostgreSQL instance; backups must be handled by the database host provider or a separate backup tool.
+
+For local development, you can create a manual backup of `directus-db-dev`:
+
+```sh
+docker compose exec directus-db-dev pg_dump --clean -U directus directus > my-backup.sql
+```
+
+To restore it:
+
+```sh
+docker compose exec -T directus-db-dev psql -U directus -d directus < my-backup.sql
+```
+
+To reset the dev database before restoring (this will delete all data):
+
+```sh
+docker compose down -v
+docker compose up --wait directus-db-dev
+# wait for healthy, then restore
+```
+
+## Production
+
+### Setup
 
 - Install Docker and PNPM
 - Create a sync lock file `"/directus/uploads/sync.lock"`
@@ -153,9 +244,7 @@ For setup of the integration with keycloak see the [Nextcloud readme](nextcloud/
 - Provision an external PostgreSQL database for Keycloak
 - Set .env vars
   - Generate secure secrets, keys, and passwords
-  - Set `DIRECTUS_DB_HOST` to the hostname of the external Directus database
-  - Set `HABIDAT_DB_HOST` to the hostname of the external Habidat database
-  - Set `KEYCLOAK_DB_HOST` to the hostname of the external Keycloak database
+  - Set `DIRECTUS_DB_HOST`, `HABIDAT_DB_HOST`, and `KEYCLOAK_DB_HOST` to the hostname of the respective external database
   - Remove variable `KEYCLOAK_COMMAND` (absence triggers production mode)
 - [Set up a reverse proxy](https://www.linode.com/docs/guides/using-nginx-proxy-manager/) with a docker network called `proxiable`
 - Set the following [custom Nginx configuration](https://stackoverflow.com/questions/56126864) for Keycloak
@@ -168,11 +257,11 @@ For setup of the integration with keycloak see the [Nextcloud readme](nextcloud/
 - Run `pnpm i` and `pnpm build`
 - Run `docker compose -f docker-compose.production.yml up -d`
 
-## Server updates
+### Server updates
 
 For deploying updates on the server:
 
-- Create a database backup (see above)
+- Create a database [backup](#backups)
 - Run `git pull`
 - Optional: if the directus version changed, perform the upgrade on the running server:
   - Build the new version: `docker compose -f docker-compose.production.yml build directus`
