@@ -33,7 +33,7 @@ const props = defineProps({
       <template v-if="props.label">{{ props.label }}</template>
       <slot name="title"></slot>
       <span v-if="props.required" class="text-red-600 ml-1">*</span>
-      <UPopover v-if="infotext" class="ml-1 z-50">
+      <UPopover v-if="infotext" class="ml-1">
         <UButton color="none" class="ml-1 mr-0 my-0 p-0 leading-none">
           <UIcon
             name="i-heroicons-question-mark-circle"
