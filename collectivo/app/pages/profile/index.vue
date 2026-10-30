@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { object, bool, type InferType } from "yup";
+import type { InferType } from "yup";
 import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
 
 definePageMeta({
@@ -25,18 +25,13 @@ const keycloakUpdatePasswordUrl = (() => {
   return `${runtimeConfig.public.keycloakUrl}/realms/${runtimeConfig.public.keycloakRealm}/protocol/openid-connect/auth?${params.toString()}`;
 })();
 
-// Same rules as on the registration form - see app/composables/formValidation.ts.
-const visibleName = () =>
-  personNameRules(
-    t,
-    trimmedString().required(() => t("This field is required")),
-  );
-const schema = object({
-  username: visibleName(),
-  username_last: visibleName(),
-  pronouns: trimmedString(),
-  hide_name: bool().optional(),
-});
+// See app/composables/formValidation.ts.
+const {
+  profile: schema,
+  address: addressSchema,
+  phone: phoneSchema,
+  email: emailSchema,
+} = profileFormSchemas(t);
 
 type Schema = InferType<typeof schema>;
 
@@ -48,8 +43,6 @@ const state = reactive({
 });
 
 // ── Address (belongs to the membership) ───────────────────────────────────────
-const addressSchema = object(addressSchemaFields(t));
-
 const addressState = reactive({
   memberships_country: user.memberships_country,
   memberships_street: user.memberships_street,
@@ -61,10 +54,6 @@ const addressState = reactive({
 });
 
 // ── Phone number (belongs to the membership) ──────────────────────────────────
-const phoneSchema = object({
-  memberships_phone: phoneRules(t, trimmedString()),
-});
-
 type PhoneSchema = InferType<typeof phoneSchema>;
 const phoneState = reactive({ memberships_phone: user.memberships_phone });
 
@@ -128,13 +117,6 @@ async function onError(event: FormErrorEvent) {
 }
 
 // ── Email change ──────────────────────────────────────────────────────────────
-const emailSchema = object({
-  email: emailRules(
-    t,
-    trimmedString().required(() => t("This field is required")),
-  ),
-});
-
 type EmailSchema = InferType<typeof emailSchema>;
 const emailState = reactive({ email: user.email });
 async function onEmailSubmit(event: FormSubmitEvent<EmailSchema>) {

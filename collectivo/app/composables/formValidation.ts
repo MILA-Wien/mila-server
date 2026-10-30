@@ -1,4 +1,4 @@
-import { string, type AnySchema, type StringSchema } from "yup";
+import { bool, object, string, type AnySchema, type StringSchema } from "yup";
 import { z } from "zod";
 import {
   isValidAddressPart,
@@ -151,5 +151,30 @@ export function addressSchemaFields(
           context.parent[key("memberships_country")],
         ),
       ),
+  };
+}
+
+/**
+ * The forms of the profile page. The visible name has the same rules as on the
+ * registration form. Also used by the unit test that checks the example data
+ * (tests/unit/exampleData.test.ts).
+ */
+export function profileFormSchemas(t: Translate) {
+  const required = () => t("This field is required");
+  const visibleName = () => personNameRules(t, trimmedString().required(required));
+  return {
+    profile: object({
+      username: visibleName(),
+      username_last: visibleName(),
+      pronouns: trimmedString(),
+      hide_name: bool().optional(),
+    }),
+    address: object(addressSchemaFields(t)),
+    phone: object({
+      memberships_phone: phoneRules(t, trimmedString()),
+    }),
+    email: object({
+      email: emailRules(t, trimmedString().required(required)),
+    }),
   };
 }

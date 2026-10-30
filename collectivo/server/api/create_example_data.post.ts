@@ -12,13 +12,15 @@ import {
   updateItems,
   updateSingleton,
   updateUser,
+  updateUsersBatch,
 } from "@directus/sdk";
 
 import { DateTime } from "luxon";
+import type { UserProfile } from "../utils/dbSchema";
 
 // Small, e2e-fast membership count (as opposed the full production-calibrated
 // TARGET_TOTAL_MEMBERSHIPS used for manual/dev seeding).
-const SEED_SCALE_SMALL_TOTAL_MEMBERSHIPS = 60;
+export const SEED_SCALE_SMALL_TOTAL_MEMBERSHIPS = 60;
 
 // Resolved lazily (called only once the handler actually runs, by which
 // point the whole module - including TARGET_TOTAL_MEMBERSHIPS further down -
@@ -326,6 +328,96 @@ function assignUniqueEmails(identities: [string, string][]): string[] {
   });
 }
 
+// Real Vienna streets with the postcode of the district they're in, so the
+// generated addresses pass the address validation of the registration and
+// profile pages (4-digit postcode, city "Wien", country "AT").
+export const VIENNA_STREETS: [street: string, postcode: string][] = [
+  ["Kärntner Straße", "1010"], ["Herrengasse", "1010"], ["Rotenturmstraße", "1010"],
+  ["Praterstraße", "1020"], ["Taborstraße", "1020"], ["Große Mohrengasse", "1020"],
+  ["Landstraßer Hauptstraße", "1030"], ["Ungargasse", "1030"], ["Rennweg", "1030"],
+  ["Wiedner Hauptstraße", "1040"], ["Mühlgasse", "1040"],
+  ["Reinprechtsdorfer Straße", "1050"], ["Schönbrunner Straße", "1050"],
+  ["Mariahilfer Straße", "1060"], ["Gumpendorfer Straße", "1060"],
+  ["Neubaugasse", "1070"], ["Zieglergasse", "1070"], ["Kaiserstraße", "1070"],
+  ["Josefstädter Straße", "1080"], ["Lange Gasse", "1080"],
+  ["Währinger Straße", "1090"], ["Porzellangasse", "1090"], ["Liechtensteinstraße", "1090"],
+  ["Favoritenstraße", "1100"], ["Quellenstraße", "1100"], ["Laxenburger Straße", "1100"],
+  ["Simmeringer Hauptstraße", "1110"],
+  ["Meidlinger Hauptstraße", "1120"], ["Schönbrunner Schloßstraße", "1120"],
+  ["Hietzinger Hauptstraße", "1130"], ["Lainzer Straße", "1130"],
+  ["Hütteldorfer Straße", "1140"], ["Linzer Straße", "1140"],
+  ["Märzstraße", "1150"], ["Sechshauser Straße", "1150"],
+  ["Thaliastraße", "1160"], ["Ottakringer Straße", "1160"],
+  ["Hernalser Hauptstraße", "1170"], ["Jörgerstraße", "1170"],
+  ["Gentzgasse", "1180"], ["Kutschkergasse", "1180"],
+  ["Billrothstraße", "1190"], ["Grinzinger Straße", "1190"],
+  ["Wallensteinstraße", "1200"], ["Jägerstraße", "1200"],
+  ["Brünner Straße", "1210"], ["Prager Straße", "1210"],
+  ["Wagramer Straße", "1220"], ["Erzherzog-Karl-Straße", "1220"],
+  ["Breitenfurter Straße", "1230"], ["Perchtoldsdorfer Straße", "1230"],
+];
+
+export interface ExampleAddress {
+  memberships_street: string;
+  memberships_streetnumber: string;
+  memberships_stair?: string;
+  memberships_door?: string;
+  memberships_postcode: string;
+  memberships_city: string;
+  memberships_country: string;
+}
+
+/** Random Vienna address. */
+function exampleAddress(): ExampleAddress {
+  const pick = <T>(arr: T[]) => arr[Math.floor(rng() * arr.length)]!;
+  const [street, postcode] = pick(VIENNA_STREETS);
+  const suffix = chance(0.1) ? pick(["a", "b", "c"]) : "";
+  // Most Viennese flats are in apartment buildings, so a door number is the
+  // norm; stairs only exist in larger buildings.
+  const hasDoor = chance(0.85);
+  const hasStair = hasDoor && chance(0.3);
+  const streetnumber = `${randomInt(1, 120)}${suffix}`;
+  const stair = hasStair ? String(randomInt(1, 4)) : undefined;
+  const door = hasDoor ? String(randomInt(1, 30)) : undefined;
+  return {
+    memberships_street: street,
+    memberships_streetnumber: streetnumber,
+    ...(stair && { memberships_stair: stair }),
+    ...(door && { memberships_door: door }),
+    memberships_postcode: postcode,
+    memberships_city: "Wien",
+    memberships_country: "AT",
+  };
+}
+
+// Austrian mobile network prefixes.
+const MOBILE_PREFIXES = ["650", "660", "664", "676", "680", "681", "688", "699"];
+
+/** Random Austrian phone number in a format the phone validation accepts
+ * (digits and spaces, "+" only at the start) - mostly mobile, some Vienna
+ * landlines (area code 1), both in international and national notation.
+ * Some users have no phone number. */
+function examplePhone(): { memberships_phone?: string } {
+  if (chance(0.2)) return {};
+  const areaCode = chance(0.8)
+    ? MOBILE_PREFIXES[Math.floor(rng() * MOBILE_PREFIXES.length)]!
+    : "1";
+  const subscriber = String(randomInt(1_000_000, 9_999_999));
+  const phone = chance(0.5) ? `+43 ${areaCode} ${subscriber}` : `0${areaCode} ${subscriber}`;
+  return { memberships_phone: phone };
+}
+
+const CONTACT_FIELDS = [
+  "memberships_street",
+  "memberships_streetnumber",
+  "memberships_stair",
+  "memberships_door",
+  "memberships_postcode",
+  "memberships_city",
+  "memberships_country",
+  "memberships_phone",
+] as const;
+
 // ============================================================================
 // CALIBRATION CONSTANTS
 // Loosely and approximately calibrated from a production export (see scripts/export-shift-stats.ts). Comments name which stat a figure is
@@ -335,7 +427,7 @@ function assignUniqueEmails(identities: [string, string][]): string[] {
 // ============================================================================
 
 // loosely: memberships.total_count
-const TARGET_TOTAL_MEMBERSHIPS = 1700;
+export const TARGET_TOTAL_MEMBERSHIPS = 1700;
 
 // loosely: memberships.status_type_crosstab
 const MEMBERSHIP_STATUS_WEIGHTS: { type: string; status: string; weight: number }[] = [
@@ -463,7 +555,7 @@ const SHIFT_LOG_TYPE_WEIGHTS: { type: string; weight: number }[] = [
 const SHIFT_LOG_HISTORY_MONTHS = 3;
 
 // loosely: buddy_status mix (directus_users, role NutzerInnen)
-const BUDDY_STATUS_WEIGHTS: { status: string; weight: number }[] = [
+const BUDDY_STATUS_WEIGHTS: { status: UserProfile["buddy_status"]; weight: number }[] = [
   { status: "keine_angabe", weight: 1727.5 },
   { status: "is_buddy", weight: 6.8 },
   { status: "need_buddy", weight: 2.1 },
@@ -777,9 +869,9 @@ async function getRole(name: string) {
 
 async function create_examples(totalMemberships: number) {
   console.info(`Creating example data for collectivo (${totalMemberships} fake memberships)`);
-  rng = makeRng(42);
-  await create_users();
-  const fakeUsers = await create_fake_users(totalMemberships);
+  const userRecords = generateUserRecords(totalMemberships);
+  await create_users(userRecords.exampleUsers);
+  const fakeUsers = await create_fake_users(userRecords.fakeUsers);
   const plan = buildFakePlan(fakeUsers.length);
   await purge_assignments();
   await create_memberships();
@@ -804,45 +896,81 @@ function exampleUserEmail(userName: string): string {
   return `${userName.toLowerCase()}@example.com`;
 }
 
-async function create_users() {
+/** A user as written to directus_users, without the role. */
+export type UserRecord = {
+  first_name: string;
+  last_name: string;
+  username: string;
+  username_last: string;
+  email: string;
+  password: string;
+  status: string;
+  buddy_status?: UserProfile["buddy_status"];
+  pronouns?: string;
+  memberships_phone?: string;
+} & ExampleAddress;
+
+/** All users a seed run writes: the fixed example users, then the fake
+ * users. Resets the rng, so this is the first step of every seed run (see
+ * create_examples) - and lets the unit test check exactly the seeded data. */
+export function generateUserRecords(totalMemberships: number): {
+  exampleUsers: UserRecord[];
+  fakeUsers: UserRecord[];
+} {
+  rng = makeRng(42);
+
+  const exampleUsers = EXAMPLE_USER_NAMES.map((userName) => ({
+    first_name: userName,
+    last_name: "Example",
+    username: userName,
+    username_last: "Example",
+    email: exampleUserEmail(userName),
+    password: userName.toLowerCase(),
+    status: "active",
+    ...exampleAddress(),
+    ...examplePhone(),
+  }));
+
+  const identities = generateIdentities(totalMemberships);
+  const emails = assignUniqueEmails(identities);
+  const buddyStatuses = identities.map(() =>
+    pickWeighted(BUDDY_STATUS_WEIGHTS.map((b) => ({ weight: b.weight, value: b.status }))),
+  );
+  const pronouns = identities.map(() =>
+    pickWeighted(PRONOUNS_WEIGHTS.map((p) => ({ weight: p.weight, value: p.pronouns }))),
+  );
+  const contacts = identities.map(() => ({
+    ...exampleAddress(),
+    ...examplePhone(),
+  }));
+  const fakeUsers = identities.map(([first, last], i) => ({
+    first_name: first,
+    last_name: last,
+    username: first,
+    username_last: last,
+    email: emails[i]!,
+    password: slugifyForEmail(first),
+    status: "active",
+    buddy_status: buddyStatuses[i],
+    pronouns: pronouns[i],
+    ...contacts[i]!,
+  }));
+
+  return { exampleUsers, fakeUsers };
+}
+
+async function create_users(records: UserRecord[]) {
   const directus = await useDirectusAdmin();
   const userRole = await getRole("NutzerInnen");
-  const editorRole = await getRole("Mitgliederverwaltung");
-  const adminRole = await getRole("Administrator");
+  const roles: Record<string, string> = {
+    Admin: await getRole("Administrator"),
+    Editor: await getRole("Mitgliederverwaltung"),
+  };
 
   // Create some users
   console.info("Creating users");
 
-  const users = [];
-
-  for (const userName of EXAMPLE_USER_NAMES) {
-    const email = exampleUserEmail(userName);
-
-    const u = {
-      first_name: userName,
-      last_name: "Example",
-      username: userName,
-      username_last: "Example",
-      email: email,
-      password: `${userName.toLowerCase()}`,
-      role: userRole,
-      status: "active",
-      memberships_street: "Example Street",
-      memberships_city: "Example City",
-      memberships_streetnumber: "123",
-      memberships_postcode: "12345",
-    };
-
-    if (userName == "Admin") {
-      u.role = adminRole;
-    }
-
-    if (userName == "Editor") {
-      u.role = editorRole;
-    }
-
-    users.push(u);
-  }
+  const users = records.map((u) => ({ ...u, role: roles[u.username] ?? userRole }));
 
   for (const user of users) {
     const usersDB = await directus.request(
@@ -875,20 +1003,13 @@ interface FakeUser {
   email: string;
 }
 
-async function create_fake_users(totalMemberships: number): Promise<FakeUser[]> {
+async function create_fake_users(records: UserRecord[]): Promise<FakeUser[]> {
   const directus = await useDirectusAdmin();
   const userRole = await getRole("NutzerInnen");
 
-  console.info(`Creating ${totalMemberships} fake Vienna users`);
+  console.info(`Creating ${records.length} fake Vienna users`);
 
-  const identities = generateIdentities(totalMemberships);
-  const emails = assignUniqueEmails(identities);
-  const buddyStatuses = identities.map(() =>
-    pickWeighted(BUDDY_STATUS_WEIGHTS.map((b) => ({ weight: b.weight, value: b.status }))),
-  );
-  const pronouns = identities.map(() =>
-    pickWeighted(PRONOUNS_WEIGHTS.map((p) => ({ weight: p.weight, value: p.pronouns }))),
-  );
+  const emails = records.map((r) => r.email);
 
   // GET-based lookup - keep the _in filter small enough to stay under
   // request header/URL size limits (500 emails in one filter causes a 431).
@@ -896,34 +1017,45 @@ async function create_fake_users(totalMemberships: number): Promise<FakeUser[]> 
     directus.request(
       readUsers({
         filter: { email: { _in: chunk } },
-        fields: ["id", "email"],
+        fields: ["id", "email", ...CONTACT_FIELDS],
         limit: -1,
       }),
-    ) as Promise<{ id: string; email: string }[]>,
+    ) as Promise<({ id: string; email: string } & Record<string, unknown>)[]>,
   );
-  const existingByEmail = new Map(existing.map((u) => [u.email, u.id]));
+  const existingByEmail = new Map(existing.map((u) => [u.email, u]));
 
+  // Existing users are otherwise reused as-is, but users from earlier seed
+  // runs may still carry an address the forms reject (e.g. a 5-digit
+  // postcode) or no phone number - so bring their address and phone number
+  // up to date. Only users where these differ are touched, so this is a
+  // no-op on later reruns.
+  const toUpdate: any[] = [];
   const toCreate: any[] = [];
-  identities.forEach(([first, last], i) => {
-    const email = emails[i]!;
-    if (existingByEmail.has(email)) return;
-    toCreate.push({
-      first_name: first,
-      last_name: last,
-      username: first,
-      username_last: last,
-      email,
-      password: slugifyForEmail(first),
-      role: userRole,
-      status: "active",
-      buddy_status: buddyStatuses[i],
-      pronouns: pronouns[i],
-      memberships_street: "Example Street",
-      memberships_city: "Example City",
-      memberships_streetnumber: "123",
-      memberships_postcode: "12345",
-    });
-  });
+  for (const record of records) {
+    const existingUser = existingByEmail.get(record.email);
+    if (!existingUser) {
+      toCreate.push({ ...record, role: userRole });
+      continue;
+    }
+    if (CONTACT_FIELDS.some((f) => (existingUser[f] ?? null) !== (record[f] ?? null))) {
+      toUpdate.push({
+        id: existingUser.id,
+        // Explicit nulls clear optional fields the new contact data doesn't have.
+        memberships_stair: null,
+        memberships_door: null,
+        memberships_phone: null,
+        ...Object.fromEntries(
+          CONTACT_FIELDS.filter((f) => record[f] !== undefined).map((f) => [f, record[f]]),
+        ),
+      });
+    }
+  }
+
+  // USER_CREATE_CHUNK_SIZE for the same reason as createUsers below: the
+  // Keycloak sync flow may also run on user updates.
+  await inChunks(toUpdate, USER_CREATE_CHUNK_SIZE, (chunk) =>
+    directus.request(updateUsersBatch(chunk, { fields: ["id"] } as any)).then(() => []),
+  );
 
   const created = await inChunks(toCreate, USER_CREATE_CHUNK_SIZE, (chunk) =>
     directus.request(
@@ -932,10 +1064,9 @@ async function create_fake_users(totalMemberships: number): Promise<FakeUser[]> 
   );
   const createdByEmail = new Map(created.map((u) => [u.email, u.id]));
 
-  return identities.map(([first, last], i) => {
-    const email = emails[i]!;
-    const id = existingByEmail.get(email) ?? createdByEmail.get(email)!;
-    return { id, first_name: first, last_name: last, email };
+  return records.map(({ first_name, last_name, email }) => {
+    const id = existingByEmail.get(email)?.id ?? createdByEmail.get(email)!;
+    return { id, first_name, last_name, email };
   });
 }
 
