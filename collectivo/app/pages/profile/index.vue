@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { object, string, bool, type InferType } from "yup";
+import type { InferType } from "yup";
 import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
+import { TEXT_MAX_LENGTH } from "../../../shared/addressSchema";
 
 definePageMeta({
   middleware: ["auth"],
@@ -25,14 +26,13 @@ const keycloakUpdatePasswordUrl = (() => {
   return `${runtimeConfig.public.keycloakUrl}/realms/${runtimeConfig.public.keycloakRealm}/protocol/openid-connect/auth?${params.toString()}`;
 })();
 
-const mv = "Dieses Feld ist erforderlich";
-const schema = object({
-  username: string().min(1, t(mv)).required(t(mv)),
-  username_last: string().min(1, t(mv)).required(t(mv)),
-  pronouns: string().optional(),
-  hide_name: bool().optional(),
-  send_notifications: bool().optional(),
-});
+// See app/composables/formValidation.ts.
+const {
+  profile: schema,
+  address: addressSchema,
+  phone: phoneSchema,
+  email: emailSchema,
+} = profileFormSchemas(t);
 
 type Schema = InferType<typeof schema>;
 
@@ -41,36 +41,67 @@ const state = reactive({
   username_last: user.username_last,
   pronouns: user.pronouns,
   hide_name: user.hide_name,
-  send_notifications: user.send_notifications,
 });
+
+// ── Address (belongs to the membership) ───────────────────────────────────────
+const addressState = reactive({
+  memberships_country: user.memberships_country,
+  memberships_street: user.memberships_street,
+  memberships_streetnumber: user.memberships_streetnumber,
+  memberships_stair: user.memberships_stair,
+  memberships_door: user.memberships_door,
+  memberships_postcode: user.memberships_postcode,
+  memberships_city: user.memberships_city,
+});
+
+// ── Phone number (belongs to the membership) ──────────────────────────────────
+type PhoneSchema = InferType<typeof phoneSchema>;
+const phoneState = reactive({ memberships_phone: user.memberships_phone });
 
 // Directus can return null values
 // But zod and yup want undefined
-Object.keys(state).forEach((key) => {
-  const s = state as Record<string, any>;
-  if (s[key] === null) {
-    s[key] = undefined;
+for (const s of [state, addressState, phoneState] as Record<string, any>[]) {
+  for (const key of Object.keys(s)) {
+    if (s[key] === null) {
+      s[key] = undefined;
+    }
   }
-});
+}
+
+// $fetch, not useFetch: useFetch caches by key, so a repeated save could be skipped
+// while still reporting success (see app/composables/user.ts).
+async function saveProfile(data: Record<string, unknown>) {
+  try {
+    await $fetch("/api/profile", { method: "PUT", body: data });
+  } catch {
+    showSaveError();
+    return;
+  }
+  await userData.value.reload();
+  toast.add({
+    title: t("Dein Profil wurde erfolgreich aktualisiert."),
+    color: "success",
+  });
+}
+
+function showSaveError() {
+  toast.add({
+    title: t("Es ist ein Fehler aufgetreten."),
+    icon: "i-heroicons-exclamation-triangle",
+    color: "error",
+  });
+}
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  const res = await useFetch("/api/profile", {
-    method: "PUT",
-    body: event.data,
-  });
-  if (res.status.value === "success") {
-    await userData.value.reload();
-    toast.add({
-      title: t("Dein Profil wurde erfolgreich aktualisiert."),
-      color: "success",
-    });
-  } else {
-    toast.add({
-      title: t("Es ist ein Fehler aufgetreten."),
-      icon: "i-heroicons-exclamation-triangle",
-      color: "error",
-    });
-  }
+  await saveProfile(event.data);
+}
+
+async function onAddressSubmit(event: FormSubmitEvent<Record<string, unknown>>) {
+  await saveProfile(event.data);
+}
+
+async function onPhoneSubmit(event: FormSubmitEvent<PhoneSchema>) {
+  await saveProfile(event.data);
 }
 
 async function onError(event: FormErrorEvent) {
@@ -87,26 +118,42 @@ async function onError(event: FormErrorEvent) {
 }
 
 // ── Email change ──────────────────────────────────────────────────────────────
-const emailSchema = object({
-  email: string().email(),
-});
-
 type EmailSchema = InferType<typeof emailSchema>;
 const emailState = reactive({ email: user.email });
 async function onEmailSubmit(event: FormSubmitEvent<EmailSchema>) {
-  const res = await useFetch("/api/profile/email", {
-    method: "PUT",
-    body: { email: emailState.email },
-  });
-  if (res.status.value === "success") {
-    await userData.value.reload();
-      toast.add({ title: t("E-Mail erfolgreich geändert."), color: "success" });
-  } else {
-    toast.add({
-      title: t("Es ist ein Fehler aufgetreten."),
-      icon: "i-heroicons-exclamation-triangle",
-      color: "error",
+  try {
+    await $fetch("/api/profile/email", {
+      method: "PUT",
+      body: { email: event.data.email },
     });
+  } catch {
+    showSaveError();
+    return;
+  }
+  await userData.value.reload();
+  toast.add({ title: t("E-Mail erfolgreich geändert."), color: "success" });
+}
+
+// ── Email notifications (saved immediately when toggled) ───────────────────────
+const sendNotifications = ref(user.send_notifications ?? false);
+const savingNotifications = ref(false);
+
+async function saveNotifications(value: boolean | "indeterminate") {
+  const previous = sendNotifications.value;
+  sendNotifications.value = value === true;
+  savingNotifications.value = true;
+  try {
+    await $fetch("/api/profile", {
+      method: "PUT",
+      body: { send_notifications: sendNotifications.value },
+    });
+    user.send_notifications = sendNotifications.value;
+    toast.add({ title: t("Einstellung gespeichert."), color: "success" });
+  } catch {
+    sendNotifications.value = previous;
+    showSaveError();
+  } finally {
+    savingNotifications.value = false;
   }
 }
 
@@ -123,121 +170,177 @@ function personTypeLabel(val: string | null | undefined) {
     <!-- ── Einstellungen ─────────────────────────────────────────────────── -->
     <div>
       <h2>{{ t("Einstellungen") }}</h2>
-      <UForm
-        :schema="schema"
-        :state="state"
-        class="space-y-4"
-        @submit="onSubmit"
-        @error="onError"
-      >
-        <FormsFormGroup
-          :label="t('Vorname')"
-          :infotext="
-            t('Dieser Name kann sich von deinem amtlichen Namen unterscheiden.')
-          "
-          name="username"
-          required
-        >
-          <template #description> </template>
-          <UInput v-model="state.username" />
-        </FormsFormGroup>
-
-        <FormsFormGroup
-          :label="t('Nachname')"
-          :infotext="
-            t('Dieser Name kann sich von deinem amtlichen Namen unterscheiden.')
-          "
-          name="username_last"
-          required
-        >
-          <template #description> </template>
-          <UInput v-model="state.username_last" />
-        </FormsFormGroup>
-
-        <FormsFormGroup
-          :label="t('Mit welchen Pronomen möchtest du angesprochen werden?')"
-          :infotext="t('i_pronouns')"
-          name="pronouns"
-        >
-          <UInput variant="outline" v-model="state.pronouns" />
-        </FormsFormGroup>
-
-        <FormsFormGroup name="hide_name" :label="t('Anonym bleiben')">
-          <UCheckbox variant="card" v-model="state.hide_name">
-            <template #label>
-              {{
-                t(
-                  "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform.",
-                )
-              }}</template
+      <div class="flex flex-col gap-4">
+        <!-- Name und Pronomen -->
+        <CollapsibleSection :title="t('Name und Pronomen')">
+          <UForm
+            :schema="schema"
+            :state="state"
+            class="space-y-4"
+            @submit="onSubmit"
+            @error="onError"
+          >
+            <FormsFormGroup
+              :label="t('Sichtbarer Vorname')"
+              :infotext="t('i_visible_name')"
+              name="username"
+              required
             >
-          </UCheckbox>
-        </FormsFormGroup>
+              <template #description> </template>
+              <UInput v-model="state.username" :maxlength="TEXT_MAX_LENGTH" />
+            </FormsFormGroup>
 
-        <FormsFormGroup
-          name="send_notifications"
-          :label="t('E-Mail-Benachrichtigungen')"
-        >
-          <UCheckbox variant="card" v-model="state.send_notifications">
-            <template #label>
-              {{
-                t(
-                  "Erhalte E-Mail-Benachrichtigungen über bevorstehende Schichten.",
-                )
-              }}
-            </template>
-          </UCheckbox>
-        </FormsFormGroup>
+            <FormsFormGroup
+              :label="t('Sichtbarer Nachname')"
+              :infotext="t('i_visible_name')"
+              name="username_last"
+              required
+            >
+              <template #description> </template>
+              <UInput
+                v-model="state.username_last"
+                :maxlength="TEXT_MAX_LENGTH"
+              />
+            </FormsFormGroup>
 
-        <div class="pt-2">
-          <UButton type="submit">
-            {{ t("Änderungen speichern") }}
-          </UButton>
-        </div>
-      </UForm>
-    </div>
+            <FormsFormGroup
+              :label="t('Pronomen')"
+              :infotext="t('i_pronouns')"
+              name="pronouns"
+            >
+              <UInput
+                variant="outline"
+                v-model="state.pronouns"
+                :maxlength="TEXT_MAX_LENGTH"
+              />
+            </FormsFormGroup>
 
-    <!-- ── Email Address ─────────────────────────────────────────────── -->
-    <div>
-      <h2>{{ t("E-Mail-Adresse ändern") }}</h2>
-      <UForm
-        :schema="emailSchema"
-        :state="emailState"
-        class="space-y-4"
-        @submit="onEmailSubmit"
-        @error="onError"
-      >
-        <FormsFormGroup name="email" :label="t('E-Mail-Adresse')" required>
-          <UInput
-            v-model="emailState.email"
-            type="email"
-          />
-        </FormsFormGroup>
-        <div class="pt-2">
-          <UButton type="submit">
-            {{ t("E-Mail-Adresse ändern") }}
-          </UButton>
-        </div>
-      </UForm>
-    </div>
+            <FormsFormGroup
+              name="hide_name"
+              :label="t('Sichtbarkeit des Namens im Schichtplan')"
+            >
+              <UCheckbox variant="card" v-model="state.hide_name">
+                <template #label>
+                  {{
+                    t(
+                      "Meinen Namen anderen Mitgliedern im Schichtplan nicht anzeigen.",
+                    )
+                  }}</template
+                >
+              </UCheckbox>
+            </FormsFormGroup>
 
-    <!-- ── Password ─────────────────────────────────────────────── -->
-    <div v-if="useKeycloak">
-      <h2>{{ t("Passwort ändern") }}</h2>
-      <div class="space-y-4">
-        <p>{{ t("Passwort_redirect_explanation") }}</p>
-        <UButton
-          :href="keycloakUpdatePasswordUrl"
-          icon="i-heroicons-arrow-right"
-        >
-          {{ t("Passwort jetzt ändern") }}
-        </UButton>
+            <div class="pt-2">
+              <UButton type="submit" icon="i-heroicons-check">
+                {{ t("Speichern") }}
+              </UButton>
+            </div>
+          </UForm>
+        </CollapsibleSection>
+
+        <!-- Adresse (belongs to the membership) -->
+        <CollapsibleSection v-if="membership" :title="t('Adresse')">
+          <UForm
+            :schema="addressSchema"
+            :state="addressState"
+            class="space-y-4"
+            @submit="onAddressSubmit"
+            @error="onError"
+          >
+            <FormsAddressFields :state="addressState" />
+            <div class="pt-2">
+              <UButton type="submit" icon="i-heroicons-check">
+                {{ t("Speichern") }}
+              </UButton>
+            </div>
+          </UForm>
+        </CollapsibleSection>
+
+        <!-- E-Mail -->
+        <CollapsibleSection :title="t('E-Mail')">
+          <p class="mb-4">{{ t("t_email_is_username") }}</p>
+          <UForm
+            :schema="emailSchema"
+            :state="emailState"
+            class="space-y-4"
+            @submit="onEmailSubmit"
+            @error="onError"
+          >
+            <FormsFormGroup name="email" :label="t('E-Mail-Adresse')" required>
+              <UInput
+                v-model="emailState.email"
+                :maxlength="TEXT_MAX_LENGTH"
+                type="email"
+              />
+            </FormsFormGroup>
+            <div class="pt-2">
+              <UButton type="submit" icon="i-heroicons-check">
+                {{ t("Speichern") }}
+              </UButton>
+            </div>
+          </UForm>
+
+          <!-- Saved immediately when toggled; only members can change it -->
+          <FormsFormGroup
+            v-if="membership"
+            class="mt-6"
+            :label="t('E-Mail-Benachrichtigungen')"
+          >
+            <UCheckbox
+              variant="card"
+              :model-value="sendNotifications"
+              :disabled="savingNotifications"
+              @update:model-value="saveNotifications"
+            >
+              <template #label>
+                {{ t("Bevorstehende Schichten") }}
+              </template>
+            </UCheckbox>
+          </FormsFormGroup>
+        </CollapsibleSection>
+
+        <!-- Passwort (changed on the Keycloak page) -->
+        <CollapsibleSection v-if="useKeycloak" :title="t('Passwort')">
+          <div class="space-y-4">
+            <p>{{ t("Passwort_redirect_explanation") }}</p>
+            <UButton
+              :href="keycloakUpdatePasswordUrl"
+              icon="i-heroicons-arrow-right"
+            >
+              {{ t("Passwort ändern") }}
+            </UButton>
+          </div>
+        </CollapsibleSection>
+
+        <!-- Telefonnummer (belongs to the membership) -->
+        <CollapsibleSection v-if="membership" :title="t('Telefonnummer')">
+          <UForm
+            :schema="phoneSchema"
+            :state="phoneState"
+            class="space-y-4"
+            @submit="onPhoneSubmit"
+            @error="onError"
+          >
+            <FormsFormGroup name="memberships_phone" :label="t('Telefonnummer')">
+              <UInput
+                v-model="phoneState.memberships_phone"
+                :maxlength="TEXT_MAX_LENGTH"
+                type="tel"
+              />
+            </FormsFormGroup>
+            <div class="pt-2">
+              <UButton type="submit" icon="i-heroicons-check">
+                {{ t("Speichern") }}
+              </UButton>
+            </div>
+          </UForm>
+        </CollapsibleSection>
       </div>
     </div>
 
-    <!-- ── Persönliche Daten (read-only) ─────────────────────────────────── -->
+    <!-- ── Mitgliedsdaten (read-only) ────────────────────────────────────── -->
     <div>
-      <h2>{{ t("Persönliche Daten") }}</h2>
+      <h2>{{ t("Mitgliedsdaten") }}</h2>
 
       <div v-if="membership?.memberships_date_ended" class="mb-4">
         <p class="text-sm text-red-600">
@@ -298,10 +401,6 @@ function personTypeLabel(val: string | null | undefined) {
           <dt class="text-sm w-48 shrink-0">{{ t("Geschlecht") }}</dt>
           <dd class="text-sm font-medium">{{ user.memberships_gender }}</dd>
         </div>
-        <div v-if="user.memberships_phone" class="flex gap-2">
-          <dt class="text-sm w-48 shrink-0">{{ t("Telefon") }}</dt>
-          <dd class="text-sm font-medium">{{ user.memberships_phone }}</dd>
-        </div>
         <div v-if="user.memberships_birthday" class="flex gap-2">
           <dt class="text-sm w-48 shrink-0">{{ t("Geburtsdatum") }}</dt>
           <dd class="text-sm font-medium">{{ user.memberships_birthday }}</dd>
@@ -333,33 +432,6 @@ function personTypeLabel(val: string | null | undefined) {
           </div>
         </template>
 
-        <!-- Address -->
-        <div
-          v-if="user.memberships_street || user.memberships_postcode"
-          class="flex gap-2"
-        >
-          <dt class="text-sm w-48 shrink-0">{{ t("Adresse") }}</dt>
-          <dd class="text-sm font-medium">
-            <span v-if="user.memberships_street">
-              {{ user.memberships_street }} {{ user.memberships_streetnumber }}
-              <template v-if="user.memberships_stair">
-                , {{ t("Stiege") }} {{ user.memberships_stair }}
-              </template>
-              <template v-if="user.memberships_door">
-                / {{ t("Tür") }} {{ user.memberships_door }}
-              </template>
-            </span>
-            <br v-if="user.memberships_street && user.memberships_postcode" />
-            <span v-if="user.memberships_postcode">
-              {{ user.memberships_postcode }} {{ user.memberships_city }}
-            </span>
-            <br v-if="user.memberships_country" />
-            <span v-if="user.memberships_country">{{
-              user.memberships_country
-            }}</span>
-          </dd>
-        </div>
-
         <!-- Payment -->
         <div v-if="user.payments_type" class="flex gap-2">
           <dt class="text-sm w-48 shrink-0">
@@ -379,25 +451,24 @@ function personTypeLabel(val: string | null | undefined) {
           </dt>
           <dd class="text-sm font-medium">{{ user.payments_account_owner }}</dd>
         </div>
-      </dl>
 
-      <!-- Coshoppers -->
-      <div
-        v-if="membership?.coshoppers && membership.coshoppers.length > 0"
-        class="mt-4"
-      >
-        <h3 class="text-base mb-2">{{ t("Miteinkäufer*in") }}</h3>
-        <ul class="space-y-1">
-          <li
-            v-for="entry in membership.coshoppers"
-            :key="entry.memberships_coshoppers_id.id"
-            class="text-sm"
-          >
-            {{ entry.memberships_coshoppers_id.first_name }}
-            {{ entry.memberships_coshoppers_id.last_name }}
-          </li>
-        </ul>
-      </div>
+        <!-- Coshoppers -->
+        <div
+          v-if="membership?.coshoppers && membership.coshoppers.length > 0"
+          class="flex gap-2"
+        >
+          <dt class="text-sm w-48 shrink-0">{{ t("Miteinkäufer*in") }}</dt>
+          <dd class="text-sm font-medium">
+            <div
+              v-for="entry in membership.coshoppers"
+              :key="entry.memberships_coshoppers_id.id"
+            >
+              {{ entry.memberships_coshoppers_id.first_name }}
+              {{ entry.memberships_coshoppers_id.last_name }}
+            </div>
+          </dd>
+        </div>
+      </dl>
 
       <!-- Skills -->
       <div
@@ -480,28 +551,29 @@ de:
   "Profile": "Profil"
   "Some fields are not filled in correctly": "Einige Felder sind nicht korrekt ausgefüllt."
   "i_pronouns": "Die Angabe der Pronomen ist freiwillig. Sie soll uns helfen bei Mila einen respektvollen Umgang miteinander zu pflegen, indem wir so mit- und übereinander sprechen, wie die angesprochenen Personen es wünschen."
+  "i_visible_name": "Dieser Name kann sich von deinem amtlichen Namen unterscheiden. Er wird z.B. in E-Mails, auf deiner Mitgliedskarte, im Schichtplan, beim Check-in im Laden und in deinem Wolke-Profil verwendet."
   "E-Mail & Passwort": "E-Mail & Passwort"
   "Aktuelle E-Mail": "Aktuelle E-Mail"
   "E-Mail-Adresse": "E-Mail-Adresse"
-  "E-Mail-Adresse ändern": "E-Mail-Adresse ändern"
+  "Name und Pronomen": "Name und Pronomen"
+  "Einstellung gespeichert.": "Einstellung gespeichert."
+  "t_email_is_username": "Deine E-Mail-Adresse wird als Nutzer*Innen-Name auf der Anmeldeseite übernommen."
   "E-Mail erfolgreich geändert.": "E-Mail erfolgreich geändert."
   "Passwort ändern": "Passwort ändern"
-  "Passwort_redirect_explanation": "Aus Sicherheitsgründen wirst du zur Änderung deines Passworts auf unsere geschützte Anmeldeseite weitergeleitet. Du musst dort dein aktuelles Passwort und das neue Passwort eingeben. Anschließend kehrst du automatisch hierher zurück."
-  "Passwort jetzt ändern": "Passwort jetzt ändern"
-  "Persönliche Daten": "Persönliche Daten"
+  "Passwort": "Passwort"
+  "Passwort_redirect_explanation": "Du wirst zur Änderung deines Passworts auf unsere Anmeldeseite weitergeleitet, wo du dein aktuelles und das neue Passwort eingeben musst. Anschließend kehrst du automatisch hierher zurück."
+  "Mitgliedsdaten": "Mitgliedsdaten"
   "Personenart": "Personenart"
   "Natürliche Person": "Natürliche Person"
   "Juristische Person": "Juristische Person"
   "Geschlecht": "Geschlecht"
-  "Telefon": "Telefon"
+  "Telefonnummer": "Telefonnummer"
   "Geburtsdatum": "Geburtsdatum"
   "Beruf": "Beruf"
   "Organisationsname": "Organisationsname"
   "Organisationsart": "Organisationsart"
   "Organisations-ID": "Organisations-ID"
   "Adresse": "Adresse"
-  "Stiege": "Stiege"
-  "Tür": "Tür"
   "Zahlungsart": "Zahlungsart"
   "transfer": "Überweisung"
   "sepa": "SEPA-Einzug"
@@ -526,39 +598,41 @@ en:
   "t_activation_survey_intro": "If you haven't participated in MILA for a while, please tell us briefly how you are doing - it helps us support you better."
   "Zu deiner Mitmach-Umfrage": "Fill in your survey"
   "Einstellungen": "Settings"
-  "Änderungen speichern": "Save changes"
   "Es ist ein Fehler aufgetreten.": "An error occurred."
   "Dein Profil wurde erfolgreich aktualisiert.": "Your profile has been updated successfully."
+  "Sichtbarer Vorname": "Visible first name"
+  "Sichtbarer Nachname": "Visible last name"
   "Wie sollen wir dich ansprechen?": "How should we address you?"
-  "Dieser Name kann sich von deinem amtlichen Namen unterscheiden.": "This name can differ from your legal name."
-  "Mit welchen Pronomen möchtest du angesprochen werden?": "Which pronouns would you like to be addressed with?"
-  "Anonym bleiben": "Stay anonymous"
-  "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform.": "Do not show my name to other members on the platform."
+  "Pronomen": "Pronouns"
+  "Sichtbarkeit des Namens im Schichtplan": "Name visibility in shift calendar"
+  "Meinen Namen anderen Mitgliedern im Schichtplan nicht anzeigen.": "Do not show my name to other members in the shift calendar."
   "E-Mail-Benachrichtigungen": "Email notifications"
-  "Erhalte E-Mail-Benachrichtigungen über bevorstehende Schichten.": "Receive email notifications about upcoming shifts."
+  "Bevorstehende Schichten": "Upcoming shifts"
   "i_pronouns": "A declaration of pronouns is optional. They help us at MILA in creating an inclusive environment, by speaking to and about each other in a way, that respects everyones wishes."
+  "i_visible_name": "This name can differ from your legal name. It is used e.g. in emails, on your membership card, in the shift plan, at check-in in the shop and in your Wolke profile."
   "E-Mail & Passwort": "Email & Password"
   "Aktuelle E-Mail": "Current email"
   "E-Mail-Adresse": "Email address"
-  "E-Mail-Adresse ändern": "Change email address"
+  "Name und Pronomen": "Name and pronouns"
+  "E-Mail": "Email"
+  "Einstellung gespeichert.": "Setting saved."
+  "t_email_is_username": "Your email address is used as your username on the login page."
   "E-Mail erfolgreich geändert.": "Email updated successfully."
   "Passwort ändern": "Change password"
-  "Passwort_redirect_explanation": "For security, you will be redirected to our secured login page to change your password. You will need to enter your current password and the new password there, then you will be returned here automatically."
-  "Passwort jetzt ändern": "Change password now"
-  "Persönliche Daten": "Personal data"
+  "Passwort": "Password"
+  "Passwort_redirect_explanation": "To change your password, you will be redirected to our login page, where you need to enter your current and your new password. Afterwards you will automatically return here."
+  "Mitgliedsdaten": "Membership data"
   "Personenart": "Person type"
   "Natürliche Person": "Natural person"
   "Juristische Person": "Legal entity"
   "Geschlecht": "Gender"
-  "Telefon": "Phone"
+  "Telefonnummer": "Phone number"
   "Geburtsdatum": "Date of birth"
   "Beruf": "Occupation"
   "Organisationsname": "Organization name"
   "Organisationsart": "Organization type"
   "Organisations-ID": "Organization ID"
   "Adresse": "Address"
-  "Stiege": "Staircase"
-  "Tür": "Door"
   "Zahlungsart": "Payment type"
   "transfer": "Bank transfer"
   "sepa": "SEPA direct debit"

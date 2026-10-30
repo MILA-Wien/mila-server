@@ -45,7 +45,7 @@ describe("Registration Form", () => {
     cy.get('[name="directus_users__memberships_streetnumber"]').type("42");
     cy.get('[name="directus_users__memberships_postcode"]').type("1010");
     cy.get('[name="directus_users__memberships_city"]').type("Wien");
-    cy.get('[name="directus_users__memberships_country"]').type("Österreich");
+    cy.selectFromMenu("directus_users__memberships_country", "Österreich");
 
     // Membership Type - Aktiv (default)
     // cy.get('[name="memberships__memberships_type"][value="Aktiv"]').check();
@@ -102,9 +102,8 @@ describe("Registration Form", () => {
       );
       expect(requestBody.directus_users__memberships_postcode).to.equal("1010");
       expect(requestBody.directus_users__memberships_city).to.equal("Wien");
-      expect(requestBody.directus_users__memberships_country).to.equal(
-        "Österreich",
-      );
+      // The ISO code is stored; the dropdown shows the localized name
+      expect(requestBody.directus_users__memberships_country).to.equal("AT");
 
       // Verify membership type
       expect(requestBody.memberships__memberships_type).to.equal("Aktiv");
@@ -145,7 +144,7 @@ describe("Registration Form", () => {
     cy.get('[name="directus_users__memberships_streetnumber"]').type("1");
     cy.get('[name="directus_users__memberships_postcode"]').type("1010");
     cy.get('[name="directus_users__memberships_city"]').type("Wien");
-    cy.get('[name="directus_users__memberships_country"]').type("Österreich");
+    cy.selectFromMenu("directus_users__memberships_country", "Österreich");
     cy.get('[name="shares_options"][value="normal"]').check();
     cy.selectFromMenu("directus_users__payments_type", "transfer");
     cy.get('[name="_statutes_approval"]').check();
@@ -192,7 +191,7 @@ describe("Registration Form", () => {
     cy.get('[name="directus_users__memberships_streetnumber"]').type("10");
     cy.get('[name="directus_users__memberships_postcode"]').type("1020");
     cy.get('[name="directus_users__memberships_city"]').type("Wien");
-    cy.get('[name="directus_users__memberships_country"]').type("Österreich");
+    cy.selectFromMenu("directus_users__memberships_country", "Österreich");
     cy.get('[name="shares_options"][value="social"]').check();
     cy.selectFromMenu("directus_users__payments_type", "transfer");
     cy.get('[name="_statutes_approval"]').check();
@@ -230,7 +229,7 @@ describe("Registration Form", () => {
     cy.get('[name="directus_users__memberships_streetnumber"]').type("5");
     cy.get('[name="directus_users__memberships_postcode"]').type("1030");
     cy.get('[name="directus_users__memberships_city"]').type("Wien");
-    cy.get('[name="directus_users__memberships_country"]').type("Österreich");
+    cy.selectFromMenu("directus_users__memberships_country", "Österreich");
     cy.get(
       '[name="memberships__memberships_type"][value="Investierend"]',
     ).check();

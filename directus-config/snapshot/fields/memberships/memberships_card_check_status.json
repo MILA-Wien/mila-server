@@ -119,7 +119,9 @@
   "schema": {
     "name": "memberships_card_check_status",
     "table": "memberships",
+    "data_type": "character varying",
     "default_value": null,
+    "max_length": 255,
     "numeric_precision": null,
     "numeric_scale": null,
     "is_nullable": true,
@@ -130,8 +132,6 @@
     "generation_expression": null,
     "has_auto_increment": false,
     "foreign_key_table": null,
-    "foreign_key_column": null,
-    "data_type": "character varying",
-    "max_length": 255
+    "foreign_key_column": null
   }
 }

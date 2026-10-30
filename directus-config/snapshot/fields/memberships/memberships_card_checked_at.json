@@ -37,7 +37,9 @@
   "schema": {
     "name": "memberships_card_checked_at",
     "table": "memberships",
+    "data_type": "timestamp with time zone",
     "default_value": null,
+    "max_length": null,
     "numeric_precision": null,
     "numeric_scale": null,
     "is_nullable": true,
@@ -48,8 +50,6 @@
     "generation_expression": null,
     "has_auto_increment": false,
     "foreign_key_table": null,
-    "foreign_key_column": null,
-    "data_type": "timestamp with time zone",
-    "max_length": null
+    "foreign_key_column": null
   }
 }
