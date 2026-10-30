@@ -5,13 +5,11 @@ import {
   isValidCity,
   isValidPostcode,
   isValidStreet,
-  isValidViennaCity,
   startsWithDigit,
 } from "../../shared/address";
 import { isValidCountryCode } from "../../shared/countries";
 import {
   isValidPersonName,
-  PERSON_NAME_MAX_LENGTH,
   PERSON_NAME_PROHIBITED_CHARACTERS,
 } from "../../shared/personName";
 import {
@@ -21,7 +19,8 @@ import {
 } from "../../shared/phone";
 
 // Yup rules shared by the registration and profile forms. The messages are looked up
-// with the caller's `t`, so each page needs translations for them.
+// with the caller's `t`; their translations are in i18n/locales/forms/, which pages
+// fall back to when a key is not in their own <i18n> block.
 
 type Translate = (key: string, params?: Record<string, unknown>) => string;
 
@@ -53,23 +52,20 @@ export function emailRules<S extends StringSchema<string | undefined>>(
 /**
  * Adds Keycloak's person name rules to a string schema. Used for the visible name
  * (username / username_last), which is synced to Keycloak - see shared/personName.ts.
+ * The length is limited by the inputs' maxlength.
  */
 export function personNameRules<S extends StringSchema<string | undefined>>(
   t: Translate,
   schema: S,
 ) {
-  return schema
-    .max(PERSON_NAME_MAX_LENGTH, () =>
-      t("Must be at most {max} characters", { max: PERSON_NAME_MAX_LENGTH }),
-    )
-    .test(
-      "person-name",
-      () =>
-        t("Contains characters that are not allowed: {chars}", {
-          chars: PERSON_NAME_PROHIBITED_CHARACTERS,
-        }),
-      isValidPersonName,
-    );
+  return schema.test(
+    "person-name",
+    () =>
+      t("Contains characters that are not allowed: {chars}", {
+        chars: PERSON_NAME_PROHIBITED_CHARACTERS,
+      }),
+    isValidPersonName,
+  );
 }
 
 /**
@@ -121,7 +117,7 @@ export function addressSchemaFields(
       .required(required)
       .test(
         "street",
-        () => t("Please enter the house number in its own field"),
+        () => t("Please enter only the street"),
         isValidStreet,
       ),
     // House number only - stair and door can be letters (e.g. "A", "EG").
@@ -143,13 +139,6 @@ export function addressSchemaFields(
         "city",
         () => t("Please enter the postcode in its own field"),
         isValidCity,
-      )
-      .test("vienna", () => t("t:city_must_be_wien"), (value, context) =>
-        isValidViennaCity(
-          value,
-          context.parent[key("memberships_postcode")],
-          context.parent[key("memberships_country")],
-        ),
       ),
   };
 }

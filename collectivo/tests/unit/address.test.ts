@@ -4,7 +4,6 @@ import {
   isValidCity,
   isValidPostcode,
   isValidStreet,
-  isValidViennaCity,
   startsWithDigit,
 } from "../../shared/address";
 
@@ -18,21 +17,6 @@ describe("isValidCity", () => {
 
   it.each(["1010 Wien", "Wien 1010", "Wien 3"])("rejects %j", (city) => {
     expect(isValidCity(city)).toBe(false);
-  });
-});
-
-describe("isValidViennaCity", () => {
-  it("requires Wien for Austrian postcodes starting with 1", () => {
-    expect(isValidViennaCity("Wien", "1010", "AT")).toBe(true);
-    expect(isValidViennaCity("Wien ", "1010", "AT")).toBe(true);
-    expect(isValidViennaCity("Vienna", "1010", "AT")).toBe(false);
-    expect(isValidViennaCity("wien", "1010", "AT")).toBe(false);
-    expect(isValidViennaCity("Schwechat", "1300", "AT")).toBe(false);
-  });
-
-  it("does not check other postcodes or countries", () => {
-    expect(isValidViennaCity("Graz", "8020", "AT")).toBe(true);
-    expect(isValidViennaCity("Berlin", "10115", "DE")).toBe(true);
   });
 });
 
@@ -60,12 +44,22 @@ describe("isValidPostcode", () => {
 });
 
 describe("isValidStreet", () => {
-  it.each(["Hauptstraße", "Straße des 17. Juni", "Am Hof", "Platz der 3 Linden"])(
-    "accepts %j",
-    (street) => {
-      expect(isValidStreet(street)).toBe(true);
-    },
-  );
+  it.each([
+    "Hauptstraße",
+    "Straße des 17. Juni",
+    "Am Hof",
+    "Platz der 3 Linden",
+    // Vienna streets with a leading ordinal, with and without a space
+    "12.-Februar-Platz",
+    "1. Haidequerstraße",
+    "1.Haidequerstraße",
+    "11. Haidequerstraße",
+    "11.Haidequerstraße",
+    "2. Molostraße",
+    "2.Molostraße",
+  ])("accepts %j", (street) => {
+    expect(isValidStreet(street)).toBe(true);
+  });
 
   it.each([
     "Hauptstraße 5",
@@ -76,6 +70,8 @@ describe("isValidStreet", () => {
     "Hauptstraße 5-7",
     "Hauptstraße 5/2/14",
     "Gasse 12.",
+    "1. Haidequerstraße 3",
+    "12.-Februar-Platz 4a",
   ])("rejects %j", (street) => {
     expect(isValidStreet(street)).toBe(false);
   });

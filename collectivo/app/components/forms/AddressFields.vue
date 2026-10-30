@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { COUNTRY_CODES, DEFAULT_COUNTRY_CODE } from "../../../shared/countries";
+import { TEXT_MAX_LENGTH } from "../../../shared/addressSchema";
 
 // Address inputs shared by the registration and profile forms. Writes into the
 // parent's form state; validation rules are in app/composables/formValidation.ts.
@@ -63,7 +64,11 @@ const textFields = [
       :name="key(field.name)"
       :required="field.required"
     >
-      <UInput variant="outline" v-model="props.state[key(field.name)]" />
+      <UInput
+        variant="outline"
+        v-model="props.state[key(field.name)]"
+        :maxlength="TEXT_MAX_LENGTH"
+      />
     </FormsFormGroup>
   </div>
 </template>

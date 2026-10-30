@@ -10,14 +10,27 @@ import {
   isValidCity,
   isValidPostcode,
   isValidStreet,
-  isValidViennaCity,
   startsWithDigit,
 } from "./address";
 import { isValidCountryCode } from "./countries";
 import { isValidPhone, PHONE_MAX_LENGTH, PHONE_MIN_LENGTH } from "./phone";
 
-/** Free-text input; leading and trailing whitespace is removed before validation. */
-export const text = () => z.string().trim();
+/** Most text columns are varchar(255). */
+export const TEXT_MAX_LENGTH = 255;
+
+/** For textareas stored in unlimited `text` columns (e.g. the survey answers). */
+export const LONG_TEXT_MAX_LENGTH = 5000;
+
+/**
+ * Free-text input; leading and trailing whitespace is removed before validation.
+ * Put further checks into `.pipe(...)`: zod still runs `.refine()` and `.email()`
+ * after a failed `.max()`, but skips the piped schema, so the checks never see
+ * overlong input.
+ */
+export const text = (max = TEXT_MAX_LENGTH) => z.string().trim().max(max);
+
+/** Email address, checked only within the length limit. */
+export const email = () => text().pipe(z.string().email());
 
 /** Phone number, see shared/phone.ts. An empty string clears it (stored as null). */
 export const phone = text().pipe(
@@ -36,34 +49,36 @@ const addressPart = (schema: z.ZodString) =>
 
 /** Per-field schemas; cross-field rules are in `addressCrossFieldIssues`. */
 export const addressFieldSchemas = {
-  street: text().min(1).refine(isValidStreet, "Street must not end in a house number"),
+  street: text()
+    .min(1)
+    .pipe(z.string().refine(isValidStreet, "Street must not end in a house number")),
   // House number only - stair and door can be letters (e.g. "A", "EG").
-  streetnumber: addressPart(text().min(1)).refine(
-    startsWithDigit,
-    "Must start with a digit",
-  ),
-  stair: addressPart(text()).optional(),
-  door: addressPart(text()).optional(),
+  streetnumber: text()
+    .min(1)
+    .pipe(addressPart(z.string()).refine(startsWithDigit, "Must start with a digit")),
+  stair: text().pipe(addressPart(z.string())).optional(),
+  door: text().pipe(addressPart(z.string())).optional(),
   postcode: text().min(1),
-  city: text().min(1).refine(isValidCity, "City must not contain digits"),
+  city: text()
+    .min(1)
+    .pipe(z.string().refine(isValidCity, "City must not contain digits")),
   country: z.string().refine(isValidCountryCode, "Unknown country code"),
 };
 
-/** Rules that depend on several address fields (postcode/city vs. country). */
+/** Rules that depend on several address fields (postcode vs. country). */
 export function addressCrossFieldIssues(address: {
   postcode?: string;
-  city?: string;
   country?: string;
-}): { field: "postcode" | "city"; message: string }[] {
-  const issues: { field: "postcode" | "city"; message: string }[] = [];
+}): { field: "postcode"; message: string }[] {
+  const issues: { field: "postcode"; message: string }[] = [];
+  // Object-level refinements also run when a field failed, so skip overlong input
+  // here too; the field itself already reports the length.
+  const tooLong = [address.postcode, address.country].some(
+    (value) => (value?.length ?? 0) > TEXT_MAX_LENGTH,
+  );
+  if (tooLong) return issues;
   if (!isValidPostcode(address.postcode, address.country)) {
     issues.push({ field: "postcode", message: "Austrian postcodes have 4 digits" });
-  }
-  if (!isValidViennaCity(address.city, address.postcode, address.country)) {
-    issues.push({
-      field: "city",
-      message: 'City must be "Wien" for Austrian postcodes starting with 1',
-    });
   }
   return issues;
 }

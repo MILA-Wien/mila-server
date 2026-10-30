@@ -14,6 +14,8 @@ import {
 import {
   addressCrossFieldIssues,
   addressFieldSchemas as address,
+  email,
+  LONG_TEXT_MAX_LENGTH,
   phone,
   text,
 } from "../../shared/addressSchema";
@@ -25,7 +27,7 @@ import {
 export const registerSchema = z
   .object({
     // User account
-    directus_users__email: text().email(),
+    directus_users__email: email(),
     directus_users__password: z.string().min(1),
     directus_users__first_name: text().min(1),
     directus_users__last_name: text().min(1),
@@ -74,8 +76,8 @@ export const registerSchema = z
     coshopper_email: text().pipe(z.literal("").or(z.string().email())).optional(),
 
     // Survey
-    directus_users__mila_survey_contact: text().optional(),
-    directus_users__mila_survey_motivation: text().optional(),
+    directus_users__mila_survey_contact: text(LONG_TEXT_MAX_LENGTH).optional(),
+    directus_users__mila_survey_motivation: text(LONG_TEXT_MAX_LENGTH).optional(),
     directus_users__mila_groups_interested_2: z.array(z.string()).optional(),
     directus_users__mila_skills_2: z.array(z.string()).optional(),
     directus_users__survey_languages: z.array(z.string()).optional(),
@@ -121,7 +123,6 @@ export const registerSchema = z
   .superRefine((data, ctx) => {
     const issues = addressCrossFieldIssues({
       postcode: data.directus_users__memberships_postcode,
-      city: data.directus_users__memberships_city,
       country: data.directus_users__memberships_country,
     });
     for (const { field, message } of issues) {
@@ -155,8 +156,9 @@ export const registerSchema = z
         continue;
       }
       if (
-        !isValidPersonName(value) ||
-        (value?.length ?? 0) > PERSON_NAME_MAX_LENGTH
+        // Length first, so the pattern never runs on overlong input
+        value.length > PERSON_NAME_MAX_LENGTH ||
+        !isValidPersonName(value)
       ) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { InferType } from "yup";
 import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
+import { TEXT_MAX_LENGTH } from "../../../shared/addressSchema";
 
 definePageMeta({
   middleware: ["auth"],
@@ -181,42 +182,48 @@ function personTypeLabel(val: string | null | undefined) {
           >
             <FormsFormGroup
               :label="t('Sichtbarer Vorname')"
-              :infotext="
-                t('Dieser Name kann sich von deinem amtlichen Namen unterscheiden.')
-              "
+              :infotext="t('i_visible_name')"
               name="username"
               required
             >
               <template #description> </template>
-              <UInput v-model="state.username" />
+              <UInput v-model="state.username" :maxlength="TEXT_MAX_LENGTH" />
             </FormsFormGroup>
 
             <FormsFormGroup
               :label="t('Sichtbarer Nachname')"
-              :infotext="
-                t('Dieser Name kann sich von deinem amtlichen Namen unterscheiden.')
-              "
+              :infotext="t('i_visible_name')"
               name="username_last"
               required
             >
               <template #description> </template>
-              <UInput v-model="state.username_last" />
+              <UInput
+                v-model="state.username_last"
+                :maxlength="TEXT_MAX_LENGTH"
+              />
             </FormsFormGroup>
 
             <FormsFormGroup
-              :label="t('Mit welchen Pronomen möchtest du angesprochen werden?')"
+              :label="t('Pronomen')"
               :infotext="t('i_pronouns')"
               name="pronouns"
             >
-              <UInput variant="outline" v-model="state.pronouns" />
+              <UInput
+                variant="outline"
+                v-model="state.pronouns"
+                :maxlength="TEXT_MAX_LENGTH"
+              />
             </FormsFormGroup>
 
-            <FormsFormGroup name="hide_name" :label="t('Anonym bleiben')">
+            <FormsFormGroup
+              name="hide_name"
+              :label="t('Sichtbarkeit des Namens im Schichtplan')"
+            >
               <UCheckbox variant="card" v-model="state.hide_name">
                 <template #label>
                   {{
                     t(
-                      "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform.",
+                      "Meinen Namen anderen Mitgliedern im Schichtplan nicht anzeigen.",
                     )
                   }}</template
                 >
@@ -262,6 +269,7 @@ function personTypeLabel(val: string | null | undefined) {
             <FormsFormGroup name="email" :label="t('E-Mail-Adresse')" required>
               <UInput
                 v-model="emailState.email"
+                :maxlength="TEXT_MAX_LENGTH"
                 type="email"
               />
             </FormsFormGroup>
@@ -314,7 +322,11 @@ function personTypeLabel(val: string | null | undefined) {
             @error="onError"
           >
             <FormsFormGroup name="memberships_phone" :label="t('Telefonnummer')">
-              <UInput v-model="phoneState.memberships_phone" type="tel" />
+              <UInput
+                v-model="phoneState.memberships_phone"
+                :maxlength="TEXT_MAX_LENGTH"
+                type="tel"
+              />
             </FormsFormGroup>
             <div class="pt-2">
               <UButton type="submit" icon="i-heroicons-check">
@@ -539,6 +551,7 @@ de:
   "Profile": "Profil"
   "Some fields are not filled in correctly": "Einige Felder sind nicht korrekt ausgefüllt."
   "i_pronouns": "Die Angabe der Pronomen ist freiwillig. Sie soll uns helfen bei Mila einen respektvollen Umgang miteinander zu pflegen, indem wir so mit- und übereinander sprechen, wie die angesprochenen Personen es wünschen."
+  "i_visible_name": "Dieser Name kann sich von deinem amtlichen Namen unterscheiden. Er wird z.B. in E-Mails, auf deiner Mitgliedskarte, im Schichtplan, beim Check-in im Laden und in deinem Wolke-Profil verwendet."
   "E-Mail & Passwort": "E-Mail & Passwort"
   "Aktuelle E-Mail": "Aktuelle E-Mail"
   "E-Mail-Adresse": "E-Mail-Adresse"
@@ -555,25 +568,12 @@ de:
   "Juristische Person": "Juristische Person"
   "Geschlecht": "Geschlecht"
   "Telefonnummer": "Telefonnummer"
-  "Must be at least {min} characters": "Muss mindestens {min} Zeichen lang sein"
-  "t:phone_invalid": "Nur Ziffern und Leerzeichen sind erlaubt, + nur am Anfang"
   "Geburtsdatum": "Geburtsdatum"
   "Beruf": "Beruf"
   "Organisationsname": "Organisationsname"
   "Organisationsart": "Organisationsart"
   "Organisations-ID": "Organisations-ID"
   "Adresse": "Adresse"
-  "This field is required": "Dieses Feld ist erforderlich"
-  "Must be at most {max} characters": "Darf höchstens {max} Zeichen lang sein"
-  "Contains characters that are not allowed: {chars}": "Enthält nicht erlaubte Zeichen: {chars}"
-  "Email address is not valid": "E-Mail Adresse ist nicht korrekt"
-  "Please select a country from the list": "Bitte wähle ein Land aus der Liste"
-  "Please enter the house number in its own field": "Bitte gib die Hausnummer im eigenen Feld ein"
-  "Must start with a number, e.g. 1 or 1a": "Muss mit einer Zahl beginnen, z.B. 1 oder 1a"
-  "t:address_part_invalid": "Bitte gib Hausnummer, Stiege und Tür in den jeweiligen Feldern ein, ohne \"/\" oder \"Top\""
-  "Austrian postcodes have 4 digits": "Österreichische Postleitzahlen haben 4 Ziffern"
-  "Please enter the postcode in its own field": "Bitte gib die Postleitzahl im eigenen Feld ein"
-  "t:city_must_be_wien": "Bei Postleitzahlen, die mit 1 beginnen, lautet der Ort \"Wien\""
   "Zahlungsart": "Zahlungsart"
   "transfer": "Überweisung"
   "sepa": "SEPA-Einzug"
@@ -602,17 +602,14 @@ en:
   "Dein Profil wurde erfolgreich aktualisiert.": "Your profile has been updated successfully."
   "Sichtbarer Vorname": "Visible first name"
   "Sichtbarer Nachname": "Visible last name"
-  "Must be at most {max} characters": "Must be at most {max} characters"
-  "Contains characters that are not allowed: {chars}": "Contains characters that are not allowed: {chars}"
-  "Email address is not valid": "Email address is not valid"
   "Wie sollen wir dich ansprechen?": "How should we address you?"
-  "Dieser Name kann sich von deinem amtlichen Namen unterscheiden.": "This name can differ from your legal name."
-  "Mit welchen Pronomen möchtest du angesprochen werden?": "Which pronouns would you like to be addressed with?"
-  "Anonym bleiben": "Stay anonymous"
-  "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform.": "Do not show my name to other members on the platform."
+  "Pronomen": "Pronouns"
+  "Sichtbarkeit des Namens im Schichtplan": "Name visibility in shift calendar"
+  "Meinen Namen anderen Mitgliedern im Schichtplan nicht anzeigen.": "Do not show my name to other members in the shift calendar."
   "E-Mail-Benachrichtigungen": "Email notifications"
   "Bevorstehende Schichten": "Upcoming shifts"
   "i_pronouns": "A declaration of pronouns is optional. They help us at MILA in creating an inclusive environment, by speaking to and about each other in a way, that respects everyones wishes."
+  "i_visible_name": "This name can differ from your legal name. It is used e.g. in emails, on your membership card, in the shift plan, at check-in in the shop and in your Wolke profile."
   "E-Mail & Passwort": "Email & Password"
   "Aktuelle E-Mail": "Current email"
   "E-Mail-Adresse": "Email address"
@@ -630,22 +627,12 @@ en:
   "Juristische Person": "Legal entity"
   "Geschlecht": "Gender"
   "Telefonnummer": "Phone number"
-  "Must be at least {min} characters": "Must be at least {min} characters"
-  "t:phone_invalid": "Only digits and spaces are allowed, + only at the start"
   "Geburtsdatum": "Date of birth"
   "Beruf": "Occupation"
   "Organisationsname": "Organization name"
   "Organisationsart": "Organization type"
   "Organisations-ID": "Organization ID"
   "Adresse": "Address"
-  "This field is required": "This field is required"
-  "Please select a country from the list": "Please select a country from the list"
-  "Please enter the house number in its own field": "Please enter the house number in its own field"
-  "Must start with a number, e.g. 1 or 1a": "Must start with a number, e.g. 1 or 1a"
-  "t:address_part_invalid": "Please enter house number, stair and door in their own fields, without \"/\" or \"Top\""
-  "Austrian postcodes have 4 digits": "Austrian postcodes have 4 digits"
-  "Please enter the postcode in its own field": "Please enter the postcode in its own field"
-  "t:city_must_be_wien": "For postcodes starting with 1, the city is \"Wien\""
   "Zahlungsart": "Payment type"
   "transfer": "Bank transfer"
   "sepa": "SEPA direct debit"

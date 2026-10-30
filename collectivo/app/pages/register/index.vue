@@ -10,6 +10,10 @@ import {
   date,
 } from "yup";
 import type { FormErrorEvent, FormSubmitEvent } from "@nuxt/ui";
+import {
+  LONG_TEXT_MAX_LENGTH,
+  TEXT_MAX_LENGTH,
+} from "../../../shared/addressSchema";
 const { t } = useI18n();
 
 setPageTitle(t("Membership Application"));
@@ -24,35 +28,36 @@ const contactEmail = "mitglied@mila.wien";
 const devMode = import.meta.dev;
 const user = useCurrentUser();
 
-// A free-text field, trimmed before validation.
+// A free-text field, trimmed before validation. The length is limited by the
+// inputs' maxlength.
 const text = () => trimmedString();
 
 const schema = object({
   directus_users__memberships_person_type: string().required(
     () => t("This field is required"),
   ),
-  directus_users__email: string().trim()
+  directus_users__email: text()
     .test("email", () => t("Email address is not valid"), isValidEmail)
     .required(() => t("This field is required")),
   directus_users__password: string().required(() => t("This field is required")),
   _pw_confirm: string()
     .required(() => t("This field is required"))
     .oneOf([ref("directus_users__password")], () => t("Passwords are not the same")),
-  directus_users__memberships_organization_name: string().trim().when(
+  directus_users__memberships_organization_name: text().when(
     "directus_users__memberships_person_type",
     {
       is: "legal",
       then: (schema) => schema.required(() => t("This field is required")),
     },
   ),
-  directus_users__memberships_organization_type: string().trim().when(
+  directus_users__memberships_organization_type: text().when(
     "directus_users__memberships_person_type",
     {
       is: "legal",
       then: (schema) => schema.required(() => t("This field is required")),
     },
   ),
-  directus_users__memberships_organization_id: string().trim().when(
+  directus_users__memberships_organization_id: text().when(
     "directus_users__memberships_person_type",
     {
       is: "legal",
@@ -69,15 +74,15 @@ const schema = object({
     then: (schema) =>
       personNameRules(t, schema.required(() => t("This field is required"))),
   }),
-  coshopper_firstname: string().trim().when("add_coshopper", {
+  coshopper_firstname: text().when("add_coshopper", {
     is: true,
     then: (schema) => schema.required(() => t("This field is required")),
   }),
-  coshopper_lastname: string().trim().when("add_coshopper", {
+  coshopper_lastname: text().when("add_coshopper", {
     is: true,
     then: (schema) => schema.required(() => t("This field is required")),
   }),
-  coshopper_email: string().trim()
+  coshopper_email: text()
     .test("email", () => t("Email address is not valid"), isValidEmail)
     .when("add_coshopper", {
       is: true,
@@ -134,7 +139,7 @@ const schema = object({
   directus_users__payments_type: string().required(
     () => t("This field is required"),
   ),
-  directus_users__payments_account_iban: string().trim().when(
+  directus_users__payments_account_iban: text().when(
     "directus_users__payments_type",
     {
       is: "sepa",
@@ -146,19 +151,19 @@ const schema = object({
           }),
     },
   ),
-  directus_users__payments_account_owner: string().trim().when(
+  directus_users__payments_account_owner: text().when(
     "directus_users__payments_type",
     {
       is: "sepa",
       then: (schema) => schema.required(() => t("This field is required")),
     },
   ),
-  directus_users__mila_survey_contact: string().trim(),
-  directus_users__mila_survey_motivation: string().trim(),
+  directus_users__mila_survey_contact: text(),
+  directus_users__mila_survey_motivation: text(),
   directus_users__mila_groups_interested_2: array(string()),
   directus_users__mila_skills_2: array(string()),
   directus_users__survey_languages: array(string()),
-  directus_users__survey_languages_additional: string().trim(),
+  directus_users__survey_languages_additional: text(),
   _statutes_approval: boolean()
     .required(() => t("This field must be accepted"))
     .oneOf([true], () => t("This field must be accepted")),
@@ -401,7 +406,11 @@ async function onError(event: FormErrorEvent) {
           name="directus_users__email"
           required
         >
-          <UInput variant="outline" v-model="state.directus_users__email" />
+          <UInput
+            variant="outline"
+            v-model="state.directus_users__email"
+            :maxlength="TEXT_MAX_LENGTH"
+          />
         </FormsFormGroup>
 
         <div class="grid md:grid-cols-2 gap-4">
@@ -446,6 +455,7 @@ async function onError(event: FormErrorEvent) {
           <UInput
             variant="outline"
             v-model="state.directus_users__memberships_organization_name"
+            :maxlength="TEXT_MAX_LENGTH"
           />
         </FormsFormGroup>
 
@@ -457,6 +467,7 @@ async function onError(event: FormErrorEvent) {
           <UInput
             variant="outline"
             v-model="state.directus_users__memberships_organization_type"
+            :maxlength="TEXT_MAX_LENGTH"
           />
         </FormsFormGroup>
 
@@ -468,6 +479,7 @@ async function onError(event: FormErrorEvent) {
           <UInput
             variant="outline"
             v-model="state.directus_users__memberships_organization_id"
+            :maxlength="TEXT_MAX_LENGTH"
           />
         </FormsFormGroup>
       </div>
@@ -498,6 +510,7 @@ async function onError(event: FormErrorEvent) {
           <UInput
             variant="outline"
             v-model="state.directus_users__first_name"
+            :maxlength="TEXT_MAX_LENGTH"
           />
         </FormsFormGroup>
 
@@ -506,7 +519,11 @@ async function onError(event: FormErrorEvent) {
           name="directus_users__last_name"
           required
         >
-          <UInput variant="outline" v-model="state.directus_users__last_name" />
+          <UInput
+            variant="outline"
+            v-model="state.directus_users__last_name"
+            :maxlength="TEXT_MAX_LENGTH"
+          />
         </FormsFormGroup>
 
         <FormsFormGroup
@@ -533,6 +550,7 @@ async function onError(event: FormErrorEvent) {
           <UInput
             variant="outline"
             v-model="state.directus_users__memberships_phone"
+            :maxlength="TEXT_MAX_LENGTH"
           />
         </FormsFormGroup>
       </div>
@@ -554,6 +572,7 @@ async function onError(event: FormErrorEvent) {
           <UInput
             variant="outline"
             v-model="state.directus_users__memberships_occupation"
+            :maxlength="TEXT_MAX_LENGTH"
           />
         </FormsFormGroup>
       </div>
@@ -567,7 +586,7 @@ async function onError(event: FormErrorEvent) {
 
     <div class="grid gap-4" v-if="isNatural">
       <FormsFormGroup
-        name="directus_users__hide_name"
+        name="use_custom_username"
         :label="t('Selbstgewählter Name')"
       >
         <UCheckbox variant="card" v-model="state.use_custom_username">
@@ -587,7 +606,11 @@ async function onError(event: FormErrorEvent) {
           required
         >
           <template #description> </template>
-          <UInput variant="outline" v-model="state.directus_users__username" />
+          <UInput
+            variant="outline"
+            v-model="state.directus_users__username"
+            :maxlength="TEXT_MAX_LENGTH"
+          />
         </FormsFormGroup>
         <FormsFormGroup
           :label="t('Visible last name')"
@@ -598,16 +621,21 @@ async function onError(event: FormErrorEvent) {
           <UInput
             variant="outline"
             v-model="state.directus_users__username_last"
+            :maxlength="TEXT_MAX_LENGTH"
           />
         </FormsFormGroup>
       </div>
 
       <FormsFormGroup
-        :label="t('Mit welchen Pronomen möchtest du angesprochen werden?')"
+        :label="t('Pronomen')"
         :infotext="t('i_pronouns')"
         name="directus_users__pronouns"
       >
-        <UInput variant="outline" v-model="state.directus_users__pronouns" />
+        <UInput
+          variant="outline"
+          v-model="state.directus_users__pronouns"
+          :maxlength="TEXT_MAX_LENGTH"
+        />
       </FormsFormGroup>
 
       <FormsFormGroup
@@ -631,13 +659,13 @@ async function onError(event: FormErrorEvent) {
 
       <FormsFormGroup
         name="directus_users__hide_name"
-        :label="t('Anonym bleiben')"
+        :label="t('Sichtbarkeit des Namens im Schichtplan')"
       >
         <UCheckbox variant="card" v-model="state.directus_users__hide_name">
           <template #label>
             {{
               t(
-                "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform.",
+                "Meinen Namen anderen Mitgliedern im Schichtplan nicht anzeigen.",
               )
             }}
           </template>
@@ -695,7 +723,7 @@ async function onError(event: FormErrorEvent) {
 
     <div v-if="isNatural && state.memberships__memberships_type === 'Aktiv'">
       <FormsFormGroup
-        name="directus_users__hide_name"
+        name="add_coshopper"
         :label="t('Miteinkäufer:in')"
       >
         <UCheckbox variant="card" v-model="state.add_coshopper">
@@ -714,17 +742,29 @@ async function onError(event: FormErrorEvent) {
           name="coshopper_firstname"
           required
         >
-          <UInput variant="outline" v-model="state.coshopper_firstname" />
+          <UInput
+            variant="outline"
+            v-model="state.coshopper_firstname"
+            :maxlength="TEXT_MAX_LENGTH"
+          />
         </FormsFormGroup>
         <FormsFormGroup
           :label="t('Last name')"
           name="coshopper_lastname"
           required
         >
-          <UInput variant="outline" v-model="state.coshopper_lastname" />
+          <UInput
+            variant="outline"
+            v-model="state.coshopper_lastname"
+            :maxlength="TEXT_MAX_LENGTH"
+          />
         </FormsFormGroup>
         <FormsFormGroup :label="t('E-Mail Address')" name="coshopper_email" required>
-          <UInput variant="outline" v-model="state.coshopper_email" />
+          <UInput
+            variant="outline"
+            v-model="state.coshopper_email"
+            :maxlength="TEXT_MAX_LENGTH"
+          />
         </FormsFormGroup>
       </div>
     </div>
@@ -833,6 +873,7 @@ async function onError(event: FormErrorEvent) {
         <UInput
           variant="outline"
           v-model="state.directus_users__payments_account_iban"
+          :maxlength="TEXT_MAX_LENGTH"
         />
       </FormsFormGroup>
 
@@ -844,6 +885,7 @@ async function onError(event: FormErrorEvent) {
         <UInput
           variant="outline"
           v-model="state.directus_users__payments_account_owner"
+          :maxlength="TEXT_MAX_LENGTH"
         />
       </FormsFormGroup>
     </div>
@@ -860,14 +902,20 @@ async function onError(event: FormErrorEvent) {
         :label="t('How did you hear about us?')"
         name="directus_users__mila_survey_contact"
       >
-        <UTextarea v-model="state.directus_users__mila_survey_contact" />
+        <UTextarea
+          v-model="state.directus_users__mila_survey_contact"
+          :maxlength="LONG_TEXT_MAX_LENGTH"
+        />
       </FormsFormGroup>
 
       <FormsFormGroup
         :label="t('What convinced you to join MILA?')"
         name="directus_users__mila_survey_motivation"
       >
-        <UTextarea v-model="state.directus_users__mila_survey_motivation" />
+        <UTextarea
+          v-model="state.directus_users__mila_survey_motivation"
+          :maxlength="LONG_TEXT_MAX_LENGTH"
+        />
       </FormsFormGroup>
 
       <FormsFormGroup
@@ -943,6 +991,7 @@ async function onError(event: FormErrorEvent) {
         <UInput
           variant="outline"
           v-model="state.directus_users__survey_languages_additional"
+          :maxlength="TEXT_MAX_LENGTH"
         />
       </FormsFormGroup>
     </div>
@@ -1072,23 +1121,6 @@ async function onError(event: FormErrorEvent) {
 
 <i18n lang="yaml">
 de:
-  "Email address is not valid": "E-Mail Adresse ist nicht korrekt"
-  "Passwords are not the same": "Passwörter stimmen nicht überein"
-  "Must be at most {max} characters": "Darf höchstens {max} Zeichen lang sein"
-  "Must be at least {min} characters": "Muss mindestens {min} Zeichen lang sein"
-  "Contains characters that are not allowed: {chars}": "Enthält nicht erlaubte Zeichen: {chars}"
-  "Please enter the house number in its own field": "Bitte gib die Hausnummer im eigenen Feld ein"
-  "Austrian postcodes have 4 digits": "Österreichische Postleitzahlen haben 4 Ziffern"
-  "Please enter the postcode in its own field": "Bitte gib die Postleitzahl im eigenen Feld ein"
-  "Please select a country from the list": "Bitte wähle ein Land aus der Liste"
-  "t:city_must_be_wien": "Bei Postleitzahlen, die mit 1 beginnen, lautet der Ort \"Wien\""
-  "t:phone_invalid": "Nur Ziffern und Leerzeichen sind erlaubt, + nur am Anfang"
-  "t:address_part_invalid": "Bitte gib Hausnummer, Stiege und Tür in den jeweiligen Feldern ein, ohne \"/\" oder \"Top\""
-  "Must start with a number, e.g. 1 or 1a": "Muss mit einer Zahl beginnen, z.B. 1 oder 1a"
-  "Must be at least 10 shares": "Muss mindestens 10 Anteile sein"
-  "This field is required": "Dieses Feld ist erforderlich"
-  "This field must be accepted": "Dieses Feld muss akzeptiert werden"
-  "IBAN is not valid": "IBAN nicht gültig"
   "There was an error": "Es ist ein Fehler aufgetreten"
 
   "User Account": "Zugangsdaten"
@@ -1228,30 +1260,13 @@ de:
   "Öffentlichkeitsarbeit/ Social Media/ Website": "Öffentlichkeitsarbeit/ Social Media/ Website"
 
 en:
-  "Email address is not valid": "Email address is not valid"
-  "Passwords are not the same": "Passwords are not the same"
-  "Must be at most {max} characters": "Must be at most {max} characters"
-  "Must be at least {min} characters": "Must be at least {min} characters"
-  "Contains characters that are not allowed: {chars}": "Contains characters that are not allowed: {chars}"
-  "Please enter the house number in its own field": "Please enter the house number in its own field"
-  "Austrian postcodes have 4 digits": "Austrian postcodes have 4 digits"
-  "Please enter the postcode in its own field": "Please enter the postcode in its own field"
-  "Please select a country from the list": "Please select a country from the list"
-  "t:city_must_be_wien": "For postcodes starting with 1, the city is \"Wien\""
-  "t:phone_invalid": "Only digits and spaces are allowed, + only at the start"
-  "t:address_part_invalid": "Please enter house number, stair and door in their own fields, without \"/\" or \"Top\""
-  "Must start with a number, e.g. 1 or 1a": "Must start with a number, e.g. 1 or 1a"
-  "Must be at least 10 shares": "Must be at least 10 shares"
-  "This field is required": "This field is required"
-  "This field must be accepted": "This field must be accepted"
-  "IBAN is not valid": "IBAN is not valid"
 
   "Wie sollen wir dich ansprechen?": "How should we address you?"
   "Dieser Name kann sich von deinem amtlichen Namen unterscheiden.": "This name can differ from your legal name."
-  "Mit welchen Pronomen möchtest du angesprochen werden?": "Which pronouns would you like to be addressed with?"
+  "Pronomen": "Pronouns"
   "Ich möchte, dass meine Pronomen auf meine Mitgliederkarte gedruckt werden.": "I would like my pronouns to be printed on my membership card."
-  "Anonym bleiben": "Stay anonymous"
-  "Verberge meinen Namen vor anderen Mitgliedern auf der Plattform.": "Do not show my name to other members on the platform."
+  "Sichtbarkeit des Namens im Schichtplan": "Name visibility in shift calendar"
+  "Meinen Namen anderen Mitgliedern im Schichtplan nicht anzeigen.": "Do not show my name to other members in the shift calendar."
   "E-Mail-Benachrichtigungen": "Email notifications"
   "Erhalte E-Mail-Benachrichtigungen über bevorstehende Schichten.": "Receive email notifications about upcoming shifts."
   "Sichtbarer Name": "Visible name"

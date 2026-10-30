@@ -35,12 +35,30 @@ describe("profileSchema", () => {
     ["username", ""],
     ["username", "Max (Moritz)"],
     ["username_last", "a".repeat(256)],
+    ["pronouns", "a".repeat(256)],
     ["memberships_phone", "43 +664 1234567"],
     ["memberships_phone", "+43 664/1234567"],
     ["memberships_phone", "12"],
     ["memberships_phone", "1".repeat(41)],
   ])("rejects %s = %j", (field, value) => {
     expect(parse({ [field]: value })).toBe(false);
+  });
+
+  it.each([
+    "memberships_street",
+    "memberships_streetnumber",
+    "memberships_stair",
+    "memberships_door",
+    "memberships_postcode",
+    "memberships_city",
+  ])("rejects more than 255 characters in %s", (field) => {
+    const result = profileSchema.safeParse({ ...address, [field]: "a".repeat(256) });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      // Only the length issue - the field's other checks are skipped
+      const issues = result.error.issues.filter((i) => i.path[0] === field);
+      expect(issues.map((i) => i.code)).toEqual(["too_big"]);
+    }
   });
 
   it("accepts phone numbers of 3 to 40 characters", () => {
@@ -107,7 +125,6 @@ describe("profileSchema", () => {
     ["memberships_door", "1/2"],
     ["memberships_postcode", "101"],
     ["memberships_city", "1010 Wien"],
-    ["memberships_city", "Vienna"],
     ["memberships_country", "Austria"],
     ["memberships_country", "Österreich"],
     ["memberships_street", "   "],

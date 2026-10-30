@@ -184,6 +184,52 @@ describe("registerSchema", () => {
     expect(result.success).toBe(false);
   });
 
+  it.each([
+    "directus_users__email",
+    "directus_users__first_name",
+    "directus_users__memberships_occupation",
+    "directus_users__memberships_organization_name",
+    "directus_users__pronouns",
+    "directus_users__memberships_street",
+    "directus_users__memberships_streetnumber",
+    "directus_users__memberships_stair",
+    "directus_users__memberships_door",
+    "directus_users__memberships_postcode",
+    "directus_users__memberships_city",
+    "directus_users__payments_account_owner",
+    "coshopper_firstname",
+    "coshopper_email",
+    "directus_users__survey_languages_additional",
+  ])("rejects more than 255 characters in %s", (field) => {
+    const result = registerSchema.safeParse(validBody({ [field]: "a".repeat(256) }));
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      const issue = result.error.issues.find((i) => i.path[0] === field);
+      expect(issue?.code).toBe("too_big");
+    }
+  });
+
+  it("does not run the other checks on overlong input", () => {
+    // Would also fail the house number check if it ran
+    const result = registerSchema.safeParse(
+      validBody({ directus_users__memberships_street: "a 1".repeat(100) }),
+    );
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.map((i) => i.code)).toEqual(["too_big"]);
+    }
+  });
+
+  it("accepts survey answers up to 5000 characters", () => {
+    for (const field of [
+      "directus_users__mila_survey_contact",
+      "directus_users__mila_survey_motivation",
+    ]) {
+      expect(registerSchema.safeParse(validBody({ [field]: "a".repeat(5000) })).success).toBe(true);
+      expect(registerSchema.safeParse(validBody({ [field]: "a".repeat(5001) })).success).toBe(false);
+    }
+  });
+
   it("only accepts countries from the dropdown list", () => {
     for (const country of ["DE", "US"]) {
       expect(
@@ -278,20 +324,6 @@ describe("registerSchema", () => {
       validBody({ directus_users__password: " secret " }),
     );
     expect(result.directus_users__password).toBe(" secret ");
-  });
-
-  it("requires Wien as city for Austrian postcodes starting with 1", () => {
-    const parse = (city: string, postcode: string) =>
-      registerSchema.safeParse(
-        validBody({
-          directus_users__memberships_city: city,
-          directus_users__memberships_postcode: postcode,
-          directus_users__memberships_country: "AT",
-        }),
-      ).success;
-    expect(parse("Wien", "1010")).toBe(true);
-    expect(parse("Vienna", "1010")).toBe(false);
-    expect(parse("Graz", "8020")).toBe(true);
   });
 
   it("rejects digits in the city", () => {

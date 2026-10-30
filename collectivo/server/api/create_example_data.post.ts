@@ -330,7 +330,7 @@ function assignUniqueEmails(identities: [string, string][]): string[] {
 
 // Real Vienna streets with the postcode of the district they're in, so the
 // generated addresses pass the address validation of the registration and
-// profile pages (4-digit postcode, city "Wien", country "AT").
+// profile pages (4-digit postcode, country "AT").
 export const VIENNA_STREETS: [street: string, postcode: string][] = [
   ["Kärntner Straße", "1010"], ["Herrengasse", "1010"], ["Rotenturmstraße", "1010"],
   ["Praterstraße", "1020"], ["Taborstraße", "1020"], ["Große Mohrengasse", "1020"],

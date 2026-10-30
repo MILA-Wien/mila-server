@@ -11,10 +11,11 @@ import {
 } from "../../../shared/addressSchema";
 
 // Synced to Keycloak firstName/lastName - see shared/personName.ts.
-const personName = text()
+const personName = text(PERSON_NAME_MAX_LENGTH)
   .min(1)
-  .max(PERSON_NAME_MAX_LENGTH)
-  .refine(isValidPersonName, "Name contains characters that are not allowed");
+  .pipe(
+    z.string().refine(isValidPersonName, "Name contains characters that are not allowed"),
+  );
 
 const REQUIRED_ADDRESS_FIELDS = [
   "memberships_street",
@@ -32,7 +33,7 @@ const ADDRESS_FIELDS = [
 
 // All fields are optional because callers update different parts of the profile
 // (e.g. the buddy system page only sends buddy_*). The address is all-or-nothing,
-// so the rules between postcode, city and country can be checked.
+// so the rules between postcode and country can be checked.
 export const profileSchema = z
   .object({
     username: personName.optional(),
@@ -65,7 +66,6 @@ export const profileSchema = z
     }
     const issues = addressCrossFieldIssues({
       postcode: data.memberships_postcode,
-      city: data.memberships_city,
       country: data.memberships_country,
     });
     for (const { field, message } of issues) {

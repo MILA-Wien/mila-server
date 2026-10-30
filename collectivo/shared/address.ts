@@ -10,10 +10,11 @@ import { AUSTRIA } from "./countries";
 
 /**
  * The street must not end in a house number, including suffixes like "5a", "5-7",
- * "5/2" or "5 a". Numbers inside the name ("Straße des 17. Juni") are fine.
+ * "5/2" or "5 a". Numbers inside the name ("Straße des 17. Juni") are fine, also
+ * ordinals without a space ("12.-Februar-Platz", "1.Haidequerstraße").
  */
 export function isValidStreet(value?: string | null): boolean {
-  return !value || !/\d\S*(\s+[a-z])?\s*$/i.test(value);
+  return !value || !/\d+[a-z]?([-/.]\d+[a-z]?)*\.?(\s+[a-z])?\s*$/i.test(value);
 }
 
 /**
@@ -22,20 +23,6 @@ export function isValidStreet(value?: string | null): boolean {
  */
 export function isValidCity(value?: string | null): boolean {
   return !value || !/\d/.test(value);
-}
-
-/** Austrian postcodes starting with 1 belong to Vienna, so the city must be "Wien". */
-export function isValidViennaCity(
-  city?: string | null,
-  postcode?: string | null,
-  country?: string | null,
-): boolean {
-  return (
-    !city ||
-    country !== AUSTRIA ||
-    !postcode?.startsWith("1") ||
-    city.trim() === "Wien"
-  );
 }
 
 /** Austrian postcodes have exactly 4 digits; other countries are not checked. */

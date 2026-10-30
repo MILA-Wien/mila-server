@@ -2,7 +2,8 @@
  * One-off migration: convert `memberships_country` on directus_users from the free-text
  * values entered before the country dropdown to ISO 3166-1 alpha-2 codes.
  *
- * Values not in COUNTRY_CODES below are left unchanged and printed, for manual fixing.
+ * Values not in LEGACY_VALUES below and not already a code from the dropdown
+ * (shared/countries.ts) are left unchanged and printed, for manual fixing.
  *
  * Usage:
  *   BACKFILL_DIRECTUS_URL=https://studio.mila.wien \
@@ -25,9 +26,10 @@ import {
   updateUser,
 } from "@directus/sdk";
 import type { DbSchema } from "../server/utils/dbSchema";
+import { isValidCountryCode } from "../shared/countries";
 
 // The distinct values found in the database before the migration.
-const COUNTRY_CODES: Record<string, string> = {
+const LEGACY_VALUES: Record<string, string> = {
   "Österreich": "AT",
   "Österreich ": "AT",
   "österreich": "AT",
@@ -85,11 +87,12 @@ async function main() {
   let unknown = 0;
 
   for (const user of users as any[]) {
-    const code = COUNTRY_CODES[user.memberships_country];
+    const code = LEGACY_VALUES[user.memberships_country];
 
     if (!code) {
-      // Already a code (e.g. "AT", "DE") or a value not in the list above
-      if (!/^[A-Z]{2}$/.test(user.memberships_country)) {
+      // Already a code from the dropdown (e.g. "AT", "DE") or a value not in the
+      // list above - also two letters that are no country, like "EU"
+      if (!isValidCountryCode(user.memberships_country)) {
         console.error(
           `Unknown value for ${user.email}: ${JSON.stringify(user.memberships_country)}, skipping`,
         );
