@@ -79,8 +79,8 @@ export default defineNuxtConfig({
     strategy: "no_prefix",
     defaultLocale: "de",
     locales: [
-      { code: "en", files: ["shifts/en.json"] }, //
-      { code: "de", files: ["shifts/de.json"] }, //
+      { code: "en", files: ["shifts/en.json", "forms/en.json"] }, //
+      { code: "de", files: ["shifts/de.json", "forms/de.json"] }, //
     ],
     bundle: {
       optimizeTranslationDirective: false,

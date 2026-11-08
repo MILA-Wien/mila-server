@@ -11,7 +11,7 @@
     "group": "memberships_address_group",
     "hidden": false,
     "interface": "input",
-    "note": null,
+    "note": "ISO-Ländercode mit 2 Großbuchstaben, z. B. AT, DE, CH. Liste: https://de.wikipedia.org/wiki/ISO-3166-1-Kodierliste",
     "options": {
       "iconRight": "globe_asia"
     },
@@ -30,8 +30,16 @@
         "translation": "Country"
       }
     ],
-    "validation": null,
-    "validation_message": null,
+    "validation": {
+      "_and": [
+        {
+          "memberships_country": {
+            "_regex": "^[A-Z]{2}$"
+          }
+        }
+      ]
+    },
+    "validation_message": "Sollte ein ISO ALPHA2 Code sein",
     "width": "half"
   },
   "schema": {
