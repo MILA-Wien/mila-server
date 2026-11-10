@@ -9,6 +9,7 @@ import {
 } from "../utils/activationMails";
 import { sendExemptionEndedMails, type EndedExemption } from "../utils/exemptionMails";
 import { hasExemptionEnded } from "../../shared/shiftsExemption";
+import { cronjobDays } from "../../shared/cronjobDays";
 import {
   classifyFreezeTransition,
   reachesShoppingWarning,
@@ -30,19 +31,12 @@ export default defineEventHandler(async (event) => {
 async function runCronjobs(force_yesterday: boolean) {
   const settings = await dbGetSettings();
 
-  // Get days since last cronjob (including day of last cronjob, not including current day)
-  const from = new Date(settings.last_cronjob + "Z");
-  if (force_yesterday) {
-    // If repeat is true, run cronjobs for the last day
-    from.setDate(new Date().getDate() - 1);
-  }
-  from.setUTCHours(0, 0, 0, 0);
-  const to = new Date();
-  to.setDate(to.getDate() - 1); // Run until yesterday, exclude today
-  const days_since_last_cronjob = [];
-  for (let d = new Date(from); d <= to; d.setDate(d.getDate() + 1)) {
-    days_since_last_cronjob.push(new Date(d));
-  }
+  // Days since last cronjob (including day of last cronjob, not including current day)
+  const days_since_last_cronjob = cronjobDays({
+    lastCronjob: settings.last_cronjob,
+    forceYesterday: force_yesterday,
+    now: new Date(),
+  });
 
   // Memberships that crossed into frozen on each processed day. Collected here rather
   // than re-queried by date so the freeze mail only ever reaches genuine transitions -
