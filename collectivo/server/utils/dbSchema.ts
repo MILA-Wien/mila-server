@@ -101,6 +101,8 @@ export interface Membership {
   memberships_date_ended?: string;
   memberships_date_approved?: string;
   shifts_user_type: ShiftsUserType;
+  // Last day (inclusive) of a time-limited exemption; only meaningful while exempt.
+  shifts_exempt_until?: string | null;
   shifts_counter: number;
   activation_last_shop?: string | null;
   activation_frozen_since?: string | null;

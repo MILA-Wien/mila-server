@@ -166,7 +166,7 @@ de:
   "Please sign up for a shift or contact the members' office.": "Bitte melde dich für eine Schicht an oder kontaktiere das Mitgliederbüro."
   "You have a holiday registered at the moment.": "Du hast aktuell einen Urlaub eingetragen."
   "You cannot go shopping during this time.": "Du kannst in dieser Zeit nicht einkaufen gehen."
-  "You are exempt from shift work.": "Du bist von der Schichtarbeit befreit."
+  "You are exempt from participation shifts.": "Du bist von den Mitmach-Schichten befreit."
   "Please do your next shift latest in": "Bitte mache deine nächste Schicht spätestens in"
   "Your membership is active. Thank you for your contribution!": "Deine Mitgliedschaft ist aktiv. Danke für deinen Beitrag!"
   "You can nonetheless sign up for shifts if you want.": "Du kannst dich trotzdem für Schichten anmelden, wenn du möchtest."

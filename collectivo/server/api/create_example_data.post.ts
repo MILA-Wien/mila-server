@@ -9,6 +9,7 @@ import {
   readRoles,
   readUsers,
   readItems,
+  updateItem,
   updateItems,
   updateSingleton,
   updateUser,
@@ -1154,6 +1155,19 @@ async function create_emails() {
     });
   }
 
+  // Seed copy for the exemption-ended mail, linked to its automation by
+  // create_automations(). {{exempt_until}} is the last exempt day, e.g. 31.12.2026.
+  templates.push({
+    messages_name: EXEMPTION_ENDED_TEMPLATE_NAME,
+    messages_method: "email",
+    messages_subject: "Deine Befreiung von den Mitmach-Schichten ist ausgelaufen",
+    messages_content:
+      "Hallo {{recipient_first_name}},\n\n" +
+      "deine Befreiung von den Mitmach-Schichten galt bis einschließlich {{exempt_until}} und ist nun ausgelaufen. " +
+      "Ab heute bist du wieder bei den Festschichten dabei.\n\n" +
+      "Falls du eine Verlängerung brauchst, wende dich bitte an das Mitgliederbüro.",
+  });
+
   const templateIds = [];
 
   try {
@@ -1166,7 +1180,10 @@ async function create_emails() {
     console.info(error);
   }
 }
-// The two activation automations.
+const EXEMPTION_ENDED_TEMPLATE_NAME = "Befreiung ausgelaufen";
+
+// The automations the daily cronjob sends from: the two activation ones and the
+// exemption-ended mail (#237).
 //
 // Created inactive and with no template attached: the copy lives in messages_templates,
 // which the Activation Team authors in Directus, and which create_emails() above purges
@@ -1178,7 +1195,7 @@ async function create_emails() {
 // missing automation row as a misconfiguration.
 async function create_automations() {
   const directus = await useDirectusAdmin();
-  console.info("Creating activation automations");
+  console.info("Creating automations");
 
   const wanted = [
     {
@@ -1188,6 +1205,10 @@ async function create_automations() {
     {
       mila_key: "activation_survey",
       mila_label: "Aktivierung: Umfrage 28 Tage nach dem Einfrieren",
+    },
+    {
+      mila_key: "shifts_exemption_ended",
+      mila_label: "Schichten: Befreiung ausgelaufen",
     },
   ];
 
@@ -1201,17 +1222,45 @@ async function create_automations() {
 
     const present = new Set(existing.map((a) => a.mila_key));
     const missing = wanted.filter((a) => !present.has(a.mila_key));
-    if (!missing.length) return;
+    if (missing.length) {
+      await directus.request(
+        createItems(
+          "mila_automations",
+          missing.map((a) => ({ ...a, mila_active: false })),
+        ),
+      );
+    }
 
-    await directus.request(
-      createItems(
-        "mila_automations",
-        missing.map((a) => ({ ...a, mila_active: false })),
-      ),
-    );
+    await link_exemption_ended_template();
   } catch (error) {
     console.info(error);
   }
+}
+
+// Unlike the activation copy, the exemption-ended template is seeded by create_emails().
+// Its purge of messages_templates empties mila_template (ON DELETE SET NULL), so relink
+// the freshly seeded template whenever the automation has none.
+async function link_exemption_ended_template() {
+  const directus = await useDirectusAdmin();
+  const [automation] = (await directus.request(
+    readItems("mila_automations", {
+      filter: { mila_key: { _eq: "shifts_exemption_ended" } },
+      fields: ["id", "mila_template"],
+    }),
+  )) as unknown as { id: number; mila_template: number | null }[];
+  if (!automation || automation.mila_template) return;
+
+  const [template] = (await directus.request(
+    readItems("messages_templates", {
+      filter: { messages_name: { _eq: EXEMPTION_ENDED_TEMPLATE_NAME } },
+      fields: ["id"],
+    }),
+  )) as unknown as { id: number }[];
+  if (!template) return;
+
+  await directus.request(
+    updateItem("mila_automations", automation.id, { mila_template: template.id }),
+  );
 }
 
 async function create_tiles() {
@@ -1368,6 +1417,7 @@ interface FakePlan {
   holidayIdx: number[];
   coshopperIdx: number[];
   shiftsCounterByIdx: number[];
+  exemptUntilByIdx: (string | null)[]; // "Befreit bis", only on some exempt memberships
   categoryAllowedByIdx: Map<number, number[]>; // idx -> old category ids
 }
 
@@ -1423,6 +1473,15 @@ function buildFakePlan(n: number): FakePlan {
     if (allowed.length > 0) categoryAllowedByIdx.set(i, allowed);
   }
 
+  // About half the exempt members get a time-limited exemption, a few already past so the
+  // next cronjob run ends them (#237).
+  // Drawn last so the rng sequence of everything above is unchanged.
+  const exemptUntilByIdx = userTypeByIdx.map((userType) =>
+    userType === "exempt" && chance(0.5)
+      ? DateTime.now().plus({ days: randomInt(-3, 90) }).toISODate()
+      : null,
+  );
+
   return {
     statusByIdx,
     typeByIdx,
@@ -1435,6 +1494,7 @@ function buildFakePlan(n: number): FakePlan {
     holidayIdx,
     coshopperIdx,
     shiftsCounterByIdx,
+    exemptUntilByIdx,
     categoryAllowedByIdx,
   };
 }
@@ -1464,6 +1524,7 @@ async function create_fake_memberships(
     memberships_status: plan.statusByIdx[idx],
     shifts_user_type: plan.userTypeByIdx[idx],
     shifts_counter: plan.shiftsCounterByIdx[idx],
+    shifts_exempt_until: plan.exemptUntilByIdx[idx],
   }));
 
   const createdMemberships = await inChunks(payload, BULK_CHUNK_SIZE, (chunk) =>

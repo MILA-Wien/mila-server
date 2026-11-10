@@ -7,6 +7,8 @@ import {
   sendActivationFrozenMails,
   sendActivationSurveyMails,
 } from "../utils/activationMails";
+import { sendExemptionEndedMails, type EndedExemption } from "../utils/exemptionMails";
+import { hasExemptionEnded } from "../../shared/shiftsExemption";
 import {
   classifyFreezeTransition,
   reachesShoppingWarning,
@@ -48,9 +50,12 @@ async function runCronjobs(force_yesterday: boolean) {
   const frozenByDay = new Map<string, number[]>();
   // Likewise for memberships that reached the shopping expiration warning point.
   const warnedByDay = new Map<string, number[]>();
+  // Exemptions ended by job 3c, mailed once after the loop (job 7).
+  const endedExemptions: EndedExemption[] = [];
 
   // Perform cronjobs
   for (const day of days_since_last_cronjob) {
+    const dayStr = day.toISOString().split("T")[0]!;
     const holidays = await dbGetActiveHolidayMemberships(day);
 
     // Job 1
@@ -65,7 +70,6 @@ async function runCronjobs(force_yesterday: boolean) {
 
     // Job 3
     if (settings.shift_point_system) {
-      const dayStr = day.toISOString().split("T")[0]!;
       const { justFrozen, justWarned } = await decrement_shifts_counter(holidays, day);
       if (justFrozen.length) {
         frozenByDay.set(dayStr, justFrozen);
@@ -73,6 +77,17 @@ async function runCronjobs(force_yesterday: boolean) {
       if (justWarned.length) {
         warnedByDay.set(dayStr, justWarned);
       }
+    }
+
+    // Job 3c: end time-limited exemptions whose last day is the processed day (or earlier).
+    // Deliberately after job 3: "Befreit bis" is inclusive, so the member must not lose a
+    // point for their last exempt day. Once back on Festschicht, they are decremented from
+    // the following day on (in this run if it catches up several days). Runs
+    // regardless of shift_point_system, as the shift type matters beyond the counter.
+    try {
+      endedExemptions.push(...(await end_expired_exemptions(dayStr)));
+    } catch (e) {
+      console.error("Error in end_expired_exemptions", e);
     }
   }
   // Job 3b: drop activation_frozen_since for memberships that are no longer frozen but
@@ -113,8 +128,36 @@ async function runCronjobs(force_yesterday: boolean) {
     console.error("Error in sendActivationSurveyMails", e);
   }
 
+  // Job 7: one mail per exemption job 3c ended.
+  try {
+    await sendExemptionEndedMails(endedExemptions);
+  } catch (e) {
+    console.error("Error in sendExemptionEndedMails", e);
+  }
+
   // Update last cronjob timestamp
   await dbUpdateSettings({ last_cronjob: new Date().toISOString() });
+}
+
+// Switch memberships whose "Befreit bis" has been reached by the processed day back to Festschicht
+// and clear the date. Returns what was ended, with the date, for the mail.
+async function end_expired_exemptions(dayStr: string): Promise<EndedExemption[]> {
+  const exempt = await dbGetExemptMembershipsWithEndDate();
+  const ended: EndedExemption[] = [];
+  for (const membership of exempt) {
+    if (
+      !hasExemptionEnded({
+        shiftsUserType: membership.shifts_user_type,
+        exemptUntil: membership.shifts_exempt_until,
+        processedDay: dayStr,
+      })
+    ) {
+      continue;
+    }
+    await dbEndMembershipExemption(membership.id);
+    ended.push({ membershipId: membership.id, exemptUntil: membership.shifts_exempt_until! });
+  }
+  return ended;
 }
 
 // Clear activation_frozen_since for memberships that have recovered by any route.
