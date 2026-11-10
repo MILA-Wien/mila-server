@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { checkAbsenceAuthorization } from "../../../shared/absenceAuthorization";
 
 const bodySchema = z.object({
   shifts_membership: z.number(),
@@ -14,8 +15,18 @@ export default defineEventHandler(async (event) => {
   const user = getMemberOrThrowError(event);
   const body = await readValidatedBody(event, bodySchema.parse);
 
-  // Users can only create absences for themselves unless they are shift admins
-  if (body.shifts_membership !== user.mship && !user.shiftAdmin) {
+  // Users can only create absences for themselves unless they are shift admins, and a
+  // named assignment must belong to the absence's membership (see absenceAuthorization).
+  const assignmentMembership =
+    body.shifts_assignment === undefined
+      ? undefined
+      : await dbGetAssignmentMembership(body.shifts_assignment);
+  const authorization = checkAbsenceAuthorization({
+    caller: user,
+    absenceMembership: body.shifts_membership,
+    assignmentMembership,
+  });
+  if (authorization === "forbidden") {
     throw createError({
       statusCode: 403,
       statusMessage: "Unauthorized",

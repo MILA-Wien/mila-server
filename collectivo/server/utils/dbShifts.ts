@@ -393,6 +393,18 @@ export async function dbDeleteAssignment(assignmentId: number) {
 // SHIFT ABSENCES CRUD
 // ============================================================================
 
+// Membership that owns an assignment, or null if no such assignment exists.
+export async function dbGetAssignmentMembership(assignmentId: number) {
+  const [assignment] = (await directus.request(
+    readItems("shifts_assignments", {
+      filter: { id: { _eq: assignmentId } },
+      fields: ["shifts_membership"],
+      limit: 1,
+    }),
+  )) as unknown as { shifts_membership: number | null }[];
+  return assignment?.shifts_membership ?? null;
+}
+
 export async function dbCreateAbsence(payload: {
   shifts_membership: number;
   shifts_from: string;
