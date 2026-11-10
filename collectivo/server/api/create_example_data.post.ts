@@ -1164,7 +1164,7 @@ async function create_emails() {
     messages_content:
       "Hallo {{recipient_first_name}},\n\n" +
       "deine Befreiung von den Mitmach-Schichten galt bis einschließlich {{exempt_until}} und ist nun ausgelaufen. " +
-      "Ab heute bist du wieder bei den Festschichten dabei.\n\n" +
+      "Du bist jetzt wieder bei den Festschichten dabei.\n\n" +
       "Falls du eine Verlängerung brauchst, wende dich bitte an das Mitgliederbüro.",
   });
 
