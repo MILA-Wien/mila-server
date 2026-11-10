@@ -1207,7 +1207,8 @@ async function create_automations() {
       mila_label: "Aktivierung: Umfrage 28 Tage nach dem Einfrieren",
     },
     {
-      mila_key: "shifts_exemption_ended",
+      // Nitro auto-import (server/utils/exemptionMails.ts), resolved at call time.
+      mila_key: EXEMPTION_ENDED_AUTOMATION_KEY,
       mila_label: "Schichten: Befreiung ausgelaufen",
     },
   ];
@@ -1244,7 +1245,7 @@ async function link_exemption_ended_template() {
   const directus = await useDirectusAdmin();
   const [automation] = (await directus.request(
     readItems("mila_automations", {
-      filter: { mila_key: { _eq: "shifts_exemption_ended" } },
+      filter: { mila_key: { _eq: EXEMPTION_ENDED_AUTOMATION_KEY } },
       fields: ["id", "mila_template"],
     }),
   )) as unknown as { id: number; mila_template: number | null }[];

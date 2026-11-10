@@ -52,8 +52,13 @@ async function runCronjobs(force_yesterday: boolean) {
     const dayStr = day.toISOString().split("T")[0]!;
     const holidays = await dbGetActiveHolidayMemberships(day);
 
-    // Job 1
-    await create_shift_logs(day, holidays, settings);
+    // Job 1. Caught like the jobs below: a throw here would abort the run after earlier
+    // days already ended exemptions (job 3c), and their mails (job 7) would be lost.
+    try {
+      await create_shift_logs(day, holidays, settings);
+    } catch (e) {
+      console.error("Error in create_shift_logs", e);
+    }
 
     // Job 2
     try {
