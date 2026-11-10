@@ -1,0 +1,18 @@
+{
+  "Email address is not valid": "E-Mail Adresse ist nicht korrekt",
+  "Passwords are not the same": "Passwörter stimmen nicht überein",
+  "Must be at most {max} characters": "Darf höchstens {max} Zeichen lang sein",
+  "Must be at least {min} characters": "Muss mindestens {min} Zeichen lang sein",
+  "Contains characters that are not allowed: {chars}": "Enthält nicht erlaubte Zeichen: {chars}",
+  "Please enter only the street": "Bitte gib nur die Straße ein",
+  "Austrian postcodes have 4 digits": "Österreichische Postleitzahlen haben 4 Ziffern",
+  "Please enter the postcode in its own field": "Bitte gib die Postleitzahl im eigenen Feld ein",
+  "Please select a country from the list": "Bitte wähle ein Land aus der Liste",
+  "t:phone_invalid": "Nur Ziffern und Leerzeichen sind erlaubt, + nur am Anfang",
+  "t:address_part_invalid": "Bitte gib Hausnummer, Stiege und Tür in den jeweiligen Feldern ein, ohne \"/\" oder \"Top\"",
+  "Must start with a number, e.g. 1 or 1a": "Muss mit einer Zahl beginnen, z.B. 1 oder 1a",
+  "Must be at least 10 shares": "Muss mindestens 10 Anteile sein",
+  "This field is required": "Dieses Feld ist erforderlich",
+  "This field must be accepted": "Dieses Feld muss akzeptiert werden",
+  "IBAN is not valid": "IBAN nicht gültig"
+}
