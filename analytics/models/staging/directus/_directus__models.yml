@@ -1,0 +1,493 @@
+version: 2
+
+models:
+  # Directus system tables
+  - name: stg_directus__directus_users
+    description: >
+      Directus user accounts (members and staff), reduced to non-identifying
+      profile and survey fields. Linked to a membership via
+      stg_directus__memberships.memberships_user.
+    columns:
+      - name: id
+        description: User ID (UUID).
+        data_tests:
+          - unique
+          - not_null
+      - name: buddy_status
+        description: Participation in the buddy programme for new members.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["need_buddy", "is_buddy", "keine_angabe"]
+      - name: memberships_postcode
+        description: Postcode of the member's address.
+      - name: memberships_gender
+        description: Gender as stated by the member.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["female", "male", "diverse", "inter", "open", "no-answer"]
+      - name: memberships_organization_type
+        description: Type of organisation, for legal persons (free text).
+      - name: memberships_person_type
+        description: Whether the member is a natural or a legal person.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["natural", "legal"]
+      - name: mila_skills_2
+        description: Skills the member offers (free text).
+      - name: survey_languages
+        description: Languages the member speaks, as selected in the registration survey.
+
+  # memberships
+  - name: stg_directus__memberships
+    description: Cooperative memberships, one row per member.
+    columns:
+      - name: id
+        description: Membership number, identifies the member.
+        data_tests:
+          - unique
+          - not_null
+      - name: memberships_user
+        description: Linked user account.
+        data_tests:
+          - unique
+          - relationships:
+              arguments:
+                to: ref('stg_directus__directus_users')
+                field: id
+      - name: memberships_type
+        description: Active members work shifts, investing members only hold shares.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["Aktiv", "Investierend"]
+      - name: memberships_status
+        description: Lifecycle status, from application to end of membership.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["applied", "approved", "in-cancellation", "in-exclusion", "widerrufen", "ended"]
+      - name: memberships_shares
+        description: Number of cooperative shares held. Changes generate an invoice.
+      - name: membership_approved_by_board
+        description: Whether the board has approved the membership.
+      - name: memberships_date_applied
+        description: Date the membership application was submitted.
+      - name: memberships_date_approved
+        description: Date the membership was approved.
+      - name: memberships_date_cancelled
+        description: Date the member cancelled the membership.
+      - name: memberships_date_ended
+        description: Date the membership ended.
+      - name: memberships_date_excluded
+        description: Date the member was excluded.
+      - name: memberships_date_type_changed
+        description: Date the membership type last changed (active/investing).
+      - name: memberships_card_check_status
+        description: Result of the last check comparing the RFID card between LotzApp and the member records.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["ok", "mismatch", "missing_lotzapp", "missing_studio", "lotzapp_id_unknown", "no_lotzapp_id", "no_card"]
+      - name: memberships_card_checked_at
+        description: Time of the last RFID card check.
+      - name: activation_do_not_call
+        description: Do not call this member for activation.
+      - name: activation_do_not_survey
+        description: Do not send this member the activation survey.
+      - name: activation_frozen_since
+        description: Date since which the shift counter is frozen.
+      - name: activation_last_call
+        description: Date the member office last called the member about activation.
+      - name: activation_last_call_successfull
+        description: Whether the last activation call reached the member.
+      - name: activation_last_shop
+        description: Date the member last checked in at the shop with their membership card.
+      - name: activation_survey_choice
+        description: Answer to the activation survey, set when the member responds. Only the latest answer is kept.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["restart", "more-support", "different-form", "health", "other"]
+      - name: activation_survey_date
+        description: Time of the latest answer to the activation survey.
+      - name: shifts_counter
+        description: Shift point balance. Negative means shifts need to be made up.
+        data_tests:
+          - not_null
+      - name: shifts_orientation_date
+        description: Date of the orientation meeting.
+      - name: shifts_user_type
+        description: How the member takes part in shifts.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["regular", "jumper", "exempt", "inactive"]
+      - name: date_created
+        description: Time the record was created.
+      - name: date_updated
+        description: Time the record was last updated.
+
+  - name: stg_directus__memberships_coshoppers
+    description: >
+      Co-shoppers (Miteinkäufer*innen) who may shop on a membership. Linked to
+      memberships either as co-shoppers or as kids via the two junction models.
+    columns:
+      - name: id
+        description: Co-shopper ID.
+        data_tests:
+          - unique
+          - not_null
+      - name: date_created
+        description: Time the record was created.
+      - name: date_updated
+        description: Time the record was last updated.
+
+  - name: stg_directus__memberships_memberships_coshoppers
+    description: Junction for memberships.coshoppers, linking co-shoppers to memberships.
+    columns:
+      - name: id
+        description: Junction row ID.
+        data_tests:
+          - unique
+          - not_null
+      - name: memberships_id
+        description: Membership.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_directus__memberships')
+                field: id
+      - name: memberships_coshoppers_id
+        description: Co-shopper.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_directus__memberships_coshoppers')
+                field: id
+
+  - name: stg_directus__memberships_memberships_coshoppers_1
+    description: Junction for memberships.kids, linking kids (stored as co-shoppers) to memberships.
+    columns:
+      - name: id
+        description: Junction row ID.
+        data_tests:
+          - unique
+          - not_null
+      - name: memberships_id
+        description: Membership.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_directus__memberships')
+                field: id
+      - name: memberships_coshoppers_id
+        description: Kid (co-shopper record).
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_directus__memberships_coshoppers')
+                field: id
+
+  - name: stg_directus__memberships_shifts_categories
+    description: Junction for memberships.shifts_categories_allowed, the shift categories a member may sign up for.
+    columns:
+      - name: id
+        description: Junction row ID.
+        data_tests:
+          - unique
+          - not_null
+      - name: memberships_id
+        description: Membership.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_directus__memberships')
+                field: id
+      - name: shifts_categories_id
+        description: Shift category.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_directus__shifts_categories')
+                field: id
+
+  - name: stg_directus__memberships_shifts_skills
+    description: Junction for memberships.shifts_skills, the shift skills a member has.
+    columns:
+      - name: id
+        description: Junction row ID.
+        data_tests:
+          - unique
+          - not_null
+      - name: memberships_id
+        description: Membership.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_directus__memberships')
+                field: id
+      - name: shifts_skills_id
+        description: Shift skill.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_directus__shifts_skills')
+                field: id
+
+  - name: stg_directus__milaccess_log
+    description: Shop check-ins at the reception, one row per member or co-shopper and day.
+    columns:
+      - name: id
+        description: Check-in ID.
+        data_tests:
+          - unique
+          - not_null
+      - name: date
+        description: Day of the check-in.
+        data_tests:
+          - not_null
+      - name: membership
+        description: Membership whose card was used.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_directus__memberships')
+                field: id
+      - name: coshopper
+        description: Co-shopper who checked in. Empty if the member checked in themselves.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_directus__memberships_coshoppers')
+                field: id
+
+  # shifts
+  - name: stg_directus__shifts_absences
+    description: Absences of members from their shifts, either for one assignment or for all.
+    columns:
+      - name: id
+        description: Absence ID.
+        data_tests:
+          - unique
+          - not_null
+      - name: shifts_membership
+        description: Absent member.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_directus__memberships')
+                field: id
+      - name: shifts_assignment
+        description: Assignment the absence applies to. Empty for absences that apply to all assignments.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_directus__shifts_assignments')
+                field: id
+      - name: shifts_from
+        description: First day of the absence.
+        data_tests:
+          - not_null
+      - name: shifts_to
+        description: Last day of the absence.
+        data_tests:
+          - not_null
+      - name: shifts_is_holiday
+        description: Holiday absence. No shopping is possible and no shift points are deducted.
+        data_tests:
+          - not_null
+      - name: shifts_is_for_all_assignments
+        description: Whether the absence applies to all of the member's assignments.
+      - name: date_created
+        description: Time the record was created.
+      - name: date_updated
+        description: Time the record was last updated.
+
+  - name: stg_directus__shifts_assignments
+    description: Sign-ups of members for shifts, one-off or regular.
+    columns:
+      - name: id
+        description: Assignment ID.
+        data_tests:
+          - unique
+          - not_null
+      - name: shifts_membership
+        description: Assigned member.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_directus__memberships')
+                field: id
+      - name: shifts_shift
+        description: Shift signed up for.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_directus__shifts_shifts')
+                field: id
+      - name: shifts_from
+        description: First day of the assignment.
+        data_tests:
+          - not_null
+      - name: shifts_to
+        description: Last day of the assignment. Empty for ongoing assignments.
+      - name: shifts_is_regular
+        description: Whether the assignment is meant to be long-term.
+      - name: date_created
+        description: Time the record was created.
+      - name: date_updated
+        description: Time the record was last updated.
+
+  - name: stg_directus__shifts_categories
+    description: Categories of special shifts. Normal shifts have no category.
+    columns:
+      - name: id
+        description: Category ID.
+        data_tests:
+          - unique
+          - not_null
+      - name: name
+        description: Category name.
+      - name: for_all
+        description: Whether the category is visible to all members.
+
+  - name: stg_directus__shifts_holidays_public
+    description: Public holidays, on which shifts can be skipped.
+    columns:
+      - name: id
+        description: Holiday ID.
+        data_tests:
+          - unique
+          - not_null
+      - name: name
+        description: Holiday name.
+      - name: date
+        description: Date of the holiday.
+        data_tests:
+          - not_null
+      - name: date_created
+        description: Time the record was created.
+      - name: date_updated
+        description: Time the record was last updated.
+
+  - name: stg_directus__shifts_logs
+    description: Log of attended and missed shifts and other shift events, with the shift points awarded.
+    columns:
+      - name: id
+        description: Log entry ID.
+        data_tests:
+          - unique
+          - not_null
+      - name: shifts_membership
+        description: Member the entry is about.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_directus__memberships')
+                field: id
+      - name: shifts_shift
+        description: Shift the entry is about, if any.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_directus__shifts_shifts')
+                field: id
+      - name: shifts_type
+        description: >
+          What is logged. attended_draft is set by collectivo for attendance that is
+          not yet confirmed and counts as attended.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["attended", "attended_draft", "missed", "other"]
+      - name: shifts_date
+        description: Date of the shift.
+        data_tests:
+          - not_null
+      - name: shifts_score
+        description: Shift points awarded (28 points = 4 weeks).
+      - name: date_created
+        description: Time the record was created.
+      - name: date_updated
+        description: Time the record was last updated.
+
+  - name: stg_directus__shifts_shifts
+    description: Shift definitions, one-off or repeating.
+    columns:
+      - name: id
+        description: Shift ID.
+        data_tests:
+          - unique
+          - not_null
+      - name: shifts_name
+        description: Shift name.
+        data_tests:
+          - not_null
+      - name: shifts_category_2
+        description: Category for special shifts. Empty for normal shifts.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_directus__shifts_categories')
+                field: id
+      - name: shifts_status
+        description: Publication status. Only published shifts appear in the calendar.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["draft", "published", "archived"]
+      - name: shifts_from
+        description: First day of the shift.
+      - name: shifts_to
+        description: Last day of a repeating shift. Empty for ongoing shifts.
+      - name: shifts_from_time
+        description: Start time.
+      - name: shifts_to_time
+        description: End time.
+      - name: shifts_is_all_day
+        description: Whether the shift lasts all day.
+      - name: shifts_is_regular
+        description: Whether the shift repeats.
+      - name: shifts_repeats_every
+        description: Repeat interval in days.
+      - name: shifts_slots
+        description: Number of members needed.
+      - name: shift_points
+        description: Shift points awarded for the shift (28 points = 4 weeks).
+      - name: shifts_allow_self_assignment
+        description: Whether members may sign up themselves.
+      - name: exclude_public_holidays
+        description: Whether the shift is skipped on public holidays.
+        data_tests:
+          - not_null
+      - name: date_created
+        description: Time the record was created.
+      - name: date_updated
+        description: Time the record was last updated.
+
+  - name: stg_directus__shifts_skills
+    description: Skills members can have for shifts.
+    columns:
+      - name: id
+        description: Skill ID.
+        data_tests:
+          - unique
+          - not_null
+      - name: name_de
+        description: Skill name in German.
+        data_tests:
+          - not_null
+      - name: name_en
+        description: Skill name in English.
+        data_tests:
+          - not_null

@@ -52,6 +52,8 @@ services:
     container_name: directus-db
     profiles: [dev]
     image: postgis/postgis:16-3.4-alpine
+    ports:
+      - 127.0.0.1:5432:5432
     volumes:
       - directus-db-data:/var/lib/postgresql/data
     restart: unless-stopped
@@ -64,6 +66,18 @@ services:
       POSTGRES_DB: "directus"
       POSTGRES_USER: "directus"
       POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD}
+      # used by analytics/setup/dbt_user.sql
+      DBT_DB_PASSWORD: ${DBT_DB_PASSWORD}
+
+  dbt:
+    container_name: dbt
+    profiles: [dbt]
+    build: ./analytics
+    volumes:
+      - ./analytics:/usr/app
+    environment:
+      DBT_HOST: "directus-db-dev"
+      DBT_DB_PASSWORD: ${DBT_DB_PASSWORD}
 
   keycloak:
     container_name: keycloak

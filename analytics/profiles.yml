@@ -1,0 +1,12 @@
+analytics:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('DBT_HOST', 'localhost') }}"
+      port: 5432
+      user: dbt_user
+      pass: "{{ env_var('DBT_DB_PASSWORD') }}"
+      dbname: directus
+      schema: analytics
+      threads: 4

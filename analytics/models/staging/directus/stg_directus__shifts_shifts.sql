@@ -1,0 +1,19 @@
+select
+    id,
+    shifts_name,
+    shifts_category_2,
+    shifts_status,
+    shifts_from,
+    shifts_to,
+    shifts_from_time,
+    shifts_to_time,
+    shifts_is_all_day,
+    shifts_is_regular,
+    shifts_repeats_every,
+    shifts_slots,
+    shift_points,
+    shifts_allow_self_assignment,
+    exclude_public_holidays,
+    date_created,
+    date_updated
+from {{ source('directus', 'shifts_shifts') }}

@@ -1,0 +1,151 @@
+version: 2
+
+sources:
+  - name: directus
+    description: >
+      Directus database. dbt_user can only read the tables and columns
+      allowlisted in setup/dbt_user.sql, so models must select columns explicitly.
+    schema: public
+    tables:
+      # Directus system tables
+      - name: directus_users
+        columns:
+          - name: id
+          - name: buddy_status
+          - name: memberships_postcode
+          - name: memberships_gender
+          - name: memberships_organization_type
+          - name: memberships_person_type
+          - name: mila_skills_2
+          - name: survey_languages
+      # memberships
+      - name: memberships
+        columns:
+          - name: id
+          - name: memberships_user
+          - name: memberships_type
+          - name: memberships_status
+          - name: memberships_shares
+          - name: membership_approved_by_board
+          - name: memberships_date_applied
+          - name: memberships_date_approved
+          - name: memberships_date_cancelled
+          - name: memberships_date_ended
+          - name: memberships_date_excluded
+          - name: memberships_date_type_changed
+          - name: memberships_card_check_status
+          - name: memberships_card_checked_at
+          - name: activation_do_not_call
+          - name: activation_do_not_survey
+          - name: activation_frozen_since
+          - name: activation_last_call
+          - name: activation_last_call_successfull
+          - name: activation_last_shop
+          - name: activation_survey_choice
+          - name: activation_survey_date
+          - name: shifts_counter
+          - name: shifts_orientation_date
+          - name: shifts_user_type
+          - name: date_created
+          - name: date_updated
+      - name: memberships_coshoppers
+        columns:
+          - name: id
+          - name: date_created
+          - name: date_updated
+      # junction for memberships.coshoppers
+      - name: memberships_memberships_coshoppers
+        columns:
+          - name: id
+          - name: memberships_id
+          - name: memberships_coshoppers_id
+      # junction for memberships.kids
+      - name: memberships_memberships_coshoppers_1
+        columns:
+          - name: id
+          - name: memberships_id
+          - name: memberships_coshoppers_id
+      - name: memberships_shifts_categories
+        columns:
+          - name: id
+          - name: memberships_id
+          - name: shifts_categories_id
+      - name: memberships_shifts_skills
+        columns:
+          - name: id
+          - name: memberships_id
+          - name: shifts_skills_id
+      - name: milaccess_log
+        columns:
+          - name: id
+          - name: date
+          - name: membership
+          - name: coshopper
+      # shifts
+      - name: shifts_absences
+        columns:
+          - name: id
+          - name: shifts_membership
+          - name: shifts_assignment
+          - name: shifts_from
+          - name: shifts_to
+          - name: shifts_is_holiday
+          - name: shifts_is_for_all_assignments
+          - name: date_created
+          - name: date_updated
+      - name: shifts_assignments
+        columns:
+          - name: id
+          - name: shifts_membership
+          - name: shifts_shift
+          - name: shifts_from
+          - name: shifts_to
+          - name: shifts_is_regular
+          - name: date_created
+          - name: date_updated
+      - name: shifts_categories
+        columns:
+          - name: id
+          - name: name
+          - name: for_all
+      - name: shifts_holidays_public
+        columns:
+          - name: id
+          - name: name
+          - name: date
+          - name: date_created
+          - name: date_updated
+      - name: shifts_logs
+        columns:
+          - name: id
+          - name: shifts_membership
+          - name: shifts_shift
+          - name: shifts_type
+          - name: shifts_date
+          - name: shifts_score
+          - name: date_created
+          - name: date_updated
+      - name: shifts_shifts
+        columns:
+          - name: id
+          - name: shifts_name
+          - name: shifts_category_2
+          - name: shifts_status
+          - name: shifts_from
+          - name: shifts_to
+          - name: shifts_from_time
+          - name: shifts_to_time
+          - name: shifts_is_all_day
+          - name: shifts_is_regular
+          - name: shifts_repeats_every
+          - name: shifts_slots
+          - name: shift_points
+          - name: shifts_allow_self_assignment
+          - name: exclude_public_holidays
+          - name: date_created
+          - name: date_updated
+      - name: shifts_skills
+        columns:
+          - name: id
+          - name: name_de
+          - name: name_en
