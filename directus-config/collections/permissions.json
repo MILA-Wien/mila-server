@@ -782,24 +782,6 @@
     "_syncId": "2f0ca645-47d7-4e49-89e4-de4637a50685"
   },
   {
-    "collection": "shifts_absences",
-    "action": "create",
-    "permissions": null,
-    "validation": null,
-    "presets": null,
-    "fields": [
-      "shifts_from",
-      "shifts_to",
-      "shifts_membership",
-      "shifts_assignment",
-      "shifts_is_holiday",
-      "shifts_is_for_all_assignments",
-      "shifts_status"
-    ],
-    "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
-    "_syncId": "2f4a76d4-7d44-4d04-b318-01b4414005e2"
-  },
-  {
     "collection": "directus_folders",
     "action": "delete",
     "permissions": {},
@@ -2496,25 +2478,6 @@
     "_syncId": "96948699-daec-4417-84b1-3cb18a01732e"
   },
   {
-    "collection": "shifts_absences",
-    "action": "read",
-    "permissions": null,
-    "validation": null,
-    "presets": null,
-    "fields": [
-      "id",
-      "shifts_from",
-      "shifts_to",
-      "shifts_membership",
-      "shifts_is_holiday",
-      "shifts_assignment",
-      "shifts_status",
-      "shifts_is_for_all_assignments"
-    ],
-    "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
-    "_syncId": "9851688e-a0d1-4592-9cd2-c1f80f22a1fe"
-  },
-  {
     "collection": "collectivo_tiles_buttons",
     "action": "read",
     "permissions": null,
@@ -2597,25 +2560,6 @@
     ],
     "policy": "56865ad6-e36c-41a8-9bef-0c7efac80bc3",
     "_syncId": "9c6fd4c4-3e20-46ad-979c-7285ba8df139"
-  },
-  {
-    "collection": "shifts_assignments",
-    "action": "read",
-    "permissions": null,
-    "validation": null,
-    "presets": null,
-    "fields": [
-      "shifts_membership",
-      "shifts_slot",
-      "shifts_to",
-      "shifts_from",
-      "shifts_absences",
-      "id",
-      "shifts_shift",
-      "shifts_is_regular"
-    ],
-    "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
-    "_syncId": "9d335557-9fcf-45eb-96f7-11f9a1839667"
   },
   {
     "collection": "directus_users",
@@ -3414,25 +3358,6 @@
     ],
     "policy": "3c58faed-6e16-4a09-8184-ac5fe6bde810",
     "_syncId": "d9cf57a8-662d-47d9-b9e9-b6d385af55f4"
-  },
-  {
-    "collection": "shifts_assignments",
-    "action": "create",
-    "permissions": null,
-    "validation": null,
-    "presets": null,
-    "fields": [
-      "shifts_membership",
-      "shifts_slot",
-      "shifts_to",
-      "shifts_from",
-      "id",
-      "shifts_is_regular",
-      "shifts_shift",
-      "shifts_absences"
-    ],
-    "policy": "7c71c3f8-10b0-4e0b-b348-dfc1933d57f0",
-    "_syncId": "da15fda6-9248-4677-81ad-1c08d6068715"
   },
   {
     "collection": "directus_shares",
