@@ -1,0 +1,80 @@
+{
+  "collection": "memberships",
+  "field": "shifts_exempt_until",
+  "type": "date",
+  "meta": {
+    "collection": "memberships",
+    "conditions": [
+      {
+        "name": "Nur setzbar, wenn befreit",
+        "readonly": true,
+        "rule": {
+          "_and": [
+            {
+              "shifts_user_type": {
+                "_neq": "exempt"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "display": null,
+    "display_options": null,
+    "field": "shifts_exempt_until",
+    "group": "shifts_group",
+    "hidden": false,
+    "interface": "datetime",
+    "note": "Letzter Tag der Befreiung (inklusive). Am Folgetag stellt das System den Schichttyp automatisch auf Festschicht zurück. Nur setzbar, wenn der Schichttyp „Befreit“ ist.",
+    "options": null,
+    "readonly": false,
+    "required": false,
+    "searchable": true,
+    "sort": 2,
+    "special": null,
+    "translations": [
+      {
+        "language": "de-DE",
+        "translation": "Befreit bis"
+      },
+      {
+        "language": "en-US",
+        "translation": "Exempt until"
+      }
+    ],
+    "validation": {
+      "_or": [
+        {
+          "shifts_exempt_until": {
+            "_null": true
+          }
+        },
+        {
+          "shifts_exempt_until": {
+            "_gte": "$NOW(-1 day)"
+          }
+        }
+      ]
+    },
+    "validation_message": "„Befreit bis“ darf nicht in der Vergangenheit liegen.",
+    "width": "half"
+  },
+  "schema": {
+    "name": "shifts_exempt_until",
+    "table": "memberships",
+    "data_type": "date",
+    "default_value": null,
+    "max_length": null,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_indexed": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

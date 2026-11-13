@@ -78,7 +78,7 @@ async function onError(event: any) {
     <p>
       {{
         t(
-          "So können sie aktiv und wie alle anderen bei einer Fest-Schicht mitarbeiten.",
+          "So können sie aktiv und wie alle anderen bei einer Festschicht mitmachen.",
         )
       }}
     </p>
@@ -183,7 +183,7 @@ en:
   "Mein Status": "My status"
   "Was bedeutet Buddy-System?": "What does buddy-system mean?"
   "Buddys sind MILA-Mitglieder, die gemeinsam eine Schicht machen.": "Buddies are MILA members who do a shift together."
-  "So können sie aktiv und wie alle anderen bei einer Fest-Schicht mitarbeiten.": "This way they can actively participate in a regular shift like everyone else."
+  "So können sie aktiv und wie alle anderen bei einer Festschicht mitmachen.": "This way they can actively participate in a regular shift like everyone else."
   "Der Grund für Unterstützungs-Bedarf ist unterschiedlich.": "The reason for the need for support is different."
   "Unterstützungs-Bedarf entsteht manchmal auch durch mehrere Dinge.": "The need for support sometimes arises from several things."
   "Zum Beispiel können Barrieren bei MILA das Mitmachen erschweren.": "For example, barriers at MILA can make participation difficult."
