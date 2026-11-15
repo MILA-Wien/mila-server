@@ -48,7 +48,9 @@ services:
       CORS_ENABLED: "true"
       CORS_ORIGIN: "true"
 
-      WEBSOCKETS_ENABLED: true
+      # Stopgap for CVE-2026-126539 / GHSA-97xr-jchp-xm3c (Directus < 12.1.0).
+      # collectivo only uses REST; re-enable after upgrading Directus.
+      WEBSOCKETS_ENABLED: "false"
 
       COLLECTIVO_API_URL: ${COLLECTIVO_URL}
       COLLECTIVO_API_TOKEN: ${COLLECTIVO_API_TOKEN}
