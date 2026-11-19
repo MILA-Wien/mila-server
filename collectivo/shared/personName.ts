@@ -7,7 +7,7 @@
  * (see keycloak/import/collectivo-realm.json). A name that passes our forms but not
  * Keycloak makes the sync fail, so the same rules are checked here.
  *
- * Keycloak 26.7.2 (PersonNameProhibitedCharactersValidator) uses the Java regex
+ * Keycloak 26.8.2 (PersonNameProhibitedCharactersValidator) uses the Java regex
  *   ^[^<>&"\v$%!#?§;*~/\\|^=\[\]{}()\p{Cntrl}]+$
  * Java's `\v` is vertical whitespace [\n\x0B\f\r\x85\u2028\u2029] and `\p{Cntrl}` is
  * [\x00-\x1F\x7F]; JS gives both a narrower meaning, so they are spelled out below.
