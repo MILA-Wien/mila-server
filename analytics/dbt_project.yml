@@ -31,4 +31,12 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   analytics:
     staging:
-      +materialized: view
+      +materialized: table
+    # Marts are written to the Directus schema so they can be added as collections.
+    # Directus needs a primary key on each mart (add it via a post_hook) and
+    # read access for its database user; names should start with "analytics_".
+    marts:
+      +materialized: table
+      +schema: public
+      +grants:
+        select: ['directus']

@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: analytics_memberships_by_status
+    description: >
+      Test mart for Directus Insights. Number of memberships and total shares
+      per membership status, one row per status.
+    columns:
+      - name: memberships_status
+        description: Membership status ("unknown" if not set). Primary key.
+        data_tests:
+          - unique
+          - not_null
+      - name: memberships_count
+        description: Number of memberships with this status.
+      - name: memberships_shares_total
+        description: Sum of shares held by memberships with this status.

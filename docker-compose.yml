@@ -30,7 +30,7 @@ services:
       ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
       ADMIN_TOKEN: ${DIRECTUS_ADMIN_TOKEN}
       DB_CLIENT: "pg"
-      DB_HOST: "directus-db-dev"
+      DB_HOST: ${DIRECTUS_DB_HOST}
       DB_PORT: "5432"
       DB_DATABASE: "directus"
       DB_USER: "directus"
@@ -76,7 +76,7 @@ services:
     volumes:
       - ./analytics:/usr/app
     environment:
-      DBT_HOST: "directus-db-dev"
+      DBT_HOST: ${DIRECTUS_DB_HOST}
       DBT_DB_PASSWORD: ${DBT_DB_PASSWORD}
 
   keycloak:

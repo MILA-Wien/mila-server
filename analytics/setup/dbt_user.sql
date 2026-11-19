@@ -1,6 +1,7 @@
 -- Creates the read-only dbt_user for the Directus database.
 -- dbt_user can read only the public (Directus) columns in the allowlist below,
--- and owns the analytics schema that dbt writes to.
+-- and owns the analytics schema that dbt writes to. It may also create tables
+-- in public, for the marts that Directus reads as collections.
 --
 -- Run as the directus superuser (re-runnable, e.g. after Directus schema changes):
 --   docker exec -i directus-db psql -U directus -d directus < analytics/setup/dbt_user.sql
@@ -27,17 +28,28 @@ GRANT CONNECT ON DATABASE directus TO dbt_user;
 -- dbt writes its models into its own schema
 CREATE SCHEMA IF NOT EXISTS analytics AUTHORIZATION dbt_user;
 
--- Read access to allowlisted columns in public
-GRANT USAGE ON SCHEMA public TO dbt_user;
+-- Read access to allowlisted columns in public.
+-- CREATE lets dbt write its marts (analytics_* tables) to public for Directus;
+-- it grants no read access to other tables.
+GRANT USAGE, CREATE ON SCHEMA public TO dbt_user;
 
 DO $$
 DECLARE
   t record;
+  r record;
   cols text;
   missing text;
 BEGIN
   -- start from scratch so removed columns/tables lose their grants
-  REVOKE SELECT ON ALL TABLES IN SCHEMA public FROM dbt_user;
+  -- (skipping the marts dbt_user owns itself)
+  FOR r IN
+    SELECT c.relname FROM pg_class c
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE n.nspname = 'public' AND c.relkind IN ('r', 'v', 'm', 'f', 'p')
+      AND c.relowner <> 'dbt_user'::regrole
+  LOOP
+    EXECUTE format('REVOKE SELECT ON public.%I FROM dbt_user', r.relname);
+  END LOOP;
 
   FOR t IN
     SELECT * FROM (VALUES
