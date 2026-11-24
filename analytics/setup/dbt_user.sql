@@ -29,7 +29,7 @@ GRANT CONNECT ON DATABASE directus TO dbt_user;
 CREATE SCHEMA IF NOT EXISTS analytics AUTHORIZATION dbt_user;
 
 -- Read access to allowlisted columns in public.
--- CREATE lets dbt write its marts (analytics_* tables) to public for Directus;
+-- CREATE lets dbt write its marts (dbt_* tables) to public for Directus;
 -- it grants no read access to other tables.
 GRANT USAGE, CREATE ON SCHEMA public TO dbt_user;
 

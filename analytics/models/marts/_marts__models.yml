@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: analytics_weekly_access_by_shopper_type
+  - name: dbt_weekly_visits
     description: >
       Number of shop check-ins per week, one row per week and shopper type,
       over roughly the last 6 months. Weeks start on Monday.
@@ -27,11 +27,11 @@ models:
       - name: access_count
         description: Number of check-ins in this week by this shopper type.
 
-  - name: analytics_weekly_unique_shoppers_by_shopper_type
+  - name: dbt_weekly_unique_shoppers
     description: >
       Number of distinct members and co-shoppers who checked in at the shop
-      per week, one row per week and shopper type, over roughly the last 6
-      months. Weeks start on Monday.
+      per week, one row per week and shopper type, over the last 6
+      months.
     columns:
       - name: id
         description: Week and shopper type, e.g. "2026-11-23_member". Primary key.
@@ -54,20 +54,107 @@ models:
       - name: unique_shopper_count
         description: Number of distinct members or co-shoppers who checked in this week.
 
-  - name: analytics_weekday_average_shoppers
+  - name: dbt_weekdaily_avg_visits
     description: >
-      Average number of shoppers (members and co-shoppers together) who checked
-      in at the shop per weekday, over the last 28 days up to and including the
-      day the model was built (so each weekday occurs 4 times). dbt runs at
-      night, when that day is complete. Sundays are left out. One row per
-      weekday. Days without check-ins (e.g. holidays) are not part of the
-      average; weekdays without any check-ins in the period have no row. Access log rows are one per shopper
-      and day, so each check-in is one shopper.
+      Average number of visits (check-ins) at the shop per weekday and shopper
+      type, over the last 4 weeks. One row per weekday and shopper
+      type. Days with fewer than 10 check-ins in total are filtered out.
     columns:
-      - name: weekday_name
-        description: ISO weekday number and English name, e.g. "1 Monday", so it sorts Monday first. Primary key.
+      - name: id
+        description: Weekday and shopper type, e.g. "1 Monday_member". Primary key.
         data_tests:
           - unique
           - not_null
-      - name: average_shopper_count
-        description: Average number of shoppers per day with check-ins on this weekday in the period, rounded to one decimal.
+      - name: weekday
+        description: ISO weekday number, 1 (Monday) to 7 (Sunday), as an integer for chart axes.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5, 6, 7]
+                quote: false
+      - name: weekday_name
+        description: ISO weekday number and English name, e.g. "1 Monday", so it sorts Monday first.
+        data_tests:
+          - not_null
+      - name: shopper_type
+        description: >
+          "member" if the member checked in with their own card,
+          "coshopper" if a co-shopper checked in on the membership.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["member", "coshopper"]
+      - name: average_visit_count
+        description: Average number of visits by this shopper type per open day on this weekday in the period, rounded to one decimal.
+
+  - name: dbt_monthly_visit_freq_abs
+    description: >
+      Histogram of how often members and co-shoppers checked in at the shop in the previous
+      calendar month. One row per shopper type and number of visits.
+      Potential shoppers who did not shop are in the 0 bucket:
+      active members (memberships_type "Aktiv") approved by the start
+      of the month and not ended or excluded before it, and the co-shoppers
+      of these members created by the start of the month. Anyone
+      who scanned their card is counted even if not eligible, e.g. frozen members.
+    columns:
+      - name: id
+        description: Shopper type and number of visits, e.g. "member_3". Primary key.
+        data_tests:
+          - unique
+          - not_null
+      - name: month
+        description: First day of the month.
+        data_tests:
+          - not_null
+      - name: shopper_type
+        description: >
+          "member" if the member checked in with their own card,
+          "coshopper" if a co-shopper checked in on the membership.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["member", "coshopper"]
+      - name: visit_count
+        description: Number of times the shopper checked in this month (several visits on one day count separately), 10 means 10 or more.
+        data_tests:
+          - not_null
+      - name: shopper_count
+        description: Number of shoppers who checked in this many times.
+        data_tests:
+          - not_null
+
+  - name: dbt_monthly_visit_freq_rel
+    description: >
+      Relative version of dbt_monthly_visit_freq_abs with the share of shoppers per bin
+      within each shopper type instead of absolute counts.
+    columns:
+      - name: id
+        description: Shopper type and number of visits, e.g. "member_3". Primary key.
+        data_tests:
+          - unique
+          - not_null
+      - name: month
+        description: First day of the month.
+        data_tests:
+          - not_null
+      - name: shopper_type
+        description: >
+          "member" if the member checked in with their own card,
+          "coshopper" if a co-shopper checked in on the membership.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["member", "coshopper"]
+      - name: visit_count
+        description: Number of times the shopper checked in this month, 10 means 10 or more.
+        data_tests:
+          - not_null
+      - name: shopper_share
+        description: >
+          Percent of all shoppers of this type who checked in this many times,
+          rounded to one decimal (the buckets of one type sum to about 100).
+          Null if the shopper type has no shoppers.

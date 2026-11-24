@@ -34,7 +34,7 @@ models:
       +materialized: table
     # Marts are written to the Directus schema so they can be added as collections.
     # Directus needs a primary key on each mart (add it via a post_hook) and
-    # read access for its database user; names should start with "analytics_".
+    # read access for its database user; names should start with "dbt_".
     marts:
       +materialized: table
       +schema: public

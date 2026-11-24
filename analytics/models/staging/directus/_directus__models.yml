@@ -425,12 +425,13 @@ models:
       - name: shifts_type
         description: >
           What is logged. attended_draft is set by collectivo for attendance that is
-          not yet confirmed and counts as attended.
+          not yet confirmed and counts as attended. cancelled (ShiftLogType.CANCELLED
+          in collectivo) is rare but does occur.
         data_tests:
           - not_null
           - accepted_values:
               arguments:
-                values: ["attended", "attended_draft", "missed", "other"]
+                values: ["attended", "attended_draft", "cancelled", "missed", "other"]
       - name: shifts_date
         description: Date of the shift.
         data_tests:
