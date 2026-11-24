@@ -1,17 +1,73 @@
 version: 2
 
 models:
-  - name: analytics_memberships_by_status
+  - name: analytics_weekly_access_by_shopper_type
     description: >
-      Test mart for Directus Insights. Number of memberships and total shares
-      per membership status, one row per status.
+      Number of shop check-ins per week, one row per week and shopper type,
+      over roughly the last 6 months. Weeks start on Monday.
     columns:
-      - name: memberships_status
-        description: Membership status ("unknown" if not set). Primary key.
+      - name: id
+        description: Week and shopper type, e.g. "2026-11-23_member". Primary key.
         data_tests:
           - unique
           - not_null
-      - name: memberships_count
-        description: Number of memberships with this status.
-      - name: memberships_shares_total
-        description: Sum of shares held by memberships with this status.
+      - name: week
+        description: First day (Monday) of the week.
+        data_tests:
+          - not_null
+      - name: shopper_type
+        description: >
+          "member" if the member checked in with their own card,
+          "coshopper" if a co-shopper checked in on the membership.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["member", "coshopper"]
+      - name: access_count
+        description: Number of check-ins in this week by this shopper type.
+
+  - name: analytics_weekly_unique_shoppers_by_shopper_type
+    description: >
+      Number of distinct members and co-shoppers who checked in at the shop
+      per week, one row per week and shopper type, over roughly the last 6
+      months. Weeks start on Monday.
+    columns:
+      - name: id
+        description: Week and shopper type, e.g. "2026-11-23_member". Primary key.
+        data_tests:
+          - unique
+          - not_null
+      - name: week
+        description: First day (Monday) of the week.
+        data_tests:
+          - not_null
+      - name: shopper_type
+        description: >
+          "member" if the member checked in with their own card,
+          "coshopper" if a co-shopper checked in on the membership.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["member", "coshopper"]
+      - name: unique_shopper_count
+        description: Number of distinct members or co-shoppers who checked in this week.
+
+  - name: analytics_weekday_average_shoppers
+    description: >
+      Average number of shoppers (members and co-shoppers together) who checked
+      in at the shop per weekday, over the last 28 days up to and including the
+      day the model was built (so each weekday occurs 4 times). dbt runs at
+      night, when that day is complete. Sundays are left out. One row per
+      weekday. Days without check-ins (e.g. holidays) are not part of the
+      average; weekdays without any check-ins in the period have no row. Access log rows are one per shopper
+      and day, so each check-in is one shopper.
+    columns:
+      - name: weekday_name
+        description: ISO weekday number and English name, e.g. "1 Monday", so it sorts Monday first. Primary key.
+        data_tests:
+          - unique
+          - not_null
+      - name: average_shopper_count
+        description: Average number of shoppers per day with check-ins on this weekday in the period, rounded to one decimal.

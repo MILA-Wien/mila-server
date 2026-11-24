@@ -1,4 +1,4 @@
-select
+SELECT
     id,
     memberships_user,
     memberships_type,
@@ -26,4 +26,4 @@ select
     shifts_user_type,
     date_created,
     date_updated
-from {{ source('directus', 'memberships') }}
+FROM {{ source('directus', 'memberships') }}

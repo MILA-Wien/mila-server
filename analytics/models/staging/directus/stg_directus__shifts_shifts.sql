@@ -1,4 +1,4 @@
-select
+SELECT
     id,
     shifts_name,
     shifts_category_2,
@@ -16,4 +16,4 @@ select
     exclude_public_holidays,
     date_created,
     date_updated
-from {{ source('directus', 'shifts_shifts') }}
+FROM {{ source('directus', 'shifts_shifts') }}

@@ -1,4 +1,4 @@
-select
+SELECT
     id,
     buddy_status,
     memberships_postcode,
@@ -7,4 +7,4 @@ select
     memberships_person_type,
     mila_skills_2,
     survey_languages
-from {{ source('directus', 'directus_users') }}
+FROM {{ source('directus', 'directus_users') }}

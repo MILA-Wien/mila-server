@@ -1,4 +1,4 @@
-select
+SELECT
     id,
     shifts_membership,
     shifts_shift,
@@ -7,4 +7,4 @@ select
     shifts_is_regular,
     date_created,
     date_updated
-from {{ source('directus', 'shifts_assignments') }}
+FROM {{ source('directus', 'shifts_assignments') }}

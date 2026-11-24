@@ -238,8 +238,11 @@ models:
                 to: ref('stg_directus__shifts_skills')
                 field: id
 
-  - name: stg_directus__milaccess_log
-    description: Shop check-ins at the reception, one row per member or co-shopper and day.
+  - name: stg_directus__access_log
+    description: >
+      Shop check-ins at the reception, one row per member or co-shopper and day.
+      Limited to roughly the last 6 months (starting on a Monday so the first
+      week is complete).
     columns:
       - name: id
         description: Check-in ID.
@@ -265,6 +268,25 @@ models:
               arguments:
                 to: ref('stg_directus__memberships_coshoppers')
                 field: id
+      - name: week
+        description: First day (Monday) of the week of the check-in.
+        data_tests:
+          - not_null
+      - name: shopper_type
+        description: >
+          "member" if the member checked in with their own card,
+          "coshopper" if a co-shopper checked in on the membership.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["member", "coshopper"]
+      - name: shopper
+        description: >
+          The person who checked in: the membership ID for members, the
+          co-shopper ID for co-shoppers (as text).
+        data_tests:
+          - not_null
 
   # shifts
   - name: stg_directus__shifts_absences

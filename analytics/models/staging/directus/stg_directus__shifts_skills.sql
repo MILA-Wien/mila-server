@@ -1,5 +1,5 @@
-select
+SELECT
     id,
     name_de,
     name_en
-from {{ source('directus', 'shifts_skills') }}
+FROM {{ source('directus', 'shifts_skills') }}

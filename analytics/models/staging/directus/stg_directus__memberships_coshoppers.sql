@@ -1,5 +1,5 @@
-select
+SELECT
     id,
     date_created,
     date_updated
-from {{ source('directus', 'memberships_coshoppers') }}
+FROM {{ source('directus', 'memberships_coshoppers') }}
