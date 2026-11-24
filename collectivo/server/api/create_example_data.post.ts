@@ -824,7 +824,10 @@ const SHIFT_LOG_HISTORY_MONTHS = 3;
 
 // Shop checkins (milaccess_log). No production stat available for any of
 // these - reasonable assumptions, not calibrated figures.
-const ACCESS_LOG_HISTORY_DAYS = 90;
+// Covers the analytics staging model's window (stg_directus__access_log:
+// last 6 months, extended back to a Monday - so up to ~190 days) with some
+// slack, so the marts don't show an artificial jump where the history starts.
+const ACCESS_LOG_HISTORY_DAYS = 200;
 // JS Date#getUTCDay(): 0 = Sunday.
 const ACCESS_LOG_CLOSED_WEEKDAYS = new Set([0]);
 // Relative busyness per open weekday (getUTCDay index), normalized below.
