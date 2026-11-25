@@ -4,7 +4,7 @@ RUN mkdir -p /mnt/rootfs
 RUN dnf install --installroot /mnt/rootfs curl --releasever 9 --setopt install_weak_deps=false --nodocs -y; dnf --installroot /mnt/rootfs clean all
 
 # Install keycloak
-FROM quay.io/keycloak/keycloak:26.7
+FROM quay.io/keycloak/keycloak:26.8.2-3
 COPY --from=ubi-micro-build /mnt/rootfs /
 
 # Enable health and metrics support
