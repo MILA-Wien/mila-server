@@ -40,7 +40,7 @@ function toDateStr(date: Date): string {
  * inactive, and throwing would log an error every single night until someone enabled
  * them. A *missing* row is still a real misconfiguration and does throw.
  */
-async function resolveAutomation(key: string): Promise<number | null> {
+export async function resolveAutomation(key: string): Promise<number | null> {
   const automation = await dbGetAutomation(key);
   if (!automation) {
     throw new Error(`Automation "${key}" not found`);
@@ -54,10 +54,10 @@ async function resolveAutomation(key: string): Promise<number | null> {
     : automation.mila_template.id;
 }
 
-async function sendCampaigns(
-  recipients: { userId: string; member: ActivationRecipient }[],
+export async function sendCampaigns<T>(
+  recipients: { userId: string; member: T }[],
   templateId: number,
-  buildContext: (member: ActivationRecipient) => Record<string, unknown>,
+  buildContext: (member: T) => Record<string, unknown>,
   label: string,
 ) {
   if (!recipients.length) return;

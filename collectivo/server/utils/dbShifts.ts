@@ -544,6 +544,47 @@ export async function dbSetMembershipFrozenSince(id: number, value: string | nul
   );
 }
 
+// Exempt memberships with a "Befreit bis" date. Whether that date has passed is decided by
+// hasExemptionEnded for each processed day, not here, so the inclusive rule lives in one
+// tested place.
+export async function dbGetExemptMembershipsWithEndDate() {
+  return (await directus.request(
+    readItems("memberships", {
+      filter: {
+        shifts_user_type: { _eq: "exempt" },
+        shifts_exempt_until: { _nnull: true },
+      } as any,
+      fields: ["id", "shifts_user_type", "shifts_exempt_until"] as any[],
+      limit: -1,
+    }),
+  )) as unknown as Pick<Membership, "id" | "shifts_user_type" | "shifts_exempt_until">[];
+}
+
+// Ends a time-limited exemption: back to Festschicht, and the date is cleared.
+export async function dbEndMembershipExemption(id: number) {
+  return await directus.request(
+    updateItem("memberships", id, {
+      shifts_user_type: "regular",
+      shifts_exempt_until: null,
+    } as any),
+  );
+}
+
+// Users to mail about their ended exemption, for approved memberships only.
+export async function dbGetExemptionEndedRecipients(ids: number[]) {
+  if (!ids.length) return [] as { id: number; memberships_user: { id: string } | null }[];
+  return (await directus.request(
+    readItems("memberships", {
+      filter: {
+        id: { _in: ids },
+        memberships_status: { _eq: "approved" },
+      } as any,
+      fields: ["id", "memberships_user.id"] as any[],
+      limit: -1,
+    }),
+  )) as unknown as { id: number; memberships_user: { id: string } | null }[];
+}
+
 export async function dbGetShiftLogsByDate(date: Date) {
   return await directus.request(
     readItems("shifts_logs", {

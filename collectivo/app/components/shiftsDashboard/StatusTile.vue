@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { formatExemptUntil } from "../../../shared/shiftsExemption";
+
 const props = defineProps<{
   mship: any;
   settingsState: any;
@@ -66,7 +68,17 @@ setColor();
         </p>
 
         <p v-else-if="mship.shifts_user_type == 'exempt'">
-          {{ t("You are exempt from shift work.") }}<br />
+          <template v-if="mship.shifts_exempt_until">
+            {{
+              t("You are exempt from participation shifts until {date}.", {
+                date: formatExemptUntil(mship.shifts_exempt_until),
+              })
+            }}<br />
+            {{ t("If you need an extension, please contact the members' office.") }}<br />
+          </template>
+          <template v-else>
+            {{ t("You are exempt from participation shifts.") }}<br />
+          </template>
           {{ t("You can nonetheless sign up for shifts if you want.") }}
         </p>
 
@@ -126,7 +138,9 @@ de:
   "Please sign up for a shift or contact the members' office.": "Bitte melde dich für eine Schicht an oder kontaktiere das Mitgliederbüro."
   "You have a holiday registered at the moment.": "Du hast aktuell einen Urlaub eingetragen."
   "You cannot go shopping during this time.": "Du kannst in dieser Zeit nicht einkaufen gehen."
-  "You are exempt from shift work.": "Du bist von der Schichtarbeit befreit."
+  "You are exempt from participation shifts.": "Du bist von den Mitmach-Schichten befreit."
+  "You are exempt from participation shifts until {date}.": "Du bist bis {date} von den Mitmach-Schichten befreit."
+  "If you need an extension, please contact the members' office.": "Für eine Verlängerung wende dich bitte an das Mitgliederbüro."
   "Please do your next shift latest in": "Bitte mache deine nächste Schicht spätestens in"
   "Your membership is active. Thank you for your contribution!": "Deine Mitgliedschaft ist aktiv. Danke für deinen Beitrag!"
   "You can nonetheless sign up for shifts if you want.": "Du kannst dich trotzdem für Schichten anmelden, wenn du möchtest."
