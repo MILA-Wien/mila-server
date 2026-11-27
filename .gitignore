@@ -65,3 +65,4 @@ analytics/target/
 analytics/dbt_packages/
 analytics/dbt_internal_packages/
 analytics/logs/
+analytics/.user.yml

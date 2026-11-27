@@ -7,7 +7,7 @@ Data transformation using [data build tool (dbt)](https://github.com/dbt-labs/db
 dbt connects as `dbt_user`, which can read all tables in the Directus (`public`) schema and owns the `analytics` schema.
 It can create tables in `public` (the `dbt_*` marts that Directus reads as collections),
 but can only alter or drop the tables it created, not the Directus tables.
-dbt grants directus access to its table (see [`dbt_project.yml`](analytics/dbt_project.yml)).
+dbt grants directus access to its table (see [`dbt_project.yml`](dbt_project.yml)).
 
 - set `DBT_DB_PASSWORD` in `.env`
 - create/update the user with:
@@ -18,7 +18,7 @@ docker exec -i directus-db psql -U directus -d directus < analytics/setup/dbt_us
 The `dbt` container idles (`sleep infinity`) to be able to run dbt commands
 in dev with `docker exec dbt dbt <cmd>` or the Dokploy scheduler in prod.
 
-Check db connection defined in [`profiles.yml`](analytics/profiles.yml):
+Check db connection defined in [`profiles.yml`](profiles.yml):
 ```
 docker exec dbt dbt debug
 ```
