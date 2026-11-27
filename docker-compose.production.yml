@@ -170,6 +170,21 @@ services:
       options:
         max-size: 50m
 
+  dbt:
+    build: ./analytics
+    restart: unless-stopped
+    init: true
+    # Idle; a Dokploy schedule runs `dbt build` in this container
+    entrypoint: ["sleep", "infinity"]
+    volumes:
+      - ./analytics:/usr/app
+    networks:
+      - default
+      - dokploy-network
+    environment:
+      DBT_HOST: ${DIRECTUS_DB_HOST}
+      DBT_DB_PASSWORD: ${DBT_DB_PASSWORD}
+
 volumes:
   directus-uploads:
   habidat-config:
