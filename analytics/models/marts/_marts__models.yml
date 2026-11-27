@@ -91,12 +91,12 @@ models:
 
   - name: dbt_monthly_visit_freq_abs
     description: >
-      Histogram of how often members and co-shoppers checked in at the shop in the previous
-      calendar month. One row per shopper type and number of visits.
+      Histogram of how often members and co-shoppers checked in at the shop in the last
+      4 complete weeks (Monday to Sunday). One row per shopper type and number of visits.
       Potential shoppers who did not shop are in the 0 bucket:
       active members (memberships_type "Aktiv") approved by the start
-      of the month and not ended or excluded before it, and the co-shoppers
-      of these members created by the start of the month. Anyone
+      of the period and not ended or excluded before it, and the co-shoppers
+      of these members created by the start of the period. Anyone
       who scanned their card is counted even if not eligible, e.g. frozen members.
     columns:
       - name: id
@@ -104,8 +104,8 @@ models:
         data_tests:
           - unique
           - not_null
-      - name: month
-        description: First day of the month.
+      - name: period_start
+        description: First day (Monday) of the 4-week period.
         data_tests:
           - not_null
       - name: shopper_type
@@ -118,7 +118,7 @@ models:
               arguments:
                 values: ["member", "coshopper"]
       - name: visit_count
-        description: Number of times the shopper checked in this month (several visits on one day count separately), 10 means 10 or more.
+        description: Number of times the shopper checked in during the period (several visits on one day count separately), 10 means 10 or more.
         data_tests:
           - not_null
       - name: shopper_count
@@ -136,8 +136,8 @@ models:
         data_tests:
           - unique
           - not_null
-      - name: month
-        description: First day of the month.
+      - name: period_start
+        description: First day (Monday) of the 4-week period.
         data_tests:
           - not_null
       - name: shopper_type
@@ -150,7 +150,7 @@ models:
               arguments:
                 values: ["member", "coshopper"]
       - name: visit_count
-        description: Number of times the shopper checked in this month, 10 means 10 or more.
+        description: Number of times the shopper checked in during the period, 10 means 10 or more.
         data_tests:
           - not_null
       - name: shopper_share

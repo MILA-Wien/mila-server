@@ -169,11 +169,15 @@ services:
         max-size: 50m
 
   dbt:
-    profiles: [dbt]
     build: ./analytics
+    restart: unless-stopped
+    init: true
+    # Idle; a Dokploy schedule runs `dbt build` in this container
+    entrypoint: ["sleep", "infinity"]
     volumes:
       - ./analytics:/usr/app
     networks:
+      - default
       - dokploy-network
     environment:
       DBT_HOST: ${DIRECTUS_DB_HOST}

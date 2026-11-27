@@ -1,4 +1,4 @@
--- Relative frequencies of the monthly shopping frequency histogram:
+-- Relative frequencies of the 4-week shopping frequency histogram:
 -- share of shoppers per visit bucket within each shopper type.
 {{ config(
     post_hook="ALTER TABLE {{ this }} ADD PRIMARY KEY (id)"
@@ -6,7 +6,7 @@
 
 SELECT
     id,
-    month,
+    period_start,
     shopper_type,
     visit_count,
     -- Percent of all shoppers of this type; buckets of one type sum to 100.

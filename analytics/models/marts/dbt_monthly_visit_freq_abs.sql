@@ -1,13 +1,13 @@
--- Histogram of shop visits per shopper in the last complete month, split into
--- members and co-shoppers. Includes potential shoppers who did not shop (0 visits).
+-- Histogram of shop visits per shopper in the last 4 complete weeks (Monday to Sunday),
+-- split into members and co-shoppers. Includes potential shoppers who did not shop (0 visits).
 {{ config(
     post_hook="ALTER TABLE {{ this }} ADD PRIMARY KEY (id)"
 ) }}
 
 WITH period AS (
     SELECT
-        (DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '1 month')::DATE AS month_start,
-        (DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '1 day')::DATE AS month_end
+        (DATE_TRUNC('week', CURRENT_DATE) - INTERVAL '4 weeks')::DATE AS period_start,
+        (DATE_TRUNC('week', CURRENT_DATE) - INTERVAL '1 day')::DATE AS period_end
 ),
 
 visits AS (
@@ -18,25 +18,25 @@ SELECT
         COUNT(*) AS visits
     FROM {{ ref('stg_directus__access_log') }} AS a
     CROSS JOIN period AS p
-    WHERE a.date BETWEEN p.month_start AND p.month_end
+    WHERE a.date BETWEEN p.period_start AND p.period_end
     GROUP BY a.shopper_type, a.shopper
 ),
 
 eligible_members AS (
-    -- Active members approved by the start of the month and not ended or excluded before it.
+    -- Active members approved by the start of the period and not ended or excluded before it.
     SELECT m.id
     FROM {{ ref('stg_directus__memberships') }} AS m
     CROSS JOIN period AS p
     WHERE m.memberships_type = 'Aktiv'
-        AND m.memberships_date_approved <= p.month_start
+        AND m.memberships_date_approved <= p.period_start
         AND (
             COALESCE(m.memberships_date_ended, m.memberships_date_excluded) IS NULL
-            OR COALESCE(m.memberships_date_ended, m.memberships_date_excluded) >= p.month_start
+            OR COALESCE(m.memberships_date_ended, m.memberships_date_excluded) >= p.period_start
         )
 ),
 
 eligible_coshoppers AS (
-    -- Co-shoppers (not kids) of eligible members, created by the start of the month.
+    -- Co-shoppers (not kids) of eligible members, created by the start of the period.
     SELECT DISTINCT c.id
     FROM eligible_members AS m
     INNER JOIN {{ ref('stg_directus__memberships_memberships_coshoppers') }} AS j
@@ -44,7 +44,7 @@ eligible_coshoppers AS (
     INNER JOIN {{ ref('stg_directus__memberships_coshoppers') }} AS c
         ON c.id = j.memberships_coshoppers_id
     CROSS JOIN period AS p
-    WHERE c.date_created <= p.month_start
+    WHERE c.date_created <= p.period_start
 ),
 
 shoppers AS (
@@ -78,7 +78,7 @@ grid AS (
 
 SELECT
     g.shopper_type || '_' || g.visit_count AS id,
-    p.month_start AS month,
+    p.period_start,
     g.shopper_type,
     g.visit_count,
     -- defaults to BIGINT which is not supported by aggregations in directus insights

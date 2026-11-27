@@ -71,8 +71,15 @@ services:
 
   dbt:
     container_name: dbt
-    profiles: [dbt]
+    profiles: [dev]
     build: ./analytics
+    init: true
+    # Idle; run commands with `docker exec dbt dbt <cmd>`
+    entrypoint: ["sleep", "infinity"]
+    restart: unless-stopped
+    depends_on:
+      directus-db-dev:
+        condition: service_healthy
     volumes:
       - ./analytics:/usr/app
     environment:

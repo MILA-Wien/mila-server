@@ -3,14 +3,21 @@ version: 2
 sources:
   - name: directus
     description: >
-      Directus database. dbt_user can only read the tables and columns
-      allowlisted in setup/dbt_user.sql, so models must select columns explicitly.
+      Directus database. dbt_user can read all tables (see setup/dbt_user.sql),
+      including personal data, so models should only select the columns they need.
     schema: public
     tables:
       # Directus system tables
       - name: directus_users
         columns:
           - name: id
+          - name: email
+          - name: provider
+            description: Login provider ("keycloak" for members, "default" for local accounts).
+          - name: external_identifier
+            description: >
+              Identifier at the login provider. For Keycloak users, a flow keeps it equal
+              to email (see tests/assert_user_email_matches_external_id.sql).
           - name: buddy_status
           - name: memberships_postcode
           - name: memberships_gender

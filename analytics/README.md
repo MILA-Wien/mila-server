@@ -4,32 +4,37 @@ Data transformation using [data build tool (dbt)](https://github.com/dbt-labs/db
 
 ## Setup
 
-Build the image:
-```
-docker compose build dbt
-```
+dbt connects as `dbt_user`, which can read all tables in the Directus (`public`) schema and owns the `analytics` schema.
+It can create tables in `public` (the `dbt_*` marts that Directus reads as collections),
+but can only alter or drop the tables it created, not the Directus tables.
+dbt grants directus access to its table (see [`dbt_project.yml`](analytics/dbt_project.yml)).
 
-Check db connection:
-```
-docker compose run --rm dbt debug
-```
-Git is only needed to fetch dbt packages from a Git repository which is not needed here so the related error can be ignored.
-
-Add an alias
-```
-dbt = "docker compose run --rm dbt"
-```
-to run commands without the docker prefix, e.g., `dbt debug`.
-
-
-## Database user
-
-dbt connects as `dbt_user`, which can read the Directus schema except for personal data
-(names, contact details, IBAN, free-text notes, ...) and owns the `analytics` schema.
-Set `DBT_DB_PASSWORD` in `.env` and create/update the user with:
+- set `DBT_DB_PASSWORD` in `.env`
+- create/update the user with:
 ```
 docker exec -i directus-db psql -U directus -d directus < analytics/setup/dbt_user.sql
 ```
-Access is granted via an allowlist in the script: to use a new table or column in dbt,
-add it there (after checking it holds no personal data) and re-run the script.
-Since some columns are hidden, models must select columns explicitly (no `select *`).
+
+The `dbt` container idles (`sleep infinity`) to be able to run dbt commands
+in dev with `docker exec dbt dbt <cmd>` or the Dokploy scheduler in prod.
+
+Check db connection defined in [`profiles.yml`](analytics/profiles.yml):
+```
+docker exec dbt dbt debug
+```
+Git is only needed to fetch dbt packages from a Git repository.
+The related error can be ignored.
+
+## Schedule
+
+In Dokploy mila-server > mila-server-production > schedules set:
+
+| Setting         | Value                                           |
+| --------------- | ------------------------------------------------|
+| Service name    | `dbt`                                           |
+| Task name       | `dbt build`                                     |
+| Description     | Weekly build of analytics models and data tests |
+| Cron expression | `0 20 * * 6` (Saturdays at 20:00)               |
+| Time zone       | `Europe/Vienna`                                 |
+| Command         | `dbt build`                                     |
+

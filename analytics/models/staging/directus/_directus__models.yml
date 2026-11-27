@@ -115,7 +115,7 @@ models:
       - name: activation_survey_date
         description: Time of the latest answer to the activation survey.
       - name: shifts_counter
-        description: Shift point balance. Negative means shifts need to be made up.
+        description: Shift point balance.
         data_tests:
           - not_null
       - name: shifts_orientation_date
